@@ -1,4 +1,4 @@
-package igrek.todotree.settings;
+package igrek.songbook.settings;
 
 import android.view.WindowManager;
 

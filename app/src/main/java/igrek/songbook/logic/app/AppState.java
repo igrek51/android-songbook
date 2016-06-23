@@ -1,4 +1,4 @@
-package igrek.todotree.logic.app;
+package igrek.songbook.logic.app;
 
 public enum AppState {
     ITEMS_LIST(1),

@@ -1,4 +1,4 @@
-package igrek.todotree;
+package igrek.songbook;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -7,8 +7,8 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import igrek.todotree.logic.app.App;
-import igrek.todotree.system.output.Output;
+import igrek.songbook.logic.app.App;
+import igrek.songbook.system.output.Output;
 
 public class MainActivity extends AppCompatActivity {
 

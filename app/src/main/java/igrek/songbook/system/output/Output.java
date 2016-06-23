@@ -1,4 +1,4 @@
-package igrek.todotree.system.output;
+package igrek.songbook.system.output;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -8,7 +8,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import igrek.todotree.settings.Config;
+import igrek.songbook.settings.Config;
 
 public class Output {
 

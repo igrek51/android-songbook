@@ -1,8 +1,8 @@
-package igrek.todotree.gui;
+package igrek.songbook.gui;
 
 import java.util.List;
 
-import igrek.todotree.logic.datatree.TreeItem;
+import igrek.songbook.logic.datatree.TreeItem;
 
 public interface GUIListener {
     void onToolbarBackClicked();

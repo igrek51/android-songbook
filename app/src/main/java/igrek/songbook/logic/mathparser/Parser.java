@@ -1,4 +1,4 @@
-package igrek.todotree.mathparser;
+package igrek.songbook.mathparser;
 
 import java.util.Vector;
 

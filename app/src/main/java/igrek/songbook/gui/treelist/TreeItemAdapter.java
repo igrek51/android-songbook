@@ -1,4 +1,4 @@
-package igrek.todotree.gui.treelist;
+package igrek.songbook.gui.treelist;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -19,10 +19,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import igrek.todotree.R;
-import igrek.todotree.gui.GUIListener;
-import igrek.todotree.logic.datatree.TreeItem;
-import igrek.todotree.system.output.Output;
+import igrek.songbook.R;
+import igrek.songbook.gui.GUIListener;
+import igrek.songbook.logic.datatree.TreeItem;
+import igrek.songbook.system.output.Output;
 
 public class TreeItemAdapter extends ArrayAdapter<TreeItem> {
 

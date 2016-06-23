@@ -1,4 +1,4 @@
-package igrek.todotree;
+package igrek.songbook;
 
 import org.junit.Test;
 

@@ -1,10 +1,10 @@
-package igrek.todotree.gui.treelist;
+package igrek.songbook.gui.treelist;
 
 import android.view.View;
 
 import java.util.HashMap;
 
-import igrek.todotree.system.output.Output;
+import igrek.songbook.system.output.Output;
 
 public class ListScrollOffset {
     int firstVisiblePosition;

@@ -1,4 +1,4 @@
-package igrek.todotree.gui;
+package igrek.songbook.gui;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 
-import igrek.todotree.logic.touchcontroller.ITouchController;
+import igrek.songbook.logic.touchcontroller.ITouchController;
 
 public class GUIBase implements View.OnTouchListener {
 

@@ -1,4 +1,4 @@
-package igrek.todotree.gui.views.edititem;
+package igrek.songbook.gui.views.edititem;
 
 import android.text.Editable;
 import android.text.InputType;
@@ -12,10 +12,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import igrek.todotree.R;
-import igrek.todotree.gui.GUI;
-import igrek.todotree.logic.datatree.TreeItem;
-import igrek.todotree.system.output.Output;
+import igrek.songbook.R;
+import igrek.songbook.gui.GUI;
+import igrek.songbook.logic.datatree.TreeItem;
+import igrek.songbook.system.output.Output;
 
 public class EditItemGUI {
 

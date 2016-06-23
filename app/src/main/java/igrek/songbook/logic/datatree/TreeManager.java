@@ -1,4 +1,4 @@
-package igrek.todotree.logic.datatree;
+package igrek.songbook.logic.datatree;
 
 import android.util.Pair;
 
@@ -15,13 +15,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import igrek.todotree.logic.datatree.serializer.TreeSerializer;
-import igrek.todotree.logic.exceptions.NoSuperItemException;
-import igrek.todotree.settings.Config;
-import igrek.todotree.settings.preferences.Preferences;
-import igrek.todotree.system.files.Files;
-import igrek.todotree.system.files.PathBuilder;
-import igrek.todotree.system.output.Output;
+import igrek.songbook.logic.datatree.serializer.TreeSerializer;
+import igrek.songbook.logic.exceptions.NoSuperItemException;
+import igrek.songbook.settings.Config;
+import igrek.songbook.settings.preferences.Preferences;
+import igrek.songbook.system.files.Files;
+import igrek.songbook.system.files.PathBuilder;
+import igrek.songbook.system.output.Output;
 
 public class TreeManager {
     private TreeItem rootItem;

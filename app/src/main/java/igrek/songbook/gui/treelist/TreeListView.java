@@ -1,4 +1,4 @@
-package igrek.todotree.gui.treelist;
+package igrek.songbook.gui.treelist;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -21,9 +21,9 @@ import android.widget.ListView;
 
 import java.util.List;
 
-import igrek.todotree.gui.GUIListener;
-import igrek.todotree.logic.datatree.TreeItem;
-import igrek.todotree.system.output.Output;
+import igrek.songbook.gui.GUIListener;
+import igrek.songbook.logic.datatree.TreeItem;
+import igrek.songbook.system.output.Output;
 
 public class TreeListView extends ListView implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 

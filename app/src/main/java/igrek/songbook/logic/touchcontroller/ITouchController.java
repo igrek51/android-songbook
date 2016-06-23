@@ -1,4 +1,4 @@
-package igrek.todotree.logic.touchcontroller;
+package igrek.songbook.logic.touchcontroller;
 
 public interface ITouchController {
     boolean onTouchDown(float x, float y);

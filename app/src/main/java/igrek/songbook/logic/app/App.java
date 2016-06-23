@@ -1,4 +1,4 @@
-package igrek.todotree.logic.app;
+package igrek.songbook.logic.app;
 
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -7,13 +7,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import igrek.todotree.R;
-import igrek.todotree.gui.GUI;
-import igrek.todotree.gui.GUIListener;
-import igrek.todotree.logic.datatree.TreeItem;
-import igrek.todotree.logic.datatree.TreeManager;
-import igrek.todotree.logic.exceptions.NoSuperItemException;
-import igrek.todotree.system.output.Output;
+import igrek.songbook.R;
+import igrek.songbook.gui.GUI;
+import igrek.songbook.gui.GUIListener;
+import igrek.songbook.logic.datatree.TreeItem;
+import igrek.songbook.logic.datatree.TreeManager;
+import igrek.songbook.logic.exceptions.NoSuperItemException;
+import igrek.songbook.system.output.Output;
 
 //  WERSJA v1.06
 //TODO: domek w navbar - przejście do root

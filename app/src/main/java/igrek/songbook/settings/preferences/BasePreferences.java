@@ -1,10 +1,10 @@
-package igrek.todotree.settings.preferences;
+package igrek.songbook.settings.preferences;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import igrek.todotree.settings.Config;
+import igrek.songbook.settings.Config;
 
 public class BasePreferences {
     protected SharedPreferences sharedPreferences;

@@ -1,8 +1,8 @@
-package igrek.todotree.settings.preferences;
+package igrek.songbook.settings.preferences;
 
 import android.app.Activity;
 
-import igrek.todotree.system.output.Output;
+import igrek.songbook.system.output.Output;
 
 public class Preferences extends BasePreferences {
 

@@ -1,4 +1,4 @@
-package igrek.todotree.gui;
+package igrek.songbook.gui;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,10 +9,10 @@ import android.widget.RelativeLayout;
 
 import java.util.List;
 
-import igrek.todotree.R;
-import igrek.todotree.gui.treelist.TreeListView;
-import igrek.todotree.gui.views.edititem.EditItemGUI;
-import igrek.todotree.logic.datatree.TreeItem;
+import igrek.songbook.R;
+import igrek.songbook.gui.treelist.TreeListView;
+import igrek.songbook.gui.views.edititem.EditItemGUI;
+import igrek.songbook.logic.datatree.TreeItem;
 
 public class GUI extends GUIBase {
 

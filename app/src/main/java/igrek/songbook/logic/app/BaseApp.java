@@ -1,4 +1,4 @@
-package igrek.todotree.logic.app;
+package igrek.songbook.logic.app;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -10,11 +10,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
-import igrek.todotree.logic.touchcontroller.ITouchController;
-import igrek.todotree.settings.Config;
-import igrek.todotree.settings.preferences.Preferences;
-import igrek.todotree.system.files.Files;
-import igrek.todotree.system.output.Output;
+import igrek.songbook.logic.touchcontroller.ITouchController;
+import igrek.songbook.settings.Config;
+import igrek.songbook.settings.preferences.Preferences;
+import igrek.songbook.system.files.Files;
+import igrek.songbook.system.output.Output;
 
 public abstract class BaseApp implements ITouchController {
 
