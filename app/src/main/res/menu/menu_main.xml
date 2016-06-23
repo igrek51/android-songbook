@@ -7,45 +7,11 @@
         android:orderInCategory="100"
         android:title="@string/action_minimize"
         app:showAsAction="never"/>
-    <item
-        android:id="@+id/action_reload"
-        android:orderInCategory="100"
-        android:title="@string/action_reload"
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/action_save"
-        android:orderInCategory="100"
-        android:title="@string/action_save"
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/action_exit_without_saving"
-        android:orderInCategory="100"
-        android:title="@string/action_exit_without_saving"
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/action_save_exit"
-        android:orderInCategory="100"
-        android:title="@string/action_save_exit"
-        app:showAsAction="never"/>
 
     <item
-        android:id="@+id/action_copy"
+        android:id="@+id/action_exit"
         android:orderInCategory="100"
-        android:title="@string/action_copy"
+        android:title="@string/action_exit"
         app:showAsAction="never"/>
-    <item
-        android:id="@+id/action_cut"
-        android:orderInCategory="100"
-        android:title="@string/action_cut"
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/action_paste"
-        android:orderInCategory="100"
-        android:title="@string/action_paste"
-        app:showAsAction="never"/>
-    <item
-        android:id="@+id/action_select_all"
-        android:orderInCategory="100"
-        android:title="@string/action_select_all"
-        app:showAsAction="never"/>
+
 </menu>

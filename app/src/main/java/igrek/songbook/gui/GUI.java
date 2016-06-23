@@ -4,22 +4,16 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 
-import java.util.List;
-
 import igrek.songbook.R;
-import igrek.songbook.gui.treelist.TreeListView;
-import igrek.songbook.gui.views.edititem.EditItemGUI;
-import igrek.songbook.logic.datatree.TreeItem;
+import igrek.songbook.gui.fileslist.FilesListView;
+import igrek.songbook.logic.filetree.FileItem;
 
 public class GUI extends GUIBase {
 
-    private EditText etEditItem;
     private ActionBar actionBar;
-    private TreeListView itemsListView;
-    private EditItemGUI editItemGUI = null;
+    private FilesListView itemsListView;
 
     public GUI(AppCompatActivity activity, GUIListener guiListener) {
         super(activity, guiListener);
@@ -48,44 +42,25 @@ public class GUI extends GUIBase {
         mainContent = (RelativeLayout) activity.findViewById(R.id.mainContent);
     }
 
-    public void showItemsList(final TreeItem currentItem) {
-        View itemsListLayout = setMainContentLayout(R.layout.items_list);
+    public void showFilesList(final FileItem currentItem) {
+        View itemsListLayout = setMainContentLayout(R.layout.files_list);
 
-        itemsListView = (TreeListView) itemsListLayout.findViewById(R.id.treeItemsList);
+        itemsListView = (FilesListView) itemsListLayout.findViewById(R.id.filesList);
 
         itemsListView.init(activity, guiListener);
 
-        itemsListView.setItems(currentItem.getChildren());
-
-        //itemsListView.setOnTouchListener(this);
-
-        updateItemsList(currentItem, null);
+        updateItemsList(currentItem);
     }
 
-    public void showEditItemPanel(final TreeItem item, TreeItem parent) {
-        editItemGUI = new EditItemGUI(this, item, parent);
-        etEditItem = editItemGUI.getEtEditItem();
-    }
-
-    public void updateItemsList(TreeItem currentItem, List<Integer> selectedPositions) {
-        //tytuł gałęzi
-        StringBuilder sb = new StringBuilder(currentItem.getContent());
-        if(!currentItem.isEmpty()) {
-            sb.append(" [");
-            sb.append(currentItem.size());
-            sb.append("]");
-        }
-        setTitle(sb.toString());
+    public void updateItemsList(FileItem currentItem) {
+        setTitle(currentItem.getFilename());
         //lista elementów
-        itemsListView.setItemsAndSelected(currentItem.getChildren(), selectedPositions);
+        //TODO wylistowanie aktualnego folderu i wyświetlenie plików i folderów
+        //itemsListView.setItems(currentItem.getChildren());
     }
 
     public void scrollToItem(int position){
         itemsListView.scrollTo(position);
-    }
-
-    public void hideSoftKeyboard() {
-        hideSoftKeyboard(etEditItem);
     }
 
     public void setTitle(String title){

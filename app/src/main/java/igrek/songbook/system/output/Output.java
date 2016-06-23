@@ -116,15 +116,6 @@ public class Output {
         lastEcho = System.currentTimeMillis();
     }
 
-    public static void echoClearAfterDelay() {
-        if (!echos.isEmpty()) {
-            if (System.currentTimeMillis() > lastEcho + Config.Output.echo_showtime) {
-                echoClear1Line();
-                lastEcho += Config.Output.echo_showtime;
-            }
-        }
-    }
-
     public static void echoClear1Line() {
         if (!echos.isEmpty()) {
             echos.remove(0);

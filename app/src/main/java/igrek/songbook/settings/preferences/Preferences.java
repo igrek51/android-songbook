@@ -6,13 +6,17 @@ import igrek.songbook.system.output.Output;
 
 public class Preferences extends BasePreferences {
 
-    public String dbFilePath = "Android/data/igrek.todotree/todo.dat";
+    //TODO: wczytywanie początkowego folderu
+    public String dbFilePath = "Android/data/igrek.songbook/todo.dat";
 
     public Preferences(Activity activity){
         super(activity);
     }
 
     public void preferencesSave() {
+
+        //TODO utworzenie folderu jeśli nie istnieje
+
         setString("dbFilePath", dbFilePath);
     }
 

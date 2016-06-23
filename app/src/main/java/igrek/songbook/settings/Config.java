@@ -7,7 +7,6 @@ public class Config {
     //  OUTPUT
     public static class Output {
         public static final String logTag = "ylog";
-        public static final int echo_showtime = 1800; //[ms]
         public static final boolean show_exceptions_trace = true;
     }
     //  SCREEN
@@ -18,16 +17,5 @@ public class Config {
         public static final boolean keep_screen_on = true;
     }
     //  USTAWIENIA UŻYTKOWNIKA
-    public static final String shared_preferences_name = "ToDoTreeUserPreferences";
-    //  BACKUP
-    public static final String backup_file_prefix = "backup_";
-    public static final int backup_num = 10;
-    //Zestaw ustawień: 0 - samsung galaxy grand prime (DEFAULT), 1 - emulator Android
-    public static final int config_set = 0;
-    //nadpisanie parametrów dla innego zestawu
-    public Config() {
-        if (config_set == 1) {
-
-        }
-    }
+    public static final String shared_preferences_name = "SongBookUserPreferences";
 }

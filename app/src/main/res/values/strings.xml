@@ -2,24 +2,7 @@
     <string name="app_name">SongBook</string>
 
     <string name="action_minimize">Minimalizuj</string>
-    <string name="action_exit_without_saving">Wyjdź bez zapisywania</string>
-    <string name="action_save_exit">Zapisz i wyjdź</string>
-    <string name="action_reload">Wczytaj ponownie</string>
-    <string name="action_save">Zapisz</string>
+    <string name="action_exit">Wyjście</string>
 
-    <string name="example_item">Example Item content long long long long ...</string>
-    <string name="list_txt">Lista:</string>
-    <string name="editButton">Edytuj</string>
-    <string name="button_save">Zapisz</string>
-    <string name="buttonEditCancel">Anuluj</string>
-
-    <string name="action_copy">Kopiuj</string>
-    <string name="action_cut">Wytnij</string>
-    <string name="action_paste">Wklej</string>
-    <string name="action_select_all">Zaznacz wszystko</string>
-    <string name="button_save_and_add">Zapisz i Dodaj</string>
-    <string name="buttonEditInsertTime">HH:mm</string>
-    <string name="buttonEditInsertDate">dd.MM.yy</string>
-    <string name="buttonEditInsertRange">-</string>
-    <string name="buttonEditInsertNumber">12,34</string>
+    <string name="example_item">Example Item filename long long long long ...</string>
 </resources>
