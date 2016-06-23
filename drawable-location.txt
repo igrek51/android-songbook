@@ -1,0 +1,2 @@
+/mnt/c/Android/sdk_linux/platforms/android-23/data/res/drawable-mdpi/
+/mnt/c/Android/sdk_linux/platforms/android-23/data/res/drawable-*/
