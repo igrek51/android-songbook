@@ -1,4 +1,4 @@
-package igrek.songbook.gui.fileslist;
+package igrek.songbook.graphics.gui.filelist;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,24 +10,24 @@ import android.widget.ListView;
 
 import java.util.List;
 
-import igrek.songbook.gui.GUIListener;
+import igrek.songbook.graphics.gui.GUIListener;
 import igrek.songbook.logic.filetree.FileItem;
 
-public class FilesListView extends ListView implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class FileListView extends ListView implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private List<FileItem> items;
-    private FilesItemAdapter adapter;
+    private FileItemAdapter adapter;
     private GUIListener guiListener;
 
-    public FilesListView(Context context) {
+    public FileListView(Context context) {
         super(context);
     }
 
-    public FilesListView(Context context, AttributeSet attrs, int defStyle) {
+    public FileListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
-    public FilesListView(Context context, AttributeSet attrs) {
+    public FileListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -36,7 +36,7 @@ public class FilesListView extends ListView implements AdapterView.OnItemClickLi
         setOnItemClickListener(this);
         setOnItemLongClickListener(this);
         setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        adapter = new FilesItemAdapter(context, null, guiListener, this);
+        adapter = new FileItemAdapter(context, null, guiListener, this);
         setAdapter(adapter);
     }
 

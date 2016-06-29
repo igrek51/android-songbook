@@ -1,8 +1,8 @@
 package igrek.songbook.logic.app;
 
 public enum AppState {
-    ITEMS_LIST(1),
-    EDIT_ITEM_CONTENT(2);
+    FILE_LIST(1),
+    FILE_CONTENT(2);
 
     int id;
 

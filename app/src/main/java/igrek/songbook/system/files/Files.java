@@ -13,6 +13,8 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
+import igrek.songbook.system.output.Output;
+
 public class Files {
     Activity activity;
     private String pathToExtSD;
@@ -22,9 +24,9 @@ public class Files {
         pathSDInit();
     }
 
-    private void pathSDInit(){
+    private void pathSDInit() {
         pathToExtSD = "/storage/extSdCard";
-        if(!exists(pathToExtSD)){
+        if (!exists(pathToExtSD)) {
             pathToExtSD = Environment.getExternalStorageDirectory().toString();
         }
     }
@@ -49,6 +51,24 @@ public class Files {
 
     public List<String> listDir(PathBuilder path) {
         return listDir(path.toString());
+    }
+
+    public List<File> listFiles(String path) {
+        List<File> files = new ArrayList<>();
+        File f = new File(path);
+        File file[] = f.listFiles();
+        if(file == null){
+            Output.error("file array null for path: " + path);
+            return files;
+        }
+        for (File aFile : file) {
+            files.add(aFile);
+        }
+        return files;
+    }
+
+    public List<File> listFiles(PathBuilder path) {
+        return listFiles(path.toString());
     }
 
     public byte[] openFile(String filename) throws IOException {
@@ -94,12 +114,12 @@ public class Files {
         return f.exists();
     }
 
-    public boolean delete(String path){
+    public boolean delete(String path) {
         File file = new File(path);
         return file.delete();
     }
 
-    public boolean delete(PathBuilder path){
+    public boolean delete(PathBuilder path) {
         return delete(path.toString());
     }
 
@@ -115,10 +135,10 @@ public class Files {
                 os.write(buffer, 0, length);
             }
         } finally {
-            if(is != null) {
+            if (is != null) {
                 is.close();
             }
-            if(os != null) {
+            if (os != null) {
                 os.close();
             }
         }

@@ -1,0 +1,258 @@
+package igrek.songbook.graphics.canvas;
+
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.Typeface;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewTreeObserver;
+
+import igrek.songbook.graphics.canvas.enums.Align;
+import igrek.songbook.graphics.canvas.enums.Font;
+import igrek.songbook.graphics.gui.GUIListener;
+
+public class BaseCanvasGraphics extends View {
+
+    protected int w;
+    protected int h;
+
+    private Paint paint;
+
+    private Canvas canvas = null;
+
+    protected GUIListener guiListener;
+
+    protected boolean init = false;
+
+
+    public BaseCanvasGraphics(Context context, GUIListener guiListener) {
+        super(context);
+        paint = new Paint();
+        this.guiListener = guiListener;
+
+        getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                w = getWidth();
+                h = getHeight();
+            }
+        });
+    }
+
+    public int getW() {
+        return w;
+    }
+
+    public int getH() {
+        return h;
+    }
+
+    public void initialized(){
+        init = true;
+    }
+
+    //metoda odrysowująca ekran do nadpisania
+    public void repaint() { }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        this.w = getWidth();
+        this.h = getHeight();
+        guiListener.onResized(w, h);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        this.canvas = canvas;
+        repaint();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        float touch_x = event.getX();
+        float touch_y = event.getY();
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                break;
+            case MotionEvent.ACTION_MOVE:
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
+        }
+        return true;
+    }
+
+    public static boolean isFlagSet(int tested, int flag) {
+        return (tested & flag) == flag;
+    }
+
+    //pomocnicze funkcje rysujące
+    private Rect textBounds = new Rect();
+
+    public void drawText(String text, float cx, float cy, int align) {
+        //domyślne wartości
+        if ((align & 0x0f) == 0) align |= Align.LEFT;
+        if ((align & 0xf0) == 0) align |= Align.TOP;
+        if (isFlagSet(align, Align.LEFT)) {
+            paint.setTextAlign(Paint.Align.LEFT);
+        } else if (isFlagSet(align, Align.HCENTER)) {
+            paint.setTextAlign(Paint.Align.CENTER);
+        } else { //right
+            paint.setTextAlign(Paint.Align.RIGHT);
+        }
+        paint.getTextBounds(text, 0, text.length(), textBounds);
+        float y_pos = cy - (paint.descent() + paint.ascent()) / 2;
+        if (isFlagSet(align, Align.TOP)) {
+            y_pos += textBounds.height() / 2;
+        } else if (isFlagSet(align, Align.BOTTOM)) {
+            y_pos -= textBounds.height() / 2;
+        }
+        canvas.drawText(text, cx, y_pos, paint);
+    }
+
+    public void drawText(String text, float cx, float cy) {
+        drawText(text, cx, cy, 0);
+    }
+
+    public void drawTextMultiline(String text, float cx, float cy, float lineheight, int align) {
+        //wyznaczenie ilości linii
+        int lines = 1;
+        for (int i = 0; i < text.length(); i++) {
+            if (text.charAt(i) == '\n') lines++;
+        }
+        //domyślne wartości
+        if ((align & 0x0f) == 0) align |= Align.LEFT;
+        if ((align & 0xf0) == 0) align |= Align.TOP;
+        //przesunięcie w osi y
+        float offset_y;
+        if (isFlagSet(align, Align.TOP)) {
+            offset_y = cy;
+        } else if (isFlagSet(align, Align.VCENTER)) {
+            offset_y = cy - (lines - 1) * lineheight / 2;
+        } else { //bottom
+            offset_y = cy - (lines - 1) * lineheight;
+        }
+        //dla każdego wiersza
+        for (int i = 0; i < lines; i++) {
+            //szukanie \n
+            int indexn = text.indexOf("\n");
+            if (indexn == -1) indexn = text.length(); //nie było już \n
+            //wycięcie wiersza
+            String row_text = text.substring(0, indexn);
+            if (indexn < text.length()) {
+                text = text.substring(indexn + 1); //usunięcie wyciętego wiersza i \n
+            }
+            //narysowanie 1 wiersza
+            drawText(row_text, cx, offset_y, align);
+            offset_y += lineheight;
+        }
+    }
+
+    public void drawTextMultiline(String text, float cx, float cy, float lineheight) {
+        drawTextMultiline(text, cx, cy, lineheight, 0);
+    }
+
+    public int getTextWidth(String text) {
+        paint.getTextBounds(text, 0, text.length(), textBounds);
+        return textBounds.width();
+    }
+
+    public void setFontSize(int textsize) {
+        paint.setTextSize(textsize);
+    }
+
+    public void setFont(int fontface) {
+        //domyślna rodzina
+        if ((fontface & 0x0f) == 0) fontface |= Font.FONT_DEFAULT;
+        //domyślny styl
+        if ((fontface & 0xf0) == 0) fontface |= Font.FONT_NORMAL;
+        Typeface family;
+        if (isFlagSet(fontface, Font.FONT_MONOSPACE)) {
+            family = Typeface.MONOSPACE;
+        } else {
+            family = Typeface.DEFAULT;
+        }
+        int style;
+        if (isFlagSet(fontface, Font.FONT_BOLD)) {
+            style = Typeface.BOLD;
+        } else {
+            style = Typeface.NORMAL;
+        }
+        paint.setTypeface(Typeface.create(family, style));
+    }
+
+    public void setFont() {
+        setFont(Font.FONT_DEFAULT | Font.FONT_NORMAL); //reset czcionki na zwykłą
+    }
+
+    public void setColor(String color) {
+        if (color.length() > 0 && color.charAt(0) != '#') {
+            color = "#" + color;
+        }
+        paint.setColor(Color.parseColor(color));
+    }
+
+    public void setColor(int color) {
+        //jeśli kanał alpha jest zerowy (nie ustawiony) - ustaw na max
+        if ((color & 0xff000000) == 0) color |= 0xff000000;
+        paint.setColor(color);
+    }
+
+    public void setColor(int rgb, int alpha) {
+        paint.setColor(rgb | (alpha << 24));
+    }
+
+    public void clearScreen() {
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawPaint(paint);
+    }
+
+    public void clearScreen(String color) {
+        setColor(color);
+        clearScreen();
+    }
+
+    public void drawLine(float startx, float starty, float stopx, float stopy) {
+        canvas.drawLine(startx, starty, stopx, stopy, paint);
+    }
+
+    public void fillCircle(float cx, float cy, float radius) {
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawCircle(cx, cy, radius, paint);
+    }
+
+    public void outlineCircle(float cx, float cy, float radius, float thickness) {
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(thickness);
+        canvas.drawCircle(cx, cy, radius, paint);
+        paint.setStrokeWidth(0);
+    }
+
+    public void fillRect(float left, float top, float right, float bottom) {
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawRect(left, top, right, bottom, paint);
+    }
+
+    public void fillRoundRect(float left, float top, float right, float bottom, float radius) {
+        paint.setStyle(Paint.Style.FILL);
+        RectF rectf = new RectF(left, top, right, bottom);
+        canvas.drawRoundRect(rectf, radius, radius, paint);
+    }
+
+    public void fillRoundRectWH(float left, float top, float width, float height, float radius) {
+        fillRoundRect(left, top, left + width, top + height, radius);
+    }
+
+    public void outlineRect(float left, float top, float right, float bottom, float thickness) {
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(thickness);
+        canvas.drawRect(left, top, right, bottom, paint);
+        paint.setStrokeWidth(0);
+    }
+}

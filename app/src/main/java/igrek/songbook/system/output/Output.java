@@ -26,6 +26,8 @@ public class Output {
         errors = 0;
     }
 
+    //TODO: publiczne poziomy logów: debug, info, warn, error
+
     //  LOG
     public static void log(String l) {
         Log.i(Config.Output.logTag, errorPrefix() + l);

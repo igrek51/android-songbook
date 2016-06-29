@@ -4,9 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 
 import igrek.songbook.R;
-import igrek.songbook.gui.GUI;
-import igrek.songbook.gui.GUIListener;
-import igrek.songbook.logic.exceptions.NoSuperItemException;
+import igrek.songbook.graphics.gui.GUI;
+import igrek.songbook.graphics.gui.GUIListener;
+import igrek.songbook.logic.exceptions.NoParentDirException;
 import igrek.songbook.logic.filetree.FileItem;
 import igrek.songbook.logic.filetree.FileTreeManager;
 import igrek.songbook.system.output.Output;
@@ -24,14 +24,14 @@ public class App extends BaseApp implements GUIListener {
         super(activity);
         
         preferences.preferencesLoad();
-        
-        fileTreeManager = new FileTreeManager();
-        //TODO załadowanie zawartości folderu
+
+        //TODO załadowanie folderu z preferencji na start
+        fileTreeManager = new FileTreeManager(files, preferences.getString("startPath", "/"));
         
         gui = new GUI(activity, this);
         gui.setTouchController(this);
-        gui.showFilesList(fileTreeManager.getCurrentItem());
-        state = AppState.ITEMS_LIST;
+        gui.showFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
+        state = AppState.FILE_LIST;
         
         Output.log("Aplikacja uruchomiona.");
     }
@@ -62,7 +62,7 @@ public class App extends BaseApp implements GUIListener {
     
     
     public void showInfo(String info) {
-        showInfo(info, gui.getMainContent());
+        showInfo(info, gui.getMainView());
     }
     
     
@@ -75,31 +75,39 @@ public class App extends BaseApp implements GUIListener {
     }
     
     public void goUp() {
-        //TODO folder w góre
-        //        try {
-        //            FileItem current = fileTreeManager.getCurrentItem();
-        //            FileItem parent = current.getParent();
-        //            fileTreeManager.goUp();
-        //            updateItemsList();
-        //            if (parent != null) {
-        //                int childIndex = parent.getChildIndex(current);
-        //                if (childIndex != -1) {
-        //                    gui.scrollToItem(childIndex);
-        //                }
-        //            }
-        //        } catch (NoSuperItemException e) {
-        //            quit();
-        //        }
+        try {
+            fileTreeManager.goUp();
+            updateFileList();
+            //TODO: scrollowanie do ostatnio otwartej pozycji
+            //            if (parent != null) {
+            //                int childIndex = parent.getChildIndex(current);
+            //                if (childIndex != -1) {
+            //                    gui.scrollToItem(childIndex);
+            //                }
+            //            }
+        } catch (NoParentDirException e) {
+            quit();
+        }
     }
     
     private void backClicked() {
-        goUp();
+        if (state == AppState.FILE_LIST) {
+            goUp();
+        } else if (state == AppState.FILE_CONTENT) {
+            state = AppState.FILE_LIST;
+            gui.showFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
+        }
     }
     
-    private void updateItemsList() {
-        //TODO: 
-//        gui.updateItemsList(fileTreeManager.getCurrentItem(), fileTreeManager.getSelectedItems());
-        state = AppState.ITEMS_LIST;
+    private void updateFileList() {
+        gui.updateFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
+        state = AppState.FILE_LIST;
+    }
+
+    private void showFileContent(String filename) {
+        state = AppState.FILE_CONTENT;
+        String filePath = fileTreeManager.getCurrentFilePath(filename);
+        gui.showFileContent(filename, fileTreeManager.getFileContent(filePath));
     }
     
     
@@ -110,11 +118,16 @@ public class App extends BaseApp implements GUIListener {
     
     @Override
     public void onItemClicked(int position, FileItem item) {
-        //TODO: wejście do folderu lub otworzenie pliku
-//        if (item.isEmpty()) {
-//            onItemEditClicked(position, item);
-//        } else {
-//            onItemGoIntoClicked(position, item);
-//        }
+        if (item.isDirectory()) {
+            fileTreeManager.goInto(item.getName());
+            updateFileList();
+        } else {
+            showFileContent(item.getName());
+        }
+    }
+
+    @Override
+    public void onResized(int w, int h) {
+        Output.log("Rozmiar grafiki 2D zmieniony: " + w + " x " + h);
     }
 }

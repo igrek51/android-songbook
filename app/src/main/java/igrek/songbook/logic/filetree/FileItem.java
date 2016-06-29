@@ -3,56 +3,40 @@ package igrek.songbook.logic.filetree;
 public class FileItem {
 
     private String filename = "";
-    private boolean folder = false;
-    private FileItem parent = null;
+    private boolean directory = false;
 
-    public FileItem(FileItem parent, String filename, boolean isFolder) {
-        this.parent = parent;
+    public FileItem(String filename, boolean directory) {
         this.filename = filename;
-        this.folder = isFolder;
+        this.directory = directory;
     }
 
-    public static FileItem file(FileItem parent, String filename){
-        return new FileItem(parent, filename, false);
+    public static FileItem file(String filename) {
+        return new FileItem(filename, false);
     }
 
-    public static FileItem folder(FileItem parent, String filename){
-        return new FileItem(parent, filename, true);
+    public static FileItem directory(String filename) {
+        return new FileItem(filename, true);
     }
 
 
-    public String getFilename() {
+    public String getName() {
         return filename;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
+    public boolean isDirectory() {
+        return directory;
     }
 
-    public FileItem getParent() {
-        return parent;
-    }
-
-    public void setParent(FileItem parent) {
-        this.parent = parent;
-    }
-
-    public boolean isFolder() {
-        //TODO
-        return false;
-    }
-
-    public String getPath(){
-        //TODO rekurencyjnie od rodzica
-        return "/";
+    public boolean isRegularFile() {
+        return !directory;
     }
 
     @Override
     public String toString() {
-        if (!isFolder()) {
-            return filename;
+        if (isDirectory()) {
+            return "[" + filename + "]";
         } else {
-            return " [" + filename + "]";
+            return filename;
         }
     }
 }

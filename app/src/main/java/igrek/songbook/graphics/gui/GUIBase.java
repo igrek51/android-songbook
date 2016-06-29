@@ -1,13 +1,11 @@
-package igrek.songbook.gui;
+package igrek.songbook.graphics.gui;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.RelativeLayout;
 
 import igrek.songbook.logic.touchcontroller.ITouchController;
 
@@ -18,8 +16,6 @@ public class GUIBase implements View.OnTouchListener {
     protected ITouchController touchController = null;
 
     protected InputMethodManager imm;
-
-    protected RelativeLayout mainContent;
 
     public GUIBase(AppCompatActivity activity, GUIListener guiListener) {
         this.activity = activity;
@@ -38,19 +34,6 @@ public class GUIBase implements View.OnTouchListener {
 
     protected void init() {
 
-    }
-
-    public RelativeLayout getMainContent() {
-        return mainContent;
-    }
-
-    public View setMainContentLayout(int layoutResource) {
-        mainContent.removeAllViews();
-        LayoutInflater inflater = activity.getLayoutInflater();
-        View layout = inflater.inflate(layoutResource, null);
-        layout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        mainContent.addView(layout);
-        return layout;
     }
 
 
@@ -83,4 +66,12 @@ public class GUIBase implements View.OnTouchListener {
         return false;
     }
 
+    protected void setFullscreen(boolean full) {
+        int fullscreen_flag = WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
+        if (full) {
+            activity.getWindow().setFlags(fullscreen_flag, fullscreen_flag);
+        } else {
+            activity.getWindow().clearFlags(fullscreen_flag);
+        }
+    }
 }

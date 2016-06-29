@@ -1,4 +1,4 @@
-package igrek.songbook.gui.fileslist;
+package igrek.songbook.graphics.gui.filelist;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import igrek.songbook.R;
-import igrek.songbook.gui.GUIListener;
+import igrek.songbook.graphics.gui.GUIListener;
 import igrek.songbook.logic.filetree.FileItem;
 
-public class FilesItemAdapter extends ArrayAdapter<FileItem> {
+public class FileItemAdapter extends ArrayAdapter<FileItem> {
 
     Context context;
     List<FileItem> dataSource;
@@ -24,7 +24,7 @@ public class FilesItemAdapter extends ArrayAdapter<FileItem> {
     View convertView = null;
     ViewGroup parent = null;
 
-    public FilesItemAdapter(Context context, List<FileItem> dataSource, GUIListener guiListener, FilesListView listView) {
+    public FileItemAdapter(Context context, List<FileItem> dataSource, GUIListener guiListener, FileListView listView) {
         super(context, 0, new ArrayList<FileItem>());
         this.context = context;
         if (dataSource == null) dataSource = new ArrayList<>();
@@ -66,12 +66,12 @@ public class FilesItemAdapter extends ArrayAdapter<FileItem> {
 
         //zawartość tekstowa elementu
         TextView textView = (TextView) itemView.findViewById(R.id.tvItemContent);
-        if (item.isFolder()) {
+        if (item.isDirectory()) {
             textView.setTypeface(null, Typeface.BOLD);
         } else {
             textView.setTypeface(null, Typeface.NORMAL);
         }
-        textView.setText(item.getFilename());
+        textView.setText(item.getName());
 
         return itemView;
     }

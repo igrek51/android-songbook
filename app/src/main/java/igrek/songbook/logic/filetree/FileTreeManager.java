@@ -1,45 +1,139 @@
 package igrek.songbook.logic.filetree;
 
-import igrek.songbook.logic.exceptions.NoSuperItemException;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import igrek.songbook.logic.exceptions.NoParentDirException;
+import igrek.songbook.system.files.Files;
+import igrek.songbook.system.output.Output;
 
 public class FileTreeManager {
-    private FileItem rootItem;
-    private FileItem currentItem;
 
-    public FileTreeManager() {
-        rootItem = FileItem.folder(null, "/");
-        currentItem = rootItem;
+    private Files files;
+
+    private String currentPath;
+    private String currentFileName = null;
+
+    private List<FileItem> items;
+
+    public FileTreeManager(Files files, String startPath) {
+        this.files = files;
+        if(files.isDirectory(startPath)) {
+            currentPath = startPath;
+        }else{
+            Output.error("Brak początkowego folderu: " + startPath);
+            currentPath = "/";
+        }
+        updateCurrentPath();
     }
 
-    public FileItem getCurrentItem() {
-        return currentItem;
+    public FileTreeManager(Files files) {
+        this(files, "/");
+    }
+
+    private static String trimEndSlash(String str) {
+        while (!str.isEmpty() && str.endsWith("/")) {
+            str = str.substring(0, str.length() - 1);
+        }
+        return str;
+    }
+
+    public String getCurrentDirName() {
+        if (currentPath.equals("/")) return currentPath;
+        String path = trimEndSlash(currentPath);
+        int lastSlash = path.lastIndexOf("/");
+        if (lastSlash == -1) return null;
+        return path.substring(lastSlash + 1);
+    }
+
+    private String getParent() {
+        if (currentPath.equals("/")) return null;
+        String path = trimEndSlash(currentPath);
+        int lastSlash = path.lastIndexOf("/");
+        if (lastSlash == -1) return null;
+        path = path.substring(0, lastSlash);
+        if(path.isEmpty()) path = "/";
+        return path;
     }
 
     //  NAWIGACJA
 
-    public void goUp() throws NoSuperItemException {
-
-        //TODO nawigacja przez obcicnanie ostaniego elementu przed slashem
-
-        if (currentItem == rootItem) {
-            throw new NoSuperItemException();
-        } else if (currentItem.getParent() == null) {
-            throw new IllegalStateException("parent = null. To się nie powinno zdarzyć");
-        } else {
-            currentItem = currentItem.getParent();
+    public void goUp() throws NoParentDirException {
+        String parent = getParent();
+        if (parent == null) {
+            throw new NoParentDirException();
         }
+        updateCurrentPath(parent);
     }
 
-    public void goInto(int childIndex) {
-        //TODO nawigacja wgłąb przez dodanie slasha i nazwy pliku
-//        goTo(currentItem.getChild(childIndex));
+    public void goInto(String dir) {
+        String path = trimEndSlash(currentPath) + "/" + trimEndSlash(dir);
+        updateCurrentPath(path);
     }
 
-    public void goTo(FileItem child) {
-        currentItem = child;
+    public void goTo(String path) {
+        if(path.equals("/")){
+            updateCurrentPath(path);
+            return;
+        }
+        updateCurrentPath(trimEndSlash(path));
     }
 
     public void goToRoot() {
-        goTo(rootItem);
+        currentPath = "/";
+        updateCurrentPath();
+    }
+
+    private void updateCurrentPath(String currentPath) {
+        this.currentPath = currentPath;
+        updateCurrentPath();
+    }
+
+    private void updateCurrentPath() {
+        List<File> fileList = files.listFiles(currentPath);
+        items = new ArrayList<>();
+
+        for (File f : fileList) {
+            if (f.isDirectory()) {
+                items.add(FileItem.directory(f.getName()));
+            } else if (f.isFile()) {
+                items.add(FileItem.file(f.getName()));
+            }
+        }
+
+        Collections.sort(items, new Comparator<FileItem>() {
+            @Override
+            public int compare(FileItem lhs, FileItem rhs) {
+                if(lhs.isDirectory() && rhs.isRegularFile()){
+                    return -1;
+                }
+                if(lhs.isRegularFile() && rhs.isDirectory()){
+                    return +1;
+                }
+                return lhs.getName().compareTo(rhs.getName());
+            }
+        });
+    }
+
+    public List<FileItem> getItems() {
+        return items;
+    }
+
+    public String getCurrentFilePath(String filename){
+        currentFileName = filename;
+        return trimEndSlash(currentPath) + "/" + trimEndSlash(filename);
+    }
+
+    public String getFileContent(String filePath){
+        try {
+            return files.openFileString(filePath);
+        } catch (IOException e) {
+            Output.error(e);
+            return null;
+        }
     }
 }
