@@ -25,7 +25,6 @@ public class App extends BaseApp implements GUIListener {
         
         preferences.preferencesLoad();
 
-        //TODO załadowanie folderu z preferencji na start
         fileTreeManager = new FileTreeManager(files, preferences.getString("startPath", "/"));
         
         gui = new GUI(activity, this);
@@ -107,6 +106,7 @@ public class App extends BaseApp implements GUIListener {
     private void showFileContent(String filename) {
         state = AppState.FILE_CONTENT;
         String filePath = fileTreeManager.getCurrentFilePath(filename);
+        //TODO: automatyczne wykrywanie kodowania
         gui.showFileContent(filename, fileTreeManager.getFileContent(filePath));
     }
     

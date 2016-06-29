@@ -17,7 +17,11 @@ public class CanvasGraphics extends BaseCanvasGraphics {
     public String filename = null;
 
     private List<String> lines = null;
-    private int scroll = 0;
+
+    private float scroll = 0;
+    private float startScroll = 0;
+
+    private boolean bracket = false;
 
     public CanvasGraphics(Context context, GUIListener guiListener) {
         super(context, guiListener);
@@ -40,7 +44,8 @@ public class CanvasGraphics extends BaseCanvasGraphics {
     }
 
     @Override
-    public void repaint() {
+    public void onRepaint() {
+
         drawBackground();
 
         drawFileContent();
@@ -52,8 +57,9 @@ public class CanvasGraphics extends BaseCanvasGraphics {
         setColor(0xffffff);
 
         int index = 0;
+        bracket = false;
         for(String line : lines){
-            drawLine(line, index * Config.Fonts.lineheight - scroll);
+            drawLine(line, index, Config.Fonts.lineheight, scroll);
             index++;
         }
     }
@@ -63,10 +69,39 @@ public class CanvasGraphics extends BaseCanvasGraphics {
         clearScreen();
     }
 
-    private void drawLine(String line, float y){
-        drawText(line, 0, y + 1, Align.TOP_LEFT);
+    private void drawLine(String line, int index, float lineheight, float scroll){
+        float y = index * lineheight - scroll;
+        if(y > h) return;
+        if(y + lineheight < 0) return;
+        final float yOffset = lineheight;
+        float x = 0;
+        for(int i=0; i<line.length(); i++){
+
+            String s = line.substring(i, i+1);
+
+            if(s.equals("[")){
+                bracket = true;
+                setColor(0x404040);
+            }else if(s.equals("]")){
+                bracket = false;
+                setColor(0x404040);
+            }else {
+                if (bracket) {
+                    setColor(0xf00000);
+                } else {
+                    setColor(0xffffff);
+                }
+            }
+
+            drawTextUnaligned(s, x, y + yOffset);
+
+            x += getTextWidth(s);
+        }
     }
 
+    //TODO: przenieść do CRDParser
+    //TODO: uwzględnić usuwane znaki [] i różną szerokość pogrubionych znaków
+    //TODO: rozbić tekst na fragmenty o różnych czcionkach
     private List<String> splitLines(String fileContent){
         fileContent.replace("\r", "");
         List<String> lines3 = new ArrayList<>();
@@ -82,7 +117,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
         if(getTextWidth(line1) <= w){
             lines2.add(line1);
         }else{
-            int maxLength = getMaxStringLength(line1);
+            int maxLength = getMaxScreenStringLength(line1);
             String before = line1.substring(0, maxLength);
             lines2.add(before);
             String after = line1.substring(maxLength);
@@ -95,11 +130,24 @@ public class CanvasGraphics extends BaseCanvasGraphics {
      * @param str
      * @return maksymalna liczba znaków tekstu (od początku) mieszcząca się w całości na ekranie
      */
-    private int getMaxStringLength(String str){
+    private int getMaxScreenStringLength(String str){
         int l = str.length();
         while(getTextWidth(str.substring(0, l)) > w && l > 1){
             l--;
         }
         return l;
+    }
+
+    @Override
+    protected void onTouchDown(float touchX, float touchY) {
+        super.onTouchDown(touchX, touchY);
+        startScroll = scroll;
+    }
+
+    @Override
+    protected void onTouchMove(float touchX, float touchY) {
+        scroll = startScroll + startTouchY - touchY;
+        if(scroll < 0) scroll = 0;
+        repaint();
     }
 }

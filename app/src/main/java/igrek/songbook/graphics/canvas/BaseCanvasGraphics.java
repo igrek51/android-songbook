@@ -22,16 +22,23 @@ public class BaseCanvasGraphics extends View {
 
     private Paint paint;
 
-    private Canvas canvas = null;
+    protected Canvas canvas = null;
 
     protected GUIListener guiListener;
 
     protected boolean initialized = false;
 
+    protected float startTouchX = 0;
+    protected float startTouchY = 0;
+
+    protected boolean repaintRequested = false;
 
     public BaseCanvasGraphics(Context context, GUIListener guiListener) {
         super(context);
         paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setFilterBitmap(true);
+//        paint.setDither(true);
         this.guiListener = guiListener;
 
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -52,7 +59,7 @@ public class BaseCanvasGraphics extends View {
     }
 
     //odrysowanie ekranu do nadpisania
-    public void repaint() { }
+    public void onRepaint() { }
 
     public void init() { }
 
@@ -76,23 +83,39 @@ public class BaseCanvasGraphics extends View {
             init();
             initialized = true;
         }
-        repaint();
+        onRepaint();
+    }
+
+    public synchronized void repaint(){
+        invalidate();
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        float touch_x = event.getX();
-        float touch_y = event.getY();
+        float touchX = event.getX();
+        float touchY = event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                onTouchDown(touchX, touchY);
                 break;
             case MotionEvent.ACTION_MOVE:
+                onTouchMove(touchX, touchY);
                 break;
             case MotionEvent.ACTION_UP:
+                onTouchUp(touchX, touchY);
                 break;
         }
         return true;
     }
+
+    protected void onTouchDown(float touchX, float touchY){
+        startTouchX = touchX;
+        startTouchY = touchY;
+    }
+
+    protected void onTouchMove(float touchX, float touchY){ }
+
+    protected void onTouchUp(float touchX, float touchY){ }
 
     public static boolean isFlagSet(int tested, int flag) {
         return (tested & flag) == flag;
@@ -100,6 +123,16 @@ public class BaseCanvasGraphics extends View {
 
     //pomocnicze funkcje rysujące
     private Rect textBounds = new Rect();
+
+    public void drawTextUnaligned(String s, float x, float y){
+        canvas.drawText(s, x, y, paint);
+    }
+
+    public float[] getTextWidths(String s){
+        float[] f = new float[s.length()];
+        paint.getTextWidths(s, f);
+        return f;
+    }
 
     public void drawText(String text, float cx, float cy, int align) {
         //domyślne wartości
@@ -164,9 +197,13 @@ public class BaseCanvasGraphics extends View {
         drawTextMultiline(text, cx, cy, lineheight, 0);
     }
 
-    public int getTextWidth(String text) {
-        paint.getTextBounds(text, 0, text.length(), textBounds);
-        return textBounds.width();
+    public float getTextWidth(String text) {
+        float[] widths = getTextWidths(text);
+        float sum = 0;
+        for(float w : widths){
+            sum += w;
+        }
+        return sum;
     }
 
     public void setFontSize(int textsize) {
