@@ -20,7 +20,7 @@ public class BaseCanvasGraphics extends View {
     protected int w;
     protected int h;
 
-    private Paint paint;
+    protected Paint paint;
 
     protected Canvas canvas = null;
 

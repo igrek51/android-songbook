@@ -1,5 +1,7 @@
 package igrek.songbook.graphics.gui;
 
+import android.graphics.Paint;
+
 import igrek.songbook.logic.filetree.FileItem;
 
 public interface GUIListener {
@@ -8,4 +10,6 @@ public interface GUIListener {
     void onItemClicked(int position, FileItem item);
 
     void onResized(int w, int h);
+
+    void onGraphicsInitialized(int w, int h, Paint paint);
 }

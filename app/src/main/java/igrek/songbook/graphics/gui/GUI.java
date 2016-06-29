@@ -11,6 +11,7 @@ import java.util.List;
 import igrek.songbook.R;
 import igrek.songbook.graphics.canvas.CanvasGraphics;
 import igrek.songbook.graphics.gui.filelist.FileListView;
+import igrek.songbook.logic.crd.CRDModel;
 import igrek.songbook.logic.filetree.FileItem;
 import igrek.songbook.settings.Config;
 
@@ -60,14 +61,13 @@ public class GUI extends GUIBase {
         updateFileList(currentDir, items);
     }
 
-    public void showFileContent(String filename, String fileContent) {
+    public void showFileContent(String filename) {
 
         setFullscreen(true);
 
         canvas = new CanvasGraphics(activity, guiListener);
 
         canvas.setFilename(filename);
-        canvas.setFileContent(fileContent);
 
         activity.setContentView(canvas);
     }
@@ -88,5 +88,9 @@ public class GUI extends GUIBase {
 
     public View getMainView() {
         return mainView;
+    }
+
+    public void setCRDModel(CRDModel model){
+        canvas.setCRDModel(model);
     }
 }

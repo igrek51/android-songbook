@@ -114,7 +114,7 @@ public class FileTreeManager {
                 if(lhs.isRegularFile() && rhs.isDirectory()){
                     return +1;
                 }
-                return lhs.getName().compareTo(rhs.getName());
+                return lhs.getName().toLowerCase().compareTo(rhs.getName().toLowerCase());
             }
         });
     }
@@ -124,7 +124,6 @@ public class FileTreeManager {
     }
 
     public String getCurrentFilePath(String filename){
-        currentFileName = filename;
         return trimEndSlash(currentPath) + "/" + trimEndSlash(filename);
     }
 
@@ -135,5 +134,13 @@ public class FileTreeManager {
             Output.error(e);
             return null;
         }
+    }
+
+    public void setCurrentFileName(String currentFileName) {
+        this.currentFileName = currentFileName;
+    }
+
+    public String getCurrentFileName() {
+        return currentFileName;
     }
 }
