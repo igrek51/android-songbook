@@ -34,22 +34,15 @@ public class CanvasGraphics extends BaseCanvasGraphics {
     }
 
     @Override
-    public void initialized(){
-        super.initialized();
+    public void init(){
+        setFontSize(Config.Fonts.fontsize);
+        lines = splitLines(fileContent);
     }
 
     @Override
     public void repaint() {
         drawBackground();
-        if (!init) return;
-        if(w == 0 && h == 0){
-            w = getWidth();
-            h = getHeight();
-        }
-        if(lines == null) {
-            setFontSize(Config.Fonts.fontsize);
-            lines = splitLines(fileContent);
-        }
+
         drawFileContent();
     }
 

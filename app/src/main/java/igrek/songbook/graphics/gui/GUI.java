@@ -70,8 +70,6 @@ public class GUI extends GUIBase {
         canvas.setFileContent(fileContent);
 
         activity.setContentView(canvas);
-
-        canvas.initialized();
     }
 
     public void updateFileList(String currentDir, List<FileItem> items) {

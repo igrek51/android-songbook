@@ -26,7 +26,7 @@ public class BaseCanvasGraphics extends View {
 
     protected GUIListener guiListener;
 
-    protected boolean init = false;
+    protected boolean initialized = false;
 
 
     public BaseCanvasGraphics(Context context, GUIListener guiListener) {
@@ -51,12 +51,10 @@ public class BaseCanvasGraphics extends View {
         return h;
     }
 
-    public void initialized(){
-        init = true;
-    }
-
-    //metoda odrysowująca ekran do nadpisania
+    //odrysowanie ekranu do nadpisania
     public void repaint() { }
+
+    public void init() { }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -70,6 +68,14 @@ public class BaseCanvasGraphics extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         this.canvas = canvas;
+        if(w == 0 && h == 0){
+            w = getWidth();
+            h = getHeight();
+        }
+        if(!initialized){
+            init();
+            initialized = true;
+        }
         repaint();
     }
 
