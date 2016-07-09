@@ -13,9 +13,11 @@ import igrek.songbook.logic.exceptions.NoParentDirException;
 import igrek.songbook.logic.filetree.FileItem;
 import igrek.songbook.logic.filetree.FileTreeManager;
 import igrek.songbook.settings.Config;
-import igrek.songbook.system.output.Output;
+import igrek.songbook.output.Output;
 
 //TODO: wypisać TODO
+
+//TODO: transpozycja akordów
 
 public class App extends BaseApp implements GUIListener {
     
@@ -110,8 +112,6 @@ public class App extends BaseApp implements GUIListener {
     private void showFileContent(String filename) {
         state = AppState.FILE_CONTENT;
         fileTreeManager.setCurrentFileName(filename);
-        String filePath = fileTreeManager.getCurrentFilePath(filename);
-        //TODO: automatyczne wykrywanie kodowania
         gui.showFileContent(filename);
     }
     
@@ -141,7 +141,6 @@ public class App extends BaseApp implements GUIListener {
         CRDParser crdParser = new CRDParser();
 
         String filePath = fileTreeManager.getCurrentFilePath(fileTreeManager.getCurrentFileName());
-        //TODO: automatyczne wykrywanie kodowania
         CRDModel crdModel = crdParser.parseFileContent(fileTreeManager.getFileContent(filePath), w, Config.Fonts.lineheight, paint);
         gui.setCRDModel(crdModel);
     }

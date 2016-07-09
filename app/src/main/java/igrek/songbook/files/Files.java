@@ -1,4 +1,4 @@
-package igrek.songbook.system.files;
+package igrek.songbook.files;
 
 import android.app.Activity;
 import android.os.Environment;
@@ -13,7 +13,7 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
-import igrek.songbook.system.output.Output;
+import igrek.songbook.output.Output;
 
 public class Files {
     Activity activity;
@@ -72,8 +72,7 @@ public class Files {
     }
 
     public byte[] openFile(String filename) throws IOException {
-        RandomAccessFile f = null;
-        f = new RandomAccessFile(new File(filename), "r");
+        RandomAccessFile f = new RandomAccessFile(new File(filename), "r");
         int length = (int) f.length();
         byte[] data = new byte[length];
         f.readFully(data);
@@ -83,7 +82,9 @@ public class Files {
 
     public String openFileString(String filename) throws IOException {
         byte[] bytes = openFile(filename);
-        return new String(bytes, "UTF-8");
+        CharsetDetector charsetDetector = new CharsetDetector();
+        String charsetName = charsetDetector.detect(bytes);
+        return new String(bytes, charsetName);
     }
 
     public void saveFile(String filename, byte[] data) throws IOException {

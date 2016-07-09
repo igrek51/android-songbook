@@ -22,6 +22,11 @@ public class CanvasGraphics extends BaseCanvasGraphics {
         super(context, guiListener);
     }
 
+    //TODO: obsługa gestów
+    //TODO: zmiana rozmiaru czcionki
+    //TODO: transpozycja gestami
+    //TODO: autoscroll + gesty
+
     public void setCRDModel(CRDModel crdModel) {
         this.crdModel = crdModel;
         repaint();

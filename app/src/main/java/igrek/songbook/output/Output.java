@@ -1,4 +1,4 @@
-package igrek.songbook.system.output;
+package igrek.songbook.output;
 
 import android.app.Activity;
 import android.app.AlertDialog;

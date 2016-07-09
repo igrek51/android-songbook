@@ -17,6 +17,7 @@ public class CRDParser {
         this.paint = paint;
 
         content = content.replace("\r", "");
+        content = content.replace("\t", " ");
         CRDModel model = new CRDModel();
         setBracket(false);
         String[] lines1 = content.split("\n");

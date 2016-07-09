@@ -8,7 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import igrek.songbook.logic.app.App;
-import igrek.songbook.system.output.Output;
+import igrek.songbook.output.Output;
 
 public class MainActivity extends AppCompatActivity {
 

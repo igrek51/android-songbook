@@ -2,7 +2,7 @@ package igrek.songbook.settings.preferences;
 
 import android.app.Activity;
 
-import igrek.songbook.system.output.Output;
+import igrek.songbook.output.Output;
 
 public class Preferences extends BasePreferences {
 
@@ -13,7 +13,6 @@ public class Preferences extends BasePreferences {
     }
 
     public void preferencesSave() {
-        //TODO utworzenie folderu jeśli nie istnieje
         setString("startPath", startPath);
     }
 

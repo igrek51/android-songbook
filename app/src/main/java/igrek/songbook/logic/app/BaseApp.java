@@ -13,8 +13,8 @@ import android.view.WindowManager;
 import igrek.songbook.logic.touchcontroller.ITouchController;
 import igrek.songbook.settings.Config;
 import igrek.songbook.settings.preferences.Preferences;
-import igrek.songbook.system.files.Files;
-import igrek.songbook.system.output.Output;
+import igrek.songbook.files.Files;
+import igrek.songbook.output.Output;
 
 public abstract class BaseApp implements ITouchController {
 
