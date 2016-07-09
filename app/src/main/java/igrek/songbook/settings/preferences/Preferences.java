@@ -19,9 +19,9 @@ public class Preferences extends BasePreferences {
     public void preferencesLoad() {
         if (exists("startPath")) {
             startPath = getString("startPath");
-            Output.log("Wczytano początkową ścieżkę: " + startPath);
+            Output.debug("Wczytano początkową ścieżkę: " + startPath);
         } else {
-            Output.log("Wczytano domyślną początkową ścieżkę: " + startPath);
+            Output.debug("Wczytano domyślną początkową ścieżkę: " + startPath);
         }
     }
 }

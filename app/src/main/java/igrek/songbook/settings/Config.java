@@ -4,6 +4,7 @@ import android.view.WindowManager;
 
 public class Config {
     //STAŁE
+    //TODO przenieść ustawienia do odpowiedzialnych klas
     //  OUTPUT
     public static class Output {
         public static final String logTag = "ylog";

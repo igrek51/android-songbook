@@ -12,72 +12,41 @@ import igrek.songbook.settings.Config;
 
 public class Output {
 
-    private static List<String> echos;
-    private static long lastEcho;
+    private static List<String> echoes;
     private static int errors = 0;
+
+    private static final LogLevel CONSOLE_LEVEL = LogLevel.DEBUG; //widoczne w konsoli
+    private static final LogLevel ECHO_LEVEL = LogLevel.OFF; //widoczne dla użytkownika
 
     public Output() {
         reset();
     }
 
     public static void reset() {
-        echos = new ArrayList<>();
-        lastEcho = 0;
+        echoes = new ArrayList<>();
         errors = 0;
     }
 
-    //TODO: publiczne poziomy logów: debug, info, warn, error
-
-    //  LOG
-    public static void log(String l) {
-        Log.i(Config.Output.logTag, errorPrefix() + l);
-    }
-
-    public static void logError(String l) {
-        Log.e(Config.Output.logTag, errorPrefix() + l);
-    }
-
-    public static void logvar(String l, int i) {
-        log(l + " = " + i);
-    }
-
-    public static void logvar(String l, float f) {
-        log(l + " = " + f);
-    }
-
-    //  ERRORS, EXCEPTIONS
-    public static void error(String e) {
+    public static void error(String message) {
         errors++;
-        logError("[ERROR] " + e);
+        log("[ERROR] " + message, LogLevel.ERROR);
     }
 
     public static void error(Throwable ex) {
         errors++;
-        logError("[EXCEPTION - " + ex.getClass().getName() + "] " + ex.getMessage());
-        if (Config.Output.show_exceptions_trace) {
-            printStackTrace(ex);
-        }
+        log("[EXCEPTION - " + ex.getClass().getName() + "] " + ex.getMessage(), LogLevel.ERROR);
+        printStackTrace(ex);
     }
 
     public static void errorUncaught(Throwable ex) {
         errors++;
-        logError("[UNCAUGHT EXCEPTION - " + ex.getClass().getName() + "] " + ex.getMessage());
-        if (Config.Output.show_exceptions_trace) {
-            printStackTrace(ex);
-        }
-    }
-
-    public static void printStackTrace(Throwable ex) {
-        logError(Log.getStackTraceString(ex));
-    }
-
-    public static void errorThrow(String e) throws Exception {
-        throw new Exception(e);
+        log("[UNCAUGHT EXCEPTION - " + ex.getClass().getName() + "] " + ex.getMessage(), LogLevel.ERROR);
+        printStackTrace(ex);
     }
 
     public static void errorCritical(final Activity activity, String e) {
         errors++;
-        logError("[CRITICAL ERROR] " + e);
+        log("[CRITICAL ERROR] " + e, LogLevel.ERROR);
         if (activity == null) {
             error("errorCritical: Brak activity");
             return;
@@ -96,55 +65,84 @@ public class Output {
 
     public static void errorCritical(final Activity activity, Throwable ex) {
         String e = ex.getClass().getName() + " - " + ex.getMessage();
-        if (Config.Output.show_exceptions_trace) {
-            printStackTrace(ex);
-        }
+        printStackTrace(ex);
         errorCritical(activity, e);
+    }
+
+    public static void warn(String message) {
+        log("[warn] " + message, LogLevel.WARN);
+    }
+
+    public static void info(String message) {
+        log(message, LogLevel.INFO);
+    }
+
+    public static void debug(String message) {
+        log("[debug] " + message, LogLevel.DEBUG);
+    }
+
+
+    private static void log(String message, LogLevel level) {
+        if (level.getLevelNumber() <= CONSOLE_LEVEL.getLevelNumber()) {
+            if (level.equals(LogLevel.ERROR)) {
+                Log.e(Config.Output.logTag, errorPrefix() + message);
+            } else {
+                Log.i(Config.Output.logTag, errorPrefix() + message);
+            }
+        }
+        if (level.getLevelNumber() <= ECHO_LEVEL.getLevelNumber()) {
+            echoes.add(message);
+        }
+    }
+
+    private static void printStackTrace(Throwable ex) {
+        if (Config.Output.show_exceptions_trace) {
+            Log.e(Config.Output.logTag, Log.getStackTraceString(ex));
+        }
     }
 
     private static String errorPrefix() {
         return (errors > 0) ? ("[E:" + errors + "] ") : "";
     }
 
-    //  INFO, ECHO - widoczne dla użytkownika
+    //  ECHOES - widoczne dla użytkownika
 
-    public static void info(String i) {
-        echo(i);
-        log("[info] " + i);
+    public static List<String> getEchoes() {
+        return echoes;
     }
 
-    private static void echo(String e) {
-        echos.add(e);
-        lastEcho = System.currentTimeMillis();
-    }
-
-    public static void echoClear1Line() {
-        if (!echos.isEmpty()) {
-            echos.remove(0);
+    /**
+     * zdejmuje ostatni komunikat (zgodnie z FIFO) i zwraca go
+     */
+    public static String echoPopLine() {
+        if (echoes.isEmpty()) {
+            return null;
+        }else{
+            String line = echoes.get(0);
+            echoes.remove(0);
+            return line;
         }
     }
 
-    public static void echoWait(int waitms) {
-        lastEcho = System.currentTimeMillis() + waitms;
-    }
-
-    public static List<String> getEchos() {
-        return echos;
-    }
-
-    public static String getEchosMultiline() {
+    /**
+     * @return komunikaty złączone znakami \n (od najstarszego)
+     */
+    public static String getEchoesMultiline() {
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < echos.size(); i++) {
-            builder.append(echos.get(i));
-            if (i < echos.size() - 1) builder.append('\n');
+        for (int i = 0; i < echoes.size(); i++) {
+            builder.append(echoes.get(i));
+            if (i < echoes.size() - 1) builder.append('\n');
         }
         return builder.toString();
     }
 
-    public static String getEchosMultilineReversed() {
+    /**
+     * @return komunikaty złączone znakami \n w odwrotnej kolejności (od najnowszego)
+     */
+    public static String getEchoesMultilineReversed() {
         StringBuilder builder = new StringBuilder();
-        for (int i = echos.size() - 1; i >= 0; i--) {
-            builder.append(echos.get(i));
+        for (int i = echoes.size() - 1; i >= 0; i--) {
+            builder.append(echoes.get(i));
             if (i > 0) builder.append('\n');
         }
         return builder.toString();

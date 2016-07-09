@@ -18,13 +18,13 @@ public class CharsetDetector {
 
         //jeśli plik zawiera znaki specjalne z UTF8
         if (containsBytes(bytes, utf8PLPrefixBytes)) {
-            Output.log("Wykryte kodowanie: " + CHARSET_UTF8);
+            Output.debug("Wykryte kodowanie: " + CHARSET_UTF8);
             return CHARSET_UTF8;
         }
 
         //jeśli plik zawiera polskie litery z CP1250
         if (containsBytes(bytes, cp1250PLBytes)) {
-            Output.log("Wykryte kodowanie: " + CHARSET_CP1250);
+            Output.debug("Wykryte kodowanie: " + CHARSET_CP1250);
             return CHARSET_CP1250;
         }
 

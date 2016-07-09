@@ -15,9 +15,9 @@ import igrek.songbook.logic.filetree.FileTreeManager;
 import igrek.songbook.settings.Config;
 import igrek.songbook.output.Output;
 
-//TODO: wypisać TODO
-
 //TODO: transpozycja akordów
+//TODO: autoscroll
+//TODO: zmiana rozmiaru czcionki
 
 public class App extends BaseApp implements GUIListener {
     
@@ -38,7 +38,7 @@ public class App extends BaseApp implements GUIListener {
         gui.showFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
         state = AppState.FILE_LIST;
         
-        Output.log("Aplikacja uruchomiona.");
+        Output.debug("Aplikacja uruchomiona.");
     }
     
     @Override
@@ -83,7 +83,7 @@ public class App extends BaseApp implements GUIListener {
         try {
             fileTreeManager.goUp();
             updateFileList();
-            //TODO: scrollowanie do ostatnio otwartej pozycji
+            //TODO: scrollowanie do ostatnio otwartego folderu
             //            if (parent != null) {
             //                int childIndex = parent.getChildIndex(current);
             //                if (childIndex != -1) {
@@ -133,7 +133,7 @@ public class App extends BaseApp implements GUIListener {
 
     @Override
     public void onResized(int w, int h) {
-        Output.log("Rozmiar grafiki 2D zmieniony: " + w + " x " + h);
+        Output.debug("Rozmiar grafiki 2D zmieniony: " + w + " x " + h);
     }
 
     @Override

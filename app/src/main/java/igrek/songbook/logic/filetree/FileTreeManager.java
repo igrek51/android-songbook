@@ -25,7 +25,7 @@ public class FileTreeManager {
         if(files.isDirectory(startPath)) {
             currentPath = startPath;
         }else{
-            Output.error("Brak początkowego folderu: " + startPath);
+            Output.warn("Brak początkowego folderu: " + startPath);
             currentPath = "/";
         }
         updateCurrentPath();

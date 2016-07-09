@@ -1,6 +1,7 @@
 package igrek.songbook.logic.touchcontroller;
 
 public interface ITouchController {
+
     boolean onTouchDown(float x, float y);
 
     boolean onTouchMove(float x, float y);

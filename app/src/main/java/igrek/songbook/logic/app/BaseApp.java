@@ -62,7 +62,7 @@ public abstract class BaseApp implements ITouchController {
 
         //        activity.setContentView(graphics);
 
-        Output.log("Inicjalizacja aplikacji...");
+        Output.debug("Inicjalizacja aplikacji...");
     }
 
     public void pause() {
@@ -75,10 +75,10 @@ public abstract class BaseApp implements ITouchController {
 
     public void quit() {
         if (!running) { //próba ponownego zamknięcia
-            Output.error("Zamykanie - próba ponownego zamknięcia");
+            Output.warn("Zamykanie - próba ponownego zamknięcia");
             return;
         }
-        Output.log("Zamykanie aplikacji...");
+        Output.debug("Zamykanie aplikacji...");
         running = false;
         activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         activity.finish();
@@ -104,11 +104,11 @@ public abstract class BaseApp implements ITouchController {
         int screenHeightDp = newConfig.screenHeightDp;
         int orientation = newConfig.orientation;
         int densityDpi = newConfig.densityDpi;
-        Output.log("Rozmiar ekranu zmieniony na: " + screenWidthDp + "dp x " + screenHeightDp + "dp (DPI = " + densityDpi + ")");
+        Output.debug("Rozmiar ekranu zmieniony na: " + screenWidthDp + "dp x " + screenHeightDp + "dp (DPI = " + densityDpi + ")");
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Output.log("Zmiana orientacji ekranu: landscape");
+            Output.debug("Zmiana orientacji ekranu: landscape");
         } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            Output.log("Zmiana orientacji ekranu: portrait");
+            Output.debug("Zmiana orientacji ekranu: portrait");
         }
     }
 

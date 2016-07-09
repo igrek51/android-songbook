@@ -58,7 +58,7 @@ public class Files {
         File f = new File(path);
         File file[] = f.listFiles();
         if(file == null){
-            Output.error("file array null for path: " + path);
+            Output.warn("file array null for path: " + path);
             return files;
         }
         for (File aFile : file) {
