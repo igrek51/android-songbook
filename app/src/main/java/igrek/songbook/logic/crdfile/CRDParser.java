@@ -1,4 +1,4 @@
-package igrek.songbook.logic.crd;
+package igrek.songbook.logic.crdfile;
 
 import android.graphics.Paint;
 import android.graphics.Typeface;

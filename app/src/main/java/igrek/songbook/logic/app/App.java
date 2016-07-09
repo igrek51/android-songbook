@@ -7,8 +7,8 @@ import android.view.Menu;
 import igrek.songbook.R;
 import igrek.songbook.graphics.gui.GUI;
 import igrek.songbook.graphics.gui.GUIListener;
-import igrek.songbook.logic.crd.CRDModel;
-import igrek.songbook.logic.crd.CRDParser;
+import igrek.songbook.logic.crdfile.CRDModel;
+import igrek.songbook.logic.crdfile.CRDParser;
 import igrek.songbook.logic.exceptions.NoParentDirException;
 import igrek.songbook.logic.filetree.FileItem;
 import igrek.songbook.logic.filetree.FileTreeManager;
@@ -138,6 +138,7 @@ public class App extends BaseApp implements GUIListener {
 
     @Override
     public void onGraphicsInitialized(int w, int h, Paint paint) {
+        //wczytanie pliku i sparsowanie
         CRDParser crdParser = new CRDParser();
 
         String filePath = fileTreeManager.getCurrentFilePath(fileTreeManager.getCurrentFileName());

@@ -1,4 +1,4 @@
-package igrek.songbook.files;
+package igrek.songbook.filesystem;
 
 import igrek.songbook.output.Output;
 

@@ -4,16 +4,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.WindowManager;
 
 import java.util.List;
 
 import igrek.songbook.R;
 import igrek.songbook.graphics.canvas.CanvasGraphics;
 import igrek.songbook.graphics.gui.filelist.FileListView;
-import igrek.songbook.logic.crd.CRDModel;
+import igrek.songbook.logic.crdfile.CRDModel;
 import igrek.songbook.logic.filetree.FileItem;
-import igrek.songbook.settings.Config;
 
 public class GUI extends GUIBase {
 

@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import igrek.songbook.logic.exceptions.NoParentDirException;
-import igrek.songbook.files.Files;
+import igrek.songbook.filesystem.Files;
 import igrek.songbook.output.Output;
 
 public class FileTreeManager {

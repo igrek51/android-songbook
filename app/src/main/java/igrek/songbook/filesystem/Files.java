@@ -1,4 +1,4 @@
-package igrek.songbook.files;
+package igrek.songbook.filesystem;
 
 import android.app.Activity;
 import android.os.Environment;

@@ -3,10 +3,10 @@ package igrek.songbook.graphics.canvas;
 import android.content.Context;
 
 import igrek.songbook.graphics.gui.GUIListener;
-import igrek.songbook.logic.crd.CRDFragment;
-import igrek.songbook.logic.crd.CRDLine;
-import igrek.songbook.logic.crd.CRDModel;
-import igrek.songbook.logic.crd.CRDTextType;
+import igrek.songbook.logic.crdfile.CRDFragment;
+import igrek.songbook.logic.crdfile.CRDLine;
+import igrek.songbook.logic.crdfile.CRDModel;
+import igrek.songbook.logic.crdfile.CRDTextType;
 import igrek.songbook.settings.Config;
 
 public class CanvasGraphics extends BaseCanvasGraphics {

@@ -1,4 +1,4 @@
-package igrek.songbook.logic.crd;
+package igrek.songbook.logic.crdfile;
 
 public enum CRDTextType {
 
