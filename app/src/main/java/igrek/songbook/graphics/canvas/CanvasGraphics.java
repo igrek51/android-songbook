@@ -11,8 +11,6 @@ import igrek.songbook.settings.Config;
 
 public class CanvasGraphics extends BaseCanvasGraphics {
 
-    public String filename = null;
-
     private CRDModel crdModel = null;
 
     private float scroll = 0;
@@ -22,18 +20,15 @@ public class CanvasGraphics extends BaseCanvasGraphics {
         super(context, guiListener);
     }
 
+    //TODO: blokowanie przewijania w dół, jeśli skończył się już plik
+
     //TODO: obsługa gestów
     //TODO: zmiana rozmiaru czcionki
-    //TODO: transpozycja gestami
     //TODO: autoscroll + gesty
 
     public void setCRDModel(CRDModel crdModel) {
         this.crdModel = crdModel;
         repaint();
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
     }
 
     @Override
@@ -57,7 +52,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 
         if (crdModel != null) {
             for (CRDLine line : crdModel.getLines()) {
-                drawLine(line, scroll, Config.Fonts.lineheight);
+                drawTextLine(line, scroll, Config.Fonts.lineheight);
             }
         }
     }
@@ -67,7 +62,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
         clearScreen();
     }
 
-    private void drawLine(CRDLine line, float scroll, float lineheight) {
+    private void drawTextLine(CRDLine line, float scroll, float lineheight) {
         float y = line.getY() - scroll;
         if (y > h) return;
         if (y + lineheight < 0) return;
@@ -96,5 +91,20 @@ public class CanvasGraphics extends BaseCanvasGraphics {
         scroll = startScroll + startTouchY - touchY;
         if (scroll < 0) scroll = 0;
         repaint();
+    }
+
+    @Override
+    protected void onTouchUp(float touchX, float touchY) {
+        float deltaX = touchX - startTouchX;
+        float deltaY = touchY - startTouchY;
+        if(Math.abs(deltaX) > Math.abs(deltaY)){
+            if(Math.abs(deltaX) >= 0.4 * w){
+                if(deltaX < 0){
+                    guiListener.onTransposed(-1);
+                }else if(deltaX > 0){
+                    guiListener.onTransposed(+1);
+                }
+            }
+        }
     }
 }

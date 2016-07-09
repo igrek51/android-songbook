@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import igrek.songbook.logic.filetree.FileItem;
 
 public interface GUIListener {
+
     void onToolbarBackClicked();
 
     void onItemClicked(int position, FileItem item);
@@ -12,4 +13,6 @@ public interface GUIListener {
     void onResized(int w, int h);
 
     void onGraphicsInitialized(int w, int h, Paint paint);
+
+    void onTransposed(int t);
 }

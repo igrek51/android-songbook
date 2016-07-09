@@ -65,8 +65,6 @@ public class GUI extends GUIBase {
 
         canvas = new CanvasGraphics(activity, guiListener);
 
-        canvas.setFilename(filename);
-
         activity.setContentView(canvas);
     }
 

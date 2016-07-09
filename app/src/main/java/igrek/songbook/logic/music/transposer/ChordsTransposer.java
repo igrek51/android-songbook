@@ -14,7 +14,7 @@ public class ChordsTransposer {
     };
 
     private final String chordsDelimiters[] = {
-            " ", "-"
+            " ", "-", "(", ")", "/", ","
     };
 
     private final int MAX_LENGTH_ANALYZE = 2;

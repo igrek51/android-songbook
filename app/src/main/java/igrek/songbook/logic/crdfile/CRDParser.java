@@ -12,6 +12,8 @@ public class CRDParser {
 
     private Paint paint;
 
+    public CRDParser(){
+    }
 
     public CRDModel parseFileContent(String content, float screenW, float lineheight, Paint paint) {
         this.paint = paint;
