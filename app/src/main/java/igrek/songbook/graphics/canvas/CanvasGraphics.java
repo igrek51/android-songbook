@@ -2,6 +2,8 @@ package igrek.songbook.graphics.canvas;
 
 import android.content.Context;
 
+import java.util.List;
+
 import igrek.songbook.graphics.gui.GUIListener;
 import igrek.songbook.logic.crdfile.CRDFragment;
 import igrek.songbook.logic.crdfile.CRDLine;
@@ -66,7 +68,6 @@ public class CanvasGraphics extends BaseCanvasGraphics {
         float y = line.getY() - scroll;
         if (y > h) return;
         if (y + lineheight < 0) return;
-        final float yOffset = lineheight;
 
         for (CRDFragment fragment : line.getFragments()) {
 
@@ -76,7 +77,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
                 setColor(0xf00000);
             }
 
-            drawTextUnaligned(fragment.getText(), fragment.getX(), y + yOffset);
+            drawTextUnaligned(fragment.getText(), fragment.getX(), y + lineheight);
         }
     }
 
@@ -89,7 +90,17 @@ public class CanvasGraphics extends BaseCanvasGraphics {
     @Override
     protected void onTouchMove(float touchX, float touchY) {
         scroll = startScroll + startTouchY - touchY;
-        if (scroll < 0) scroll = 0;
+        if (scroll < 0) scroll = 0; //za duże przeskrolowanie w górę
+        float bottomY = getTextBottomY();
+        float reserve = 0.125f * h;
+        if(bottomY > h){
+            if(bottomY + reserve - scroll < h) { //za duże przescrollowanie w dół
+                scroll = bottomY + reserve - h;
+            }
+        }else{
+            //brak możliwości scrollowania
+            scroll = 0;
+        }
         repaint();
     }
 
@@ -106,5 +117,14 @@ public class CanvasGraphics extends BaseCanvasGraphics {
                 }
             }
         }
+    }
+
+    private float getTextBottomY() {
+        if (crdModel == null) return 0;
+        List<CRDLine> lines = crdModel.getLines();
+        if (lines == null || lines.isEmpty()) return 0;
+        CRDLine lastLine = lines.get(lines.size() - 1);
+        if (lastLine == null) return 0;
+        return lastLine.getY() + Config.Fonts.lineheight;
     }
 }
