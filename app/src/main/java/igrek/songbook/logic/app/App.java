@@ -14,7 +14,6 @@ import igrek.songbook.logic.filetree.FileTreeManager;
 import igrek.songbook.output.Output;
 
 //TODO: autoscroll
-//TODO: zmiana rozmiaru czcionki
 
 public class App extends BaseApp implements GUIListener {
     
@@ -30,6 +29,7 @@ public class App extends BaseApp implements GUIListener {
         preferences.preferencesLoad();
 
         fileTreeManager = new FileTreeManager(files, preferences.getString("startPath", "/"));
+        chordsManager = new ChordsManager();
         
         gui = new GUI(activity, this);
         gui.setTouchController(this);
@@ -52,6 +52,12 @@ public class App extends BaseApp implements GUIListener {
             return true;
         } else if (id == R.id.action_exit) {
             quit();
+            return true;
+        } else if (id == R.id.action_font_increase) {
+            changeFontSize(+1);
+            return true;
+        } else if (id == R.id.action_font_decrease) {
+            changeFontSize(-1);
             return true;
         }
         return false;
@@ -110,7 +116,13 @@ public class App extends BaseApp implements GUIListener {
     private void showFileContent(String filename) {
         state = AppState.FILE_CONTENT;
         fileTreeManager.setCurrentFileName(filename);
-        gui.showFileContent(filename);
+        gui.showFileContent();
+    }
+
+    private void changeFontSize(float change){
+        chordsManager.setFontsize(chordsManager.getFontsize() + change);
+        chordsManager.setLineheight(chordsManager.getFontsize() + 1);
+        Output.debug("rozmiar czcionki: " + chordsManager.getFontsize() + ", rozmiar wiersza: " + chordsManager.getLineheight());
     }
     
     
@@ -139,8 +151,9 @@ public class App extends BaseApp implements GUIListener {
         //wczytanie pliku i sparsowanie
         String filePath = fileTreeManager.getCurrentFilePath(fileTreeManager.getCurrentFileName());
         String fileContent = fileTreeManager.getFileContent(filePath);
-        chordsManager = new ChordsManager(fileContent, w, h, paint);
+        chordsManager.load(fileContent, w, h, paint);
 
+        gui.setFontSize(chordsManager.getFontsize(), chordsManager.getLineheight());
         gui.setCRDModel(chordsManager.getCRDModel());
     }
 

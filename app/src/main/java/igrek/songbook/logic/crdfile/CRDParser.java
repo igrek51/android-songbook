@@ -15,8 +15,10 @@ public class CRDParser {
     public CRDParser(){
     }
 
-    public CRDModel parseFileContent(String content, float screenW, float lineheight, Paint paint) {
+    public CRDModel parseFileContent(String content, float screenW, float fontsize, float lineheight, Paint paint) {
         this.paint = paint;
+        setNormalFont();
+        paint.setTextSize(fontsize);
 
         content = content.replace("\r", "");
         content = content.replace("\t", " ");

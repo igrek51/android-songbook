@@ -2,6 +2,19 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="igrek.todotree.MainActivity">
+
+    <item
+        android:id="@+id/action_font_increase"
+        android:orderInCategory="100"
+        android:title="@string/action_font_increase"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_font_decrease"
+        android:orderInCategory="100"
+        android:title="@string/action_font_decrease"
+        app:showAsAction="never"/>
+
     <item
         android:id="@+id/action_minimize"
         android:orderInCategory="100"

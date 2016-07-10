@@ -18,6 +18,9 @@ public class Output {
     private static final LogLevel CONSOLE_LEVEL = LogLevel.DEBUG; //widoczne w konsoli
     private static final LogLevel ECHO_LEVEL = LogLevel.OFF; //widoczne dla użytkownika
 
+    private static final String logTag = "ylog";
+    private static final boolean show_exceptions_trace = true;
+
     public Output() {
         reset();
     }
@@ -85,9 +88,9 @@ public class Output {
     private static void log(String message, LogLevel level) {
         if (level.getLevelNumber() <= CONSOLE_LEVEL.getLevelNumber()) {
             if (level.equals(LogLevel.ERROR)) {
-                Log.e(Config.Output.logTag, errorPrefix() + message);
+                Log.e(logTag, errorPrefix() + message);
             } else {
-                Log.i(Config.Output.logTag, errorPrefix() + message);
+                Log.i(logTag, errorPrefix() + message);
             }
         }
         if (level.getLevelNumber() <= ECHO_LEVEL.getLevelNumber()) {
@@ -96,8 +99,8 @@ public class Output {
     }
 
     private static void printStackTrace(Throwable ex) {
-        if (Config.Output.show_exceptions_trace) {
-            Log.e(Config.Output.logTag, Log.getStackTraceString(ex));
+        if (show_exceptions_trace) {
+            Log.e(logTag, Log.getStackTraceString(ex));
         }
     }
 

@@ -94,6 +94,7 @@ public class BaseCanvasGraphics extends View {
     public boolean onTouchEvent(MotionEvent event) {
         float touchX = event.getX();
         float touchY = event.getY();
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 onTouchDown(touchX, touchY);
@@ -206,7 +207,7 @@ public class BaseCanvasGraphics extends View {
         return sum;
     }
 
-    public void setFontSize(int textsize) {
+    public void setFontSize(float textsize) {
         paint.setTextSize(textsize);
     }
 

@@ -59,7 +59,7 @@ public class GUI extends GUIBase {
         updateFileList(currentDir, items);
     }
 
-    public void showFileContent(String filename) {
+    public void showFileContent() {
 
         setFullscreen(true);
 
@@ -88,5 +88,9 @@ public class GUI extends GUIBase {
 
     public void setCRDModel(CRDModel model){
         canvas.setCRDModel(model);
+    }
+
+    public void setFontSize(float fontsize, float lineheight){
+        canvas.setFontSizes(fontsize, lineheight);
     }
 }

@@ -5,4 +5,6 @@
     <string name="action_exit">Wyjście</string>
 
     <string name="example_item">Example Item filename long long long long ...</string>
+    <string name="action_font_increase">Zwiększ czcionkę</string>
+    <string name="action_font_decrease">Zmniejsz czcionkę</string>
 </resources>

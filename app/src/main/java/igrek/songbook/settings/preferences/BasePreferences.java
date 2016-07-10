@@ -4,13 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import igrek.songbook.settings.Config;
-
 public class BasePreferences {
+
     protected SharedPreferences sharedPreferences;
 
+    private static final String SHARED_PREFERENCES_NAME = "SongBookUserPreferences";
+
     public BasePreferences(Activity activity) {
-        sharedPreferences = activity.getApplicationContext().getSharedPreferences(Config.shared_preferences_name, Context.MODE_PRIVATE);
+        sharedPreferences = activity.getApplicationContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
     }
 
     public void clear() {
