@@ -5,13 +5,9 @@ import java.util.List;
 
 public class CRDLine {
 
-    private float y;
+    private int y;
 
     private List<CRDFragment> fragments = new ArrayList<>();
-
-    public CRDLine(float y) {
-        this.y = y;
-    }
 
     public CRDLine() {
     }
@@ -24,7 +20,7 @@ public class CRDLine {
         return fragments;
     }
 
-    public void setY(float y) {
+    public void setY(int y) {
         this.y = y;
     }
 

@@ -57,7 +57,7 @@ public class Files {
         List<File> files = new ArrayList<>();
         File f = new File(path);
         File file[] = f.listFiles();
-        if(file == null){
+        if (file == null) {
             Output.warn("file array null for path: " + path);
             return files;
         }
@@ -84,6 +84,7 @@ public class Files {
         byte[] bytes = openFile(filename);
         CharsetDetector charsetDetector = new CharsetDetector();
         String charsetName = charsetDetector.detect(bytes);
+        bytes = charsetDetector.repair(bytes, charsetName);
         return new String(bytes, charsetName);
     }
 

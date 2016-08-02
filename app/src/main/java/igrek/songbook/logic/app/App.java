@@ -15,8 +15,7 @@ import igrek.songbook.logic.filetree.FileItem;
 import igrek.songbook.logic.filetree.FileTreeManager;
 import igrek.songbook.output.Output;
 
-//TODO autoscroll, obsługa gestem ?
-//TODO gesty
+//TODO autoscroll, obsługa gestem
 
 public class App extends BaseApp implements GUIListener {
     
@@ -60,12 +59,6 @@ public class App extends BaseApp implements GUIListener {
             return true;
         } else if (id == R.id.action_home) {
             homeClicked();
-            return true;
-        } else if (id == R.id.action_font_increase) {
-            changeFontSize(+1);
-            return true;
-        } else if (id == R.id.action_font_decrease) {
-            changeFontSize(-1);
             return true;
         }
         return false;
@@ -125,12 +118,6 @@ public class App extends BaseApp implements GUIListener {
         fileTreeManager.setCurrentFileName(filename);
         gui.showFileContent();
     }
-
-    private void changeFontSize(float change) {
-        chordsManager.setFontsize(chordsManager.getFontsize() + change);
-        chordsManager.setLineheight(chordsManager.getFontsize() + 1);
-        Output.debug("rozmiar czcionki: " + chordsManager.getFontsize() + ", rozmiar wiersza: " + chordsManager.getLineheight());
-    }
     
     
     @Override
@@ -151,7 +138,7 @@ public class App extends BaseApp implements GUIListener {
 
     @Override
     public void onResized(int w, int h) {
-        Output.debug("Rozmiar grafiki 2D zmieniony: " + w + " x " + h);
+        Output.info("Rozmiar grafiki 2D zmieniony: " + w + " x " + h);
     }
 
     @Override
@@ -161,13 +148,24 @@ public class App extends BaseApp implements GUIListener {
         String fileContent = fileTreeManager.getFileContent(filePath);
         chordsManager.load(fileContent, w, h, paint);
 
-        gui.setFontSize(chordsManager.getFontsize(), chordsManager.getLineheight());
+        gui.setFontSize(chordsManager.getFontsize());
         gui.setCRDModel(chordsManager.getCRDModel());
     }
 
     @Override
     public void onTransposed(int t) {
         chordsManager.transpose(t);
+        gui.setCRDModel(chordsManager.getCRDModel());
+    }
+
+    @Override
+    public void onFontsizeChanged(float fontsize) {
+        chordsManager.setFontsize(fontsize);
+        //wczytanie pliku i sparsowanie
+        String filePath = fileTreeManager.getCurrentFilePath(fileTreeManager.getCurrentFileName());
+        String fileContent = fileTreeManager.getFileContent(filePath);
+        chordsManager.load(fileContent, null, null, null);
+
         gui.setCRDModel(chordsManager.getCRDModel());
     }
 

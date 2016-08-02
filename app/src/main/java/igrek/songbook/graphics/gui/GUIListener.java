@@ -15,4 +15,6 @@ public interface GUIListener {
     void onGraphicsInitialized(int w, int h, Paint paint);
 
     void onTransposed(int t);
+
+    void onFontsizeChanged(float fontsize);
 }

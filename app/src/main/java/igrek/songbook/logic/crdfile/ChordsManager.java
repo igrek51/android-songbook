@@ -21,7 +21,6 @@ public class ChordsManager {
     private Paint paint = null;
 
     private float fontsize = 21.0f;
-    private float lineheight = 22.0f;
 
 
     public ChordsManager() {
@@ -30,10 +29,14 @@ public class ChordsManager {
         crdParser = new CRDParser();
     }
 
-    public void load(String fileContent, int screenW, int screenH, Paint paint){
+    public void load(String fileContent, Integer screenW, Integer screenH, Paint paint){
         this.fileContent = fileContent;
-        this.screenW = screenW;
-        this.paint = paint;
+        if(screenW != null) {
+            this.screenW = screenW;
+        }
+        if(paint != null) {
+            this.paint = paint;
+        }
 
         chordsTransposer = new ChordsTransposer();
         crdParser = new CRDParser();
@@ -54,20 +57,11 @@ public class ChordsManager {
         this.fontsize = fontsize;
     }
 
-    public float getLineheight() {
-        return lineheight;
-    }
-
-    public void setLineheight(float lineheight) {
-        if(lineheight < 1) lineheight = 1;
-        this.lineheight = lineheight;
-    }
-
     public void parseAndTranspose(){
 
         String transposedContent = chordsTransposer.transposeContent(fileContent, transposed);
 
-        crdModel = crdParser.parseFileContent(transposedContent, screenW, fontsize, lineheight, paint);
+        crdModel = crdParser.parseFileContent(transposedContent, screenW, fontsize, paint);
     }
 
     public void transpose(int t){

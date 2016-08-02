@@ -31,8 +31,6 @@ public class BaseCanvasGraphics extends View {
     protected float startTouchX = 0;
     protected float startTouchY = 0;
 
-    protected boolean repaintRequested = false;
-
     public BaseCanvasGraphics(Context context, GUIListener guiListener) {
         super(context);
         paint = new Paint();
@@ -92,31 +90,38 @@ public class BaseCanvasGraphics extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        float touchX = event.getX();
-        float touchY = event.getY();
-
-        switch (event.getAction()) {
+        switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
-                onTouchDown(touchX, touchY);
+                onTouchDown(event);
                 break;
             case MotionEvent.ACTION_MOVE:
-                onTouchMove(touchX, touchY);
+                onTouchMove(event);
                 break;
             case MotionEvent.ACTION_UP:
-                onTouchUp(touchX, touchY);
+                onTouchUp(event);
+                break;
+            case MotionEvent.ACTION_POINTER_DOWN:
+                onTouchPointerDown(event);
+                break;
+            case MotionEvent.ACTION_POINTER_UP:
+                onTouchPointerUp(event);
                 break;
         }
         return true;
     }
 
-    protected void onTouchDown(float touchX, float touchY){
-        startTouchX = touchX;
-        startTouchY = touchY;
+    protected void onTouchDown(MotionEvent event){
+        startTouchX = event.getX();
+        startTouchY = event.getY();
     }
 
-    protected void onTouchMove(float touchX, float touchY){ }
+    protected void onTouchMove(MotionEvent event){ }
 
-    protected void onTouchUp(float touchX, float touchY){ }
+    protected void onTouchUp(MotionEvent event){ }
+
+    protected void onTouchPointerDown(MotionEvent event){ }
+
+    protected void onTouchPointerUp(MotionEvent event){ }
 
     public static boolean isFlagSet(int tested, int flag) {
         return (tested & flag) == flag;

@@ -15,7 +15,7 @@ public class CRDParser {
     public CRDParser(){
     }
 
-    public CRDModel parseFileContent(String content, float screenW, float fontsize, float lineheight, Paint paint) {
+    public CRDModel parseFileContent(String content, float screenW, float fontsize, Paint paint) {
         this.paint = paint;
         setNormalFont();
         paint.setTextSize(fontsize);
@@ -26,20 +26,20 @@ public class CRDParser {
         setBracket(false);
         String[] lines1 = content.split("\n");
         for (String line1 : lines1) {
-            model.addLines(parseLine(line1, screenW));
+            model.addLines(parseLine(line1, screenW, fontsize));
         }
 
-        //obliczenie współrzędnych y
-        float y = 0;
+        //zapisanie numerów wierszy
+        int y = 0;
         for (CRDLine line : model.getLines()) {
             line.setY(y);
-            y += lineheight;
+            y ++;
         }
 
         return model;
     }
 
-    private List<CRDLine> parseLine(String line, float screenW) {
+    private List<CRDLine> parseLine(String line, float screenW, float fontsize) {
 
         List<CRDChar> chars = str2chars(line);
 
@@ -47,7 +47,7 @@ public class CRDParser {
 
         List<CRDLine> lines = new ArrayList<>();
         for (List<CRDChar> subline : lines2) {
-            lines.add(chars2line(subline));
+            lines.add(chars2line(subline, fontsize));
         }
 
         return lines;
@@ -117,7 +117,7 @@ public class CRDParser {
         return lines;
     }
 
-    private CRDLine chars2line(List<CRDChar> chars) {
+    private CRDLine chars2line(List<CRDChar> chars, float fontsize) {
         //agregacja w grupy tego samego typu
         CRDLine line = new CRDLine();
 
@@ -135,7 +135,7 @@ public class CRDParser {
 
                     if (lastType == CRDTextType.REGULAR_TEXT || lastType == CRDTextType.CHORDS) {
 
-                        CRDFragment fragment = new CRDFragment(startX, buffer.toString(), lastType);
+                        CRDFragment fragment = new CRDFragment(startX/fontsize, buffer.toString(), lastType);
                         line.addFragment(fragment);
                     }
 
@@ -157,7 +157,7 @@ public class CRDParser {
 
             if (lastType == CRDTextType.REGULAR_TEXT || lastType == CRDTextType.CHORDS) {
 
-                CRDFragment fragment = new CRDFragment(startX, buffer.toString(), lastType);
+                CRDFragment fragment = new CRDFragment(startX/fontsize, buffer.toString(), lastType);
                 line.addFragment(fragment);
             }
         }

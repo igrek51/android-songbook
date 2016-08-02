@@ -18,17 +18,30 @@ public class CharsetDetector {
 
         //jeśli plik zawiera znaki specjalne z UTF8
         if (containsBytes(bytes, utf8PLPrefixBytes)) {
-            Output.debug("Wykryte kodowanie: " + CHARSET_UTF8);
+            Output.info("Wykryte kodowanie: " + CHARSET_UTF8);
             return CHARSET_UTF8;
         }
 
         //jeśli plik zawiera polskie litery z CP1250
         if (containsBytes(bytes, cp1250PLBytes)) {
-            Output.debug("Wykryte kodowanie: " + CHARSET_CP1250);
+            Output.info("Wykryte kodowanie: " + CHARSET_CP1250);
             return CHARSET_CP1250;
         }
 
+        Output.info("Domyślne kodowanie: " + CHARSET_UTF8);
         return CHARSET_UTF8;
+    }
+
+    public byte[] repair(byte[] in, String charset) {
+        if (charset.equals(CHARSET_UTF8)) {
+            for (int i = 0; i < in.length; i++) {
+                //krzaki zamiast apostrofu
+                if (in[i] == (byte) 0x92) {
+                    in[i] = (byte) '\'';
+                }
+            }
+        }
+        return in;
     }
 
     private String byte2hex(byte b) {

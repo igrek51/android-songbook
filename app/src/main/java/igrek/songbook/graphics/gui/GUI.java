@@ -90,8 +90,8 @@ public class GUI extends GUIBase {
         canvas.setCRDModel(model);
     }
 
-    public void setFontSize(float fontsize, float lineheight){
-        canvas.setFontSizes(fontsize, lineheight);
+    public void setFontSize(float fontsize){
+        canvas.setFontSizes(fontsize);
     }
 
     public Integer getCurrentScrollPos() {
