@@ -1,4 +1,4 @@
-package igrek.songbook.settings.preferences;
+package igrek.songbook.preferences;
 
 import android.app.Activity;
 
