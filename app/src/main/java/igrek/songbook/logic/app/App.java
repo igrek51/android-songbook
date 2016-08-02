@@ -13,7 +13,10 @@ import igrek.songbook.logic.filetree.FileItem;
 import igrek.songbook.logic.filetree.FileTreeManager;
 import igrek.songbook.output.Output;
 
-//TODO: autoscroll
+//TODO autoscroll, obsługa gestem ?
+//TODO gesty
+//TODO przywracanie scrolla po powrocie z podglądu i przechodzeniu w górę
+//TODO import z todo tree - powrtót scrolla, przewijanie, logger
 
 public class App extends BaseApp implements GUIListener {
     
@@ -28,7 +31,7 @@ public class App extends BaseApp implements GUIListener {
         
         preferences.preferencesLoad();
 
-        fileTreeManager = new FileTreeManager(files, preferences.getString("startPath", "/"));
+        fileTreeManager = new FileTreeManager(files, getHomePath());
         chordsManager = new ChordsManager();
         
         gui = new GUI(activity, this);
@@ -52,6 +55,9 @@ public class App extends BaseApp implements GUIListener {
             return true;
         } else if (id == R.id.action_exit) {
             quit();
+            return true;
+        } else if (id == R.id.action_home) {
+            homeClicked();
             return true;
         } else if (id == R.id.action_font_increase) {
             changeFontSize(+1);
@@ -161,5 +167,22 @@ public class App extends BaseApp implements GUIListener {
     public void onTransposed(int t) {
         chordsManager.transpose(t);
         gui.setCRDModel(chordsManager.getCRDModel());
+    }
+
+    private String getHomePath() {
+        return preferences.getString("startPath", "/");
+    }
+
+    private boolean isInHomeDir() {
+        return fileTreeManager.getCurrentPath().equals(FileTreeManager.trimEndSlash(getHomePath()));
+    }
+
+    private void homeClicked() {
+        if (isInHomeDir()) {
+            quit();
+        } else {
+            fileTreeManager.goTo(getHomePath());
+            updateFileList();
+        }
     }
 }

@@ -27,4 +27,11 @@
         android:title="@string/action_exit"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/action_home"
+        android:orderInCategory="300"
+        android:title="@string/action_home"
+        android:icon="@drawable/ic_menu_home"
+        app:showAsAction="ifRoom"/>
+
 </menu>

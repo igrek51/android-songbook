@@ -7,8 +7,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import igrek.songbook.logic.exceptions.NoParentDirException;
 import igrek.songbook.filesystem.Files;
+import igrek.songbook.logic.exceptions.NoParentDirException;
 import igrek.songbook.output.Output;
 
 public class FileTreeManager {
@@ -35,7 +35,7 @@ public class FileTreeManager {
         this(files, "/");
     }
 
-    private static String trimEndSlash(String str) {
+    public static String trimEndSlash(String str) {
         while (!str.isEmpty() && str.endsWith("/")) {
             str = str.substring(0, str.length() - 1);
         }
@@ -125,6 +125,10 @@ public class FileTreeManager {
 
     public String getCurrentFilePath(String filename){
         return trimEndSlash(currentPath) + "/" + trimEndSlash(filename);
+    }
+
+    public String getCurrentPath() {
+        return trimEndSlash(currentPath);
     }
 
     public String getFileContent(String filePath){
