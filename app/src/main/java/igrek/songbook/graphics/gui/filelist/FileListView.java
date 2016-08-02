@@ -8,16 +8,20 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.util.HashMap;
 import java.util.List;
 
 import igrek.songbook.graphics.gui.GUIListener;
 import igrek.songbook.logic.filetree.FileItem;
+import igrek.songbook.output.Output;
 
 public class FileListView extends ListView implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private List<FileItem> items;
     private FileItemAdapter adapter;
     private GUIListener guiListener;
+
+    private HashMap<Integer, Integer> itemHeights = new HashMap<>();
 
     public FileListView(Context context) {
         super(context);
@@ -72,6 +76,39 @@ public class FileListView extends ListView implements AdapterView.OnItemClickLis
         this.items = items;
         adapter.setDataSource(items);
         invalidate();
+        calculateViewHeights();
+    }
+
+    private void calculateViewHeights() {
+        int measureSpecW = MeasureSpec.makeMeasureSpec(this.getWidth(), MeasureSpec.EXACTLY);
+        int measureSpecH = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+        itemHeights = new HashMap<>();
+        for (int i = 0; i < adapter.getCount(); i++) {
+            View mView = adapter.getView(i, null, this);
+            mView.measure(measureSpecW, measureSpecH);
+            itemHeights.put(i, mView.getMeasuredHeight());
+        }
+    }
+
+    private int getRealScrollPosition() {
+        if (getChildAt(0) == null) {
+            return 0;
+        }
+        int sumh = 0;
+        for (int i = 0; i < getFirstVisiblePosition(); i++) {
+            sumh += getItemHeight(i);
+        }
+        //separatory
+        //sumh += getFirstVisiblePosition() * getDividerHeight();
+        return sumh - getChildAt(0).getTop();
+    }
+
+    private int getItemHeight(int position) {
+        Integer h = itemHeights.get(position);
+        if (h == null) {
+            Output.warn("Item View = null");
+        }
+        return h != null ? h : 0;
     }
 
     /**
@@ -82,5 +119,23 @@ public class FileListView extends ListView implements AdapterView.OnItemClickLis
         if (position < 0) position = 0;
         setSelection(position);
         invalidate();
+    }
+
+    public void scrollToPosition(int y) {
+        //wyznaczenie najbliższego elementu i przesunięcie względem niego
+        int position = 0;
+        while (y > itemHeights.get(position)) {
+            y -= itemHeights.get(position);
+            position++;
+        }
+
+        setSelection(position);
+        smoothScrollBy(y, 50);
+
+        invalidate();
+    }
+
+    public Integer getCurrentScrollPosition() {
+        return getRealScrollPosition();
     }
 }

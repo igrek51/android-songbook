@@ -1,12 +1,14 @@
 package igrek.songbook.logic.app;
 
 import android.graphics.Paint;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 
 import igrek.songbook.R;
 import igrek.songbook.graphics.gui.GUI;
 import igrek.songbook.graphics.gui.GUIListener;
+import igrek.songbook.graphics.gui.ScrollPosBuffer;
 import igrek.songbook.logic.crdfile.ChordsManager;
 import igrek.songbook.logic.exceptions.NoParentDirException;
 import igrek.songbook.logic.filetree.FileItem;
@@ -15,12 +17,11 @@ import igrek.songbook.output.Output;
 
 //TODO autoscroll, obsługa gestem ?
 //TODO gesty
-//TODO przywracanie scrolla po powrocie z podglądu i przechodzeniu w górę
-//TODO import z todo tree - powrtót scrolla, przewijanie, logger
 
 public class App extends BaseApp implements GUIListener {
     
     private FileTreeManager fileTreeManager;
+    private ScrollPosBuffer scrollPosBuffer;
     private ChordsManager chordsManager;
     private GUI gui;
     
@@ -32,6 +33,7 @@ public class App extends BaseApp implements GUIListener {
         preferences.preferencesLoad();
 
         fileTreeManager = new FileTreeManager(files, getHomePath());
+        scrollPosBuffer = new ScrollPosBuffer();
         chordsManager = new ChordsManager();
         
         gui = new GUI(activity, this);
@@ -84,22 +86,14 @@ public class App extends BaseApp implements GUIListener {
     @Override
     public void menuInit(Menu menu) {
         super.menuInit(menu);
-        //setMenuItemVisible(R.id.action_copy, false);
-        //item.setTitle(title);
-        //item.setIcon(iconRes); //int iconRes
     }
     
     public void goUp() {
         try {
             fileTreeManager.goUp();
             updateFileList();
-            //TODO: scrollowanie do ostatnio otwartego folderu
-            //            if (parent != null) {
-            //                int childIndex = parent.getChildIndex(current);
-            //                if (childIndex != -1) {
-            //                    gui.scrollToItem(childIndex);
-            //                }
-            //            }
+            //scrollowanie do ostatnio otwartego folderu
+            restoreScrollPosition(fileTreeManager.getCurrentPath());
         } catch (NoParentDirException e) {
             quit();
         }
@@ -111,6 +105,13 @@ public class App extends BaseApp implements GUIListener {
         } else if (state == AppState.FILE_CONTENT) {
             state = AppState.FILE_LIST;
             gui.showFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
+
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    restoreScrollPosition(fileTreeManager.getCurrentPath());
+                }
+            });
         }
     }
     
@@ -125,7 +126,7 @@ public class App extends BaseApp implements GUIListener {
         gui.showFileContent();
     }
 
-    private void changeFontSize(float change){
+    private void changeFontSize(float change) {
         chordsManager.setFontsize(chordsManager.getFontsize() + change);
         chordsManager.setLineheight(chordsManager.getFontsize() + 1);
         Output.debug("rozmiar czcionki: " + chordsManager.getFontsize() + ", rozmiar wiersza: " + chordsManager.getLineheight());
@@ -139,6 +140,7 @@ public class App extends BaseApp implements GUIListener {
     
     @Override
     public void onItemClicked(int position, FileItem item) {
+        scrollPosBuffer.storeScrollPosition(fileTreeManager.getCurrentPath(), gui.getCurrentScrollPos());
         if (item.isDirectory()) {
             fileTreeManager.goInto(item.getName());
             updateFileList();
@@ -183,6 +185,13 @@ public class App extends BaseApp implements GUIListener {
         } else {
             fileTreeManager.goTo(getHomePath());
             updateFileList();
+        }
+    }
+
+    private void restoreScrollPosition(String path) {
+        Integer savedScrollPos = scrollPosBuffer.restoreScrollPosition(path);
+        if (savedScrollPos != null) {
+            gui.scrollToPosition(savedScrollPos);
         }
     }
 }

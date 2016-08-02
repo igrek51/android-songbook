@@ -93,4 +93,12 @@ public class GUI extends GUIBase {
     public void setFontSize(float fontsize, float lineheight){
         canvas.setFontSizes(fontsize, lineheight);
     }
+
+    public Integer getCurrentScrollPos() {
+        return itemsListView.getCurrentScrollPosition();
+    }
+
+    public void scrollToPosition(int y) {
+        itemsListView.scrollToPosition(y);
+    }
 }
