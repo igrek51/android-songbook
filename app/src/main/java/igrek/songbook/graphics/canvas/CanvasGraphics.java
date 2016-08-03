@@ -26,7 +26,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
     private float lineheight;
 
     private final float EOF_SCROLL_RESERVE = 0.1f;
-    private final float LINEHEIGHT_SCALE_FACTOR = 1.05f;
+    private final float LINEHEIGHT_SCALE_FACTOR = 1.02f;
     private final float FONTSIZE_SCALE_FACTOR = 0.7f;
 
     private Float pointersDst0 = null;

@@ -16,6 +16,9 @@ import igrek.songbook.logic.filetree.FileTreeManager;
 import igrek.songbook.output.Output;
 
 //TODO autoscroll, obsługa gestem
+//TODO autoscroll: start po timeoucie
+//TODO dopasuwojące się tempo autoscrolla po ręcznym przewinięciu
+//TODO ? menu z przyciskami: otwarcie kliknięciem (w odpowiednim miejscu), transpozycja 0, 1, 5
 
 public class App extends BaseApp implements GUIListener {
     
@@ -39,8 +42,8 @@ public class App extends BaseApp implements GUIListener {
         gui.setTouchController(this);
         gui.showFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
         state = AppState.FILE_LIST;
-        
-        Output.debug("Aplikacja uruchomiona.");
+
+        Output.info("Aplikacja uruchomiona.");
     }
     
     @Override
