@@ -36,7 +36,7 @@ public class App extends BaseApp implements GUIListener {
 
         fileTreeManager = new FileTreeManager(files, getHomePath());
         scrollPosBuffer = new ScrollPosBuffer();
-        chordsManager = new ChordsManager();
+        chordsManager = new ChordsManager(this);
         
         gui = new GUI(activity, this);
         gui.setTouchController(this);
@@ -89,8 +89,12 @@ public class App extends BaseApp implements GUIListener {
             showInfoAgain(info, gui.getCanvas());
         }
     }
-    
-    
+
+    @Override
+    public void showCanvasInfo(String info) {
+        showInfoAgain(info, gui.getCanvas());
+    }
+
     @Override
     public void menuInit(Menu menu) {
         super.menuInit(menu);
@@ -111,6 +115,7 @@ public class App extends BaseApp implements GUIListener {
         if (state == AppState.FILE_LIST) {
             goUp();
         } else if (state == AppState.FILE_CONTENT) {
+            chordsManager.autoscrollStop();
             state = AppState.FILE_LIST;
             gui.showFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
 
@@ -205,5 +210,48 @@ public class App extends BaseApp implements GUIListener {
         if (savedScrollPos != null) {
             gui.scrollToPosition(savedScrollPos);
         }
+    }
+
+    @Override
+    public void onAutoscrollStartRequest() {
+        if (!chordsManager.getAutoscroll().isRunning()) {
+            chordsManager.autoscrollStart(gui.getCanvasScroll());
+        } else {
+            onCanvasClicked();
+        }
+    }
+
+    @Override
+    public void onCanvasClicked() {
+        if (chordsManager.getAutoscroll().isRunning()) {
+            chordsManager.autoscrollStop();
+            hideInfo(gui.getCanvas());
+            //showCanvasInfo("Anulowano autoprzewijanie.");
+        }
+    }
+
+    @Override
+    public void autoscrollRemainingWaitTime(long ms) {
+        int seconds = (int) ((ms + 500) / 1000);
+        showCanvasInfo("Autoprzewijanie za " + seconds + " s.");
+    }
+
+    @Override
+    public void onAutoscrollStarted() {
+        hideInfo(gui.getCanvas());
+    }
+
+    @Override
+    public void onAutoscrollEnded() {
+    }
+
+    @Override
+    public boolean auscrollScrollBy(float intervalStep) {
+        return gui.auscrollScrollBy(intervalStep);
+    }
+
+    @Override
+    public boolean canAutoScroll() {
+        return gui.canAutoScroll();
     }
 }

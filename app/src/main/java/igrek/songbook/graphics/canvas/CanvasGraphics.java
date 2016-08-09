@@ -15,8 +15,9 @@ import igrek.songbook.logic.crdfile.CRDTextType;
 
 public class CanvasGraphics extends BaseCanvasGraphics {
 
-    //TODO komunikaty wyświetlane użytkownikowi (echo)
     //TODO test ze zmianą orientacji ekranu
+
+    //TODO przyspieszanie autscrolla (szybkości lub czasu oczekiwania) poprzez przewijanie
 
     private CRDModel crdModel = null;
 
@@ -29,6 +30,14 @@ public class CanvasGraphics extends BaseCanvasGraphics {
     private final float EOF_SCROLL_RESERVE = 0.1f;
     private final float LINEHEIGHT_SCALE_FACTOR = 1.02f;
     private final float FONTSIZE_SCALE_FACTOR = 0.7f;
+
+    private final float GESTURE_TRANSPOSE_MIN_DX = 0.4f;
+
+    private final float GESTURE_AUTOSCROLL_BOTTOM_REGION = 0.75f;
+
+    private final float GESTURE_CLICK_MAX_HYPOT = 0.1f;
+
+    private final long GESTURE_CLICK_MAX_TIME = 500;
 
     private Float pointersDst0 = null;
     private Float fontsize0 = null;
@@ -45,6 +54,10 @@ public class CanvasGraphics extends BaseCanvasGraphics {
     public void setFontSizes(float fontsize) {
         this.fontsize = fontsize;
         this.lineheight = fontsize * LINEHEIGHT_SCALE_FACTOR;
+    }
+
+    public float getScroll() {
+        return scroll;
     }
 
     @Override
@@ -117,18 +130,21 @@ public class CanvasGraphics extends BaseCanvasGraphics {
             }
         } else {
             scroll = startScroll + startTouchY - event.getY();
+            float maxScroll = getMaxScroll();
             if (scroll < 0) scroll = 0; //za duże przeskrolowanie w górę
-            float bottomY = getTextBottomY();
-            float reserve = EOF_SCROLL_RESERVE * h;
-            if (bottomY > h) {
-                if (bottomY + reserve - scroll < h) { //za duże przescrollowanie w dół
-                    scroll = bottomY + reserve - h;
-                }
-            } else {
-                //brak możliwości scrollowania
-                scroll = 0;
-            }
+            if (scroll > maxScroll) scroll = maxScroll; // za duże przescrollowanie w dół
             repaint();
+        }
+    }
+
+    private float getMaxScroll() {
+        float bottomY = getTextBottomY();
+        float reserve = EOF_SCROLL_RESERVE * h;
+        if (bottomY > h) {
+            return bottomY + reserve - h;
+        } else {
+            //brak możliwości scrollowania
+            return 0;
         }
     }
 
@@ -136,12 +152,27 @@ public class CanvasGraphics extends BaseCanvasGraphics {
     protected void onTouchUp(MotionEvent event) {
         float deltaX = event.getX() - startTouchX;
         float deltaY = event.getY() - startTouchY;
+        //gest smyrania w lewo i prawo
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
-            if (Math.abs(deltaX) >= 0.4 * w) {
+            if (Math.abs(deltaX) >= GESTURE_TRANSPOSE_MIN_DX * w) {
                 if (deltaX < 0) {
                     guiListener.onTransposed(-1);
+                    return;
                 } else if (deltaX > 0) {
                     guiListener.onTransposed(+1);
+                    return;
+                }
+            }
+        }
+        //włączenie autoscrolla - szybkie kliknięcie na dole
+        float hypot = (float) Math.hypot(deltaX, deltaY);
+        int smallScreenSize = getSmallerScreenSize();
+        if (hypot / smallScreenSize <= GESTURE_CLICK_MAX_HYPOT) { //kliknięcie w jednym miejscu
+            if (System.currentTimeMillis() - startTouchTime <= GESTURE_CLICK_MAX_TIME) { //szybkie kliknięcie
+                if (event.getY() >= h * GESTURE_AUTOSCROLL_BOTTOM_REGION) {  //na dole
+                    guiListener.onAutoscrollStartRequest();
+                } else {
+                    guiListener.onCanvasClicked();
                 }
             }
         }
@@ -176,5 +207,29 @@ public class CanvasGraphics extends BaseCanvasGraphics {
             setFontSizes(fontsize1);
             repaint();
         }
+    }
+
+    private void showInfo(String info) {
+        guiListener.showCanvasInfo(info);
+    }
+
+    public boolean autoscrollBy(float intervalStep) {
+        boolean scrollable = true;
+        scroll += intervalStep;
+        float maxScroll = getMaxScroll();
+        if (scroll < 0) {
+            scroll = 0;
+            scrollable = false;
+        }
+        if (scroll > maxScroll) {
+            scroll = maxScroll;
+            scrollable = false;
+        }
+        repaint();
+        return scrollable;
+    }
+
+    public boolean canAutoScroll() {
+        return scroll < getMaxScroll();
     }
 }

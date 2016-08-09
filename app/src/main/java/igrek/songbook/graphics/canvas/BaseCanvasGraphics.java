@@ -30,6 +30,7 @@ public class BaseCanvasGraphics extends View {
 
     protected float startTouchX = 0;
     protected float startTouchY = 0;
+    protected long startTouchTime;
 
     public BaseCanvasGraphics(Context context, GUIListener guiListener) {
         super(context);
@@ -54,6 +55,10 @@ public class BaseCanvasGraphics extends View {
 
     public int getH() {
         return h;
+    }
+
+    public int getSmallerScreenSize(){
+        return w < h ? w : h;
     }
 
     //odrysowanie ekranu do nadpisania
@@ -113,6 +118,7 @@ public class BaseCanvasGraphics extends View {
     protected void onTouchDown(MotionEvent event){
         startTouchX = event.getX();
         startTouchY = event.getY();
+        startTouchTime = System.currentTimeMillis();
     }
 
     protected void onTouchMove(MotionEvent event){ }

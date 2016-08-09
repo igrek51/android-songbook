@@ -86,11 +86,11 @@ public class GUI extends GUIBase {
         return mainView;
     }
 
-    public void setCRDModel(CRDModel model){
+    public void setCRDModel(CRDModel model) {
         canvas.setCRDModel(model);
     }
 
-    public void setFontSize(float fontsize){
+    public void setFontSize(float fontsize) {
         canvas.setFontSizes(fontsize);
     }
 
@@ -104,5 +104,17 @@ public class GUI extends GUIBase {
 
     public CanvasGraphics getCanvas() {
         return canvas;
+    }
+
+    public float getCanvasScroll() {
+        return canvas.getScroll();
+    }
+
+    public boolean auscrollScrollBy(float intervalStep) {
+        return canvas.autoscrollBy(intervalStep);
+    }
+
+    public boolean canAutoScroll() {
+        return canvas.canAutoScroll();
     }
 }

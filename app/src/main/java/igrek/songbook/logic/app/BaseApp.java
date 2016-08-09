@@ -169,7 +169,6 @@ public abstract class BaseApp implements ITouchController {
         if (snackbar == null) {
             showInfo(info, view);
         } else {
-            //snackbar = Snackbar.make(view, info, Snackbar.LENGTH_SHORT);
             snackbar.setText(info);
             snackbar.setAction("OK", new View.OnClickListener() {
                 @Override
@@ -181,6 +180,13 @@ public abstract class BaseApp implements ITouchController {
             snackbar.show();
             infobars.put(view, snackbar);
             Output.info(info);
+        }
+    }
+
+    public void hideInfo(View view){
+        final Snackbar snackbar = infobars.get(view);
+        if (snackbar != null) {
+            snackbar.dismiss();
         }
     }
 

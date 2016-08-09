@@ -17,4 +17,20 @@ public interface GUIListener {
     void onTransposed(int t);
 
     void onFontsizeChanged(float fontsize);
+
+    void showCanvasInfo(String info);
+
+    void autoscrollRemainingWaitTime(long ms);
+
+    void onAutoscrollStartRequest();
+
+    void onAutoscrollStarted();
+
+    void onAutoscrollEnded();
+
+    void onCanvasClicked();
+
+    boolean auscrollScrollBy(float intervalStep);
+
+    boolean canAutoScroll();
 }
