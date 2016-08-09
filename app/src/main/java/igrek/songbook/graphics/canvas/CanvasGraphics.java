@@ -16,6 +16,7 @@ import igrek.songbook.logic.crdfile.CRDTextType;
 public class CanvasGraphics extends BaseCanvasGraphics {
 
     //TODO komunikaty wyświetlane użytkownikowi (echo)
+    //TODO test ze zmianą orientacji ekranu
 
     private CRDModel crdModel = null;
 

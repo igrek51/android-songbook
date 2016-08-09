@@ -75,7 +75,19 @@ public class App extends BaseApp implements GUIListener {
     
     
     public void showInfo(String info) {
-        showInfo(info, gui.getMainView());
+        if (state == AppState.FILE_LIST) {
+            showInfo(info, gui.getMainView());
+        } else if (state == AppState.FILE_CONTENT) {
+            showInfo(info, gui.getCanvas());
+        }
+    }
+
+    public void showInfoAgain(String info) {
+        if (state == AppState.FILE_LIST) {
+            showInfoAgain(info, gui.getMainView());
+        } else if (state == AppState.FILE_CONTENT) {
+            showInfoAgain(info, gui.getCanvas());
+        }
     }
     
     
@@ -149,6 +161,7 @@ public class App extends BaseApp implements GUIListener {
         //wczytanie pliku i sparsowanie
         String filePath = fileTreeManager.getCurrentFilePath(fileTreeManager.getCurrentFileName());
         String fileContent = fileTreeManager.getFileContent(filePath);
+        //inicjalizacja - pierwsze wczytanie pliku
         chordsManager.load(fileContent, w, h, paint);
 
         gui.setFontSize(chordsManager.getFontsize());
@@ -159,16 +172,14 @@ public class App extends BaseApp implements GUIListener {
     public void onTransposed(int t) {
         chordsManager.transpose(t);
         gui.setCRDModel(chordsManager.getCRDModel());
+        showInfoAgain("Transpozycja: " + chordsManager.getTransposed());
     }
 
     @Override
     public void onFontsizeChanged(float fontsize) {
         chordsManager.setFontsize(fontsize);
-        //wczytanie pliku i sparsowanie
-        String filePath = fileTreeManager.getCurrentFilePath(fileTreeManager.getCurrentFileName());
-        String fileContent = fileTreeManager.getFileContent(filePath);
-        chordsManager.load(fileContent, null, null, null);
-
+        //parsowanie bez ponownego wczytywania pliku i wykrywania kodowania
+        chordsManager.reparse();
         gui.setCRDModel(chordsManager.getCRDModel());
     }
 

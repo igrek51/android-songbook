@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
+import java.util.HashMap;
+
 import igrek.songbook.filesystem.Files;
 import igrek.songbook.logic.touchcontroller.ITouchController;
 import igrek.songbook.output.Output;
@@ -25,6 +27,8 @@ public abstract class BaseApp implements ITouchController {
     public AppCompatActivity activity;
     private Thread.UncaughtExceptionHandler defaultUEH;
     protected Menu menu;
+
+    protected HashMap<View, Snackbar> infobars = new HashMap<>();
 
     boolean running = true;
 
@@ -145,6 +149,7 @@ public abstract class BaseApp implements ITouchController {
         activity.startActivity(startMain);
     }
 
+
     public void showInfo(String info, View view) {
         final Snackbar snackbar = Snackbar.make(view, info, Snackbar.LENGTH_SHORT);
         snackbar.setAction("OK", new View.OnClickListener() {
@@ -153,6 +158,35 @@ public abstract class BaseApp implements ITouchController {
                 snackbar.dismiss();
             }
         });
+        snackbar.setActionTextColor(Color.WHITE);
+        snackbar.show();
+        infobars.put(view, snackbar);
+        Output.info(info);
+    }
+
+    public void showInfoAgain(String info, View view) {
+        final Snackbar snackbar = infobars.get(view);
+        if (snackbar == null) {
+            showInfo(info, view);
+        } else {
+            //snackbar = Snackbar.make(view, info, Snackbar.LENGTH_SHORT);
+            snackbar.setText(info);
+            snackbar.setAction("OK", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    snackbar.dismiss();
+                }
+            });
+            snackbar.setActionTextColor(Color.WHITE);
+            snackbar.show();
+            infobars.put(view, snackbar);
+            Output.info(info);
+        }
+    }
+
+    public void showInfoCancellable(String info, View view, View.OnClickListener cancelCallback) {
+        Snackbar snackbar = Snackbar.make(view, info, Snackbar.LENGTH_LONG);
+        snackbar.setAction("Cofnij", cancelCallback);
         snackbar.setActionTextColor(Color.WHITE);
         snackbar.show();
         Output.info(info);

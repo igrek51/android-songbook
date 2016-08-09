@@ -6,8 +6,6 @@ import igrek.songbook.logic.music.transposer.ChordsTransposer;
 
 public class ChordsManager {
 
-    private String fileContent = null;
-
     private ChordsTransposer chordsTransposer;
 
     private int transposed = 0;
@@ -22,6 +20,8 @@ public class ChordsManager {
 
     private float fontsize = 21.0f;
 
+    String originalFileContent = null;
+
 
     public ChordsManager() {
 
@@ -29,19 +29,30 @@ public class ChordsManager {
         crdParser = new CRDParser();
     }
 
-    public void load(String fileContent, Integer screenW, Integer screenH, Paint paint){
-        this.fileContent = fileContent;
-        if(screenW != null) {
+    public void reset() {
+        transposed = 0;
+    }
+
+    public void load(String fileContent, Integer screenW, Integer screenH, Paint paint) {
+        reset();
+        originalFileContent = fileContent;
+
+        if (screenW != null) {
             this.screenW = screenW;
         }
-        if(paint != null) {
+        if (paint != null) {
             this.paint = paint;
         }
 
         chordsTransposer = new ChordsTransposer();
         crdParser = new CRDParser();
 
-        parseAndTranspose();
+        parseAndTranspose(originalFileContent);
+    }
+
+
+    public void reparse() {
+        parseAndTranspose(originalFileContent);
     }
 
     public CRDModel getCRDModel() {
@@ -53,19 +64,25 @@ public class ChordsManager {
     }
 
     public void setFontsize(float fontsize) {
-        if(fontsize < 1) fontsize = 1;
+        if (fontsize < 1) fontsize = 1;
         this.fontsize = fontsize;
     }
 
-    public void parseAndTranspose(){
+    private void parseAndTranspose(String originalFileContent) {
 
-        String transposedContent = chordsTransposer.transposeContent(fileContent, transposed);
+        String transposedContent = chordsTransposer.transposeContent(originalFileContent, transposed);
 
         crdModel = crdParser.parseFileContent(transposedContent, screenW, fontsize, paint);
     }
 
-    public void transpose(int t){
+    public void transpose(int t) {
         transposed += t;
-        parseAndTranspose();
+        if (transposed >= 12) transposed -= 12;
+        if (transposed <= -12) transposed += 12;
+        parseAndTranspose(originalFileContent);
+    }
+
+    public int getTransposed() {
+        return transposed;
     }
 }

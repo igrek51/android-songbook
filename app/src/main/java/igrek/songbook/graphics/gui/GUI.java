@@ -101,4 +101,8 @@ public class GUI extends GUIBase {
     public void scrollToPosition(int y) {
         itemsListView.scrollToPosition(y);
     }
+
+    public CanvasGraphics getCanvas() {
+        return canvas;
+    }
 }
