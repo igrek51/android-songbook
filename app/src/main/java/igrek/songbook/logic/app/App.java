@@ -9,15 +9,13 @@ import igrek.songbook.R;
 import igrek.songbook.graphics.gui.GUI;
 import igrek.songbook.graphics.gui.GUIListener;
 import igrek.songbook.graphics.gui.ScrollPosBuffer;
+import igrek.songbook.graphics.infobar.InfoBarClickAction;
 import igrek.songbook.logic.crdfile.ChordsManager;
 import igrek.songbook.logic.exceptions.NoParentDirException;
 import igrek.songbook.logic.filetree.FileItem;
 import igrek.songbook.logic.filetree.FileTreeManager;
 import igrek.songbook.output.Output;
 
-//TODO autoscroll, obsługa gestem
-//TODO autoscroll: start po timeoucie
-//TODO dopasuwojące się tempo autoscrolla po ręcznym przewinięciu
 //TODO ? menu z przyciskami: otwarcie kliknięciem (w odpowiednim miejscu), transpozycja 0, 1, 5
 
 public class App extends BaseApp implements GUIListener {
@@ -72,28 +70,7 @@ public class App extends BaseApp implements GUIListener {
         backClicked();
         return true;
     }
-    
-    
-    public void showInfo(String info) {
-        if (state == AppState.FILE_LIST) {
-            showInfo(info, gui.getMainView());
-        } else if (state == AppState.FILE_CONTENT) {
-            showInfo(info, gui.getCanvas());
-        }
-    }
 
-    public void showInfoAgain(String info) {
-        if (state == AppState.FILE_LIST) {
-            showInfoAgain(info, gui.getMainView());
-        } else if (state == AppState.FILE_CONTENT) {
-            showInfoAgain(info, gui.getCanvas());
-        }
-    }
-
-    @Override
-    public void showCanvasInfo(String info) {
-        showInfoAgain(info, gui.getCanvas());
-    }
 
     @Override
     public void menuInit(Menu menu) {
@@ -177,7 +154,7 @@ public class App extends BaseApp implements GUIListener {
     public void onTransposed(int t) {
         chordsManager.transpose(t);
         gui.setCRDModel(chordsManager.getCRDModel());
-        showInfoAgain("Transpozycja: " + chordsManager.getTransposed());
+        showReusableActionInfo("Transpozycja: " + chordsManager.getTransposed(), gui.getCanvas(), "OK", null);
     }
 
     @Override
@@ -233,7 +210,12 @@ public class App extends BaseApp implements GUIListener {
     @Override
     public void autoscrollRemainingWaitTime(long ms) {
         int seconds = (int) ((ms + 500) / 1000);
-        showCanvasInfo("Autoprzewijanie za " + seconds + " s.");
+        showReusableActionInfo("Autoprzewijanie za " + seconds + " s.", gui.getCanvas(), "Zatrzymaj", new InfoBarClickAction() {
+            @Override
+            public void onClick() {
+                chordsManager.autoscrollStop();
+            }
+        });
     }
 
     @Override
@@ -253,5 +235,10 @@ public class App extends BaseApp implements GUIListener {
     @Override
     public boolean canAutoScroll() {
         return gui.canAutoScroll();
+    }
+
+    @Override
+    public void onCanvasScroll(float dScroll) {
+        chordsManager.getAutoscroll().handleCanvasScroll(dScroll);
     }
 }

@@ -18,8 +18,6 @@ public interface GUIListener {
 
     void onFontsizeChanged(float fontsize);
 
-    void showCanvasInfo(String info);
-
     void autoscrollRemainingWaitTime(long ms);
 
     void onAutoscrollStartRequest();
@@ -33,4 +31,6 @@ public interface GUIListener {
     boolean auscrollScrollBy(float intervalStep);
 
     boolean canAutoScroll();
+
+    void onCanvasScroll(float dScroll);
 }

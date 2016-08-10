@@ -3,27 +3,29 @@ package igrek.songbook.logic.autoscroll;
 import android.os.Handler;
 
 import igrek.songbook.graphics.gui.GUIListener;
+import igrek.songbook.output.Output;
 
 public class Autoscroll {
 
     private AutoscrollState state;
 
-    //TODO skalowanie czcionki zmienia skaluje intervał / step
+    private long waitTime = 30000; // [ms]
+    private long intervalTime = 280; // [ms]
+    private float intervalStep = 2.0f; // [px]
 
-    private long waitTime = 12000; // [ms]
-    private long intervalTime = 140; // [ms]
-    private float intervalStep = 1.0f; // [px]
+    private float fontsize;
 
     private long startTime; // [ms]
 
-    private final float START_NO_WAITING_MIN_SCROLL = 5.0f;
+    private final long MIN_INTERVAL_TIME = 5;
+    private final float START_NO_WAITING_MIN_SCROLL_FACTOR = 1.0f;
 
     private Handler timerHandler;
     private Runnable timerRunnable;
 
     private GUIListener guiListener;
 
-    public Autoscroll(GUIListener guiListener) {
+    public Autoscroll(GUIListener guiListener, float fontsize) {
         this.guiListener = guiListener;
         timerHandler = new Handler();
         timerRunnable = new Runnable() {
@@ -33,6 +35,7 @@ public class Autoscroll {
                 handleAutoscroll();
             }
         };
+        this.fontsize = fontsize;
         reset();
     }
 
@@ -41,7 +44,7 @@ public class Autoscroll {
     }
 
     public void start(float scroll) {
-        if (scroll <= START_NO_WAITING_MIN_SCROLL) {
+        if (scroll <= START_NO_WAITING_MIN_SCROLL_FACTOR * fontsize) {
             start(true);
         } else {
             start(false);
@@ -69,15 +72,15 @@ public class Autoscroll {
     }
 
     public boolean isRunning() {
-        return state.equals(AutoscrollState.WAITING) || state.equals(AutoscrollState.SCROLLING);
+        return state == AutoscrollState.WAITING || state == AutoscrollState.SCROLLING;
     }
 
     public boolean isWaiting() {
-        return state.equals(AutoscrollState.WAITING);
+        return state == AutoscrollState.WAITING;
     }
 
     public boolean isScrolling() {
-        return state.equals(AutoscrollState.SCROLLING);
+        return state == AutoscrollState.SCROLLING;
     }
 
     private void handleAutoscroll() {
@@ -88,7 +91,8 @@ public class Autoscroll {
                 timerHandler.postDelayed(timerRunnable, 0);
                 guiListener.onAutoscrollStarted();
             } else {
-                timerHandler.postDelayed(timerRunnable, remainingTimeMs % 1001);
+                long delay = remainingTimeMs > 1000 ? 1000 : remainingTimeMs; //nasycenie do 1000
+                timerHandler.postDelayed(timerRunnable, delay);
                 guiListener.autoscrollRemainingWaitTime(remainingTimeMs);
             }
         } else if (state == AutoscrollState.SCROLLING) {
@@ -98,6 +102,33 @@ public class Autoscroll {
                 stop();
                 guiListener.onAutoscrollEnded();
             }
+        }
+    }
+
+    public void setFontsize(float fontsize) {
+        //TODO skalowanie czcionki zmienia skaluje intervał / step
+        this.fontsize = fontsize;
+    }
+
+    public void handleCanvasScroll(float dScroll) {
+
+        Output.debug("scroll: " + dScroll);
+
+        if (state == AutoscrollState.WAITING) {
+            if (dScroll > 0) {
+                state = AutoscrollState.SCROLLING;
+                guiListener.onAutoscrollStarted();
+            }
+        } else if (state == AutoscrollState.SCROLLING) {
+            if (dScroll > 0) { //przyspieszanie przewijania
+                intervalTime -= intervalTime * dScroll / 300;
+            } else if (dScroll < 0) { //zwalnianie przewijania
+                intervalTime -= intervalTime * dScroll / 300;
+            }
+            if (intervalTime < MIN_INTERVAL_TIME) {
+                intervalTime = MIN_INTERVAL_TIME;
+            }
+            Output.info("Nowy interwał autoprzewijania: " + intervalTime + " ms");
         }
     }
 }

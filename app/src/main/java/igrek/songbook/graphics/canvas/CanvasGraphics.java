@@ -27,17 +27,16 @@ public class CanvasGraphics extends BaseCanvasGraphics {
     private float fontsize;
     private float lineheight;
 
-    private final float EOF_SCROLL_RESERVE = 0.1f;
+    private final float EOF_SCROLL_RESERVE = 0.05f;
     private final float LINEHEIGHT_SCALE_FACTOR = 1.02f;
     private final float FONTSIZE_SCALE_FACTOR = 0.7f;
 
     private final float GESTURE_TRANSPOSE_MIN_DX = 0.4f;
-
     private final float GESTURE_AUTOSCROLL_BOTTOM_REGION = 0.75f;
-
     private final float GESTURE_CLICK_MAX_HYPOT = 0.1f;
-
     private final long GESTURE_CLICK_MAX_TIME = 500;
+
+    private final float MIN_SCROLL_EVENT = 10f;
 
     private Float pointersDst0 = null;
     private Float fontsize0 = null;
@@ -150,6 +149,13 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 
     @Override
     protected void onTouchUp(MotionEvent event) {
+        // monitorowanie zmiany przewijania
+        float dScroll = scroll - startScroll;
+        if (Math.abs(dScroll) > MIN_SCROLL_EVENT) {
+            guiListener.onCanvasScroll(dScroll);
+        }
+
+        //  GESTY
         float deltaX = event.getX() - startTouchX;
         float deltaY = event.getY() - startTouchY;
         //gest smyrania w lewo i prawo
@@ -207,10 +213,6 @@ public class CanvasGraphics extends BaseCanvasGraphics {
             setFontSizes(fontsize1);
             repaint();
         }
-    }
-
-    private void showInfo(String info) {
-        guiListener.showCanvasInfo(info);
     }
 
     public boolean autoscrollBy(float intervalStep) {

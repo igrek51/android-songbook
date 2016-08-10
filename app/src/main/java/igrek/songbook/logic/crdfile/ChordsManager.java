@@ -24,13 +24,14 @@ public class ChordsManager {
 
     private String originalFileContent = null;
 
+    //TODO przenieść obsługę autoscrolla do innej klasy lub zmienić sposób komunikacji
     private Autoscroll autoscroll;
 
 
     public ChordsManager(GUIListener guiListener) {
         chordsTransposer = new ChordsTransposer();
         crdParser = new CRDParser();
-        autoscroll = new Autoscroll(guiListener);
+        autoscroll = new Autoscroll(guiListener, fontsize);
     }
 
     public void reset() {
@@ -71,6 +72,7 @@ public class ChordsManager {
     public void setFontsize(float fontsize) {
         if (fontsize < 1) fontsize = 1;
         this.fontsize = fontsize;
+        autoscroll.setFontsize(fontsize);
     }
 
     private void parseAndTranspose(String originalFileContent) {

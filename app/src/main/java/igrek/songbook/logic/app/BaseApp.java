@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import java.util.HashMap;
 
 import igrek.songbook.filesystem.Files;
+import igrek.songbook.graphics.infobar.InfoBarClickAction;
 import igrek.songbook.logic.touchcontroller.ITouchController;
 import igrek.songbook.output.Output;
 import igrek.songbook.preferences.Preferences;
@@ -149,38 +150,44 @@ public abstract class BaseApp implements ITouchController {
         activity.startActivity(startMain);
     }
 
+    /**
+     * @param info tekst do wyświetlenia lub zmiany
+     * @param view widok, na którym ma zostać wyświetlony tekst
+     * @param actionName tekst przycisku akcji (jeśli null - brak przycisku akcji)
+     * @param action akcja kliknięcia przycisku (jeśli null - schowanie wyświetlanego tekstu)
+     */
+    public void showReusableActionInfo(String info, View view, String actionName, InfoBarClickAction action){
+        Snackbar snackbar = infobars.get(view);
+        if (snackbar == null) { //nowy
+            snackbar = Snackbar.make(view, info, Snackbar.LENGTH_SHORT);
+            snackbar.setActionTextColor(Color.WHITE);
+        } else { //użyty kolejny raz
+            snackbar.setText(info);
+        }
 
-    public void showInfo(String info, View view) {
-        final Snackbar snackbar = Snackbar.make(view, info, Snackbar.LENGTH_SHORT);
-        snackbar.setAction("OK", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                snackbar.dismiss();
+        if(actionName != null){
+            if(action == null){
+                final Snackbar finalSnackbar = snackbar;
+                action = new InfoBarClickAction() {
+                    @Override
+                    public void onClick() {
+                        finalSnackbar.dismiss();
+                    }
+                };
             }
-        });
-        snackbar.setActionTextColor(Color.WHITE);
+
+            final InfoBarClickAction finalAction = action;
+            snackbar.setAction(actionName, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finalAction.onClick();
+                }
+            });
+        }
+
         snackbar.show();
         infobars.put(view, snackbar);
         Output.info(info);
-    }
-
-    public void showInfoAgain(String info, View view) {
-        final Snackbar snackbar = infobars.get(view);
-        if (snackbar == null) {
-            showInfo(info, view);
-        } else {
-            snackbar.setText(info);
-            snackbar.setAction("OK", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    snackbar.dismiss();
-                }
-            });
-            snackbar.setActionTextColor(Color.WHITE);
-            snackbar.show();
-            infobars.put(view, snackbar);
-            Output.info(info);
-        }
     }
 
     public void hideInfo(View view){
@@ -188,13 +195,5 @@ public abstract class BaseApp implements ITouchController {
         if (snackbar != null) {
             snackbar.dismiss();
         }
-    }
-
-    public void showInfoCancellable(String info, View view, View.OnClickListener cancelCallback) {
-        Snackbar snackbar = Snackbar.make(view, info, Snackbar.LENGTH_LONG);
-        snackbar.setAction("Cofnij", cancelCallback);
-        snackbar.setActionTextColor(Color.WHITE);
-        snackbar.show();
-        Output.info(info);
     }
 }
