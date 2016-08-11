@@ -155,7 +155,12 @@ public class App extends BaseApp implements GUIListener {
     public void onTransposed(int t) {
         chordsManager.transpose(t);
         gui.setCRDModel(chordsManager.getCRDModel());
-        showReusableActionInfo("Transpozycja: " + chordsManager.getTransposed(), gui.getCanvas(), "OK", null);
+        showReusableActionInfo("Transpozycja: " + chordsManager.getTransposed(), gui.getCanvas(), "Zeruj", new InfoBarClickAction() {
+            @Override
+            public void onClick() {
+                onTransposed(-chordsManager.getTransposed());
+            }
+        });
     }
 
     @Override
