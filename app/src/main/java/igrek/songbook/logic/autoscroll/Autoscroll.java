@@ -10,7 +10,7 @@ public class Autoscroll {
     private AutoscrollState state;
 
     private long waitTime = 30000; // [ms]
-    private long intervalTime = 250; // [ms]
+    private float intervalTime = 270; // [ms]
     private float intervalStep = 2.0f; // [px]
 
     private float fontsize;
@@ -20,7 +20,8 @@ public class Autoscroll {
     private final long MIN_INTERVAL_TIME = 5;
     private final float START_NO_WAITING_MIN_SCROLL_FACTOR = 1.0f;
 
-    private final float AUTOCHANGE_SPEED_SCALE = 0.0027f;
+    private final float AUTOCHANGE_INTERVAL_SCALE = 0.0027f;
+    private final float AUTOCHANGE_WAITING_SCALE = 5.0f;
 
     private Handler timerHandler;
     private Runnable timerRunnable;
@@ -99,7 +100,7 @@ public class Autoscroll {
             }
         } else if (state == AutoscrollState.SCROLLING) {
             if (guiListener.auscrollScrollBy(intervalStep)) {
-                timerHandler.postDelayed(timerRunnable, intervalTime);
+                timerHandler.postDelayed(timerRunnable, (long) intervalTime);
             } else {
                 stop();
                 guiListener.onAutoscrollEnded();
@@ -115,15 +116,20 @@ public class Autoscroll {
     public void handleCanvasScroll(float dScroll) {
 
         if (state == AutoscrollState.WAITING) {
-            if (dScroll > 0) {
+            if (dScroll > 0) { //przyspieszanie przewijania
                 state = AutoscrollState.SCROLLING;
                 guiListener.onAutoscrollStarted();
+            } else if (dScroll < 0) { //zwalnianie odliczania
+                Output.debug("dScroll: " + dScroll + ", dt :" + (long) (dScroll * AUTOCHANGE_WAITING_SCALE));
+                startTime -= (long) (dScroll * AUTOCHANGE_WAITING_SCALE);
+                long remainingTimeMs = waitTime + startTime - System.currentTimeMillis();
+                guiListener.autoscrollRemainingWaitTime(remainingTimeMs);
             }
         } else if (state == AutoscrollState.SCROLLING) {
             if (dScroll > 0) { //przyspieszanie przewijania
-                intervalTime -= intervalTime * dScroll * AUTOCHANGE_SPEED_SCALE;
+                intervalTime -= intervalTime * dScroll * AUTOCHANGE_INTERVAL_SCALE;
             } else if (dScroll < 0) { //zwalnianie przewijania
-                intervalTime -= intervalTime * dScroll * AUTOCHANGE_SPEED_SCALE;
+                intervalTime -= intervalTime * dScroll * AUTOCHANGE_INTERVAL_SCALE;
             }
             if (intervalTime < MIN_INTERVAL_TIME) {
                 intervalTime = MIN_INTERVAL_TIME;

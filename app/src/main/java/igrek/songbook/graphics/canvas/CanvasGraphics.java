@@ -149,15 +149,16 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 
     @Override
     protected void onTouchUp(MotionEvent event) {
+
+        float deltaX = event.getX() - startTouchX;
+        float deltaY = event.getY() - startTouchY;
         // monitorowanie zmiany przewijania
-        float dScroll = scroll - startScroll;
+        float dScroll = -deltaY;
         if (Math.abs(dScroll) > MIN_SCROLL_EVENT) {
             guiListener.onCanvasScroll(dScroll);
         }
 
         //  GESTY
-        float deltaX = event.getX() - startTouchX;
-        float deltaY = event.getY() - startTouchY;
         //gest smyrania w lewo i prawo
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
             if (Math.abs(deltaX) >= GESTURE_TRANSPOSE_MIN_DX * w) {

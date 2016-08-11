@@ -20,7 +20,7 @@ public class ChordsManager {
 
     private Paint paint = null;
 
-    private float fontsize = 21.0f;
+    private float fontsize = 22.0f;
 
     private String originalFileContent = null;
 

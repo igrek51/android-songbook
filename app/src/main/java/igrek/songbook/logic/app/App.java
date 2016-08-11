@@ -194,6 +194,12 @@ public class App extends BaseApp implements GUIListener {
     public void onAutoscrollStartRequest() {
         if (!chordsManager.getAutoscroll().isRunning()) {
             chordsManager.autoscrollStart(gui.getCanvasScroll());
+            showReusableActionInfo("Rozpoczęto autoprzewijanie.", gui.getCanvas(), "Zatrzymaj", new InfoBarClickAction() {
+                @Override
+                public void onClick() {
+                    chordsManager.autoscrollStop();
+                }
+            });
         } else {
             onCanvasClicked();
         }
@@ -203,8 +209,7 @@ public class App extends BaseApp implements GUIListener {
     public void onCanvasClicked() {
         if (chordsManager.getAutoscroll().isRunning()) {
             chordsManager.autoscrollStop();
-            hideInfo(gui.getCanvas());
-            //showCanvasInfo("Anulowano autoprzewijanie.");
+            showReusableActionInfo("Zatrzymano autoprzewijanie.", gui.getCanvas(), "OK", null);
         }
     }
 
@@ -221,11 +226,17 @@ public class App extends BaseApp implements GUIListener {
 
     @Override
     public void onAutoscrollStarted() {
-        hideInfo(gui.getCanvas());
+        showReusableActionInfo("Rozpoczęto autoprzewijanie.", gui.getCanvas(), "Zatrzymaj", new InfoBarClickAction() {
+            @Override
+            public void onClick() {
+                chordsManager.autoscrollStop();
+            }
+        });
     }
 
     @Override
     public void onAutoscrollEnded() {
+        showReusableActionInfo("Zatrzymano autoprzewijanie.", gui.getCanvas(), "OK", null);
     }
 
     @Override
