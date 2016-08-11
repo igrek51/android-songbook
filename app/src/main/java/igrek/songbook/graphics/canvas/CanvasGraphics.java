@@ -32,8 +32,8 @@ public class CanvasGraphics extends BaseCanvasGraphics {
     private final float FONTSIZE_SCALE_FACTOR = 0.7f;
 
     private final float GESTURE_TRANSPOSE_MIN_DX = 0.4f;
-    private final float GESTURE_AUTOSCROLL_BOTTOM_REGION = 0.75f;
-    private final float GESTURE_CLICK_MAX_HYPOT = 0.1f;
+    private final float GESTURE_AUTOSCROLL_BOTTOM_REGION = 0.6f;
+    private final float GESTURE_CLICK_MAX_HYPOT = 7.0f;
     private final long GESTURE_CLICK_MAX_TIME = 500;
 
     private final float MIN_SCROLL_EVENT = 10f;
@@ -172,8 +172,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
         }
         //włączenie autoscrolla - szybkie kliknięcie na dole
         float hypot = (float) Math.hypot(deltaX, deltaY);
-        int smallScreenSize = getSmallerScreenSize();
-        if (hypot / smallScreenSize <= GESTURE_CLICK_MAX_HYPOT) { //kliknięcie w jednym miejscu
+        if (hypot <= GESTURE_CLICK_MAX_HYPOT) { //kliknięcie w jednym miejscu
             if (System.currentTimeMillis() - startTouchTime <= GESTURE_CLICK_MAX_TIME) { //szybkie kliknięcie
                 if (event.getY() >= h * GESTURE_AUTOSCROLL_BOTTOM_REGION) {  //na dole
                     guiListener.onAutoscrollStartRequest();

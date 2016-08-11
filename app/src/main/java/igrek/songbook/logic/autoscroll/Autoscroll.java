@@ -10,7 +10,7 @@ public class Autoscroll {
     private AutoscrollState state;
 
     private long waitTime = 30000; // [ms]
-    private long intervalTime = 280; // [ms]
+    private long intervalTime = 250; // [ms]
     private float intervalStep = 2.0f; // [px]
 
     private float fontsize;
@@ -19,6 +19,8 @@ public class Autoscroll {
 
     private final long MIN_INTERVAL_TIME = 5;
     private final float START_NO_WAITING_MIN_SCROLL_FACTOR = 1.0f;
+
+    private final float AUTOCHANGE_SPEED_SCALE = 0.0027f;
 
     private Handler timerHandler;
     private Runnable timerRunnable;
@@ -112,8 +114,6 @@ public class Autoscroll {
 
     public void handleCanvasScroll(float dScroll) {
 
-        Output.debug("scroll: " + dScroll);
-
         if (state == AutoscrollState.WAITING) {
             if (dScroll > 0) {
                 state = AutoscrollState.SCROLLING;
@@ -121,9 +121,9 @@ public class Autoscroll {
             }
         } else if (state == AutoscrollState.SCROLLING) {
             if (dScroll > 0) { //przyspieszanie przewijania
-                intervalTime -= intervalTime * dScroll / 300;
+                intervalTime -= intervalTime * dScroll * AUTOCHANGE_SPEED_SCALE;
             } else if (dScroll < 0) { //zwalnianie przewijania
-                intervalTime -= intervalTime * dScroll / 300;
+                intervalTime -= intervalTime * dScroll * AUTOCHANGE_SPEED_SCALE;
             }
             if (intervalTime < MIN_INTERVAL_TIME) {
                 intervalTime = MIN_INTERVAL_TIME;
