@@ -128,6 +128,7 @@ public class App extends BaseApp implements GUIListener {
         if (item.isDirectory()) {
             fileTreeManager.goInto(item.getName());
             updateFileList();
+            gui.scrollToItem(0);
         } else {
             showFileContent(item.getName());
         }
