@@ -6,6 +6,8 @@ import igrek.songbook.output.Output;
 
 public class Preferences extends BasePreferences {
 
+    //TODO zapis szybkości scrolla, rozmiaru czcionki, w preferences
+
     public String startPath = "/storage/extSdCard/Gitara";
 
     public Preferences(Activity activity){
