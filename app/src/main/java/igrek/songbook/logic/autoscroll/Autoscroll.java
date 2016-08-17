@@ -20,8 +20,8 @@ public class Autoscroll {
     private final long MIN_INTERVAL_TIME = 5;
     private final float START_NO_WAITING_MIN_SCROLL_FACTOR = 1.0f;
 
-    private final float AUTOCHANGE_INTERVAL_SCALE = 0.0023f;
-    private final float AUTOCHANGE_WAITING_SCALE = 6.0f;
+    private final float AUTOCHANGE_INTERVAL_SCALE = 0.0022f;
+    private final float AUTOCHANGE_WAITING_SCALE = 7.0f;
 
     private Handler timerHandler;
     private Runnable timerRunnable;
@@ -111,6 +111,9 @@ public class Autoscroll {
     public void setFontsize(float fontsize) {
         //skalowanie czcionki zmienia skaluje intervał / step
         intervalTime = intervalTime * this.fontsize / fontsize;
+        if (intervalTime < MIN_INTERVAL_TIME) {
+            intervalTime = MIN_INTERVAL_TIME;
+        }
         this.fontsize = fontsize;
         Output.info("Nowy interwał autoprzewijania (po zmianie czcionki): " + intervalTime + " ms");
     }
@@ -121,7 +124,6 @@ public class Autoscroll {
                 state = AutoscrollState.SCROLLING;
                 guiListener.onAutoscrollStarted();
             } else if (dScroll < 0) { //zwalnianie odliczania
-                Output.debug("dScroll: " + dScroll + ", dt :" + (long) (dScroll * AUTOCHANGE_WAITING_SCALE));
                 startTime -= (long) (dScroll * AUTOCHANGE_WAITING_SCALE);
                 long remainingTimeMs = waitTime + startTime - System.currentTimeMillis();
                 guiListener.autoscrollRemainingWaitTime(remainingTimeMs);
@@ -130,8 +132,17 @@ public class Autoscroll {
             if (dScroll > 0) { //przyspieszanie przewijania
                 intervalTime -= intervalTime * dScroll * AUTOCHANGE_INTERVAL_SCALE;
             } else if (dScroll < 0) { //zwalnianie przewijania
-                //TODO jeśli scroll <= 0, przejście w tryb waiting z dodaniem czasu
-                intervalTime -= intervalTime * dScroll * AUTOCHANGE_INTERVAL_SCALE;
+                //przewinięcie na początek pliku
+                if (scroll <= 0) {
+                    //przejście w tryb waiting z dodaniem czasu
+                    state = AutoscrollState.WAITING;
+                    startTime = System.currentTimeMillis() - waitTime - (long) (dScroll * AUTOCHANGE_WAITING_SCALE);
+                    long remainingTimeMs = waitTime + startTime - System.currentTimeMillis();
+                    guiListener.autoscrollRemainingWaitTime(remainingTimeMs);
+                    return;
+                } else {
+                    intervalTime -= intervalTime * dScroll * AUTOCHANGE_INTERVAL_SCALE;
+                }
             }
             if (intervalTime < MIN_INTERVAL_TIME) {
                 intervalTime = MIN_INTERVAL_TIME;
