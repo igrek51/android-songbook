@@ -10,7 +10,7 @@ public class Autoscroll {
     private AutoscrollState state;
 
     private long waitTime = 32000; // [ms]
-    private float intervalTime = 280; // [ms]
+    private float intervalTime = 300; // [ms]
     private float intervalStep = 2.0f; // [px]
 
     private float fontsize;
