@@ -259,7 +259,7 @@ public class App extends BaseApp implements GUIListener {
     }
 
     @Override
-    public void onCanvasScroll(float dScroll) {
-        chordsManager.getAutoscroll().handleCanvasScroll(dScroll);
+    public void onCanvasScroll(float dScroll, float scroll) {
+        chordsManager.getAutoscroll().handleCanvasScroll(dScroll, scroll);
     }
 }

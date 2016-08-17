@@ -36,7 +36,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
     private final float GESTURE_CLICK_MAX_HYPOT = 7.0f;
     private final long GESTURE_CLICK_MAX_TIME = 500;
 
-    private final float MIN_SCROLL_EVENT = 10f;
+    private final float MIN_SCROLL_EVENT = 15f;
 
     private Float pointersDst0 = null;
     private Float fontsize0 = null;
@@ -155,7 +155,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
         // monitorowanie zmiany przewijania
         float dScroll = -deltaY;
         if (Math.abs(dScroll) > MIN_SCROLL_EVENT) {
-            guiListener.onCanvasScroll(dScroll);
+            guiListener.onCanvasScroll(dScroll, scroll);
         }
 
         //  GESTY

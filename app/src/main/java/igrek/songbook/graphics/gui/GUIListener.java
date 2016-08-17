@@ -32,5 +32,5 @@ public interface GUIListener {
 
     boolean canAutoScroll();
 
-    void onCanvasScroll(float dScroll);
+    void onCanvasScroll(float dScroll, float scroll);
 }

@@ -20,7 +20,7 @@ public class Autoscroll {
     private final long MIN_INTERVAL_TIME = 5;
     private final float START_NO_WAITING_MIN_SCROLL_FACTOR = 1.0f;
 
-    private final float AUTOCHANGE_INTERVAL_SCALE = 0.0025f;
+    private final float AUTOCHANGE_INTERVAL_SCALE = 0.0023f;
     private final float AUTOCHANGE_WAITING_SCALE = 6.0f;
 
     private Handler timerHandler;
@@ -109,11 +109,13 @@ public class Autoscroll {
     }
 
     public void setFontsize(float fontsize) {
-        //TODO skalowanie czcionki zmienia skaluje intervał / step
+        //skalowanie czcionki zmienia skaluje intervał / step
+        intervalTime = intervalTime * this.fontsize / fontsize;
         this.fontsize = fontsize;
+        Output.info("Nowy interwał autoprzewijania (po zmianie czcionki): " + intervalTime + " ms");
     }
 
-    public void handleCanvasScroll(float dScroll) {
+    public void handleCanvasScroll(float dScroll, float scroll) {
         if (state == AutoscrollState.WAITING) {
             if (dScroll > 0) { //przyspieszanie przewijania
                 state = AutoscrollState.SCROLLING;
