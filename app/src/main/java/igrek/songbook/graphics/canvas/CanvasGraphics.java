@@ -17,8 +17,6 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 
     //TODO test ze zmianą orientacji ekranu
 
-    //TODO przyspieszanie autscrolla (szybkości lub czasu oczekiwania) poprzez przewijanie
-
     private CRDModel crdModel = null;
 
     private float scroll = 0;

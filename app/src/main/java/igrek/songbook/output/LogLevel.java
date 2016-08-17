@@ -4,17 +4,19 @@ public enum LogLevel {
 
     OFF(0), //tylko do konfiguracji poziomów
 
-    CRITICAL_ERROR(1),
+    FATAL(10),
 
-    ERROR(2),
+    ERROR(20),
 
-    WARN(3),
+    WARN(30),
 
-    INFO(4),
+    INFO(40),
 
-    DEBUG(5),
+    DEBUG(50),
 
-    ALL(100); //tylko do konfiguracji poziomów
+    TRACE(60),
+
+    ALL(1000); //tylko do konfiguracji poziomów
 
     /** mniejszy numer poziomu - ważniejszy */
     private int levelNumber;

@@ -16,7 +16,7 @@ import igrek.songbook.logic.filetree.FileItem;
 import igrek.songbook.logic.filetree.FileTreeManager;
 import igrek.songbook.output.Output;
 
-//TODO ? menu z przyciskami: otwarcie kliknięciem (w odpowiednim miejscu), transpozycja 0, 1, 5
+//TODO menu z przyciskami: otwarcie kliknięciem (w odpowiednim miejscu), transpozycja 0, 1, 5
 
 public class App extends BaseApp implements GUIListener {
     
@@ -136,7 +136,7 @@ public class App extends BaseApp implements GUIListener {
 
     @Override
     public void onResized(int w, int h) {
-        Output.info("Rozmiar grafiki 2D zmieniony: " + w + " x " + h);
+        Output.debug("Rozmiar grafiki 2D zmieniony: " + w + " x " + h);
     }
 
     @Override

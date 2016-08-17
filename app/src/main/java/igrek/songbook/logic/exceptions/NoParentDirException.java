@@ -1,6 +1,7 @@
 package igrek.songbook.logic.exceptions;
 
 public class NoParentDirException extends Exception {
+
     public NoParentDirException() {
         super();
     }

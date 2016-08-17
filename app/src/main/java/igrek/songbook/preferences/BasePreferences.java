@@ -32,6 +32,12 @@ public class BasePreferences {
         editor.apply();
     }
 
+    public void setFloat(String name, float value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putFloat(name, value);
+        editor.apply();
+    }
+
     public void setString(String name, String value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(name, value);
@@ -52,6 +58,14 @@ public class BasePreferences {
 
     public int getInt(String name) {
         return getInt(name, 0);
+    }
+
+    public float getFloat(String name, float _default) {
+        return sharedPreferences.getFloat(name, _default);
+    }
+
+    public float getFloat(String name) {
+        return getFloat(name, 0f);
     }
 
     public String getString(String name, String _default) {

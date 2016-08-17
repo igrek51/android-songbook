@@ -10,12 +10,12 @@ import java.util.List;
 
 public class Output {
 
-    private static final LogLevel CONSOLE_LEVEL = LogLevel.DEBUG; //widoczne w konsoli
+    private static final LogLevel CONSOLE_LEVEL = LogLevel.TRACE; //widoczne w konsoli
     private static final LogLevel ECHO_LEVEL = LogLevel.OFF; //widoczne dla użytkownika (i przechowywane w historii)
 
     private static final String LOG_TAG = "ylog";
     private static final boolean SHOW_EXCEPTIONS_TRACE = true;
-    private static final LogLevel SHOW_EXECUTION_DETAILS_LEVEL = LogLevel.DEBUG;
+    private static final LogLevel SHOW_TRACE_DETAILS_LEVEL = LogLevel.TRACE;
 
     private static List<String> echoes;
     private static int errors = 0;
@@ -42,15 +42,15 @@ public class Output {
 
     public static void errorUncaught(Throwable ex) {
         errors++;
-        log(ex.getMessage(), LogLevel.CRITICAL_ERROR, "[UNCAUGHT EXCEPTION - " + ex.getClass().getName() + "] ");
+        log(ex.getMessage(), LogLevel.FATAL, "[UNCAUGHT EXCEPTION - " + ex.getClass().getName() + "] ");
         printExceptionStackTrace(ex);
     }
 
-    public static void errorCritical(final Activity activity, String e) {
+    public static void fatal(final Activity activity, String e) {
         errors++;
-        log(e, LogLevel.CRITICAL_ERROR, "[CRITICAL ERROR] ");
+        log(e, LogLevel.FATAL, "[FATAL ERROR] ");
         if (activity == null) {
-            error("errorCritical: Brak activity");
+            error("FATAL ERROR: Brak activity");
             return;
         }
         AlertDialog.Builder dlgAlert = new AlertDialog.Builder(activity);
@@ -65,10 +65,10 @@ public class Output {
         dlgAlert.create().show();
     }
 
-    public static void errorCritical(final Activity activity, Throwable ex) {
+    public static void fatal(final Activity activity, Throwable ex) {
         String e = ex.getClass().getName() + " - " + ex.getMessage();
         printExceptionStackTrace(ex);
-        errorCritical(activity, e);
+        fatal(activity, e);
     }
 
     public static void warn(String message) {
@@ -83,13 +83,17 @@ public class Output {
         log(message, LogLevel.DEBUG, "[debug] ");
     }
 
+    public static void trace(String message) {
+        log(message, LogLevel.TRACE, "[trace] ");
+    }
+
 
     private static void log(String message, LogLevel level, String logPrefix) {
 
         if (level.lowerOrEqual(CONSOLE_LEVEL)) {
 
             String consoleMessage;
-            if (level.higherOrEqual(SHOW_EXECUTION_DETAILS_LEVEL)) {
+            if (level.higherOrEqual(SHOW_TRACE_DETAILS_LEVEL)) {
                 final int stackTraceIndex = 4;
 
                 StackTraceElement ste = Thread.currentThread().getStackTrace()[stackTraceIndex];
@@ -122,7 +126,7 @@ public class Output {
             String methodName = ste.getMethodName();
             String fileName = ste.getFileName();
             int lineNumber = ste.getLineNumber();
-            String consoleMessage = "[debug] STACK TRACE " + (i - 3) + ": " + methodName + "(" + fileName + ":" + lineNumber + ")";
+            String consoleMessage = "[trace] STACK TRACE " + (i - 3) + ": " + methodName + "(" + fileName + ":" + lineNumber + ")";
             Log.i(LOG_TAG, consoleMessage);
         }
     }
@@ -180,7 +184,7 @@ public class Output {
         return builder.toString();
     }
 
-    public static void debug() {
-        log("Quick Debug: " + System.currentTimeMillis(), LogLevel.DEBUG, "[debug] ");
+    public static void trace() {
+        log("Quick Trace: " + System.currentTimeMillis(), LogLevel.DEBUG, "[trace] ");
     }
 }

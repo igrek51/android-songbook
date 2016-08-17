@@ -69,7 +69,7 @@ public abstract class BaseApp implements ITouchController {
 
         //        activity.setContentView(graphics);
 
-        Output.info("Inicjalizacja aplikacji...");
+        Output.debug("Inicjalizacja aplikacji...");
     }
 
     public void pause() {
@@ -111,11 +111,11 @@ public abstract class BaseApp implements ITouchController {
         int screenHeightDp = newConfig.screenHeightDp;
         int orientation = newConfig.orientation;
         int densityDpi = newConfig.densityDpi;
-        Output.info("Rozmiar ekranu zmieniony na: " + screenWidthDp + "dp x " + screenHeightDp + "dp (DPI = " + densityDpi + ")");
+        Output.debug("Rozmiar ekranu zmieniony na: " + screenWidthDp + "dp x " + screenHeightDp + "dp (DPI = " + densityDpi + ")");
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Output.info("Zmiana orientacji ekranu: landscape");
+            Output.debug("Zmiana orientacji ekranu: landscape");
         } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            Output.info("Zmiana orientacji ekranu: portrait");
+            Output.debug("Zmiana orientacji ekranu: portrait");
         }
     }
 

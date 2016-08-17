@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             app = new App(this);
         } catch (Exception ex) {
-            Output.errorCritical(this, ex);
+            Output.fatal(this, ex);
         }
     }
 
