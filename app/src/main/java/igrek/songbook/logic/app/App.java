@@ -18,7 +18,7 @@ import igrek.songbook.output.Output;
 
 //TODO menu z przyciskami: otwarcie kliknięciem (w odpowiednim miejscu), transpozycja 0, 1, 5
 
-//TODO dist ap
+//TODO dist apk
 //TODO user action controller
 
 public class App extends BaseApp implements GUIListener {
