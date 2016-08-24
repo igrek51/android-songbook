@@ -18,6 +18,9 @@ import igrek.songbook.output.Output;
 
 //TODO menu z przyciskami: otwarcie kliknięciem (w odpowiednim miejscu), transpozycja 0, 1, 5
 
+//TODO dist ap
+//TODO user action controller
+
 public class App extends BaseApp implements GUIListener {
     
     private FileTreeManager fileTreeManager;
@@ -29,8 +32,8 @@ public class App extends BaseApp implements GUIListener {
     
     public App(AppCompatActivity activity) {
         super(activity);
-        
-        preferences.preferencesLoad();
+
+        preferences.loadAll();
 
         fileTreeManager = new FileTreeManager(files, getHomePath());
         scrollPosBuffer = new ScrollPosBuffer();
@@ -46,7 +49,7 @@ public class App extends BaseApp implements GUIListener {
     
     @Override
     public void quit() {
-        preferences.preferencesSave();
+        preferences.saveAll();
         super.quit();
     }
     
@@ -60,6 +63,9 @@ public class App extends BaseApp implements GUIListener {
             return true;
         } else if (id == R.id.action_home) {
             homeClicked();
+            return true;
+        } else if (id == R.id.action_sethomedir) {
+            setHomePath();
             return true;
         }
         return false;
@@ -172,7 +178,7 @@ public class App extends BaseApp implements GUIListener {
     }
 
     private String getHomePath() {
-        return preferences.getString("startPath", "/");
+        return preferences.startPath;
     }
 
     private boolean isInHomeDir() {
@@ -187,6 +193,14 @@ public class App extends BaseApp implements GUIListener {
             updateFileList();
         }
     }
+
+    private void setHomePath() {
+        String homeDir = fileTreeManager.getCurrentPath();
+        preferences.startPath = homeDir;
+        preferences.saveAll();
+        showReusableActionInfo("Zapisano obecny folder jako startowy.", gui.getMainView(), "OK", null);
+    }
+
 
     private void restoreScrollPosition(String path) {
         Integer savedScrollPos = scrollPosBuffer.restoreScrollPosition(path);
@@ -262,4 +276,6 @@ public class App extends BaseApp implements GUIListener {
     public void onCanvasScroll(float dScroll, float scroll) {
         chordsManager.getAutoscroll().handleCanvasScroll(dScroll, scroll);
     }
+
+
 }

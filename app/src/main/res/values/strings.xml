@@ -8,4 +8,5 @@
     <string name="action_font_increase">Zwiększ czcionkę</string>
     <string name="action_font_decrease">Zmniejsz czcionkę</string>
     <string name="action_home">root</string>
+    <string name="action_sethomedir">Ustaw folder startowy</string>
 </resources>

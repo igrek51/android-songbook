@@ -22,4 +22,10 @@
         android:icon="@drawable/ic_menu_home"
         app:showAsAction="ifRoom"/>
 
+    <item
+        android:id="@+id/action_sethomedir"
+        android:orderInCategory="100"
+        android:title="@string/action_sethomedir"
+        app:showAsAction="never"/>
+
 </menu>

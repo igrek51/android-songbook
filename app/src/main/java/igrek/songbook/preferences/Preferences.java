@@ -23,11 +23,13 @@ public class Preferences extends BasePreferences {
         super(activity);
     }
 
-    public void preferencesSave() {
-        setString(START_PATH, startPath);
+    public void saveAll() {
+        if (startPath != null) {
+            setString(START_PATH, startPath);
+        }
     }
 
-    public void preferencesLoad() {
+    public void loadAll() {
         if (exists(START_PATH)) {
             startPath = getString(START_PATH);
             Output.debug("Wczytano początkową ścieżkę: " + startPath);
