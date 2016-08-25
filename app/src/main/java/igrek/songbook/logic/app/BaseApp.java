@@ -1,5 +1,6 @@
 package igrek.songbook.logic.app;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -60,9 +61,7 @@ public abstract class BaseApp implements ITouchController {
         if (FULLSCREEN) {
             activity.getWindow().setFlags(FULLSCREEN_FLAG, FULLSCREEN_FLAG);
         }
-        if (KEEP_SCREEN_ON) {
-            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        }
+
         new Output();
         files = new Files(activity);
         preferences = new Preferences(activity);
@@ -87,7 +86,7 @@ public abstract class BaseApp implements ITouchController {
         }
         Output.info("Zamykanie aplikacji...");
         running = false;
-        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        keepScreenOff(activity);
         activity.finish();
     }
 
@@ -195,5 +194,13 @@ public abstract class BaseApp implements ITouchController {
         if (snackbar != null) {
             snackbar.dismiss();
         }
+    }
+
+    protected void keepScreenOn(Activity activity) {
+        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    protected void keepScreenOff(Activity activity) {
+        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 }

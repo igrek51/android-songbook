@@ -102,6 +102,8 @@ public class App extends BaseApp implements GUIListener {
             state = AppState.FILE_LIST;
             gui.showFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
 
+            keepScreenOff(activity);
+
             new Handler().post(new Runnable() {
                 @Override
                 public void run() {
@@ -120,6 +122,9 @@ public class App extends BaseApp implements GUIListener {
         state = AppState.FILE_CONTENT;
         fileTreeManager.setCurrentFileName(filename);
         gui.showFileContent();
+        if (KEEP_SCREEN_ON) {
+            keepScreenOn(activity);
+        }
     }
     
     
