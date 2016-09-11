@@ -5,11 +5,17 @@ import android.os.Handler;
 import igrek.songbook.graphics.canvas.CanvasGraphics;
 import igrek.songbook.logger.Logs;
 import igrek.songbook.logic.controller.AppController;
+import igrek.songbook.logic.controller.dispatcher.IEvent;
+import igrek.songbook.logic.controller.dispatcher.IEventObserver;
+import igrek.songbook.logic.controller.services.IService;
+import igrek.songbook.logic.crdfile.ChordsManager;
 import igrek.songbook.logic.events.AutoscrollEndedEvent;
 import igrek.songbook.logic.events.AutoscrollRemainingWaitTimeEvent;
+import igrek.songbook.logic.events.AutoscrollStartRequestEvent;
 import igrek.songbook.logic.events.AutoscrollStartedEvent;
+import igrek.songbook.logic.events.AutoscrollStopRequestEvent;
 
-public class Autoscroll {
+public class Autoscroll implements IService, IEventObserver {
 
     private AutoscrollState state;
 
@@ -30,7 +36,8 @@ public class Autoscroll {
     private Handler timerHandler;
     private Runnable timerRunnable;
 
-    public Autoscroll(float fontsize) {
+    public Autoscroll() {
+
         timerHandler = new Handler();
         timerRunnable = new Runnable() {
             @Override
@@ -39,7 +46,13 @@ public class Autoscroll {
                 handleAutoscroll();
             }
         };
-        this.fontsize = fontsize;
+
+        ChordsManager chordsManager = AppController.getService(ChordsManager.class);
+        fontsize = chordsManager.getFontsize();
+
+        AppController.registerEventObserver(AutoscrollStartRequestEvent.class, this);
+        AppController.registerEventObserver(AutoscrollStopRequestEvent.class, this);
+
         reset();
     }
 
@@ -47,7 +60,9 @@ public class Autoscroll {
         stop();
     }
 
-    public void start(float scroll) {
+    public void start() {
+        CanvasGraphics canvas = AppController.getService(CanvasGraphics.class);
+        float scroll = canvas.getScroll();
         if (scroll <= START_NO_WAITING_MIN_SCROLL_FACTOR * fontsize) {
             start(true);
         } else {
@@ -55,7 +70,7 @@ public class Autoscroll {
         }
     }
 
-    public void start(boolean withWaiting) {
+    private void start(boolean withWaiting) {
         if (isRunning()) {
             stop();
         }
@@ -78,14 +93,6 @@ public class Autoscroll {
 
     public boolean isRunning() {
         return state == AutoscrollState.WAITING || state == AutoscrollState.SCROLLING;
-    }
-
-    public boolean isWaiting() {
-        return state == AutoscrollState.WAITING;
-    }
-
-    public boolean isScrolling() {
-        return state == AutoscrollState.SCROLLING;
     }
 
     private void handleAutoscroll() {
@@ -151,6 +158,15 @@ public class Autoscroll {
                 intervalTime = MIN_INTERVAL_TIME;
             }
             Logs.info("Nowy interwał autoprzewijania: " + intervalTime + " ms");
+        }
+    }
+
+    @Override
+    public void onEvent(IEvent event) {
+        if (event instanceof AutoscrollStartRequestEvent) {
+            start();
+        } else if (event instanceof AutoscrollStopRequestEvent) {
+            stop();
         }
     }
 }

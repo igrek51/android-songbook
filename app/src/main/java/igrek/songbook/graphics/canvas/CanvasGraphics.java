@@ -13,7 +13,7 @@ import igrek.songbook.logic.crdfile.CRDFragment;
 import igrek.songbook.logic.crdfile.CRDLine;
 import igrek.songbook.logic.crdfile.CRDModel;
 import igrek.songbook.logic.crdfile.CRDTextType;
-import igrek.songbook.logic.events.AutoscrollStartRequestEvent;
+import igrek.songbook.logic.events.AutoscrollStartRequestUIEvent;
 import igrek.songbook.logic.events.CanvasClickedEvent;
 import igrek.songbook.logic.events.CanvasScrollEvent;
 import igrek.songbook.logic.events.FontsizeChangedEvent;
@@ -182,7 +182,7 @@ public class CanvasGraphics extends BaseCanvasGraphics implements IService {
         if (hypot <= GESTURE_CLICK_MAX_HYPOT) { //kliknięcie w jednym miejscu
             if (System.currentTimeMillis() - startTouchTime <= GESTURE_CLICK_MAX_TIME) { //szybkie kliknięcie
                 if (event.getY() >= h * GESTURE_AUTOSCROLL_BOTTOM_REGION) {  //na dole
-                    AppController.sendEvent(new AutoscrollStartRequestEvent());
+                    AppController.sendEvent(new AutoscrollStartRequestUIEvent());
                 } else {
                     AppController.sendEvent(new CanvasClickedEvent());
                 }

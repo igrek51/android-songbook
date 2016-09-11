@@ -5,8 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import igrek.songbook.logger.Logs;
+import igrek.songbook.logic.controller.services.IService;
 
-public class ChordsTransposer {
+public class ChordsTransposer implements IService {
 
     private final String soundNames[] = {
             "c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "b", "h", //mollowe

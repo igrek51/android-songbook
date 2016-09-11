@@ -133,7 +133,12 @@ public abstract class BaseApp {
      * @param actionName tekst przycisku akcji (jeśli null - brak przycisku akcji)
      * @param action akcja kliknięcia przycisku (jeśli null - schowanie wyświetlanego tekstu)
      */
-    public void showReusableActionInfo(String info, View view, String actionName, InfoBarClickAction action){
+    public void showActionInfo(String info, View view, String actionName, InfoBarClickAction action) {
+
+        if (view == null) {
+            view = getActiveView();
+        }
+
         Snackbar snackbar = infobars.get(view);
         if (snackbar == null) { //nowy
             snackbar = Snackbar.make(view, info, Snackbar.LENGTH_SHORT);
@@ -181,4 +186,6 @@ public abstract class BaseApp {
     protected void keepScreenOff(Activity activity) {
         activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
+
+    protected abstract View getActiveView();
 }

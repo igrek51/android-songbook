@@ -3,11 +3,11 @@ package igrek.songbook.logic.crdfile;
 import android.graphics.Paint;
 
 import igrek.songbook.logic.autoscroll.Autoscroll;
+import igrek.songbook.logic.controller.AppController;
+import igrek.songbook.logic.controller.services.IService;
 import igrek.songbook.logic.music.transposer.ChordsTransposer;
 
-public class ChordsManager {
-
-    private ChordsTransposer chordsTransposer;
+public class ChordsManager implements IService {
 
     private int transposed = 0;
 
@@ -23,18 +23,14 @@ public class ChordsManager {
 
     private String originalFileContent = null;
 
-    //TODO przenieść obsługę autoscrolla do innej klasy lub zmienić sposób komunikacji
-    private Autoscroll autoscroll;
-
 
     public ChordsManager() {
-        chordsTransposer = new ChordsTransposer();
         crdParser = new CRDParser();
-        autoscroll = new Autoscroll(fontsize);
     }
 
     public void reset() {
         transposed = 0;
+        Autoscroll autoscroll = AppController.getService(Autoscroll.class);
         autoscroll.reset();
     }
 
@@ -49,7 +45,6 @@ public class ChordsManager {
             this.paint = paint;
         }
 
-        chordsTransposer = new ChordsTransposer();
         crdParser = new CRDParser();
 
         parseAndTranspose(originalFileContent);
@@ -71,10 +66,13 @@ public class ChordsManager {
     public void setFontsize(float fontsize) {
         if (fontsize < 1) fontsize = 1;
         this.fontsize = fontsize;
+        Autoscroll autoscroll = AppController.getService(Autoscroll.class);
         autoscroll.setFontsize(fontsize);
     }
 
     private void parseAndTranspose(String originalFileContent) {
+
+        ChordsTransposer chordsTransposer = AppController.getService(ChordsTransposer.class);
 
         String transposedContent = chordsTransposer.transposeContent(originalFileContent, transposed);
 
@@ -90,17 +88,5 @@ public class ChordsManager {
 
     public int getTransposed() {
         return transposed;
-    }
-
-    public void autoscrollStart(float scroll) {
-        autoscroll.start(scroll);
-    }
-
-    public void autoscrollStop() {
-        autoscroll.stop();
-    }
-
-    public Autoscroll getAutoscroll() {
-        return autoscroll;
     }
 }

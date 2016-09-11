@@ -26,11 +26,6 @@ public class GUI extends GUIBase {
         super(activity);
     }
 
-    @Override
-    protected void init() {
-
-    }
-
     public void showFileList(String currentDir, List<FileItem> items) {
 
         setFullscreen(false);
@@ -104,21 +99,5 @@ public class GUI extends GUIBase {
 
     public void scrollToPosition(int y) {
         itemsListView.scrollToPosition(y);
-    }
-
-    public CanvasGraphics getCanvas() {
-        return canvas;
-    }
-
-    public float getCanvasScroll() {
-        return canvas.getScroll();
-    }
-
-    public boolean auscrollScrollBy(float intervalStep) {
-        return canvas.autoscrollBy(intervalStep);
-    }
-
-    public boolean canAutoScroll() {
-        return canvas.canAutoScroll();
     }
 }

@@ -4,6 +4,7 @@ import android.graphics.Paint;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
+import android.view.View;
 
 import igrek.songbook.R;
 import igrek.songbook.filesystem.Filesystem;
@@ -12,6 +13,7 @@ import igrek.songbook.graphics.gui.GUI;
 import igrek.songbook.graphics.gui.ScrollPosBuffer;
 import igrek.songbook.graphics.infobar.InfoBarClickAction;
 import igrek.songbook.logger.Logs;
+import igrek.songbook.logic.autoscroll.Autoscroll;
 import igrek.songbook.logic.controller.AppController;
 import igrek.songbook.logic.controller.dispatcher.IEvent;
 import igrek.songbook.logic.controller.dispatcher.IEventObserver;
@@ -19,7 +21,9 @@ import igrek.songbook.logic.crdfile.ChordsManager;
 import igrek.songbook.logic.events.AutoscrollEndedEvent;
 import igrek.songbook.logic.events.AutoscrollRemainingWaitTimeEvent;
 import igrek.songbook.logic.events.AutoscrollStartRequestEvent;
+import igrek.songbook.logic.events.AutoscrollStartRequestUIEvent;
 import igrek.songbook.logic.events.AutoscrollStartedEvent;
+import igrek.songbook.logic.events.AutoscrollStopRequestEvent;
 import igrek.songbook.logic.events.CanvasClickedEvent;
 import igrek.songbook.logic.events.CanvasScrollEvent;
 import igrek.songbook.logic.events.FontsizeChangedEvent;
@@ -31,6 +35,7 @@ import igrek.songbook.logic.events.TransposedEvent;
 import igrek.songbook.logic.exceptions.NoParentDirException;
 import igrek.songbook.logic.filetree.FileItem;
 import igrek.songbook.logic.filetree.FileTreeManager;
+import igrek.songbook.logic.music.transposer.ChordsTransposer;
 import igrek.songbook.preferences.Preferences;
 
 //TODO menu z przyciskami: otwarcie kliknięciem (w odpowiednim miejscu), transpozycja 0, 1, 5
@@ -52,7 +57,8 @@ public class App extends BaseApp implements IEventObserver {
         registerEventObservers();
 
         fileTreeManager = new FileTreeManager(getHomePath());
-        chordsManager = new ChordsManager();
+
+        chordsManager = AppController.getService(ChordsManager.class);
 
         gui = new GUI(activity);
         gui.showFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
@@ -65,7 +71,10 @@ public class App extends BaseApp implements IEventObserver {
         AppController.registerService(new Filesystem(activity));
         AppController.registerService(new Preferences(activity));
 
+        AppController.registerService(new ChordsManager());
         AppController.registerService(new ScrollPosBuffer());
+        AppController.registerService(new ChordsTransposer());
+        AppController.registerService(new Autoscroll());
     }
 
     private void registerEventObservers() {
@@ -76,7 +85,7 @@ public class App extends BaseApp implements IEventObserver {
         AppController.registerEventObserver(TransposedEvent.class, this);
         AppController.registerEventObserver(FontsizeChangedEvent.class, this);
         AppController.registerEventObserver(AutoscrollRemainingWaitTimeEvent.class, this);
-        AppController.registerEventObserver(AutoscrollStartRequestEvent.class, this);
+        AppController.registerEventObserver(AutoscrollStartRequestUIEvent.class, this);
         AppController.registerEventObserver(AutoscrollStartedEvent.class, this);
         AppController.registerEventObserver(AutoscrollEndedEvent.class, this);
         AppController.registerEventObserver(CanvasClickedEvent.class, this);
@@ -135,7 +144,7 @@ public class App extends BaseApp implements IEventObserver {
         if (state == AppState.FILE_LIST) {
             goUp();
         } else if (state == AppState.FILE_CONTENT) {
-            chordsManager.autoscrollStop();
+            AppController.sendEvent(new AutoscrollStopRequestEvent());
             state = AppState.FILE_LIST;
             gui.showFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
 
@@ -188,7 +197,7 @@ public class App extends BaseApp implements IEventObserver {
         String homeDir = fileTreeManager.getCurrentPath();
         preferences.startPath = homeDir;
         preferences.saveAll();
-        showReusableActionInfo("Zapisano obecny folder jako startowy.", gui.getMainView(), "OK", null);
+        showActionInfo("Zapisano obecny folder jako startowy.", null, "OK", null);
     }
 
 
@@ -201,6 +210,10 @@ public class App extends BaseApp implements IEventObserver {
     }
 
 
+    @Override
+    protected View getActiveView() {
+        return gui.getMainView();
+    }
 
     @Override
     public void onEvent(IEvent event) {
@@ -249,7 +262,7 @@ public class App extends BaseApp implements IEventObserver {
 
             chordsManager.transpose(t);
             gui.setCRDModel(chordsManager.getCRDModel());
-            showReusableActionInfo("Transpozycja: " + chordsManager.getTransposed(), gui.getCanvas(), "Zeruj", new InfoBarClickAction() {
+            showActionInfo("Transpozycja: " + chordsManager.getTransposed(), null, "Zeruj", new InfoBarClickAction() {
                 @Override
                 public void onClick() {
                     AppController.sendEvent(new TransposedEvent(-chordsManager.getTransposed()));
@@ -270,27 +283,29 @@ public class App extends BaseApp implements IEventObserver {
             long ms = ((AutoscrollRemainingWaitTimeEvent) event).getMs();
 
             int seconds = (int) ((ms + 500) / 1000);
-            showReusableActionInfo("Autoprzewijanie za " + seconds + " s.", gui.getCanvas(), "Zatrzymaj", new InfoBarClickAction() {
+            showActionInfo("Autoprzewijanie za " + seconds + " s.", null, "Zatrzymaj", new InfoBarClickAction() {
                 @Override
                 public void onClick() {
-                    chordsManager.autoscrollStop();
+                    AppController.sendEvent(new AutoscrollStopRequestEvent());
                 }
             });
 
-        } else if (event instanceof AutoscrollStartRequestEvent) {
+        } else if (event instanceof AutoscrollStartRequestUIEvent) {
 
-            if (!chordsManager.getAutoscroll().isRunning()) {
+            Autoscroll autoscroll = AppController.getService(Autoscroll.class);
+
+            if (!autoscroll.isRunning()) {
                 CanvasGraphics canvas = AppController.getService(CanvasGraphics.class);
                 if (canvas.canAutoScroll()) {
-                    chordsManager.autoscrollStart(gui.getCanvasScroll());
-                    showReusableActionInfo("Rozpoczęto autoprzewijanie.", gui.getCanvas(), "Zatrzymaj", new InfoBarClickAction() {
+                    AppController.sendEvent(new AutoscrollStartRequestEvent());
+                    showActionInfo("Rozpoczęto autoprzewijanie.", null, "Zatrzymaj", new InfoBarClickAction() {
                         @Override
                         public void onClick() {
-                            chordsManager.autoscrollStop();
+                            AppController.sendEvent(new AutoscrollStopRequestEvent());
                         }
                     });
                 } else {
-                    showReusableActionInfo("EOF - Zatrzymano autoprzewijanie.", gui.getCanvas(), "OK", null);
+                    showActionInfo("EOF - Zatrzymano autoprzewijanie.", null, "OK", null);
                 }
             } else {
                 AppController.sendEvent(new CanvasClickedEvent());
@@ -298,22 +313,23 @@ public class App extends BaseApp implements IEventObserver {
 
         } else if (event instanceof AutoscrollStartedEvent) {
 
-            showReusableActionInfo("Rozpoczęto autoprzewijanie.", gui.getCanvas(), "Zatrzymaj", new InfoBarClickAction() {
+            showActionInfo("Rozpoczęto autoprzewijanie.", null, "Zatrzymaj", new InfoBarClickAction() {
                 @Override
                 public void onClick() {
-                    chordsManager.autoscrollStop();
+                    AppController.sendEvent(new AutoscrollStopRequestEvent());
                 }
             });
 
         } else if (event instanceof AutoscrollEndedEvent) {
 
-            showReusableActionInfo("EOF - Zatrzymano autoprzewijanie.", gui.getCanvas(), "OK", null);
+            showActionInfo("EOF - Zatrzymano autoprzewijanie.", null, "OK", null);
 
         } else if (event instanceof CanvasClickedEvent) {
 
-            if (chordsManager.getAutoscroll().isRunning()) {
-                chordsManager.autoscrollStop();
-                showReusableActionInfo("Zatrzymano autoprzewijanie.", gui.getCanvas(), "OK", null);
+            Autoscroll autoscroll = AppController.getService(Autoscroll.class);
+            if (autoscroll.isRunning()) {
+                AppController.sendEvent(new AutoscrollStopRequestEvent());
+                showActionInfo("Zatrzymano autoprzewijanie.", null, "OK", null);
             }
 
         } else if (event instanceof CanvasScrollEvent) {
@@ -321,7 +337,8 @@ public class App extends BaseApp implements IEventObserver {
             float dScroll = ((CanvasScrollEvent) event).getdScroll();
             float scroll = ((CanvasScrollEvent) event).getScroll();
 
-            chordsManager.getAutoscroll().handleCanvasScroll(dScroll, scroll);
+            Autoscroll autoscroll = AppController.getService(Autoscroll.class);
+            autoscroll.handleCanvasScroll(dScroll, scroll);
 
         }
     }
