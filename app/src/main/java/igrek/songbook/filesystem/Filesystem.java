@@ -13,13 +13,15 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
-import igrek.songbook.output.Output;
+import igrek.songbook.logger.Logs;
+import igrek.songbook.logic.controller.services.IService;
 
-public class Files {
+public class Filesystem implements IService {
+
     Activity activity;
     private String pathToExtSD;
 
-    public Files(Activity activity) {
+    public Filesystem(Activity activity) {
         this.activity = activity;
         pathSDInit();
     }
@@ -58,7 +60,7 @@ public class Files {
         File f = new File(path);
         File file[] = f.listFiles();
         if (file == null) {
-            Output.warn("file array null for path: " + path);
+            Logs.warn("file array null for path: " + path);
             return files;
         }
         for (File aFile : file) {

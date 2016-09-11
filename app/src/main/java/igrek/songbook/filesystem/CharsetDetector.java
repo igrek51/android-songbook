@@ -1,6 +1,6 @@
 package igrek.songbook.filesystem;
 
-import igrek.songbook.output.Output;
+import igrek.songbook.logger.Logs;
 
 public class CharsetDetector {
 
@@ -18,17 +18,17 @@ public class CharsetDetector {
 
         //jeśli plik zawiera znaki specjalne z UTF8
         if (containsBytes(bytes, utf8PLPrefixBytes)) {
-            Output.info("Wykryte kodowanie: " + CHARSET_UTF8);
+            Logs.info("Wykryte kodowanie: " + CHARSET_UTF8);
             return CHARSET_UTF8;
         }
 
         //jeśli plik zawiera polskie litery z CP1250
         if (containsBytes(bytes, cp1250PLBytes)) {
-            Output.info("Wykryte kodowanie: " + CHARSET_CP1250);
+            Logs.info("Wykryte kodowanie: " + CHARSET_CP1250);
             return CHARSET_CP1250;
         }
 
-        Output.info("Domyślne kodowanie: " + CHARSET_UTF8);
+        Logs.info("Domyślne kodowanie: " + CHARSET_UTF8);
         return CHARSET_UTF8;
     }
 

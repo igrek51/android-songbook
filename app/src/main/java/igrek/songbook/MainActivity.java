@@ -7,8 +7,8 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import igrek.songbook.logger.Logs;
 import igrek.songbook.logic.app.App;
-import igrek.songbook.output.Output;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             app = new App(this);
         } catch (Exception ex) {
-            Output.fatal(this, ex);
+            Logs.fatal(this, ex);
         }
     }
 

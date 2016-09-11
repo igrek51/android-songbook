@@ -3,7 +3,7 @@ package igrek.songbook.logic.autoscroll;
 import android.os.Handler;
 
 import igrek.songbook.graphics.gui.GUIListener;
-import igrek.songbook.output.Output;
+import igrek.songbook.logger.Logs;
 
 public class Autoscroll {
 
@@ -115,7 +115,7 @@ public class Autoscroll {
             intervalTime = MIN_INTERVAL_TIME;
         }
         this.fontsize = fontsize;
-        Output.info("Nowy interwał autoprzewijania (po zmianie czcionki): " + intervalTime + " ms");
+        Logs.info("Nowy interwał autoprzewijania (po zmianie czcionki): " + intervalTime + " ms");
     }
 
     public void handleCanvasScroll(float dScroll, float scroll) {
@@ -147,7 +147,7 @@ public class Autoscroll {
             if (intervalTime < MIN_INTERVAL_TIME) {
                 intervalTime = MIN_INTERVAL_TIME;
             }
-            Output.info("Nowy interwał autoprzewijania: " + intervalTime + " ms");
+            Logs.info("Nowy interwał autoprzewijania: " + intervalTime + " ms");
         }
     }
 }

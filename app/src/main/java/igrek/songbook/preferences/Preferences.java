@@ -2,13 +2,14 @@ package igrek.songbook.preferences;
 
 import android.app.Activity;
 
-import igrek.songbook.output.Output;
+import igrek.songbook.logger.Logs;
+import igrek.songbook.logic.controller.services.IService;
 
-public class Preferences extends BasePreferences {
+public class Preferences extends BasePreferences implements IService {
 
     //TODO zapis szybkości scrolla, rozmiaru czcionki, w preferences
 
-    //TODO oznaczenie pól anotacjami, zapis i odczyt przez mechanizm reflekcji
+    //TODO oznaczenie pól anotacjami, zapis i odczyt przez mechanizm refleksji
 
     public String startPath = "/storage/extSdCard/Gitara";
     private final String START_PATH = "startPath";
@@ -32,9 +33,9 @@ public class Preferences extends BasePreferences {
     public void loadAll() {
         if (exists(START_PATH)) {
             startPath = getString(START_PATH);
-            Output.debug("Wczytano początkową ścieżkę: " + startPath);
+            Logs.debug("Wczytano początkową ścieżkę: " + startPath);
         } else {
-            Output.debug("Wczytano domyślną początkową ścieżkę: " + startPath);
+            Logs.debug("Wczytano domyślną początkową ścieżkę: " + startPath);
         }
     }
 }

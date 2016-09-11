@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import igrek.songbook.output.Output;
+import igrek.songbook.logger.Logs;
 
 public class ChordsTransposer {
 
@@ -120,7 +120,7 @@ public class ChordsTransposer {
                 if (chordNumber != null) break; //rozpoznano akord z dopisanymi znakami (literami lub liczbami)
             }
             if (chordNumber == null) { //nie rozpoznano żadnego akordu
-                Output.warn("Transpozycja: Nie rozpoznano akordu: " + chord);
+                Logs.warn("Transpozycja: Nie rozpoznano akordu: " + chord);
                 return chord;
             }
         }

@@ -13,13 +13,12 @@ import android.view.WindowManager;
 
 import java.util.HashMap;
 
-import igrek.songbook.filesystem.Files;
+import igrek.songbook.filesystem.Filesystem;
 import igrek.songbook.graphics.infobar.InfoBarClickAction;
-import igrek.songbook.logic.touchcontroller.ITouchController;
-import igrek.songbook.output.Output;
+import igrek.songbook.logger.Logs;
 import igrek.songbook.preferences.Preferences;
 
-public abstract class BaseApp implements ITouchController {
+public abstract class BaseApp {
 
     public static final int FULLSCREEN_FLAG = WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
     public static final boolean FULLSCREEN = false;
@@ -34,7 +33,7 @@ public abstract class BaseApp implements ITouchController {
 
     boolean running = true;
 
-    public Files files;
+    public Filesystem filesystem;
     public Preferences preferences;
 
     public BaseApp(AppCompatActivity aActivity) {
@@ -45,7 +44,7 @@ public abstract class BaseApp implements ITouchController {
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread thread, Throwable th) {
-                Output.errorUncaught(th);
+                Logs.errorUncaught(th);
                 //przekazanie dalej do systemu operacyjnego
                 defaultUEH.uncaughtException(thread, th);
             }
@@ -62,13 +61,13 @@ public abstract class BaseApp implements ITouchController {
             activity.getWindow().setFlags(FULLSCREEN_FLAG, FULLSCREEN_FLAG);
         }
 
-        new Output();
-        files = new Files(activity);
+        new Logs();
+        filesystem = new Filesystem(activity);
         preferences = new Preferences(activity);
 
         //        activity.setContentView(graphics);
 
-        Output.debug("Inicjalizacja aplikacji...");
+        Logs.debug("Inicjalizacja aplikacji...");
     }
 
     public void pause() {
@@ -81,40 +80,26 @@ public abstract class BaseApp implements ITouchController {
 
     public void quit() {
         if (!running) { //próba ponownego zamknięcia
-            Output.warn("Zamykanie - próba ponownego zamknięcia");
+            Logs.warn("Zamykanie - próba ponownego zamknięcia");
             return;
         }
-        Output.info("Zamykanie aplikacji...");
+        Logs.info("Zamykanie aplikacji...");
         running = false;
         keepScreenOff(activity);
         activity.finish();
     }
 
-    @Override
-    public boolean onTouchDown(float x, float y) {
-        return false;
-    }
-
-    @Override
-    public boolean onTouchMove(float x, float y) {
-        return false;
-    }
-
-    @Override
-    public boolean onTouchUp(float x, float y) {
-        return false;
-    }
 
     public void onResizeEvent(Configuration newConfig) {
         int screenWidthDp = newConfig.screenWidthDp;
         int screenHeightDp = newConfig.screenHeightDp;
         int orientation = newConfig.orientation;
         int densityDpi = newConfig.densityDpi;
-        Output.debug("Rozmiar ekranu zmieniony na: " + screenWidthDp + "dp x " + screenHeightDp + "dp (DPI = " + densityDpi + ")");
+        Logs.debug("Rozmiar ekranu zmieniony na: " + screenWidthDp + "dp x " + screenHeightDp + "dp (DPI = " + densityDpi + ")");
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Output.debug("Zmiana orientacji ekranu: landscape");
+            Logs.debug("Zmiana orientacji ekranu: landscape");
         } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            Output.debug("Zmiana orientacji ekranu: portrait");
+            Logs.debug("Zmiana orientacji ekranu: portrait");
         }
     }
 
@@ -186,7 +171,7 @@ public abstract class BaseApp implements ITouchController {
 
         snackbar.show();
         infobars.put(view, snackbar);
-        Output.info(info);
+        Logs.info(info);
     }
 
     public void hideInfo(View view){

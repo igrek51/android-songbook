@@ -1,4 +1,4 @@
-package igrek.songbook.output;
+package igrek.songbook.logger;
 
 public enum LogLevel {
 

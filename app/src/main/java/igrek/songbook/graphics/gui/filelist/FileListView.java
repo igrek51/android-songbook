@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import igrek.songbook.graphics.gui.GUIListener;
+import igrek.songbook.logger.Logs;
 import igrek.songbook.logic.filetree.FileItem;
-import igrek.songbook.output.Output;
 
 public class FileListView extends ListView implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
@@ -106,7 +106,7 @@ public class FileListView extends ListView implements AdapterView.OnItemClickLis
     private int getItemHeight(int position) {
         Integer h = itemHeights.get(position);
         if (h == null) {
-            Output.warn("Item View = null");
+            Logs.warn("Item View = null");
         }
         return h != null ? h : 0;
     }

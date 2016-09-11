@@ -10,16 +10,15 @@ import igrek.songbook.graphics.gui.GUI;
 import igrek.songbook.graphics.gui.GUIListener;
 import igrek.songbook.graphics.gui.ScrollPosBuffer;
 import igrek.songbook.graphics.infobar.InfoBarClickAction;
+import igrek.songbook.logger.Logs;
 import igrek.songbook.logic.crdfile.ChordsManager;
 import igrek.songbook.logic.exceptions.NoParentDirException;
 import igrek.songbook.logic.filetree.FileItem;
 import igrek.songbook.logic.filetree.FileTreeManager;
-import igrek.songbook.output.Output;
 
 //TODO menu z przyciskami: otwarcie kliknięciem (w odpowiednim miejscu), transpozycja 0, 1, 5
 
-//TODO dist apk
-//TODO user action controller
+//TODO user action controller, event dispatcher
 
 public class App extends BaseApp implements GUIListener {
     
@@ -35,16 +34,15 @@ public class App extends BaseApp implements GUIListener {
 
         preferences.loadAll();
 
-        fileTreeManager = new FileTreeManager(files, getHomePath());
+        fileTreeManager = new FileTreeManager(filesystem, getHomePath());
         scrollPosBuffer = new ScrollPosBuffer();
         chordsManager = new ChordsManager(this);
         
         gui = new GUI(activity, this);
-        gui.setTouchController(this);
         gui.showFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
         state = AppState.FILE_LIST;
 
-        Output.info("Aplikacja uruchomiona.");
+        Logs.info("Aplikacja uruchomiona.");
     }
     
     @Override
@@ -147,7 +145,7 @@ public class App extends BaseApp implements GUIListener {
 
     @Override
     public void onResized(int w, int h) {
-        Output.debug("Rozmiar grafiki 2D zmieniony: " + w + " x " + h);
+        Logs.debug("Rozmiar grafiki 2D zmieniony: " + w + " x " + h);
     }
 
     @Override

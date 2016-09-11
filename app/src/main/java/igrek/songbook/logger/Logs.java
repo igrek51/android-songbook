@@ -1,4 +1,4 @@
-package igrek.songbook.output;
+package igrek.songbook.logger;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -8,7 +8,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Output {
+public class Logs {
 
     private static final LogLevel CONSOLE_LEVEL = LogLevel.TRACE; //widoczne w konsoli
     private static final LogLevel ECHO_LEVEL = LogLevel.OFF; //widoczne dla użytkownika (i przechowywane w historii)
@@ -20,7 +20,7 @@ public class Output {
     private static List<String> echoes;
     private static int errors = 0;
 
-    public Output() {
+    public Logs() {
         reset();
     }
 

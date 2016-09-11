@@ -7,32 +7,32 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import igrek.songbook.filesystem.Files;
+import igrek.songbook.filesystem.Filesystem;
+import igrek.songbook.logger.Logs;
 import igrek.songbook.logic.exceptions.NoParentDirException;
-import igrek.songbook.output.Output;
 
 public class FileTreeManager {
 
-    private Files files;
+    private Filesystem filesystem;
 
     private String currentPath;
     private String currentFileName = null;
 
     private List<FileItem> items;
 
-    public FileTreeManager(Files files, String startPath) {
-        this.files = files;
-        if(files.isDirectory(startPath)) {
+    public FileTreeManager(Filesystem filesystem, String startPath) {
+        this.filesystem = filesystem;
+        if (filesystem.isDirectory(startPath)) {
             currentPath = startPath;
         }else{
-            Output.warn("Brak początkowego folderu: " + startPath);
+            Logs.warn("Brak początkowego folderu: " + startPath);
             currentPath = "/";
         }
         updateCurrentPath();
     }
 
-    public FileTreeManager(Files files) {
-        this(files, "/");
+    public FileTreeManager(Filesystem filesystem) {
+        this(filesystem, "/");
     }
 
     public static String trimEndSlash(String str) {
@@ -94,7 +94,7 @@ public class FileTreeManager {
     }
 
     private void updateCurrentPath() {
-        List<File> fileList = files.listFiles(currentPath);
+        List<File> fileList = filesystem.listFiles(currentPath);
         items = new ArrayList<>();
 
         for (File f : fileList) {
@@ -133,9 +133,9 @@ public class FileTreeManager {
 
     public String getFileContent(String filePath){
         try {
-            return files.openFileString(filePath);
+            return filesystem.openFileString(filePath);
         } catch (IOException e) {
-            Output.error(e);
+            Logs.error(e);
             return null;
         }
     }
