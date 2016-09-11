@@ -26,6 +26,7 @@ public class ServicesRegistry {
 
     public <T extends IService> T getService(Class<T> clazz) {
         try {
+            @SuppressWarnings("unchecked")
             T service = (T) services.get(clazz.getName());
             return service;
         } catch (ClassCastException e) {

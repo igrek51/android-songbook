@@ -9,19 +9,20 @@ import java.util.List;
 
 import igrek.songbook.filesystem.Filesystem;
 import igrek.songbook.logger.Logs;
+import igrek.songbook.logic.controller.AppController;
 import igrek.songbook.logic.exceptions.NoParentDirException;
 
 public class FileTreeManager {
-
-    private Filesystem filesystem;
 
     private String currentPath;
     private String currentFileName = null;
 
     private List<FileItem> items;
 
-    public FileTreeManager(Filesystem filesystem, String startPath) {
-        this.filesystem = filesystem;
+    public FileTreeManager(String startPath) {
+
+        Filesystem filesystem = AppController.getService(Filesystem.class);
+
         if (filesystem.isDirectory(startPath)) {
             currentPath = startPath;
         }else{
@@ -31,8 +32,8 @@ public class FileTreeManager {
         updateCurrentPath();
     }
 
-    public FileTreeManager(Filesystem filesystem) {
-        this(filesystem, "/");
+    public FileTreeManager() {
+        this("/");
     }
 
     public static String trimEndSlash(String str) {
@@ -94,6 +95,9 @@ public class FileTreeManager {
     }
 
     private void updateCurrentPath() {
+
+        Filesystem filesystem = AppController.getService(Filesystem.class);
+
         List<File> fileList = filesystem.listFiles(currentPath);
         items = new ArrayList<>();
 
@@ -133,6 +137,7 @@ public class FileTreeManager {
 
     public String getFileContent(String filePath){
         try {
+            Filesystem filesystem = AppController.getService(Filesystem.class);
             return filesystem.openFileString(filePath);
         } catch (IOException e) {
             Logs.error(e);

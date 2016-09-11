@@ -7,13 +7,20 @@ import java.util.List;
 
 import igrek.songbook.graphics.Colors;
 import igrek.songbook.graphics.canvas.enums.Font;
-import igrek.songbook.graphics.gui.GUIListener;
+import igrek.songbook.logic.controller.AppController;
+import igrek.songbook.logic.controller.services.IService;
 import igrek.songbook.logic.crdfile.CRDFragment;
 import igrek.songbook.logic.crdfile.CRDLine;
 import igrek.songbook.logic.crdfile.CRDModel;
 import igrek.songbook.logic.crdfile.CRDTextType;
+import igrek.songbook.logic.events.AutoscrollStartRequestEvent;
+import igrek.songbook.logic.events.CanvasClickedEvent;
+import igrek.songbook.logic.events.CanvasScrollEvent;
+import igrek.songbook.logic.events.FontsizeChangedEvent;
+import igrek.songbook.logic.events.GraphicsInitializedEvent;
+import igrek.songbook.logic.events.TransposedEvent;
 
-public class CanvasGraphics extends BaseCanvasGraphics {
+public class CanvasGraphics extends BaseCanvasGraphics implements IService {
 
     //TODO test ze zmianą orientacji ekranu
 
@@ -39,8 +46,9 @@ public class CanvasGraphics extends BaseCanvasGraphics {
     private Float pointersDst0 = null;
     private Float fontsize0 = null;
 
-    public CanvasGraphics(Context context, GUIListener guiListener) {
-        super(context, guiListener);
+    public CanvasGraphics(Context context) {
+        super(context);
+        AppController.registerService(this);
     }
 
     public void setCRDModel(CRDModel crdModel) {
@@ -61,7 +69,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
     public void init() {
         setFontSize(fontsize);
         setFont(Font.FONT_NORMAL);
-        guiListener.onGraphicsInitialized(w, h, paint);
+        AppController.sendEvent(new GraphicsInitializedEvent(w, h, paint));
     }
 
     @Override
@@ -153,7 +161,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
         // monitorowanie zmiany przewijania
         float dScroll = -deltaY;
         if (Math.abs(dScroll) > MIN_SCROLL_EVENT) {
-            guiListener.onCanvasScroll(dScroll, scroll);
+            AppController.sendEvent(new CanvasScrollEvent(dScroll, scroll));
         }
 
         //  GESTY
@@ -161,10 +169,10 @@ public class CanvasGraphics extends BaseCanvasGraphics {
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
             if (Math.abs(deltaX) >= GESTURE_TRANSPOSE_MIN_DX * w) {
                 if (deltaX < 0) {
-                    guiListener.onTransposed(-1);
+                    AppController.sendEvent(new TransposedEvent(-1));
                     return;
                 } else if (deltaX > 0) {
-                    guiListener.onTransposed(+1);
+                    AppController.sendEvent(new TransposedEvent(+1));
                     return;
                 }
             }
@@ -174,9 +182,9 @@ public class CanvasGraphics extends BaseCanvasGraphics {
         if (hypot <= GESTURE_CLICK_MAX_HYPOT) { //kliknięcie w jednym miejscu
             if (System.currentTimeMillis() - startTouchTime <= GESTURE_CLICK_MAX_TIME) { //szybkie kliknięcie
                 if (event.getY() >= h * GESTURE_AUTOSCROLL_BOTTOM_REGION) {  //na dole
-                    guiListener.onAutoscrollStartRequest();
+                    AppController.sendEvent(new AutoscrollStartRequestEvent());
                 } else {
-                    guiListener.onCanvasClicked();
+                    AppController.sendEvent(new CanvasClickedEvent());
                 }
             }
         }
@@ -184,7 +192,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 
     @Override
     protected void onTouchPointerUp(MotionEvent event) {
-        guiListener.onFontsizeChanged(fontsize);
+        AppController.sendEvent(new FontsizeChangedEvent(fontsize));
         pointersDst0 = null; //reset poczatkowej długości
         startTouchY = event.getY(0); // brak przewijania
         startScroll = scroll;

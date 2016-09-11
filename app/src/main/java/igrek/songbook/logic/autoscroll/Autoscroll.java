@@ -2,8 +2,12 @@ package igrek.songbook.logic.autoscroll;
 
 import android.os.Handler;
 
-import igrek.songbook.graphics.gui.GUIListener;
+import igrek.songbook.graphics.canvas.CanvasGraphics;
 import igrek.songbook.logger.Logs;
+import igrek.songbook.logic.controller.AppController;
+import igrek.songbook.logic.events.AutoscrollEndedEvent;
+import igrek.songbook.logic.events.AutoscrollRemainingWaitTimeEvent;
+import igrek.songbook.logic.events.AutoscrollStartedEvent;
 
 public class Autoscroll {
 
@@ -26,10 +30,7 @@ public class Autoscroll {
     private Handler timerHandler;
     private Runnable timerRunnable;
 
-    private GUIListener guiListener;
-
-    public Autoscroll(GUIListener guiListener, float fontsize) {
-        this.guiListener = guiListener;
+    public Autoscroll(float fontsize) {
         timerHandler = new Handler();
         timerRunnable = new Runnable() {
             @Override
@@ -58,7 +59,8 @@ public class Autoscroll {
         if (isRunning()) {
             stop();
         }
-        if (guiListener.canAutoScroll()) {
+        CanvasGraphics canvas = AppController.getService(CanvasGraphics.class);
+        if (canvas.canAutoScroll()) {
             if (withWaiting) {
                 state = AutoscrollState.WAITING;
             } else {
@@ -92,18 +94,19 @@ public class Autoscroll {
             if (remainingTimeMs <= 0) {
                 state = AutoscrollState.SCROLLING;
                 timerHandler.postDelayed(timerRunnable, 0);
-                guiListener.onAutoscrollStarted();
+                AppController.sendEvent(new AutoscrollStartedEvent());
             } else {
                 long delay = remainingTimeMs > 1000 ? 1000 : remainingTimeMs; //nasycenie do 1000
                 timerHandler.postDelayed(timerRunnable, delay);
-                guiListener.autoscrollRemainingWaitTime(remainingTimeMs);
+                AppController.sendEvent(new AutoscrollRemainingWaitTimeEvent(remainingTimeMs));
             }
         } else if (state == AutoscrollState.SCROLLING) {
-            if (guiListener.auscrollScrollBy(intervalStep)) {
+            CanvasGraphics canvas = AppController.getService(CanvasGraphics.class);
+            if (canvas.autoscrollBy(intervalStep)) {
                 timerHandler.postDelayed(timerRunnable, (long) intervalTime);
             } else {
                 stop();
-                guiListener.onAutoscrollEnded();
+                AppController.sendEvent(new AutoscrollEndedEvent());
             }
         }
     }
@@ -122,11 +125,11 @@ public class Autoscroll {
         if (state == AutoscrollState.WAITING) {
             if (dScroll > 0) { //przyspieszanie przewijania
                 state = AutoscrollState.SCROLLING;
-                guiListener.onAutoscrollStarted();
+                AppController.sendEvent(new AutoscrollStartedEvent());
             } else if (dScroll < 0) { //zwalnianie odliczania
                 startTime -= (long) (dScroll * AUTOCHANGE_WAITING_SCALE);
                 long remainingTimeMs = waitTime + startTime - System.currentTimeMillis();
-                guiListener.autoscrollRemainingWaitTime(remainingTimeMs);
+                AppController.sendEvent(new AutoscrollRemainingWaitTimeEvent(remainingTimeMs));
             }
         } else if (state == AutoscrollState.SCROLLING) {
             if (dScroll > 0) { //przyspieszanie przewijania
@@ -138,7 +141,7 @@ public class Autoscroll {
                     state = AutoscrollState.WAITING;
                     startTime = System.currentTimeMillis() - waitTime - (long) (dScroll * AUTOCHANGE_WAITING_SCALE);
                     long remainingTimeMs = waitTime + startTime - System.currentTimeMillis();
-                    guiListener.autoscrollRemainingWaitTime(remainingTimeMs);
+                    AppController.sendEvent(new AutoscrollRemainingWaitTimeEvent(remainingTimeMs));
                     return;
                 } else {
                     intervalTime -= intervalTime * dScroll * AUTOCHANGE_INTERVAL_SCALE;

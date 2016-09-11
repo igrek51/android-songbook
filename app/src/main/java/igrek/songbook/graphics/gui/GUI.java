@@ -10,7 +10,9 @@ import java.util.List;
 import igrek.songbook.R;
 import igrek.songbook.graphics.canvas.CanvasGraphics;
 import igrek.songbook.graphics.gui.filelist.FileListView;
+import igrek.songbook.logic.controller.AppController;
 import igrek.songbook.logic.crdfile.CRDModel;
+import igrek.songbook.logic.events.ToolbarBackClickedEvent;
 import igrek.songbook.logic.filetree.FileItem;
 
 public class GUI extends GUIBase {
@@ -20,8 +22,8 @@ public class GUI extends GUIBase {
     private View mainView;
     private CanvasGraphics canvas = null;
 
-    public GUI(AppCompatActivity activity, GUIListener guiListener) {
-        super(activity, guiListener);
+    public GUI(AppCompatActivity activity) {
+        super(activity);
     }
 
     @Override
@@ -46,7 +48,7 @@ public class GUI extends GUIBase {
         toolbar1.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                guiListener.onToolbarBackClicked();
+                AppController.sendEvent(new ToolbarBackClickedEvent());
             }
         });
 
@@ -54,7 +56,7 @@ public class GUI extends GUIBase {
 
         itemsListView = (FileListView) activity.findViewById(R.id.filesList);
 
-        itemsListView.init(activity, guiListener);
+        itemsListView.init(activity);
 
         updateFileList(currentDir, items);
     }
@@ -63,7 +65,7 @@ public class GUI extends GUIBase {
 
         setFullscreen(true);
 
-        canvas = new CanvasGraphics(activity, guiListener);
+        canvas = new CanvasGraphics(activity);
 
         mainView = canvas;
 

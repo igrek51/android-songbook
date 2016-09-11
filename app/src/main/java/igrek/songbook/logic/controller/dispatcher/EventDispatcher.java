@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//TODO ? dispatcher bez kolejki, natychmiastowe wykonanie eventu + odpowiedź, IRequest
+
 public class EventDispatcher {
 
     private Map<Class<? extends IEvent>, List<IEventObserver>> eventObservers;

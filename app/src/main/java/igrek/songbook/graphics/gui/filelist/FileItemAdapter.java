@@ -12,24 +12,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import igrek.songbook.R;
-import igrek.songbook.graphics.gui.GUIListener;
 import igrek.songbook.logic.filetree.FileItem;
 
 public class FileItemAdapter extends ArrayAdapter<FileItem> {
 
     Context context;
     List<FileItem> dataSource;
-    GUIListener guiListener;
 
     View convertView = null;
     ViewGroup parent = null;
 
-    public FileItemAdapter(Context context, List<FileItem> dataSource, GUIListener guiListener, FileListView listView) {
+    public FileItemAdapter(Context context, List<FileItem> dataSource, FileListView listView) {
         super(context, 0, new ArrayList<FileItem>());
         this.context = context;
         if (dataSource == null) dataSource = new ArrayList<>();
         this.dataSource = dataSource;
-        this.guiListener = guiListener;
     }
 
     public void setDataSource(List<FileItem> dataSource) {

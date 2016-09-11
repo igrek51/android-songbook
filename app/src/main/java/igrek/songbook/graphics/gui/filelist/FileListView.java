@@ -11,15 +11,15 @@ import android.widget.ListView;
 import java.util.HashMap;
 import java.util.List;
 
-import igrek.songbook.graphics.gui.GUIListener;
 import igrek.songbook.logger.Logs;
+import igrek.songbook.logic.controller.AppController;
+import igrek.songbook.logic.events.ItemClickedEvent;
 import igrek.songbook.logic.filetree.FileItem;
 
 public class FileListView extends ListView implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private List<FileItem> items;
     private FileItemAdapter adapter;
-    private GUIListener guiListener;
 
     private HashMap<Integer, Integer> itemHeights = new HashMap<>();
 
@@ -35,12 +35,11 @@ public class FileListView extends ListView implements AdapterView.OnItemClickLis
         super(context, attrs);
     }
 
-    public void init(Context context, GUIListener aGuiListener) {
-        this.guiListener = aGuiListener;
+    public void init(Context context) {
         setOnItemClickListener(this);
         setOnItemLongClickListener(this);
         setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        adapter = new FileItemAdapter(context, null, guiListener, this);
+        adapter = new FileItemAdapter(context, null, this);
         setAdapter(adapter);
     }
 
@@ -62,13 +61,13 @@ public class FileListView extends ListView implements AdapterView.OnItemClickLis
     @Override
     public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
         FileItem item = adapter.getItem(position);
-        guiListener.onItemClicked(position, item);
+        AppController.sendEvent(new ItemClickedEvent(position, item));
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         FileItem item = adapter.getItem(position);
-        guiListener.onItemClicked(position, item);
+        AppController.sendEvent(new ItemClickedEvent(position, item));
         return true;
     }
 

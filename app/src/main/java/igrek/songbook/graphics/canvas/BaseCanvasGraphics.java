@@ -13,7 +13,8 @@ import android.view.ViewTreeObserver;
 
 import igrek.songbook.graphics.canvas.enums.Align;
 import igrek.songbook.graphics.canvas.enums.Font;
-import igrek.songbook.graphics.gui.GUIListener;
+import igrek.songbook.logic.controller.AppController;
+import igrek.songbook.logic.events.ResizedEvent;
 
 public class BaseCanvasGraphics extends View {
 
@@ -24,21 +25,18 @@ public class BaseCanvasGraphics extends View {
 
     protected Canvas canvas = null;
 
-    protected GUIListener guiListener;
-
     protected boolean initialized = false;
 
     protected float startTouchX = 0;
     protected float startTouchY = 0;
     protected long startTouchTime;
 
-    public BaseCanvasGraphics(Context context, GUIListener guiListener) {
+    public BaseCanvasGraphics(Context context) {
         super(context);
         paint = new Paint();
         paint.setAntiAlias(true);
         paint.setFilterBitmap(true);
 //        paint.setDither(true);
-        this.guiListener = guiListener;
 
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -71,7 +69,7 @@ public class BaseCanvasGraphics extends View {
         super.onSizeChanged(w, h, oldw, oldh);
         this.w = getWidth();
         this.h = getHeight();
-        guiListener.onResized(w, h);
+        AppController.sendEvent(new ResizedEvent(w, h));
     }
 
     @Override

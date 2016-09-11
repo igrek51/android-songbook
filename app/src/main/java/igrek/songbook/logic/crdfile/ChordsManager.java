@@ -2,7 +2,6 @@ package igrek.songbook.logic.crdfile;
 
 import android.graphics.Paint;
 
-import igrek.songbook.graphics.gui.GUIListener;
 import igrek.songbook.logic.autoscroll.Autoscroll;
 import igrek.songbook.logic.music.transposer.ChordsTransposer;
 
@@ -28,10 +27,10 @@ public class ChordsManager {
     private Autoscroll autoscroll;
 
 
-    public ChordsManager(GUIListener guiListener) {
+    public ChordsManager() {
         chordsTransposer = new ChordsTransposer();
         crdParser = new CRDParser();
-        autoscroll = new Autoscroll(guiListener, fontsize);
+        autoscroll = new Autoscroll(fontsize);
     }
 
     public void reset() {

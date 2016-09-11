@@ -6,21 +6,38 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 
 import igrek.songbook.R;
+import igrek.songbook.filesystem.Filesystem;
+import igrek.songbook.graphics.canvas.CanvasGraphics;
 import igrek.songbook.graphics.gui.GUI;
-import igrek.songbook.graphics.gui.GUIListener;
 import igrek.songbook.graphics.gui.ScrollPosBuffer;
 import igrek.songbook.graphics.infobar.InfoBarClickAction;
 import igrek.songbook.logger.Logs;
+import igrek.songbook.logic.controller.AppController;
+import igrek.songbook.logic.controller.dispatcher.IEvent;
+import igrek.songbook.logic.controller.dispatcher.IEventObserver;
 import igrek.songbook.logic.crdfile.ChordsManager;
+import igrek.songbook.logic.events.AutoscrollEndedEvent;
+import igrek.songbook.logic.events.AutoscrollRemainingWaitTimeEvent;
+import igrek.songbook.logic.events.AutoscrollStartRequestEvent;
+import igrek.songbook.logic.events.AutoscrollStartedEvent;
+import igrek.songbook.logic.events.CanvasClickedEvent;
+import igrek.songbook.logic.events.CanvasScrollEvent;
+import igrek.songbook.logic.events.FontsizeChangedEvent;
+import igrek.songbook.logic.events.GraphicsInitializedEvent;
+import igrek.songbook.logic.events.ItemClickedEvent;
+import igrek.songbook.logic.events.ResizedEvent;
+import igrek.songbook.logic.events.ToolbarBackClickedEvent;
+import igrek.songbook.logic.events.TransposedEvent;
 import igrek.songbook.logic.exceptions.NoParentDirException;
 import igrek.songbook.logic.filetree.FileItem;
 import igrek.songbook.logic.filetree.FileTreeManager;
+import igrek.songbook.preferences.Preferences;
 
 //TODO menu z przyciskami: otwarcie kliknięciem (w odpowiednim miejscu), transpozycja 0, 1, 5
 
-//TODO user action controller, event dispatcher
+//TODO context server service - systemowe operacje, zamiast przekazywania contextu
 
-public class App extends BaseApp implements GUIListener {
+public class App extends BaseApp implements IEventObserver {
     
     private FileTreeManager fileTreeManager;
     private ScrollPosBuffer scrollPosBuffer;
@@ -32,21 +49,43 @@ public class App extends BaseApp implements GUIListener {
     public App(AppCompatActivity activity) {
         super(activity);
 
-        preferences.loadAll();
+        registerServices();
+        registerEventObservers();
 
-        fileTreeManager = new FileTreeManager(filesystem, getHomePath());
+        fileTreeManager = new FileTreeManager(getHomePath());
         scrollPosBuffer = new ScrollPosBuffer();
-        chordsManager = new ChordsManager(this);
-        
-        gui = new GUI(activity, this);
+        chordsManager = new ChordsManager();
+
+        gui = new GUI(activity);
         gui.showFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
         state = AppState.FILE_LIST;
 
         Logs.info("Aplikacja uruchomiona.");
     }
+
+    private void registerServices() {
+        AppController.registerService(new Filesystem(activity));
+        AppController.registerService(new Preferences(activity));
+    }
+
+    private void registerEventObservers() {
+        AppController.registerEventObserver(ToolbarBackClickedEvent.class, this);
+        AppController.registerEventObserver(ItemClickedEvent.class, this);
+        AppController.registerEventObserver(ResizedEvent.class, this);
+        AppController.registerEventObserver(GraphicsInitializedEvent.class, this);
+        AppController.registerEventObserver(TransposedEvent.class, this);
+        AppController.registerEventObserver(FontsizeChangedEvent.class, this);
+        AppController.registerEventObserver(AutoscrollRemainingWaitTimeEvent.class, this);
+        AppController.registerEventObserver(AutoscrollStartRequestEvent.class, this);
+        AppController.registerEventObserver(AutoscrollStartedEvent.class, this);
+        AppController.registerEventObserver(AutoscrollEndedEvent.class, this);
+        AppController.registerEventObserver(CanvasClickedEvent.class, this);
+        AppController.registerEventObserver(CanvasScrollEvent.class, this);
+    }
     
     @Override
     public void quit() {
+        Preferences preferences = AppController.getService(Preferences.class);
         preferences.saveAll();
         super.quit();
     }
@@ -124,63 +163,10 @@ public class App extends BaseApp implements GUIListener {
             keepScreenOn(activity);
         }
     }
-    
-    
-    @Override
-    public void onToolbarBackClicked() {
-        backClicked();
-    }
-    
-    @Override
-    public void onItemClicked(int position, FileItem item) {
-        scrollPosBuffer.storeScrollPosition(fileTreeManager.getCurrentPath(), gui.getCurrentScrollPos());
-        if (item.isDirectory()) {
-            fileTreeManager.goInto(item.getName());
-            updateFileList();
-            gui.scrollToItem(0);
-        } else {
-            showFileContent(item.getName());
-        }
-    }
 
-    @Override
-    public void onResized(int w, int h) {
-        Logs.debug("Rozmiar grafiki 2D zmieniony: " + w + " x " + h);
-    }
-
-    @Override
-    public void onGraphicsInitialized(int w, int h, Paint paint) {
-        //wczytanie pliku i sparsowanie
-        String filePath = fileTreeManager.getCurrentFilePath(fileTreeManager.getCurrentFileName());
-        String fileContent = fileTreeManager.getFileContent(filePath);
-        //inicjalizacja - pierwsze wczytanie pliku
-        chordsManager.load(fileContent, w, h, paint);
-
-        gui.setFontSize(chordsManager.getFontsize());
-        gui.setCRDModel(chordsManager.getCRDModel());
-    }
-
-    @Override
-    public void onTransposed(int t) {
-        chordsManager.transpose(t);
-        gui.setCRDModel(chordsManager.getCRDModel());
-        showReusableActionInfo("Transpozycja: " + chordsManager.getTransposed(), gui.getCanvas(), "Zeruj", new InfoBarClickAction() {
-            @Override
-            public void onClick() {
-                onTransposed(-chordsManager.getTransposed());
-            }
-        });
-    }
-
-    @Override
-    public void onFontsizeChanged(float fontsize) {
-        chordsManager.setFontsize(fontsize);
-        //parsowanie bez ponownego wczytywania pliku i wykrywania kodowania
-        chordsManager.reparse();
-        gui.setCRDModel(chordsManager.getCRDModel());
-    }
 
     private String getHomePath() {
+        Preferences preferences = AppController.getService(Preferences.class);
         return preferences.startPath;
     }
 
@@ -198,6 +184,7 @@ public class App extends BaseApp implements GUIListener {
     }
 
     private void setHomePath() {
+        Preferences preferences = AppController.getService(Preferences.class);
         String homeDir = fileTreeManager.getCurrentPath();
         preferences.startPath = homeDir;
         preferences.saveAll();
@@ -212,73 +199,129 @@ public class App extends BaseApp implements GUIListener {
         }
     }
 
+
+
     @Override
-    public void onAutoscrollStartRequest() {
-        if (!chordsManager.getAutoscroll().isRunning()) {
-            if (canAutoScroll()) {
-                chordsManager.autoscrollStart(gui.getCanvasScroll());
-                showReusableActionInfo("Rozpoczęto autoprzewijanie.", gui.getCanvas(), "Zatrzymaj", new InfoBarClickAction() {
-                    @Override
-                    public void onClick() {
-                        chordsManager.autoscrollStop();
-                    }
-                });
+    public void onEvent(IEvent event) {
+        //TODO zrobić z tym porządek - uprościć
+        //TODO problem polimorfizmu - wyłapania pochodnych typów eventów
+        //TODO przenieść do klas odpowiedzialnych za działanie
+        if (event instanceof ToolbarBackClickedEvent) {
+
+            backClicked();
+
+        } else if (event instanceof ItemClickedEvent) {
+
+            int position = ((ItemClickedEvent) event).getPosition();
+            FileItem item = ((ItemClickedEvent) event).getItem();
+
+            scrollPosBuffer.storeScrollPosition(fileTreeManager.getCurrentPath(), gui.getCurrentScrollPos());
+            if (item.isDirectory()) {
+                fileTreeManager.goInto(item.getName());
+                updateFileList();
+                gui.scrollToItem(0);
             } else {
-                showReusableActionInfo("EOF - Zatrzymano autoprzewijanie.", gui.getCanvas(), "OK", null);
+                showFileContent(item.getName());
             }
-        } else {
-            onCanvasClicked();
+        } else if (event instanceof ResizedEvent) {
+
+            Logs.debug("Rozmiar grafiki 2D zmieniony: " + ((ResizedEvent) event).getW() + " x " + ((ResizedEvent) event).getH());
+
+        } else if (event instanceof GraphicsInitializedEvent) {
+
+            int w = ((GraphicsInitializedEvent) event).getW();
+            int h = ((GraphicsInitializedEvent) event).getH();
+            Paint paint = ((GraphicsInitializedEvent) event).getPaint();
+
+            //wczytanie pliku i sparsowanie
+            String filePath = fileTreeManager.getCurrentFilePath(fileTreeManager.getCurrentFileName());
+            String fileContent = fileTreeManager.getFileContent(filePath);
+            //inicjalizacja - pierwsze wczytanie pliku
+            chordsManager.load(fileContent, w, h, paint);
+
+            gui.setFontSize(chordsManager.getFontsize());
+            gui.setCRDModel(chordsManager.getCRDModel());
+
+        } else if (event instanceof TransposedEvent) {
+
+            int t = ((TransposedEvent) event).getT();
+
+            chordsManager.transpose(t);
+            gui.setCRDModel(chordsManager.getCRDModel());
+            showReusableActionInfo("Transpozycja: " + chordsManager.getTransposed(), gui.getCanvas(), "Zeruj", new InfoBarClickAction() {
+                @Override
+                public void onClick() {
+                    AppController.sendEvent(new TransposedEvent(-chordsManager.getTransposed()));
+                }
+            });
+
+        } else if (event instanceof FontsizeChangedEvent) {
+
+            float fontsize = ((FontsizeChangedEvent) event).getFontsize();
+
+            chordsManager.setFontsize(fontsize);
+            //parsowanie bez ponownego wczytywania pliku i wykrywania kodowania
+            chordsManager.reparse();
+            gui.setCRDModel(chordsManager.getCRDModel());
+
+        } else if (event instanceof AutoscrollRemainingWaitTimeEvent) {
+
+            long ms = ((AutoscrollRemainingWaitTimeEvent) event).getMs();
+
+            int seconds = (int) ((ms + 500) / 1000);
+            showReusableActionInfo("Autoprzewijanie za " + seconds + " s.", gui.getCanvas(), "Zatrzymaj", new InfoBarClickAction() {
+                @Override
+                public void onClick() {
+                    chordsManager.autoscrollStop();
+                }
+            });
+
+        } else if (event instanceof AutoscrollStartRequestEvent) {
+
+            if (!chordsManager.getAutoscroll().isRunning()) {
+                CanvasGraphics canvas = AppController.getService(CanvasGraphics.class);
+                if (canvas.canAutoScroll()) {
+                    chordsManager.autoscrollStart(gui.getCanvasScroll());
+                    showReusableActionInfo("Rozpoczęto autoprzewijanie.", gui.getCanvas(), "Zatrzymaj", new InfoBarClickAction() {
+                        @Override
+                        public void onClick() {
+                            chordsManager.autoscrollStop();
+                        }
+                    });
+                } else {
+                    showReusableActionInfo("EOF - Zatrzymano autoprzewijanie.", gui.getCanvas(), "OK", null);
+                }
+            } else {
+                AppController.sendEvent(new CanvasClickedEvent());
+            }
+
+        } else if (event instanceof AutoscrollStartedEvent) {
+
+            showReusableActionInfo("Rozpoczęto autoprzewijanie.", gui.getCanvas(), "Zatrzymaj", new InfoBarClickAction() {
+                @Override
+                public void onClick() {
+                    chordsManager.autoscrollStop();
+                }
+            });
+
+        } else if (event instanceof AutoscrollEndedEvent) {
+
+            showReusableActionInfo("EOF - Zatrzymano autoprzewijanie.", gui.getCanvas(), "OK", null);
+
+        } else if (event instanceof CanvasClickedEvent) {
+
+            if (chordsManager.getAutoscroll().isRunning()) {
+                chordsManager.autoscrollStop();
+                showReusableActionInfo("Zatrzymano autoprzewijanie.", gui.getCanvas(), "OK", null);
+            }
+
+        } else if (event instanceof CanvasScrollEvent) {
+
+            float dScroll = ((CanvasScrollEvent) event).getdScroll();
+            float scroll = ((CanvasScrollEvent) event).getScroll();
+
+            chordsManager.getAutoscroll().handleCanvasScroll(dScroll, scroll);
+
         }
     }
-
-    @Override
-    public void onCanvasClicked() {
-        if (chordsManager.getAutoscroll().isRunning()) {
-            chordsManager.autoscrollStop();
-            showReusableActionInfo("Zatrzymano autoprzewijanie.", gui.getCanvas(), "OK", null);
-        }
-    }
-
-    @Override
-    public void autoscrollRemainingWaitTime(long ms) {
-        int seconds = (int) ((ms + 500) / 1000);
-        showReusableActionInfo("Autoprzewijanie za " + seconds + " s.", gui.getCanvas(), "Zatrzymaj", new InfoBarClickAction() {
-            @Override
-            public void onClick() {
-                chordsManager.autoscrollStop();
-            }
-        });
-    }
-
-    @Override
-    public void onAutoscrollStarted() {
-        showReusableActionInfo("Rozpoczęto autoprzewijanie.", gui.getCanvas(), "Zatrzymaj", new InfoBarClickAction() {
-            @Override
-            public void onClick() {
-                chordsManager.autoscrollStop();
-            }
-        });
-    }
-
-    @Override
-    public void onAutoscrollEnded() {
-        showReusableActionInfo("EOF - Zatrzymano autoprzewijanie.", gui.getCanvas(), "OK", null);
-    }
-
-    @Override
-    public boolean auscrollScrollBy(float intervalStep) {
-        return gui.auscrollScrollBy(intervalStep);
-    }
-
-    @Override
-    public boolean canAutoScroll() {
-        return gui.canAutoScroll();
-    }
-
-    @Override
-    public void onCanvasScroll(float dScroll, float scroll) {
-        chordsManager.getAutoscroll().handleCanvasScroll(dScroll, scroll);
-    }
-
-
 }

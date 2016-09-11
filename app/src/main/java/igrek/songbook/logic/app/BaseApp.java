@@ -13,10 +13,8 @@ import android.view.WindowManager;
 
 import java.util.HashMap;
 
-import igrek.songbook.filesystem.Filesystem;
 import igrek.songbook.graphics.infobar.InfoBarClickAction;
 import igrek.songbook.logger.Logs;
-import igrek.songbook.preferences.Preferences;
 
 public abstract class BaseApp {
 
@@ -32,9 +30,6 @@ public abstract class BaseApp {
     protected HashMap<View, Snackbar> infobars = new HashMap<>();
 
     boolean running = true;
-
-    public Filesystem filesystem;
-    public Preferences preferences;
 
     public BaseApp(AppCompatActivity aActivity) {
         this.activity = aActivity;
@@ -62,10 +57,8 @@ public abstract class BaseApp {
         }
 
         new Logs();
-        filesystem = new Filesystem(activity);
-        preferences = new Preferences(activity);
 
-        //        activity.setContentView(graphics);
+        // activity.setContentView(graphics);
 
         Logs.debug("Inicjalizacja aplikacji...");
     }

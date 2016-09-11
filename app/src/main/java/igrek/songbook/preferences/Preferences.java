@@ -22,6 +22,7 @@ public class Preferences extends BasePreferences implements IService {
 
     public Preferences(Activity activity){
         super(activity);
+        loadAll();
     }
 
     public void saveAll() {

@@ -9,19 +9,13 @@ import android.view.inputmethod.InputMethodManager;
 public class GUIBase {
 
     protected AppCompatActivity activity;
-    protected GUIListener guiListener;
 
     protected InputMethodManager imm;
 
-    public GUIBase(AppCompatActivity activity, GUIListener guiListener) {
+    public GUIBase(AppCompatActivity activity) {
         this.activity = activity;
-        this.guiListener = guiListener;
         imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         init();
-    }
-
-    public GUIListener getGuiListener() {
-        return guiListener;
     }
 
     protected void init() {
