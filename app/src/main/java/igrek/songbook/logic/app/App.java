@@ -40,7 +40,6 @@ import igrek.songbook.preferences.Preferences;
 public class App extends BaseApp implements IEventObserver {
     
     private FileTreeManager fileTreeManager;
-    private ScrollPosBuffer scrollPosBuffer;
     private ChordsManager chordsManager;
     private GUI gui;
     
@@ -53,7 +52,6 @@ public class App extends BaseApp implements IEventObserver {
         registerEventObservers();
 
         fileTreeManager = new FileTreeManager(getHomePath());
-        scrollPosBuffer = new ScrollPosBuffer();
         chordsManager = new ChordsManager();
 
         gui = new GUI(activity);
@@ -66,6 +64,8 @@ public class App extends BaseApp implements IEventObserver {
     private void registerServices() {
         AppController.registerService(new Filesystem(activity));
         AppController.registerService(new Preferences(activity));
+
+        AppController.registerService(new ScrollPosBuffer());
     }
 
     private void registerEventObservers() {
@@ -193,6 +193,7 @@ public class App extends BaseApp implements IEventObserver {
 
 
     private void restoreScrollPosition(String path) {
+        ScrollPosBuffer scrollPosBuffer = AppController.getService(ScrollPosBuffer.class);
         Integer savedScrollPos = scrollPosBuffer.restoreScrollPosition(path);
         if (savedScrollPos != null) {
             gui.scrollToPosition(savedScrollPos);
@@ -212,7 +213,7 @@ public class App extends BaseApp implements IEventObserver {
 
         } else if (event instanceof ItemClickedEvent) {
 
-            int position = ((ItemClickedEvent) event).getPosition();
+            ScrollPosBuffer scrollPosBuffer = AppController.getService(ScrollPosBuffer.class);
             FileItem item = ((ItemClickedEvent) event).getItem();
 
             scrollPosBuffer.storeScrollPosition(fileTreeManager.getCurrentPath(), gui.getCurrentScrollPos());

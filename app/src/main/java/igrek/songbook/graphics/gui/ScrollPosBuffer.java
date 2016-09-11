@@ -2,7 +2,9 @@ package igrek.songbook.graphics.gui;
 
 import java.util.HashMap;
 
-public class ScrollPosBuffer {
+import igrek.songbook.logic.controller.services.IService;
+
+public class ScrollPosBuffer implements IService {
 
     private HashMap<String, Integer> storedScrollPositions;
 
