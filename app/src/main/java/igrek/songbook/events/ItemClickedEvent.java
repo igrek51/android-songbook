@@ -1,4 +1,4 @@
-package igrek.songbook.logic.events;
+package igrek.songbook.events;
 
 import igrek.songbook.logic.controller.dispatcher.IEvent;
 import igrek.songbook.logic.filetree.FileItem;

@@ -1,4 +1,4 @@
-package igrek.songbook.logic.events;
+package igrek.songbook.events;
 
 import android.graphics.Paint;
 

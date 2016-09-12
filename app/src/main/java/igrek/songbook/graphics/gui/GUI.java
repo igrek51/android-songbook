@@ -8,11 +8,11 @@ import android.view.View;
 import java.util.List;
 
 import igrek.songbook.R;
+import igrek.songbook.events.ToolbarBackClickedEvent;
 import igrek.songbook.graphics.canvas.CanvasGraphics;
 import igrek.songbook.graphics.gui.filelist.FileListView;
 import igrek.songbook.logic.controller.AppController;
 import igrek.songbook.logic.crdfile.CRDModel;
-import igrek.songbook.logic.events.ToolbarBackClickedEvent;
 import igrek.songbook.logic.filetree.FileItem;
 
 public class GUI extends GUIBase {

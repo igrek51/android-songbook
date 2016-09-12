@@ -9,6 +9,9 @@ import igrek.songbook.logic.music.transposer.ChordsTransposer;
 
 public class ChordsManager implements IService {
 
+    //TODO klasa do przechowywania danych tymczasowej konfiguracji przeglądarki akordów
+    //TODO dodanie obsługi przez eventy, usunięcie z pola App, pełny service
+
     private int transposed = 0;
 
     private CRDParser crdParser;

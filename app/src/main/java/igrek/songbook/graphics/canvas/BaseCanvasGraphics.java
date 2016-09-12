@@ -11,10 +11,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
+import igrek.songbook.events.ResizedEvent;
 import igrek.songbook.graphics.canvas.enums.Align;
 import igrek.songbook.graphics.canvas.enums.Font;
 import igrek.songbook.logic.controller.AppController;
-import igrek.songbook.logic.events.ResizedEvent;
 
 public class BaseCanvasGraphics extends View {
 
@@ -135,6 +135,7 @@ public class BaseCanvasGraphics extends View {
     private Rect textBounds = new Rect();
 
     public void drawTextUnaligned(String s, float x, float y){
+        paint.setTextAlign(Paint.Align.LEFT);
         canvas.drawText(s, x, y, paint);
     }
 
@@ -302,10 +303,10 @@ public class BaseCanvasGraphics extends View {
         fillRoundRect(left, top, left + width, top + height, radius);
     }
 
-    public void outlineRect(float left, float top, float right, float bottom, float thickness) {
+    public void outlineRectWH(float left, float top, float width, float height, float thickness) {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(thickness);
-        canvas.drawRect(left, top, right, bottom, paint);
+        canvas.drawRect(left, top, left + width, top + height, paint);
         paint.setStrokeWidth(0);
     }
 }

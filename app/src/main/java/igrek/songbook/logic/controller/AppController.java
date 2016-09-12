@@ -40,6 +40,10 @@ public class AppController {
         getInstance().eventDispatcher.registerEventObserver(eventClass, observer);
     }
 
+    public static void clearEventObservers(Class<? extends IEvent> eventClass) {
+        getInstance().eventDispatcher.clearEventObservers(eventClass);
+    }
+
     public static void sendEvent(IEvent event) {
         getInstance().eventDispatcher.sendEvent(event);
     }

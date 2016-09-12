@@ -36,6 +36,14 @@ public class EventDispatcher {
         dispatchEvents();
     }
 
+    public void clearEventObservers(Class<? extends IEvent> eventClass) {
+        List<IEventObserver> observers = eventObservers.get(eventClass);
+        if (observers != null) {
+            observers.clear();
+        }
+        eventObservers.put(eventClass, null);
+    }
+
     private void dispatchEvents() {
         if (dispatching) return;
         dispatching = true;

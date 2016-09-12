@@ -2,6 +2,12 @@ package igrek.songbook.logic.autoscroll;
 
 import android.os.Handler;
 
+import igrek.songbook.events.AutoscrollEndedEvent;
+import igrek.songbook.events.AutoscrollRemainingWaitTimeEvent;
+import igrek.songbook.events.AutoscrollStartRequestEvent;
+import igrek.songbook.events.AutoscrollStartedEvent;
+import igrek.songbook.events.AutoscrollStopRequestEvent;
+import igrek.songbook.events.AutoscrollToggleRequestEvent;
 import igrek.songbook.graphics.canvas.CanvasGraphics;
 import igrek.songbook.logger.Logs;
 import igrek.songbook.logic.controller.AppController;
@@ -9,11 +15,6 @@ import igrek.songbook.logic.controller.dispatcher.IEvent;
 import igrek.songbook.logic.controller.dispatcher.IEventObserver;
 import igrek.songbook.logic.controller.services.IService;
 import igrek.songbook.logic.crdfile.ChordsManager;
-import igrek.songbook.logic.events.AutoscrollEndedEvent;
-import igrek.songbook.logic.events.AutoscrollRemainingWaitTimeEvent;
-import igrek.songbook.logic.events.AutoscrollStartRequestEvent;
-import igrek.songbook.logic.events.AutoscrollStartedEvent;
-import igrek.songbook.logic.events.AutoscrollStopRequestEvent;
 
 public class Autoscroll implements IService, IEventObserver {
 
@@ -52,6 +53,7 @@ public class Autoscroll implements IService, IEventObserver {
 
         AppController.registerEventObserver(AutoscrollStartRequestEvent.class, this);
         AppController.registerEventObserver(AutoscrollStopRequestEvent.class, this);
+        AppController.registerEventObserver(AutoscrollToggleRequestEvent.class, this);
 
         reset();
     }
@@ -89,6 +91,14 @@ public class Autoscroll implements IService, IEventObserver {
     public void stop() {
         state = AutoscrollState.OFF;
         timerHandler.removeCallbacks(timerRunnable);
+    }
+
+    public void toggle() {
+        if (isRunning()) {
+            stop();
+        } else {
+            start();
+        }
     }
 
     public boolean isRunning() {
@@ -167,6 +177,8 @@ public class Autoscroll implements IService, IEventObserver {
             start();
         } else if (event instanceof AutoscrollStopRequestEvent) {
             stop();
+        } else if (event instanceof AutoscrollToggleRequestEvent) {
+            toggle();
         }
     }
 }

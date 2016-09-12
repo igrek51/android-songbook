@@ -7,6 +7,21 @@ import android.view.Menu;
 import android.view.View;
 
 import igrek.songbook.R;
+import igrek.songbook.events.AutoscrollEndedEvent;
+import igrek.songbook.events.AutoscrollRemainingWaitTimeEvent;
+import igrek.songbook.events.AutoscrollStartRequestEvent;
+import igrek.songbook.events.AutoscrollStartRequestUIEvent;
+import igrek.songbook.events.AutoscrollStartedEvent;
+import igrek.songbook.events.AutoscrollStopRequestEvent;
+import igrek.songbook.events.CanvasClickedEvent;
+import igrek.songbook.events.CanvasScrollEvent;
+import igrek.songbook.events.FontsizeChangedEvent;
+import igrek.songbook.events.GraphicsInitializedEvent;
+import igrek.songbook.events.ItemClickedEvent;
+import igrek.songbook.events.ResizedEvent;
+import igrek.songbook.events.ShowQuickMenuEvent;
+import igrek.songbook.events.ToolbarBackClickedEvent;
+import igrek.songbook.events.TransposedEvent;
 import igrek.songbook.filesystem.Filesystem;
 import igrek.songbook.graphics.canvas.CanvasGraphics;
 import igrek.songbook.graphics.gui.GUI;
@@ -18,20 +33,6 @@ import igrek.songbook.logic.controller.AppController;
 import igrek.songbook.logic.controller.dispatcher.IEvent;
 import igrek.songbook.logic.controller.dispatcher.IEventObserver;
 import igrek.songbook.logic.crdfile.ChordsManager;
-import igrek.songbook.logic.events.AutoscrollEndedEvent;
-import igrek.songbook.logic.events.AutoscrollRemainingWaitTimeEvent;
-import igrek.songbook.logic.events.AutoscrollStartRequestEvent;
-import igrek.songbook.logic.events.AutoscrollStartRequestUIEvent;
-import igrek.songbook.logic.events.AutoscrollStartedEvent;
-import igrek.songbook.logic.events.AutoscrollStopRequestEvent;
-import igrek.songbook.logic.events.CanvasClickedEvent;
-import igrek.songbook.logic.events.CanvasScrollEvent;
-import igrek.songbook.logic.events.FontsizeChangedEvent;
-import igrek.songbook.logic.events.GraphicsInitializedEvent;
-import igrek.songbook.logic.events.ItemClickedEvent;
-import igrek.songbook.logic.events.ResizedEvent;
-import igrek.songbook.logic.events.ToolbarBackClickedEvent;
-import igrek.songbook.logic.events.TransposedEvent;
 import igrek.songbook.logic.exceptions.NoParentDirException;
 import igrek.songbook.logic.filetree.FileItem;
 import igrek.songbook.logic.filetree.FileTreeManager;
@@ -144,18 +145,27 @@ public class App extends BaseApp implements IEventObserver {
         if (state == AppState.FILE_LIST) {
             goUp();
         } else if (state == AppState.FILE_CONTENT) {
-            AppController.sendEvent(new AutoscrollStopRequestEvent());
-            state = AppState.FILE_LIST;
-            gui.showFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
 
-            keepScreenOff(activity);
+            CanvasGraphics canvas = AppController.getService(CanvasGraphics.class);
+            if (canvas.isMenuVisible()) {
+                AppController.sendEvent(new ShowQuickMenuEvent(false));
+            } else {
 
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    restoreScrollPosition(fileTreeManager.getCurrentPath());
-                }
-            });
+                AppController.sendEvent(new AutoscrollStopRequestEvent());
+                state = AppState.FILE_LIST;
+                gui.showFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
+
+                keepScreenOff(activity);
+
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        restoreScrollPosition(fileTreeManager.getCurrentPath());
+                    }
+                });
+
+            }
+
         }
     }
     
