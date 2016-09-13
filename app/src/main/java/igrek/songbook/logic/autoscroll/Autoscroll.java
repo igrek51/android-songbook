@@ -2,12 +2,11 @@ package igrek.songbook.logic.autoscroll;
 
 import android.os.Handler;
 
-import igrek.songbook.events.AutoscrollEndedEvent;
-import igrek.songbook.events.AutoscrollRemainingWaitTimeEvent;
-import igrek.songbook.events.AutoscrollStartRequestEvent;
-import igrek.songbook.events.AutoscrollStartedEvent;
-import igrek.songbook.events.AutoscrollStopRequestEvent;
-import igrek.songbook.events.AutoscrollToggleRequestEvent;
+import igrek.songbook.events.autoscroll.AutoscrollEndedEvent;
+import igrek.songbook.events.autoscroll.AutoscrollRemainingWaitTimeEvent;
+import igrek.songbook.events.autoscroll.AutoscrollStartEvent;
+import igrek.songbook.events.autoscroll.AutoscrollStartedEvent;
+import igrek.songbook.events.autoscroll.AutoscrollStopEvent;
 import igrek.songbook.graphics.canvas.CanvasGraphics;
 import igrek.songbook.logger.Logs;
 import igrek.songbook.logic.controller.AppController;
@@ -51,9 +50,8 @@ public class Autoscroll implements IService, IEventObserver {
         ChordsManager chordsManager = AppController.getService(ChordsManager.class);
         fontsize = chordsManager.getFontsize();
 
-        AppController.registerEventObserver(AutoscrollStartRequestEvent.class, this);
-        AppController.registerEventObserver(AutoscrollStopRequestEvent.class, this);
-        AppController.registerEventObserver(AutoscrollToggleRequestEvent.class, this);
+        AppController.registerEventObserver(AutoscrollStartEvent.class, this);
+        AppController.registerEventObserver(AutoscrollStopEvent.class, this);
 
         reset();
     }
@@ -173,12 +171,10 @@ public class Autoscroll implements IService, IEventObserver {
 
     @Override
     public void onEvent(IEvent event) {
-        if (event instanceof AutoscrollStartRequestEvent) {
+        if (event instanceof AutoscrollStartEvent) {
             start();
-        } else if (event instanceof AutoscrollStopRequestEvent) {
+        } else if (event instanceof AutoscrollStopEvent) {
             stop();
-        } else if (event instanceof AutoscrollToggleRequestEvent) {
-            toggle();
         }
     }
 }

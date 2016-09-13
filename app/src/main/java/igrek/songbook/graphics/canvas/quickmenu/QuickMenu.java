@@ -3,16 +3,20 @@ package igrek.songbook.graphics.canvas.quickmenu;
 import java.util.ArrayList;
 import java.util.List;
 
-import igrek.songbook.events.AutoscrollToggleRequestEvent;
 import igrek.songbook.events.ShowQuickMenuEvent;
-import igrek.songbook.events.TransposeEvent;
-import igrek.songbook.events.TransposeResetEvent;
+import igrek.songbook.events.autoscroll.AutoscrollStartUIEvent;
+import igrek.songbook.events.autoscroll.AutoscrollStopUIEvent;
+import igrek.songbook.events.transpose.TransposeEvent;
+import igrek.songbook.events.transpose.TransposeResetEvent;
 import igrek.songbook.graphics.canvas.CanvasGraphics;
 import igrek.songbook.graphics.canvas.enums.Font;
+import igrek.songbook.logic.autoscroll.Autoscroll;
 import igrek.songbook.logic.controller.AppController;
 import igrek.songbook.logic.controller.dispatcher.IEvent;
 import igrek.songbook.logic.controller.dispatcher.IEventObserver;
 import igrek.songbook.logic.controller.services.IService;
+
+//TODO jedna instacja, ponowne wykorzystanie klasy
 
 public class QuickMenu implements IService, IEventObserver {
 
@@ -44,7 +48,14 @@ public class QuickMenu implements IService, IEventObserver {
         buttons.add(new QuickMenuButton("Autoscroll", 0, 1 - MENU_AUTOSCROLL_BUTTON_H, 1, MENU_AUTOSCROLL_BUTTON_H, new ButtonClickedAction() {
             @Override
             public void onClicked() {
-                AppController.sendEvent(new AutoscrollToggleRequestEvent());
+
+                Autoscroll autoscroll = AppController.getService(Autoscroll.class);
+                if (autoscroll.isRunning()) {
+                    AppController.sendEvent(new AutoscrollStopUIEvent());
+                } else {
+                    AppController.sendEvent(new AutoscrollStartUIEvent());
+                }
+
                 setVisible(false);
             }
         }));

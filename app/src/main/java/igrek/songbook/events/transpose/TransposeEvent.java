@@ -1,4 +1,4 @@
-package igrek.songbook.events;
+package igrek.songbook.events.transpose;
 
 import igrek.songbook.logic.controller.dispatcher.IEvent;
 

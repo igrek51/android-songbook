@@ -7,13 +7,6 @@ import android.view.Menu;
 import android.view.View;
 
 import igrek.songbook.R;
-import igrek.songbook.events.AutoscrollEndedEvent;
-import igrek.songbook.events.AutoscrollRemainingWaitTimeEvent;
-import igrek.songbook.events.AutoscrollStartRequestEvent;
-import igrek.songbook.events.AutoscrollStartRequestUIEvent;
-import igrek.songbook.events.AutoscrollStartedEvent;
-import igrek.songbook.events.AutoscrollStopRequestEvent;
-import igrek.songbook.events.CanvasClickedEvent;
 import igrek.songbook.events.CanvasScrollEvent;
 import igrek.songbook.events.FontsizeChangedEvent;
 import igrek.songbook.events.GraphicsInitializedEvent;
@@ -21,8 +14,15 @@ import igrek.songbook.events.ItemClickedEvent;
 import igrek.songbook.events.ResizedEvent;
 import igrek.songbook.events.ShowQuickMenuEvent;
 import igrek.songbook.events.ToolbarBackClickedEvent;
-import igrek.songbook.events.TransposeEvent;
-import igrek.songbook.events.TransposeResetEvent;
+import igrek.songbook.events.autoscroll.AutoscrollEndedEvent;
+import igrek.songbook.events.autoscroll.AutoscrollRemainingWaitTimeEvent;
+import igrek.songbook.events.autoscroll.AutoscrollStartEvent;
+import igrek.songbook.events.autoscroll.AutoscrollStartUIEvent;
+import igrek.songbook.events.autoscroll.AutoscrollStartedEvent;
+import igrek.songbook.events.autoscroll.AutoscrollStopEvent;
+import igrek.songbook.events.autoscroll.AutoscrollStopUIEvent;
+import igrek.songbook.events.transpose.TransposeEvent;
+import igrek.songbook.events.transpose.TransposeResetEvent;
 import igrek.songbook.filesystem.Filesystem;
 import igrek.songbook.graphics.canvas.CanvasGraphics;
 import igrek.songbook.graphics.canvas.quickmenu.QuickMenu;
@@ -89,10 +89,10 @@ public class App extends BaseApp implements IEventObserver {
         AppController.registerEventObserver(TransposeResetEvent.class, this);
         AppController.registerEventObserver(FontsizeChangedEvent.class, this);
         AppController.registerEventObserver(AutoscrollRemainingWaitTimeEvent.class, this);
-        AppController.registerEventObserver(AutoscrollStartRequestUIEvent.class, this);
+        AppController.registerEventObserver(AutoscrollStartUIEvent.class, this);
         AppController.registerEventObserver(AutoscrollStartedEvent.class, this);
         AppController.registerEventObserver(AutoscrollEndedEvent.class, this);
-        AppController.registerEventObserver(CanvasClickedEvent.class, this);
+        AppController.registerEventObserver(AutoscrollStopUIEvent.class, this);
         AppController.registerEventObserver(CanvasScrollEvent.class, this);
     }
     
@@ -154,7 +154,7 @@ public class App extends BaseApp implements IEventObserver {
                 AppController.sendEvent(new ShowQuickMenuEvent(false));
             } else {
 
-                AppController.sendEvent(new AutoscrollStopRequestEvent());
+                AppController.sendEvent(new AutoscrollStopEvent());
                 state = AppState.FILE_LIST;
                 gui.showFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
 
@@ -305,29 +305,31 @@ public class App extends BaseApp implements IEventObserver {
             showActionInfo("Autoprzewijanie za " + seconds + " s.", null, "Zatrzymaj", new InfoBarClickAction() {
                 @Override
                 public void onClick() {
-                    AppController.sendEvent(new AutoscrollStopRequestEvent());
+                    AppController.sendEvent(new AutoscrollStopEvent());
                 }
             });
 
-        } else if (event instanceof AutoscrollStartRequestUIEvent) {
+        } else if (event instanceof AutoscrollStartUIEvent) {
 
+            //TODO event odbierany przez autoscrolla
+            //TODO zgeneralizowane wiadomości o rozpoczęciu / zakończeniu autoscrolla
             Autoscroll autoscroll = AppController.getService(Autoscroll.class);
 
             if (!autoscroll.isRunning()) {
                 CanvasGraphics canvas = AppController.getService(CanvasGraphics.class);
                 if (canvas.canAutoScroll()) {
-                    AppController.sendEvent(new AutoscrollStartRequestEvent());
+                    AppController.sendEvent(new AutoscrollStartEvent());
                     showActionInfo("Rozpoczęto autoprzewijanie.", null, "Zatrzymaj", new InfoBarClickAction() {
                         @Override
                         public void onClick() {
-                            AppController.sendEvent(new AutoscrollStopRequestEvent());
+                            AppController.sendEvent(new AutoscrollStopEvent());
                         }
                     });
                 } else {
-                    showActionInfo("EOF - Zatrzymano autoprzewijanie.", null, "OK", null);
+                    showActionInfo("Koniec pliku\nZatrzymano autoprzewijanie.", null, "OK", null);
                 }
             } else {
-                AppController.sendEvent(new CanvasClickedEvent());
+                AppController.sendEvent(new AutoscrollStopUIEvent());
             }
 
         } else if (event instanceof AutoscrollStartedEvent) {
@@ -335,19 +337,19 @@ public class App extends BaseApp implements IEventObserver {
             showActionInfo("Rozpoczęto autoprzewijanie.", null, "Zatrzymaj", new InfoBarClickAction() {
                 @Override
                 public void onClick() {
-                    AppController.sendEvent(new AutoscrollStopRequestEvent());
+                    AppController.sendEvent(new AutoscrollStopEvent());
                 }
             });
 
         } else if (event instanceof AutoscrollEndedEvent) {
 
-            showActionInfo("EOF - Zatrzymano autoprzewijanie.", null, "OK", null);
+            showActionInfo("Koniec pliku\nZatrzymano autoprzewijanie.", null, "OK", null);
 
-        } else if (event instanceof CanvasClickedEvent) {
+        } else if (event instanceof AutoscrollStopUIEvent) {
 
             Autoscroll autoscroll = AppController.getService(Autoscroll.class);
             if (autoscroll.isRunning()) {
-                AppController.sendEvent(new AutoscrollStopRequestEvent());
+                AppController.sendEvent(new AutoscrollStopEvent());
                 showActionInfo("Zatrzymano autoprzewijanie.", null, "OK", null);
             }
 

@@ -5,12 +5,12 @@ import android.view.MotionEvent;
 
 import java.util.List;
 
-import igrek.songbook.events.AutoscrollStartRequestUIEvent;
-import igrek.songbook.events.CanvasClickedEvent;
 import igrek.songbook.events.CanvasScrollEvent;
 import igrek.songbook.events.FontsizeChangedEvent;
 import igrek.songbook.events.GraphicsInitializedEvent;
-import igrek.songbook.events.TransposeEvent;
+import igrek.songbook.events.autoscroll.AutoscrollStartUIEvent;
+import igrek.songbook.events.autoscroll.AutoscrollStopUIEvent;
+import igrek.songbook.events.transpose.TransposeEvent;
 import igrek.songbook.graphics.Colors;
 import igrek.songbook.graphics.canvas.enums.Font;
 import igrek.songbook.graphics.canvas.quickmenu.QuickMenu;
@@ -199,8 +199,6 @@ public class CanvasGraphics extends BaseCanvasGraphics implements IService {
 
     private boolean onScreenClicked(float x, float y) {
 
-        //TODO zgeneralizowane wiadomości o rozpoczęciu / zakończeniu autoscrolla
-
         if (quickMenu.isVisible()) {
 
             return quickMenu.onScreenClicked(x, y);
@@ -209,14 +207,12 @@ public class CanvasGraphics extends BaseCanvasGraphics implements IService {
 
             Autoscroll autoscroll = AppController.getService(Autoscroll.class);
             if (autoscroll.isRunning()) {
-                //TODO event autoscroll stop
-                AppController.sendEvent(new CanvasClickedEvent());
+                AppController.sendEvent(new AutoscrollStopUIEvent());
             } else {
 
                 if (y >= h * GESTURE_AUTOSCROLL_BOTTOM_REGION) {  //kliknięcie na dole ekranu
 
-                    //TODO uprościć event
-                    AppController.sendEvent(new AutoscrollStartRequestUIEvent());
+                    AppController.sendEvent(new AutoscrollStartUIEvent());
 
                 } else {
 

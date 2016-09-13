@@ -1,4 +1,4 @@
-package igrek.songbook.events;
+package igrek.songbook.events.autoscroll;
 
 import igrek.songbook.logic.controller.dispatcher.IEvent;
 

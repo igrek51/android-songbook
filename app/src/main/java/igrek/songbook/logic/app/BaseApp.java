@@ -127,6 +127,7 @@ public abstract class BaseApp {
         activity.startActivity(startMain);
     }
 
+    //TODO usługa obsługująca action info bar
     /**
      * @param info tekst do wyświetlenia lub zmiany
      * @param view widok, na którym ma zostać wyświetlony tekst
