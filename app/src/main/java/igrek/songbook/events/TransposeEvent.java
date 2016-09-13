@@ -2,11 +2,11 @@ package igrek.songbook.events;
 
 import igrek.songbook.logic.controller.dispatcher.IEvent;
 
-public class TransposedEvent implements IEvent {
+public class TransposeEvent implements IEvent {
 
     private int t;
 
-    public TransposedEvent(int t) {
+    public TransposeEvent(int t) {
         this.t = t;
     }
 

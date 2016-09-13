@@ -293,6 +293,11 @@ public class BaseCanvasGraphics extends View {
         canvas.drawRect(left, top, right, bottom, paint);
     }
 
+    public void fillRectWH(float left, float top, float width, float height) {
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawRect(left, top, left + width, top + height, paint);
+    }
+
     public void fillRoundRect(float left, float top, float right, float bottom, float radius) {
         paint.setStyle(Paint.Style.FILL);
         RectF rectf = new RectF(left, top, right, bottom);

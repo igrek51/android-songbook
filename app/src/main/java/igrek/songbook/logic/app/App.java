@@ -21,9 +21,11 @@ import igrek.songbook.events.ItemClickedEvent;
 import igrek.songbook.events.ResizedEvent;
 import igrek.songbook.events.ShowQuickMenuEvent;
 import igrek.songbook.events.ToolbarBackClickedEvent;
-import igrek.songbook.events.TransposedEvent;
+import igrek.songbook.events.TransposeEvent;
+import igrek.songbook.events.TransposeResetEvent;
 import igrek.songbook.filesystem.Filesystem;
 import igrek.songbook.graphics.canvas.CanvasGraphics;
+import igrek.songbook.graphics.canvas.quickmenu.QuickMenu;
 import igrek.songbook.graphics.gui.GUI;
 import igrek.songbook.graphics.gui.ScrollPosBuffer;
 import igrek.songbook.graphics.infobar.InfoBarClickAction;
@@ -83,7 +85,8 @@ public class App extends BaseApp implements IEventObserver {
         AppController.registerEventObserver(ItemClickedEvent.class, this);
         AppController.registerEventObserver(ResizedEvent.class, this);
         AppController.registerEventObserver(GraphicsInitializedEvent.class, this);
-        AppController.registerEventObserver(TransposedEvent.class, this);
+        AppController.registerEventObserver(TransposeEvent.class, this);
+        AppController.registerEventObserver(TransposeResetEvent.class, this);
         AppController.registerEventObserver(FontsizeChangedEvent.class, this);
         AppController.registerEventObserver(AutoscrollRemainingWaitTimeEvent.class, this);
         AppController.registerEventObserver(AutoscrollStartRequestUIEvent.class, this);
@@ -146,8 +149,8 @@ public class App extends BaseApp implements IEventObserver {
             goUp();
         } else if (state == AppState.FILE_CONTENT) {
 
-            CanvasGraphics canvas = AppController.getService(CanvasGraphics.class);
-            if (canvas.isMenuVisible()) {
+            QuickMenu quickMenu = AppController.getService(QuickMenu.class);
+            if (quickMenu.isVisible()) {
                 AppController.sendEvent(new ShowQuickMenuEvent(false));
             } else {
 
@@ -266,18 +269,24 @@ public class App extends BaseApp implements IEventObserver {
             gui.setFontSize(chordsManager.getFontsize());
             gui.setCRDModel(chordsManager.getCRDModel());
 
-        } else if (event instanceof TransposedEvent) {
+        } else if (event instanceof TransposeEvent) {
 
-            int t = ((TransposedEvent) event).getT();
+            //TODO przenieść łapanie eventu do chordsmanager
+            int t = ((TransposeEvent) event).getT();
 
             chordsManager.transpose(t);
             gui.setCRDModel(chordsManager.getCRDModel());
             showActionInfo("Transpozycja: " + chordsManager.getTransposed(), null, "Zeruj", new InfoBarClickAction() {
                 @Override
                 public void onClick() {
-                    AppController.sendEvent(new TransposedEvent(-chordsManager.getTransposed()));
+                    AppController.sendEvent(new TransposeResetEvent());
                 }
             });
+
+        } else if (event instanceof TransposeResetEvent) {
+
+            //TODO przenieść łapanie eventu do chordsmanager
+            AppController.sendEvent(new TransposeEvent(-chordsManager.getTransposed()));
 
         } else if (event instanceof FontsizeChangedEvent) {
 
