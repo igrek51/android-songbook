@@ -1,12 +1,10 @@
 <resources>
     <string name="app_name">SongBook</string>
 
-    <string name="action_minimize">Minimalizuj</string>
-    <string name="action_exit">Wyjście</string>
+    <string name="action_minimize">Minimize</string>
+    <string name="action_exit">Exit</string>
 
     <string name="example_item">Example Item filename long long long long ...</string>
-    <string name="action_font_increase">Zwiększ czcionkę</string>
-    <string name="action_font_decrease">Zmniejsz czcionkę</string>
-    <string name="action_home">root</string>
-    <string name="action_sethomedir">Ustaw jako folder startowy</string>
+    <string name="action_home">Go to root</string>
+    <string name="action_sethomedir">Set as starting directory</string>
 </resources>

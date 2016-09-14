@@ -210,7 +210,7 @@ public class App extends BaseApp implements IEventObserver {
         String homeDir = fileTreeManager.getCurrentPath();
         preferences.startPath = homeDir;
         preferences.saveAll();
-        showActionInfo("Zapisano obecny folder jako startowy.", null, "OK", null);
+        showActionInfo("Current directory saved as starting directory.", null, "OK", null);
     }
 
 
@@ -276,7 +276,7 @@ public class App extends BaseApp implements IEventObserver {
 
             chordsManager.transpose(t);
             gui.setCRDModel(chordsManager.getCRDModel());
-            showActionInfo("Transpozycja: " + chordsManager.getTransposed(), null, "Zeruj", new InfoBarClickAction() {
+            showActionInfo("Transposition: " + chordsManager.getTransposed(), null, "Reset", new InfoBarClickAction() {
                 @Override
                 public void onClick() {
                     AppController.sendEvent(new TransposeResetEvent());
@@ -302,7 +302,7 @@ public class App extends BaseApp implements IEventObserver {
             long ms = ((AutoscrollRemainingWaitTimeEvent) event).getMs();
 
             int seconds = (int) ((ms + 500) / 1000);
-            showActionInfo("Autoprzewijanie za " + seconds + " s.", null, "Zatrzymaj", new InfoBarClickAction() {
+            showActionInfo("Autoscroll starts in " + seconds + " s.", null, "Stop", new InfoBarClickAction() {
                 @Override
                 public void onClick() {
                     AppController.sendEvent(new AutoscrollStopEvent());
@@ -319,14 +319,14 @@ public class App extends BaseApp implements IEventObserver {
                 CanvasGraphics canvas = AppController.getService(CanvasGraphics.class);
                 if (canvas.canAutoScroll()) {
                     AppController.sendEvent(new AutoscrollStartEvent());
-                    showActionInfo("Rozpoczęto autoprzewijanie.", null, "Zatrzymaj", new InfoBarClickAction() {
+                    showActionInfo("Autoscroll started.", null, "Stop", new InfoBarClickAction() {
                         @Override
                         public void onClick() {
                             AppController.sendEvent(new AutoscrollStopEvent());
                         }
                     });
                 } else {
-                    showActionInfo("Koniec pliku\nZatrzymano autoprzewijanie.", null, "OK", null);
+                    showActionInfo("End of file\nAutoscroll stopped.", null, "OK", null);
                 }
             } else {
                 AppController.sendEvent(new AutoscrollStopUIEvent());
@@ -334,7 +334,7 @@ public class App extends BaseApp implements IEventObserver {
 
         } else if (event instanceof AutoscrollStartedEvent) {
 
-            showActionInfo("Rozpoczęto autoprzewijanie.", null, "Zatrzymaj", new InfoBarClickAction() {
+            showActionInfo("Autoscroll started.", null, "Stop", new InfoBarClickAction() {
                 @Override
                 public void onClick() {
                     AppController.sendEvent(new AutoscrollStopEvent());
@@ -343,14 +343,14 @@ public class App extends BaseApp implements IEventObserver {
 
         } else if (event instanceof AutoscrollEndedEvent) {
 
-            showActionInfo("Koniec pliku\nZatrzymano autoprzewijanie.", null, "OK", null);
+            showActionInfo("End of file\n" + "Autoscroll stopped.", null, "OK", null);
 
         } else if (event instanceof AutoscrollStopUIEvent) {
 
             Autoscroll autoscroll = AppController.getService(Autoscroll.class);
             if (autoscroll.isRunning()) {
                 AppController.sendEvent(new AutoscrollStopEvent());
-                showActionInfo("Zatrzymano autoprzewijanie.", null, "OK", null);
+                showActionInfo("Autoscroll stopped.", null, "OK", null);
             }
 
         } else if (event instanceof CanvasScrollEvent) {
