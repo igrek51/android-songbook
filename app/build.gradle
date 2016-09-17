@@ -16,14 +16,15 @@ android {
 //        }
 
         int code = versionProps['VERSION_CODE'].toInteger() + 1
-        String name = versionProps['VERSION_PREFIX']
+        String versionPrefix = versionProps['VERSION_PREFIX']
 
         versionProps['VERSION_CODE'] = code.toString()
+        versionProps['VERSION_NAME'] = versionPrefix + code.toString()
         versionProps.store(versionPropsFile.newWriter(), null)
 
         defaultConfig {
             versionCode code
-            versionName name + code
+            versionName versionPrefix + code
             applicationId "igrek.songbook"
             minSdkVersion 13
             targetSdkVersion 23
