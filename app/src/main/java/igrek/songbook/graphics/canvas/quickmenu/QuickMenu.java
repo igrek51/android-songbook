@@ -108,6 +108,8 @@ public class QuickMenu implements IService, IEventObserver {
             for (QuickMenuButton button : buttons) {
                 button.draw(canvas);
             }
+
+            //TODO informacja o aktualnej transpozycji, tytuł Transpozycja do buttonów
         }
     }
 

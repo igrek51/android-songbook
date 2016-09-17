@@ -7,6 +7,9 @@ import java.util.List;
 import igrek.songbook.logger.Logs;
 import igrek.songbook.logic.controller.services.IService;
 
+//TODO obsługa notacji Dm: uwaga na Dmaj7, D#m czy Dm#
+//TODO wybór notacji amerykańskiej: A Bb B C ...
+
 public class ChordsTransposer implements IService {
 
     private final String soundNames[] = {

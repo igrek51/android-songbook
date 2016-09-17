@@ -47,6 +47,8 @@ import igrek.songbook.preferences.Preferences;
 
 //TODO teksty wyświetlane użytkownikowi przenieść do strings.xml
 
+//TODO UI help
+
 public class App extends BaseApp implements IEventObserver {
     
     private FileTreeManager fileTreeManager;
