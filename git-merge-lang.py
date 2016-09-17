@@ -13,8 +13,6 @@ def fatalError(message):
 	print '[ERROR] ' + message
 	sys.exit()
 
-shellExec('git checkout en-lang')
-shellExec('git merge master')
 shellExec('git checkout pl-lang')
 shellExec('git merge master')
 shellExec('git checkout master')
