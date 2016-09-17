@@ -45,6 +45,8 @@ import igrek.songbook.preferences.Preferences;
 
 //TODO context server service - systemowe operacje, zamiast przekazywania contextu
 
+//TODO teksty wyświetlane użytkownikowi przenieść do strings.xml
+
 public class App extends BaseApp implements IEventObserver {
     
     private FileTreeManager fileTreeManager;
