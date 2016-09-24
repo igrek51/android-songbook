@@ -13,8 +13,8 @@ import igrek.songbook.logic.controller.services.IService;
 public class ChordsTransposer implements IService {
 
     private final String soundNames[] = {
-            "c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "b", "h", //mollowe
-            "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "B", "H" //durowe
+            "c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "b", "h", //minor
+            "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "B", "H" //major
     };
 
     private final String chordsDelimiters[] = {

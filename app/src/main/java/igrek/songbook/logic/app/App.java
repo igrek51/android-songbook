@@ -278,7 +278,7 @@ public class App extends BaseApp implements IEventObserver {
 
             chordsManager.transpose(t);
             gui.setCRDModel(chordsManager.getCRDModel());
-            showActionInfo("Transposition: " + chordsManager.getTransposed(), null, "Reset", new InfoBarClickAction() {
+            showActionInfo("Transposition: " + chordsManager.getTransposedString(), null, "Reset", new InfoBarClickAction() {
                 @Override
                 public void onClick() {
                     AppController.sendEvent(new TransposeResetEvent());
@@ -314,7 +314,6 @@ public class App extends BaseApp implements IEventObserver {
         } else if (event instanceof AutoscrollStartUIEvent) {
 
             //TODO event odbierany przez autoscrolla
-            //TODO zgeneralizowane wiadomości o rozpoczęciu / zakończeniu autoscrolla
             Autoscroll autoscroll = AppController.getService(Autoscroll.class);
 
             if (!autoscroll.isRunning()) {
@@ -328,7 +327,7 @@ public class App extends BaseApp implements IEventObserver {
                         }
                     });
                 } else {
-                    showActionInfo("End of file\nAutoscroll stopped.", null, "OK", null);
+                    showActionInfo("End of file\nAutoscroll not started.", null, "OK", null);
                 }
             } else {
                 AppController.sendEvent(new AutoscrollStopUIEvent());

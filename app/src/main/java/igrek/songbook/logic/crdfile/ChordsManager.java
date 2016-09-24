@@ -9,7 +9,7 @@ import igrek.songbook.logic.music.transposer.ChordsTransposer;
 
 public class ChordsManager implements IService {
 
-    //TODO klasa do przechowywania danych tymczasowej konfiguracji przeglądarki akordów
+    //TODO klasa do przechowywania danych tymczasowej konfiguracji przeglądarki akordów, zmiana nazwy
     //TODO dodanie obsługi przez eventy, usunięcie z pola App, pełny service
 
     private int transposed = 0;
@@ -91,5 +91,9 @@ public class ChordsManager implements IService {
 
     public int getTransposed() {
         return transposed;
+    }
+
+    public String getTransposedString() {
+        return (transposed > 0 ? "+" : "") + transposed;
     }
 }

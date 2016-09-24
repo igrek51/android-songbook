@@ -31,7 +31,7 @@ public class Autoscroll implements IService, IEventObserver {
     private final float START_NO_WAITING_MIN_SCROLL_FACTOR = 1.0f;
 
     private final float AUTOCHANGE_INTERVAL_SCALE = 0.0022f;
-    private final float AUTOCHANGE_WAITING_SCALE = 7.0f;
+    private final float AUTOCHANGE_WAITING_SCALE = 9.0f;
 
     private Handler timerHandler;
     private Runnable timerRunnable;

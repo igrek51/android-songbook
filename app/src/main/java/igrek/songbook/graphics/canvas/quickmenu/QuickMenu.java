@@ -9,18 +9,21 @@ import igrek.songbook.events.autoscroll.AutoscrollStopUIEvent;
 import igrek.songbook.events.transpose.TransposeEvent;
 import igrek.songbook.events.transpose.TransposeResetEvent;
 import igrek.songbook.graphics.canvas.CanvasGraphics;
+import igrek.songbook.graphics.canvas.enums.Align;
 import igrek.songbook.graphics.canvas.enums.Font;
 import igrek.songbook.logic.autoscroll.Autoscroll;
 import igrek.songbook.logic.controller.AppController;
 import igrek.songbook.logic.controller.dispatcher.IEvent;
 import igrek.songbook.logic.controller.dispatcher.IEventObserver;
 import igrek.songbook.logic.controller.services.IService;
+import igrek.songbook.logic.crdfile.ChordsManager;
 
 //TODO jedna instacja, ponowne wykorzystanie klasy
 
 public class QuickMenu implements IService, IEventObserver {
 
     private CanvasGraphics canvas;
+    private ChordsManager chordsManager;
 
     private boolean visible = false;
 
@@ -31,6 +34,8 @@ public class QuickMenu implements IService, IEventObserver {
 
     public QuickMenu(CanvasGraphics canvas) {
         this.canvas = canvas;
+
+        chordsManager = AppController.getService(ChordsManager.class);
 
         initButtons();
 
@@ -101,15 +106,19 @@ public class QuickMenu implements IService, IEventObserver {
             float w = canvas.getW();
             float h = canvas.getH();
 
-            canvas.setFont(Font.FONT_NORMAL);
             canvas.setColor(0x000000, 110);
             canvas.fillRect(0, 0, w, h);
+
+            //info o aktualnej transpozycji
+            canvas.setColor(0xffffff);
+            canvas.setFont(Font.FONT_BOLD);
+            //TODO tłumaczenia pl lub przenieść do strings.xml
+            canvas.drawText("Transposition: " + chordsManager.getTransposedString(), 0.5f * w, (1 - MENU_AUTOSCROLL_BUTTON_H - MENU_TRANSPOSE_BUTTON_H) * h, Align.BOTTOM_HCENTER);
 
             for (QuickMenuButton button : buttons) {
                 button.draw(canvas);
             }
 
-            //TODO informacja o aktualnej transpozycji, tytuł Transpozycja do buttonów
         }
     }
 
