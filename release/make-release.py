@@ -43,7 +43,7 @@ class FakeSecHead(object):
 
 apkSrc = '../app/build/outputs/apk/app-debug.apk'
 versionFile = '../app/version.properties'
-guitarDBDir = 'GuitarDB'
+guitarDBDir = 'guitarDB'
 
 # wyciągnięcie numeru wersji
 config = ConfigParser.RawConfigParser()
@@ -60,9 +60,10 @@ removeFilesWildcard('./SongBook-db-*.zip')
 
 # aktualizacja zmian z bazy źródłowej
 print 'updating ' + guitarDBDir + '...'
-shellExec('cd ' + guitarDBDir)
+os.chdir(guitarDBDir)
 shellExec('git pull origin master')
-shellExec('cd ..')
+shellExec('git merge master')
+os.chdir('..')
 
 shellExec('cp ' + apkSrc + ' ' + apkOutputFile)
 
