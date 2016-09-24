@@ -84,6 +84,8 @@ public class CanvasGraphics extends BaseCanvasGraphics implements IService {
 
         drawBackground();
 
+        drawScrollBar();
+
         drawFileContent();
 
         quickMenu.draw();
@@ -123,6 +125,16 @@ public class CanvasGraphics extends BaseCanvasGraphics implements IService {
 
             drawTextUnaligned(fragment.getText(), fragment.getX() * fontsize, y + lineheight);
         }
+    }
+
+    private void drawScrollBar() {
+        float maxScroll = getMaxScroll();
+        float range = maxScroll + h;
+        float top = scroll / range;
+        float bottom = (scroll + h) / range;
+
+        setColor(0xAEC3E0);
+        drawLine(w - 1, top * h, w - 1, bottom * h);
     }
 
     @Override
