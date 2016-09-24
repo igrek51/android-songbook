@@ -64,11 +64,15 @@ public abstract class BaseApp {
     }
 
     public void pause() {
-
+        Logs.debug("Activity paused");
     }
 
     public void resume() {
+        Logs.debug("Activity resumed");
+    }
 
+    public void destroy() {
+        Logs.debug("Activity destroyed");
     }
 
     public void quit() {
