@@ -3,30 +3,69 @@
 
 import subprocess
 import os
+import glob
+import ConfigParser
 
-apkSrc = '../app/build/outputs/apk/app-debug.apk'
-# TODO wyciągnąć numer wersji z app/version.properties
-versionName = '1.0.2'
+def shellExec(cmd):
+	errCode = subprocess.call(cmd, shell=True)
+	if errCode != 0:
+		fatalError('failed executing: ' + cmd)
 
-apkOutputFile = 'SongBook-' + versionName + '-debug.apk'
-outputDBArchive = 'SongBook-db-' + versionName + '.zip'
+def fatalError(message):
+	print '[ERROR] ' + message
+	sys.exit()
 
 def removeIfExists(fileName):
 	if os.path.exists(fileName):
 		print 'removing ' + fileName + '...'
-		subprocess.call('rm '+fileName, shell=True)
+		os.remove(fileName)
 
-# TODO usuwanie starszych wersji
-removeIfExists(outputDBArchive)
+def removeFilesWildcard(pattern):
+	files = glob.glob(pattern)
+	for file in files:
+		os.remove(file)
 
-removeIfExists(apkOutputFile)
-subprocess.call('cp ' + apkSrc + ' ' + apkOutputFile, shell=True)
+# zjebany ConfigParser
+class FakeSecHead(object):
+    def __init__(self, fp):
+        self.fp = fp
+        self.sechead = '[dummysection]\n'
 
-subprocess.call('zip -r '+outputDBArchive+' GuitarDB -x *.git*', shell=True)
+    def readline(self):
+        if self.sechead:
+            try: 
+                return self.sechead
+            finally: 
+                self.sechead = None
+        else: 
+            return self.fp.readline()
 
-# link do aktualnej wersji
-# releaseLinkName = 'SongBook-apkdb-release.zip'
-# removeIfExists(releaseLinkName)
-# subprocess.call('ln -s ' + outputArchive + ' ' + releaseLinkName, shell=True)
+
+apkSrc = '../app/build/outputs/apk/app-debug.apk'
+versionFile = '../app/version.properties'
+guitarDBDir = 'GuitarDB'
+
+# wyciągnięcie numeru wersji
+config = ConfigParser.RawConfigParser()
+config.readfp(FakeSecHead(open(versionFile)))
+versionName = config.get('dummysection', 'VERSION_NAME');
+
+# pliki wyjściowe
+apkOutputFile = 'SongBook-' + versionName + '.apk'
+outputDBArchive = 'SongBook-db-' + versionName + '.zip'
+
+# usuwanie starszych wersji
+removeFilesWildcard('./SongBook-*.apk')
+removeFilesWildcard('./SongBook-db-*.zip')
+
+# aktualizacja zmian z bazy źródłowej
+print 'updating ' + guitarDBDir + '...'
+shellExec('cd ' + guitarDBDir)
+shellExec('git pull origin master')
+shellExec('cd ..')
+
+shellExec('cp ' + apkSrc + ' ' + apkOutputFile)
+
+shellExec('zip -r '+outputDBArchive+' '+guitarDBDir+' -x *.git*')
 
 print 'done'

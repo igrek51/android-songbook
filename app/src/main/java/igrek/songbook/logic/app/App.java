@@ -41,8 +41,6 @@ import igrek.songbook.logic.filetree.FileTreeManager;
 import igrek.songbook.logic.music.transposer.ChordsTransposer;
 import igrek.songbook.preferences.Preferences;
 
-//TODO menu z przyciskami: otwarcie kliknięciem (w odpowiednim miejscu), transpozycja 0, 1, 5
-
 //TODO context server service - systemowe operacje, zamiast przekazywania contextu
 
 //TODO teksty wyświetlane użytkownikowi przenieść do strings.xml

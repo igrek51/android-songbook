@@ -15,16 +15,21 @@ android {
 //            value = 1;
 //        }
 
-        int code = versionProps['VERSION_CODE'].toInteger() + 1
-        String versionPrefix = versionProps['VERSION_PREFIX']
+        int vMajor = versionProps['VERSION_MAJOR'].toInteger()
+        int vMinor = versionProps['VERSION_MINOR'].toInteger()
+        int vPatch = versionProps['VERSION_PATCH'].toInteger() + 1
+        int vCode = versionProps['VERSION_CODE'].toInteger() + 1
 
-        versionProps['VERSION_CODE'] = code.toString()
-        versionProps['VERSION_NAME'] = versionPrefix + code.toString()
+        versionProps['VERSION_PATCH'] = vPatch.toString()
+        versionProps['VERSION_CODE'] = vCode.toString()
+        String vName = vMajor.toString() + "." + vMinor.toString() + "." + vPatch.toString()
+        versionProps['VERSION_NAME'] = vName
+
         versionProps.store(versionPropsFile.newWriter(), null)
 
         defaultConfig {
-            versionCode code
-            versionName versionPrefix + code
+            versionCode vCode
+            versionName vName
             applicationId "igrek.songbook"
             minSdkVersion 13
             targetSdkVersion 23
