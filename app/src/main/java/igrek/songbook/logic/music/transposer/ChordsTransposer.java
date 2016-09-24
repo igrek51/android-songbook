@@ -1,20 +1,25 @@
 package igrek.songbook.logic.music.transposer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import igrek.songbook.logger.Logs;
 import igrek.songbook.logic.controller.services.IService;
 
-//TODO obsługa notacji Dm: uwaga na Dmaj7, D#m czy Dm#
-//TODO wybór notacji amerykańskiej: A Bb B C ...
-
 public class ChordsTransposer implements IService {
 
+    /**
+     * obsługiwane formaty akordów:
+     * d, d#, D, D#, Dm, D#m, Dmaj7, D#maj7, d7, d#7, D#m7, D#7, Dadd9, Dsus
+     */
     private final String soundNames[] = {
             "c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "b", "h", //minor
-            "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "B", "H" //major
+            "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "B", "H", //major (lub prefix dla mollowych: F#m)
+            // notacja amerykańska
+            //"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "Bb", "B", //major lub prefix dla minor
     };
 
     private final String chordsDelimiters[] = {
@@ -23,10 +28,23 @@ public class ChordsTransposer implements IService {
 
     private final int MAX_LENGTH_ANALYZE = 2;
 
-    private HashMap<String, Integer> soundNumbers;
+    /**
+     * mapa nazwy akordu (prefixu) na jego numer
+     */
+    private Map<String, Integer> soundNumbers;
 
     public ChordsTransposer() {
-        soundNumbers = new HashMap<>();
+        // klucze posortowane po długości malejąco
+        soundNumbers = new TreeMap<>(new Comparator<String>() {
+            @Override
+            public int compare(String lhs, String rhs) {
+                if (rhs.length() != lhs.length()) {
+                    return rhs.length() - lhs.length();
+                } else {
+                    return lhs.compareTo(rhs);
+                }
+            }
+        });
         for (int i = 0; i < soundNames.length; i++) {
             soundNumbers.put(soundNames[i], i);
         }
@@ -130,15 +148,21 @@ public class ChordsTransposer implements IService {
         }
 
         //transpozycja - przesunięcie o półtony
-        if (chordNumber < 12) { //mollowe: 0 - 11
-            chordNumber = (chordNumber + t) % 12;
-            if (chordNumber < 0) chordNumber += 12;
-        } else { //durowe: 12 - 23
-            chordNumber = (chordNumber - 12 + t) % 12 + 12;
-            if (chordNumber < 12) chordNumber += 12;
+        int family = getChordFamilyIndex(chordNumber);
+        chordNumber = chordNumber + t;
+        //przywrócenie oryginalnej rodziny akordu
+        while (getChordFamilyIndex(chordNumber) > family) {
+            chordNumber -= 12;
+        }
+        while (chordNumber < 0 || getChordFamilyIndex(chordNumber) < family) {
+            chordNumber += 12;
         }
 
         return getChordName(chordNumber) + suffix;
+    }
+
+    private int getChordFamilyIndex(int chordNumber) {
+        return chordNumber / 12;
     }
 
     /**
