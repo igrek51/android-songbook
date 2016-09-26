@@ -18,7 +18,7 @@ import igrek.songbook.logic.controller.dispatcher.IEvent;
 import igrek.songbook.logic.controller.dispatcher.IEventObserver;
 import igrek.songbook.logic.controller.services.IService;
 import igrek.songbook.logic.crdfile.ChordsManager;
-import igrek.songbook.resources.LangStringService;
+import igrek.songbook.resources.UserInfoService;
 
 //TODO jedna instacja, ponowne wykorzystanie klasy
 
@@ -26,7 +26,7 @@ public class QuickMenu implements IService, IEventObserver {
 
     private CanvasGraphics canvas;
     private ChordsManager chordsManager;
-    private LangStringService langStrings;
+    private UserInfoService infoService;
 
     private boolean visible = false;
 
@@ -39,7 +39,7 @@ public class QuickMenu implements IService, IEventObserver {
         this.canvas = canvas;
 
         chordsManager = AppController.getService(ChordsManager.class);
-        langStrings = AppController.getService(LangStringService.class);
+        infoService = AppController.getService(UserInfoService.class);
 
         initButtons();
 
@@ -54,8 +54,7 @@ public class QuickMenu implements IService, IEventObserver {
 
         //TODO button extends QuickMenuButton z nadpisaną metodą getText(), dynamiczny tekst na podstawie stanu autoscrolla
         //TODO 2 buttony: autoscroll wait, autoscroll now
-        //TODO autoscroll text to string xml
-        buttons.add(new QuickMenuButton(langStrings.resString(R.string.autoscroll), 0, 1 - MENU_AUTOSCROLL_BUTTON_H, 1, MENU_AUTOSCROLL_BUTTON_H, new ButtonClickedAction() {
+        buttons.add(new QuickMenuButton(infoService.resString(R.string.autoscroll), 0, 1 - MENU_AUTOSCROLL_BUTTON_H, 1, MENU_AUTOSCROLL_BUTTON_H, new ButtonClickedAction() {
             @Override
             public void onClicked() {
 
@@ -117,8 +116,8 @@ public class QuickMenu implements IService, IEventObserver {
             //info o aktualnej transpozycji
             canvas.setColor(0xffffff);
             canvas.setFont(Font.FONT_BOLD);
-            //TODO tłumaczenia pl lub przenieść do strings.xml
-            canvas.drawText(langStrings.resString(R.string.transposition) + ": " + chordsManager.getTransposedString(), 0.5f * w, (1 - MENU_AUTOSCROLL_BUTTON_H - MENU_TRANSPOSE_BUTTON_H) * h, Align.BOTTOM_HCENTER);
+
+            canvas.drawText(infoService.resString(R.string.transposition) + ": " + chordsManager.getTransposedString(), 0.5f * w, (1 - MENU_AUTOSCROLL_BUTTON_H - MENU_TRANSPOSE_BUTTON_H) * h, Align.BOTTOM_HCENTER);
 
             for (QuickMenuButton button : buttons) {
                 button.draw(canvas);

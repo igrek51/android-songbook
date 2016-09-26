@@ -2,12 +2,20 @@ package igrek.songbook.logic.crdfile;
 
 import android.graphics.Paint;
 
+import igrek.songbook.R;
+import igrek.songbook.events.transpose.TransposeEvent;
+import igrek.songbook.events.transpose.TransposeResetEvent;
+import igrek.songbook.graphics.canvas.CanvasGraphics;
+import igrek.songbook.graphics.infobar.InfoBarClickAction;
 import igrek.songbook.logic.autoscroll.Autoscroll;
 import igrek.songbook.logic.controller.AppController;
+import igrek.songbook.logic.controller.dispatcher.IEvent;
+import igrek.songbook.logic.controller.dispatcher.IEventObserver;
 import igrek.songbook.logic.controller.services.IService;
 import igrek.songbook.logic.music.transposer.ChordsTransposer;
+import igrek.songbook.resources.UserInfoService;
 
-public class ChordsManager implements IService {
+public class ChordsManager implements IService, IEventObserver {
 
     //TODO klasa do przechowywania danych tymczasowej konfiguracji przeglądarki akordów, zmiana nazwy
     //TODO dodanie obsługi przez eventy, usunięcie z pola App, pełny service
@@ -29,6 +37,8 @@ public class ChordsManager implements IService {
 
     public ChordsManager() {
         crdParser = new CRDParser();
+        AppController.registerEventObserver(TransposeEvent.class, this);
+        AppController.registerEventObserver(TransposeResetEvent.class, this);
     }
 
     public void reset() {
@@ -95,5 +105,41 @@ public class ChordsManager implements IService {
 
     public String getTransposedString() {
         return (transposed > 0 ? "+" : "") + transposed;
+    }
+
+    @Override
+    public void onEvent(IEvent event) {
+
+        if (event instanceof TransposeEvent) {
+
+            int t = ((TransposeEvent) event).getT();
+
+            UserInfoService userInfo = AppController.getService(UserInfoService.class);
+
+            transpose(t);
+
+            CanvasGraphics canvas = AppController.getService(CanvasGraphics.class);
+            canvas.setCRDModel(getCRDModel());
+
+            String info = userInfo.resString(R.string.transposition) + ": " + getTransposedString();
+
+            if (getTransposed() != 0) { //włączono niezerową transpozycję
+
+                userInfo.showActionInfo(info, null, userInfo.resString(R.string.transposition_reset), new InfoBarClickAction() {
+                    @Override
+                    public void onClick() {
+                        AppController.sendEvent(new TransposeResetEvent());
+                    }
+                });
+
+            } else {
+                userInfo.showActionInfo(info, null, userInfo.resString(R.string.action_info_ok), null);
+            }
+
+        } else if (event instanceof TransposeResetEvent) {
+
+            AppController.sendEvent(new TransposeEvent(-getTransposed()));
+
+        }
     }
 }

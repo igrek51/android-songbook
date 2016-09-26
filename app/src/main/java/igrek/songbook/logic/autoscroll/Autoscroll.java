@@ -2,18 +2,23 @@ package igrek.songbook.logic.autoscroll;
 
 import android.os.Handler;
 
+import igrek.songbook.R;
 import igrek.songbook.events.autoscroll.AutoscrollEndedEvent;
 import igrek.songbook.events.autoscroll.AutoscrollRemainingWaitTimeEvent;
 import igrek.songbook.events.autoscroll.AutoscrollStartEvent;
+import igrek.songbook.events.autoscroll.AutoscrollStartUIEvent;
 import igrek.songbook.events.autoscroll.AutoscrollStartedEvent;
 import igrek.songbook.events.autoscroll.AutoscrollStopEvent;
+import igrek.songbook.events.autoscroll.AutoscrollStopUIEvent;
 import igrek.songbook.graphics.canvas.CanvasGraphics;
+import igrek.songbook.graphics.infobar.InfoBarClickAction;
 import igrek.songbook.logger.Logs;
 import igrek.songbook.logic.controller.AppController;
 import igrek.songbook.logic.controller.dispatcher.IEvent;
 import igrek.songbook.logic.controller.dispatcher.IEventObserver;
 import igrek.songbook.logic.controller.services.IService;
 import igrek.songbook.logic.crdfile.ChordsManager;
+import igrek.songbook.resources.UserInfoService;
 
 public class Autoscroll implements IService, IEventObserver {
 
@@ -36,6 +41,8 @@ public class Autoscroll implements IService, IEventObserver {
     private Handler timerHandler;
     private Runnable timerRunnable;
 
+    private UserInfoService userInfo;
+
     public Autoscroll() {
 
         timerHandler = new Handler();
@@ -50,8 +57,16 @@ public class Autoscroll implements IService, IEventObserver {
         ChordsManager chordsManager = AppController.getService(ChordsManager.class);
         fontsize = chordsManager.getFontsize();
 
+        userInfo = AppController.getService(UserInfoService.class);
+
         AppController.registerEventObserver(AutoscrollStartEvent.class, this);
         AppController.registerEventObserver(AutoscrollStopEvent.class, this);
+
+        AppController.registerEventObserver(AutoscrollRemainingWaitTimeEvent.class, this);
+        AppController.registerEventObserver(AutoscrollStartUIEvent.class, this);
+        AppController.registerEventObserver(AutoscrollStartedEvent.class, this);
+        AppController.registerEventObserver(AutoscrollEndedEvent.class, this);
+        AppController.registerEventObserver(AutoscrollStopUIEvent.class, this);
 
         reset();
     }
@@ -175,6 +190,59 @@ public class Autoscroll implements IService, IEventObserver {
             start();
         } else if (event instanceof AutoscrollStopEvent) {
             stop();
+        } else if (event instanceof AutoscrollRemainingWaitTimeEvent) {
+
+            long ms = ((AutoscrollRemainingWaitTimeEvent) event).getMs();
+
+            int seconds = (int) ((ms + 500) / 1000);
+
+            userInfo.showActionInfo(userInfo.resString(R.string.autoscroll_starts_in) + " " + seconds + " s.", null, userInfo.resString(R.string.stop_autoscroll), new InfoBarClickAction() {
+                @Override
+                public void onClick() {
+                    AppController.sendEvent(new AutoscrollStopEvent());
+                }
+            });
+
+        } else if (event instanceof AutoscrollStartUIEvent) {
+
+            if (!isRunning()) {
+                CanvasGraphics canvas = AppController.getService(CanvasGraphics.class);
+                if (canvas.canAutoScroll()) {
+                    AppController.sendEvent(new AutoscrollStartEvent());
+
+                    userInfo.showActionInfo(R.string.autoscroll_started, null, userInfo.resString(R.string.stop_autoscroll), new InfoBarClickAction() {
+                        @Override
+                        public void onClick() {
+                            AppController.sendEvent(new AutoscrollStopEvent());
+                        }
+                    });
+                } else {
+                    userInfo.showActionInfo(userInfo.resString(R.string.end_of_file) + "\n" + userInfo.resString(R.string.autoscroll_not_started), null, userInfo.resString(R.string.action_info_ok), null);
+                }
+            } else {
+                AppController.sendEvent(new AutoscrollStopUIEvent());
+            }
+
+        } else if (event instanceof AutoscrollStartedEvent) {
+
+            userInfo.showActionInfo(R.string.autoscroll_started, null, userInfo.resString(R.string.stop_autoscroll), new InfoBarClickAction() {
+                @Override
+                public void onClick() {
+                    AppController.sendEvent(new AutoscrollStopEvent());
+                }
+            });
+
+        } else if (event instanceof AutoscrollEndedEvent) {
+
+            userInfo.showActionInfo(userInfo.resString(R.string.end_of_file) + "\n" + userInfo.resString(R.string.autoscroll_stopped), null, userInfo.resString(R.string.action_info_ok), null);
+
+        } else if (event instanceof AutoscrollStopUIEvent) {
+
+            if (isRunning()) {
+                AppController.sendEvent(new AutoscrollStopEvent());
+                userInfo.showActionInfo(R.string.autoscroll_stopped, null, userInfo.resString(R.string.action_info_ok), null);
+            }
+
         }
     }
 }

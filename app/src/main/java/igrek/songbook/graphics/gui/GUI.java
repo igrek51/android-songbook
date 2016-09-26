@@ -14,6 +14,7 @@ import igrek.songbook.graphics.gui.filelist.FileListView;
 import igrek.songbook.logic.controller.AppController;
 import igrek.songbook.logic.crdfile.CRDModel;
 import igrek.songbook.logic.filetree.FileItem;
+import igrek.songbook.resources.UserInfoService;
 
 public class GUI extends GUIBase {
 
@@ -47,7 +48,8 @@ public class GUI extends GUIBase {
             }
         });
 
-        mainView = activity.findViewById(R.id.mainLayout);
+        UserInfoService userInfo = AppController.getService(UserInfoService.class);
+        userInfo.setMainView(activity.findViewById(R.id.mainLayout));
 
         itemsListView = (FileListView) activity.findViewById(R.id.filesList);
 
@@ -62,7 +64,8 @@ public class GUI extends GUIBase {
 
         canvas = new CanvasGraphics(activity);
 
-        mainView = canvas;
+        UserInfoService userInfo = AppController.getService(UserInfoService.class);
+        userInfo.setMainView(canvas);
 
         activity.setContentView(canvas);
     }
@@ -81,11 +84,8 @@ public class GUI extends GUIBase {
         actionBar.setTitle(title);
     }
 
-    public View getMainView() {
-        return mainView;
-    }
-
     public void setCRDModel(CRDModel model) {
+        //TODO wywalić metodę, odwoływać się bezpośrednio przez Canvas
         canvas.setCRDModel(model);
     }
 

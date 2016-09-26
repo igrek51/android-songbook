@@ -4,7 +4,6 @@ import android.graphics.Paint;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
-import android.view.View;
 
 import igrek.songbook.R;
 import igrek.songbook.events.CanvasScrollEvent;
@@ -14,21 +13,11 @@ import igrek.songbook.events.ItemClickedEvent;
 import igrek.songbook.events.ResizedEvent;
 import igrek.songbook.events.ShowQuickMenuEvent;
 import igrek.songbook.events.ToolbarBackClickedEvent;
-import igrek.songbook.events.autoscroll.AutoscrollEndedEvent;
-import igrek.songbook.events.autoscroll.AutoscrollRemainingWaitTimeEvent;
-import igrek.songbook.events.autoscroll.AutoscrollStartEvent;
-import igrek.songbook.events.autoscroll.AutoscrollStartUIEvent;
-import igrek.songbook.events.autoscroll.AutoscrollStartedEvent;
 import igrek.songbook.events.autoscroll.AutoscrollStopEvent;
-import igrek.songbook.events.autoscroll.AutoscrollStopUIEvent;
-import igrek.songbook.events.transpose.TransposeEvent;
-import igrek.songbook.events.transpose.TransposeResetEvent;
 import igrek.songbook.filesystem.Filesystem;
-import igrek.songbook.graphics.canvas.CanvasGraphics;
 import igrek.songbook.graphics.canvas.quickmenu.QuickMenu;
 import igrek.songbook.graphics.gui.GUI;
 import igrek.songbook.graphics.gui.ScrollPosBuffer;
-import igrek.songbook.graphics.infobar.InfoBarClickAction;
 import igrek.songbook.logger.Logs;
 import igrek.songbook.logic.autoscroll.Autoscroll;
 import igrek.songbook.logic.controller.AppController;
@@ -40,11 +29,7 @@ import igrek.songbook.logic.filetree.FileItem;
 import igrek.songbook.logic.filetree.FileTreeManager;
 import igrek.songbook.logic.music.transposer.ChordsTransposer;
 import igrek.songbook.preferences.Preferences;
-import igrek.songbook.resources.LangStringService;
-
-//TODO context server service - systemowe operacje, zamiast przekazywania contextu
-
-//TODO teksty wyświetlane użytkownikowi przenieść do strings.xml
+import igrek.songbook.resources.UserInfoService;
 
 //TODO UI help
 
@@ -52,7 +37,7 @@ public class App extends BaseApp implements IEventObserver {
     
     private FileTreeManager fileTreeManager;
     private ChordsManager chordsManager;
-    private LangStringService langStrings;
+    private UserInfoService userInfo;
     private GUI gui;
     
     private AppState state;
@@ -78,7 +63,7 @@ public class App extends BaseApp implements IEventObserver {
         AppController.registerService(new Filesystem(activity));
         AppController.registerService(new Preferences(activity));
 
-        langStrings = new LangStringService(activity);
+        userInfo = new UserInfoService(activity);
 
         AppController.registerService(new ChordsManager());
         AppController.registerService(new ScrollPosBuffer());
@@ -91,14 +76,7 @@ public class App extends BaseApp implements IEventObserver {
         AppController.registerEventObserver(ItemClickedEvent.class, this);
         AppController.registerEventObserver(ResizedEvent.class, this);
         AppController.registerEventObserver(GraphicsInitializedEvent.class, this);
-        AppController.registerEventObserver(TransposeEvent.class, this);
-        AppController.registerEventObserver(TransposeResetEvent.class, this);
         AppController.registerEventObserver(FontsizeChangedEvent.class, this);
-        AppController.registerEventObserver(AutoscrollRemainingWaitTimeEvent.class, this);
-        AppController.registerEventObserver(AutoscrollStartUIEvent.class, this);
-        AppController.registerEventObserver(AutoscrollStartedEvent.class, this);
-        AppController.registerEventObserver(AutoscrollEndedEvent.class, this);
-        AppController.registerEventObserver(AutoscrollStopUIEvent.class, this);
         AppController.registerEventObserver(CanvasScrollEvent.class, this);
     }
     
@@ -216,7 +194,7 @@ public class App extends BaseApp implements IEventObserver {
         String homeDir = fileTreeManager.getCurrentPath();
         preferences.startPath = homeDir;
         preferences.saveAll();
-        showActionInfo(langStrings.resString(R.string.starting_directory_saved), null, langStrings.resString(R.string.action_info_ok), null);
+        userInfo.showActionInfo(R.string.starting_directory_saved, null, userInfo.resString(R.string.action_info_ok), null);
     }
 
 
@@ -228,16 +206,10 @@ public class App extends BaseApp implements IEventObserver {
         }
     }
 
-
-    @Override
-    protected View getActiveView() {
-        return gui.getMainView();
-    }
-
     @Override
     public void onEvent(IEvent event) {
-        //TODO zrobić z tym porządek - uprościć
-        //TODO problem polimorfizmu - wyłapania pochodnych typów eventów
+        //TODO uproszczenie odbierania eventów
+        //TODO problem polimorfizmu - wczesnego wyłapania pochodnych typów eventów
         //TODO przenieść do klas odpowiedzialnych za działanie
         if (event instanceof ToolbarBackClickedEvent) {
 
@@ -275,34 +247,6 @@ public class App extends BaseApp implements IEventObserver {
             gui.setFontSize(chordsManager.getFontsize());
             gui.setCRDModel(chordsManager.getCRDModel());
 
-        } else if (event instanceof TransposeEvent) {
-
-            //TODO przenieść łapanie eventu do chordsmanager
-            int t = ((TransposeEvent) event).getT();
-
-            chordsManager.transpose(t);
-            gui.setCRDModel(chordsManager.getCRDModel());
-
-            String info = langStrings.resString(R.string.transposition) + ": " + chordsManager.getTransposedString();
-
-            if (chordsManager.getTransposed() != 0) { //włączono niezerową transpozycję
-
-                showActionInfo(info, null, langStrings.resString(R.string.transposition_reset), new InfoBarClickAction() {
-                    @Override
-                    public void onClick() {
-                        AppController.sendEvent(new TransposeResetEvent());
-                    }
-                });
-
-            } else {
-                showActionInfo(info, null, langStrings.resString(R.string.action_info_ok), null);
-            }
-
-        } else if (event instanceof TransposeResetEvent) {
-
-            //TODO przenieść łapanie eventu do chordsmanager
-            AppController.sendEvent(new TransposeEvent(-chordsManager.getTransposed()));
-
         } else if (event instanceof FontsizeChangedEvent) {
 
             float fontsize = ((FontsizeChangedEvent) event).getFontsize();
@@ -311,63 +255,6 @@ public class App extends BaseApp implements IEventObserver {
             //parsowanie bez ponownego wczytywania pliku i wykrywania kodowania
             chordsManager.reparse();
             gui.setCRDModel(chordsManager.getCRDModel());
-
-        } else if (event instanceof AutoscrollRemainingWaitTimeEvent) {
-
-            long ms = ((AutoscrollRemainingWaitTimeEvent) event).getMs();
-
-            int seconds = (int) ((ms + 500) / 1000);
-
-            showActionInfo(langStrings.resString(R.string.autoscroll_starts_in) + " " + seconds + " s.", null, langStrings.resString(R.string.stop_autoscroll), new InfoBarClickAction() {
-                @Override
-                public void onClick() {
-                    AppController.sendEvent(new AutoscrollStopEvent());
-                }
-            });
-
-        } else if (event instanceof AutoscrollStartUIEvent) {
-
-            //TODO event odbierany przez autoscrolla
-            Autoscroll autoscroll = AppController.getService(Autoscroll.class);
-
-            if (!autoscroll.isRunning()) {
-                CanvasGraphics canvas = AppController.getService(CanvasGraphics.class);
-                if (canvas.canAutoScroll()) {
-                    AppController.sendEvent(new AutoscrollStartEvent());
-
-                    showActionInfo(langStrings.resString(R.string.autoscroll_started), null, langStrings.resString(R.string.stop_autoscroll), new InfoBarClickAction() {
-                        @Override
-                        public void onClick() {
-                            AppController.sendEvent(new AutoscrollStopEvent());
-                        }
-                    });
-                } else {
-                    showActionInfo(langStrings.resString(R.string.end_of_file) + "\n" + langStrings.resString(R.string.autoscroll_not_started), null, langStrings.resString(R.string.action_info_ok), null);
-                }
-            } else {
-                AppController.sendEvent(new AutoscrollStopUIEvent());
-            }
-
-        } else if (event instanceof AutoscrollStartedEvent) {
-
-            showActionInfo(langStrings.resString(R.string.autoscroll_started), null, langStrings.resString(R.string.stop_autoscroll), new InfoBarClickAction() {
-                @Override
-                public void onClick() {
-                    AppController.sendEvent(new AutoscrollStopEvent());
-                }
-            });
-
-        } else if (event instanceof AutoscrollEndedEvent) {
-
-            showActionInfo(langStrings.resString(R.string.end_of_file) + "\n" + langStrings.resString(R.string.autoscroll_stopped), null, langStrings.resString(R.string.action_info_ok), null);
-
-        } else if (event instanceof AutoscrollStopUIEvent) {
-
-            Autoscroll autoscroll = AppController.getService(Autoscroll.class);
-            if (autoscroll.isRunning()) {
-                AppController.sendEvent(new AutoscrollStopEvent());
-                showActionInfo(langStrings.resString(R.string.autoscroll_stopped), null, langStrings.resString(R.string.action_info_ok), null);
-            }
 
         } else if (event instanceof CanvasScrollEvent) {
 
