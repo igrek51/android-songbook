@@ -3,6 +3,7 @@ package igrek.songbook.graphics.canvas.quickmenu;
 import java.util.ArrayList;
 import java.util.List;
 
+import igrek.songbook.R;
 import igrek.songbook.events.ShowQuickMenuEvent;
 import igrek.songbook.events.autoscroll.AutoscrollStartUIEvent;
 import igrek.songbook.events.autoscroll.AutoscrollStopUIEvent;
@@ -17,6 +18,7 @@ import igrek.songbook.logic.controller.dispatcher.IEvent;
 import igrek.songbook.logic.controller.dispatcher.IEventObserver;
 import igrek.songbook.logic.controller.services.IService;
 import igrek.songbook.logic.crdfile.ChordsManager;
+import igrek.songbook.resources.LangStringService;
 
 //TODO jedna instacja, ponowne wykorzystanie klasy
 
@@ -24,6 +26,7 @@ public class QuickMenu implements IService, IEventObserver {
 
     private CanvasGraphics canvas;
     private ChordsManager chordsManager;
+    private LangStringService langStrings;
 
     private boolean visible = false;
 
@@ -36,6 +39,7 @@ public class QuickMenu implements IService, IEventObserver {
         this.canvas = canvas;
 
         chordsManager = AppController.getService(ChordsManager.class);
+        langStrings = AppController.getService(LangStringService.class);
 
         initButtons();
 
@@ -50,7 +54,8 @@ public class QuickMenu implements IService, IEventObserver {
 
         //TODO button extends QuickMenuButton z nadpisaną metodą getText(), dynamiczny tekst na podstawie stanu autoscrolla
         //TODO 2 buttony: autoscroll wait, autoscroll now
-        buttons.add(new QuickMenuButton("Autoscroll", 0, 1 - MENU_AUTOSCROLL_BUTTON_H, 1, MENU_AUTOSCROLL_BUTTON_H, new ButtonClickedAction() {
+        //TODO autoscroll text to string xml
+        buttons.add(new QuickMenuButton(langStrings.resString(R.string.autoscroll), 0, 1 - MENU_AUTOSCROLL_BUTTON_H, 1, MENU_AUTOSCROLL_BUTTON_H, new ButtonClickedAction() {
             @Override
             public void onClicked() {
 
@@ -113,7 +118,7 @@ public class QuickMenu implements IService, IEventObserver {
             canvas.setColor(0xffffff);
             canvas.setFont(Font.FONT_BOLD);
             //TODO tłumaczenia pl lub przenieść do strings.xml
-            canvas.drawText("Transposition: " + chordsManager.getTransposedString(), 0.5f * w, (1 - MENU_AUTOSCROLL_BUTTON_H - MENU_TRANSPOSE_BUTTON_H) * h, Align.BOTTOM_HCENTER);
+            canvas.drawText(langStrings.resString(R.string.transposition) + ": " + chordsManager.getTransposedString(), 0.5f * w, (1 - MENU_AUTOSCROLL_BUTTON_H - MENU_TRANSPOSE_BUTTON_H) * h, Align.BOTTOM_HCENTER);
 
             for (QuickMenuButton button : buttons) {
                 button.draw(canvas);

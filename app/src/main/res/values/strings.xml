@@ -1,10 +1,20 @@
 <resources>
-    <string name="app_name">SongBook</string>
+    <string name="app_name" translatable="false">SongBook</string>
 
     <string name="action_minimize">Minimize</string>
     <string name="action_exit">Exit</string>
 
-    <string name="example_item">Example Item filename long long long long ...</string>
     <string name="action_home">Go to root</string>
     <string name="action_sethomedir">Set as starting directory</string>
+    <string name="starting_directory_saved">Current directory saved as starting directory.</string>
+    <string name="transposition">Transposition</string>
+    <string name="transposition_reset">Reset</string>
+    <string name="stop_autoscroll">Stop</string>
+    <string name="autoscroll_starts_in">Autoscroll starts in</string>
+    <string name="autoscroll_started">Autoscroll started.</string>
+    <string name="action_info_ok">OK</string>
+    <string name="end_of_file">End of file</string>
+    <string name="autoscroll_not_started">Autoscroll not started.</string>
+    <string name="autoscroll_stopped">Autoscroll stopped.</string>
+    <string name="autoscroll">Autoscroll</string>
 </resources>

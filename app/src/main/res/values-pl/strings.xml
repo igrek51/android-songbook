@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SongBook</string>
+    <string name="action_exit">Wyjście</string>
+    <string name="action_home">Przejdź do root</string>
+    <string name="action_minimize">Minimalizuj</string>
+    <string name="action_sethomedir">Ustaw folder startowy</string>
+    <string name="action_info_ok">OK</string>
+    <string name="starting_directory_saved">Zapisano obecny folder jako startowy.</string>
+    <string name="transposition">Transpozycja</string>
+    <string name="autoscroll_starts_in">Autoprzewijanie za</string>
+    <string name="autoscroll">Autoprzewijanie</string>
+    <string name="autoscroll_started">Rozpoczęto autoprzewijanie.</string>
+    <string name="end_of_file">Koniec pliku</string>
+    <string name="autoscroll_not_started">Autoprzewijanie wyłączone.</string>
+    <string name="autoscroll_stopped">Zatrzymano autoprzewijanie.</string>
+    <string name="stop_autoscroll">Zatrzymaj</string>
+    <string name="transposition_reset">Reset</string>
+</resources>

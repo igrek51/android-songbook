@@ -72,4 +72,8 @@ shellExec('cp ' + apkSrc + ' ' + apkOutputFile)
 
 shellExec('zip -r '+outputDBArchive+' '+guitarDBDir+' -x *.git*')
 
+# nowe pliki do repo gita
+shellExec('git add ' + apkOutputFile)
+shellExec('git add ' + outputDBArchive)
+
 print 'done'

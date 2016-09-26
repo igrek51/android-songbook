@@ -40,6 +40,7 @@ import igrek.songbook.logic.filetree.FileItem;
 import igrek.songbook.logic.filetree.FileTreeManager;
 import igrek.songbook.logic.music.transposer.ChordsTransposer;
 import igrek.songbook.preferences.Preferences;
+import igrek.songbook.resources.LangStringService;
 
 //TODO context server service - systemowe operacje, zamiast przekazywania contextu
 
@@ -51,6 +52,7 @@ public class App extends BaseApp implements IEventObserver {
     
     private FileTreeManager fileTreeManager;
     private ChordsManager chordsManager;
+    private LangStringService langStrings;
     private GUI gui;
     
     private AppState state;
@@ -75,6 +77,8 @@ public class App extends BaseApp implements IEventObserver {
     private void registerServices() {
         AppController.registerService(new Filesystem(activity));
         AppController.registerService(new Preferences(activity));
+
+        langStrings = new LangStringService(activity);
 
         AppController.registerService(new ChordsManager());
         AppController.registerService(new ScrollPosBuffer());
@@ -212,7 +216,7 @@ public class App extends BaseApp implements IEventObserver {
         String homeDir = fileTreeManager.getCurrentPath();
         preferences.startPath = homeDir;
         preferences.saveAll();
-        showActionInfo("Current directory saved as starting directory.", null, "OK", null);
+        showActionInfo(langStrings.resString(R.string.starting_directory_saved), null, langStrings.resString(R.string.action_info_ok), null);
     }
 
 
@@ -278,12 +282,21 @@ public class App extends BaseApp implements IEventObserver {
 
             chordsManager.transpose(t);
             gui.setCRDModel(chordsManager.getCRDModel());
-            showActionInfo("Transposition: " + chordsManager.getTransposedString(), null, "Reset", new InfoBarClickAction() {
-                @Override
-                public void onClick() {
-                    AppController.sendEvent(new TransposeResetEvent());
-                }
-            });
+
+            String info = langStrings.resString(R.string.transposition) + ": " + chordsManager.getTransposedString();
+
+            if (chordsManager.getTransposed() != 0) { //włączono niezerową transpozycję
+
+                showActionInfo(info, null, langStrings.resString(R.string.transposition_reset), new InfoBarClickAction() {
+                    @Override
+                    public void onClick() {
+                        AppController.sendEvent(new TransposeResetEvent());
+                    }
+                });
+
+            } else {
+                showActionInfo(info, null, langStrings.resString(R.string.action_info_ok), null);
+            }
 
         } else if (event instanceof TransposeResetEvent) {
 
@@ -304,7 +317,8 @@ public class App extends BaseApp implements IEventObserver {
             long ms = ((AutoscrollRemainingWaitTimeEvent) event).getMs();
 
             int seconds = (int) ((ms + 500) / 1000);
-            showActionInfo("Autoscroll starts in " + seconds + " s.", null, "Stop", new InfoBarClickAction() {
+
+            showActionInfo(langStrings.resString(R.string.autoscroll_starts_in) + " " + seconds + " s.", null, langStrings.resString(R.string.stop_autoscroll), new InfoBarClickAction() {
                 @Override
                 public void onClick() {
                     AppController.sendEvent(new AutoscrollStopEvent());
@@ -320,14 +334,15 @@ public class App extends BaseApp implements IEventObserver {
                 CanvasGraphics canvas = AppController.getService(CanvasGraphics.class);
                 if (canvas.canAutoScroll()) {
                     AppController.sendEvent(new AutoscrollStartEvent());
-                    showActionInfo("Autoscroll started.", null, "Stop", new InfoBarClickAction() {
+
+                    showActionInfo(langStrings.resString(R.string.autoscroll_started), null, langStrings.resString(R.string.stop_autoscroll), new InfoBarClickAction() {
                         @Override
                         public void onClick() {
                             AppController.sendEvent(new AutoscrollStopEvent());
                         }
                     });
                 } else {
-                    showActionInfo("End of file\nAutoscroll not started.", null, "OK", null);
+                    showActionInfo(langStrings.resString(R.string.end_of_file) + "\n" + langStrings.resString(R.string.autoscroll_not_started), null, langStrings.resString(R.string.action_info_ok), null);
                 }
             } else {
                 AppController.sendEvent(new AutoscrollStopUIEvent());
@@ -335,7 +350,7 @@ public class App extends BaseApp implements IEventObserver {
 
         } else if (event instanceof AutoscrollStartedEvent) {
 
-            showActionInfo("Autoscroll started.", null, "Stop", new InfoBarClickAction() {
+            showActionInfo(langStrings.resString(R.string.autoscroll_started), null, langStrings.resString(R.string.stop_autoscroll), new InfoBarClickAction() {
                 @Override
                 public void onClick() {
                     AppController.sendEvent(new AutoscrollStopEvent());
@@ -344,14 +359,14 @@ public class App extends BaseApp implements IEventObserver {
 
         } else if (event instanceof AutoscrollEndedEvent) {
 
-            showActionInfo("End of file\n" + "Autoscroll stopped.", null, "OK", null);
+            showActionInfo(langStrings.resString(R.string.end_of_file) + "\n" + langStrings.resString(R.string.autoscroll_stopped), null, langStrings.resString(R.string.action_info_ok), null);
 
         } else if (event instanceof AutoscrollStopUIEvent) {
 
             Autoscroll autoscroll = AppController.getService(Autoscroll.class);
             if (autoscroll.isRunning()) {
                 AppController.sendEvent(new AutoscrollStopEvent());
-                showActionInfo("Autoscroll stopped.", null, "OK", null);
+                showActionInfo(langStrings.resString(R.string.autoscroll_stopped), null, langStrings.resString(R.string.action_info_ok), null);
             }
 
         } else if (event instanceof CanvasScrollEvent) {
