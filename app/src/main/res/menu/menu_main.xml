@@ -28,4 +28,10 @@
         android:title="@string/action_sethomedir"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/action_ui_help"
+        android:orderInCategory="100"
+        android:title="@string/ui_help"
+        app:showAsAction="never"/>
+
 </menu>

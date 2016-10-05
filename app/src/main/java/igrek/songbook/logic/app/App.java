@@ -1,5 +1,7 @@
 package igrek.songbook.logic.app;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -100,6 +102,9 @@ public class App extends BaseApp implements IEventObserver {
             return true;
         } else if (id == R.id.action_sethomedir) {
             setHomePath();
+            return true;
+        } else if (id == R.id.action_ui_help) {
+            showUIHelp();
             return true;
         }
         return false;
@@ -204,6 +209,19 @@ public class App extends BaseApp implements IEventObserver {
         if (savedScrollPos != null) {
             gui.scrollToPosition(savedScrollPos);
         }
+    }
+
+    private void showUIHelp() {
+        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(activity);
+        //TODO tłumaczenie na angielski
+        dlgAlert.setMessage(userInfo.resString(R.string.ui_help_content));
+        dlgAlert.setTitle(userInfo.resString(R.string.ui_help));
+        dlgAlert.setPositiveButton(userInfo.resString(R.string.action_info_ok), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        dlgAlert.setCancelable(true);
+        dlgAlert.create().show();
     }
 
     @Override

@@ -16,4 +16,18 @@
     <string name="autoscroll_stopped">Zatrzymano autoprzewijanie.</string>
     <string name="stop_autoscroll">Zatrzymaj</string>
     <string name="transposition_reset">Reset</string>
+    <string name="ui_help">Interfejs użytkownika</string>
+    <string name="ui_help_content">
+skalowanie dwoma palcami - zmiana rozmiaru czcionki
+\npociągnięcie w lewo / prawo - transpozycja -1 / +1
+    \n\nSzybkie menu:
+\nkliknięcie w górnej części ekranu - otwiera / zamyka szybkie menu
+\n-5, -1, +1, +5 - zmiana tonacji o liczbę półtonów
+\n0 - przywrócenie oryginalnej tonacji
+\nAutoprzewijanie - włącza autoprzewijanie
+    \n\nAutoprzewijanie:
+\nkliknięcie w dolnej części ekranu - włącza / wyłącza autoprzwijanie
+\njeśli plik  przescrollowany - autoprzewijanie włącza się bez odliczania
+\nręczne przewijanie podczas autoprzewijania - pominięcie odliczania / włączenie odliczania / zmiana tempa autoprzewijania
+    </string>
 </resources>

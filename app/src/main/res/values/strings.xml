@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">SongBook</string>
-
     <string name="action_minimize">Minimize</string>
     <string name="action_exit">Exit</string>
-
     <string name="action_home">Go to root</string>
     <string name="action_sethomedir">Set as starting directory</string>
     <string name="starting_directory_saved">Current directory saved as starting directory.</string>
@@ -17,4 +15,17 @@
     <string name="autoscroll_not_started">Autoscroll not started.</string>
     <string name="autoscroll_stopped">Autoscroll stopped.</string>
     <string name="autoscroll">Autoscroll</string>
+    <string name="ui_help">UI Help</string>
+    <string name="ui_help_content">
+\npociągnięcie w lewo / prawo - transpozycja -1 / +1
+    \n\nSzybkie menu:
+\nkliknięcie w górnej części ekranu - otwiera / zamyka szybkie menu
+\n-5, -1, +1, +5 - zmiana tonacji o liczbę półtonów
+\n0 - przywrócenie oryginalnej tonacji
+\nAutoprzewijanie - włącza autoprzewijanie
+    \n\nAutoprzewijanie:
+\nkliknięcie w dolnej części ekranu - włącza / wyłącza autoprzwijanie
+\njeśli plik  przescrollowany - autoprzewijanie włącza się bez odliczania
+\nręczne przewijanie podczas autoprzewijania - pominięcie odliczania / włączenie odliczania / zmiana tempa autoprzewijania
+    </string>
 </resources>
