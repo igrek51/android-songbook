@@ -23,17 +23,22 @@ public class FileTreeManager {
 
         Filesystem filesystem = AppController.getService(Filesystem.class);
 
-        if (filesystem.isDirectory(startPath)) {
-            currentPath = startPath;
-        }else{
-            Logs.warn("Brak początkowego folderu: " + startPath);
-            currentPath = "/";
+        setCurrentPathIfNotSet(filesystem, startPath);
+        if (currentPath == null) {
+            Logs.warn("not existing starting directory: " + startPath + ", getting default");
         }
+        setCurrentPathIfNotSet(filesystem, filesystem.pathSD().toString());
+        setCurrentPathIfNotSet(filesystem, "/");
+
         updateCurrentPath();
     }
 
-    public FileTreeManager() {
-        this("/");
+    private void setCurrentPathIfNotSet(Filesystem filesystem, String path) {
+        if (currentPath == null) {
+            if (path != null && filesystem.isDirectory(path)) {
+                currentPath = path;
+            }
+        }
     }
 
     public static String trimEndSlash(String str) {

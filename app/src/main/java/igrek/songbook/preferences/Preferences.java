@@ -11,7 +11,7 @@ public class Preferences extends BasePreferences implements IService {
 
     //TODO oznaczenie pól anotacjami, zapis i odczyt przez mechanizm refleksji
 
-    public String startPath = "/storage/extSdCard/Gitara";
+    public String startPath = "/storage/extSdCard/guitarDB";
     private final String START_PATH = "startPath";
 
     public float fontsize = 23.0f;
