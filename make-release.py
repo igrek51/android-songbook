@@ -64,8 +64,7 @@ removeFilesWildcard('./SongBook-db-*.zip')
 # aktualizacja zmian z bazy źródłowej
 print 'updating ' + guitarDBDir + '...'
 os.chdir(guitarDBDir)
-shellExec('git pull origin master')
-shellExec('git merge master')
+shellExec('git pull origin release-en')
 os.chdir('..')
 
 shellExec('cp ' + apkSrc + ' ' + apkOutputFile)

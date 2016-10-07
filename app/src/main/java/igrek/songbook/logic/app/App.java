@@ -213,7 +213,6 @@ public class App extends BaseApp implements IEventObserver {
 
     private void showUIHelp() {
         AlertDialog.Builder dlgAlert = new AlertDialog.Builder(activity);
-        //TODO tłumaczenie na angielski
         dlgAlert.setMessage(userInfo.resString(R.string.ui_help_content));
         dlgAlert.setTitle(userInfo.resString(R.string.ui_help));
         dlgAlert.setPositiveButton(userInfo.resString(R.string.action_info_ok), new DialogInterface.OnClickListener() {
