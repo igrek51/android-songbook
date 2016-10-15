@@ -19,15 +19,15 @@
     <string name="ui_help">Interfejs użytkownika</string>
     <string name="ui_help_content">
     WIDOK PODGLĄDU PLIKU:
-\nSkalowanie dwoma palcami - zmiana rozmiaru czcionki;
-\nPrzeciągnięcie w lewo / prawo - transpozycja o -1 / +1 półton
+\nSkalowanie dwoma palcami - zmiana rozmiaru czcionki.
+\nPrzeciągnięcie w lewo / prawo - transpozycja o -1 / +1 półton.
     \n\nSZYBKIE MENU:
-\nKliknięcie w górnej części ekranu - pokazuje / chowa szybkie menu;
-\nPrzyciski -5, -1, +1, +5 - zmiana tonacji o liczbę półtonów;
-\nPrzycisk 0 - przywrócenie oryginalnej tonacji
+\nKliknięcie w górnej części ekranu - pokazuje / chowa szybkie menu.
+\nPrzyciski -5, -1, +1, +5 - zmiana tonacji o liczbę półtonów.
+\nPrzycisk 0 - przywrócenie oryginalnej tonacji.
     \n\nAUTOPRZEWIJANIE:
-\nKliknięcie w dolnej części ekranu - włącza / wyłącza autoprzwijanie. Jeśli widoczny jest początek pliku, autoprzewijanie włącza się z odliczaniem.
-\nRęczne scrollowanie w dół podczas autoprzewijania pominija odliczanie lub przyspiesza autoprzewijanie.
+\nKliknięcie w dolnej części ekranu - włącza / wyłącza autoprzwijanie. Jeśli widoczny jest początek pliku, autoprzewijanie włącza się z odliczaniem. Jeśli jest już przewinięty plik, autoprzewijanie włącza się natychmiast.
+\nRęczne scrollowanie w dół podczas autoprzewijania pomija odliczanie lub przyspiesza autoprzewijanie.
 \nRęczne scrollowanie w górę podczas autoprzewijania włącza odliczanie lub spowalnia autoprzewijanie.
     </string>
 </resources>
