@@ -7,7 +7,7 @@ Also you can turn on the autoscrolling mode, so you can play songs with long lyr
 Generally, the application tries to help people playing songs on guitar.
 
 To use the Guitar database unzip the songbook DB content (release/SongBook-db-....zip) and put it anywhere on your mobile device.
-Next, choose by the SongBook application explorer the selected *.crd song file, and then enjoy the lyrics with the chords.
+Next, choose by the SongBook application explorer the selected \*.crd song file, and then enjoy the lyrics with the chords.
 
 Example application screenshots are shown below:
 
