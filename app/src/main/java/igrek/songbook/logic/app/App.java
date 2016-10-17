@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 
 import igrek.songbook.R;
-import igrek.songbook.events.CanvasScrollEvent;
 import igrek.songbook.events.FontsizeChangedEvent;
 import igrek.songbook.events.GraphicsInitializedEvent;
 import igrek.songbook.events.ItemClickedEvent;
@@ -77,7 +76,6 @@ public class App extends BaseApp implements IEventObserver {
         AppController.registerEventObserver(ResizedEvent.class, this);
         AppController.registerEventObserver(GraphicsInitializedEvent.class, this);
         AppController.registerEventObserver(FontsizeChangedEvent.class, this);
-        AppController.registerEventObserver(CanvasScrollEvent.class, this);
     }
     
     @Override
@@ -270,14 +268,6 @@ public class App extends BaseApp implements IEventObserver {
             //parsowanie bez ponownego wczytywania pliku i wykrywania kodowania
             chordsManager.reparse();
             gui.setCRDModel(chordsManager.getCRDModel());
-
-        } else if (event instanceof CanvasScrollEvent) {
-
-            float dScroll = ((CanvasScrollEvent) event).getdScroll();
-            float scroll = ((CanvasScrollEvent) event).getScroll();
-
-            Autoscroll autoscroll = AppController.getService(Autoscroll.class);
-            autoscroll.handleCanvasScroll(dScroll, scroll);
 
         }
     }

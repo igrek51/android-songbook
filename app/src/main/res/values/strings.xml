@@ -3,7 +3,7 @@
     <string name="action_minimize">Minimize</string>
     <string name="action_exit">Exit</string>
     <string name="action_home">Go to root</string>
-    <string name="action_sethomedir">Set as starting directory</string>
+    <string name="action_sethomedir">Set starting directory here</string>
     <string name="starting_directory_saved">Current directory saved as starting directory.</string>
     <string name="transposition">Transposition</string>
     <string name="transposition_reset">Reset</string>

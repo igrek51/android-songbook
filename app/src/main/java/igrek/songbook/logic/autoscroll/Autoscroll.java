@@ -3,6 +3,7 @@ package igrek.songbook.logic.autoscroll;
 import android.os.Handler;
 
 import igrek.songbook.R;
+import igrek.songbook.events.CanvasScrollEvent;
 import igrek.songbook.events.autoscroll.AutoscrollEndedEvent;
 import igrek.songbook.events.autoscroll.AutoscrollRemainingWaitTimeEvent;
 import igrek.songbook.events.autoscroll.AutoscrollStartEvent;
@@ -19,8 +20,6 @@ import igrek.songbook.logic.controller.dispatcher.IEventObserver;
 import igrek.songbook.logic.controller.services.IService;
 import igrek.songbook.logic.crdfile.ChordsManager;
 import igrek.songbook.resources.UserInfoService;
-
-//FIXME dopasowywanie prędkości autoscrolla, ograniczenie zmiany
 
 public class Autoscroll implements IService, IEventObserver {
 
@@ -40,6 +39,8 @@ public class Autoscroll implements IService, IEventObserver {
     private final float AUTOCHANGE_INTERVAL_SCALE = 0.0022f;
     private final float AUTOCHANGE_WAITING_SCALE = 9.0f;
 
+    private final float MANUAL_SCROLL_MAX_RANGE = 150f;
+
     private Handler timerHandler;
     private Runnable timerRunnable;
 
@@ -52,7 +53,7 @@ public class Autoscroll implements IService, IEventObserver {
             @Override
             public void run() {
                 if (state == AutoscrollState.OFF) return;
-                handleAutoscroll();
+                handleAutoscrollStep();
             }
         };
 
@@ -69,6 +70,8 @@ public class Autoscroll implements IService, IEventObserver {
         AppController.registerEventObserver(AutoscrollStartedEvent.class, this);
         AppController.registerEventObserver(AutoscrollEndedEvent.class, this);
         AppController.registerEventObserver(AutoscrollStopUIEvent.class, this);
+
+        AppController.registerEventObserver(CanvasScrollEvent.class, this);
 
         reset();
     }
@@ -120,7 +123,7 @@ public class Autoscroll implements IService, IEventObserver {
         return state == AutoscrollState.WAITING || state == AutoscrollState.SCROLLING;
     }
 
-    private void handleAutoscroll() {
+    private void handleAutoscrollStep() {
         if (state == AutoscrollState.WAITING) {
             long remainingTimeMs = waitTime + startTime - System.currentTimeMillis();
             if (remainingTimeMs <= 0) {
@@ -154,29 +157,42 @@ public class Autoscroll implements IService, IEventObserver {
     }
 
     public void handleCanvasScroll(float dScroll, float scroll) {
+
         if (state == AutoscrollState.WAITING) {
-            if (dScroll > 0) { //przyspieszanie przewijania
+            if (dScroll > 0) { //natychmiastowe pominięcie odliczania
                 state = AutoscrollState.SCROLLING;
                 AppController.sendEvent(new AutoscrollStartedEvent());
-            } else if (dScroll < 0) { //zwalnianie odliczania
+            } else if (dScroll < 0) { //wydłużenie czasu odliczania
                 startTime -= (long) (dScroll * AUTOCHANGE_WAITING_SCALE);
                 long remainingTimeMs = waitTime + startTime - System.currentTimeMillis();
                 AppController.sendEvent(new AutoscrollRemainingWaitTimeEvent(remainingTimeMs));
             }
         } else if (state == AutoscrollState.SCROLLING) {
-            if (dScroll > 0) { //przyspieszanie przewijania
+            if (dScroll > 0) { //przyspieszanie tempa autoprzewijania
+
+                if (dScroll > MANUAL_SCROLL_MAX_RANGE) {
+                    dScroll = MANUAL_SCROLL_MAX_RANGE;
+                }
                 intervalTime -= intervalTime * dScroll * AUTOCHANGE_INTERVAL_SCALE;
-            } else if (dScroll < 0) { //zwalnianie przewijania
-                //przewinięcie na początek pliku
-                if (scroll <= 0) {
-                    //przejście w tryb waiting z dodaniem czasu
+
+
+            } else if (dScroll < 0) {
+                if (scroll <= 0) { //przewinięcie na początek pliku
+                    //przejście w tryb odliczania z dodaniem czasu
                     state = AutoscrollState.WAITING;
                     startTime = System.currentTimeMillis() - waitTime - (long) (dScroll * AUTOCHANGE_WAITING_SCALE);
                     long remainingTimeMs = waitTime + startTime - System.currentTimeMillis();
                     AppController.sendEvent(new AutoscrollRemainingWaitTimeEvent(remainingTimeMs));
                     return;
                 } else {
+                    //zwalnianie tempa autoprzewijania
+
+                    if (dScroll < -MANUAL_SCROLL_MAX_RANGE) {
+                        dScroll = -MANUAL_SCROLL_MAX_RANGE;
+                    }
+
                     intervalTime -= intervalTime * dScroll * AUTOCHANGE_INTERVAL_SCALE;
+
                 }
             }
             if (intervalTime < MIN_INTERVAL_TIME) {
@@ -244,6 +260,13 @@ public class Autoscroll implements IService, IEventObserver {
                 AppController.sendEvent(new AutoscrollStopEvent());
                 userInfo.showActionInfo(R.string.autoscroll_stopped, null, userInfo.resString(R.string.action_info_ok), null);
             }
+
+        } else if (event instanceof CanvasScrollEvent) {
+
+            float dScroll = ((CanvasScrollEvent) event).getdScroll();
+            float scroll = ((CanvasScrollEvent) event).getScroll();
+
+            handleCanvasScroll(dScroll, scroll);
 
         }
     }

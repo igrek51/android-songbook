@@ -4,7 +4,7 @@
     <string name="action_exit">Wyjście</string>
     <string name="action_home">Przejdź do root</string>
     <string name="action_minimize">Minimalizuj</string>
-    <string name="action_sethomedir">Ustaw folder startowy</string>
+    <string name="action_sethomedir">Ustaw tu folder startowy</string>
     <string name="action_info_ok">OK</string>
     <string name="starting_directory_saved">Zapisano obecny folder jako startowy.</string>
     <string name="transposition">Transpozycja</string>

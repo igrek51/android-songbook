@@ -57,6 +57,11 @@ public class CanvasGraphics extends BaseCanvasGraphics implements IService {
     public void reset() {
         super.reset();
         quickMenu = new QuickMenu(this);
+        scroll = 0;
+        startScroll = 0;
+        pointersDst0 = null;
+        fontsize0 = null;
+        crdModel = null;
     }
 
     public void setCRDModel(CRDModel crdModel) {
@@ -147,6 +152,7 @@ public class CanvasGraphics extends BaseCanvasGraphics implements IService {
 
     @Override
     protected void onTouchMove(MotionEvent event) {
+
         if (event.getPointerCount() >= 2) {
 
             if (pointersDst0 != null) {
@@ -155,12 +161,15 @@ public class CanvasGraphics extends BaseCanvasGraphics implements IService {
                 float fontsize1 = fontsize0 * scale;
                 previewFontsize(fontsize1);
             }
+
         } else {
+
             scroll = startScroll + startTouchY - event.getY();
             float maxScroll = getMaxScroll();
             if (scroll < 0) scroll = 0; //za duże przeskrolowanie w górę
             if (scroll > maxScroll) scroll = maxScroll; // za duże przescrollowanie w dół
             repaint();
+
         }
     }
 
@@ -241,8 +250,20 @@ public class CanvasGraphics extends BaseCanvasGraphics implements IService {
     protected void onTouchPointerUp(MotionEvent event) {
         AppController.sendEvent(new FontsizeChangedEvent(fontsize));
         pointersDst0 = null; //reset poczatkowej długości
-        startTouchY = event.getY(0); // brak przewijania
+        // reset na brak przewijania
         startScroll = scroll;
+
+        //pozostawienie pointera, który jest jeszcze aktywny
+        Integer pointerIndex = 0;
+        if (event.getPointerCount() >= 2) {
+            for (int i = 0; i < event.getPointerCount(); i++) {
+                if (i != event.getActionIndex()) {
+                    pointerIndex = i;
+                    break;
+                }
+            }
+        }
+        startTouchY = event.getY(pointerIndex);
     }
 
     @Override
