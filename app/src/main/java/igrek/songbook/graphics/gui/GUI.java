@@ -62,7 +62,11 @@ public class GUI extends GUIBase {
 
         setFullscreen(true);
 
-        canvas = new CanvasGraphics(activity);
+        if (canvas == null) {
+            canvas = new CanvasGraphics(activity);
+        } else {
+            canvas.reset();
+        }
 
         UserInfoService userInfo = AppController.getService(UserInfoService.class);
         userInfo.setMainView(canvas);

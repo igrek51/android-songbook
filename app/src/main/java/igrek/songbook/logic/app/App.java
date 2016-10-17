@@ -33,8 +33,6 @@ import igrek.songbook.logic.music.transposer.ChordsTransposer;
 import igrek.songbook.preferences.Preferences;
 import igrek.songbook.resources.UserInfoService;
 
-//TODO UI help
-
 public class App extends BaseApp implements IEventObserver {
     
     private FileTreeManager fileTreeManager;

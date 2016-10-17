@@ -21,6 +21,8 @@ import igrek.songbook.logic.crdfile.ChordsManager;
 import igrek.songbook.resources.UserInfoService;
 
 //TODO jedna instacja, ponowne wykorzystanie klasy
+//TODO material design w quick menu
+//TODO paski regulacji czasu odliczania i tempa autoscrolla
 
 public class QuickMenu implements IService, IEventObserver {
 

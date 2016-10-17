@@ -20,6 +20,8 @@ import igrek.songbook.logic.controller.services.IService;
 import igrek.songbook.logic.crdfile.ChordsManager;
 import igrek.songbook.resources.UserInfoService;
 
+//FIXME dopasowywanie prędkości autoscrolla, ograniczenie zmiany
+
 public class Autoscroll implements IService, IEventObserver {
 
     private AutoscrollState state;

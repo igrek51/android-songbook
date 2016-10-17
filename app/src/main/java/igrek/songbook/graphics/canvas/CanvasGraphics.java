@@ -22,8 +22,6 @@ import igrek.songbook.logic.crdfile.CRDLine;
 import igrek.songbook.logic.crdfile.CRDModel;
 import igrek.songbook.logic.crdfile.CRDTextType;
 
-//TODO jedna instacja, ponowne wykorzystanie klasy
-
 public class CanvasGraphics extends BaseCanvasGraphics implements IService {
 
     private CRDModel crdModel = null;
@@ -52,10 +50,13 @@ public class CanvasGraphics extends BaseCanvasGraphics implements IService {
 
     public CanvasGraphics(Context context) {
         super(context);
-
-        quickMenu = new QuickMenu(this);
-
         AppController.registerService(this);
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+        quickMenu = new QuickMenu(this);
     }
 
     public void setCRDModel(CRDModel crdModel) {
