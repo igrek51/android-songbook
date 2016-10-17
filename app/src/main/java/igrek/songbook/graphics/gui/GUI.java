@@ -20,7 +20,6 @@ public class GUI extends GUIBase {
 
     private ActionBar actionBar;
     private FileListView itemsListView;
-    private View mainView;
     private CanvasGraphics canvas = null;
 
     public GUI(AppCompatActivity activity) {
