@@ -14,6 +14,9 @@ public class AppController {
 
     private static AppController instance = null;
 
+    /**
+     * Reset instacji rejestru usług i wyczyszczenie listenerów eventów
+     */
     public AppController() {
         servicesRegistry = new ServicesRegistry();
         eventDispatcher = new EventDispatcher();

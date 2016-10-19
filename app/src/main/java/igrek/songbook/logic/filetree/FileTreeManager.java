@@ -14,7 +14,7 @@ import igrek.songbook.logic.exceptions.NoParentDirException;
 
 public class FileTreeManager {
 
-    private String currentPath;
+    private String currentPath = null;
     private String currentFileName = null;
 
     private List<FileItem> items;
@@ -23,6 +23,7 @@ public class FileTreeManager {
 
         Filesystem filesystem = AppController.getService(Filesystem.class);
 
+        currentPath = null;
         setCurrentPathIfNotSet(filesystem, startPath);
         if (currentPath == null) {
             Logs.warn("not existing starting directory: " + startPath + ", getting default");

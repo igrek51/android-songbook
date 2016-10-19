@@ -15,7 +15,7 @@ public class Logs {
 
     private static final String LOG_TAG = "ylog";
     private static final boolean SHOW_EXCEPTIONS_TRACE = true;
-    private static final LogLevel SHOW_TRACE_DETAILS_LEVEL = LogLevel.TRACE;
+    private static final LogLevel SHOW_TRACE_DETAILS_LEVEL = LogLevel.DEBUG;
 
     private static List<String> echoes;
     private static int errors = 0;
