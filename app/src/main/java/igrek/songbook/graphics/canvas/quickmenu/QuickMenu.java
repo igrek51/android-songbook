@@ -115,15 +115,15 @@ public class QuickMenu implements IService, IEventObserver {
             canvas.setColor(0x000000, 110);
             canvas.fillRect(0, 0, w, h);
 
-            //info o aktualnej transpozycji
-            canvas.setColor(0xffffff);
-            canvas.setFont(Font.FONT_BOLD);
-
-            canvas.drawText(infoService.resString(R.string.transposition) + ": " + chordsManager.getTransposedString(), 0.5f * w, (1 - MENU_AUTOSCROLL_BUTTON_H - MENU_TRANSPOSE_BUTTON_H) * h, Align.BOTTOM_HCENTER);
-
+            //przyciski
             for (QuickMenuButton button : buttons) {
                 button.draw(canvas);
             }
+
+            //info o aktualnej transpozycji
+            canvas.setColor(0xffffff);
+            canvas.setFont(Font.FONT_BOLD);
+            canvas.drawText(infoService.resString(R.string.transposition) + ": " + chordsManager.getTransposedString(), 0.5f * w, (1 - MENU_AUTOSCROLL_BUTTON_H - MENU_TRANSPOSE_BUTTON_H) * h, Align.BOTTOM_HCENTER);
 
         }
     }

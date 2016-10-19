@@ -18,8 +18,8 @@ import igrek.songbook.logic.controller.AppController;
 
 public class BaseCanvasGraphics extends View {
 
-    protected int w;
-    protected int h;
+    protected int w = 0;
+    protected int h = 0;
 
     protected Paint paint;
 
@@ -36,11 +36,8 @@ public class BaseCanvasGraphics extends View {
         paint = new Paint();
         paint.setAntiAlias(true);
         paint.setFilterBitmap(true);
-        //      paint.setDither(true);
-        reset();
-    }
+        //paint.setDither(true);
 
-    public void reset() {
         getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -48,6 +45,13 @@ public class BaseCanvasGraphics extends View {
                 h = getHeight();
             }
         });
+
+        reset();
+    }
+
+    public void reset() {
+        canvas = null;
+        initialized = false;
     }
 
     public int getW() {
