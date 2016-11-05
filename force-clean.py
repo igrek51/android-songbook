@@ -12,9 +12,9 @@ def shellExec(cmd):
 		fatalError('failed executing: ' + cmd)
 
 def fatalError(message):
-	print '[ERROR] ' + message
+	print('[ERROR] ' + message)
 	sys.exit()
 
 shellExec('rm -rf app/build')
 
-print 'done'
+print('done')
