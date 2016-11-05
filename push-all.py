@@ -10,7 +10,7 @@ def shellExec(cmd):
 		fatalError('failed executing: ' + cmd)
 
 def fatalError(message):
-	print '[ERROR] ' + message
+	print('[ERROR] ' + message)
 	sys.exit()
 
 shellExec('git push origin --all')
@@ -18,4 +18,4 @@ shellExec('git push origin --tags')
 shellExec('git push gh --all')
 shellExec('git push gh --tags')
 
-print 'done'
+print('done')

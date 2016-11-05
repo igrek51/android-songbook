@@ -1,8 +1,9 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 # -*- coding: utf-8 -*-
 
 import subprocess
 import os
+import sys
 import glob
 import ConfigParser
 
@@ -12,12 +13,12 @@ def shellExec(cmd):
 		fatalError('failed executing: ' + cmd)
 
 def fatalError(message):
-	print '[ERROR] ' + message
+	print('[ERROR] ' + message)
 	sys.exit()
 
 def removeIfExists(fileName):
 	if os.path.exists(fileName):
-		print 'removing ' + fileName + '...'
+		print('removing ' + fileName + '...')
 		os.remove(fileName)
 
 def removeFilesWildcard(pattern):
@@ -33,11 +34,11 @@ class FakeSecHead(object):
 
     def readline(self):
         if self.sechead:
-            try: 
+            try:
                 return self.sechead
-            finally: 
+            finally:
                 self.sechead = None
-        else: 
+        else:
             return self.fp.readline()
 
 
@@ -62,7 +63,7 @@ removeFilesWildcard('./SongBook-*.apk')
 removeFilesWildcard('./SongBook-db-*.zip')
 
 # aktualizacja zmian z bazy źródłowej
-print 'updating ' + guitarDBDir + '...'
+print('updating ' + guitarDBDir + '...')
 os.chdir(guitarDBDir)
 shellExec('git pull origin release-en')
 os.chdir('..')
@@ -75,4 +76,4 @@ shellExec('zip -r '+outputDBArchive+' '+guitarDBDir+' -x *.git*')
 shellExec('git add ' + apkOutputFile)
 shellExec('git add ' + outputDBArchive)
 
-print 'done'
+print('done')
