@@ -25,8 +25,8 @@ public class Autoscroll implements IService, IEventObserver {
 
     private AutoscrollState state;
 
-    private long waitTime = 32000; // [ms]
-    private float intervalTime = 300; // [ms]
+    private long waitTime = 35000; // [ms]
+    private float intervalTime = 320; // [ms]
     private float intervalStep = 2.0f; // [px]
 
     private float fontsize;

@@ -10,7 +10,6 @@ import igrek.songbook.events.FontsizeChangedEvent;
 import igrek.songbook.events.GraphicsInitializedEvent;
 import igrek.songbook.events.autoscroll.AutoscrollStartUIEvent;
 import igrek.songbook.events.autoscroll.AutoscrollStopUIEvent;
-import igrek.songbook.events.transpose.TransposeEvent;
 import igrek.songbook.graphics.Colors;
 import igrek.songbook.graphics.canvas.enums.Font;
 import igrek.songbook.graphics.canvas.quickmenu.QuickMenu;
@@ -197,17 +196,17 @@ public class CanvasGraphics extends BaseCanvasGraphics implements IService {
 
         //  GESTY
         //gest smyrania w lewo i prawo
-        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-            if (Math.abs(deltaX) >= GESTURE_TRANSPOSE_MIN_DX * w) {
-                if (deltaX < 0) {
-                    AppController.sendEvent(new TransposeEvent(-1));
-                    return;
-                } else if (deltaX > 0) {
-                    AppController.sendEvent(new TransposeEvent(+1));
-                    return;
-                }
-            }
-        }
+        //if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        //    if (Math.abs(deltaX) >= GESTURE_TRANSPOSE_MIN_DX * w) {
+        //        if (deltaX < 0) {
+        //            AppController.sendEvent(new TransposeEvent(-1));
+        //            return;
+        //        } else if (deltaX > 0) {
+        //            AppController.sendEvent(new TransposeEvent(+1));
+        //            return;
+        //        }
+        //    }
+        //}
         //włączenie autoscrolla - szybkie kliknięcie na dole
         float hypot = (float) Math.hypot(deltaX, deltaY);
         if (hypot <= GESTURE_CLICK_MAX_HYPOT) { //kliknięcie w jednym miejscu
