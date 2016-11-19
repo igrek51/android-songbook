@@ -1,7 +1,8 @@
 package igrek.songbook.graphics.canvas.quickmenu;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import igrek.songbook.R;
 import igrek.songbook.events.ShowQuickMenuEvent;
@@ -9,9 +10,8 @@ import igrek.songbook.events.autoscroll.AutoscrollStartUIEvent;
 import igrek.songbook.events.autoscroll.AutoscrollStopUIEvent;
 import igrek.songbook.events.transpose.TransposeEvent;
 import igrek.songbook.events.transpose.TransposeResetEvent;
+import igrek.songbook.events.transpose.TransposedEvent;
 import igrek.songbook.graphics.canvas.CanvasGraphics;
-import igrek.songbook.graphics.canvas.enums.Align;
-import igrek.songbook.graphics.canvas.enums.Font;
 import igrek.songbook.logic.autoscroll.Autoscroll;
 import igrek.songbook.logic.controller.AppController;
 import igrek.songbook.logic.controller.dispatcher.IEvent;
@@ -20,9 +20,9 @@ import igrek.songbook.logic.controller.services.IService;
 import igrek.songbook.logic.crdfile.ChordsManager;
 import igrek.songbook.resources.UserInfoService;
 
-//TODO jedna instacja, ponowne wykorzystanie klasy
-//TODO material design w quick menu
+//TODO jedna instacja, ponowne wykorzystanie klasy, bez czyszczenia event observerów
 //TODO paski regulacji czasu odliczania i tempa autoscrolla
+//TODO 2 buttony: autoscroll wait, autoscroll now
 
 public class QuickMenu implements IService, IEventObserver {
 
@@ -32,10 +32,15 @@ public class QuickMenu implements IService, IEventObserver {
 
     private boolean visible = false;
 
-    private final float MENU_TRANSPOSE_BUTTON_H = 0.2f;
-    private final float MENU_AUTOSCROLL_BUTTON_H = 0.2f;
+    private View quickMenuView;
 
-    private List<QuickMenuButton> buttons;
+    private TextView tvTransposition;
+    private Button btnTransposeM5;
+    private Button btnTransposeM1;
+    private Button btnTranspose0;
+    private Button btnTransposeP1;
+    private Button btnTransposeP5;
+    private Button btnAutoscrollToggle;
 
     public QuickMenu(CanvasGraphics canvas) {
         this.canvas = canvas;
@@ -43,23 +48,63 @@ public class QuickMenu implements IService, IEventObserver {
         chordsManager = AppController.getService(ChordsManager.class);
         infoService = AppController.getService(UserInfoService.class);
 
-        initButtons();
-
         AppController.registerService(this);
 
         AppController.clearEventObservers(ShowQuickMenuEvent.class);
         AppController.registerEventObserver(ShowQuickMenuEvent.class, this);
+        AppController.clearEventObservers(TransposedEvent.class);
+        AppController.registerEventObserver(TransposedEvent.class, this);
     }
 
-    private void initButtons() {
-        buttons = new ArrayList<>();
+    public void setQuickMenuView(View quickMenuView) {
+        this.quickMenuView = quickMenuView;
 
-        //TODO button extends QuickMenuButton z nadpisaną metodą getText(), dynamiczny tekst na podstawie stanu autoscrolla
-        //TODO 2 buttony: autoscroll wait, autoscroll now
-        buttons.add(new QuickMenuButton(infoService.resString(R.string.autoscroll), 0, 1 - MENU_AUTOSCROLL_BUTTON_H, 1, MENU_AUTOSCROLL_BUTTON_H, new ButtonClickedAction() {
+        tvTransposition = (TextView) quickMenuView.findViewById(R.id.tvTransposition);
+
+        btnTransposeM5 = (Button) quickMenuView.findViewById(R.id.btnTransposeM5);
+        btnTransposeM5.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClicked() {
+            public void onClick(View v) {
+                AppController.sendEvent(new TransposeEvent(-5));
+            }
+        });
 
+        btnTransposeM1 = (Button) quickMenuView.findViewById(R.id.btnTransposeM1);
+        btnTransposeM1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppController.sendEvent(new TransposeEvent(-1));
+            }
+        });
+
+        btnTranspose0 = (Button) quickMenuView.findViewById(R.id.btnTranspose0);
+        btnTranspose0.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppController.sendEvent(new TransposeResetEvent());
+            }
+        });
+
+        btnTransposeP1 = (Button) quickMenuView.findViewById(R.id.btnTransposeP1);
+        btnTransposeP1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppController.sendEvent(new TransposeEvent(+1));
+            }
+        });
+
+        btnTransposeP5 = (Button) quickMenuView.findViewById(R.id.btnTransposeP5);
+        btnTransposeP5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppController.sendEvent(new TransposeEvent(+5));
+            }
+        });
+
+        btnAutoscrollToggle = (Button) quickMenuView.findViewById(R.id.btnAutoscrollToggle);
+        btnAutoscrollToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 Autoscroll autoscroll = AppController.getService(Autoscroll.class);
                 if (autoscroll.isRunning()) {
                     AppController.sendEvent(new AutoscrollStopUIEvent());
@@ -69,39 +114,15 @@ public class QuickMenu implements IService, IEventObserver {
 
                 setVisible(false);
             }
-        }));
+        });
 
-        buttons.add(new QuickMenuButton("-5", 0, 1 - MENU_AUTOSCROLL_BUTTON_H - MENU_TRANSPOSE_BUTTON_H, 0.2f, MENU_TRANSPOSE_BUTTON_H, new ButtonClickedAction() {
-            @Override
-            public void onClicked() {
-                AppController.sendEvent(new TransposeEvent(-5));
-            }
-        }));
-        buttons.add(new QuickMenuButton("-1", 0.2f, 1 - MENU_AUTOSCROLL_BUTTON_H - MENU_TRANSPOSE_BUTTON_H, 0.2f, MENU_TRANSPOSE_BUTTON_H, new ButtonClickedAction() {
-            @Override
-            public void onClicked() {
-                AppController.sendEvent(new TransposeEvent(-1));
-            }
-        }));
-        buttons.add(new QuickMenuButton("0", 0.4f, 1 - MENU_AUTOSCROLL_BUTTON_H - MENU_TRANSPOSE_BUTTON_H, 0.2f, MENU_TRANSPOSE_BUTTON_H, new ButtonClickedAction() {
-            @Override
-            public void onClicked() {
-                AppController.sendEvent(new TransposeResetEvent());
-            }
-        }));
-        buttons.add(new QuickMenuButton("+1", 0.6f, 1 - MENU_AUTOSCROLL_BUTTON_H - MENU_TRANSPOSE_BUTTON_H, 0.2f, MENU_TRANSPOSE_BUTTON_H, new ButtonClickedAction() {
-            @Override
-            public void onClicked() {
-                AppController.sendEvent(new TransposeEvent(+1));
-            }
-        }));
-        buttons.add(new QuickMenuButton("+5", 0.8f, 1 - MENU_AUTOSCROLL_BUTTON_H - MENU_TRANSPOSE_BUTTON_H, 0.2f, MENU_TRANSPOSE_BUTTON_H, new ButtonClickedAction() {
-            @Override
-            public void onClicked() {
-                AppController.sendEvent(new TransposeEvent(+5));
-            }
-        }));
+        updateTranspositionText();
+    }
 
+    private void updateTranspositionText() {
+        String tvTranspositionText = infoService.resString(R.string.transposition) + ": " + chordsManager.getTransposedString();
+
+        tvTransposition.setText(tvTranspositionText);
     }
 
     public void draw() {
@@ -112,29 +133,13 @@ public class QuickMenu implements IService, IEventObserver {
             float w = canvas.getW();
             float h = canvas.getH();
 
-            canvas.setColor(0x000000, 110);
+            canvas.setColor(0x000000, 130);
             canvas.fillRect(0, 0, w, h);
-
-            //przyciski
-            for (QuickMenuButton button : buttons) {
-                button.draw(canvas);
-            }
-
-            //info o aktualnej transpozycji
-            canvas.setColor(0xffffff);
-            canvas.setFont(Font.FONT_BOLD);
-            canvas.drawText(infoService.resString(R.string.transposition) + ": " + chordsManager.getTransposedString(), 0.5f * w, (1 - MENU_AUTOSCROLL_BUTTON_H - MENU_TRANSPOSE_BUTTON_H) * h, Align.BOTTOM_HCENTER);
 
         }
     }
 
     public boolean onScreenClicked(float x, float y) {
-
-        for (QuickMenuButton button : buttons) {
-            if (button.click(x / canvas.getW(), y / canvas.getH())) {
-                return true;
-            }
-        }
 
         setVisible(false);
 
@@ -147,6 +152,14 @@ public class QuickMenu implements IService, IEventObserver {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+
+        if (visible) {
+            quickMenuView.setVisibility(View.VISIBLE);
+            updateTranspositionText();
+        } else {
+            quickMenuView.setVisibility(View.GONE);
+        }
+
         canvas.repaint();
     }
 
@@ -154,6 +167,10 @@ public class QuickMenu implements IService, IEventObserver {
     public void onEvent(IEvent event) {
         if (event instanceof ShowQuickMenuEvent) {
             setVisible(((ShowQuickMenuEvent) event).isShow());
+        } else if (event instanceof TransposedEvent) {
+            if (visible) {
+                updateTranspositionText();
+            }
         }
     }
 }

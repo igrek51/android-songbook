@@ -2,6 +2,7 @@ package igrek.songbook.graphics.canvas;
 
 import android.content.Context;
 import android.view.MotionEvent;
+import android.view.View;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class CanvasGraphics extends BaseCanvasGraphics implements IService {
 
     private final float GESTURE_TRANSPOSE_MIN_DX = 0.4f;
     private final float GESTURE_AUTOSCROLL_BOTTOM_REGION = 0.6f;
-    private final float GESTURE_CLICK_MAX_HYPOT = 7.0f;
+    private final float GESTURE_CLICK_MAX_HYPOT = 8.0f;
     private final long GESTURE_CLICK_MAX_TIME = 500;
 
     private final float MIN_SCROLL_EVENT = 15f;
@@ -306,5 +307,10 @@ public class CanvasGraphics extends BaseCanvasGraphics implements IService {
 
     public boolean canAutoScroll() {
         return scroll < getMaxScroll();
+    }
+
+    public void setQuickMenuView(View quickMenuView) {
+        quickMenu.setQuickMenuView(quickMenuView);
+        quickMenu.setVisible(false);
     }
 }

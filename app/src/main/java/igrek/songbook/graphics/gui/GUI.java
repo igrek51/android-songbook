@@ -3,7 +3,9 @@ package igrek.songbook.graphics.gui;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import java.util.List;
@@ -16,6 +18,8 @@ import igrek.songbook.logic.controller.AppController;
 import igrek.songbook.logic.crdfile.CRDModel;
 import igrek.songbook.logic.filetree.FileItem;
 import igrek.songbook.resources.UserInfoService;
+
+//TODO nowe screeny wrzucić na githuba
 
 public class GUI extends GUIBase {
 
@@ -69,9 +73,16 @@ public class GUI extends GUIBase {
         FrameLayout mainFrame = (FrameLayout) activity.findViewById(R.id.mainFrame);
 
         mainFrame.removeAllViews();
+
         mainFrame.addView(canvas);
 
-        //TODO wyświetlanie canvas w frame layoucie z możliwością pokazania menu
+
+        LayoutInflater inflater = activity.getLayoutInflater();
+        View quickMenuView = inflater.inflate(R.layout.quick_menu, null);
+        quickMenuView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        mainFrame.addView(quickMenuView);
+
+        canvas.setQuickMenuView(quickMenuView);
 
         UserInfoService userInfo = AppController.getService(UserInfoService.class);
         userInfo.setMainView(mainFrame);

@@ -43,6 +43,7 @@ public class AppController {
         getInstance().eventDispatcher.registerEventObserver(eventClass, observer);
     }
 
+    @Deprecated
     public static void clearEventObservers(Class<? extends IEvent> eventClass) {
         getInstance().eventDispatcher.clearEventObservers(eventClass);
     }

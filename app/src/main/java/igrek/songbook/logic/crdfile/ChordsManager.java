@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import igrek.songbook.R;
 import igrek.songbook.events.transpose.TransposeEvent;
 import igrek.songbook.events.transpose.TransposeResetEvent;
+import igrek.songbook.events.transpose.TransposedEvent;
 import igrek.songbook.graphics.canvas.CanvasGraphics;
 import igrek.songbook.graphics.infobar.InfoBarClickAction;
 import igrek.songbook.logic.autoscroll.Autoscroll;
@@ -135,6 +136,8 @@ public class ChordsManager implements IService, IEventObserver {
             } else {
                 userInfo.showActionInfo(info, null, userInfo.resString(R.string.action_info_ok), null);
             }
+
+            AppController.sendEvent(new TransposedEvent());
 
         } else if (event instanceof TransposeResetEvent) {
 
