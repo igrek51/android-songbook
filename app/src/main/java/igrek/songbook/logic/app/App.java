@@ -2,10 +2,14 @@ package igrek.songbook.logic.app;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.view.Menu;
+
+import java.util.Locale;
 
 import igrek.songbook.R;
 import igrek.songbook.events.FontsizeChangedEvent;
@@ -43,6 +47,8 @@ public class App extends BaseApp implements IEventObserver {
     
     public App(AppCompatActivity activity) {
         super(activity);
+
+        //setLocale("en"); // angielska wersja językowa
 
         registerServices();
         registerEventObservers();
@@ -217,6 +223,15 @@ public class App extends BaseApp implements IEventObserver {
         });
         dlgAlert.setCancelable(true);
         dlgAlert.create().show();
+    }
+
+    private void setLocale(String langCode) {
+        Resources res = activity.getResources();
+        // Change locale settings in the app.
+        DisplayMetrics dm = res.getDisplayMetrics();
+        android.content.res.Configuration conf = res.getConfiguration();
+        conf.locale = new Locale(langCode.toLowerCase());
+        res.updateConfiguration(conf, dm);
     }
 
     @Override
