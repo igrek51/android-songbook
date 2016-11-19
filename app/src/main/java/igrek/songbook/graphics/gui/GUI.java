@@ -4,6 +4,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import java.util.List;
 
@@ -61,16 +62,19 @@ public class GUI extends GUIBase {
 
         setFullscreen(true);
 
-        if (canvas == null) {
-            canvas = new CanvasGraphics(activity);
-        } else {
-            canvas.reset();
-        }
+        activity.setContentView(R.layout.file_content);
+
+        canvas = new CanvasGraphics(activity);
+
+        FrameLayout mainFrame = (FrameLayout) activity.findViewById(R.id.mainFrame);
+
+        mainFrame.removeAllViews();
+        mainFrame.addView(canvas);
+
+        //TODO wyświetlanie canvas w frame layoucie z możliwością pokazania menu
 
         UserInfoService userInfo = AppController.getService(UserInfoService.class);
-        userInfo.setMainView(canvas);
-
-        activity.setContentView(canvas);
+        userInfo.setMainView(mainFrame);
     }
 
     public void updateFileList(String currentDir, List<FileItem> items) {

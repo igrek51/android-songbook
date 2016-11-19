@@ -30,6 +30,7 @@ public class UserInfoService implements IService {
 
     public void setMainView(View mainView) {
         this.mainView = mainView;
+        infobars.clear();
     }
 
     /**
@@ -45,10 +46,10 @@ public class UserInfoService implements IService {
         }
 
         Snackbar snackbar = infobars.get(view);
-        if (snackbar == null) { //nowy
+        if (snackbar == null || !snackbar.isShown()) { //nowy
             snackbar = Snackbar.make(view, info, Snackbar.LENGTH_SHORT);
             snackbar.setActionTextColor(Color.WHITE);
-        } else { //użyty kolejny raz
+        } else { //widoczny - użyty kolejny raz
             snackbar.setText(info);
         }
 
