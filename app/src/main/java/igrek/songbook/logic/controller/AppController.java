@@ -39,10 +39,13 @@ public class AppController {
         return getInstance().servicesRegistry.getService(clazz);
     }
 
+    //TODO rejestracja event observerów dla pojedynczych instancji klas (automatyczne przejmowanie eventów)
+
     public static void registerEventObserver(Class<? extends IEvent> eventClass, IEventObserver observer) {
         getInstance().eventDispatcher.registerEventObserver(eventClass, observer);
     }
 
+    //TODO poprawić strukturę aplikacji tak, aby nie musieć czyścić observerów
     @Deprecated
     public static void clearEventObservers(Class<? extends IEvent> eventClass) {
         getInstance().eventDispatcher.clearEventObservers(eventClass);

@@ -31,7 +31,7 @@ public class ChordsManager implements IService, IEventObserver {
 
     private Paint paint = null;
 
-    private float fontsize = 23.0f;
+    private float fontsize = 26.0f;
 
     private String originalFileContent = null;
 

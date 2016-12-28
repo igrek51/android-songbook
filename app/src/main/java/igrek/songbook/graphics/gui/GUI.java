@@ -19,8 +19,6 @@ import igrek.songbook.logic.crdfile.CRDModel;
 import igrek.songbook.logic.filetree.FileItem;
 import igrek.songbook.resources.UserInfoService;
 
-//TODO nowe screeny wrzucić na githuba
-
 public class GUI extends GUIBase {
 
     private ActionBar actionBar;
