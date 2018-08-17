@@ -42,7 +42,7 @@ class FakeSecHead(object):
             return self.fp.readline()
 
 
-apkSrc = '../app/build/outputs/apk/app-debug.apk'
+apkSrc = '../app/build/outputs/apk/debug/app-debug.apk'
 versionFile = '../app/version.properties'
 guitarDBDir = 'guitarDB'
 releaseDir = 'release'
