@@ -1,6 +1,5 @@
 package igrek.songbook.dagger;
 
-import android.app.Activity;
 import android.app.Application;
 
 import org.junit.Before;
