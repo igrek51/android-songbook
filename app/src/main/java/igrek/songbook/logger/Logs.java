@@ -13,7 +13,7 @@ public class Logs {
     private static final LogLevel CONSOLE_LEVEL = LogLevel.TRACE; //widoczne w konsoli
     private static final LogLevel ECHO_LEVEL = LogLevel.OFF; //widoczne dla użytkownika (i przechowywane w historii)
 
-    private static final String LOG_TAG = "ylog";
+    private static final String LOG_TAG = "dupa";
     private static final boolean SHOW_EXCEPTIONS_TRACE = true;
     private static final LogLevel SHOW_TRACE_DETAILS_LEVEL = LogLevel.DEBUG;
 

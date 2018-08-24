@@ -1,7 +1,7 @@
 # android-songbook
 Guitar Songbook Application for Android
 
-Android SongBook is an application which shows the lyrics of songs with the coloured guitar chords.
+Android SongBook is a viewer of songs lyrics with highlighting guitar chords.
 While displaying songs the screen is always on, so it can be used while playing on guitar.
 It's also possible to transpose the song to every different key (using transpose tools in quick menu after clicking on screen).
 Another feature is the autoscrolling mode. It automatically scrolls the lyrics with user-defined speed so there is no need to scroll it manually while playing.
@@ -14,3 +14,11 @@ Next, choose by the file explorer (included in SongBook application) some \*.crd
 Example application screenshots are shown below:
 
 ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/songbook-04-mix.png)
+
+## Features
+
+* Chords highlighting
+* Chords transposition (to any key)
+* Auto scrolling
+* Always-on screen
+* Vast offline songs database
