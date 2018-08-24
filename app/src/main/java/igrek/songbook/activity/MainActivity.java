@@ -33,19 +33,19 @@ public class MainActivity extends AppCompatActivity {
 		DaggerIoc.getFactoryComponent().inject(this);
 		appInitializer.init();
 	}
-
+	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		activityController.onConfigurationChanged(newConfig);
 	}
-
+	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		activityController.onDestroy();
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -56,17 +56,19 @@ public class MainActivity extends AppCompatActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		return optionSelectDispatcher.optionsSelect(item.getItemId()) || super.onOptionsItemSelected(item);
 	}
-
+	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if (systemKeyDispatcher.onKeyBack()) return true;
+			if (systemKeyDispatcher.onKeyBack())
+				return true;
 		} else if (keyCode == KeyEvent.KEYCODE_MENU) {
-			if (systemKeyDispatcher.onKeyMenu()) return true;
+			if (systemKeyDispatcher.onKeyMenu())
+				return true;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-
+	
 	@Override
 	public boolean onKeyUp(int keyCode, KeyEvent event) {
 		return super.onKeyDown(keyCode, event);

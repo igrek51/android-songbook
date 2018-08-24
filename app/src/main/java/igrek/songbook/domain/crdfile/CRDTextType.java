@@ -2,9 +2,9 @@ package igrek.songbook.domain.crdfile;
 
 public enum CRDTextType {
 
-    REGULAR_TEXT,
+	REGULAR_TEXT,
 
-    CHORDS,
+	CHORDS,
 
-    BRACKET;
+	BRACKET;
 }

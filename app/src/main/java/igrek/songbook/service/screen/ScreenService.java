@@ -16,8 +16,6 @@ public class ScreenService {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
-	private static final int FULLSCREEN_FLAG = WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
-	
 	public void keepScreenOn() {
 		activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
@@ -33,6 +31,15 @@ public class ScreenService {
 	}
 	
 	public void setFullscreen() {
-		activity.getWindow().setFlags(FULLSCREEN_FLAG, FULLSCREEN_FLAG);
+		activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+	}
+	
+	public void setFullscreenLocked(boolean set) {
+		int fullscreen_flag = WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
+		if (set) {
+			activity.getWindow().setFlags(fullscreen_flag, fullscreen_flag);
+		} else {
+			activity.getWindow().clearFlags(fullscreen_flag);
+		}
 	}
 }

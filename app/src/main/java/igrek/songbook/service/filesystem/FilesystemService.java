@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -36,14 +38,20 @@ public class FilesystemService {
 		return !f.exists() && f.mkdirs();
 	}
 	
-	private List<String> listDir(String path) {
-		List<String> lista = new ArrayList<>();
-		File f = new File(path);
-		File file[] = f.listFiles();
-		for (File aFile : file) {
-			lista.add(aFile.getName());
+	public List<String> listFilenames(String path) {
+		List<File> files = listFiles(path);
+		List<String> filenames = new ArrayList<>();
+		for (File file : files) {
+			filenames.add(file.getName());
 		}
-		return lista;
+		return filenames;
+	}
+	
+	public List<File> listFiles(String path) {
+		File f = new File(path);
+		List<File> files = Arrays.asList(f.listFiles());
+		Collections.sort(files, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+		return files;
 	}
 	
 	private byte[] openFile(String filename) throws IOException {
@@ -73,7 +81,7 @@ public class FilesystemService {
 	public void createMissingParentDir(File file) {
 		File parentDir = file.getParentFile();
 		if (!parentDir.exists()) {
-			if(parentDir.mkdirs()) {
+			if (parentDir.mkdirs()) {
 				logger.debug("missing dir created: " + parentDir.toString());
 			}
 		}
@@ -107,6 +115,10 @@ public class FilesystemService {
 				os.close();
 			}
 		}
+	}
+	
+	public String getExternalSDPath() {
+		return externalCardService.getExternalSDPath();
 	}
 	
 	public void ensureAppDataDirExists() {

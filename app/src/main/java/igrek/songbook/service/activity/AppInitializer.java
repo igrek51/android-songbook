@@ -30,8 +30,8 @@ public class AppInitializer {
 			//setLocale("pl");
 			
 			// TODO
-//			gui = new GUI(activity);
-//			gui.showFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
+			//			gui = new GUI(activity);
+			//			gui.showFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
 			
 			logger.debug("Application has been initialized");
 			
