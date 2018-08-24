@@ -1,4 +1,0 @@
-[submodule "release/guitarDB"]
-	path = release/guitarDB
-	url = /mnt/data/Igrek/guitarDB/
-	branch = release-en
