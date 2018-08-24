@@ -21,6 +21,7 @@ public interface FactoryComponent {
 	
 	void inject(MainActivity there);
 	
+	/* Services */
 	void inject(ExternalCardService there);
 	void inject(FilesystemService there);
 	void inject(AppInitializer there);

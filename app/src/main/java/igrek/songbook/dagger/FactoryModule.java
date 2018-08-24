@@ -110,7 +110,7 @@ public class FactoryModule {
 	}
 	
 	/*
-	empty service pattern:
+	 * Empty service pattern:
 	@Provides
 	@Singleton
 	protected  provide() {
