@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import igrek.songbook.R;
-import igrek.songbook.domain.filetree.FileItem;
+import igrek.songbook.service.filetree.FileItem;
 
 public class FileItemAdapter extends ArrayAdapter<FileItem> {
 	

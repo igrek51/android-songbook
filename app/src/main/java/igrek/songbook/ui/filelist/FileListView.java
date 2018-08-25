@@ -11,9 +11,9 @@ import android.widget.ListView;
 import java.util.HashMap;
 import java.util.List;
 
-import igrek.songbook.domain.filetree.FileItem;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
+import igrek.songbook.service.filetree.FileItem;
 
 public class FileListView extends ListView implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 	

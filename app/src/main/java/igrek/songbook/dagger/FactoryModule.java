@@ -25,9 +25,10 @@ import igrek.songbook.service.filetree.FileTreeManager;
 import igrek.songbook.service.filetree.ScrollPosBuffer;
 import igrek.songbook.service.info.UIResourceService;
 import igrek.songbook.service.info.UserInfoService;
+import igrek.songbook.service.layout.LayoutController;
+import igrek.songbook.service.layout.SoftKeyboardService;
 import igrek.songbook.service.preferences.PreferencesService;
-import igrek.songbook.service.screen.ScreenService;
-import igrek.songbook.service.state.AppStateService;
+import igrek.songbook.service.screen.WindowManagerService;
 import igrek.songbook.service.transpose.ChordsTransposer;
 
 /**
@@ -107,14 +108,8 @@ public class FactoryModule {
 	
 	@Provides
 	@Singleton
-	protected ScreenService provideScreenService() {
-		return new ScreenService();
-	}
-	
-	@Provides
-	@Singleton
-	protected AppStateService provideAppStateService() {
-		return new AppStateService();
+	protected WindowManagerService provideScreenService() {
+		return new WindowManagerService();
 	}
 	
 	@Provides
@@ -163,6 +158,18 @@ public class FactoryModule {
 	@Singleton
 	protected ScrollPosBuffer provideScrollPosBuffer() {
 		return new ScrollPosBuffer();
+	}
+	
+	@Provides
+	@Singleton
+	protected LayoutController provideLayoutController() {
+		return new LayoutController();
+	}
+	
+	@Provides
+	@Singleton
+	protected SoftKeyboardService provideSoftKeyboardService() {
+		return new SoftKeyboardService();
 	}
 	
 	/*

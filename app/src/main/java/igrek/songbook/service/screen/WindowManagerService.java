@@ -7,12 +7,12 @@ import javax.inject.Inject;
 
 import igrek.songbook.dagger.DaggerIoc;
 
-public class ScreenService {
+public class WindowManagerService {
 	
 	@Inject
 	AppCompatActivity activity;
 	
-	public ScreenService() {
+	public WindowManagerService() {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	

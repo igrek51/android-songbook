@@ -1,4 +1,4 @@
-package igrek.songbook.domain.filetree;
+package igrek.songbook.service.filetree;
 
 public class FileItem {
 

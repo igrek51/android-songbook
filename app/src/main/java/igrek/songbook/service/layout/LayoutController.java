@@ -1,14 +1,11 @@
-package igrek.songbook.ui.gui;
+package igrek.songbook.service.layout;
 
-import android.content.Context;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 
 import java.util.List;
@@ -18,68 +15,59 @@ import javax.inject.Inject;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.domain.crdfile.CRDModel;
-import igrek.songbook.domain.filetree.FileItem;
-import igrek.songbook.service.info.UIResourceService;
-import igrek.songbook.service.screen.ScreenService;
+import igrek.songbook.service.filetree.FileItem;
+import igrek.songbook.service.filetree.FileTreeManager;
+import igrek.songbook.service.screen.WindowManagerService;
 import igrek.songbook.ui.canvas.CanvasGraphics;
 import igrek.songbook.ui.filelist.FileListView;
 
-public class GUI {
+public class LayoutController {
 	
-	protected AppCompatActivity activity;
-	protected InputMethodManager imm;
+	@Inject
+	AppCompatActivity activity;
+	
+	@Inject
+	WindowManagerService windowManagerService;
+	
+	@Inject
+	FileTreeManager fileTreeManager;
+	
+	private LayoutState state = LayoutState.FILE_LIST;
 	
 	private ActionBar actionBar;
 	private FileListView itemsListView;
 	private CanvasGraphics canvas = null;
 	
-	@Inject
-	ScreenService screenService;
-	
-	public GUI(AppCompatActivity activity) {
-		this.activity = activity;
+	public LayoutController() {
 		DaggerIoc.getFactoryComponent().inject(this);
-		imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
 	}
 	
-	public void hideSoftKeyboard(View window) {
-		if (imm != null) {
-			imm.hideSoftInputFromWindow(window.getWindowToken(), 0);
-		}
-	}
-	
-	public void showSoftKeyboard(View window) {
-		if (imm != null) {
-			imm.showSoftInput(window, 0);
-		}
-	}
-	
-	public void showFileList(String currentDir, List<FileItem> items) {
+	public void showFileList() {
 		
-		screenService.setFullscreenLocked(false);
+		String currentDir = fileTreeManager.getCurrentDirName();
+		List<FileItem> items = fileTreeManager.getItems();
+		
+		windowManagerService.setFullscreenLocked(false);
 		
 		activity.setContentView(R.layout.files_list);
 		
 		//toolbar
-		Toolbar toolbar1 = (Toolbar) activity.findViewById(R.id.toolbar1);
+		Toolbar toolbar1 = activity.findViewById(R.id.toolbar1);
 		activity.setSupportActionBar(toolbar1);
 		actionBar = activity.getSupportActionBar();
 		if (actionBar != null) {
 			actionBar.setDisplayHomeAsUpEnabled(true);
 			actionBar.setDisplayShowHomeEnabled(true);
 		}
-		toolbar1.setNavigationOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-//				TODO event
-				//				AppController.sendEvent(new ToolbarBackClickedEvent());
-			}
+		toolbar1.setNavigationOnClickListener(v -> {
+			//				TODO event
+			//				AppController.sendEvent(new ToolbarBackClickedEvent());
 		});
 		
-//		TODO
-//		userInfo.setMainView(activity.findViewById(R.id.mainLayout));
+		//		TODO
+		//		userInfo.setMainView(activity.findViewById(R.id.mainLayout));
 		
-		itemsListView = (FileListView) activity.findViewById(R.id.filesList);
+		itemsListView = activity.findViewById(R.id.filesList);
 		
 		itemsListView.init(activity);
 		
@@ -88,7 +76,7 @@ public class GUI {
 	
 	public void showFileContent() {
 		
-		screenService.setFullscreenLocked(true);
+		windowManagerService.setFullscreenLocked(true);
 		
 		activity.setContentView(R.layout.file_content);
 		
@@ -108,8 +96,8 @@ public class GUI {
 		
 		canvas.setQuickMenuView(quickMenuView);
 		
-//		TODO
-//		userInfo.setMainView(mainFrame);
+		//		TODO
+		//		userInfo.setMainView(mainFrame);
 	}
 	
 	public void updateFileList(String currentDir, List<FileItem> items) {
@@ -141,5 +129,13 @@ public class GUI {
 	
 	public void scrollToPosition(int y) {
 		itemsListView.scrollToPosition(y);
+	}
+	
+	public LayoutState getState() {
+		return state;
+	}
+	
+	public void setState(LayoutState state) {
+		this.state = state;
 	}
 }

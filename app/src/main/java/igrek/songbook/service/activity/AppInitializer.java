@@ -7,14 +7,17 @@ import javax.inject.Inject;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
-import igrek.songbook.service.screen.ScreenService;
+import igrek.songbook.service.layout.LayoutController;
+import igrek.songbook.service.screen.WindowManagerService;
 
 public class AppInitializer {
 	
 	@Inject
-	ScreenService screenService;
+	WindowManagerService windowManagerService;
 	@Inject
 	Activity activity;
+	@Inject
+	LayoutController layoutController;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
@@ -24,14 +27,12 @@ public class AppInitializer {
 	
 	public void init() {
 		try {
-			screenService.hideTaskbar();
+			windowManagerService.hideTaskbar();
 			
 			// force locale
 			//setLocale("pl");
 			
-			// TODO
-			//			gui = new GUI(activity);
-			//			gui.showFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
+			layoutController.showFileList();
 			
 			logger.debug("Application has been initialized");
 			

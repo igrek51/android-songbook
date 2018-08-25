@@ -11,7 +11,6 @@ import javax.inject.Inject;
 
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.domain.exception.NoParentDirException;
-import igrek.songbook.domain.filetree.FileItem;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.filesystem.FilesystemService;
@@ -20,7 +19,7 @@ public class FileTreeManager {
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
-	private String currentPath = null;
+	private String currentPath;
 	private String currentFileName = null;
 	
 	private List<FileItem> items;

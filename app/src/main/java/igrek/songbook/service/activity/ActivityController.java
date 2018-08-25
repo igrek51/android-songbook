@@ -9,14 +9,14 @@ import javax.inject.Inject;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
-import igrek.songbook.service.screen.ScreenService;
+import igrek.songbook.service.screen.WindowManagerService;
 
 public class ActivityController {
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
 	@Inject
-	ScreenService screenService;
+	WindowManagerService windowManagerService;
 	@Inject
 	Activity activity;
 	
@@ -24,9 +24,9 @@ public class ActivityController {
 	//	private FileTreeManager fileTreeManager;
 	//	private ChordsManager chordsManager;
 	//	private UIResourceService userInfo;
-	//	private GUI gui;
+	//	private LayoutController gui;
 	//
-	//	private AppState state;
+	//	private LayoutState state;
 	
 	public ActivityController() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -56,7 +56,7 @@ public class ActivityController {
 		//		preferences.saveAll();
 		
 		logger.debug("Closing app...");
-		screenService.keepScreenOff();
+		windowManagerService.keepScreenOff();
 		activity.finish();
 	}
 	
@@ -82,15 +82,15 @@ public class ActivityController {
 	//
 	//	private void updateFileList() {
 	//		gui.updateFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
-	//		state = AppState.FILE_LIST;
+	//		state = LayoutState.FILE_LIST;
 	//	}
 	//
 	//	private void showFileContent(String filename) {
-	//		state = AppState.FILE_CONTENT;
+	//		state = LayoutState.FILE_CONTENT;
 	//		fileTreeManager.setCurrentFileName(filename);
 	//		gui.showFileContent();
 	//		if (KEEP_SCREEN_ON) {
-	//			screenService.keepScreenOn();
+	//			windowManagerService.keepScreenOn();
 	//		}
 	//	}
 	//

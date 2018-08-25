@@ -15,14 +15,14 @@ import igrek.songbook.service.filetree.FileTreeManager;
 import igrek.songbook.service.filetree.ScrollPosBuffer;
 import igrek.songbook.service.info.UIResourceService;
 import igrek.songbook.service.info.UserInfoService;
+import igrek.songbook.service.layout.LayoutController;
+import igrek.songbook.service.layout.SoftKeyboardService;
 import igrek.songbook.service.preferences.PreferencesService;
-import igrek.songbook.service.screen.ScreenService;
-import igrek.songbook.service.state.AppStateService;
+import igrek.songbook.service.screen.WindowManagerService;
 import igrek.songbook.service.transpose.ChordsTransposer;
 import igrek.songbook.ui.canvas.CanvasGraphics;
 import igrek.songbook.ui.canvas.quickmenu.QuickMenu;
 import igrek.songbook.ui.errorcheck.UIErrorHandler;
-import igrek.songbook.ui.gui.GUI;
 
 /**
  * Dagger will be injecting to those classes
@@ -42,9 +42,7 @@ public interface FactoryComponent {
 	
 	void inject(ActivityController there);
 	
-	void inject(ScreenService there);
-	
-	void inject(AppStateService there);
+	void inject(WindowManagerService there);
 	
 	void inject(OptionSelectDispatcher there);
 	
@@ -62,15 +60,17 @@ public interface FactoryComponent {
 	
 	void inject(ChordsTransposer there);
 	
+	void inject(SoftKeyboardService there);
+	
+	void inject(LayoutController there);
+	
+	void inject(ScrollPosBuffer there);
+	
 	
 	void inject(UIErrorHandler there);
 	
 	void inject(QuickMenu there);
 	
-	void inject(ScrollPosBuffer there);
-	
 	void inject(CanvasGraphics there);
-	
-	void inject(GUI there);
 	
 }
