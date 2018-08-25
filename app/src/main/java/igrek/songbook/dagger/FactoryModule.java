@@ -26,10 +26,12 @@ import igrek.songbook.service.filetree.ScrollPosBuffer;
 import igrek.songbook.service.info.UIResourceService;
 import igrek.songbook.service.info.UserInfoService;
 import igrek.songbook.service.layout.LayoutController;
-import igrek.songbook.service.layout.SoftKeyboardService;
+import igrek.songbook.service.layout.songpreview.SongPreviewController;
+import igrek.songbook.service.layout.songselection.SongSelectionController;
 import igrek.songbook.service.preferences.PreferencesService;
-import igrek.songbook.service.screen.WindowManagerService;
 import igrek.songbook.service.transpose.ChordsTransposer;
+import igrek.songbook.service.window.SoftKeyboardService;
+import igrek.songbook.service.window.WindowManagerService;
 
 /**
  * Module with providers. These classes can be injected
@@ -170,6 +172,18 @@ public class FactoryModule {
 	@Singleton
 	protected SoftKeyboardService provideSoftKeyboardService() {
 		return new SoftKeyboardService();
+	}
+	
+	@Provides
+	@Singleton
+	protected SongSelectionController provideSongSelectionController() {
+		return new SongSelectionController();
+	}
+	
+	@Provides
+	@Singleton
+	protected SongPreviewController provideSongPreviewController() {
+		return new SongPreviewController();
 	}
 	
 	/*

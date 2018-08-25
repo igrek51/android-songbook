@@ -16,10 +16,12 @@ import igrek.songbook.service.filetree.ScrollPosBuffer;
 import igrek.songbook.service.info.UIResourceService;
 import igrek.songbook.service.info.UserInfoService;
 import igrek.songbook.service.layout.LayoutController;
-import igrek.songbook.service.layout.SoftKeyboardService;
+import igrek.songbook.service.layout.songpreview.SongPreviewController;
+import igrek.songbook.service.layout.songselection.SongSelectionController;
 import igrek.songbook.service.preferences.PreferencesService;
-import igrek.songbook.service.screen.WindowManagerService;
 import igrek.songbook.service.transpose.ChordsTransposer;
+import igrek.songbook.service.window.SoftKeyboardService;
+import igrek.songbook.service.window.WindowManagerService;
 import igrek.songbook.ui.canvas.CanvasGraphics;
 import igrek.songbook.ui.canvas.quickmenu.QuickMenu;
 import igrek.songbook.ui.errorcheck.UIErrorHandler;
@@ -63,6 +65,10 @@ public interface FactoryComponent {
 	void inject(SoftKeyboardService there);
 	
 	void inject(LayoutController there);
+	
+	void inject(SongSelectionController there);
+	
+	void inject(SongPreviewController there);
 	
 	void inject(ScrollPosBuffer there);
 	

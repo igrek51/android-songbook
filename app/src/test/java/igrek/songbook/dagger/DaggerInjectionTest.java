@@ -19,7 +19,7 @@ import igrek.songbook.dagger.base.TestModule;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, application = MainApplication.class)
-public class SimpleDaggerInjectionTest {
+public class DaggerInjectionTest {
 	
 	@Inject
 	Application application;

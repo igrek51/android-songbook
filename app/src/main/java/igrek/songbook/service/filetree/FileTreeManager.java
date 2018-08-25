@@ -52,7 +52,7 @@ public class FileTreeManager {
 		}
 	}
 	
-	private String trimEndSlash(String str) {
+	public static String trimEndSlash(String str) {
 		while (!str.isEmpty() && str.endsWith("/")) {
 			str = str.substring(0, str.length() - 1);
 		}

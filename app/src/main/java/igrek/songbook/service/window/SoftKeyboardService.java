@@ -1,4 +1,4 @@
-package igrek.songbook.service.layout;
+package igrek.songbook.service.window;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;

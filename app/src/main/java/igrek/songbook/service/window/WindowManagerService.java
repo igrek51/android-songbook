@@ -1,4 +1,4 @@
-package igrek.songbook.service.screen;
+package igrek.songbook.service.window;
 
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;

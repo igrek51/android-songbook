@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Toast;
 
@@ -21,6 +22,9 @@ public class UserInfoService {
 	
 	@Inject
 	Activity activity;
+	
+	@Inject
+	UIResourceService uiResourceService;
 	
 	private HashMap<View, Snackbar> infobars = new HashMap<>();
 	
@@ -74,8 +78,24 @@ public class UserInfoService {
 	}
 	
 	
+	public void showInfo(String info, String dismissName) {
+		showActionInfo(info, null, dismissName, null, null);
+	}
+	
 	public void showInfo(String info) {
-		showActionInfo(info, null, "OK", null, null);
+		String dismissName = uiResourceService.resString(R.string.action_info_ok);
+		showInfo(info, dismissName);
+	}
+	
+	public void showInfo(int infoRes, int dismissNameRes) {
+		String info = uiResourceService.resString(infoRes);
+		String dismissName = uiResourceService.resString(dismissNameRes);
+		showInfo(info, dismissName);
+	}
+	
+	public void showInfo(int infoRes) {
+		String info = uiResourceService.resString(infoRes);
+		showInfo(info);
 	}
 	
 	public void showInfoCancellable(String info, InfoBarClickAction cancelCallback) {
@@ -85,5 +105,15 @@ public class UserInfoService {
 	public void showToast(String message) {
 		Toast.makeText(activity.getApplicationContext(), message, Toast.LENGTH_LONG).show();
 		logger.info("TOAST: " + message);
+	}
+	
+	public void showDialog(String title, String message) {
+		AlertDialog.Builder dlgAlert = new AlertDialog.Builder(activity);
+		dlgAlert.setMessage(message);
+		dlgAlert.setTitle(title);
+		dlgAlert.setPositiveButton(uiResourceService.resString(R.string.action_info_ok), (dialog, which) -> {
+		});
+		dlgAlert.setCancelable(true);
+		dlgAlert.create().show();
 	}
 }

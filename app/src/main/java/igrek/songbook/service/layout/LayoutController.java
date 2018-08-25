@@ -17,7 +17,7 @@ import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.domain.crdfile.CRDModel;
 import igrek.songbook.service.filetree.FileItem;
 import igrek.songbook.service.filetree.FileTreeManager;
-import igrek.songbook.service.screen.WindowManagerService;
+import igrek.songbook.service.window.WindowManagerService;
 import igrek.songbook.ui.canvas.CanvasGraphics;
 import igrek.songbook.ui.filelist.FileListView;
 
