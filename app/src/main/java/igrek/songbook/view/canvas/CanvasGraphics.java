@@ -1,6 +1,7 @@
 package igrek.songbook.view.canvas;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -115,17 +116,29 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		if (y + lineheight < 0)
 			return;
 		
+		// line wrapper on bottom
+		if (line.getFragments().size() > 0) {
+			CRDFragment lastFragment = line.getFragments().get(line.getFragments().size() - 1);
+			if (lastFragment.getType() == CRDTextType.LINEWRAPPER) {
+				setFont(Font.FONT_NORMAL);
+				setColor(0xa0a0a0);
+				paint.setTextAlign(Paint.Align.RIGHT);
+				canvas.drawText(lastFragment.getText(), w, y + 0.85f * lineheight, paint);
+			}
+		}
+		
 		for (CRDFragment fragment : line.getFragments()) {
 			
 			if (fragment.getType() == CRDTextType.REGULAR_TEXT) {
 				setFont(Font.FONT_NORMAL);
 				setColor(0xffffff);
+				drawTextUnaligned(fragment.getText(), fragment.getX() * fontsize, y + lineheight);
 			} else if (fragment.getType() == CRDTextType.CHORDS) {
 				setFont(Font.FONT_BOLD);
 				setColor(0xf00000);
+				drawTextUnaligned(fragment.getText(), fragment.getX() * fontsize, y + lineheight);
 			}
 			
-			drawTextUnaligned(fragment.getText(), fragment.getX() * fontsize, y + lineheight);
 		}
 	}
 	

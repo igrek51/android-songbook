@@ -15,7 +15,7 @@ public class CRDParser {
 	public CRDParser() {
 	}
 	
-	public CRDModel parseFileContent(String content, float screenW, float fontsize, Paint paint) {
+	public synchronized CRDModel parseFileContent(String content, float screenW, float fontsize, Paint paint) {
 		this.paint = paint;
 		setNormalFont();
 		paint.setTextSize(fontsize);
@@ -29,7 +29,7 @@ public class CRDParser {
 			model.addLines(parseLine(line1, screenW, fontsize));
 		}
 		
-		//zapisanie numerów wierszy
+		// store line numbers
 		int y = 0;
 		for (CRDLine line : model.getLines()) {
 			line.setY(y);
@@ -110,15 +110,17 @@ public class CRDParser {
 		} else {
 			int maxLength = maxScreenStringLength(chars, screenW);
 			List<CRDChar> before = chars.subList(0, maxLength);
+			ArrayList<CRDChar> newBefore = new ArrayList<>(before);
+			newBefore.add(new CRDChar("\u21B5", 0, CRDTextType.LINEWRAPPER));
 			List<CRDChar> after = chars.subList(maxLength, chars.size());
-			lines.add(before);
+			lines.add(newBefore);
 			lines.addAll(wrapLine(after, screenW));
 		}
 		return lines;
 	}
 	
-	private CRDLine chars2line(List<CRDChar> chars, float fontsize) {
-		//agregacja w grupy tego samego typu
+	private synchronized CRDLine chars2line(List<CRDChar> chars, float fontsize) {
+		// aggregate groups of the same type
 		CRDLine line = new CRDLine();
 		
 		CRDTextType lastType = null;
@@ -131,11 +133,10 @@ public class CRDParser {
 				lastType = crdChar.type;
 			
 			if (crdChar.type != lastType) {
-				//zakończenie poprzedniego fragmentu
+				// complete the previous fragment
 				if (buffer.length() > 0) {
 					
-					if (lastType == CRDTextType.REGULAR_TEXT || lastType == CRDTextType.CHORDS) {
-						
+					if (lastType.isDisplayable()) {
 						CRDFragment fragment = new CRDFragment(startX / fontsize, buffer.toString(), lastType);
 						line.addFragment(fragment);
 					}
@@ -147,17 +148,15 @@ public class CRDParser {
 				lastType = crdChar.type;
 			}
 			
-			if (crdChar.type == CRDTextType.REGULAR_TEXT || crdChar.type == CRDTextType.CHORDS) {
+			if (crdChar.type.isDisplayable()) {
 				buffer.append(crdChar.c);
 				x += crdChar.width;
 			}
 		}
 		
-		//zakończenie ostatniego fragmentu
+		// complete the last fragment
 		if (buffer.length() > 0) {
-			
-			if (lastType == CRDTextType.REGULAR_TEXT || lastType == CRDTextType.CHORDS) {
-				
+			if (lastType.isDisplayable()) {
 				CRDFragment fragment = new CRDFragment(startX / fontsize, buffer.toString(), lastType);
 				line.addFragment(fragment);
 			}
@@ -169,6 +168,7 @@ public class CRDParser {
 	
 	private void setBracket(boolean bracket) {
 		this.bracket = bracket;
+		// change typeface due to text width calculation
 		if (bracket) {
 			setBoldFont();
 		} else {

@@ -2,9 +2,21 @@ package igrek.songbook.domain.crdfile;
 
 public enum CRDTextType {
 	
-	REGULAR_TEXT,
+	REGULAR_TEXT(true),
 	
-	CHORDS,
+	CHORDS(true),
 	
-	BRACKET;
+	BRACKET(false),
+	
+	LINEWRAPPER(true);
+	
+	private boolean displayable;
+	
+	CRDTextType(boolean displayable) {
+		this.displayable = displayable;
+	}
+	
+	public boolean isDisplayable() {
+		return displayable;
+	}
 }
