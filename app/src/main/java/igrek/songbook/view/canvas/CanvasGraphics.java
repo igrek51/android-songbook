@@ -33,6 +33,8 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	Lazy<AutoscrollService> autoscroll;
 	@Inject
 	Lazy<SongPreviewController> songPreviewController;
+	@Inject
+	Lazy<QuickMenu> quickMenu;
 	private CRDModel crdModel = null;
 	private float scroll = 0;
 	private float startScroll = 0;
@@ -40,17 +42,10 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	private float lineheight;
 	private Float pointersDst0 = null;
 	private Float fontsize0 = null;
-	private QuickMenu quickMenu;
 	
 	public CanvasGraphics(Context context) {
 		super(context);
 		DaggerIoc.getFactoryComponent().inject(this);
-	}
-	
-	@Override
-	public void reset() {
-		super.reset();
-		quickMenu = new QuickMenu(this);
 		scroll = 0;
 		startScroll = 0;
 		pointersDst0 = null;
@@ -88,7 +83,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		
 		drawFileContent();
 		
-		quickMenu.draw();
+		quickMenu.get().draw();
 	}
 	
 	private void drawFileContent() {
@@ -205,8 +200,8 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	}
 	
 	private boolean onScreenClicked(float x, float y) {
-		if (quickMenu.isVisible()) {
-			return quickMenu.onScreenClicked(x, y);
+		if (quickMenu.get().isVisible()) {
+			return quickMenu.get().onScreenClicked(x, y);
 		} else {
 			if (autoscroll.get().isRunning()) {
 				autoscroll.get().onAutoscrollStopUIEvent();
@@ -214,7 +209,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 				if (y >= h * GESTURE_AUTOSCROLL_BOTTOM_REGION) {  //kliknięcie na dole ekranu
 					autoscroll.get().onAutoscrollStartUIEvent();
 				} else {
-					quickMenu.setVisible(true);
+					quickMenu.get().setVisible(true);
 				}
 			}
 			return true;
@@ -289,7 +284,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	}
 	
 	public void setQuickMenuView(View quickMenuView) {
-		quickMenu.setQuickMenuView(quickMenuView);
-		quickMenu.setVisible(false);
+		quickMenu.get().setQuickMenuView(quickMenuView);
+		quickMenu.get().setVisible(false);
 	}
 }

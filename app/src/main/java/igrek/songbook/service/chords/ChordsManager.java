@@ -31,7 +31,7 @@ public class ChordsManager {
 	@Inject
 	CanvasGraphics canvas;
 	@Inject
-	QuickMenu quickMenu;
+	Lazy<QuickMenu> quickMenu;
 	private Logger logger = LoggerFactory.getLogger();
 	private int transposed = 0;
 	private CRDParser crdParser;
@@ -122,7 +122,7 @@ public class ChordsManager {
 			userInfo.showInfo(info);
 		}
 		
-		quickMenu.onTransposedEvent();
+		quickMenu.get().onTransposedEvent();
 	}
 	
 	public void onTransposeResetEvent() {

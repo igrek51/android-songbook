@@ -27,6 +27,7 @@ import igrek.songbook.service.window.SoftKeyboardService;
 import igrek.songbook.service.window.WindowManagerService;
 import igrek.songbook.view.canvas.CanvasGraphics;
 import igrek.songbook.view.canvas.quickmenu.QuickMenu;
+import igrek.songbook.view.filelist.FileListView;
 
 /**
  * Dagger will be injecting to those classes
@@ -78,6 +79,8 @@ public interface FactoryComponent {
 	
 	
 	void inject(UIErrorHandler there);
+	
+	void inject(FileListView there);
 	
 	void inject(SafeExecutor there);
 	

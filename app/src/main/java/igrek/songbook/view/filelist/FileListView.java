@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.filetree.FileItem;
@@ -29,6 +30,10 @@ public class FileListView extends ListView implements AdapterView.OnItemClickLis
 	private FileItemAdapter adapter;
 	
 	private HashMap<Integer, Integer> itemHeights = new HashMap<>();
+	
+	{
+		DaggerIoc.getFactoryComponent().inject(this);
+	}
 	
 	public FileListView(Context context) {
 		super(context);

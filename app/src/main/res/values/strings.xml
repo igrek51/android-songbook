@@ -16,6 +16,7 @@
     <string name="autoscroll_stopped">Autoscroll stopped.</string>
     <string name="autoscroll">Autoscroll</string>
     <string name="ui_help">UI Help</string>
+    <string name="message_home_not_set">Home directory is not set.</string>
     <string name="ui_help_content">
     FILE PREVIEW:
 \nScaling with two fingers - changing font size.

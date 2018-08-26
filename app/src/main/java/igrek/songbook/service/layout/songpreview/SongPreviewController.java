@@ -6,6 +6,8 @@ import javax.inject.Inject;
 
 import dagger.Lazy;
 import igrek.songbook.dagger.DaggerIoc;
+import igrek.songbook.logger.Logger;
+import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.chords.ChordsManager;
 import igrek.songbook.service.filetree.FileTreeManager;
 import igrek.songbook.service.layout.LayoutController;
@@ -22,6 +24,8 @@ public class SongPreviewController {
 	@Inject
 	CanvasGraphics canvas;
 	
+	private Logger logger = LoggerFactory.getLogger();
+	
 	public SongPreviewController() {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
@@ -35,6 +39,8 @@ public class SongPreviewController {
 		
 		canvas.setFontSize(chordsManager.getFontsize());
 		canvas.setCRDModel(chordsManager.getCRDModel());
+		
+		logger.debug("canvas graphics has been initialized");
 	}
 	
 	public void onFontsizeChangedEvent(float fontsize) {

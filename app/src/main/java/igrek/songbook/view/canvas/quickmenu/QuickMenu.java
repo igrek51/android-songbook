@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import javax.inject.Inject;
 
+import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.service.autoscroll.AutoscrollService;
@@ -16,7 +17,7 @@ import igrek.songbook.view.canvas.CanvasGraphics;
 public class QuickMenu {
 	
 	@Inject
-	ChordsManager chordsManager;
+	Lazy<ChordsManager> chordsManager;
 	@Inject
 	UIResourceService infoService;
 	@Inject
@@ -45,19 +46,19 @@ public class QuickMenu {
 		tvTransposition = quickMenuView.findViewById(R.id.tvTransposition);
 		
 		btnTransposeM5 = quickMenuView.findViewById(R.id.btnTransposeM5);
-		btnTransposeM5.setOnClickListener(v -> chordsManager.onTransposeEvent(-5));
+		btnTransposeM5.setOnClickListener(v -> chordsManager.get().onTransposeEvent(-5));
 		
 		btnTransposeM1 = quickMenuView.findViewById(R.id.btnTransposeM1);
-		btnTransposeM1.setOnClickListener(v -> chordsManager.onTransposeEvent(-1));
+		btnTransposeM1.setOnClickListener(v -> chordsManager.get().onTransposeEvent(-1));
 		
 		btnTranspose0 = quickMenuView.findViewById(R.id.btnTranspose0);
-		btnTranspose0.setOnClickListener(v -> chordsManager.onTransposeResetEvent());
+		btnTranspose0.setOnClickListener(v -> chordsManager.get().onTransposeResetEvent());
 		
 		btnTransposeP1 = quickMenuView.findViewById(R.id.btnTransposeP1);
-		btnTransposeP1.setOnClickListener(v -> chordsManager.onTransposeEvent(+1));
+		btnTransposeP1.setOnClickListener(v -> chordsManager.get().onTransposeEvent(+1));
 		
 		btnTransposeP5 = quickMenuView.findViewById(R.id.btnTransposeP5);
-		btnTransposeP5.setOnClickListener(v -> chordsManager.onTransposeEvent(+5));
+		btnTransposeP5.setOnClickListener(v -> chordsManager.get().onTransposeEvent(+5));
 		
 		btnAutoscrollToggle = quickMenuView.findViewById(R.id.btnAutoscrollToggle);
 		btnAutoscrollToggle.setOnClickListener(v -> {
@@ -74,7 +75,7 @@ public class QuickMenu {
 	}
 	
 	private void updateTranspositionText() {
-		String tvTranspositionText = infoService.resString(R.string.transposition) + ": " + chordsManager
+		String tvTranspositionText = infoService.resString(R.string.transposition) + ": " + chordsManager.get()
 				.getTransposedString();
 		tvTransposition.setText(tvTranspositionText);
 	}

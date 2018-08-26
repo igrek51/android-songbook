@@ -76,8 +76,13 @@ public class SongSelectionController {
 		if (isInHomeDir()) {
 			activityController.get().quit();
 		} else {
-			fileTreeManager.goTo(getHomePath());
-			updateFileList();
+			String homePath = getHomePath();
+			if (homePath == null) {
+				userInfoService.showInfo(R.string.message_home_not_set);
+			}else {
+				fileTreeManager.goTo(homePath);
+				updateFileList();
+			}
 		}
 	}
 	
