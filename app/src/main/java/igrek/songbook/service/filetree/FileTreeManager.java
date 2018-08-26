@@ -19,18 +19,14 @@ import igrek.songbook.service.preferences.PreferencesService;
 
 public class FileTreeManager {
 	
-	private Logger logger = LoggerFactory.getLogger();
-	
-	private String currentPath;
-	private String currentFileName = null;
-	
-	private List<FileItem> items;
-	
 	@Inject
 	FilesystemService filesystem;
-	
 	@Inject
 	PreferencesService preferencesService;
+	private Logger logger = LoggerFactory.getLogger();
+	private String currentPath;
+	private String currentFileName = null;
+	private List<FileItem> items;
 	
 	public FileTreeManager() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -48,19 +44,19 @@ public class FileTreeManager {
 		updateCurrentPath();
 	}
 	
+	public static String trimEndSlash(String str) {
+		while (!str.isEmpty() && str.endsWith("/")) {
+			str = str.substring(0, str.length() - 1);
+		}
+		return str;
+	}
+	
 	private void setCurrentPathIfNotSet(String path) {
 		if (currentPath == null) {
 			if (path != null && new File(path).isDirectory()) {
 				currentPath = path;
 			}
 		}
-	}
-	
-	public static String trimEndSlash(String str) {
-		while (!str.isEmpty() && str.endsWith("/")) {
-			str = str.substring(0, str.length() - 1);
-		}
-		return str;
 	}
 	
 	public String getCurrentDirName() {
@@ -166,11 +162,11 @@ public class FileTreeManager {
 		}
 	}
 	
-	public void setCurrentFileName(String currentFileName) {
-		this.currentFileName = currentFileName;
-	}
-	
 	public String getCurrentFileName() {
 		return currentFileName;
+	}
+	
+	public void setCurrentFileName(String currentFileName) {
+		this.currentFileName = currentFileName;
 	}
 }

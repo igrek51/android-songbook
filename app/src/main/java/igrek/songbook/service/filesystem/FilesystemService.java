@@ -22,12 +22,11 @@ import igrek.songbook.logger.LoggerFactory;
 
 public class FilesystemService {
 	
-	private Logger logger = LoggerFactory.getLogger();
-	
 	@Inject
 	Activity activity;
 	@Inject
 	ExternalCardService externalCardService;
+	private Logger logger = LoggerFactory.getLogger();
 	
 	public FilesystemService() {
 		DaggerIoc.getFactoryComponent().inject(this);

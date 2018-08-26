@@ -15,14 +15,13 @@ import igrek.songbook.view.canvas.CanvasGraphics;
 
 public class QuickMenu {
 	
-	private CanvasGraphics canvas;
 	@Inject
 	ChordsManager chordsManager;
 	@Inject
 	UIResourceService infoService;
 	@Inject
 	AutoscrollService autoscrollService;
-	
+	private CanvasGraphics canvas;
 	private boolean visible = false;
 	
 	private View quickMenuView;

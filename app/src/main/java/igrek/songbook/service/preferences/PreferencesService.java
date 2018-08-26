@@ -15,17 +15,13 @@ import igrek.songbook.logger.LoggerFactory;
 
 public class PreferencesService {
 	
-	private Logger logger = LoggerFactory.getLogger();
-	
 	private static final String SHARED_PREFERENCES_NAME = "SongBook-UserPreferences";
-	
-	private Map<String, Object> propertyValues = new HashMap<>();
-	
-	private SharedPreferences sharedPreferences;
-	
 	@Inject
 	Activity activity;
-
+	private Logger logger = LoggerFactory.getLogger();
+	private Map<String, Object> propertyValues = new HashMap<>();
+	private SharedPreferences sharedPreferences;
+	
 	public PreferencesService() {
 		DaggerIoc.getFactoryComponent().inject(this);
 		sharedPreferences = createSharedPreferences();

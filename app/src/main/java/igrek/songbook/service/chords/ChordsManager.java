@@ -12,7 +12,6 @@ import igrek.songbook.domain.crdfile.CRDParser;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.autoscroll.AutoscrollService;
-import igrek.songbook.service.info.InfoBarClickAction;
 import igrek.songbook.service.info.UIResourceService;
 import igrek.songbook.service.info.UserInfoService;
 import igrek.songbook.service.transpose.ChordsTransposer;
@@ -21,39 +20,26 @@ import igrek.songbook.view.canvas.quickmenu.QuickMenu;
 
 public class ChordsManager {
 	
-	private Logger logger = LoggerFactory.getLogger();
-	
-	private int transposed = 0;
-	
-	private CRDParser crdParser;
-	
-	private CRDModel crdModel;
-	
-	private int screenW = 0;
-	
-	private Paint paint = null;
-	
-	private float fontsize = 26.0f;
-	
-	private String originalFileContent = null;
-	
 	@Inject
 	UserInfoService userInfo;
-	
 	@Inject
 	ChordsTransposer chordsTransposer;
-	
 	@Inject
 	Lazy<AutoscrollService> autoscrollService;
-	
 	@Inject
 	UIResourceService uiResourceService;
-	
 	@Inject
 	CanvasGraphics canvas;
-	
 	@Inject
 	QuickMenu quickMenu;
+	private Logger logger = LoggerFactory.getLogger();
+	private int transposed = 0;
+	private CRDParser crdParser;
+	private CRDModel crdModel;
+	private int screenW = 0;
+	private Paint paint = null;
+	private float fontsize = 26.0f;
+	private String originalFileContent = null;
 	
 	public ChordsManager() {
 		DaggerIoc.getFactoryComponent().inject(this);

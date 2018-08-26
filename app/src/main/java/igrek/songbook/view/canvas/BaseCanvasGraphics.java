@@ -27,6 +27,8 @@ public class BaseCanvasGraphics extends View {
 	protected float startTouchX = 0;
 	protected float startTouchY = 0;
 	protected long startTouchTime;
+	//pomocnicze funkcje rysujące
+	private Rect textBounds = new Rect();
 	
 	public BaseCanvasGraphics(Context context) {
 		super(context);
@@ -41,6 +43,10 @@ public class BaseCanvasGraphics extends View {
 		});
 		
 		reset();
+	}
+	
+	public static boolean isFlagSet(int tested, int flag) {
+		return (tested & flag) == flag;
 	}
 	
 	public void reset() {
@@ -132,13 +138,6 @@ public class BaseCanvasGraphics extends View {
 	
 	protected void onTouchPointerUp(MotionEvent event) {
 	}
-	
-	public static boolean isFlagSet(int tested, int flag) {
-		return (tested & flag) == flag;
-	}
-	
-	//pomocnicze funkcje rysujące
-	private Rect textBounds = new Rect();
 	
 	public void drawTextUnaligned(String s, float x, float y) {
 		paint.setTextAlign(Paint.Align.LEFT);

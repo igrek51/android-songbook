@@ -24,10 +24,9 @@ import igrek.songbook.logger.LoggerFactory;
  */
 public class ExternalCardService {
 	
-	private Logger logger = LoggerFactory.getLogger();
 	@Inject
 	Activity activity;
-	
+	private Logger logger = LoggerFactory.getLogger();
 	private String externalSDPath;
 	
 	public ExternalCardService() {

@@ -2,7 +2,6 @@ package igrek.songbook.dagger;
 
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 
@@ -10,7 +9,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import igrek.songbook.MainApplication;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.activity.ActivityController;

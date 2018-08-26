@@ -14,14 +14,13 @@ import igrek.songbook.service.window.WindowManagerService;
 
 public class ActivityController {
 	
-	private Logger logger = LoggerFactory.getLogger();
-	
 	@Inject
 	WindowManagerService windowManagerService;
 	@Inject
 	Activity activity;
 	@Inject
 	PreferencesService preferencesService;
+	private Logger logger = LoggerFactory.getLogger();
 	
 	public ActivityController() {
 		DaggerIoc.getFactoryComponent().inject(this);

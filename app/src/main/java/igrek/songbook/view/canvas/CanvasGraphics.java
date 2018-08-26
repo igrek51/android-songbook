@@ -21,35 +21,26 @@ import igrek.songbook.view.canvas.quickmenu.QuickMenu;
 
 public class CanvasGraphics extends BaseCanvasGraphics {
 	
-	private CRDModel crdModel = null;
-	
-	private float scroll = 0;
-	private float startScroll = 0;
-	
-	private float fontsize;
-	private float lineheight;
-	
 	private final float EOF_SCROLL_RESERVE = 0.09f;
 	private final float LINEHEIGHT_SCALE_FACTOR = 1.02f;
 	private final float FONTSIZE_SCALE_FACTOR = 0.6f;
-	
 	private final float GESTURE_TRANSPOSE_MIN_DX = 0.4f;
 	private final float GESTURE_AUTOSCROLL_BOTTOM_REGION = 0.6f;
 	private final float GESTURE_CLICK_MAX_HYPOT = 8.0f;
 	private final long GESTURE_CLICK_MAX_TIME = 500;
-	
 	private final float MIN_SCROLL_EVENT = 15f;
-	
-	private Float pointersDst0 = null;
-	private Float fontsize0 = null;
-	
-	private QuickMenu quickMenu;
-	
 	@Inject
 	Lazy<AutoscrollService> autoscroll;
-	
 	@Inject
 	Lazy<SongPreviewController> songPreviewController;
+	private CRDModel crdModel = null;
+	private float scroll = 0;
+	private float startScroll = 0;
+	private float fontsize;
+	private float lineheight;
+	private Float pointersDst0 = null;
+	private Float fontsize0 = null;
+	private QuickMenu quickMenu;
 	
 	public CanvasGraphics(Context context) {
 		super(context);

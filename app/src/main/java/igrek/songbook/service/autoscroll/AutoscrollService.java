@@ -10,47 +10,34 @@ import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.chords.ChordsManager;
-import igrek.songbook.service.info.InfoBarClickAction;
 import igrek.songbook.service.info.UIResourceService;
 import igrek.songbook.service.info.UserInfoService;
 import igrek.songbook.view.canvas.CanvasGraphics;
 
 public class AutoscrollService {
 	
+	private final long MIN_INTERVAL_TIME = 5;
+	private final float START_NO_WAITING_MIN_SCROLL_FACTOR = 1.0f;
+	private final float AUTOCHANGE_INTERVAL_SCALE = 0.0022f;
+	private final float AUTOCHANGE_WAITING_SCALE = 9.0f;
+	private final float MANUAL_SCROLL_MAX_RANGE = 150f;
+	@Inject
+	UserInfoService userInfo;
+	@Inject
+	Lazy<ChordsManager> chordsManager;
+	@Inject
+	CanvasGraphics canvas;
+	@Inject
+	UIResourceService uiResourceService;
 	private Logger logger = LoggerFactory.getLogger();
-	
 	private AutoscrollState state;
-	
 	private long waitTime = 35000; // [ms]
 	private float intervalTime = 320; // [ms]
 	private float intervalStep = 2.0f; // [px]
-	
 	private float fontsize;
-	
 	private long startTime; // [ms]
-	
-	private final long MIN_INTERVAL_TIME = 5;
-	private final float START_NO_WAITING_MIN_SCROLL_FACTOR = 1.0f;
-	
-	private final float AUTOCHANGE_INTERVAL_SCALE = 0.0022f;
-	private final float AUTOCHANGE_WAITING_SCALE = 9.0f;
-	
-	private final float MANUAL_SCROLL_MAX_RANGE = 150f;
-	
 	private Handler timerHandler;
 	private Runnable timerRunnable;
-	
-	@Inject
-	UserInfoService userInfo;
-	
-	@Inject
-	Lazy<ChordsManager> chordsManager;
-	
-	@Inject
-	CanvasGraphics canvas;
-	
-	@Inject
-	UIResourceService uiResourceService;
 	
 	public AutoscrollService() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -212,7 +199,8 @@ public class AutoscrollService {
 				onAutoscrollStartEvent();
 				userInfo.showInfoWithAction(R.string.autoscroll_started, R.string.stop_autoscroll, this::onAutoscrollStopEvent);
 			} else {
-				userInfo.showInfo(uiResourceService.resString(R.string.end_of_file) + "\n" + uiResourceService.resString(R.string.autoscroll_not_started));
+				userInfo.showInfo(uiResourceService.resString(R.string.end_of_file) + "\n" + uiResourceService
+						.resString(R.string.autoscroll_not_started));
 			}
 		} else {
 			onAutoscrollStopUIEvent();
@@ -224,7 +212,8 @@ public class AutoscrollService {
 	}
 	
 	public void onAutoscrollEndedEvent() {
-		userInfo.showInfo(uiResourceService.resString(R.string.end_of_file) + "\n" + uiResourceService.resString(R.string.autoscroll_stopped));
+		userInfo.showInfo(uiResourceService.resString(R.string.end_of_file) + "\n" + uiResourceService
+				.resString(R.string.autoscroll_stopped));
 	}
 	
 	public void onAutoscrollStopUIEvent() {

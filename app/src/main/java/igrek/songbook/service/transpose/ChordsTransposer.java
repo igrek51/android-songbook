@@ -12,8 +12,6 @@ import igrek.songbook.logger.LoggerFactory;
 
 public class ChordsTransposer {
 	
-	private Logger logger = LoggerFactory.getLogger();
-	
 	/**
 	 * obsługiwane formaty akordów:
 	 * d, d#, D, D#, Dm, D#m, Dmaj7, D#maj7, d7, d#7, D#m7, D#7, Dadd9, Dsus
@@ -25,18 +23,10 @@ public class ChordsTransposer {
 			// notacja amerykańska
 			//"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "Bb", "B", //major lub prefix dla minor
 	};
-	
 	private final String chordsDelimiters[] = {
 			" ", "-", "(", ")", "/", ","
 	};
-	
 	private final int MAX_LENGTH_ANALYZE = 2;
-	
-	/**
-	 * mapa nazwy akordu (prefixu) na jego numer
-	 */
-	private Map<String, Integer> soundNumbers;
-	
 	private final Comparator<String> lengthComparator = (lhs, rhs) -> {
 		if (rhs.length() != lhs.length()) {
 			return rhs.length() - lhs.length();
@@ -44,6 +34,11 @@ public class ChordsTransposer {
 			return lhs.compareTo(rhs);
 		}
 	};
+	private Logger logger = LoggerFactory.getLogger();
+	/**
+	 * mapa nazwy akordu (prefixu) na jego numer
+	 */
+	private Map<String, Integer> soundNumbers;
 	
 	public ChordsTransposer() {
 		DaggerIoc.getFactoryComponent().inject(this);

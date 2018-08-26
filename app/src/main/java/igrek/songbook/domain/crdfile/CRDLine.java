@@ -20,11 +20,11 @@ public class CRDLine {
 		return fragments;
 	}
 
-	public void setY(int y) {
-		this.y = y;
-	}
-
 	public float getY() {
 		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
 	}
 }

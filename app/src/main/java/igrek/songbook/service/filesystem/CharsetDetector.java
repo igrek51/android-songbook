@@ -5,18 +5,15 @@ import igrek.songbook.logger.LoggerFactory;
 
 public class CharsetDetector {
 	
-	private Logger logger = LoggerFactory.getLogger();
-	
 	private final byte[] cp1250PLBytes = {
 			(byte) 0xB9, (byte) 0xBF, (byte) 0x9C, (byte) 0x9F, (byte) 0xEA, (byte) 0xE6,
 			(byte) 0xF1, (byte) 0xF3, (byte) 0xB3, (byte) 0xA5, (byte) 0xAF, (byte) 0x8C,
 			(byte) 0x8F, (byte) 0xCA, (byte) 0xC6, (byte) 0xD1, (byte) 0xD3, (byte) 0xA3
 	};
-	
 	private final byte[] utf8PLPrefixBytes = {(byte) 0xC3, (byte) 0xC4, (byte) 0xC5};
-	
 	private final String CHARSET_UTF8 = "UTF-8";
 	private final String CHARSET_CP1250 = "Cp1250";
+	private Logger logger = LoggerFactory.getLogger();
 	
 	public CharsetDetector() {
 	}

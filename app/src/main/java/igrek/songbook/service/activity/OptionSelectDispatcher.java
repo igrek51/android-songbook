@@ -34,7 +34,7 @@ public class OptionSelectDispatcher {
 	}
 	
 	public boolean optionsSelect(int id) {
-		if (optionActions.containsKey(id)){
+		if (optionActions.containsKey(id)) {
 			Runnable action = optionActions.get(id);
 			new SafeExecutor().execute(action);
 			return true;

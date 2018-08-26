@@ -18,14 +18,14 @@ public class UIErrorHandler {
 	private UIErrorHandler() {
 	}
 	
+	public static void showError(Throwable t) {
+		new UIErrorHandler()._handleError(t);
+	}
+	
 	private void _handleError(Throwable t) {
 		DaggerIoc.getFactoryComponent().inject(this);
 		logger.error(t);
 		userInfoService.showInfo("Error occurred: " + t.getMessage());
-	}
-	
-	public static void showError(Throwable t) {
-		new UIErrorHandler()._handleError(t);
 	}
 	
 }
