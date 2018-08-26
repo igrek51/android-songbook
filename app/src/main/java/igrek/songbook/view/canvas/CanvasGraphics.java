@@ -49,7 +49,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	}
 	
 	@Override
-	public void reset(){
+	public void reset() {
 		super.reset();
 		scroll = 0;
 		startScroll = 0;

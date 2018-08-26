@@ -101,7 +101,7 @@ public class AutoscrollService {
 		return state == AutoscrollState.WAITING || state == AutoscrollState.SCROLLING;
 	}
 	
-	private CanvasGraphics getCanvas(){
+	private CanvasGraphics getCanvas() {
 		return songPreviewController.get().getCanvas();
 	}
 	

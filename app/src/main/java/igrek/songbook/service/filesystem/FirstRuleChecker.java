@@ -57,7 +57,7 @@ public class FirstRuleChecker<T> {
 	private class Rule {
 		BooleanCondition when;
 		Provider<T> then;
-
+		
 		public Rule(BooleanCondition when, Provider<T> then) {
 			this.when = when;
 			this.then = then;

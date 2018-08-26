@@ -42,7 +42,7 @@ public class QuickMenu {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
-	private CanvasGraphics getCanvas(){
+	private CanvasGraphics getCanvas() {
 		return songPreviewController.get().getCanvas();
 	}
 	
@@ -81,7 +81,8 @@ public class QuickMenu {
 	}
 	
 	private void updateTranspositionText() {
-		String tvTranspositionText = infoService.resString(R.string.transposition) + ": " + chordsManager.get()
+		String tvTranspositionText = infoService.resString(R.string.transposition) + ": " + chordsManager
+				.get()
 				.getTransposedString();
 		tvTransposition.setText(tvTranspositionText);
 	}
