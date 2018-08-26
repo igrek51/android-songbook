@@ -71,10 +71,10 @@ public class SongPreviewController {
 		//inicjalizacja - pierwsze wczytanie pliku
 		chordsManager.load(fileContent, w, h, paint);
 		
-		canvas.setFontSize(chordsManager.getFontsize());
+		canvas.setFontSizes(chordsManager.getFontsize());
 		canvas.setCRDModel(chordsManager.getCRDModel());
 		
-		logger.debug("canvas graphics has been initialized");
+		logger.debug("canvas graphics has been initialized: " + fileTreeManager.getCurrentFileName() + " - " + w +  " x " + h);
 	}
 	
 	public void onFontsizeChangedEvent(float fontsize) {
