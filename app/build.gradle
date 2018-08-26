@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
 
-    // version incrementer
+    // automatic version incrementer
     def versionPropsFile = file('version.properties')
     if (versionPropsFile.canRead()) {
         Properties versionProps = new Properties()
@@ -17,17 +17,19 @@ android {
         String vName = vMajor.toString() + "." + vMinor.toString() + "." + vPatch.toString()
         versionProps['VERSION_NAME'] = vName
         versionProps.store(versionPropsFile.newWriter(), null)
-
         defaultConfig {
-            applicationId "igrek.songbook"
-            minSdkVersion 16
-            targetSdkVersion 27
             versionCode vCode
             versionName vName
-            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         }
     } else {
         throw new GradleException("Could not read version.properties!")
+    }
+
+    defaultConfig {
+        applicationId "igrek.songbook"
+        minSdkVersion 16
+        targetSdkVersion 27
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
