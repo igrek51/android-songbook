@@ -1,4 +1,4 @@
-package igrek.songbook.ui.canvas;
+package igrek.songbook.view.canvas;
 
 import android.content.Context;
 import android.view.MotionEvent;
@@ -8,14 +8,16 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.Lazy;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.domain.crdfile.CRDFragment;
 import igrek.songbook.domain.crdfile.CRDLine;
 import igrek.songbook.domain.crdfile.CRDModel;
 import igrek.songbook.domain.crdfile.CRDTextType;
 import igrek.songbook.service.autoscroll.AutoscrollService;
-import igrek.songbook.ui.canvas.enums.Font;
-import igrek.songbook.ui.canvas.quickmenu.QuickMenu;
+import igrek.songbook.service.layout.songpreview.SongPreviewController;
+import igrek.songbook.view.canvas.enums.Font;
+import igrek.songbook.view.canvas.quickmenu.QuickMenu;
 
 public class CanvasGraphics extends BaseCanvasGraphics {
 	
@@ -44,7 +46,10 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	private QuickMenu quickMenu;
 	
 	@Inject
-	AutoscrollService autoscroll;
+	Lazy<AutoscrollService> autoscroll;
+	
+	@Inject
+	Lazy<SongPreviewController> songPreviewController;
 	
 	public CanvasGraphics(Context context) {
 		super(context);
@@ -80,8 +85,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	public void init() {
 		setFontSize(fontsize);
 		setFont(Font.FONT_NORMAL);
-//		TODO event
-//		AppController.sendEvent(new GraphicsInitializedEvent(w, h, paint));
+		songPreviewController.get().onGraphicsInitializedEvent(w, h, paint);
 	}
 	
 	@Override
@@ -109,7 +113,6 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	}
 	
 	private void drawBackground() {
-//		TODO get from colors.xml
 		setColor(0x000000);
 		clearScreen();
 	}
@@ -191,14 +194,12 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	
 	@Override
 	protected void onTouchUp(MotionEvent event) {
-		
 		float deltaX = event.getX() - startTouchX;
 		float deltaY = event.getY() - startTouchY;
 		// monitorowanie zmiany przewijania
 		float dScroll = -deltaY;
 		if (Math.abs(dScroll) > MIN_SCROLL_EVENT) {
-			//		TODO event
-//			AppController.sendEvent(new CanvasScrollEvent(dScroll, scroll));
+			autoscroll.get().onCanvasScrollEvent(dScroll, scroll);
 		}
 		
 		//włączenie autoscrolla - szybkie kliknięcie na dole
@@ -213,27 +214,16 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	}
 	
 	private boolean onScreenClicked(float x, float y) {
-		
 		if (quickMenu.isVisible()) {
-			
 			return quickMenu.onScreenClicked(x, y);
-			
 		} else {
-			
-			if (autoscroll.isRunning()) {
-//				TODO event
-//				AppController.sendEvent(new AutoscrollStopUIEvent());
+			if (autoscroll.get().isRunning()) {
+				autoscroll.get().onAutoscrollStopUIEvent();
 			} else {
-				
 				if (y >= h * GESTURE_AUTOSCROLL_BOTTOM_REGION) {  //kliknięcie na dole ekranu
-					
-//					TODO event
-//					AppController.sendEvent(new AutoscrollStartUIEvent());
-					
+					autoscroll.get().onAutoscrollStartUIEvent();
 				} else {
-					
 					quickMenu.setVisible(true);
-					
 				}
 			}
 			return true;
@@ -242,8 +232,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	
 	@Override
 	protected void onTouchPointerUp(MotionEvent event) {
-		//TODO event
-//		AppController.sendEvent(new FontsizeChangedEvent(fontsize));
+		songPreviewController.get().onFontsizeChangedEvent(fontsize);
 		
 		pointersDst0 = null; //reset poczatkowej długości
 		// reset na brak przewijania

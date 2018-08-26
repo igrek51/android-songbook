@@ -7,6 +7,7 @@ import igrek.songbook.activity.MainActivity;
 import igrek.songbook.service.activity.ActivityController;
 import igrek.songbook.service.activity.AppInitializer;
 import igrek.songbook.service.activity.OptionSelectDispatcher;
+import igrek.songbook.service.activity.SystemKeyDispatcher;
 import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.chords.ChordsManager;
 import igrek.songbook.service.errorcheck.SafeExecutor;
@@ -24,8 +25,8 @@ import igrek.songbook.service.preferences.PreferencesService;
 import igrek.songbook.service.transpose.ChordsTransposer;
 import igrek.songbook.service.window.SoftKeyboardService;
 import igrek.songbook.service.window.WindowManagerService;
-import igrek.songbook.ui.canvas.CanvasGraphics;
-import igrek.songbook.ui.canvas.quickmenu.QuickMenu;
+import igrek.songbook.view.canvas.CanvasGraphics;
+import igrek.songbook.view.canvas.quickmenu.QuickMenu;
 
 /**
  * Dagger will be injecting to those classes
@@ -72,6 +73,8 @@ public interface FactoryComponent {
 	void inject(SongPreviewController there);
 	
 	void inject(ScrollPosBuffer there);
+	
+	void inject(SystemKeyDispatcher there);
 	
 	
 	void inject(UIErrorHandler there);

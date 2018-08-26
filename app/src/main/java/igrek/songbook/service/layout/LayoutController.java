@@ -12,16 +12,17 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.domain.crdfile.CRDModel;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.filetree.FileItem;
 import igrek.songbook.service.filetree.FileTreeManager;
+import igrek.songbook.service.layout.songselection.SongSelectionController;
 import igrek.songbook.service.window.WindowManagerService;
-import igrek.songbook.ui.canvas.CanvasGraphics;
-import igrek.songbook.ui.filelist.FileListView;
+import igrek.songbook.view.canvas.CanvasGraphics;
+import igrek.songbook.view.filelist.FileListView;
 
 public class LayoutController {
 	
@@ -34,9 +35,12 @@ public class LayoutController {
 	@Inject
 	FileTreeManager fileTreeManager;
 	
+	@Inject
+	Lazy<SongSelectionController> songSelectionController;
+	
 	private Logger logger = LoggerFactory.getLogger();
 	
-	private LayoutState state = LayoutState.FILE_LIST;
+	private LayoutState state = LayoutState.SONG_LIST;
 	private ActionBar actionBar;
 	private FileListView itemsListView;
 	private CanvasGraphics canvas = null;
@@ -65,11 +69,9 @@ public class LayoutController {
 			actionBar.setDisplayShowHomeEnabled(true);
 		}
 		toolbar1.setNavigationOnClickListener(v -> {
-			//				TODO event
-			//				AppController.sendEvent(new ToolbarBackClickedEvent());
+			songSelectionController.get().onToolbarBackClickedEvent();
 		});
 		
-		//		TODO
 		//		userInfo.setMainView(activity.findViewById(R.id.mainLayout));
 		
 		itemsListView = activity.findViewById(R.id.filesList);
@@ -87,7 +89,7 @@ public class LayoutController {
 		
 		canvas = new CanvasGraphics(activity);
 		
-		FrameLayout mainFrame = (FrameLayout) activity.findViewById(R.id.mainFrame);
+		FrameLayout mainFrame = activity.findViewById(R.id.mainFrame);
 		
 		mainFrame.removeAllViews();
 		
@@ -101,7 +103,6 @@ public class LayoutController {
 		
 		canvas.setQuickMenuView(quickMenuView);
 		
-		//		TODO
 		//		userInfo.setMainView(mainFrame);
 	}
 	
@@ -119,15 +120,6 @@ public class LayoutController {
 		actionBar.setTitle(title);
 	}
 	
-	public void setCRDModel(CRDModel model) {
-		//TODO wywalić metodę, odwoływać się bezpośrednio przez Canvas
-		canvas.setCRDModel(model);
-	}
-	
-	public void setFontSize(float fontsize) {
-		canvas.setFontSizes(fontsize);
-	}
-	
 	public Integer getCurrentScrollPos() {
 		return itemsListView.getCurrentScrollPosition();
 	}
@@ -136,8 +128,8 @@ public class LayoutController {
 		itemsListView.scrollToPosition(y);
 	}
 	
-	public LayoutState getState() {
-		return state;
+	public boolean isState(LayoutState compare) {
+		return state == compare;
 	}
 	
 	public void setState(LayoutState state) {

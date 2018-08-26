@@ -1,4 +1,4 @@
-package igrek.songbook.ui.filelist;
+package igrek.songbook.view.filelist;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -11,11 +11,17 @@ import android.widget.ListView;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.filetree.FileItem;
+import igrek.songbook.service.layout.songselection.SongSelectionController;
 
 public class FileListView extends ListView implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+	
+	@Inject
+	SongSelectionController songSelectionController;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
@@ -62,15 +68,13 @@ public class FileListView extends ListView implements AdapterView.OnItemClickLis
 	@Override
 	public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
 		FileItem item = adapter.getItem(position);
-//		TODO
-//		AppController.sendEvent(new ItemClickedEvent(position, item));
+		songSelectionController.onItemClickedEvent(position, item);
 	}
 	
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 		FileItem item = adapter.getItem(position);
-//		TODO
-//		AppController.sendEvent(new ItemClickedEvent(position, item));
+		songSelectionController.onItemClickedEvent(position, item);
 		return true;
 	}
 	

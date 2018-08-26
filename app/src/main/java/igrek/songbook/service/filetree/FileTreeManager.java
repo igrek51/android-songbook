@@ -14,6 +14,8 @@ import igrek.songbook.domain.exception.NoParentDirException;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.filesystem.FilesystemService;
+import igrek.songbook.service.preferences.PreferencesDefinition;
+import igrek.songbook.service.preferences.PreferencesService;
 
 public class FileTreeManager {
 	
@@ -27,11 +29,13 @@ public class FileTreeManager {
 	@Inject
 	FilesystemService filesystem;
 	
+	@Inject
+	PreferencesService preferencesService;
+	
 	public FileTreeManager() {
 		DaggerIoc.getFactoryComponent().inject(this);
 		
-		// TODO
-		String homePath = null;
+		String homePath = preferencesService.getValue(PreferencesDefinition.startPath, String.class);
 		
 		currentPath = null;
 		setCurrentPathIfNotSet(homePath);

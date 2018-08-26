@@ -56,7 +56,7 @@ public class ActivityController {
 	public void quit() {
 		logger.debug("Closing application...");
 		preferencesService.saveAll();
-		windowManagerService.keepScreenOff();
+		windowManagerService.dontKeepScreenOn();
 		activity.finish();
 	}
 	

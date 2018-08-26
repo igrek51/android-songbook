@@ -98,8 +98,19 @@ public class UserInfoService {
 		showInfo(info);
 	}
 	
-	public void showInfoCancellable(String info, InfoBarClickAction cancelCallback) {
-		showActionInfo(info, null, "Undo", cancelCallback, ContextCompat.getColor(activity, R.color.colorPrimary));
+	public void showInfoWithAction(String info, String actionName, InfoBarClickAction actionCallback) {
+		showActionInfo(info, null, "Undo", actionCallback, ContextCompat.getColor(activity, R.color.colorPrimary));
+	}
+	
+	public void showInfoWithAction(String info, int actionNameRes, InfoBarClickAction actionCallback) {
+		String actionName = uiResourceService.resString(actionNameRes);
+		showInfoWithAction(info, actionName, actionCallback);
+	}
+	
+	public void showInfoWithAction(int infoRes, int actionNameRes, InfoBarClickAction actionCallback) {
+		String info = uiResourceService.resString(infoRes);
+		String actionName = uiResourceService.resString(actionNameRes);
+		showInfoWithAction(info, actionName, actionCallback);
 	}
 	
 	public void showToast(String message) {

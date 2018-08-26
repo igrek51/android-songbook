@@ -1,4 +1,4 @@
-package igrek.songbook.ui.canvas;
+package igrek.songbook.view.canvas;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,10 +9,9 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 
-import igrek.songbook.ui.canvas.enums.Align;
-import igrek.songbook.ui.canvas.enums.Font;
+import igrek.songbook.view.canvas.enums.Align;
+import igrek.songbook.view.canvas.enums.Font;
 
 public class BaseCanvasGraphics extends View {
 	
@@ -36,12 +35,9 @@ public class BaseCanvasGraphics extends View {
 		paint.setFilterBitmap(true);
 		//paint.setDither(true);
 		
-		getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-			@Override
-			public void onGlobalLayout() {
-				w = getWidth();
-				h = getHeight();
-			}
+		getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+			w = getWidth();
+			h = getHeight();
 		});
 		
 		reset();
@@ -76,8 +72,6 @@ public class BaseCanvasGraphics extends View {
 		super.onSizeChanged(w, h, oldw, oldh);
 		this.w = getWidth();
 		this.h = getHeight();
-//		TODO
-//		AppController.sendEvent(new ResizedEvent(w, h));
 	}
 	
 	@Override

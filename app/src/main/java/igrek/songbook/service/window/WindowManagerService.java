@@ -20,7 +20,7 @@ public class WindowManagerService {
 		activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 	
-	public void keepScreenOff() {
+	public void dontKeepScreenOn() {
 		activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 	

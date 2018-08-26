@@ -1,4 +1,4 @@
-package igrek.songbook.ui.filelist;
+package igrek.songbook.view.filelist;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -65,7 +65,7 @@ public class FileItemAdapter extends ArrayAdapter<FileItem> {
 		final FileItem item = dataSource.get(position);
 		
 		//zawartość tekstowa elementu
-		TextView textView = (TextView) itemView.findViewById(R.id.tvItemContent);
+		TextView textView = itemView.findViewById(R.id.tvItemContent);
 		if (item.isDirectory()) {
 			textView.setTypeface(null, Typeface.BOLD);
 		} else {

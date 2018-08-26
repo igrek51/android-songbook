@@ -7,6 +7,7 @@ import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.domain.exception.NoParentDirException;
 import igrek.songbook.service.activity.ActivityController;
+import igrek.songbook.service.filetree.FileItem;
 import igrek.songbook.service.filetree.FileTreeManager;
 import igrek.songbook.service.filetree.ScrollPosBuffer;
 import igrek.songbook.service.info.UIResourceService;
@@ -53,11 +54,11 @@ public class SongSelectionController {
 	
 	private void updateFileList() {
 		layoutController.updateFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
-		layoutController.setState(LayoutState.FILE_LIST);
+		layoutController.setState(LayoutState.SONG_LIST);
 	}
 	
 	private void showFileContent(String filename) {
-		layoutController.setState(LayoutState.FILE_CONTENT);
+		layoutController.setState(LayoutState.SONG_PREVIEW);
 		fileTreeManager.setCurrentFileName(filename);
 		layoutController.showFileContent();
 		windowManagerService.keepScreenOn();
@@ -88,7 +89,7 @@ public class SongSelectionController {
 	}
 	
 	
-	private void restoreScrollPosition(String path) {
+	public void restoreScrollPosition(String path) {
 		Integer savedScrollPos = scrollPosBuffer.restoreScrollPosition(path);
 		if (savedScrollPos != null) {
 			layoutController.scrollToPosition(savedScrollPos);
@@ -101,26 +102,20 @@ public class SongSelectionController {
 		userInfoService.showDialog(title, message);
 	}
 	
-	//	@Override
-	//	public void onEvent(IEvent event) {
-	//		if (event instanceof ToolbarBackClickedEvent) {
-	//
-	//			backClicked();
-	//
-	//		} else if (event instanceof ItemClickedEvent) {
-	//
-	//			ScrollPosBuffer scrollPosBuffer = AppController.getService(ScrollPosBuffer.class);
-	//			FileItem item = ((ItemClickedEvent) event).getItem();
-	//
-	//			scrollPosBuffer.storeScrollPosition(fileTreeManager.getCurrentPath(), gui.getCurrentScrollPos());
-	//			if (item.isDirectory()) {
-	//				fileTreeManager.goInto(item.getName());
-	//				updateFileList();
-	//				gui.scrollToItem(0);
-	//			} else {
-	//				showFileContent(item.getName());
-	//			}
-	//		}
-	//	}
+	public void onToolbarBackClickedEvent() {
+		goUp();
+	}
+	
+	public void onItemClickedEvent(int posistion, FileItem item) {
+		scrollPosBuffer.storeScrollPosition(fileTreeManager.getCurrentPath(), layoutController.getCurrentScrollPos());
+		if (item.isDirectory()) {
+			fileTreeManager.goInto(item.getName());
+			updateFileList();
+			layoutController.scrollToItem(0);
+		} else {
+			showFileContent(item.getName());
+		}
+	}
+	
 	
 }

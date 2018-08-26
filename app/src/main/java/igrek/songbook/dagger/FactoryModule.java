@@ -32,6 +32,8 @@ import igrek.songbook.service.preferences.PreferencesService;
 import igrek.songbook.service.transpose.ChordsTransposer;
 import igrek.songbook.service.window.SoftKeyboardService;
 import igrek.songbook.service.window.WindowManagerService;
+import igrek.songbook.view.canvas.CanvasGraphics;
+import igrek.songbook.view.canvas.quickmenu.QuickMenu;
 
 /**
  * Module with providers. These classes can be injected
@@ -179,6 +181,18 @@ public class FactoryModule {
 	@Singleton
 	protected SongPreviewController provideSongPreviewController() {
 		return new SongPreviewController();
+	}
+	
+	@Provides
+	@Singleton
+	protected CanvasGraphics provideCanvasGraphics(Context context) {
+		return new CanvasGraphics(context);
+	}
+	
+	@Provides
+	@Singleton
+	protected QuickMenu provideQuickMenu(CanvasGraphics canvas) {
+		return new QuickMenu(canvas);
 	}
 	
 	/*
