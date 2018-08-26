@@ -3,11 +3,8 @@ package igrek.songbook.domain.crdfile;
 public class CRDFragment {
 
 	private float x;
-
 	private String text;
-
 	private CRDTextType type;
-
 
 	public CRDFragment(float x, String text, CRDTextType type) {
 		this.x = x;

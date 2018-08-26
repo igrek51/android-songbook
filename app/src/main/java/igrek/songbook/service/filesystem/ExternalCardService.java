@@ -31,7 +31,6 @@ public class ExternalCardService {
 	
 	public ExternalCardService() {
 		DaggerIoc.getFactoryComponent().inject(this);
-		logger.debug(Joiner.on(", ").join(getExternalMounts()));
 		externalSDPath = findExternalSDPath();
 		logger.debug("External SD Card path: " + externalSDPath);
 		//logger.debug("DEVICE = " + android.os.Build.DEVICE);

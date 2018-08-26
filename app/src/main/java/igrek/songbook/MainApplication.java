@@ -25,8 +25,6 @@ public class MainApplication extends Application {
 			//pass further to OS
 			defaultUEH.uncaughtException(thread, th);
 		});
-		
-		logger.debug("Application has been started");
 	}
 	
 	@Override

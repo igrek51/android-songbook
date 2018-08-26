@@ -2,7 +2,7 @@ package igrek.songbook.service.preferences;
 
 public enum PreferencesDefinition {
 	
-	startPath("/storage/extSdCard/guitarDB"),
+	startPath(""),
 	
 	fontsize(23.0f),
 	

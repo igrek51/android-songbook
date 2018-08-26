@@ -15,7 +15,7 @@ public class DaggerIoc {
 	}
 	
 	public static void init(AppCompatActivity activity) {
-		logger.debug("Initializing Dagger IOC container...");
+		logger.info("Initializing Dagger IOC container...");
 		appComponent = DaggerFactoryComponent.builder()
 				.factoryModule(new FactoryModule(activity))
 				.build();

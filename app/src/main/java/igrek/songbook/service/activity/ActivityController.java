@@ -41,19 +41,16 @@ public class ActivityController {
 	}
 	
 	public void onDestroy() {
-		logger.debug("Activity has been destroyed.");
+		logger.info("Activity has been destroyed.");
 	}
 	
 	public void onStart() {
-		logger.debug("Activity has been started.");
 	}
 	
 	public void onStop() {
-		logger.debug("Activity has been stopped.");
 	}
 	
 	public void quit() {
-		logger.debug("Closing application...");
 		preferencesService.saveAll();
 		windowManagerService.dontKeepScreenOn();
 		activity.finish();

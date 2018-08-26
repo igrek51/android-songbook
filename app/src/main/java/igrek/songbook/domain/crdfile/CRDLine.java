@@ -1,5 +1,7 @@
 package igrek.songbook.domain.crdfile;
 
+import com.google.common.base.Joiner;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,5 +28,10 @@ public class CRDLine {
 
 	public void setY(int y) {
 		this.y = y;
+	}
+	
+	@Override
+	public String toString() {
+		return Joiner.on(" ").join(fragments);
 	}
 }

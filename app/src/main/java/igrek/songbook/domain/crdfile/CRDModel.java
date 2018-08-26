@@ -1,5 +1,7 @@
 package igrek.songbook.domain.crdfile;
 
+import com.google.common.base.Joiner;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,5 +23,10 @@ public class CRDModel {
 	
 	public List<CRDLine> getLines() {
 		return lines;
+	}
+	
+	@Override
+	public String toString() {
+		return Joiner.on("\n").join(lines);
 	}
 }
