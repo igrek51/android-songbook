@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		// Dagger Container init
+		DaggerIoc.init(this);
 		DaggerIoc.getFactoryComponent().inject(this);
 		appInitializer.init();
 	}
@@ -44,6 +46,18 @@ public class MainActivity extends AppCompatActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		activityController.onDestroy();
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		activityController.onStart();
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		activityController.onStop();
 	}
 	
 	@Override

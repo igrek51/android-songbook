@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Application;
 
 import igrek.songbook.activity.CurrentActivityListener;
-import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 
@@ -18,9 +17,6 @@ public class MainApplication extends Application {
 		super.onCreate();
 		
 		registerActivityLifecycleCallbacks(currentActivityListener);
-		
-		// Dagger Container init
-		DaggerIoc.init(this);
 		
 		// catch all uncaught exceptions
 		Thread.UncaughtExceptionHandler defaultUEH = Thread.getDefaultUncaughtExceptionHandler();

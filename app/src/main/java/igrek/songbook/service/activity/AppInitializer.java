@@ -32,8 +32,6 @@ public class AppInitializer {
 	public void init() {
 		try {
 			windowManagerService.hideTaskbar();
-			// force locale settings
-			//setLocale("pl");
 			layoutController.showFileList();
 			logger.debug("Application has been initialized");
 		} catch (Exception ex) {
@@ -41,6 +39,10 @@ public class AppInitializer {
 		}
 	}
 	
+	/**
+	 * forces locale settings
+	 * @param langCode
+	 */
 	private void setLocale(String langCode) {
 		Resources res = activity.getResources();
 		// Change locale settings in the app.

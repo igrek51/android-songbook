@@ -1,17 +1,23 @@
 package igrek.songbook.dagger;
 
-import igrek.songbook.MainApplication;
+import android.support.v7.app.AppCompatActivity;
+
+import igrek.songbook.logger.Logger;
+import igrek.songbook.logger.LoggerFactory;
 
 public class DaggerIoc {
 	
 	private static FactoryComponent appComponent;
 	
+	private static Logger logger = LoggerFactory.getLogger();
+	
 	private DaggerIoc() {
 	}
 	
-	public static void init(MainApplication application) {
+	public static void init(AppCompatActivity activity) {
+		logger.debug("Initializing Dagger IOC container...");
 		appComponent = DaggerFactoryComponent.builder()
-				.factoryModule(new FactoryModule(application))
+				.factoryModule(new FactoryModule(activity))
 				.build();
 	}
 	

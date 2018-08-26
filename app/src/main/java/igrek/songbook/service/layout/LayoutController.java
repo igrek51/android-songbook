@@ -15,6 +15,8 @@ import javax.inject.Inject;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.domain.crdfile.CRDModel;
+import igrek.songbook.logger.Logger;
+import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.filetree.FileItem;
 import igrek.songbook.service.filetree.FileTreeManager;
 import igrek.songbook.service.window.WindowManagerService;
@@ -32,8 +34,9 @@ public class LayoutController {
 	@Inject
 	FileTreeManager fileTreeManager;
 	
-	private LayoutState state = LayoutState.FILE_LIST;
+	private Logger logger = LoggerFactory.getLogger();
 	
+	private LayoutState state = LayoutState.FILE_LIST;
 	private ActionBar actionBar;
 	private FileListView itemsListView;
 	private CanvasGraphics canvas = null;
@@ -48,6 +51,8 @@ public class LayoutController {
 		List<FileItem> items = fileTreeManager.getItems();
 		
 		windowManagerService.setFullscreenLocked(false);
+		
+		logger.info("activity: " + activity);
 		
 		activity.setContentView(R.layout.files_list);
 		

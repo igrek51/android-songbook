@@ -39,30 +39,25 @@ import igrek.songbook.service.window.WindowManagerService;
 @Module
 public class FactoryModule {
 	
-	private MainApplication application;
+	private AppCompatActivity activity;
 	
-	public FactoryModule(MainApplication application) {
-		this.application = application;
-	}
-	
-	@Provides
-	protected Application provideApplication() {
-		return application;
+	public FactoryModule(AppCompatActivity activity) {
+		this.activity = activity;
 	}
 	
 	@Provides
 	protected Context provideContext() {
-		return application.getApplicationContext();
+		return activity.getApplicationContext();
 	}
 	
 	@Provides
 	protected Activity provideActivity() {
-		return application.getCurrentActivity();
+		return activity;
 	}
 	
 	@Provides
 	protected AppCompatActivity provideAppCompatActivity() {
-		return (AppCompatActivity) provideActivity();
+		return activity;
 	}
 	
 	@Provides

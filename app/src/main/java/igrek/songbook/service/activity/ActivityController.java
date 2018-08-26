@@ -45,6 +45,14 @@ public class ActivityController {
 		logger.debug("Activity has been destroyed.");
 	}
 	
+	public void onStart() {
+		logger.debug("Activity has been started.");
+	}
+	
+	public void onStop() {
+		logger.debug("Activity has been stopped.");
+	}
+	
 	public void quit() {
 		logger.debug("Closing application...");
 		preferencesService.saveAll();
