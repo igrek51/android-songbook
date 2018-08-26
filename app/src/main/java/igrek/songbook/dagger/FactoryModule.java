@@ -183,14 +183,8 @@ public class FactoryModule {
 	
 	@Provides
 	@Singleton
-	protected CanvasGraphics provideCanvasGraphics(Context context) {
-		return new CanvasGraphics(context);
-	}
-	
-	@Provides
-	@Singleton
-	protected QuickMenu provideQuickMenu(CanvasGraphics canvas) {
-		return new QuickMenu(canvas);
+	protected QuickMenu provideQuickMenu() {
+		return new QuickMenu();
 	}
 	
 	/*

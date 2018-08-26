@@ -14,8 +14,8 @@ import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.info.UIResourceService;
 import igrek.songbook.service.info.UserInfoService;
+import igrek.songbook.service.layout.songpreview.SongPreviewController;
 import igrek.songbook.service.transpose.ChordsTransposer;
-import igrek.songbook.view.canvas.CanvasGraphics;
 import igrek.songbook.view.canvas.quickmenu.QuickMenu;
 
 public class ChordsManager {
@@ -29,7 +29,7 @@ public class ChordsManager {
 	@Inject
 	UIResourceService uiResourceService;
 	@Inject
-	CanvasGraphics canvas;
+	Lazy<SongPreviewController> songPreviewController;
 	@Inject
 	Lazy<QuickMenu> quickMenu;
 	private Logger logger = LoggerFactory.getLogger();
@@ -112,7 +112,7 @@ public class ChordsManager {
 	public void onTransposeEvent(int t) {
 		transpose(t);
 		
-		canvas.setCRDModel(getCRDModel());
+		songPreviewController.get().getCanvas().setCRDModel(crdModel);
 		
 		String info = uiResourceService.resString(R.string.transposition) + ": " + getTransposedString();
 		

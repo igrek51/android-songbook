@@ -1,11 +1,19 @@
 package igrek.songbook.service.layout.songselection;
 
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+
+import java.util.List;
+
 import javax.inject.Inject;
 
 import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.domain.exception.NoParentDirException;
+import igrek.songbook.logger.Logger;
+import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.activity.ActivityController;
 import igrek.songbook.service.filetree.FileItem;
 import igrek.songbook.service.filetree.FileTreeManager;
@@ -17,6 +25,7 @@ import igrek.songbook.service.layout.LayoutState;
 import igrek.songbook.service.preferences.PreferencesDefinition;
 import igrek.songbook.service.preferences.PreferencesService;
 import igrek.songbook.service.window.WindowManagerService;
+import igrek.songbook.view.filelist.FileListView;
 
 public class SongSelectionController {
 	
@@ -36,9 +45,70 @@ public class SongSelectionController {
 	ScrollPosBuffer scrollPosBuffer;
 	@Inject
 	UIResourceService uiResourceService;
+	@Inject
+	AppCompatActivity activity;
+	@Inject
+	Lazy<SongSelectionController> songSelectionController;
+	
+	private Logger logger = LoggerFactory.getLogger();
+	private ActionBar actionBar;
+	private FileListView itemsListView;
 	
 	public SongSelectionController() {
 		DaggerIoc.getFactoryComponent().inject(this);
+	}
+	
+	public void showFileList() {
+		String currentDir = fileTreeManager.getCurrentDirName();
+		List<FileItem> items = fileTreeManager.getItems();
+		
+		windowManagerService.setFullscreenLocked(false);
+		
+		logger.info("activity: " + activity);
+		
+		activity.setContentView(R.layout.files_list);
+		
+		//toolbar
+		Toolbar toolbar1 = activity.findViewById(R.id.toolbar1);
+		activity.setSupportActionBar(toolbar1);
+		actionBar = activity.getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setDisplayHomeAsUpEnabled(true);
+			actionBar.setDisplayShowHomeEnabled(true);
+		}
+		toolbar1.setNavigationOnClickListener(v -> {
+			songSelectionController.get().onToolbarBackClickedEvent();
+		});
+		
+		//		userInfo.setMainView(activity.findViewById(R.id.mainLayout));
+		
+		itemsListView = activity.findViewById(R.id.filesList);
+		
+		itemsListView.init(activity);
+		
+		updateFileList(currentDir, items);
+	}
+	
+	public void updateFileList(String currentDir, List<FileItem> items) {
+		setTitle(currentDir);
+		//lista elementów
+		itemsListView.setItems(items);
+	}
+	
+	public void scrollToItem(int position) {
+		itemsListView.scrollTo(position);
+	}
+	
+	public void setTitle(String title) {
+		actionBar.setTitle(title);
+	}
+	
+	public Integer getCurrentScrollPos() {
+		return itemsListView.getCurrentScrollPosition();
+	}
+	
+	public void scrollToPosition(int y) {
+		itemsListView.scrollToPosition(y);
 	}
 	
 	public void goUp() {
@@ -53,7 +123,7 @@ public class SongSelectionController {
 	}
 	
 	private void updateFileList() {
-		layoutController.updateFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
+		updateFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
 		layoutController.setState(LayoutState.SONG_LIST);
 	}
 	
@@ -97,7 +167,7 @@ public class SongSelectionController {
 	public void restoreScrollPosition(String path) {
 		Integer savedScrollPos = scrollPosBuffer.restoreScrollPosition(path);
 		if (savedScrollPos != null) {
-			layoutController.scrollToPosition(savedScrollPos);
+			scrollToPosition(savedScrollPos);
 		}
 	}
 	
@@ -112,11 +182,11 @@ public class SongSelectionController {
 	}
 	
 	public void onItemClickedEvent(int posistion, FileItem item) {
-		scrollPosBuffer.storeScrollPosition(fileTreeManager.getCurrentPath(), layoutController.getCurrentScrollPos());
+		scrollPosBuffer.storeScrollPosition(fileTreeManager.getCurrentPath(), getCurrentScrollPos());
 		if (item.isDirectory()) {
 			fileTreeManager.goInto(item.getName());
 			updateFileList();
-			layoutController.scrollToItem(0);
+			scrollToItem(0);
 		} else {
 			showFileContent(item.getName());
 		}

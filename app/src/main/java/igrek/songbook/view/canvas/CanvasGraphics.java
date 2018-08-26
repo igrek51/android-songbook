@@ -46,6 +46,11 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	public CanvasGraphics(Context context) {
 		super(context);
 		DaggerIoc.getFactoryComponent().inject(this);
+	}
+	
+	@Override
+	public void reset(){
+		super.reset();
 		scroll = 0;
 		startScroll = 0;
 		pointersDst0 = null;

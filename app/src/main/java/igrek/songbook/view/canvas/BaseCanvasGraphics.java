@@ -32,17 +32,11 @@ public class BaseCanvasGraphics extends View {
 	
 	public BaseCanvasGraphics(Context context) {
 		super(context);
-		paint = new Paint();
-		paint.setAntiAlias(true);
-		paint.setFilterBitmap(true);
-		//paint.setDither(true);
 		
 		getViewTreeObserver().addOnGlobalLayoutListener(() -> {
 			w = getWidth();
 			h = getHeight();
 		});
-		
-		reset();
 	}
 	
 	public static boolean isFlagSet(int tested, int flag) {
@@ -50,6 +44,11 @@ public class BaseCanvasGraphics extends View {
 	}
 	
 	public void reset() {
+		paint = new Paint();
+		paint.setAntiAlias(true);
+		paint.setFilterBitmap(true);
+		//paint.setDither(true);
+		
 		canvas = null;
 		initialized = false;
 	}

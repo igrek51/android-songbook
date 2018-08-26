@@ -12,6 +12,7 @@ import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.chords.ChordsManager;
 import igrek.songbook.service.info.UIResourceService;
 import igrek.songbook.service.info.UserInfoService;
+import igrek.songbook.service.layout.songpreview.SongPreviewController;
 import igrek.songbook.view.canvas.CanvasGraphics;
 
 public class AutoscrollService {
@@ -26,9 +27,10 @@ public class AutoscrollService {
 	@Inject
 	Lazy<ChordsManager> chordsManager;
 	@Inject
-	CanvasGraphics canvas;
+	Lazy<SongPreviewController> songPreviewController;
 	@Inject
 	UIResourceService uiResourceService;
+	
 	private Logger logger = LoggerFactory.getLogger();
 	private AutoscrollState state;
 	private long waitTime = 35000; // [ms]
@@ -59,7 +61,7 @@ public class AutoscrollService {
 	}
 	
 	public void start() {
-		float scroll = canvas.getScroll();
+		float scroll = getCanvas().getScroll();
 		if (scroll <= START_NO_WAITING_MIN_SCROLL_FACTOR * fontsize) {
 			start(true);
 		} else {
@@ -71,7 +73,7 @@ public class AutoscrollService {
 		if (isRunning()) {
 			stop();
 		}
-		if (canvas.canAutoScroll()) {
+		if (getCanvas().canAutoScroll()) {
 			if (withWaiting) {
 				state = AutoscrollState.WAITING;
 			} else {
@@ -99,6 +101,10 @@ public class AutoscrollService {
 		return state == AutoscrollState.WAITING || state == AutoscrollState.SCROLLING;
 	}
 	
+	private CanvasGraphics getCanvas(){
+		return songPreviewController.get().getCanvas();
+	}
+	
 	private void handleAutoscrollStep() {
 		if (state == AutoscrollState.WAITING) {
 			long remainingTimeMs = waitTime + startTime - System.currentTimeMillis();
@@ -112,7 +118,7 @@ public class AutoscrollService {
 				onAutoscrollRemainingWaitTimeEvent(remainingTimeMs);
 			}
 		} else if (state == AutoscrollState.SCROLLING) {
-			if (canvas.autoscrollBy(intervalStep)) {
+			if (getCanvas().autoscrollBy(intervalStep)) {
 				timerHandler.postDelayed(timerRunnable, (long) intervalTime);
 			} else {
 				stop();
@@ -195,7 +201,7 @@ public class AutoscrollService {
 	
 	public void onAutoscrollStartUIEvent() {
 		if (!isRunning()) {
-			if (canvas.canAutoScroll()) {
+			if (getCanvas().canAutoScroll()) {
 				onAutoscrollStartEvent();
 				userInfo.showInfoWithAction(R.string.autoscroll_started, R.string.stop_autoscroll, this::onAutoscrollStopEvent);
 			} else {

@@ -12,6 +12,7 @@ import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.chords.ChordsManager;
 import igrek.songbook.service.info.UIResourceService;
+import igrek.songbook.service.layout.songpreview.SongPreviewController;
 import igrek.songbook.view.canvas.CanvasGraphics;
 
 public class QuickMenu {
@@ -22,7 +23,9 @@ public class QuickMenu {
 	UIResourceService infoService;
 	@Inject
 	AutoscrollService autoscrollService;
-	private CanvasGraphics canvas;
+	@Inject
+	Lazy<SongPreviewController> songPreviewController;
+	
 	private boolean visible = false;
 	
 	private View quickMenuView;
@@ -35,9 +38,12 @@ public class QuickMenu {
 	private Button btnTransposeP5;
 	private Button btnAutoscrollToggle;
 	
-	public QuickMenu(CanvasGraphics canvas) {
-		this.canvas = canvas;
+	public QuickMenu() {
 		DaggerIoc.getFactoryComponent().inject(this);
+	}
+	
+	private CanvasGraphics getCanvas(){
+		return songPreviewController.get().getCanvas();
 	}
 	
 	public void setQuickMenuView(View quickMenuView) {
@@ -83,11 +89,11 @@ public class QuickMenu {
 	public void draw() {
 		if (visible) {
 			//dimmed background
-			float w = canvas.getW();
-			float h = canvas.getH();
+			float w = getCanvas().getW();
+			float h = getCanvas().getH();
 			
-			canvas.setColor(0x000000, 130);
-			canvas.fillRect(0, 0, w, h);
+			getCanvas().setColor(0x000000, 130);
+			getCanvas().fillRect(0, 0, w, h);
 			
 		}
 	}
@@ -111,7 +117,7 @@ public class QuickMenu {
 			quickMenuView.setVisibility(View.GONE);
 		}
 		
-		canvas.repaint();
+		getCanvas().repaint();
 	}
 	
 	public void onShowQuickMenuEvent(boolean visible) {
