@@ -63,8 +63,6 @@ public class SongSelectionController {
 		String currentDir = fileTreeManager.getCurrentDirName();
 		List<FileItem> items = fileTreeManager.getItems();
 		
-		windowManagerService.setFullscreenLocked(false);
-		
 		activity.setContentView(R.layout.files_list);
 		
 		//toolbar
@@ -130,7 +128,7 @@ public class SongSelectionController {
 		layoutController.setState(LayoutState.SONG_PREVIEW);
 		fileTreeManager.setCurrentFileName(filename);
 		layoutController.showFileContent();
-		windowManagerService.keepScreenOn();
+		windowManagerService.keepScreenOn(true);
 	}
 	
 	public void restoreScrollPosition(String path) {

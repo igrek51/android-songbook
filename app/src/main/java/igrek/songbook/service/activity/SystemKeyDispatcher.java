@@ -44,7 +44,7 @@ public class SystemKeyDispatcher {
 				layoutController.setState(LayoutState.SONG_LIST);
 				layoutController.showFileList();
 				
-				windowManagerService.dontKeepScreenOn();
+				windowManagerService.keepScreenOn(false);
 				
 				new Handler().post(() -> songSelectionController.restoreScrollPosition(fileTreeManager
 						.getCurrentPath()));

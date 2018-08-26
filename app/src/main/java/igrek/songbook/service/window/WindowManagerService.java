@@ -16,12 +16,13 @@ public class WindowManagerService {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
-	public void keepScreenOn() {
-		activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-	}
-	
-	public void dontKeepScreenOn() {
-		activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	public void keepScreenOn(boolean set) {
+		if (set) {
+			activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		} else {
+			activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		}
+		setShowWhenLocked(set);
 	}
 	
 	public void hideTaskbar() {
@@ -30,16 +31,21 @@ public class WindowManagerService {
 		}
 	}
 	
-	public void setFullscreen() {
-		activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+	public void setFullscreen(boolean set) {
+		int flag = WindowManager.LayoutParams.FLAG_FULLSCREEN;
+		if (set) {
+			activity.getWindow().addFlags(flag);
+		} else {
+			activity.getWindow().clearFlags(flag);
+		}
 	}
 	
-	public void setFullscreenLocked(boolean set) {
-		int fullscreen_flag = WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
+	public void setShowWhenLocked(boolean set) {
+		int flag = WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED;
 		if (set) {
-			activity.getWindow().setFlags(fullscreen_flag, fullscreen_flag);
+			activity.getWindow().setFlags(flag, flag);
 		} else {
-			activity.getWindow().clearFlags(fullscreen_flag);
+			activity.getWindow().clearFlags(flag);
 		}
 	}
 }

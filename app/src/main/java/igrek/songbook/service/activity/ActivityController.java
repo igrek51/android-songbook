@@ -52,7 +52,7 @@ public class ActivityController {
 	
 	public void quit() {
 		preferencesService.saveAll();
-		windowManagerService.dontKeepScreenOn();
+		windowManagerService.keepScreenOn(false);
 		activity.finish();
 	}
 	

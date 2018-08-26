@@ -42,8 +42,6 @@ public class SongPreviewController {
 	}
 	
 	public void showFileContent() {
-		windowManagerService.setFullscreenLocked(true);
-		
 		activity.setContentView(R.layout.file_content);
 		
 		canvas = new CanvasGraphics(activity);
@@ -74,7 +72,7 @@ public class SongPreviewController {
 		canvas.setFontSizes(chordsManager.getFontsize());
 		canvas.setCRDModel(chordsManager.getCRDModel());
 		
-		logger.debug("canvas graphics has been initialized: " + fileTreeManager.getCurrentFileName() + " - " + w +  " x " + h);
+		logger.debug("canvas graphics " + w + "x" + h + " has been initialized");
 	}
 	
 	public void onFontsizeChangedEvent(float fontsize) {
