@@ -4,6 +4,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -63,8 +64,6 @@ public class SongSelectionController {
 		List<FileItem> items = fileTreeManager.getItems();
 		
 		windowManagerService.setFullscreenLocked(false);
-		
-		logger.info("activity: " + activity);
 		
 		activity.setContentView(R.layout.files_list);
 		
@@ -147,7 +146,7 @@ public class SongSelectionController {
 			activityController.get().quit();
 		} else {
 			String homePath = getHomePath();
-			if (homePath == null) {
+			if (homePath == null || homePath.isEmpty() || !new File(homePath).isDirectory()) {
 				userInfoService.showInfo(R.string.message_home_not_set);
 			}else {
 				fileTreeManager.goTo(homePath);
