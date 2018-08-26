@@ -4,7 +4,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -23,7 +22,6 @@ import igrek.songbook.service.info.UIResourceService;
 import igrek.songbook.service.info.UserInfoService;
 import igrek.songbook.service.layout.LayoutController;
 import igrek.songbook.service.layout.LayoutState;
-import igrek.songbook.service.preferences.PreferencesDefinition;
 import igrek.songbook.service.preferences.PreferencesService;
 import igrek.songbook.service.window.WindowManagerService;
 import igrek.songbook.view.filelist.FileListView;
@@ -50,6 +48,8 @@ public class SongSelectionController {
 	AppCompatActivity activity;
 	@Inject
 	Lazy<SongSelectionController> songSelectionController;
+	@Inject
+	HomePathService homePathService;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	private ActionBar actionBar;
@@ -133,36 +133,6 @@ public class SongSelectionController {
 		windowManagerService.keepScreenOn();
 	}
 	
-	private String getHomePath() {
-		return preferencesService.getValue(PreferencesDefinition.startPath, String.class);
-	}
-	
-	private boolean isInHomeDir() {
-		return fileTreeManager.getCurrentPath().equals(FileTreeManager.trimEndSlash(getHomePath()));
-	}
-	
-	public void homeClicked() {
-		if (isInHomeDir()) {
-			activityController.get().quit();
-		} else {
-			String homePath = getHomePath();
-			if (homePath == null || homePath.isEmpty() || !new File(homePath).isDirectory()) {
-				userInfoService.showInfo(R.string.message_home_not_set);
-			}else {
-				fileTreeManager.goTo(homePath);
-				updateFileList();
-			}
-		}
-	}
-	
-	public void setHomePath() {
-		String homeDir = fileTreeManager.getCurrentPath();
-		preferencesService.setValue(PreferencesDefinition.startPath, homeDir);
-		preferencesService.saveAll();
-		userInfoService.showInfo(R.string.starting_directory_saved, R.string.action_info_ok);
-	}
-	
-	
 	public void restoreScrollPosition(String path) {
 		Integer savedScrollPos = scrollPosBuffer.restoreScrollPosition(path);
 		if (savedScrollPos != null) {
@@ -191,5 +161,23 @@ public class SongSelectionController {
 		}
 	}
 	
+	public void setHomePath() {
+		homePathService.setHomePath(fileTreeManager.getCurrentPath());
+		userInfoService.showInfo(R.string.starting_directory_saved, R.string.action_info_ok);
+	}
+	
+	public void homeClicked() {
+		if (homePathService.isInHomeDir(fileTreeManager.getCurrentPath())) {
+			activityController.get().quit();
+		} else {
+			String homePath = homePathService.getHomePath();
+			if (homePath == null) {
+				userInfoService.showInfo(R.string.message_home_not_set);
+			} else {
+				fileTreeManager.goTo(homePath);
+				updateFileList();
+			}
+		}
+	}
 	
 }

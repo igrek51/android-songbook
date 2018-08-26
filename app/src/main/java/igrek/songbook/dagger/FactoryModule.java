@@ -25,12 +25,12 @@ import igrek.songbook.service.info.UIResourceService;
 import igrek.songbook.service.info.UserInfoService;
 import igrek.songbook.service.layout.LayoutController;
 import igrek.songbook.service.layout.songpreview.SongPreviewController;
+import igrek.songbook.service.layout.songselection.HomePathService;
 import igrek.songbook.service.layout.songselection.SongSelectionController;
 import igrek.songbook.service.preferences.PreferencesService;
 import igrek.songbook.service.transpose.ChordsTransposer;
 import igrek.songbook.service.window.SoftKeyboardService;
 import igrek.songbook.service.window.WindowManagerService;
-import igrek.songbook.view.canvas.CanvasGraphics;
 import igrek.songbook.view.canvas.quickmenu.QuickMenu;
 
 /**
@@ -185,6 +185,12 @@ public class FactoryModule {
 	@Singleton
 	protected QuickMenu provideQuickMenu() {
 		return new QuickMenu();
+	}
+	
+	@Provides
+	@Singleton
+	protected HomePathService provideHomePathService() {
+		return new HomePathService();
 	}
 	
 	/*

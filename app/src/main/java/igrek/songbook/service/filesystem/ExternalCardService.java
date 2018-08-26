@@ -6,8 +6,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 
-import com.google.common.base.Joiner;
-
 import java.io.File;
 import java.io.InputStream;
 import java.util.HashSet;
@@ -32,7 +30,7 @@ public class ExternalCardService {
 	public ExternalCardService() {
 		DaggerIoc.getFactoryComponent().inject(this);
 		externalSDPath = findExternalSDPath();
-		logger.debug("External SD Card path: " + externalSDPath);
+		logger.debug("External SD Card path detected: " + externalSDPath);
 		//logger.debug("DEVICE = " + android.os.Build.DEVICE);
 		//logger.debug("MANUFACTURER = " + android.os.Build.MANUFACTURER);
 	}

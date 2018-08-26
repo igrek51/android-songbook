@@ -20,6 +20,7 @@ import igrek.songbook.service.info.UIResourceService;
 import igrek.songbook.service.info.UserInfoService;
 import igrek.songbook.service.layout.LayoutController;
 import igrek.songbook.service.layout.songpreview.SongPreviewController;
+import igrek.songbook.service.layout.songselection.HomePathService;
 import igrek.songbook.service.layout.songselection.SongSelectionController;
 import igrek.songbook.service.preferences.PreferencesService;
 import igrek.songbook.service.transpose.ChordsTransposer;
@@ -76,6 +77,8 @@ public interface FactoryComponent {
 	void inject(ScrollPosBuffer there);
 	
 	void inject(SystemKeyDispatcher there);
+	
+	void inject(HomePathService there);
 	
 	
 	void inject(UIErrorHandler there);

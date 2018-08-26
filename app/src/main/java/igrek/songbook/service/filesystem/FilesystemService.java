@@ -134,4 +134,11 @@ public class FilesystemService {
 			}
 		}
 	}
+	
+	public static String trimEndSlash(String str) {
+		while (str.endsWith("/")) {
+			str = str.substring(0, str.length() - 1);
+		}
+		return str;
+	}
 }

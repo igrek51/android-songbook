@@ -14,15 +14,17 @@ import igrek.songbook.domain.exception.NoParentDirException;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.filesystem.FilesystemService;
-import igrek.songbook.service.preferences.PreferencesDefinition;
-import igrek.songbook.service.preferences.PreferencesService;
+import igrek.songbook.service.layout.songselection.HomePathService;
+
+import static igrek.songbook.service.filesystem.FilesystemService.trimEndSlash;
 
 public class FileTreeManager {
 	
 	@Inject
 	FilesystemService filesystem;
 	@Inject
-	PreferencesService preferencesService;
+	HomePathService homePathService;
+	
 	private Logger logger = LoggerFactory.getLogger();
 	private String currentPath;
 	private String currentFileName = null;
@@ -30,33 +32,7 @@ public class FileTreeManager {
 	
 	public FileTreeManager() {
 		DaggerIoc.getFactoryComponent().inject(this);
-		
-		String homePath = preferencesService.getValue(PreferencesDefinition.startPath, String.class);
-		
-		currentPath = null;
-		setCurrentPathIfNotSet(homePath);
-		if (currentPath == null) {
-			logger.warn("not existing starting directory: " + homePath + ", getting default");
-		}
-		setCurrentPathIfNotSet(filesystem.getExternalSDPath().toString());
-		setCurrentPathIfNotSet("/");
-		
-		updateCurrentPath();
-	}
-	
-	public static String trimEndSlash(String str) {
-		while (!str.isEmpty() && str.endsWith("/")) {
-			str = str.substring(0, str.length() - 1);
-		}
-		return str;
-	}
-	
-	private void setCurrentPathIfNotSet(String path) {
-		if (currentPath == null) {
-			if (path != null && new File(path).isDirectory()) {
-				currentPath = path;
-			}
-		}
+		updateCurrentPath(homePathService.getStartPath());
 	}
 	
 	public String getCurrentDirName() {

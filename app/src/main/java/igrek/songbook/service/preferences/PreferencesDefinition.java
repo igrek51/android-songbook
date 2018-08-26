@@ -2,7 +2,7 @@ package igrek.songbook.service.preferences;
 
 public enum PreferencesDefinition {
 	
-	startPath(""),
+	homePath(""),
 	
 	fontsize(23.0f),
 	
