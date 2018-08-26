@@ -16,7 +16,7 @@ import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
-import igrek.songbook.ui.errorcheck.SafeClickListener;
+import igrek.songbook.service.errorcheck.SafeClickListener;
 
 public class UserInfoService {
 	

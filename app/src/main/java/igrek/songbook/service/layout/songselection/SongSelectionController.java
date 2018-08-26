@@ -71,7 +71,7 @@ public class SongSelectionController {
 		return fileTreeManager.getCurrentPath().equals(FileTreeManager.trimEndSlash(getHomePath()));
 	}
 	
-	private void homeClicked() {
+	public void homeClicked() {
 		if (isInHomeDir()) {
 			activityController.get().quit();
 		} else {
@@ -80,7 +80,7 @@ public class SongSelectionController {
 		}
 	}
 	
-	private void setHomePath() {
+	public void setHomePath() {
 		String homeDir = fileTreeManager.getCurrentPath();
 		preferencesService.setValue(PreferencesDefinition.startPath, homeDir);
 		preferencesService.saveAll();
@@ -95,7 +95,7 @@ public class SongSelectionController {
 		}
 	}
 	
-	private void showUIHelp() {
+	public void showUIHelp() {
 		String message = uiResourceService.resString(R.string.ui_help_content);
 		String title = uiResourceService.resString(R.string.ui_help);
 		userInfoService.showDialog(title, message);

@@ -1,4 +1,4 @@
-package igrek.songbook.ui.errorcheck;
+package igrek.songbook.service.errorcheck;
 
 
 import javax.inject.Inject;
