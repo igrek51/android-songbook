@@ -72,8 +72,6 @@ public class SongPreviewController {
 		canvas.setFontSizes(chordsManager.getFontsize());
 		canvas.setCRDModel(chordsManager.getCRDModel());
 		
-		logger.info(chordsManager.getCRDModel().toString());
-		
 		logger.debug("canvas graphics " + w + "x" + h + " has been initialized");
 	}
 	
