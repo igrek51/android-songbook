@@ -177,9 +177,9 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 			scroll = startScroll + startTouchY - event.getY();
 			float maxScroll = getMaxScroll();
 			if (scroll < 0)
-				scroll = 0; //za duże przeskrolowanie w górę
+				scroll = 0; // too much scrolling up
 			if (scroll > maxScroll)
-				scroll = maxScroll; // za duże przescrollowanie w dół
+				scroll = maxScroll; // too much scrolling down
 			repaint();
 			
 		}
@@ -191,7 +191,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		if (bottomY > h) {
 			return bottomY + reserve - h;
 		} else {
-			//brak możliwości scrollowania
+			// no scroll possibility
 			return 0;
 		}
 	}
@@ -200,16 +200,16 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	protected void onTouchUp(MotionEvent event) {
 		float deltaX = event.getX() - startTouchX;
 		float deltaY = event.getY() - startTouchY;
-		// monitorowanie zmiany przewijania
+		// monitor scroll changes
 		float dScroll = -deltaY;
 		if (Math.abs(dScroll) > MIN_SCROLL_EVENT) {
 			autoscroll.get().onCanvasScrollEvent(dScroll, scroll);
 		}
 		
-		//włączenie autoscrolla - szybkie kliknięcie na dole
+		// quick tap on bottom - turn on autoscroll
 		float hypot = (float) Math.hypot(deltaX, deltaY);
-		if (hypot <= GESTURE_CLICK_MAX_HYPOT) { //kliknięcie w jednym miejscu
-			if (System.currentTimeMillis() - startTouchTime <= GESTURE_CLICK_MAX_TIME) { //szybkie kliknięcie
+		if (hypot <= GESTURE_CLICK_MAX_HYPOT) { // tap in one area
+			if (System.currentTimeMillis() - startTouchTime <= GESTURE_CLICK_MAX_TIME) { //quick tap
 				if (onScreenClicked(event.getX(), event.getY())) {
 					repaint();
 				}
@@ -224,7 +224,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 			if (autoscroll.get().isRunning()) {
 				autoscroll.get().onAutoscrollStopUIEvent();
 			} else {
-				if (y >= h * GESTURE_AUTOSCROLL_BOTTOM_REGION) {  //kliknięcie na dole ekranu
+				if (y >= h * GESTURE_AUTOSCROLL_BOTTOM_REGION) {  //tap on a screen bottom
 					autoscroll.get().onAutoscrollStartUIEvent();
 				} else {
 					quickMenu.get().setVisible(true);
@@ -238,11 +238,10 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	protected void onTouchPointerUp(MotionEvent event) {
 		songPreviewController.get().onFontsizeChangedEvent(fontsize);
 		
-		pointersDst0 = null; //reset poczatkowej długości
-		// reset na brak przewijania
+		pointersDst0 = null; // reset initial length
 		startScroll = scroll;
 		
-		//pozostawienie pointera, który jest jeszcze aktywny
+		// leave a pointer which is still active
 		Integer pointerIndex = 0;
 		if (event.getPointerCount() >= 2) {
 			for (int i = 0; i < event.getPointerCount(); i++) {

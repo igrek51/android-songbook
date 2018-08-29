@@ -10,7 +10,7 @@ import android.graphics.Typeface;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class BaseCanvasGraphics extends View {
+public abstract class BaseCanvasGraphics extends View {
 	
 	protected int w = 0;
 	protected int h = 0;
@@ -24,7 +24,6 @@ public class BaseCanvasGraphics extends View {
 	protected float startTouchX = 0;
 	protected float startTouchY = 0;
 	protected long startTouchTime;
-	//pomocnicze funkcje rysujące
 	private Rect textBounds = new Rect();
 	
 	public BaseCanvasGraphics(Context context) {
@@ -62,7 +61,9 @@ public class BaseCanvasGraphics extends View {
 		return w < h ? w : h;
 	}
 	
-	//odrysowanie ekranu do nadpisania
+	/**
+	 * repaint screen method to override
+	 */
 	public void onRepaint() {
 	}
 	
@@ -182,38 +183,38 @@ public class BaseCanvasGraphics extends View {
 	}
 	
 	public void drawTextMultiline(String text, float cx, float cy, float lineheight, int align) {
-		//wyznaczenie ilości linii
+		// calculate lines count
 		int lines = 1;
 		for (int i = 0; i < text.length(); i++) {
 			if (text.charAt(i) == '\n')
 				lines++;
 		}
-		//domyślne wartości
+		// default values
 		if ((align & 0x0f) == 0)
 			align |= Align.LEFT;
 		if ((align & 0xf0) == 0)
 			align |= Align.TOP;
-		//przesunięcie w osi y
+		// offest in Y axis
 		float offset_y;
 		if (isFlagSet(align, Align.TOP)) {
 			offset_y = cy;
 		} else if (isFlagSet(align, Align.VCENTER)) {
 			offset_y = cy - (lines - 1) * lineheight / 2;
-		} else { //bottom
+		} else { // bottom
 			offset_y = cy - (lines - 1) * lineheight;
 		}
-		//dla każdego wiersza
+		// for each line
 		for (int i = 0; i < lines; i++) {
-			//szukanie \n
+			// find \n character
 			int indexn = text.indexOf("\n");
 			if (indexn == -1)
-				indexn = text.length(); //nie było już \n
-			//wycięcie wiersza
+				indexn = text.length(); // there is no \n anymore
+			// cut a row
 			String row_text = text.substring(0, indexn);
 			if (indexn < text.length()) {
-				text = text.substring(indexn + 1); //usunięcie wyciętego wiersza i \n
+				text = text.substring(indexn + 1); // remove cut row and \n character
 			}
-			//narysowanie 1 wiersza
+			// draw 1 row
 			drawText(row_text, cx, offset_y, align);
 			offset_y += lineheight;
 		}
@@ -237,10 +238,9 @@ public class BaseCanvasGraphics extends View {
 	}
 	
 	public void setFont(int fontface) {
-		//domyślna rodzina
+		// default values
 		if ((fontface & 0x0f) == 0)
 			fontface |= Font.FONT_DEFAULT;
-		//domyślny styl
 		if ((fontface & 0xf0) == 0)
 			fontface |= Font.FONT_NORMAL;
 		Typeface family;
@@ -259,7 +259,7 @@ public class BaseCanvasGraphics extends View {
 	}
 	
 	public void setFont() {
-		setFont(Font.FONT_DEFAULT | Font.FONT_NORMAL); //reset czcionki na zwykłą
+		setFont(Font.FONT_DEFAULT | Font.FONT_NORMAL); // reset font to default
 	}
 	
 	public void setColor(String color) {
@@ -270,7 +270,7 @@ public class BaseCanvasGraphics extends View {
 	}
 	
 	public void setColor(int color) {
-		//jeśli kanał alpha jest zerowy (nie ustawiony) - ustaw na max
+		// if alpha channel is not set - set it to max (opaque)
 		if ((color & 0xff000000) == 0)
 			color |= 0xff000000;
 		paint.setColor(color);
