@@ -18,13 +18,13 @@ import igrek.songbook.service.activity.ActivityController;
 import igrek.songbook.service.filetree.FileItem;
 import igrek.songbook.service.filetree.FileTreeManager;
 import igrek.songbook.service.filetree.ScrollPosBuffer;
+import igrek.songbook.service.info.UIInfoService;
 import igrek.songbook.service.info.UIResourceService;
-import igrek.songbook.service.info.UserInfoService;
 import igrek.songbook.service.layout.LayoutController;
 import igrek.songbook.service.layout.LayoutState;
 import igrek.songbook.service.preferences.PreferencesService;
 import igrek.songbook.service.window.WindowManagerService;
-import igrek.songbook.view.filelist.FileListView;
+import igrek.songbook.view.songselection.FileListView;
 
 public class SongSelectionController {
 	
@@ -39,7 +39,7 @@ public class SongSelectionController {
 	@Inject
 	PreferencesService preferencesService;
 	@Inject
-	UserInfoService userInfoService;
+	UIInfoService UIInfoService;
 	@Inject
 	ScrollPosBuffer scrollPosBuffer;
 	@Inject
@@ -59,7 +59,7 @@ public class SongSelectionController {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
-	public void showFileList() {
+	public void showSongSelection() {
 		String currentDir = fileTreeManager.getCurrentDirName();
 		List<FileItem> items = fileTreeManager.getItems();
 		
@@ -76,8 +76,6 @@ public class SongSelectionController {
 		toolbar1.setNavigationOnClickListener(v -> {
 			songSelectionController.get().onToolbarBackClickedEvent();
 		});
-		
-		//		userInfo.setMainView(activity.findViewById(R.id.mainLayout));
 		
 		itemsListView = activity.findViewById(R.id.filesList);
 		
@@ -127,7 +125,7 @@ public class SongSelectionController {
 	private void showFileContent(String filename) {
 		layoutController.setState(LayoutState.SONG_PREVIEW);
 		fileTreeManager.setCurrentFileName(filename);
-		layoutController.showFileContent();
+		layoutController.showSongPreview();
 		windowManagerService.keepScreenOn(true);
 	}
 	
@@ -141,7 +139,7 @@ public class SongSelectionController {
 	public void showUIHelp() {
 		String message = uiResourceService.resString(R.string.ui_help_content);
 		String title = uiResourceService.resString(R.string.ui_help);
-		userInfoService.showDialog(title, message);
+		UIInfoService.showDialog(title, message);
 	}
 	
 	public void onToolbarBackClickedEvent() {
@@ -161,7 +159,7 @@ public class SongSelectionController {
 	
 	public void setHomePath() {
 		homePathService.setHomePath(fileTreeManager.getCurrentPath());
-		userInfoService.showInfo(R.string.starting_directory_saved, R.string.action_info_ok);
+		UIInfoService.showInfo(R.string.starting_directory_saved, R.string.action_info_ok);
 	}
 	
 	public void homeClicked() {
@@ -170,7 +168,7 @@ public class SongSelectionController {
 		} else {
 			String homePath = homePathService.getHomePath();
 			if (homePath == null) {
-				userInfoService.showInfo(R.string.message_home_not_set);
+				UIInfoService.showInfo(R.string.message_home_not_set);
 			} else {
 				fileTreeManager.goTo(homePath);
 				updateFileList();

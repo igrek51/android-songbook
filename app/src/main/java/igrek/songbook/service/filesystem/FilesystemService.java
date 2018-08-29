@@ -20,6 +20,9 @@ import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 
+/**
+ * Filesystem facade
+ */
 public class FilesystemService {
 	
 	private Logger logger = LoggerFactory.getLogger();
@@ -91,11 +94,6 @@ public class FilesystemService {
 		saveFile(filename, str.getBytes());
 	}
 	
-	public boolean exists(String path) {
-		File f = new File(path);
-		return f.exists();
-	}
-	
 	public void copy(File source, File dest) throws IOException {
 		InputStream is = null;
 		OutputStream os = null;
@@ -117,10 +115,6 @@ public class FilesystemService {
 		}
 	}
 	
-	public String getExternalSDPath() {
-		return externalCardService.getExternalSDPath();
-	}
-	
 	public void ensureAppDataDirExists() {
 		File externalSD = new File(externalCardService.getExternalSDPath());
 		File appDataDir = new File(externalSD, "Android/data/" + activity.getPackageName());
@@ -135,10 +129,9 @@ public class FilesystemService {
 		}
 	}
 	
-	public static String trimEndSlash(String str) {
-		while (str.endsWith("/")) {
+	public String trimEndSlash(String str) {
+		while (str.endsWith("/"))
 			str = str.substring(0, str.length() - 1);
-		}
 		return str;
 	}
 }

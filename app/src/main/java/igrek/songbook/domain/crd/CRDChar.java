@@ -1,4 +1,4 @@
-package igrek.songbook.domain.crdfile;
+package igrek.songbook.domain.crd;
 
 public class CRDChar {
 	

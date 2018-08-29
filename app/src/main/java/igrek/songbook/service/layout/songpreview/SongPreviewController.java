@@ -18,7 +18,7 @@ import igrek.songbook.service.chords.ChordsManager;
 import igrek.songbook.service.filetree.FileTreeManager;
 import igrek.songbook.service.layout.LayoutController;
 import igrek.songbook.service.window.WindowManagerService;
-import igrek.songbook.view.canvas.CanvasGraphics;
+import igrek.songbook.view.songpreview.CanvasGraphics;
 
 public class SongPreviewController {
 	
@@ -41,7 +41,7 @@ public class SongPreviewController {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
-	public void showFileContent() {
+	public void showSongPreview() {
 		activity.setContentView(R.layout.file_content);
 		
 		canvas = new CanvasGraphics(activity);
@@ -58,15 +58,13 @@ public class SongPreviewController {
 		mainFrame.addView(quickMenuView);
 		
 		canvas.setQuickMenuView(quickMenuView);
-		
-		//		userInfo.setMainView(mainFrame);
 	}
 	
 	public void onGraphicsInitializedEvent(int w, int h, Paint paint) {
-		//wczytanie pliku i sparsowanie
+		// load file and parse it
 		String filePath = fileTreeManager.getCurrentFilePath(fileTreeManager.getCurrentFileName());
 		String fileContent = fileTreeManager.getFileContent(filePath);
-		//inicjalizacja - pierwsze wczytanie pliku
+		// initialize - first file loading
 		chordsManager.load(fileContent, w, h, paint);
 		
 		canvas.setFontSizes(chordsManager.getFontsize());
@@ -77,7 +75,7 @@ public class SongPreviewController {
 	
 	public void onFontsizeChangedEvent(float fontsize) {
 		chordsManager.setFontsize(fontsize);
-		//parsowanie bez ponownego wczytywania pliku i wykrywania kodowania
+		// parse without reading a whole file again
 		chordsManager.reparse();
 		canvas.setCRDModel(chordsManager.getCRDModel());
 	}

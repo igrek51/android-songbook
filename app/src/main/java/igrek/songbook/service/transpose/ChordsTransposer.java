@@ -13,20 +13,24 @@ import igrek.songbook.logger.LoggerFactory;
 public class ChordsTransposer {
 	
 	/**
-	 * obsługiwane formaty akordów:
+	 * supported chords formats:
 	 * d, d#, D, D#, Dm, D#m, Dmaj7, D#maj7, d7, d#7, D#m7, D#7, Dadd9, Dsus
 	 */
 	private final String soundNames[] = {
-			"c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "b", "h", //minor
+			// minor
+			"c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "b", "h",
+			// major (or minor prefix: F#m)
 			"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "B", "H",
-			//major (lub prefix dla mollowych: F#m)
-			// notacja amerykańska
-			//"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "Bb", "B", //major lub prefix dla minor
+			// american notation (major or minor with prefix)
+			//"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "Bb", "B",
 	};
+	
 	private final String chordsDelimiters[] = {
 			" ", "-", "(", ")", "/", ","
 	};
+	
 	private final int MAX_LENGTH_ANALYZE = 2;
+	
 	private final Comparator<String> lengthComparator = (lhs, rhs) -> {
 		if (rhs.length() != lhs.length()) {
 			return rhs.length() - lhs.length();
@@ -34,15 +38,16 @@ public class ChordsTransposer {
 			return lhs.compareTo(rhs);
 		}
 	};
+	
 	private Logger logger = LoggerFactory.getLogger();
 	/**
-	 * mapa nazwy akordu (prefixu) na jego numer
+	 * map: chord name (prefix) -> chord number
 	 */
 	private Map<String, Integer> soundNumbers;
 	
 	public ChordsTransposer() {
 		DaggerIoc.getFactoryComponent().inject(this);
-		// klucze posortowane po długości malejąco
+		// keys sorted by length descending
 		soundNumbers = new TreeMap<>(lengthComparator);
 		for (int i = 0; i < soundNames.length; i++) {
 			soundNumbers.put(soundNames[i], i);
@@ -50,42 +55,35 @@ public class ChordsTransposer {
 	}
 	
 	/**
-	 * @param in zawartość pliku (z tekstem i akordami)
-	 * @param t  liczba półtonów przesunięcia
-	 * @return przetransponowana zawartość (w tej samej postaci, co wejściowa)
+	 * @param in file content with lyrics and chords
+	 * @param t  shift semitones count
+	 * @return content transposed by semitones (the same format as input)
 	 */
 	public String transposeContent(String in, int t) {
-		
 		StringBuilder out = new StringBuilder();
-		
 		StringBuilder chordsSection = new StringBuilder();
 		boolean bracket = false;
 		
 		for (int i = 0; i < in.length(); i++) {
-			
 			char c = in.charAt(i);
-			
 			if (c == '[') {
 				bracket = true;
 				out.append(c);
 			} else if (c == ']') {
 				bracket = false;
-				//transpozycja całej aktualnej sekcji akordów
+				// transpose whole chords section
 				String transposedChords = transposeChords(chordsSection.toString(), t);
 				out.append(transposedChords);
-				
 				out.append(c);
-				
 				chordsSection.delete(0, chordsSection.length());
-			} else { //zwykły znak
+			} else { // the regular character
 				if (bracket) {
-					chordsSection.append(c); //przepisanie do bufora sekcji akordów
+					chordsSection.append(c); // move to chords section buffer
 				} else {
 					out.append(c);
 				}
 			}
 		}
-		
 		
 		return out.toString();
 	}
@@ -101,9 +99,9 @@ public class ChordsTransposer {
 	}
 	
 	/**
-	 * @param in sekcja akordów
-	 * @param t  liczba półtonów przesunięcia
-	 * @return przetransponowana sekcja akordów
+	 * @param in chords section
+	 * @param t  shift semitones count
+	 * @return chords section transposed by semitones
 	 */
 	public String transposeChords(String in, int t) {
 		StringBuilder out = new StringBuilder();
@@ -121,44 +119,42 @@ public class ChordsTransposer {
 	}
 	
 	/**
-	 * @param chord akord formatu: C, C#, c, c#, Cmaj7, c7, c#7, Cadd9, Csus
-	 * @param t     liczba półtonów przesunięcia
-	 * @return przetransponowany akord
+	 * @param chord chord in format: C, C#, c, c#, Cmaj7, c7, c#7, Cadd9, Csus
+	 * @param t     shift semitones count
+	 * @return chord transposed by semitones
 	 */
 	private String transposeChord(String chord, int t) {
 		
 		if (chord.isEmpty())
 			return chord;
 		
-		//rozpoznanie akordu
+		// chord recognition
 		Integer chordNumber = getChordNumber(chord);
-		String suffix = ""; //znaki dopisane do akordu, np. Cmaj7 (maj7)
-		if (chordNumber == null) { //nie rozpoznano akordu podstawowego (bez dopisków)
-			//próba rozpoznania akordu formatu: C#maj7, akord + [literki] + [liczba]
-			//rozpoznawanie coraz krótszych podciągów
+		String suffix = ""; // characters appended to a chords, e.g. Cmaj7 (maj7)
+		if (chordNumber == null) { // basic chord not recognized (without suffixes)
+			// attempt to recognize complex chord (with prefixes): C#maj7, akord + [letters] + [number]
+			// recognition shorter and shorter substrings
 			for (int l = Math.min(MAX_LENGTH_ANALYZE, chord.length() - 1); l >= 1; l--) {
 				String chordCut = chord.substring(0, l);
 				suffix = chord.substring(l);
 				chordNumber = getChordNumber(chordCut);
 				if (chordNumber != null)
-					break; //rozpoznano akord z dopisanymi znakami (literami lub liczbami)
+					break; // a chord with suffix has been recognized
 			}
-			if (chordNumber == null) { //nie rozpoznano żadnego akordu
-				logger.warn("Transpozycja: Nie rozpoznano akordu: " + chord);
+			if (chordNumber == null) { // a chord was not recognized
+				logger.warn("Transpose: Chord not recognized: " + chord);
 				return chord;
 			}
 		}
 		
-		//transpozycja - przesunięcie o półtony
+		// transpose by semitones
 		int family = getChordFamilyIndex(chordNumber);
 		chordNumber = chordNumber + t;
-		//przywrócenie oryginalnej rodziny akordu
-		while (getChordFamilyIndex(chordNumber) > family) {
+		// restore the original chord family
+		while (getChordFamilyIndex(chordNumber) > family)
 			chordNumber -= 12;
-		}
-		while (chordNumber < 0 || getChordFamilyIndex(chordNumber) < family) {
+		while (chordNumber < 0 || getChordFamilyIndex(chordNumber) < family)
 			chordNumber += 12;
-		}
 		
 		return getChordName(chordNumber) + suffix;
 	}
@@ -168,14 +164,14 @@ public class ChordsTransposer {
 	}
 	
 	/**
-	 * @param in         tekst zawierający separatory
-	 * @param delimiters tablica separatorów
-	 * @return lista podzielonych fragmentów tekstu z zapamiętanymi separatorami (lub bez, jeśli jest to ostatni element)
+	 * @param in         text with separators
+	 * @param delimiters delimiters (separators) table
+	 * @return a list of splitted text fragments with delimiters stored (or without if it's the last part)
 	 */
 	private List<StringWithDelimiter> splitWithDelimiters(String in, String[] delimiters) {
 		List<StringWithDelimiter> splitted = new ArrayList<>();
 		
-		//znalezienie najwcześniejszego separatora
+		// find a first delimiter
 		String minDelimiter = null;
 		Integer minDelimiterIndex = null;
 		for (String delimiter : delimiters) {
@@ -188,32 +184,18 @@ public class ChordsTransposer {
 			}
 		}
 		
-		if (minDelimiterIndex == null) { //brak separatora
-			splitted.add(new StringWithDelimiter(in)); //ostatni fragment
+		if (minDelimiterIndex == null) { //no delimiter
+			splitted.add(new StringWithDelimiter(in)); // the last fragment
 			return splitted;
 		} else {
 			String before = in.substring(0, minDelimiterIndex);
 			String after = in.substring(minDelimiterIndex + minDelimiter.length());
 			splitted.add(new StringWithDelimiter(before, minDelimiter));
-			//rekurencyjny podział
+			// recursive split
 			splitted.addAll(splitWithDelimiters(after, delimiters));
 		}
 		
 		return splitted;
 	}
 	
-	private class StringWithDelimiter {
-		public String str;
-		public String delimiter = null;
-		
-		public StringWithDelimiter(String str, String delimiter) {
-			this.str = str;
-			this.delimiter = delimiter;
-		}
-		
-		public StringWithDelimiter(String str) {
-			this.str = str;
-			this.delimiter = "";
-		}
-	}
 }

@@ -9,7 +9,7 @@ public class FirstRuleChecker<T> {
 	// remembers inserting order
 	private List<Rule> rules = new LinkedList<>();
 	
-	public FirstRuleChecker() {
+	FirstRuleChecker() {
 	}
 	
 	public FirstRuleChecker<T> addRule(BooleanCondition when, Provider<T> then) {
@@ -58,7 +58,7 @@ public class FirstRuleChecker<T> {
 		BooleanCondition when;
 		Provider<T> then;
 		
-		public Rule(BooleanCondition when, Provider<T> then) {
+		Rule(BooleanCondition when, Provider<T> then) {
 			this.when = when;
 			this.then = then;
 		}

@@ -1,4 +1,4 @@
-package igrek.songbook.view.canvas.quickmenu;
+package igrek.songbook.view.songpreview.quickmenu;
 
 import android.view.View;
 import android.widget.Button;
@@ -13,7 +13,7 @@ import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.chords.ChordsManager;
 import igrek.songbook.service.info.UIResourceService;
 import igrek.songbook.service.layout.songpreview.SongPreviewController;
-import igrek.songbook.view.canvas.CanvasGraphics;
+import igrek.songbook.view.songpreview.CanvasGraphics;
 
 public class QuickMenu {
 	

@@ -1,4 +1,4 @@
-package igrek.songbook.view.canvas;
+package igrek.songbook.view.songpreview.base;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,9 +9,6 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.view.MotionEvent;
 import android.view.View;
-
-import igrek.songbook.view.canvas.enums.Align;
-import igrek.songbook.view.canvas.enums.Font;
 
 public class BaseCanvasGraphics extends View {
 	
@@ -150,7 +147,15 @@ public class BaseCanvasGraphics extends View {
 	}
 	
 	public void drawText(String text, float cx, float cy, int align) {
-		//domyślne wartości
+		// short case
+		if (align == Align.LEFT) { // left only
+			paint.setTextAlign(Paint.Align.LEFT);
+			canvas.drawText(text, cx, cy, paint);
+		} else if (align == Align.RIGHT) { // right only
+			paint.setTextAlign(Paint.Align.RIGHT);
+			canvas.drawText(text, cx, cy, paint);
+		}
+		// default values
 		if ((align & 0x0f) == 0)
 			align |= Align.LEFT;
 		if ((align & 0xf0) == 0)
@@ -159,7 +164,7 @@ public class BaseCanvasGraphics extends View {
 			paint.setTextAlign(Paint.Align.LEFT);
 		} else if (isFlagSet(align, Align.HCENTER)) {
 			paint.setTextAlign(Paint.Align.CENTER);
-		} else { //right
+		} else { // right
 			paint.setTextAlign(Paint.Align.RIGHT);
 		}
 		paint.getTextBounds(text, 0, text.length(), textBounds);

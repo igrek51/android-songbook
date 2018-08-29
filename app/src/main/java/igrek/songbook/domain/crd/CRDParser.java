@@ -1,4 +1,4 @@
-package igrek.songbook.domain.crdfile;
+package igrek.songbook.domain.crd;
 
 import android.graphics.Paint;
 import android.graphics.Typeface;

@@ -2,10 +2,10 @@ package igrek.songbook.service.filetree;
 
 public class FileItem {
 	
-	private String filename = "";
-	private boolean directory = false;
+	private String filename;
+	private boolean directory;
 	
-	public FileItem(String filename, boolean directory) {
+	private FileItem(String filename, boolean directory) {
 		this.filename = filename;
 		this.directory = directory;
 	}

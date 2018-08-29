@@ -11,7 +11,7 @@ import igrek.songbook.service.layout.LayoutController;
 import igrek.songbook.service.layout.LayoutState;
 import igrek.songbook.service.layout.songselection.SongSelectionController;
 import igrek.songbook.service.window.WindowManagerService;
-import igrek.songbook.view.canvas.quickmenu.QuickMenu;
+import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
 
 public class SystemKeyDispatcher {
 	
@@ -42,7 +42,7 @@ public class SystemKeyDispatcher {
 				autoscrollService.onAutoscrollStopEvent();
 				
 				layoutController.setState(LayoutState.SONG_LIST);
-				layoutController.showFileList();
+				layoutController.showSongSelection();
 				
 				windowManagerService.keepScreenOn(false);
 				

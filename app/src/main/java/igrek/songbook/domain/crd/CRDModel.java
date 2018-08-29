@@ -1,4 +1,4 @@
-package igrek.songbook.domain.crdfile;
+package igrek.songbook.domain.crd;
 
 import com.google.common.base.Joiner;
 

@@ -6,10 +6,9 @@ import javax.inject.Inject;
 
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.service.filesystem.ExternalCardService;
+import igrek.songbook.service.filesystem.FilesystemService;
 import igrek.songbook.service.preferences.PreferencesDefinition;
 import igrek.songbook.service.preferences.PreferencesService;
-
-import static igrek.songbook.service.filesystem.FilesystemService.trimEndSlash;
 
 public class HomePathService {
 	
@@ -17,6 +16,8 @@ public class HomePathService {
 	PreferencesService preferencesService;
 	@Inject
 	ExternalCardService externalCardService;
+	@Inject
+	FilesystemService filesystem;
 	
 	public HomePathService() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -42,7 +43,6 @@ public class HomePathService {
 	}
 	
 	public void setHomePath(String path) {
-		//String homeDir = ;
 		preferencesService.setValue(PreferencesDefinition.homePath, path);
 		preferencesService.saveAll();
 	}
@@ -51,6 +51,6 @@ public class HomePathService {
 		String homePath = getHomePath();
 		if (path == null || homePath == null)
 			return false;
-		return trimEndSlash(path).equals(trimEndSlash(homePath));
+		return filesystem.trimEndSlash(path).equals(filesystem.trimEndSlash(homePath));
 	}
 }

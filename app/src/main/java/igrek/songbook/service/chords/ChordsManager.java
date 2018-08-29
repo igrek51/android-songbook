@@ -7,21 +7,21 @@ import javax.inject.Inject;
 import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.domain.crdfile.CRDModel;
-import igrek.songbook.domain.crdfile.CRDParser;
+import igrek.songbook.domain.crd.CRDModel;
+import igrek.songbook.domain.crd.CRDParser;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.autoscroll.AutoscrollService;
+import igrek.songbook.service.info.UIInfoService;
 import igrek.songbook.service.info.UIResourceService;
-import igrek.songbook.service.info.UserInfoService;
 import igrek.songbook.service.layout.songpreview.SongPreviewController;
 import igrek.songbook.service.transpose.ChordsTransposer;
-import igrek.songbook.view.canvas.quickmenu.QuickMenu;
+import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
 
 public class ChordsManager {
 	
 	@Inject
-	UserInfoService userInfo;
+	UIInfoService userInfo;
 	@Inject
 	ChordsTransposer chordsTransposer;
 	@Inject

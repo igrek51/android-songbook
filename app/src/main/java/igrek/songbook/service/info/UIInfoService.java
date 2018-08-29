@@ -18,7 +18,7 @@ import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.errorcheck.SafeClickListener;
 
-public class UserInfoService {
+public class UIInfoService {
 	
 	@Inject
 	Activity activity;
@@ -30,15 +30,15 @@ public class UserInfoService {
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
-	public UserInfoService() {
+	public UIInfoService() {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
 	/**
-	 * @param info       tekst do wyświetlenia lub zmiany
-	 * @param view       widok, na którym ma zostać wyświetlony tekst
-	 * @param actionName tekst przycisku akcji (jeśli null - brak przycisku akcji)
-	 * @param action     akcja kliknięcia przycisku (jeśli null - schowanie wyświetlanego tekstu)
+	 * @param info       text to show or replace
+	 * @param view       view, on which the text should be displayed
+	 * @param actionName action button text value (if null - no action button)
+	 * @param action     action perforfmed on button click (if null - dismiss displayed snackbar)
 	 */
 	private void showActionInfo(String info, View view, String actionName, InfoBarClickAction action, Integer color) {
 		
@@ -46,11 +46,12 @@ public class UserInfoService {
 			view = activity.findViewById(android.R.id.content);
 		}
 		
+		// dont create new snackbars if one is already shown
 		Snackbar snackbar = infobars.get(view);
-		if (snackbar == null || !snackbar.isShown()) { //nowy
+		if (snackbar == null || !snackbar.isShown()) { // a new one
 			snackbar = Snackbar.make(view, info, Snackbar.LENGTH_SHORT);
 			snackbar.setActionTextColor(Color.WHITE);
-		} else { //widoczny - użyty kolejny raz
+		} else { // visible - use it one more time
 			snackbar.setText(info);
 		}
 		
@@ -99,7 +100,7 @@ public class UserInfoService {
 	}
 	
 	public void showInfoWithAction(String info, String actionName, InfoBarClickAction actionCallback) {
-		showActionInfo(info, null, "Undo", actionCallback, ContextCompat.getColor(activity, R.color.colorPrimary));
+		showActionInfo(info, null, actionName, actionCallback, ContextCompat.getColor(activity, R.color.colorPrimary));
 	}
 	
 	public void showInfoWithAction(String info, int actionNameRes, InfoBarClickAction actionCallback) {

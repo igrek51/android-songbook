@@ -32,7 +32,7 @@ public class AppInitializer {
 	public void init() {
 		try {
 			windowManagerService.hideTaskbar();
-			layoutController.showFileList();
+			layoutController.showSongSelection();
 			logger.info("Application has been initialized.");
 		} catch (Exception ex) {
 			logger.fatal(activity, ex);

@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -15,8 +14,6 @@ import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.filesystem.FilesystemService;
 import igrek.songbook.service.layout.songselection.HomePathService;
-
-import static igrek.songbook.service.filesystem.FilesystemService.trimEndSlash;
 
 public class FileTreeManager {
 	
@@ -38,7 +35,7 @@ public class FileTreeManager {
 	public String getCurrentDirName() {
 		if (currentPath.equals("/"))
 			return currentPath;
-		String path = trimEndSlash(currentPath);
+		String path = filesystem.trimEndSlash(currentPath);
 		int lastSlash = path.lastIndexOf("/");
 		if (lastSlash == -1)
 			return null;
@@ -48,7 +45,7 @@ public class FileTreeManager {
 	private String getParent() {
 		if (currentPath.equals("/"))
 			return null;
-		String path = trimEndSlash(currentPath);
+		String path = filesystem.trimEndSlash(currentPath);
 		int lastSlash = path.lastIndexOf("/");
 		if (lastSlash == -1)
 			return null;
@@ -69,7 +66,7 @@ public class FileTreeManager {
 	}
 	
 	public void goInto(String dir) {
-		String path = trimEndSlash(currentPath) + "/" + trimEndSlash(dir);
+		String path = filesystem.trimEndSlash(currentPath) + "/" + filesystem.trimEndSlash(dir);
 		updateCurrentPath(path);
 	}
 	
@@ -78,12 +75,7 @@ public class FileTreeManager {
 			updateCurrentPath(path);
 			return;
 		}
-		updateCurrentPath(trimEndSlash(path));
-	}
-	
-	public void goToRoot() {
-		currentPath = "/";
-		updateCurrentPath();
+		updateCurrentPath(filesystem.trimEndSlash(path));
 	}
 	
 	private void updateCurrentPath(String currentPath) {
@@ -103,17 +95,14 @@ public class FileTreeManager {
 			}
 		}
 		
-		Collections.sort(items, new Comparator<FileItem>() {
-			@Override
-			public int compare(FileItem lhs, FileItem rhs) {
-				if (lhs.isDirectory() && rhs.isRegularFile()) {
-					return -1;
-				}
-				if (lhs.isRegularFile() && rhs.isDirectory()) {
-					return +1;
-				}
-				return lhs.getName().toLowerCase().compareTo(rhs.getName().toLowerCase());
+		Collections.sort(items, (lhs, rhs) -> {
+			if (lhs.isDirectory() && rhs.isRegularFile()) {
+				return -1;
 			}
+			if (lhs.isRegularFile() && rhs.isDirectory()) {
+				return +1;
+			}
+			return lhs.getName().toLowerCase().compareTo(rhs.getName().toLowerCase());
 		});
 	}
 	
@@ -122,11 +111,11 @@ public class FileTreeManager {
 	}
 	
 	public String getCurrentFilePath(String filename) {
-		return trimEndSlash(currentPath) + "/" + trimEndSlash(filename);
+		return filesystem.trimEndSlash(currentPath) + "/" + filesystem.trimEndSlash(filename);
 	}
 	
 	public String getCurrentPath() {
-		return trimEndSlash(currentPath);
+		return filesystem.trimEndSlash(currentPath);
 	}
 	
 	public String getFileContent(String filePath) {
