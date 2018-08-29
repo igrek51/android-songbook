@@ -10,15 +10,11 @@ import javax.inject.Inject;
 
 import dagger.Lazy;
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.domain.crd.CRDFragment;
 import igrek.songbook.domain.crd.CRDLine;
 import igrek.songbook.domain.crd.CRDModel;
-import igrek.songbook.domain.crd.CRDTextType;
 import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.layout.songpreview.SongPreviewController;
-import igrek.songbook.view.songpreview.base.Align;
 import igrek.songbook.view.songpreview.base.BaseCanvasGraphics;
-import igrek.songbook.view.songpreview.base.Font;
 import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
 
 public class CanvasGraphics extends BaseCanvasGraphics {
@@ -44,6 +40,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	private float lineheight;
 	private Float pointersDst0 = null;
 	private Float fontsize0 = null;
+	private LyricsRenderer lyricsRenderer;
 	
 	public CanvasGraphics(Context context) {
 		super(context);
@@ -62,6 +59,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	
 	public void setCRDModel(CRDModel crdModel) {
 		this.crdModel = crdModel;
+		this.lyricsRenderer = new LyricsRenderer(this, crdModel);
 		repaint();
 	}
 	
@@ -76,80 +74,22 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	
 	@Override
 	public void init() {
-		setFontSize(fontsize);
-		setFont(Font.FONT_NORMAL);
 		songPreviewController.get().onGraphicsInitializedEvent(w, h, paint);
 	}
 	
 	@Override
 	public void onRepaint() {
-		
 		drawBackground();
-		
-		drawScrollBar();
-		
-		drawFileContent();
-		
-		quickMenu.get().draw();
-	}
-	
-	private void drawFileContent() {
-		setFontSize(fontsize);
-		
-		setColor(0xffffff);
-		
-		if (crdModel != null) {
-			for (CRDLine line : crdModel.getLines()) {
-				drawTextLine(line, scroll);
-			}
+		if (this.lyricsRenderer != null) {
+			lyricsRenderer.drawScrollBar();
+			lyricsRenderer.drawFileContent(fontsize, lineheight);
 		}
+		quickMenu.get().draw();
 	}
 	
 	private void drawBackground() {
 		setColor(0x000000);
 		clearScreen();
-	}
-	
-	private void drawTextLine(CRDLine line, float scroll) {
-		float y = line.getY() * lineheight - scroll;
-		if (y > h)
-			return;
-		if (y + lineheight < 0)
-			return;
-		
-		// line wrapper on bottom layer
-		if (line.getFragments().size() > 0) {
-			CRDFragment lastFragment = line.getFragments().get(line.getFragments().size() - 1);
-			if (lastFragment.getType() == CRDTextType.LINEWRAPPER) {
-				setFont(Font.FONT_NORMAL);
-				setColor(0xa0a0a0);
-				drawText(lastFragment.getText(), w, y + 0.85f * lineheight, Align.RIGHT);
-			}
-		}
-		
-		for (CRDFragment fragment : line.getFragments()) {
-			
-			if (fragment.getType() == CRDTextType.REGULAR_TEXT) {
-				setFont(Font.FONT_NORMAL);
-				setColor(0xffffff);
-				drawText(fragment.getText(), fragment.getX() * fontsize, y + lineheight, Align.LEFT);
-			} else if (fragment.getType() == CRDTextType.CHORDS) {
-				setFont(Font.FONT_BOLD);
-				setColor(0xf00000);
-				drawText(fragment.getText(), fragment.getX() * fontsize, y + lineheight, Align.LEFT);
-			}
-			
-		}
-	}
-	
-	private void drawScrollBar() {
-		float maxScroll = getMaxScroll();
-		float range = maxScroll + h;
-		float top = scroll / range;
-		float bottom = (scroll + h) / range;
-		
-		setColor(0xAEC3E0);
-		drawLine(w - 1, top * h, w - 1, bottom * h);
 	}
 	
 	@Override
@@ -161,9 +101,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	
 	@Override
 	protected void onTouchMove(MotionEvent event) {
-		
 		if (event.getPointerCount() >= 2) {
-			
 			if (pointersDst0 != null) {
 				Float pointersDst1 = (float) Math.hypot(event.getX(1) - event.getX(0), event.getY(1) - event
 						.getY(0));
@@ -171,9 +109,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 				float fontsize1 = fontsize0 * scale;
 				previewFontsize(fontsize1);
 			}
-			
 		} else {
-			
 			scroll = startScroll + startTouchY - event.getY();
 			float maxScroll = getMaxScroll();
 			if (scroll < 0)
@@ -181,11 +117,10 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 			if (scroll > maxScroll)
 				scroll = maxScroll; // too much scrolling down
 			repaint();
-			
 		}
 	}
 	
-	private float getMaxScroll() {
+	float getMaxScroll() {
 		float bottomY = getTextBottomY();
 		float reserve = EOF_SCROLL_RESERVE * h;
 		if (bottomY > h) {
