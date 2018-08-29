@@ -152,9 +152,11 @@ public abstract class BaseCanvasGraphics extends View {
 		if (align == Align.LEFT) { // left only
 			paint.setTextAlign(Paint.Align.LEFT);
 			canvas.drawText(text, cx, cy, paint);
+			return;
 		} else if (align == Align.RIGHT) { // right only
 			paint.setTextAlign(Paint.Align.RIGHT);
 			canvas.drawText(text, cx, cy, paint);
+			return;
 		}
 		// default values
 		if ((align & 0x0f) == 0)

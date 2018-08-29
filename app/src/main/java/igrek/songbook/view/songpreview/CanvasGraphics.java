@@ -132,7 +132,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 			if (fragment.getType() == CRDTextType.REGULAR_TEXT) {
 				setFont(Font.FONT_NORMAL);
 				setColor(0xffffff);
-				drawTextUnaligned(fragment.getText(), fragment.getX() * fontsize, y + lineheight);
+				drawText(fragment.getText(), fragment.getX() * fontsize, y + lineheight, Align.LEFT);
 			} else if (fragment.getType() == CRDTextType.CHORDS) {
 				setFont(Font.FONT_BOLD);
 				setColor(0xf00000);
