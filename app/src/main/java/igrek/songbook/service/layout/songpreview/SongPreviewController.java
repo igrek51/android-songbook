@@ -41,14 +41,11 @@ public class SongPreviewController {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
-	public void showSongPreview() {
-		activity.setContentView(R.layout.file_content);
-		
+	public void showSongPreview(View layout) {
 		canvas = new CanvasGraphics(activity);
 		canvas.reset();
 		
-		FrameLayout mainFrame = activity.findViewById(R.id.mainFrame);
-		
+		FrameLayout mainFrame = layout.findViewById(R.id.mainFrame);
 		mainFrame.removeAllViews();
 		mainFrame.addView(canvas);
 		

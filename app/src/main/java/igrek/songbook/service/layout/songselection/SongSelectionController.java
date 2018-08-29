@@ -1,8 +1,12 @@
 package igrek.songbook.service.layout.songselection;
 
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -47,40 +51,44 @@ public class SongSelectionController {
 	@Inject
 	AppCompatActivity activity;
 	@Inject
-	Lazy<SongSelectionController> songSelectionController;
-	@Inject
 	HomePathService homePathService;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	private ActionBar actionBar;
 	private FileListView itemsListView;
+	private TextView toolbarTitle;
 	
 	public SongSelectionController() {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
-	public void showSongSelection() {
+	public void showSongSelection(View layout) {
 		String currentDir = fileTreeManager.getCurrentDirName();
 		List<FileItem> items = fileTreeManager.getItems();
 		
-		activity.setContentView(R.layout.files_list);
-		
-		//toolbar
-		Toolbar toolbar1 = activity.findViewById(R.id.toolbar1);
+		// toolbar
+		Toolbar toolbar1 = layout.findViewById(R.id.toolbar1);
 		activity.setSupportActionBar(toolbar1);
 		actionBar = activity.getSupportActionBar();
 		if (actionBar != null) {
-			actionBar.setDisplayHomeAsUpEnabled(true);
-			actionBar.setDisplayShowHomeEnabled(true);
+			actionBar.setDisplayHomeAsUpEnabled(false);
+			actionBar.setDisplayShowHomeEnabled(false);
 		}
-		toolbar1.setNavigationOnClickListener(v -> {
-			songSelectionController.get().onToolbarBackClickedEvent();
-		});
 		
-		itemsListView = activity.findViewById(R.id.filesList);
+		ImageButton navMenuButton = layout.findViewById(R.id.navMenuButton);
+		navMenuButton.setOnClickListener(v -> layoutController.navDrawerToggle());
 		
+		ImageButton goHomeButton = layout.findViewById(R.id.goHomeButton);
+		goHomeButton.setOnClickListener(v -> homeClicked());
+		
+		ImageButton goBackButton = layout.findViewById(R.id.goBackButton);
+		goBackButton.setOnClickListener(v -> onToolbarBackClickedEvent());
+		
+		toolbarTitle = layout.findViewById(R.id.toolbarTitle);
+		
+		itemsListView = layout.findViewById(R.id.filesList);
 		itemsListView.init(activity);
-		
+
 		updateFileList(currentDir, items);
 	}
 	
@@ -96,6 +104,7 @@ public class SongSelectionController {
 	
 	public void setTitle(String title) {
 		actionBar.setTitle(title);
+		toolbarTitle.setText(title);
 	}
 	
 	public Integer getCurrentScrollPos() {
