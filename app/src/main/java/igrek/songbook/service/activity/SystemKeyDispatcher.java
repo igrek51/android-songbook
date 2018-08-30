@@ -33,7 +33,7 @@ public class SystemKeyDispatcher {
 	}
 	
 	public boolean onKeyBack() {
-		if (layoutController.isState(LayoutState.SONG_LIST)) {
+		if (layoutController.isState(LayoutState.SONGS_LIST)) {
 			songSelectionController.onToolbarBackClickedEvent();
 		} else if (layoutController.isState(LayoutState.SONG_PREVIEW)) {
 			if (quickMenu.isVisible()) {
@@ -41,7 +41,7 @@ public class SystemKeyDispatcher {
 			} else {
 				autoscrollService.onAutoscrollStopEvent();
 				
-				layoutController.setState(LayoutState.SONG_LIST);
+				layoutController.setState(LayoutState.SONGS_LIST);
 				layoutController.showSongSelection();
 				
 				windowManagerService.keepScreenOn(false);

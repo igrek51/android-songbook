@@ -5,39 +5,39 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_songs_list"
-            android:icon="@android:drawable/ic_menu_camera"
-            android:title="Songs"/>
+            android:icon="@drawable/list"
+            android:title="@string/nav_songs_list"/>
         <item
             android:id="@+id/nav_search"
-            android:icon="@android:drawable/ic_menu_gallery"
-            android:title="Search"/>
+            android:icon="@drawable/search"
+            android:title="@string/nav_search_song"/>
         <item
             android:id="@+id/nav_update_db"
-            android:icon="@android:drawable/ic_menu_slideshow"
-            android:title="Update songs"/>
+            android:icon="@drawable/sync"
+            android:title="@string/nav_update_songs"/>
         <item
             android:id="@+id/nav_import_song"
-            android:icon="@android:drawable/ic_menu_manage"
-            android:title="Import song"/>
+            android:icon="@drawable/add"
+            android:title="@string/nav_import_song"/>
     </group>
     <group
         android:id="@+id/nav_group2"
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_settings"
-            android:icon="@android:drawable/ic_menu_camera"
-            android:title="Settings"/>
+            android:icon="@drawable/settings"
+            android:title="@string/nav_settings"/>
         <item
             android:id="@+id/nav_help"
-            android:icon="@android:drawable/ic_menu_gallery"
-            android:title="Help"/>
+            android:icon="@drawable/help"
+            android:title="@string/nav_help"/>
         <item
             android:id="@+id/nav_about"
-            android:icon="@android:drawable/ic_menu_slideshow"
-            android:title="About"/>
+            android:icon="@drawable/info"
+            android:title="@string/nav_about"/>
         <item
             android:id="@+id/nav_exit"
-            android:icon="@android:drawable/ic_menu_manage"
-            android:title="Exit"/>
+            android:icon="@drawable/close"
+            android:title="@string/nav_exit"/>
     </group>
 </menu>

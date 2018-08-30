@@ -24,6 +24,7 @@ import igrek.songbook.service.filetree.ScrollPosBuffer;
 import igrek.songbook.service.info.UiInfoService;
 import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.layout.LayoutController;
+import igrek.songbook.service.layout.navmenu.NavigationMenuController;
 import igrek.songbook.service.layout.songpreview.SongPreviewController;
 import igrek.songbook.service.layout.songselection.HomePathService;
 import igrek.songbook.service.layout.songselection.SongSelectionController;
@@ -191,6 +192,12 @@ public class FactoryModule {
 	@Singleton
 	protected HomePathService provideHomePathService() {
 		return new HomePathService();
+	}
+	
+	@Provides
+	@Singleton
+	protected NavigationMenuController provideNavigationMenuController() {
+		return new NavigationMenuController();
 	}
 	
 	/*

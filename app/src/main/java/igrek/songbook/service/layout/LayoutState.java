@@ -2,11 +2,12 @@ package igrek.songbook.service.layout;
 
 public enum LayoutState {
 	
-	SONG_LIST(1), SONG_PREVIEW(2);
+	SONGS_LIST,
 	
-	int id;
+	SEARCH_SONG,
 	
-	LayoutState(int id) {
-		this.id = id;
-	}
+	SONG_PREVIEW,
+	
+	SETTINGS,
+	
 }

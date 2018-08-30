@@ -25,6 +25,7 @@ import igrek.songbook.service.info.UiInfoService;
 import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.layout.LayoutController;
 import igrek.songbook.service.layout.LayoutState;
+import igrek.songbook.service.layout.navmenu.NavigationMenuController;
 import igrek.songbook.service.preferences.PreferencesService;
 import igrek.songbook.service.window.WindowManagerService;
 import igrek.songbook.view.songselection.FileListView;
@@ -51,6 +52,8 @@ public class SongSelectionController {
 	AppCompatActivity activity;
 	@Inject
 	HomePathService homePathService;
+	@Inject
+	NavigationMenuController navigationMenuController;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	private ActionBar actionBar;
@@ -75,7 +78,7 @@ public class SongSelectionController {
 		}
 		
 		ImageButton navMenuButton = layout.findViewById(R.id.navMenuButton);
-		navMenuButton.setOnClickListener(v -> layoutController.navDrawerShow());
+		navMenuButton.setOnClickListener(v -> navigationMenuController.navDrawerShow());
 		
 		ImageButton goHomeButton = layout.findViewById(R.id.goHomeButton);
 		goHomeButton.setOnClickListener(v -> homeClicked());
@@ -127,7 +130,7 @@ public class SongSelectionController {
 	
 	private void updateFileList() {
 		updateFileList(fileTreeManager.getCurrentDirName(), fileTreeManager.getItems());
-		layoutController.setState(LayoutState.SONG_LIST);
+		layoutController.setState(LayoutState.SONGS_LIST);
 	}
 	
 	private void showFileContent(String filename) {
@@ -170,7 +173,7 @@ public class SongSelectionController {
 		uiInfoService.showInfo(R.string.starting_directory_saved, R.string.action_info_ok);
 	}
 	
-	public void homeClicked() {
+	private void homeClicked() {
 		if (homePathService.isInHomeDir(fileTreeManager.getCurrentPath())) {
 			activityController.get().quit();
 		} else {

@@ -105,6 +105,7 @@ public class PreferencesService {
 		return castIfNotNull(propertyValue, clazz);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private <T> T castIfNotNull(Object o, Class<T> clazz) {
 		if (o == null)
 			return null;
