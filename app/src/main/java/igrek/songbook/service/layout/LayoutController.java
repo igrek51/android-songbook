@@ -11,12 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 
 import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
+import igrek.songbook.logger.Logger;
+import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.layout.songpreview.SongPreviewController;
 import igrek.songbook.service.layout.songselection.SongSelectionController;
 
@@ -34,6 +37,7 @@ public class LayoutController {
 	private DrawerLayout drawerLayout;
 	private FrameLayout mainContentLayout;
 	private NavigationView navigationView;
+	private Logger logger = LoggerFactory.getLogger();
 	
 	private LayoutState state = LayoutState.SONG_LIST;
 	
@@ -48,9 +52,12 @@ public class LayoutController {
 		navigationView = activity.findViewById(R.id.nav_view);
 		
 		navigationView.setNavigationItemSelectedListener(menuItem -> {
+			int id = menuItem.getItemId();
+			if (id == R.id.nav_about) {
+				Toast.makeText(activity, "Camera is clicked", Toast.LENGTH_SHORT).show();
+			}
 			// set item as selected to persist highlight
 			menuItem.setChecked(true);
-			// close drawer when item is tapped
 			drawerLayout.closeDrawers();
 			return true;
 		});
@@ -84,7 +91,10 @@ public class LayoutController {
 		return layout;
 	}
 	
-	public void navDrawerToggle() {
+	public void navDrawerShow() {
 		drawerLayout.openDrawer(GravityCompat.START);
+		// deselect all menu items
+		for(int id = 0; id < navigationView.getMenu().size(); id++)
+			navigationView.getMenu().getItem(id).setChecked(false);
 	}
 }

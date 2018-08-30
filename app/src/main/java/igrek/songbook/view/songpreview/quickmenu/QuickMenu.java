@@ -11,7 +11,7 @@ import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.chords.ChordsManager;
-import igrek.songbook.service.info.UIResourceService;
+import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.layout.songpreview.SongPreviewController;
 import igrek.songbook.view.songpreview.CanvasGraphics;
 
@@ -20,7 +20,7 @@ public class QuickMenu {
 	@Inject
 	Lazy<ChordsManager> chordsManager;
 	@Inject
-	UIResourceService infoService;
+	UiResourceService infoService;
 	@Inject
 	AutoscrollService autoscrollService;
 	@Inject

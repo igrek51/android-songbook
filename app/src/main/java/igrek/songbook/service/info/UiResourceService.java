@@ -6,12 +6,12 @@ import javax.inject.Inject;
 
 import igrek.songbook.dagger.DaggerIoc;
 
-public class UIResourceService {
+public class UiResourceService {
 	
 	@Inject
 	Activity activity;
 	
-	public UIResourceService() {
+	public UiResourceService() {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	

@@ -6,12 +6,12 @@ import javax.inject.Inject;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
-import igrek.songbook.service.info.UIInfoService;
+import igrek.songbook.service.info.UiInfoService;
 
 public class SafeExecutor {
 	
 	@Inject
-	UIInfoService UIInfoService;
+	UiInfoService uiInfoService;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
@@ -21,7 +21,7 @@ public class SafeExecutor {
 		} catch (Throwable t) {
 			logger.error(t);
 			DaggerIoc.getFactoryComponent().inject(this);
-			UIInfoService.showInfo("Error occurred: " + t.getMessage());
+			uiInfoService.showInfo("Error occurred: " + t.getMessage());
 		}
 	}
 	

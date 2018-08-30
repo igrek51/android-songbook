@@ -1,6 +1,5 @@
 package igrek.songbook.service.layout.songselection;
 
-import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -22,8 +21,8 @@ import igrek.songbook.service.activity.ActivityController;
 import igrek.songbook.service.filetree.FileItem;
 import igrek.songbook.service.filetree.FileTreeManager;
 import igrek.songbook.service.filetree.ScrollPosBuffer;
-import igrek.songbook.service.info.UIInfoService;
-import igrek.songbook.service.info.UIResourceService;
+import igrek.songbook.service.info.UiInfoService;
+import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.layout.LayoutController;
 import igrek.songbook.service.layout.LayoutState;
 import igrek.songbook.service.preferences.PreferencesService;
@@ -43,11 +42,11 @@ public class SongSelectionController {
 	@Inject
 	PreferencesService preferencesService;
 	@Inject
-	UIInfoService UIInfoService;
+	UiInfoService uiInfoService;
 	@Inject
 	ScrollPosBuffer scrollPosBuffer;
 	@Inject
-	UIResourceService uiResourceService;
+	UiResourceService uiResourceService;
 	@Inject
 	AppCompatActivity activity;
 	@Inject
@@ -76,7 +75,7 @@ public class SongSelectionController {
 		}
 		
 		ImageButton navMenuButton = layout.findViewById(R.id.navMenuButton);
-		navMenuButton.setOnClickListener(v -> layoutController.navDrawerToggle());
+		navMenuButton.setOnClickListener(v -> layoutController.navDrawerShow());
 		
 		ImageButton goHomeButton = layout.findViewById(R.id.goHomeButton);
 		goHomeButton.setOnClickListener(v -> homeClicked());
@@ -148,7 +147,7 @@ public class SongSelectionController {
 	public void showUIHelp() {
 		String message = uiResourceService.resString(R.string.ui_help_content);
 		String title = uiResourceService.resString(R.string.ui_help);
-		UIInfoService.showDialog(title, message);
+		uiInfoService.showDialog(title, message);
 	}
 	
 	public void onToolbarBackClickedEvent() {
@@ -168,7 +167,7 @@ public class SongSelectionController {
 	
 	public void setHomePath() {
 		homePathService.setHomePath(fileTreeManager.getCurrentPath());
-		UIInfoService.showInfo(R.string.starting_directory_saved, R.string.action_info_ok);
+		uiInfoService.showInfo(R.string.starting_directory_saved, R.string.action_info_ok);
 	}
 	
 	public void homeClicked() {
@@ -177,7 +176,7 @@ public class SongSelectionController {
 		} else {
 			String homePath = homePathService.getHomePath();
 			if (homePath == null) {
-				UIInfoService.showInfo(R.string.message_home_not_set);
+				uiInfoService.showInfo(R.string.message_home_not_set);
 			} else {
 				fileTreeManager.goTo(homePath);
 				updateFileList();

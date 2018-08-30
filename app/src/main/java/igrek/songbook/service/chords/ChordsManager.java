@@ -12,8 +12,8 @@ import igrek.songbook.domain.crd.CRDParser;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.autoscroll.AutoscrollService;
-import igrek.songbook.service.info.UIInfoService;
-import igrek.songbook.service.info.UIResourceService;
+import igrek.songbook.service.info.UiInfoService;
+import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.layout.songpreview.SongPreviewController;
 import igrek.songbook.service.transpose.ChordsTransposer;
 import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
@@ -21,13 +21,13 @@ import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
 public class ChordsManager {
 	
 	@Inject
-	UIInfoService userInfo;
+	UiInfoService userInfo;
 	@Inject
 	ChordsTransposer chordsTransposer;
 	@Inject
 	Lazy<AutoscrollService> autoscrollService;
 	@Inject
-	UIResourceService uiResourceService;
+	UiResourceService uiResourceService;
 	@Inject
 	Lazy<SongPreviewController> songPreviewController;
 	@Inject

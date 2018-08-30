@@ -18,19 +18,19 @@ import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.errorcheck.SafeClickListener;
 
-public class UIInfoService {
+public class UiInfoService {
 	
 	@Inject
 	Activity activity;
 	
 	@Inject
-	UIResourceService uiResourceService;
+	UiResourceService uiResourceService;
 	
 	private HashMap<View, Snackbar> infobars = new HashMap<>();
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
-	public UIInfoService() {
+	public UiInfoService() {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	

@@ -1,21 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/nav_group1"
+        android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav_songs_list"
             android:icon="@android:drawable/ic_menu_camera"
-            android:title="import" />
+            android:title="Songs"/>
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_search"
             android:icon="@android:drawable/ic_menu_gallery"
-            android:title="gallery" />
+            android:title="Search"/>
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_update_db"
             android:icon="@android:drawable/ic_menu_slideshow"
-            android:title="slideshow" />
+            android:title="Update songs"/>
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_import_song"
             android:icon="@android:drawable/ic_menu_manage"
-            android:title="tools" />
+            android:title="Import song"/>
+    </group>
+    <group
+        android:id="@+id/nav_group2"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@android:drawable/ic_menu_camera"
+            android:title="Settings"/>
+        <item
+            android:id="@+id/nav_help"
+            android:icon="@android:drawable/ic_menu_gallery"
+            android:title="Help"/>
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@android:drawable/ic_menu_slideshow"
+            android:title="About"/>
+        <item
+            android:id="@+id/nav_exit"
+            android:icon="@android:drawable/ic_menu_manage"
+            android:title="Exit"/>
     </group>
 </menu>

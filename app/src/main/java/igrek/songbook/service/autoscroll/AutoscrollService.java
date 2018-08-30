@@ -10,8 +10,8 @@ import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.chords.ChordsManager;
-import igrek.songbook.service.info.UIInfoService;
-import igrek.songbook.service.info.UIResourceService;
+import igrek.songbook.service.info.UiInfoService;
+import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.layout.songpreview.SongPreviewController;
 import igrek.songbook.view.songpreview.CanvasGraphics;
 
@@ -23,13 +23,13 @@ public class AutoscrollService {
 	private final float AUTOCHANGE_WAITING_SCALE = 9.0f;
 	private final float MANUAL_SCROLL_MAX_RANGE = 150f;
 	@Inject
-	UIInfoService userInfo;
+	UiInfoService userInfo;
 	@Inject
 	Lazy<ChordsManager> chordsManager;
 	@Inject
 	Lazy<SongPreviewController> songPreviewController;
 	@Inject
-	UIResourceService uiResourceService;
+	UiResourceService uiResourceService;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	private AutoscrollState state;
@@ -134,7 +134,7 @@ public class AutoscrollService {
 			intervalTime = MIN_INTERVAL_TIME;
 		}
 		this.fontsize = fontsize;
-		logger.info("Nowy interwał autoprzewijania (po zmianie czcionki): " + intervalTime + " ms");
+		logger.info("new autoscroll interval (fontsize change): " + intervalTime + " ms");
 	}
 	
 	public void handleCanvasScroll(float dScroll, float scroll) {
@@ -179,7 +179,7 @@ public class AutoscrollService {
 			if (intervalTime < MIN_INTERVAL_TIME) {
 				intervalTime = MIN_INTERVAL_TIME;
 			}
-			logger.info("Nowy interwał autoprzewijania: " + intervalTime + " ms");
+			logger.info("new autoscroll interval: " + intervalTime + " ms");
 		}
 	}
 	
