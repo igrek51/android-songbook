@@ -1,6 +1,6 @@
 package igrek.songbook.dagger;
 
-import android.app.Application;
+import android.app.Activity;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,7 @@ import igrek.songbook.dagger.base.TestModule;
 public class DaggerInjectionTest {
 	
 	@Inject
-	Application application;
+	Activity activity;
 	
 	@Before
 	public void setUp() {
@@ -39,7 +39,7 @@ public class DaggerInjectionTest {
 	
 	@Test
 	public void testApplicationInjection() {
-		System.out.println("injected application: " + application.toString());
+		System.out.println("injected activity: " + activity.toString());
 	}
 	
 }

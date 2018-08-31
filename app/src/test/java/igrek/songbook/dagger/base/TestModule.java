@@ -13,7 +13,7 @@ import igrek.songbook.mock.LoggerMock;
 public class TestModule extends FactoryModule {
 	
 	public TestModule(MainApplication application) {
-		super(application);
+		super(((AppCompatActivity) application.getCurrentActivity()));
 	}
 	
 	@Override
