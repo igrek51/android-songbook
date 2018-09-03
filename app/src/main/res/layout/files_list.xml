@@ -36,20 +36,6 @@
                 />
 
             <ImageButton
-                android:id="@+id/goHomeButton"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_centerVertical="true"
-                android:layout_gravity="start|center_vertical"
-                android:adjustViewBounds="true"
-                android:background="@drawable/home"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="10dp"
-                android:scaleType="fitCenter"
-                />
-
-            <ImageButton
                 android:id="@+id/goBackButton"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
@@ -72,7 +58,6 @@
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
-
 
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"

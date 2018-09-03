@@ -80,9 +80,6 @@ public class SongSelectionController {
 		ImageButton navMenuButton = layout.findViewById(R.id.navMenuButton);
 		navMenuButton.setOnClickListener(v -> navigationMenuController.navDrawerShow());
 		
-		ImageButton goHomeButton = layout.findViewById(R.id.goHomeButton);
-		goHomeButton.setOnClickListener(v -> homeClicked());
-		
 		ImageButton goBackButton = layout.findViewById(R.id.goBackButton);
 		goBackButton.setOnClickListener(v -> onToolbarBackClickedEvent());
 		
@@ -150,6 +147,12 @@ public class SongSelectionController {
 	public void showUIHelp() {
 		String message = uiResourceService.resString(R.string.ui_help_content);
 		String title = uiResourceService.resString(R.string.ui_help);
+		uiInfoService.showDialog(title, message);
+	}
+	
+	public void showAbout() {
+		String message = uiResourceService.resString(R.string.ui_about_content);
+		String title = uiResourceService.resString(R.string.ui_about);
 		uiInfoService.showDialog(title, message);
 	}
 	

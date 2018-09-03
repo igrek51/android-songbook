@@ -20,6 +20,7 @@ public class ActivityController {
 	Activity activity;
 	@Inject
 	PreferencesService preferencesService;
+	
 	private Logger logger = LoggerFactory.getLogger();
 	
 	public ActivityController() {
