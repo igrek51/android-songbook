@@ -26,9 +26,9 @@ class NavigationMenuController {
     @Inject
     lateinit var uiInfoService: UiInfoService
     @Inject
-    lateinit var songSelectionController: SongSelectionController
+    lateinit var songSelectionController: dagger.Lazy<SongSelectionController>
     @Inject
-    lateinit var activityController: ActivityController
+    lateinit var activityController: dagger.Lazy<ActivityController>
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
@@ -41,9 +41,9 @@ class NavigationMenuController {
         actionsMap[R.id.nav_update_db] = Runnable { uiInfoService.showToast("not implemented yet") }
         actionsMap[R.id.nav_import_song] = Runnable { uiInfoService.showToast("not implemented yet") }
         actionsMap[R.id.nav_settings] = Runnable { uiInfoService.showToast("not implemented yet") }
-        actionsMap[R.id.nav_help] = Runnable { songSelectionController.showUIHelp() }
-        actionsMap[R.id.nav_about] = Runnable { songSelectionController.showAbout() }
-        actionsMap[R.id.nav_exit] = Runnable { activityController.quit() }
+        actionsMap[R.id.nav_help] = Runnable { songSelectionController.get().showUIHelp() }
+        actionsMap[R.id.nav_about] = Runnable { songSelectionController.get().showAbout() }
+        actionsMap[R.id.nav_exit] = Runnable { activityController.get().quit() }
     }
 
     fun init() {
