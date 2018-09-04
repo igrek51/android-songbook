@@ -1,4 +1,4 @@
-package igrek.songbook.service.database;
+package igrek.songbook.service.persistence.database;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -15,15 +15,15 @@ import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 
-public class SongsDatabaseService {
+public class LocalDatabaseService {
 	
 	@Inject
 	Activity activity;
 	
-	private SongsDbHelper dbHelper;
+	private SQLiteDbHelper dbHelper;
 	private Logger logger = LoggerFactory.getLogger();
 	
-	public SongsDatabaseService() {
+	public LocalDatabaseService() {
 		DaggerIoc.getFactoryComponent().inject(this);
 		
 		// if file does not exist - copy initial db from resources
@@ -32,7 +32,7 @@ public class SongsDatabaseService {
 			createInitialDb(songsDbFile);
 		}
 		
-		dbHelper = new SongsDbHelper(activity, songsDbFile.getAbsolutePath());
+		dbHelper = new SQLiteDbHelper(activity, songsDbFile.getAbsolutePath());
 	}
 	
 	private void createInitialDb(File dbFile) {
@@ -70,7 +70,7 @@ public class SongsDatabaseService {
 		return new File(getSongDbDir(), "songs.sqlite");
 	}
 	
-	public SongsDbHelper getDbHelper() {
+	public SQLiteDbHelper getDbHelper() {
 		return dbHelper;
 	}
 }

@@ -17,9 +17,6 @@ import igrek.songbook.service.activity.OptionSelectDispatcher;
 import igrek.songbook.service.activity.SystemKeyDispatcher;
 import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.chords.ChordsManager;
-import igrek.songbook.service.database.PersistenceService;
-import igrek.songbook.service.database.SongsDatabaseService;
-import igrek.songbook.service.database.SqlQueryService;
 import igrek.songbook.service.filesystem.ExternalCardService;
 import igrek.songbook.service.filesystem.FilesystemService;
 import igrek.songbook.service.filetree.FileTreeManager;
@@ -35,6 +32,10 @@ import igrek.songbook.service.layout.songpreview.SongPreviewController;
 import igrek.songbook.service.layout.songtree.HomePathService;
 import igrek.songbook.service.layout.songtree.SongTreeController;
 import igrek.songbook.service.navmenu.NavigationMenuController;
+import igrek.songbook.service.persistence.PersistenceService;
+import igrek.songbook.service.persistence.SongsDbRepository;
+import igrek.songbook.service.persistence.database.LocalDatabaseService;
+import igrek.songbook.service.persistence.database.SqlQueryService;
 import igrek.songbook.service.preferences.PreferencesService;
 import igrek.songbook.service.transpose.ChordsTransposer;
 import igrek.songbook.service.window.SoftKeyboardService;
@@ -233,8 +234,8 @@ public class FactoryModule {
 	
 	@Provides
 	@Singleton
-	protected SongsDatabaseService provideSongsDbService() {
-		return new SongsDatabaseService();
+	protected LocalDatabaseService provideSongsDbService() {
+		return new LocalDatabaseService();
 	}
 	
 	@Provides
@@ -247,6 +248,12 @@ public class FactoryModule {
 	@Singleton
 	protected PersistenceService providePersistenceService() {
 		return new PersistenceService();
+	}
+	
+	@Provides
+	@Singleton
+	protected SongsDbRepository provideSongsDbRepository() {
+		return new SongsDbRepository();
 	}
 	
 	/*

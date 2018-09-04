@@ -1,4 +1,4 @@
-package igrek.songbook.service.database
+package igrek.songbook.service.persistence.database
 
 import android.database.Cursor
 import igrek.songbook.dagger.DaggerIoc
@@ -9,7 +9,7 @@ import javax.inject.Inject
 class SqlQueryService {
 
     @Inject
-    lateinit var songsDatabaseService: SongsDatabaseService
+    lateinit var localDatabaseService: LocalDatabaseService
 
     private val logger = LoggerFactory.getLogger()
 
@@ -75,7 +75,7 @@ class SqlQueryService {
     }
 
     private fun sqlQuery(sql: String, selectionArgs: Array<String> = arrayOf()): Cursor {
-        val db = songsDatabaseService.dbHelper.readableDatabase
+        val db = localDatabaseService.dbHelper.readableDatabase
         return db.rawQuery(sql, selectionArgs)
     }
 

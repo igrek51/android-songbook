@@ -10,9 +10,6 @@ import igrek.songbook.service.activity.OptionSelectDispatcher;
 import igrek.songbook.service.activity.SystemKeyDispatcher;
 import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.chords.ChordsManager;
-import igrek.songbook.service.database.PersistenceService;
-import igrek.songbook.service.database.SongsDatabaseService;
-import igrek.songbook.service.database.SqlQueryService;
 import igrek.songbook.service.errorcheck.SafeExecutor;
 import igrek.songbook.service.errorcheck.UIErrorHandler;
 import igrek.songbook.service.filesystem.ExternalCardService;
@@ -30,6 +27,10 @@ import igrek.songbook.service.layout.songpreview.SongPreviewController;
 import igrek.songbook.service.layout.songtree.HomePathService;
 import igrek.songbook.service.layout.songtree.SongTreeController;
 import igrek.songbook.service.navmenu.NavigationMenuController;
+import igrek.songbook.service.persistence.PersistenceService;
+import igrek.songbook.service.persistence.SongsDbRepository;
+import igrek.songbook.service.persistence.database.LocalDatabaseService;
+import igrek.songbook.service.persistence.database.SqlQueryService;
 import igrek.songbook.service.preferences.PreferencesService;
 import igrek.songbook.service.transpose.ChordsTransposer;
 import igrek.songbook.service.window.SoftKeyboardService;
@@ -98,11 +99,13 @@ public interface FactoryComponent {
 	
 	void inject(HelpLayoutController there);
 	
-	void inject(SongsDatabaseService there);
+	void inject(LocalDatabaseService there);
 	
 	void inject(SqlQueryService there);
 	
 	void inject(PersistenceService there);
+	
+	void inject(SongsDbRepository there);
 	
 	
 	void inject(UIErrorHandler there);

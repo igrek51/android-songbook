@@ -73,13 +73,13 @@ public class SongListView extends ListView implements AdapterView.OnItemClickLis
 	@Override
 	public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
 		FileItem item = adapter.getItem(position);
-		songTreeController.onItemClickedEvent(position, item);
+		songTreeController.onItemClickedEvent(item);
 	}
 	
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 		FileItem item = adapter.getItem(position);
-		songTreeController.onItemClickedEvent(position, item);
+		songTreeController.onItemClickedEvent(item);
 		return true;
 	}
 	
