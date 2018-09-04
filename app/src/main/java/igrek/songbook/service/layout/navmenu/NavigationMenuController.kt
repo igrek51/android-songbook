@@ -44,6 +44,7 @@ class NavigationMenuController {
         actionsMap[R.id.nav_help] = Runnable { songSelectionController.get().showUIHelp() }
         actionsMap[R.id.nav_about] = Runnable { songSelectionController.get().showAbout() }
         actionsMap[R.id.nav_exit] = Runnable { activityController.get().quit() }
+        actionsMap[R.id.nav_contact] = Runnable { songSelectionController.get().showContact() }
     }
 
     fun init() {

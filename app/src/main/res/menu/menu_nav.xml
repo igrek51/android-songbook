@@ -30,11 +30,15 @@
         <item
             android:id="@+id/nav_help"
             android:icon="@drawable/help"
-            android:title="@string/nav_help"/>
+            android:title="@string/ui_help"/>
+        <item
+            android:id="@+id/nav_contact"
+            android:icon="@drawable/send"
+            android:title="@string/ui_contact"/>
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/info"
-            android:title="@string/nav_about"/>
+            android:title="@string/ui_about"/>
         <item
             android:id="@+id/nav_exit"
             android:icon="@drawable/close"

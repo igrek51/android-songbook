@@ -156,6 +156,12 @@ public class SongSelectionController {
 		uiInfoService.showDialog(title, message);
 	}
 	
+	public void showContact() {
+		String message = uiResourceService.resString(R.string.ui_contact_content);
+		String title = uiResourceService.resString(R.string.ui_contact);
+		uiInfoService.showDialog(title, message);
+	}
+	
 	public void onToolbarBackClickedEvent() {
 		goUp();
 	}
@@ -189,5 +195,4 @@ public class SongSelectionController {
 			}
 		}
 	}
-	
 }
