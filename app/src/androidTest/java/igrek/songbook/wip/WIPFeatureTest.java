@@ -16,6 +16,7 @@ import igrek.songbook.dagger.AndroidTestComponent;
 import igrek.songbook.dagger.DaggerAndroidTestComponent;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.dagger.FactoryModule;
+import igrek.songbook.domain.song.Song;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.database.SongsDbService;
@@ -60,9 +61,10 @@ public class WIPFeatureTest {
 	
 	@Test
 	//@Ignore
-	public void testFeature() {
-		
-		sqlQueryService.read();
+	public void testWipFeature() {
+		for (Song song : sqlQueryService.readAllSongs()) {
+			logger.debug(song);
+		}
 		
 	}
 	
