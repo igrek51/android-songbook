@@ -9,7 +9,7 @@ import javax.inject.Inject
 class SqlQueryService {
 
     @Inject
-    lateinit var songsDbService: SongsDbService
+    lateinit var songsDatabaseService: SongsDatabaseService
 
     private val logger = LoggerFactory.getLogger()
 
@@ -75,7 +75,7 @@ class SqlQueryService {
     }
 
     private fun sqlQuery(sql: String, selectionArgs: Array<String> = arrayOf()): Cursor {
-        val db = songsDbService.dbHelper.readableDatabase
+        val db = songsDatabaseService.dbHelper.readableDatabase
         return db.rawQuery(sql, selectionArgs)
     }
 

@@ -15,7 +15,7 @@ import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 
-public class SongsDbService {
+public class SongsDatabaseService {
 	
 	@Inject
 	Activity activity;
@@ -23,7 +23,7 @@ public class SongsDbService {
 	private SongsDbHelper dbHelper;
 	private Logger logger = LoggerFactory.getLogger();
 	
-	public SongsDbService() {
+	public SongsDatabaseService() {
 		DaggerIoc.getFactoryComponent().inject(this);
 		
 		// if file does not exist - copy initial db from resources

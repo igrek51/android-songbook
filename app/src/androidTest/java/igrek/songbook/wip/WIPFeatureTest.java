@@ -19,8 +19,7 @@ import igrek.songbook.dagger.FactoryModule;
 import igrek.songbook.domain.song.Song;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
-import igrek.songbook.service.database.SongsDbService;
-import igrek.songbook.service.database.SqlQueryService;
+import igrek.songbook.service.database.PersistenceService;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -39,10 +38,7 @@ public class WIPFeatureTest {
 	Activity activity;
 	
 	@Inject
-	SongsDbService songsDbService;
-	
-	@Inject
-	SqlQueryService sqlQueryService;
+	PersistenceService persistenceService;
 	
 	@Before
 	public void setUpDagger() {
@@ -62,8 +58,9 @@ public class WIPFeatureTest {
 	@Test
 	//@Ignore
 	public void testWipFeature() {
-		for (Song song : sqlQueryService.readAllSongs()) {
-			logger.debug(song);
+		
+		for (Song song : persistenceService.readAllSongs()) {
+			logger.debug(song.getTitle());
 		}
 		
 	}

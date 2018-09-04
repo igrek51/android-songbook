@@ -10,7 +10,8 @@ import igrek.songbook.service.activity.OptionSelectDispatcher;
 import igrek.songbook.service.activity.SystemKeyDispatcher;
 import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.chords.ChordsManager;
-import igrek.songbook.service.database.SongsDbService;
+import igrek.songbook.service.database.PersistenceService;
+import igrek.songbook.service.database.SongsDatabaseService;
 import igrek.songbook.service.database.SqlQueryService;
 import igrek.songbook.service.errorcheck.SafeExecutor;
 import igrek.songbook.service.errorcheck.UIErrorHandler;
@@ -97,9 +98,11 @@ public interface FactoryComponent {
 	
 	void inject(HelpLayoutController there);
 	
-	void inject(SongsDbService there);
+	void inject(SongsDatabaseService there);
 	
 	void inject(SqlQueryService there);
+	
+	void inject(PersistenceService there);
 	
 	
 	void inject(UIErrorHandler there);
