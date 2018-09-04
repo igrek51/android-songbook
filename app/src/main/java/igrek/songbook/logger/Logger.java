@@ -11,6 +11,8 @@ public class Logger {
 	protected Logger() {
 	}
 	
+	private long lastRandomKey;
+	
 	public void error(String message) {
 		log(message, LogLevel.ERROR, "[ERROR] ");
 	}
@@ -112,19 +114,32 @@ public class Logger {
 	}
 	
 	protected void printDebug(String msg) {
-		Log.d(LoggerFactory.LOG_TAG, msg);
+		Log.d(tagWithRandomKey(), msg);
 	}
 	
 	protected void printInfo(String msg) {
-		Log.i(LoggerFactory.LOG_TAG, msg);
+		Log.i(tagWithRandomKey(), msg);
 	}
 	
 	protected void printWarn(String msg) {
-		Log.w(LoggerFactory.LOG_TAG, msg);
+		Log.w(tagWithRandomKey(), msg);
 	}
 	
 	protected void printError(String msg) {
-		Log.e(LoggerFactory.LOG_TAG, msg);
+		Log.e(tagWithRandomKey(), msg);
 	}
 	
+	/**
+	 * needed to force logcat to align all logs the same way by generating different tags:
+	 * https://github.com/orhanobut/logger/issues/173
+	 */
+	private String tagWithRandomKey() {
+		int random = (int) (10 * Math.random());
+		if (random == lastRandomKey) {
+			random = (random + 1) % 10;
+		}
+		lastRandomKey = random;
+		
+		return LoggerFactory.LOG_TAG + String.valueOf(random);
+	}
 }
