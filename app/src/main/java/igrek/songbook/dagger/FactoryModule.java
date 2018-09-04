@@ -24,10 +24,14 @@ import igrek.songbook.service.filetree.ScrollPosBuffer;
 import igrek.songbook.service.info.UiInfoService;
 import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.layout.LayoutController;
-import igrek.songbook.service.layout.navmenu.NavigationMenuController;
+import igrek.songbook.service.layout.about.AboutLayoutController;
+import igrek.songbook.service.layout.contact.ContactLayoutController;
+import igrek.songbook.service.layout.help.HelpLayoutController;
+import igrek.songbook.service.layout.search.SongSearchController;
 import igrek.songbook.service.layout.songpreview.SongPreviewController;
-import igrek.songbook.service.layout.songselection.HomePathService;
-import igrek.songbook.service.layout.songselection.SongSelectionController;
+import igrek.songbook.service.layout.songtree.HomePathService;
+import igrek.songbook.service.layout.songtree.SongTreeController;
+import igrek.songbook.service.navmenu.NavigationMenuController;
 import igrek.songbook.service.preferences.PreferencesService;
 import igrek.songbook.service.transpose.ChordsTransposer;
 import igrek.songbook.service.window.SoftKeyboardService;
@@ -172,8 +176,8 @@ public class FactoryModule {
 	
 	@Provides
 	@Singleton
-	protected SongSelectionController provideSongSelectionController() {
-		return new SongSelectionController();
+	protected SongTreeController provideSongSelectionController() {
+		return new SongTreeController();
 	}
 	
 	@Provides
@@ -198,6 +202,30 @@ public class FactoryModule {
 	@Singleton
 	protected NavigationMenuController provideNavigationMenuController() {
 		return new NavigationMenuController();
+	}
+	
+	@Provides
+	@Singleton
+	protected SongSearchController provideSongSearchController() {
+		return new SongSearchController();
+	}
+	
+	@Provides
+	@Singleton
+	protected AboutLayoutController provideAboutLayoutController() {
+		return new AboutLayoutController();
+	}
+	
+	@Provides
+	@Singleton
+	protected ContactLayoutController provideContactLayoutController() {
+		return new ContactLayoutController();
+	}
+	
+	@Provides
+	@Singleton
+	protected HelpLayoutController provideHelpLayoutController() {
+		return new HelpLayoutController();
 	}
 	
 	/*

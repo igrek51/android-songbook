@@ -17,17 +17,17 @@ import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.filetree.FileItem;
-import igrek.songbook.service.layout.songselection.SongSelectionController;
+import igrek.songbook.service.layout.songtree.SongTreeController;
 
-public class FileListView extends ListView implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class SongListView extends ListView implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 	
 	@Inject
-	SongSelectionController songSelectionController;
+	SongTreeController songTreeController;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
 	private List<FileItem> items;
-	private FileItemAdapter adapter;
+	private SongListItemAdapter adapter;
 	
 	private HashMap<Integer, Integer> itemHeights = new HashMap<>();
 	
@@ -35,15 +35,15 @@ public class FileListView extends ListView implements AdapterView.OnItemClickLis
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
-	public FileListView(Context context) {
+	public SongListView(Context context) {
 		super(context);
 	}
 	
-	public FileListView(Context context, AttributeSet attrs, int defStyle) {
+	public SongListView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 	}
 	
-	public FileListView(Context context, AttributeSet attrs) {
+	public SongListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 	
@@ -51,7 +51,7 @@ public class FileListView extends ListView implements AdapterView.OnItemClickLis
 		setOnItemClickListener(this);
 		setOnItemLongClickListener(this);
 		setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-		adapter = new FileItemAdapter(context, null, this);
+		adapter = new SongListItemAdapter(context, null, this);
 		setAdapter(adapter);
 	}
 	
@@ -73,13 +73,13 @@ public class FileListView extends ListView implements AdapterView.OnItemClickLis
 	@Override
 	public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
 		FileItem item = adapter.getItem(position);
-		songSelectionController.onItemClickedEvent(position, item);
+		songTreeController.onItemClickedEvent(position, item);
 	}
 	
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 		FileItem item = adapter.getItem(position);
-		songSelectionController.onItemClickedEvent(position, item);
+		songTreeController.onItemClickedEvent(position, item);
 		return true;
 	}
 	
@@ -109,8 +109,6 @@ public class FileListView extends ListView implements AdapterView.OnItemClickLis
 		for (int i = 0; i < getFirstVisiblePosition(); i++) {
 			sumh += getItemHeight(i);
 		}
-		//separatory
-		//sumh += getFirstVisiblePosition() * getDividerHeight();
 		return sumh - getChildAt(0).getTop();
 	}
 	
@@ -123,7 +121,7 @@ public class FileListView extends ListView implements AdapterView.OnItemClickLis
 	}
 	
 	/**
-	 * @param position pozycja elementu do przescrollowania (-1 - ostatni element)
+	 * @param position position of element to scroll (-1 - last element)
 	 */
 	public void scrollTo(int position) {
 		if (position == -1)
@@ -135,7 +133,7 @@ public class FileListView extends ListView implements AdapterView.OnItemClickLis
 	}
 	
 	public void scrollToPosition(int y) {
-		//wyznaczenie najbliższego elementu i przesunięcie względem niego
+		// determine nearest element and scroll relative to it
 		int position = 0;
 		while (y > itemHeights.get(position)) {
 			y -= itemHeights.get(position);

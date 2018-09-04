@@ -14,16 +14,13 @@ import java.util.List;
 import igrek.songbook.R;
 import igrek.songbook.service.filetree.FileItem;
 
-public class FileItemAdapter extends ArrayAdapter<FileItem> {
+public class SongListItemAdapter extends ArrayAdapter<FileItem> {
 	
-	Context context;
-	List<FileItem> dataSource;
+	private Context context;
+	private List<FileItem> dataSource;
 	
-	View convertView = null;
-	ViewGroup parent = null;
-	
-	public FileItemAdapter(Context context, List<FileItem> dataSource, FileListView listView) {
-		super(context, 0, new ArrayList<FileItem>());
+	public SongListItemAdapter(Context context, List<FileItem> dataSource, SongListView listView) {
+		super(context, 0, new ArrayList<>());
 		this.context = context;
 		if (dataSource == null)
 			dataSource = new ArrayList<>();
@@ -56,12 +53,9 @@ public class FileItemAdapter extends ArrayAdapter<FileItem> {
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		
-		this.convertView = convertView;
-		this.parent = parent;
-		
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
-		final View itemView = inflater.inflate(R.layout.file_item, parent, false);
+		final View itemView = inflater.inflate(R.layout.song_list_item, parent, false);
 		final FileItem item = dataSource.get(position);
 		
 		//zawartość tekstowa elementu

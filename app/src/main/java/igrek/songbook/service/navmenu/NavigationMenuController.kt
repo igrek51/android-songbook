@@ -1,4 +1,4 @@
-package igrek.songbook.service.layout.navmenu
+package igrek.songbook.service.navmenu
 
 import android.app.Activity
 import android.support.design.widget.NavigationView
@@ -10,7 +10,10 @@ import igrek.songbook.logger.LoggerFactory
 import igrek.songbook.service.activity.ActivityController
 import igrek.songbook.service.errorcheck.SafeExecutor
 import igrek.songbook.service.info.UiInfoService
-import igrek.songbook.service.layout.songselection.SongSelectionController
+import igrek.songbook.service.layout.LayoutController
+import igrek.songbook.service.layout.about.AboutLayoutController
+import igrek.songbook.service.layout.contact.ContactLayoutController
+import igrek.songbook.service.layout.help.HelpLayoutController
 import java.util.*
 import javax.inject.Inject
 
@@ -26,9 +29,15 @@ class NavigationMenuController {
     @Inject
     lateinit var uiInfoService: UiInfoService
     @Inject
-    lateinit var songSelectionController: dagger.Lazy<SongSelectionController>
-    @Inject
     lateinit var activityController: dagger.Lazy<ActivityController>
+    @Inject
+    lateinit var contactLayoutController: dagger.Lazy<ContactLayoutController>
+    @Inject
+    lateinit var helpLayoutController: dagger.Lazy<HelpLayoutController>
+    @Inject
+    lateinit var aboutLayoutController: dagger.Lazy<AboutLayoutController>
+    @Inject
+    lateinit var layoutController: dagger.Lazy<LayoutController>
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
@@ -36,15 +45,15 @@ class NavigationMenuController {
     }
 
     private fun initOptionActionsMap() {
-        actionsMap[R.id.nav_songs_list] = Runnable { uiInfoService.showToast("not implemented yet") }
-        actionsMap[R.id.nav_search] = Runnable { uiInfoService.showToast("not implemented yet") }
-        actionsMap[R.id.nav_update_db] = Runnable { uiInfoService.showToast("not implemented yet") }
+        actionsMap[R.id.nav_songs_list] = Runnable { layoutController.get().showSongTree() }
+        actionsMap[R.id.nav_search] = Runnable { layoutController.get().showSongSearch() }
+        actionsMap[R.id.nav_update_db] = Runnable { uiInfoService.showToast("Songs database is up-to-date") }
         actionsMap[R.id.nav_import_song] = Runnable { uiInfoService.showToast("not implemented yet") }
         actionsMap[R.id.nav_settings] = Runnable { uiInfoService.showToast("not implemented yet") }
-        actionsMap[R.id.nav_help] = Runnable { songSelectionController.get().showUIHelp() }
-        actionsMap[R.id.nav_about] = Runnable { songSelectionController.get().showAbout() }
+        actionsMap[R.id.nav_help] = Runnable { helpLayoutController.get().showUIHelp() }
+        actionsMap[R.id.nav_about] = Runnable { aboutLayoutController.get().showAbout() }
         actionsMap[R.id.nav_exit] = Runnable { activityController.get().quit() }
-        actionsMap[R.id.nav_contact] = Runnable { songSelectionController.get().showContact() }
+        actionsMap[R.id.nav_contact] = Runnable { contactLayoutController.get().showContact() }
     }
 
     fun init() {

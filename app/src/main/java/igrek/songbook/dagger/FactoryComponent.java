@@ -19,17 +19,21 @@ import igrek.songbook.service.filetree.ScrollPosBuffer;
 import igrek.songbook.service.info.UiInfoService;
 import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.layout.LayoutController;
-import igrek.songbook.service.layout.navmenu.NavigationMenuController;
+import igrek.songbook.service.layout.about.AboutLayoutController;
+import igrek.songbook.service.layout.contact.ContactLayoutController;
+import igrek.songbook.service.layout.help.HelpLayoutController;
+import igrek.songbook.service.layout.search.SongSearchController;
 import igrek.songbook.service.layout.songpreview.SongPreviewController;
-import igrek.songbook.service.layout.songselection.HomePathService;
-import igrek.songbook.service.layout.songselection.SongSelectionController;
+import igrek.songbook.service.layout.songtree.HomePathService;
+import igrek.songbook.service.layout.songtree.SongTreeController;
+import igrek.songbook.service.navmenu.NavigationMenuController;
 import igrek.songbook.service.preferences.PreferencesService;
 import igrek.songbook.service.transpose.ChordsTransposer;
 import igrek.songbook.service.window.SoftKeyboardService;
 import igrek.songbook.service.window.WindowManagerService;
 import igrek.songbook.view.songpreview.CanvasGraphics;
 import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
-import igrek.songbook.view.songselection.FileListView;
+import igrek.songbook.view.songselection.SongListView;
 
 /**
  * Dagger will be injecting to those classes
@@ -71,7 +75,7 @@ public interface FactoryComponent {
 	
 	void inject(LayoutController there);
 	
-	void inject(SongSelectionController there);
+	void inject(SongTreeController there);
 	
 	void inject(SongPreviewController there);
 	
@@ -83,10 +87,18 @@ public interface FactoryComponent {
 	
 	void inject(NavigationMenuController there);
 	
+	void inject(SongSearchController there);
+	
+	void inject(AboutLayoutController there);
+	
+	void inject(ContactLayoutController there);
+	
+	void inject(HelpLayoutController there);
+	
 	
 	void inject(UIErrorHandler there);
 	
-	void inject(FileListView there);
+	void inject(SongListView there);
 	
 	void inject(SafeExecutor there);
 	

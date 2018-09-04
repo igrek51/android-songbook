@@ -9,7 +9,7 @@ import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.filetree.FileTreeManager;
 import igrek.songbook.service.layout.LayoutController;
 import igrek.songbook.service.layout.LayoutState;
-import igrek.songbook.service.layout.songselection.SongSelectionController;
+import igrek.songbook.service.layout.songtree.SongTreeController;
 import igrek.songbook.service.window.WindowManagerService;
 import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
 
@@ -18,7 +18,7 @@ public class SystemKeyDispatcher {
 	@Inject
 	LayoutController layoutController;
 	@Inject
-	SongSelectionController songSelectionController;
+	SongTreeController songTreeController;
 	@Inject
 	QuickMenu quickMenu;
 	@Inject
@@ -34,7 +34,7 @@ public class SystemKeyDispatcher {
 	
 	public boolean onKeyBack() {
 		if (layoutController.isState(LayoutState.SONGS_LIST)) {
-			songSelectionController.onToolbarBackClickedEvent();
+			songTreeController.onToolbarBackClickedEvent();
 		} else if (layoutController.isState(LayoutState.SONG_PREVIEW)) {
 			if (quickMenu.isVisible()) {
 				quickMenu.onShowQuickMenuEvent(false);
@@ -42,11 +42,11 @@ public class SystemKeyDispatcher {
 				autoscrollService.onAutoscrollStopEvent();
 				
 				layoutController.setState(LayoutState.SONGS_LIST);
-				layoutController.showSongSelection();
+				layoutController.showSongTree();
 				
 				windowManagerService.keepScreenOn(false);
 				
-				new Handler().post(() -> songSelectionController.restoreScrollPosition(fileTreeManager
+				new Handler().post(() -> songTreeController.restoreScrollPosition(fileTreeManager
 						.getCurrentPath()));
 			}
 		}
