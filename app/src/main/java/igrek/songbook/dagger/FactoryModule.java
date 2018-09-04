@@ -17,6 +17,7 @@ import igrek.songbook.service.activity.OptionSelectDispatcher;
 import igrek.songbook.service.activity.SystemKeyDispatcher;
 import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.chords.ChordsManager;
+import igrek.songbook.service.database.SongsDbService;
 import igrek.songbook.service.filesystem.ExternalCardService;
 import igrek.songbook.service.filesystem.FilesystemService;
 import igrek.songbook.service.filetree.FileTreeManager;
@@ -226,6 +227,12 @@ public class FactoryModule {
 	@Singleton
 	protected HelpLayoutController provideHelpLayoutController() {
 		return new HelpLayoutController();
+	}
+	
+	@Provides
+	@Singleton
+	protected SongsDbService provideSongsDbService() {
+		return new SongsDbService();
 	}
 	
 	/*
