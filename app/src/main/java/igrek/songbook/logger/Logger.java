@@ -11,7 +11,7 @@ public class Logger {
 	protected Logger() {
 	}
 	
-	private long lastRandomKey;
+	private static int lastTagKey = 0;
 	
 	public void error(String message) {
 		log(message, LogLevel.ERROR, "[ERROR] ");
@@ -23,7 +23,7 @@ public class Logger {
 	}
 	
 	public void fatal(final Activity activity, String e) {
-		log(e, LogLevel.FATAL, "[FATAL ERROR] ");
+		log(e, LogLevel.FATAL, "[FATAL] ");
 		if (activity == null) {
 			error("FATAL ERROR: No activity");
 			return;
@@ -43,11 +43,11 @@ public class Logger {
 	}
 	
 	public void warn(String message) {
-		log(message, LogLevel.WARN, "[warn] ");
+		log(message, LogLevel.WARN, "[warn]  ");
 	}
 	
 	public void info(String message) {
-		log(message, LogLevel.INFO, "");
+		log(message, LogLevel.INFO, "[info]  ");
 	}
 	
 	public void debug(String message) {
@@ -114,32 +114,33 @@ public class Logger {
 	}
 	
 	protected void printDebug(String msg) {
-		Log.d(tagWithRandomKey(), msg);
+		Log.d(tagWithKey(), msg);
 	}
 	
 	protected void printInfo(String msg) {
-		Log.i(tagWithRandomKey(), msg);
+		Log.i(tagWithKey(), msg);
 	}
 	
 	protected void printWarn(String msg) {
-		Log.w(tagWithRandomKey(), msg);
+		Log.w(tagWithKey(), msg);
 	}
 	
 	protected void printError(String msg) {
-		Log.e(tagWithRandomKey(), msg);
+		Log.e(tagWithKey(), msg);
 	}
 	
 	/**
-	 * needed to force logcat to align all logs the same way by generating different tags:
+	 * force logcat to align all logs the same way
+	 * by generating different tags for every next log.
+	 * (to prevent log header cutting by logcat)
 	 * https://github.com/orhanobut/logger/issues/173
 	 */
-	private String tagWithRandomKey() {
-		int random = (int) (10 * Math.random());
-		if (random == lastRandomKey) {
-			random = (random + 1) % 10;
-		}
-		lastRandomKey = random;
-		
-		return LoggerFactory.LOG_TAG + String.valueOf(random);
+	private String tagWithKey() {
+		return LoggerFactory.LOG_TAG + incrementTagKey();
+	}
+	
+	private static synchronized int incrementTagKey() {
+		lastTagKey = (lastTagKey + 1) % 10;
+		return lastTagKey;
 	}
 }

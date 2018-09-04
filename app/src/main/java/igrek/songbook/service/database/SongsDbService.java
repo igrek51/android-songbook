@@ -1,8 +1,12 @@
 package igrek.songbook.service.database;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import javax.inject.Inject;
 
@@ -21,35 +25,52 @@ public class SongsDbService {
 	
 	public SongsDbService() {
 		DaggerIoc.getFactoryComponent().inject(this);
-		init();
-	}
-	
-	public void init() {
-		logger.debug("initializing database");
-		String dbName = "android.resource://" + activity.getPackageName() + "/" + R.raw.songs;
-		dbHelper = new SongsDbHelper(activity, dbName);
-	}
-	
-	public void read() {
-		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		
-		String[] projection = {
-				"*"
-		};
-		
-		Cursor cursor = db.query("songs",   // The table to query
-				projection,             // The array of columns to return (pass null to get all)
-				null,              // The columns for the WHERE clause
-				null,          // The values for the WHERE clause
-				null,                   // don't group the rows
-				null,                   // don't filter by row groups
-				null               // The sort order
-		);
-		
-		while (cursor.moveToNext()) {
-			long itemId = cursor.getLong(cursor.getColumnIndexOrThrow("id"));
-			logger.debug(itemId);
+		// if file does not exist - copy initial db from resources
+		File songsDbFile = getSongsDbFile();
+		if (!songsDbFile.exists()) {
+			createInitialDb(songsDbFile);
 		}
-		cursor.close();
+		
+		dbHelper = new SongsDbHelper(activity, songsDbFile.getAbsolutePath());
+	}
+	
+	private void createInitialDb(File dbFile) {
+		logger.info("no database file - creating intial db from resources");
+		copyFileFromResources(R.raw.songs, dbFile);
+	}
+	
+	private void copyFileFromResources(int resourceId, File targetPath) {
+		byte[] buff = new byte[1024];
+		try (InputStream in = activity.getResources()
+				.openRawResource(resourceId); FileOutputStream out = new FileOutputStream(targetPath)) {
+			int read;
+			while ((read = in.read(buff)) > 0) {
+				out.write(buff, 0, read);
+			}
+		} catch (IOException e) {
+			logger.error(e);
+		}
+	}
+	
+	@SuppressLint("SdCardPath")
+	private File getSongDbDir() {
+		File dir = activity.getExternalFilesDir("data");
+		if (dir != null && dir.isDirectory())
+			return dir;
+		
+		dir = activity.getFilesDir();
+		if (dir != null && dir.isDirectory())
+			return dir;
+		
+		return new File("/data/data/" + activity.getPackageName() + "/files");
+	}
+	
+	private File getSongsDbFile() {
+		return new File(getSongDbDir(), "songs.sqlite");
+	}
+	
+	public SongsDbHelper getDbHelper() {
+		return dbHelper;
 	}
 }

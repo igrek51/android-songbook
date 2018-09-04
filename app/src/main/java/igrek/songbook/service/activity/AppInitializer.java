@@ -11,7 +11,6 @@ import javax.inject.Inject;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
-import igrek.songbook.service.database.SongsDbService;
 import igrek.songbook.service.layout.LayoutController;
 import igrek.songbook.service.window.WindowManagerService;
 
@@ -23,8 +22,6 @@ public class AppInitializer {
 	Activity activity;
 	@Inject
 	LayoutController layoutController;
-	@Inject
-	SongsDbService songsDbService;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	

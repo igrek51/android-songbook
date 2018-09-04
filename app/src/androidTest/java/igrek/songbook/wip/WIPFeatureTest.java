@@ -18,6 +18,8 @@ import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.dagger.FactoryModule;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
+import igrek.songbook.service.database.SongsDbService;
+import igrek.songbook.service.database.SqlQueryService;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -35,6 +37,12 @@ public class WIPFeatureTest {
 	@Inject
 	Activity activity;
 	
+	@Inject
+	SongsDbService songsDbService;
+	
+	@Inject
+	SqlQueryService sqlQueryService;
+	
 	@Before
 	public void setUpDagger() {
 		MainActivity activity = rule.getActivity();
@@ -46,13 +54,16 @@ public class WIPFeatureTest {
 		DaggerIoc.setFactoryComponent(component);
 		component.inject(this);
 		
+		logger.warn("====== Running Android Instrumentation Test: WIPFeatureTest ======");
 		logger.debug("Injected activity: " + this.activity);
 	}
 	
 	@Test
 	//@Ignore
 	public void testFeature() {
-		logger.info("dupa");
+		
+		sqlQueryService.read();
+		
 	}
 	
 }
