@@ -12,6 +12,7 @@ import igrek.songbook.domain.songsdb.SongsDb
 import igrek.songbook.logger.Logger
 import igrek.songbook.logger.LoggerFactory
 import igrek.songbook.service.activity.ActivityController
+import igrek.songbook.service.info.UiResourceService
 import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController
 import igrek.songbook.service.navmenu.NavigationMenuController
 import igrek.songbook.service.persistence.SongsDbRepository
@@ -39,6 +40,8 @@ abstract class SongSelectionLayoutController : OnSongClickListener {
     lateinit var navigationMenuController: NavigationMenuController
     @Inject
     lateinit var songsDbRepository: SongsDbRepository
+    @Inject
+    lateinit var uiResourceService: UiResourceService
     @Inject
     lateinit var songPreviewLayoutController: Lazy<SongPreviewLayoutController>
 

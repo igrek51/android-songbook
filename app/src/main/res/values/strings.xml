@@ -45,4 +45,6 @@
     <string name="contact_message_hint">Message…</string>
     <string name="song_search_edit_hint">Song title or artist</string>
     <string name="contact_send">Send</string>
+    <string name="unlock_action">Unlock</string>
+    <string name="action_cancel">Cancel</string>
 </resources>

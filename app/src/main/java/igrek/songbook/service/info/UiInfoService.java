@@ -126,4 +126,15 @@ public class UiInfoService {
 		dlgAlert.setCancelable(true);
 		dlgAlert.create().show();
 	}
+	
+	public void showDialog(String title, String message, String neutralActionName, Runnable neutralAction) {
+		AlertDialog.Builder dlgAlert = new AlertDialog.Builder(activity);
+		dlgAlert.setMessage(message);
+		dlgAlert.setTitle(title);
+		dlgAlert.setPositiveButton(uiResourceService.resString(R.string.action_info_ok), (dialog, which) -> {
+		});
+		dlgAlert.setNeutralButton(neutralActionName, (dialog, which) -> neutralAction.run());
+		dlgAlert.setCancelable(true);
+		dlgAlert.create().show();
+	}
 }

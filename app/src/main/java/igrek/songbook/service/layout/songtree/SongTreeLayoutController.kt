@@ -13,6 +13,7 @@ import igrek.songbook.service.songtree.SongTreeItem
 class SongTreeLayoutController : SongSelectionLayoutController() {
 
     private var toolbarTitle: TextView? = null
+    private var goBackButton: ImageButton? = null
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
@@ -24,8 +25,8 @@ class SongTreeLayoutController : SongSelectionLayoutController() {
         val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)
         navMenuButton.setOnClickListener { _ -> navigationMenuController.navDrawerShow() }
 
-        val goBackButton = layout.findViewById<ImageButton>(R.id.goBackButton)
-        goBackButton.setOnClickListener { _ -> onBackClicked() }
+        goBackButton = layout.findViewById(R.id.goBackButton)
+        goBackButton!!.setOnClickListener { _ -> onBackClicked() }
 
         toolbarTitle = layout.findViewById(R.id.toolbarTitle)
 
@@ -43,9 +44,11 @@ class SongTreeLayoutController : SongSelectionLayoutController() {
     override fun updateSongItemsList() {
         super.updateSongItemsList()
         if (songTreeWalker.isCategorySelected) {
+            goBackButton!!.visibility = View.VISIBLE
             setTitle(songTreeWalker.currentCategory.displayName)
         } else {
-            setTitle("Songs")
+            goBackButton!!.visibility = View.INVISIBLE
+            setTitle(uiResourceService.resString(R.string.nav_songs_list))
         }
     }
 
