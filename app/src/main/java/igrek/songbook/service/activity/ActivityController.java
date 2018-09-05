@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
+import igrek.songbook.service.persistence.database.LocalDatabaseService;
 import igrek.songbook.service.preferences.PreferencesService;
 import igrek.songbook.service.system.WindowManagerService;
 
@@ -20,6 +21,8 @@ public class ActivityController {
 	Activity activity;
 	@Inject
 	PreferencesService preferencesService;
+	@Inject
+	LocalDatabaseService localDatabaseService;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
@@ -42,6 +45,7 @@ public class ActivityController {
 	}
 	
 	public void onDestroy() {
+		localDatabaseService.closeDatabase();
 		logger.info("Activity has been destroyed.");
 	}
 	

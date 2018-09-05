@@ -9,12 +9,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.domain.songsdb.Song;
 import igrek.songbook.domain.songsdb.SongCategory;
 import igrek.songbook.domain.songsdb.SongsDb;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
+import igrek.songbook.service.info.UiInfoService;
 import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.persistence.database.LocalDatabaseService;
 import igrek.songbook.service.persistence.database.SqlQueryService;
@@ -27,6 +29,8 @@ public class SongsDbRepository {
 	LocalDatabaseService localDatabaseService;
 	@Inject
 	UiResourceService uiResourceService;
+	@Inject
+	UiInfoService uiInfoService;
 	
 	private SongsDb songsDb;
 	
@@ -34,15 +38,19 @@ public class SongsDbRepository {
 	
 	public SongsDbRepository() {
 		DaggerIoc.getFactoryComponent().inject(this);
+		localDatabaseService.checkDatabaseValid();
 		initSongsDb();
 	}
 	
 	public void updateDb() {
 		localDatabaseService.recreateDb();
 		initSongsDb();
+		uiInfoService.showInfo(R.string.ui_db_is_uptodate);
 	}
 	
 	private void initSongsDb() {
+		long versionNumber = sqlQueryService.readDbVersionNumber();
+		
 		List<SongCategory> categories = sqlQueryService.readAllCategories();
 		List<Song> songs = sqlQueryService.readAllSongs(categories);
 		
@@ -65,7 +73,6 @@ public class SongsDbRepository {
 			}
 		}
 		
-		long versionNumber = sqlQueryService.readDbVersionNumber();
 		songsDb = new SongsDb(versionNumber, categories, songs);
 	}
 	

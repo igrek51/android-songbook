@@ -49,7 +49,8 @@ public class UiInfoService {
 		// dont create new snackbars if one is already shown
 		Snackbar snackbar = infobars.get(view);
 		if (snackbar == null || !snackbar.isShown()) { // a new one
-			snackbar = Snackbar.make(view, info, Snackbar.LENGTH_SHORT);
+			int duration = info.length() > 50 ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_SHORT;
+			snackbar = Snackbar.make(view, info, duration);
 			snackbar.setActionTextColor(Color.WHITE);
 		} else { // visible - use it one more time
 			snackbar.setText(info);
@@ -114,7 +115,6 @@ public class UiInfoService {
 	
 	public void showToast(String message) {
 		Toast.makeText(activity.getApplicationContext(), message, Toast.LENGTH_LONG).show();
-		logger.info("TOAST: " + message);
 	}
 	
 	public void showDialog(String title, String message) {

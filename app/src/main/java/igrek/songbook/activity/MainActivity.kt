@@ -8,9 +8,12 @@ import android.view.Menu
 import android.view.MenuItem
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.logger.Logger
+import igrek.songbook.logger.LoggerFactory
 import igrek.songbook.service.activity.ActivityController
 import igrek.songbook.service.activity.AppInitializer
 import igrek.songbook.service.activity.OptionSelectDispatcher
+import igrek.songbook.service.filesystem.PermissionService
 import igrek.songbook.service.system.SystemKeyDispatcher
 import javax.inject.Inject
 
@@ -24,13 +27,21 @@ class MainActivity : AppCompatActivity() {
     lateinit var optionSelectDispatcher: OptionSelectDispatcher
     @Inject
     lateinit var systemKeyDispatcher: SystemKeyDispatcher
+    @Inject
+    lateinit var permissionService: PermissionService
+
+    private val logger: Logger = LoggerFactory.getLogger()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Dagger Container init
-        DaggerIoc.init(this)
-        DaggerIoc.getFactoryComponent().inject(this)
-        appInitializer.init()
+        try {
+            // Dagger Container init
+            DaggerIoc.init(this)
+            DaggerIoc.getFactoryComponent().inject(this)
+            appInitializer.init()
+        } catch (t: Throwable) {
+            logger.fatal(this, t)
+        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -75,5 +86,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
         return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        permissionService.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 }

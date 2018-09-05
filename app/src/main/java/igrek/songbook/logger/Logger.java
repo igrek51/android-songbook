@@ -30,7 +30,7 @@ public class Logger {
 		}
 		AlertDialog.Builder dlgAlert = new AlertDialog.Builder(activity);
 		dlgAlert.setMessage(e);
-		dlgAlert.setTitle("Critical error");
+		dlgAlert.setTitle("Critical error :(");
 		dlgAlert.setPositiveButton("Close app", (dialog, which) -> activity.finish());
 		dlgAlert.setCancelable(false);
 		dlgAlert.create().show();

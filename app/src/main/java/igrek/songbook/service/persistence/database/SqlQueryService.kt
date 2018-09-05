@@ -11,7 +11,7 @@ import javax.inject.Inject
 class SqlQueryService {
 
     @Inject
-    lateinit var localDatabaseService: LocalDatabaseService
+    lateinit var localDatabaseService: dagger.Lazy<LocalDatabaseService>
 
     private val logger = LoggerFactory.getLogger()
 
@@ -121,7 +121,7 @@ class SqlQueryService {
     }
 
     private fun sqlQuery(sql: String, selectionArgs: Array<String> = arrayOf()): Cursor {
-        val db = localDatabaseService.dbHelper.readableDatabase
+        val db = localDatabaseService.get().dbHelper.readableDatabase
         return db.rawQuery(sql, selectionArgs)
     }
 
