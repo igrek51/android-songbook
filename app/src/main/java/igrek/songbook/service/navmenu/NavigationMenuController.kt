@@ -14,6 +14,7 @@ import igrek.songbook.service.layout.LayoutController
 import igrek.songbook.service.layout.about.AboutLayoutController
 import igrek.songbook.service.layout.contact.ContactLayoutController
 import igrek.songbook.service.layout.help.HelpLayoutController
+import igrek.songbook.service.persistence.SongsDbRepository
 import java.util.*
 import javax.inject.Inject
 
@@ -38,6 +39,8 @@ class NavigationMenuController {
     lateinit var aboutLayoutController: dagger.Lazy<AboutLayoutController>
     @Inject
     lateinit var layoutController: dagger.Lazy<LayoutController>
+    @Inject
+    lateinit var songsDbRepository: SongsDbRepository
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
@@ -47,7 +50,7 @@ class NavigationMenuController {
     private fun initOptionActionsMap() {
         actionsMap[R.id.nav_songs_list] = Runnable { layoutController.get().showSongTree() }
         actionsMap[R.id.nav_search] = Runnable { layoutController.get().showSongSearch() }
-        actionsMap[R.id.nav_update_db] = Runnable { uiInfoService.showToast("Songs database is up-to-date") }
+        actionsMap[R.id.nav_update_db] = Runnable { songsDbRepository.updateDb() }
         actionsMap[R.id.nav_import_song] = Runnable { uiInfoService.showToast("not implemented yet") }
         actionsMap[R.id.nav_settings] = Runnable { uiInfoService.showToast("not implemented yet") }
         actionsMap[R.id.nav_help] = Runnable { helpLayoutController.get().showUIHelp() }

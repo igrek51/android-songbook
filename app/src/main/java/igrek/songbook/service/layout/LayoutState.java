@@ -2,7 +2,7 @@ package igrek.songbook.service.layout;
 
 public enum LayoutState {
 	
-	SONGS_LIST,
+	SONGS_TREE,
 	
 	SEARCH_SONG,
 	

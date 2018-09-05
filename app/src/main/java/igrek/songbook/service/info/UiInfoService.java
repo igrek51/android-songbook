@@ -75,9 +75,7 @@ public class UiInfoService {
 		
 		snackbar.show();
 		infobars.put(view, snackbar);
-		logger.info(info);
 	}
-	
 	
 	public void showInfo(String info, String dismissName) {
 		showActionInfo(info, null, dismissName, null, null);

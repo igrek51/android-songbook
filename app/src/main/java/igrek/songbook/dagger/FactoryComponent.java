@@ -7,9 +7,9 @@ import igrek.songbook.activity.MainActivity;
 import igrek.songbook.service.activity.ActivityController;
 import igrek.songbook.service.activity.AppInitializer;
 import igrek.songbook.service.activity.OptionSelectDispatcher;
-import igrek.songbook.service.activity.SystemKeyDispatcher;
 import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.chords.ChordsManager;
+import igrek.songbook.service.chords.transpose.ChordsTransposer;
 import igrek.songbook.service.errorcheck.SafeExecutor;
 import igrek.songbook.service.errorcheck.UIErrorHandler;
 import igrek.songbook.service.filesystem.ExternalCardService;
@@ -24,16 +24,15 @@ import igrek.songbook.service.layout.search.SongSearchLayoutController;
 import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController;
 import igrek.songbook.service.layout.songtree.SongTreeLayoutController;
 import igrek.songbook.service.navmenu.NavigationMenuController;
-import igrek.songbook.service.persistence.PersistenceService;
 import igrek.songbook.service.persistence.SongsDbRepository;
 import igrek.songbook.service.persistence.database.LocalDatabaseService;
 import igrek.songbook.service.persistence.database.SqlQueryService;
 import igrek.songbook.service.preferences.PreferencesService;
 import igrek.songbook.service.songtree.ScrollPosBuffer;
 import igrek.songbook.service.songtree.SongTreeWalker;
-import igrek.songbook.service.transpose.ChordsTransposer;
-import igrek.songbook.service.window.SoftKeyboardService;
-import igrek.songbook.service.window.WindowManagerService;
+import igrek.songbook.service.system.SoftKeyboardService;
+import igrek.songbook.service.system.SystemKeyDispatcher;
+import igrek.songbook.service.system.WindowManagerService;
 import igrek.songbook.view.songpreview.CanvasGraphics;
 import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
 import igrek.songbook.view.songselection.SongListView;
@@ -99,8 +98,6 @@ public interface FactoryComponent {
 	void inject(LocalDatabaseService there);
 	
 	void inject(SqlQueryService there);
-	
-	void inject(PersistenceService there);
 	
 	void inject(SongsDbRepository there);
 	

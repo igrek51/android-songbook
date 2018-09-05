@@ -1,7 +1,7 @@
 package igrek.songbook.service.songtree;
 
-import igrek.songbook.domain.song.Song;
-import igrek.songbook.domain.song.SongCategory;
+import igrek.songbook.domain.songsdb.Song;
+import igrek.songbook.domain.songsdb.SongCategory;
 
 public class SongTreeItem {
 	
@@ -50,7 +50,7 @@ public class SongTreeItem {
 		if (isCategory()) {
 			return "[" + category.getName() + "]";
 		} else {
-			return song.getCategoryName() + " - " + song.getTitle();
+			return song.getCategory().getName() + " - " + song.getTitle();
 		}
 	}
 }

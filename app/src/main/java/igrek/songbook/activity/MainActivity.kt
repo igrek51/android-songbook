@@ -11,7 +11,7 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.service.activity.ActivityController
 import igrek.songbook.service.activity.AppInitializer
 import igrek.songbook.service.activity.OptionSelectDispatcher
-import igrek.songbook.service.activity.SystemKeyDispatcher
+import igrek.songbook.service.system.SystemKeyDispatcher
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {

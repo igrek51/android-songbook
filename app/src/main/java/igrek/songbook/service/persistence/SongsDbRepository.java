@@ -4,23 +4,27 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.domain.song.Song;
-import igrek.songbook.domain.song.SongCategory;
-import igrek.songbook.domain.song.SongCategoryType;
-import igrek.songbook.domain.song.SongsDb;
+import igrek.songbook.domain.songsdb.Song;
+import igrek.songbook.domain.songsdb.SongCategory;
+import igrek.songbook.domain.songsdb.SongsDb;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.info.UiResourceService;
+import igrek.songbook.service.persistence.database.LocalDatabaseService;
+import igrek.songbook.service.persistence.database.SqlQueryService;
 
 public class SongsDbRepository {
 	
 	@Inject
-	PersistenceService persistenceService;
+	SqlQueryService sqlQueryService;
+	@Inject
+	LocalDatabaseService localDatabaseService;
 	@Inject
 	UiResourceService uiResourceService;
 	
@@ -33,30 +37,27 @@ public class SongsDbRepository {
 		initSongsDb();
 	}
 	
+	public void updateDb() {
+		localDatabaseService.recreateDb();
+		initSongsDb();
+	}
+	
 	private void initSongsDb() {
-		List<Song> songs = persistenceService.readAllSongs();
-		Multimap<String, Song> categorySongs = ArrayListMultimap.create();
-		
-		for (Song song : songs) {
-			String categoryName = song.getCategoryName();
-			categorySongs.put(categoryName, song);
-		}
+		List<SongCategory> categories = sqlQueryService.readAllCategories();
+		List<Song> songs = sqlQueryService.readAllSongs(categories);
 		
 		// group by categories
-		List<SongCategory> categories = new ArrayList<>();
-		for (String categoryName : categorySongs.keySet()) {
-			List<Song> songsOfCategory = new ArrayList<>(categorySongs.get(categoryName));
-			SongCategory category;
-			if (categoryName != null) {
-				category = new SongCategory(categoryName, SongCategoryType.ARTIST, songsOfCategory);
-			} else {
-				categoryName = uiResourceService.resString(SongCategoryType.OTHERS.getLocaleStringId());
-				category = new SongCategory(categoryName, SongCategoryType.OTHERS, songsOfCategory);
-			}
-			categories.add(category);
+		Multimap<SongCategory, Song> categorySongs = ArrayListMultimap.create();
+		for (Song song : songs) {
+			categorySongs.put(song.getCategory(), song);
 		}
 		
-		long versionNumber = 1;
+		for (SongCategory category : categories) {
+			Collection<Song> songsOfCategory = categorySongs.get(category);
+			category.setSongs(new ArrayList<>(songsOfCategory));
+		}
+		
+		long versionNumber = sqlQueryService.readDbVersionNumber();
 		songsDb = new SongsDb(versionNumber, categories, songs);
 	}
 	

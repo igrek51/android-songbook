@@ -11,25 +11,18 @@ import android.widget.ListView;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
-import igrek.songbook.service.layout.songtree.SongTreeLayoutController;
 import igrek.songbook.service.songtree.SongTreeItem;
 
 public class SongListView extends ListView implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 	
-	@Inject
-	SongTreeLayoutController songTreeLayoutController;
-	
 	private Logger logger = LoggerFactory.getLogger();
-	
 	private List<SongTreeItem> items;
 	private SongListItemAdapter adapter;
-	
 	private HashMap<Integer, Integer> itemHeights = new HashMap<>();
+	private OnSongClickListener onClickListener;
 	
 	{
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -47,7 +40,8 @@ public class SongListView extends ListView implements AdapterView.OnItemClickLis
 		super(context, attrs);
 	}
 	
-	public void init(Context context) {
+	public void init(Context context, OnSongClickListener onClickListener) {
+		this.onClickListener = onClickListener;
 		setOnItemClickListener(this);
 		setOnItemLongClickListener(this);
 		setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -73,13 +67,15 @@ public class SongListView extends ListView implements AdapterView.OnItemClickLis
 	@Override
 	public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
 		SongTreeItem item = adapter.getItem(position);
-		songTreeLayoutController.onItemClickedEvent(item);
+		if (onClickListener != null)
+			onClickListener.onSongItemClick(item);
 	}
 	
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 		SongTreeItem item = adapter.getItem(position);
-		songTreeLayoutController.onItemClickedEvent(item);
+		if (onClickListener != null)
+			onClickListener.onSongItemClick(item);
 		return true;
 	}
 	
@@ -102,9 +98,8 @@ public class SongListView extends ListView implements AdapterView.OnItemClickLis
 	}
 	
 	private int getRealScrollPosition() {
-		if (getChildAt(0) == null) {
+		if (getChildAt(0) == null)
 			return 0;
-		}
 		int sumh = 0;
 		for (int i = 0; i < getFirstVisiblePosition(); i++) {
 			sumh += getItemHeight(i);
@@ -114,9 +109,8 @@ public class SongListView extends ListView implements AdapterView.OnItemClickLis
 	
 	private int getItemHeight(int position) {
 		Integer h = itemHeights.get(position);
-		if (h == null) {
+		if (h == null)
 			logger.warn("Item View = null");
-		}
 		return h != null ? h : 0;
 	}
 	

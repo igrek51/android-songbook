@@ -32,11 +32,15 @@ public class LocalDatabaseService {
 			createInitialDb(songsDbFile);
 		}
 		
+		initDbHelper(songsDbFile);
+	}
+	
+	public void initDbHelper(File songsDbFile) {
 		dbHelper = new SQLiteDbHelper(activity, songsDbFile.getAbsolutePath());
 	}
 	
 	private void createInitialDb(File dbFile) {
-		logger.info("no database file - creating intial db from resources");
+		logger.info("recreating intial database from resources");
 		copyFileFromResources(R.raw.songs, dbFile);
 	}
 	
@@ -72,5 +76,20 @@ public class LocalDatabaseService {
 	
 	public SQLiteDbHelper getDbHelper() {
 		return dbHelper;
+	}
+	
+	public void closeDatabase() {
+		if (dbHelper != null)
+			dbHelper.close();
+	}
+	
+	public void recreateDb() {
+		closeDatabase();
+		
+		File songsDbFile = getSongsDbFile();
+		if (!songsDbFile.delete())
+			logger.error("failed to delete old database");
+		
+		initDbHelper(songsDbFile);
 	}
 }

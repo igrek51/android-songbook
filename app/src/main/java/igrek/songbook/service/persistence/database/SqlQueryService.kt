@@ -2,7 +2,9 @@ package igrek.songbook.service.persistence.database
 
 import android.database.Cursor
 import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.domain.song.Song
+import igrek.songbook.domain.songsdb.Song
+import igrek.songbook.domain.songsdb.SongCategory
+import igrek.songbook.domain.songsdb.SongCategoryType
 import igrek.songbook.logger.LoggerFactory
 import javax.inject.Inject
 
@@ -19,11 +21,11 @@ class SqlQueryService {
 
     /*
     SCHEMA:
-    CREATE TABLE songs (
+    c.execute('''CREATE TABLE songs (
 		id integer PRIMARY KEY,
-		fileContent text NOT NULL,
 		title text NOT NULL,
-		categoryName text,
+		categoryId integer NOT NULL,
+		fileContent text,
 		versionNumber integer NOT NULL,
 		updateTime integer,
 		custom integer NOT NULL,
@@ -31,24 +33,52 @@ class SqlQueryService {
 		comment text,
 		preferredKey text,
 		locked integer NOT NULL,
-		lockPassword text
-		);
-	CREATE TABLE info (
+		lockPassword text,
+		author text
+		);''')
+	c.execute('''CREATE TABLE categories (
+		id integer PRIMARY KEY,
+		typeId integer NOT NULL,
+		name text
+		);''')
+	c.execute('''CREATE TABLE info (
 		name text,
 		value text
-		);
+		);''')
      */
 
-    fun readAllSongs(): List<Song> {
+    fun readAllCategories(): List<SongCategory> {
+        val entities: MutableList<SongCategory> = mutableListOf()
+        try {
+            val cursor = sqlQuery("SELECT * FROM categories ORDER BY id")
+
+            while (cursor.moveToNext()) {
+                val id = cursor.getLong(cursor.getColumnIndexOrThrow("id"))
+                val typeId = cursor.getLong(cursor.getColumnIndexOrThrow("typeId"))
+                val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+                val type = SongCategoryType.parseById(typeId)
+
+                val entity = SongCategory(id, type, name)
+                entities.add(entity)
+            }
+
+            cursor.close()
+        } catch (e: IllegalArgumentException) {
+            logger.error(e)
+        }
+        return entities
+    }
+
+    fun readAllSongs(categories: List<SongCategory>): List<Song> {
         val songs: MutableList<Song> = mutableListOf()
         try {
             val cursor = sqlQuery("SELECT * FROM songs ORDER BY id")
 
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(cursor.getColumnIndexOrThrow("id"))
-                val fileContent = cursor.getString(cursor.getColumnIndexOrThrow("fileContent"))
                 val title = cursor.getString(cursor.getColumnIndexOrThrow("title"))
-                val categoryName = cursor.getString(cursor.getColumnIndexOrThrow("categoryName"))
+                val categoryId = cursor.getLong(cursor.getColumnIndexOrThrow("categoryId"))
+                val fileContent = cursor.getString(cursor.getColumnIndexOrThrow("fileContent"))
                 val versionNumber = cursor.getLong(cursor.getColumnIndexOrThrow("versionNumber"))
                 val updateTime = cursor.getLong(cursor.getColumnIndexOrThrow("updateTime"))
                 val custom = getBooleanColumn(cursor, "custom")
@@ -57,8 +87,11 @@ class SqlQueryService {
                 val preferredKey = cursor.getString(cursor.getColumnIndexOrThrow("preferredKey"))
                 val locked = getBooleanColumn(cursor, "locked")
                 val lockPassword = cursor.getString(cursor.getColumnIndexOrThrow("lockPassword"))
+                val author = cursor.getString(cursor.getColumnIndexOrThrow("author"))
 
-                val song = Song(id, fileContent, title, categoryName, versionNumber, updateTime, custom, filename, comment, preferredKey, locked, lockPassword)
+                val category = categories.first { category -> category.id == categoryId }
+
+                val song = Song(id, title, category, fileContent, versionNumber, updateTime, custom, filename, comment, preferredKey, locked, lockPassword, author)
                 songs.add(song)
             }
 
@@ -67,6 +100,19 @@ class SqlQueryService {
             logger.error(e)
         }
         return songs
+    }
+
+    fun readDbVersionNumber(): Long? {
+        try {
+            val cursor = sqlQuery("SELECT value FROM info WHERE name = 'versionNumber'")
+            if (cursor.moveToNext()) {
+                val value = cursor.getLong(cursor.getColumnIndexOrThrow("value"))
+                return value
+            }
+        } catch (e: IllegalArgumentException) {
+            logger.error(e)
+        }
+        return null
     }
 
     private fun sqlQuery(sql: String, vararg args: Any): Cursor {

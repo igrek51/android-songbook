@@ -3,22 +3,22 @@ package igrek.songbook.service.songtree;
 import java.util.HashMap;
 
 import igrek.songbook.dagger.DaggerIoc;
+import igrek.songbook.domain.songsdb.SongCategory;
 
 public class ScrollPosBuffer {
 	
-	private HashMap<String, Integer> storedScrollPositions = new HashMap<>();
+	private HashMap<SongCategory, Integer> storedScrollPositions = new HashMap<>();
 	
 	public ScrollPosBuffer() {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
-	public void storeScrollPosition(String path, Integer y) {
-		if (path != null && y != null) {
-			storedScrollPositions.put(path, y);
-		}
+	public void storeScrollPosition(SongCategory category, Integer y) {
+		if (y != null)
+			storedScrollPositions.put(category, y);
 	}
 	
-	public Integer restoreScrollPosition(String path) {
-		return storedScrollPositions.get(path);
+	public Integer restoreScrollPosition(SongCategory category) {
+		return storedScrollPositions.get(category);
 	}
 }

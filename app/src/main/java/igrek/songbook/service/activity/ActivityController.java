@@ -10,7 +10,7 @@ import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.preferences.PreferencesService;
-import igrek.songbook.service.window.WindowManagerService;
+import igrek.songbook.service.system.WindowManagerService;
 
 public class ActivityController {
 	

@@ -4,7 +4,7 @@ package igrek.songbook.service.filesystem;
 import java.util.LinkedList;
 import java.util.List;
 
-public class FirstRuleChecker<T> {
+class FirstRuleChecker<T> {
 	
 	// remembers inserting order
 	private List<Rule> rules = new LinkedList<>();

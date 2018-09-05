@@ -1,138 +1,67 @@
 package igrek.songbook.service.layout.search
 
-import android.support.v7.app.ActionBar
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
-import android.widget.ImageButton
-import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.logger.LoggerFactory
-import igrek.songbook.service.activity.ActivityController
-import igrek.songbook.service.info.UiInfoService
-import igrek.songbook.service.info.UiResourceService
-import igrek.songbook.service.layout.LayoutController
-import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController
-import igrek.songbook.service.navmenu.NavigationMenuController
-import igrek.songbook.service.persistence.SongsDbRepository
-import igrek.songbook.service.songtree.ScrollPosBuffer
+import igrek.songbook.domain.songsdb.SongsDb
+import igrek.songbook.service.layout.SongSelectionLayoutController
+import igrek.songbook.service.songtree.SongTreeFilter
 import igrek.songbook.service.songtree.SongTreeItem
-import igrek.songbook.service.songtree.SongTreeWalker
-import igrek.songbook.service.window.WindowManagerService
-import igrek.songbook.view.songselection.SongListView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
-class SongSearchLayoutController {
+class SongSearchLayoutController : SongSelectionLayoutController() {
 
-    @Inject
-    lateinit var songTreeWalker: SongTreeWalker
-    @Inject
-    lateinit var activityController: Lazy<ActivityController>
-    @Inject
-    lateinit var layoutController: LayoutController
-    @Inject
-    lateinit var windowManagerService: WindowManagerService
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-    @Inject
-    lateinit var scrollPosBuffer: ScrollPosBuffer
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var activity: AppCompatActivity
-    @Inject
-    lateinit var navigationMenuController: NavigationMenuController
-    @Inject
-    lateinit var songsDbRepository: SongsDbRepository
-    @Inject
-    lateinit var songPreviewLayoutController: Lazy<SongPreviewLayoutController>
-
-    private val logger = LoggerFactory.getLogger()
-    private var actionBar: ActionBar? = null
-    private var itemsListView: SongListView? = null
     private var searchFilterEdit: EditText? = null
     private var searchFilterSubject: PublishSubject<String> = PublishSubject.create()
-
-    val currentScrollPos: Int?
-        get() = itemsListView!!.currentScrollPosition
+    private var itemNameFilter: String? = null
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
     }
 
     fun showSongSearch(layout: View) {
-        // toolbar
-        val toolbar1 = layout.findViewById<Toolbar>(R.id.toolbar1)
-        activity.setSupportActionBar(toolbar1)
-        actionBar = activity.supportActionBar
-        if (actionBar != null) {
-            actionBar!!.setDisplayHomeAsUpEnabled(false)
-            actionBar!!.setDisplayShowHomeEnabled(false)
-        }
+        initSongSelectionLayout(layout)
 
-        val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)
-        navMenuButton.setOnClickListener { _ -> navigationMenuController.navDrawerShow() }
-
-        itemsListView = layout.findViewById(R.id.filesList)
         searchFilterEdit = layout.findViewById(R.id.searchFilterEdit)
-
         searchFilterEdit!!.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                searchFilterSubject.onNext(s.toString());
+                searchFilterSubject.onNext(s.toString())
             }
         })
+        // refresh only after some inactive time
         searchFilterSubject.debounce(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { text -> setSongFilter(text) }
+                .subscribe { _ -> setSongFilter() }
 
         songTreeWalker.goToAllSongs()
-        itemsListView!!.init(activity)
-        updateItemsList()
+        itemsListView!!.init(activity, this)
+        updateSongItemsList()
+
+        restoreScrollPosition(null)
     }
 
-    private fun setSongFilter(text: String?) {
-
-        val filterValue = searchFilterEdit!!.text.toString()
-        songTreeWalker.setItemFilter(filterValue)
-        updateItemsList()
+    private fun setSongFilter() {
+        itemNameFilter = searchFilterEdit!!.text.toString()
+        scrollPosBuffer.storeScrollPosition(null, 0)
+        updateSongItemsList()
     }
 
-    fun updateItemsList() {
-        songTreeWalker.updateItems(songsDbRepository.songsDb)
-        itemsListView!!.setItems(songTreeWalker.currentItems)
+    override fun getSongItems(songsDb: SongsDb): List<SongTreeItem> {
+        val songNameFilter = SongTreeFilter(itemNameFilter)
+        return songsDb.allSongs
+                .map { song -> SongTreeItem.song(song) }
+                .filter { item -> songNameFilter.matchesNameFilter(item) }
     }
 
-    fun scrollToItem(position: Int) {
-        itemsListView!!.scrollTo(position)
+    fun onBackClicked() {
+        activityController.get().quit()
     }
 
-    fun onItemClickedEvent(item: SongTreeItem) {
-        // TODO store / restore scroll position
-        //scrollPosBuffer.storeScrollPosition(songTreeWalker.currentPath, currentScrollPos)
-        if (item.isCategory) {
-            songTreeWalker.goToCategory(item.category)
-            updateItemsList()
-            scrollToItem(0)
-        } else {
-            openSongPreview(item)
-        }
-    }
-
-    private fun openSongPreview(item: SongTreeItem) {
-        songPreviewLayoutController.get().currentSong = item.song
-        layoutController.showSongPreview()
-    }
 }

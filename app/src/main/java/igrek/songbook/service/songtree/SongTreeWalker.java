@@ -1,114 +1,43 @@
 package igrek.songbook.service.songtree;
 
-import java.text.Collator;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.domain.exception.NoParentItemException;
-import igrek.songbook.domain.song.Song;
-import igrek.songbook.domain.song.SongCategory;
-import igrek.songbook.domain.song.SongsDb;
-import igrek.songbook.logger.Logger;
-import igrek.songbook.logger.LoggerFactory;
+import igrek.songbook.domain.songsdb.SongCategory;
 
 public class SongTreeWalker {
 	
-	private Logger logger = LoggerFactory.getLogger();
-	
 	private List<SongTreeItem> currentItems;
 	private SongCategory currentCategory;
-	private String itemFilter;
-	
-	private State state = State.CategoriesList;
-	
-	private final Locale locale = new Locale("pl", "PL");
-	private Collator stringCollator = Collator.getInstance(locale);
-	
-	private enum State {
-		CategoriesList, CategorySongs, AllSongs
-	}
 	
 	public SongTreeWalker() {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
 	public void goUp() throws NoParentItemException {
-		if (state == State.CategoriesList || state == State.AllSongs)
+		if (currentCategory == null)
 			throw new NoParentItemException();
 		goToAllCategories();
 	}
 	
 	public void goToAllCategories() {
-		state = State.CategoriesList;
 		currentCategory = null;
 		currentItems = null;
 	}
 	
 	public void goToCategory(SongCategory category) {
-		state = State.CategorySongs;
 		currentCategory = category;
 		currentItems = null;
 	}
 	
 	public void goToAllSongs() {
-		state = State.AllSongs;
 		currentCategory = null;
 		currentItems = null;
-		itemFilter = null;
 	}
 	
-	public void updateItems(SongsDb songsDb) {
-		currentItems = new ArrayList<>();
-		
-		if (state == State.CategoriesList) {
-			for (SongCategory category : songsDb.getCategories()) {
-				SongTreeItem item = SongTreeItem.category(category);
-				currentItems.add(item);
-			}
-		} else if (state == State.CategorySongs) {
-			for (Song song : currentCategory.getSongs()) {
-				SongTreeItem item = SongTreeItem.song(song);
-				currentItems.add(item);
-			}
-		} else if (state == State.AllSongs) {
-			for (Song song : songsDb.getAllSongs()) {
-				SongTreeItem item = SongTreeItem.song(song);
-				// filtering
-				if (itemFilter == null) {
-					currentItems.add(item);
-				} else {
-					// must contain every part
-					String fullName = song.getCategoryName() + " - " + song.getTitle();
-					if (containsEveryPart(fullName, itemFilter)) {
-						currentItems.add(item);
-					}
-				}
-			}
-		}
-		
-		Collections.sort(currentItems, (lhs, rhs) -> {
-			// categories first
-			if (lhs.isCategory() && rhs.isSong())
-				return -1;
-			if (lhs.isSong() && rhs.isCategory())
-				return +1;
-			String lName = lhs.getSimpleName().toLowerCase(locale);
-			String rName = rhs.getSimpleName().toLowerCase(locale);
-			return stringCollator.compare(lName, rName);
-		});
-	}
-	
-	private boolean containsEveryPart(String input, String partsFilter) {
-		input = input.toLowerCase(locale);
-		String[] parts = partsFilter.split(" ");
-		for (String part : parts) {
-			if (!input.contains(part.toLowerCase(locale)))
-				return false;
-		}
-		return true;
+	public void setCurrentItems(List<SongTreeItem> items) {
+		this.currentItems = items;
 	}
 	
 	public List<SongTreeItem> getCurrentItems() {
@@ -120,12 +49,6 @@ public class SongTreeWalker {
 	}
 	
 	public boolean isCategorySelected() {
-		return state == State.CategorySongs;
-	}
-	
-	public void setItemFilter(String itemFilter) {
-		if (itemFilter.isEmpty())
-			itemFilter = null;
-		this.itemFilter = itemFilter;
+		return currentCategory != null;
 	}
 }

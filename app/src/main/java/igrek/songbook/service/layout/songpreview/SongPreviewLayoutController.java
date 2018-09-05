@@ -12,19 +12,19 @@ import javax.inject.Inject;
 import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.domain.song.Song;
+import igrek.songbook.domain.songsdb.Song;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
+import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.chords.ChordsManager;
 import igrek.songbook.service.layout.LayoutController;
-import igrek.songbook.service.songtree.SongTreeWalker;
-import igrek.songbook.service.window.WindowManagerService;
+import igrek.songbook.service.layout.LayoutState;
+import igrek.songbook.service.system.WindowManagerService;
 import igrek.songbook.view.songpreview.CanvasGraphics;
+import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
 
 public class SongPreviewLayoutController {
 	
-	@Inject
-	SongTreeWalker songTreeWalker;
 	@Inject
 	ChordsManager chordsManager;
 	@Inject
@@ -33,6 +33,10 @@ public class SongPreviewLayoutController {
 	WindowManagerService windowManagerService;
 	@Inject
 	AppCompatActivity activity;
+	@Inject
+	QuickMenu quickMenu;
+	@Inject
+	AutoscrollService autoscrollService;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	private CanvasGraphics canvas;
@@ -89,5 +93,18 @@ public class SongPreviewLayoutController {
 	
 	public void setCurrentSong(Song currentSong) {
 		this.currentSong = currentSong;
+	}
+	
+	public void onBackClicked() {
+		if (quickMenu.isVisible()) {
+			quickMenu.onShowQuickMenuEvent(false);
+		} else {
+			autoscrollService.onAutoscrollStopEvent();
+			
+			layoutController.get().setState(LayoutState.SONGS_TREE);
+			layoutController.get().showSongTree();
+			
+			windowManagerService.keepScreenOn(false);
+		}
 	}
 }

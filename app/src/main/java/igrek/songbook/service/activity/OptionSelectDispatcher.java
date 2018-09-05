@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.service.errorcheck.SafeExecutor;
 
@@ -22,8 +21,6 @@ public class OptionSelectDispatcher {
 	}
 	
 	private void initOptionActionsMap() {
-		optionActions.put(R.id.action_minimize, activityController::minimize);
-		optionActions.put(R.id.action_exit, activityController::quit);
 	}
 	
 	public boolean optionsSelect(int id) {

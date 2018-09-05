@@ -1,4 +1,4 @@
-package igrek.songbook.service.transpose;
+package igrek.songbook.service.chords.transpose;
 
 class StringWithDelimiter {
 	

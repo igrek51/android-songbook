@@ -38,7 +38,7 @@ public class LayoutController {
 	private FrameLayout mainContentLayout;
 	private Logger logger = LoggerFactory.getLogger();
 	
-	private LayoutState state = LayoutState.SONGS_LIST;
+	private LayoutState state = LayoutState.SONGS_TREE;
 	
 	public LayoutController() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -51,7 +51,7 @@ public class LayoutController {
 	}
 	
 	public void showSongTree() {
-		state = LayoutState.SONGS_LIST;
+		state = LayoutState.SONGS_TREE;
 		View layout = setMainContentLayout(R.layout.song_tree);
 		songTreeController.get().showSongTree(layout);
 	}
