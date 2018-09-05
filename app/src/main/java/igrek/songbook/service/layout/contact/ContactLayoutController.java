@@ -20,9 +20,11 @@ import igrek.songbook.service.errorcheck.SafeClickListener;
 import igrek.songbook.service.info.UiInfoService;
 import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.layout.LayoutController;
+import igrek.songbook.service.layout.LayoutState;
+import igrek.songbook.service.layout.MainLayout;
 import igrek.songbook.service.navmenu.NavigationMenuController;
 
-public class ContactLayoutController {
+public class ContactLayoutController implements MainLayout {
 	
 	@Inject
 	Lazy<ActivityController> activityController;
@@ -44,6 +46,7 @@ public class ContactLayoutController {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
+	@Override
 	public void showLayout(View layout) {
 		// Toolbar
 		Toolbar toolbar1 = layout.findViewById(R.id.toolbar1);
@@ -65,7 +68,16 @@ public class ContactLayoutController {
 				sendContactMessage();
 			}
 		});
-		
+	}
+	
+	@Override
+	public LayoutState getLayoutState() {
+		return LayoutState.CONTACT;
+	}
+	
+	@Override
+	public int getLayoutResourceId() {
+		return R.layout.contact;
 	}
 	
 	private void sendContactMessage() {

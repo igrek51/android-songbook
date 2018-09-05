@@ -8,24 +8,31 @@ import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.domain.songsdb.SongsDb
 import igrek.songbook.service.layout.LayoutState
+import igrek.songbook.service.layout.MainLayout
 import igrek.songbook.service.layout.SongSelectionLayoutController
 import igrek.songbook.service.songtree.SongTreeFilter
 import igrek.songbook.service.songtree.SongTreeItem
+import igrek.songbook.service.system.SoftKeyboardService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class SongSearchLayoutController : SongSelectionLayoutController() {
+class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
 
     private var searchFilterEdit: EditText? = null
     private var searchFilterSubject: PublishSubject<String> = PublishSubject.create()
     private var itemNameFilter: String? = null
+    private var storedScroll: Int? = null
+
+    @Inject
+    lateinit var softKeyboardService: SoftKeyboardService
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
     }
 
-    fun showLayout(layout: View) {
+    override fun showLayout(layout: View) {
         initSongSelectionLayout(layout)
 
         searchFilterEdit = layout.findViewById(R.id.searchFilterEdit)
@@ -40,8 +47,9 @@ class SongSearchLayoutController : SongSelectionLayoutController() {
         searchFilterSubject.debounce(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { _ -> setSongFilter() }
+        searchFilterEdit!!.requestFocus()
+        softKeyboardService.showSoftKeyboard()
 
-        songTreeWalker.goToAllSongs()
         itemsListView!!.init(activity, this)
         updateSongItemsList()
 
@@ -51,14 +59,26 @@ class SongSearchLayoutController : SongSelectionLayoutController() {
         }
     }
 
+    override fun getLayoutState(): LayoutState {
+        return LayoutState.SEARCH_SONG
+    }
+
+    override fun getLayoutResourceId(): Int {
+        return R.layout.song_search
+    }
+
     override fun updateSongItemsList() {
         super.updateSongItemsList()
-        restoreScrollPosition(songTreeWalker.currentCategory)
+        // restore Scroll Position
+        if (storedScroll != null) {
+            itemsListView?.scrollToPosition(storedScroll!!)
+        }
     }
 
     private fun setSongFilter() {
         itemNameFilter = searchFilterEdit!!.text.toString()
-        scrollPosBuffer.storeScrollPosition(null, 0)
+        // reset scroll
+        storedScroll = null
         updateSongItemsList()
     }
 
@@ -77,6 +97,14 @@ class SongSearchLayoutController : SongSelectionLayoutController() {
 
     fun onBackClicked() {
         activityController.get().quit()
+    }
+
+    override fun onSongItemClick(item: SongTreeItem) {
+        // store Scroll Position
+        storedScroll = itemsListView!!.currentScrollPosition
+        if (item.isSong) {
+            openSongPreview(item)
+        }
     }
 
 }

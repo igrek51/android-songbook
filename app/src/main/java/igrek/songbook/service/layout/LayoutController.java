@@ -41,6 +41,8 @@ public class LayoutController {
 	
 	private FrameLayout mainContentLayout;
 	private Logger logger = LoggerFactory.getLogger();
+	private MainLayout previouslyShown;
+	private MainLayout currentlyShown;
 	
 	private LayoutState state = LayoutState.SONGS_TREE;
 	
@@ -55,44 +57,46 @@ public class LayoutController {
 	}
 	
 	public void showSongTree() {
-		state = LayoutState.SONGS_TREE;
-		View layout = setMainContentLayout(R.layout.song_tree);
-		songTreeController.get().showLayout(layout);
+		showMainLayout(songTreeController.get());
 	}
 	
 	public void showSongSearch() {
-		state = LayoutState.SEARCH_SONG;
-		View layout = setMainContentLayout(R.layout.song_search);
-		songSearchController.get().showLayout(layout);
+		showMainLayout(songSearchController.get());
 	}
 	
 	public void showSongPreview() {
-		state = LayoutState.SONG_PREVIEW;
-		View layout = setMainContentLayout(R.layout.song_preview);
-		songPreviewController.get().showLayout(layout);
+		showMainLayout(songPreviewController.get());
 	}
 	
 	public void showContact() {
-		state = LayoutState.CONTACT;
-		View layout = setMainContentLayout(R.layout.contact);
-		contactLayoutController.get().showLayout(layout);
+		showMainLayout(contactLayoutController.get());
+	}
+	
+	
+	private void showMainLayout(MainLayout mainLayout) {
+		previouslyShown = currentlyShown;
+		currentlyShown = mainLayout;
+		
+		int layoutResource = mainLayout.getLayoutResourceId();
+		state = mainLayout.getLayoutState();
+		
+		// replace main content with brand new inflated layout
+		mainContentLayout.removeAllViews();
+		LayoutInflater inflater = activity.getLayoutInflater();
+		View layoutView = inflater.inflate(layoutResource, null);
+		layoutView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		mainContentLayout.addView(layoutView);
+		
+		mainLayout.showLayout(layoutView);
+	}
+	
+	public void showPreviousLayout() {
+		if (previouslyShown != null) {
+			showMainLayout(previouslyShown);
+		}
 	}
 	
 	public boolean isState(LayoutState compare) {
 		return state == compare;
-	}
-	
-	public void setState(LayoutState state) {
-		this.state = state;
-	}
-	
-	private View setMainContentLayout(int layoutResource) {
-		// replace main content with brand new inflated layout
-		mainContentLayout.removeAllViews();
-		LayoutInflater inflater = activity.getLayoutInflater();
-		View layout = inflater.inflate(layoutResource, null);
-		layout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-		mainContentLayout.addView(layout);
-		return layout;
 	}
 }

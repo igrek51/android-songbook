@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.ImageButton
 import dagger.Lazy
 import igrek.songbook.R
-import igrek.songbook.domain.songsdb.SongCategory
 import igrek.songbook.domain.songsdb.SongsDb
 import igrek.songbook.logger.Logger
 import igrek.songbook.logger.LoggerFactory
@@ -16,10 +15,8 @@ import igrek.songbook.service.info.UiResourceService
 import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController
 import igrek.songbook.service.navmenu.NavigationMenuController
 import igrek.songbook.service.persistence.SongsDbRepository
-import igrek.songbook.service.songtree.ScrollPosBuffer
 import igrek.songbook.service.songtree.SongTreeItem
 import igrek.songbook.service.songtree.SongTreeSorter
-import igrek.songbook.service.songtree.SongTreeWalker
 import igrek.songbook.view.songselection.OnSongClickListener
 import igrek.songbook.view.songselection.SongListView
 import javax.inject.Inject
@@ -27,13 +24,9 @@ import javax.inject.Inject
 abstract class SongSelectionLayoutController : OnSongClickListener {
 
     @Inject
-    lateinit var songTreeWalker: SongTreeWalker
-    @Inject
     lateinit var activityController: Lazy<ActivityController>
     @Inject
     lateinit var layoutController: LayoutController
-    @Inject
-    lateinit var scrollPosBuffer: ScrollPosBuffer
     @Inject
     lateinit var activity: AppCompatActivity
     @Inject
@@ -68,7 +61,6 @@ abstract class SongSelectionLayoutController : OnSongClickListener {
     open fun updateSongItemsList() {
         val items: List<SongTreeItem> = getSongItems(songsDbRepository.songsDb!!)
         SongTreeSorter().sort(items)
-        songTreeWalker.currentItems = items
         itemsListView!!.setItems(items)
     }
 
@@ -76,31 +68,8 @@ abstract class SongSelectionLayoutController : OnSongClickListener {
         return mutableListOf()
     }
 
-    fun storeScrollPosition() {
-        scrollPosBuffer.storeScrollPosition(songTreeWalker.currentCategory, itemsListView!!.currentScrollPosition)
-    }
-
-    fun restoreScrollPosition(category: SongCategory?) {
-        val savedScrollPos = scrollPosBuffer.restoreScrollPosition(category)
-        if (savedScrollPos != null) {
-            itemsListView!!.scrollToPosition(savedScrollPos)
-        }
-    }
-
     fun openSongPreview(item: SongTreeItem) {
         songPreviewLayoutController.get().currentSong = item.song
         layoutController.showSongPreview()
-    }
-
-    override fun onSongItemClick(item: SongTreeItem) {
-        storeScrollPosition()
-        if (item.isCategory) {
-            songTreeWalker.goToCategory(item.category)
-            updateSongItemsList()
-            // scroll to beginning
-            itemsListView!!.scrollTo(0)
-        } else {
-            openSongPreview(item)
-        }
     }
 }

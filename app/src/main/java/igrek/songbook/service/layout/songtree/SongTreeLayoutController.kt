@@ -6,12 +6,22 @@ import android.widget.TextView
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.domain.exception.NoParentItemException
+import igrek.songbook.domain.songsdb.SongCategory
 import igrek.songbook.domain.songsdb.SongsDb
 import igrek.songbook.service.layout.LayoutState
+import igrek.songbook.service.layout.MainLayout
 import igrek.songbook.service.layout.SongSelectionLayoutController
+import igrek.songbook.service.songtree.ScrollPosBuffer
 import igrek.songbook.service.songtree.SongTreeItem
+import igrek.songbook.service.songtree.SongTreeWalker
+import javax.inject.Inject
 
-class SongTreeLayoutController : SongSelectionLayoutController() {
+class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
+
+    @Inject
+    lateinit var songTreeWalker: SongTreeWalker
+    @Inject
+    lateinit var scrollPosBuffer: ScrollPosBuffer
 
     private var toolbarTitle: TextView? = null
     private var goBackButton: ImageButton? = null
@@ -20,7 +30,7 @@ class SongTreeLayoutController : SongSelectionLayoutController() {
         DaggerIoc.getFactoryComponent().inject(this)
     }
 
-    fun showLayout(layout: View) {
+    override fun showLayout(layout: View) {
         initSongSelectionLayout(layout)
 
         val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)
@@ -31,7 +41,6 @@ class SongTreeLayoutController : SongSelectionLayoutController() {
 
         toolbarTitle = layout.findViewById(R.id.toolbarTitle)
 
-        songTreeWalker.goToAllCategories()
         itemsListView!!.init(activity, this)
         updateSongItemsList()
 
@@ -39,6 +48,14 @@ class SongTreeLayoutController : SongSelectionLayoutController() {
             if (layoutController.isState(LayoutState.SONGS_TREE))
                 updateSongItemsList()
         }
+    }
+
+    override fun getLayoutState(): LayoutState {
+        return LayoutState.SONGS_TREE
+    }
+
+    override fun getLayoutResourceId(): Int {
+        return R.layout.song_tree
     }
 
     fun onBackClicked() {
@@ -57,6 +74,18 @@ class SongTreeLayoutController : SongSelectionLayoutController() {
         restoreScrollPosition(songTreeWalker.currentCategory)
     }
 
+    override fun getSongItems(songsDb: SongsDb): List<SongTreeItem> {
+        return if (!songTreeWalker.isCategorySelected) {
+            // all categories list
+            songsDb.getAllUnlockedCategories()
+                    .map { category -> SongTreeItem.category(category) }
+        } else {
+            // selected category
+            songTreeWalker.currentCategory.getUnlockedSongs()
+                    .map { song -> SongTreeItem.song(song) }
+        }
+    }
+
     private fun setTitle(title: String?) {
         actionBar!!.title = title
         toolbarTitle!!.text = title
@@ -71,15 +100,26 @@ class SongTreeLayoutController : SongSelectionLayoutController() {
         }
     }
 
-    override fun getSongItems(songsDb: SongsDb): List<SongTreeItem> {
-        return if (!songTreeWalker.isCategorySelected) {
-            // all categories list
-            songsDb.getAllUnlockedCategories()
-                    .map { category -> SongTreeItem.category(category) }
+    private fun storeScrollPosition() {
+        scrollPosBuffer.storeScrollPosition(songTreeWalker.currentCategory, itemsListView!!.currentScrollPosition)
+    }
+
+    private fun restoreScrollPosition(category: SongCategory?) {
+        val savedScrollPos = scrollPosBuffer.restoreScrollPosition(category)
+        if (savedScrollPos != null) {
+            itemsListView!!.scrollToPosition(savedScrollPos)
+        }
+    }
+
+    override fun onSongItemClick(item: SongTreeItem) {
+        storeScrollPosition()
+        if (item.isCategory) {
+            songTreeWalker.goToCategory(item.category)
+            updateSongItemsList()
+            // scroll to beginning
+            itemsListView!!.scrollTo(0)
         } else {
-            // selected category
-            songTreeWalker.currentCategory.getUnlockedSongs()
-                    .map { song -> SongTreeItem.song(song) }
+            openSongPreview(item)
         }
     }
 }

@@ -1,6 +1,7 @@
 package igrek.songbook.service.system;
 
 import android.content.Context;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -21,13 +22,15 @@ public class SoftKeyboardService {
 		imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
 	}
 	
-	public void hideSoftKeyboard(View window) {
+	public void hideSoftKeyboard() {
+		IBinder window = activity.getWindow().getDecorView().getRootView().getWindowToken();
 		if (imm != null) {
-			imm.hideSoftInputFromWindow(window.getWindowToken(), 0);
+			imm.hideSoftInputFromWindow(window, 0);
 		}
 	}
 	
-	public void showSoftKeyboard(View window) {
+	public void showSoftKeyboard() {
+		View window = activity.getWindow().getDecorView().getRootView();
 		if (imm != null) {
 			imm.showSoftInput(window, 0);
 		}

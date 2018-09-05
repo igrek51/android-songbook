@@ -19,11 +19,13 @@ import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.chords.ChordsManager;
 import igrek.songbook.service.layout.LayoutController;
 import igrek.songbook.service.layout.LayoutState;
+import igrek.songbook.service.layout.MainLayout;
+import igrek.songbook.service.system.SoftKeyboardService;
 import igrek.songbook.service.system.WindowManagerService;
 import igrek.songbook.view.songpreview.CanvasGraphics;
 import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
 
-public class SongPreviewLayoutController {
+public class SongPreviewLayoutController implements MainLayout {
 	
 	@Inject
 	ChordsManager chordsManager;
@@ -37,6 +39,8 @@ public class SongPreviewLayoutController {
 	QuickMenu quickMenu;
 	@Inject
 	AutoscrollService autoscrollService;
+	@Inject
+	SoftKeyboardService softKeyboardService;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	private CanvasGraphics canvas;
@@ -46,6 +50,7 @@ public class SongPreviewLayoutController {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
+	@Override
 	public void showLayout(View layout) {
 		canvas = new CanvasGraphics(activity);
 		canvas.reset();
@@ -61,7 +66,19 @@ public class SongPreviewLayoutController {
 		quickMenuView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 		mainFrame.addView(quickMenuView);
 		
+		softKeyboardService.hideSoftKeyboard();
+		
 		canvas.setQuickMenuView(quickMenuView);
+	}
+	
+	@Override
+	public LayoutState getLayoutState() {
+		return LayoutState.SONG_PREVIEW;
+	}
+	
+	@Override
+	public int getLayoutResourceId() {
+		return R.layout.song_preview;
 	}
 	
 	public void onGraphicsInitializedEvent(int w, int h, Paint paint) {
@@ -73,7 +90,7 @@ public class SongPreviewLayoutController {
 		canvas.setFontSizes(chordsManager.getFontsize());
 		canvas.setCRDModel(chordsManager.getCRDModel());
 		
-		logger.debug("canvas graphics " + w + "x" + h + " has been initialized");
+		//logger.debug("canvas graphics " + w + "x" + h + " has been initialized");
 	}
 	
 	public void onFontsizeChangedEvent(float fontsize) {
@@ -101,8 +118,7 @@ public class SongPreviewLayoutController {
 		} else {
 			autoscrollService.onAutoscrollStopEvent();
 			
-			layoutController.get().setState(LayoutState.SONGS_TREE);
-			layoutController.get().showSongTree();
+			layoutController.get().showPreviousLayout();
 			
 			windowManagerService.keepScreenOn(false);
 		}
