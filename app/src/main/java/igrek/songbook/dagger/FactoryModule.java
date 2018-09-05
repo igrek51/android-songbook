@@ -19,24 +19,23 @@ import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.chords.ChordsManager;
 import igrek.songbook.service.filesystem.ExternalCardService;
 import igrek.songbook.service.filesystem.FilesystemService;
-import igrek.songbook.service.filetree.FileTreeManager;
-import igrek.songbook.service.filetree.ScrollPosBuffer;
 import igrek.songbook.service.info.UiInfoService;
 import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.layout.LayoutController;
 import igrek.songbook.service.layout.about.AboutLayoutController;
 import igrek.songbook.service.layout.contact.ContactLayoutController;
 import igrek.songbook.service.layout.help.HelpLayoutController;
-import igrek.songbook.service.layout.search.SongSearchController;
-import igrek.songbook.service.layout.songpreview.SongPreviewController;
-import igrek.songbook.service.layout.songtree.HomePathService;
-import igrek.songbook.service.layout.songtree.SongTreeController;
+import igrek.songbook.service.layout.search.SongSearchLayoutController;
+import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController;
+import igrek.songbook.service.layout.songtree.SongTreeLayoutController;
 import igrek.songbook.service.navmenu.NavigationMenuController;
 import igrek.songbook.service.persistence.PersistenceService;
 import igrek.songbook.service.persistence.SongsDbRepository;
 import igrek.songbook.service.persistence.database.LocalDatabaseService;
 import igrek.songbook.service.persistence.database.SqlQueryService;
 import igrek.songbook.service.preferences.PreferencesService;
+import igrek.songbook.service.songtree.ScrollPosBuffer;
+import igrek.songbook.service.songtree.SongTreeWalker;
 import igrek.songbook.service.transpose.ChordsTransposer;
 import igrek.songbook.service.window.SoftKeyboardService;
 import igrek.songbook.service.window.WindowManagerService;
@@ -144,8 +143,8 @@ public class FactoryModule {
 	
 	@Provides
 	@Singleton
-	protected FileTreeManager provideFileTreeManager() {
-		return new FileTreeManager();
+	protected SongTreeWalker provideFileTreeManager() {
+		return new SongTreeWalker();
 	}
 	
 	@Provides
@@ -180,14 +179,14 @@ public class FactoryModule {
 	
 	@Provides
 	@Singleton
-	protected SongTreeController provideSongSelectionController() {
-		return new SongTreeController();
+	protected SongTreeLayoutController provideSongSelectionController() {
+		return new SongTreeLayoutController();
 	}
 	
 	@Provides
 	@Singleton
-	protected SongPreviewController provideSongPreviewController() {
-		return new SongPreviewController();
+	protected SongPreviewLayoutController provideSongPreviewController() {
+		return new SongPreviewLayoutController();
 	}
 	
 	@Provides
@@ -198,20 +197,14 @@ public class FactoryModule {
 	
 	@Provides
 	@Singleton
-	protected HomePathService provideHomePathService() {
-		return new HomePathService();
-	}
-	
-	@Provides
-	@Singleton
 	protected NavigationMenuController provideNavigationMenuController() {
 		return new NavigationMenuController();
 	}
 	
 	@Provides
 	@Singleton
-	protected SongSearchController provideSongSearchController() {
-		return new SongSearchController();
+	protected SongSearchLayoutController provideSongSearchController() {
+		return new SongSearchLayoutController();
 	}
 	
 	@Provides

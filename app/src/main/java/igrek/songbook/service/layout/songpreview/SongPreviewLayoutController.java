@@ -12,18 +12,19 @@ import javax.inject.Inject;
 import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
+import igrek.songbook.domain.song.Song;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.chords.ChordsManager;
-import igrek.songbook.service.filetree.FileTreeManager;
 import igrek.songbook.service.layout.LayoutController;
+import igrek.songbook.service.songtree.SongTreeWalker;
 import igrek.songbook.service.window.WindowManagerService;
 import igrek.songbook.view.songpreview.CanvasGraphics;
 
-public class SongPreviewController {
+public class SongPreviewLayoutController {
 	
 	@Inject
-	FileTreeManager fileTreeManager;
+	SongTreeWalker songTreeWalker;
 	@Inject
 	ChordsManager chordsManager;
 	@Inject
@@ -34,16 +35,18 @@ public class SongPreviewController {
 	AppCompatActivity activity;
 	
 	private Logger logger = LoggerFactory.getLogger();
-	
 	private CanvasGraphics canvas;
+	private Song currentSong;
 	
-	public SongPreviewController() {
+	public SongPreviewLayoutController() {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
 	public void showSongPreview(View layout) {
 		canvas = new CanvasGraphics(activity);
 		canvas.reset();
+		
+		windowManagerService.keepScreenOn(true);
 		
 		FrameLayout mainFrame = layout.findViewById(R.id.mainFrame);
 		mainFrame.removeAllViews();
@@ -59,8 +62,7 @@ public class SongPreviewController {
 	
 	public void onGraphicsInitializedEvent(int w, int h, Paint paint) {
 		// load file and parse it
-		String filePath = fileTreeManager.getCurrentFilePath(fileTreeManager.getCurrentFileName());
-		String fileContent = fileTreeManager.getFileContent(filePath);
+		String fileContent = currentSong.getFileContent();
 		// initialize - first file loading
 		chordsManager.load(fileContent, w, h, paint);
 		
@@ -79,5 +81,13 @@ public class SongPreviewController {
 	
 	public CanvasGraphics getCanvas() {
 		return canvas;
+	}
+	
+	public Song getCurrentSong() {
+		return currentSong;
+	}
+	
+	public void setCurrentSong(Song currentSong) {
+		this.currentSong = currentSong;
 	}
 }

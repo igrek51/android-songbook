@@ -15,11 +15,14 @@ import igrek.songbook.domain.song.SongCategoryType;
 import igrek.songbook.domain.song.SongsDb;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
+import igrek.songbook.service.info.UiResourceService;
 
 public class SongsDbRepository {
 	
 	@Inject
 	PersistenceService persistenceService;
+	@Inject
+	UiResourceService uiResourceService;
 	
 	private SongsDb songsDb;
 	
@@ -47,7 +50,8 @@ public class SongsDbRepository {
 			if (categoryName != null) {
 				category = new SongCategory(categoryName, SongCategoryType.ARTIST, songsOfCategory);
 			} else {
-				category = new SongCategory(null, SongCategoryType.OTHERS, songsOfCategory);
+				categoryName = uiResourceService.resString(SongCategoryType.OTHERS.getLocaleStringId());
+				category = new SongCategory(categoryName, SongCategoryType.OTHERS, songsOfCategory);
 			}
 			categories.add(category);
 		}

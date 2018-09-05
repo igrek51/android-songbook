@@ -1,4 +1,4 @@
-package igrek.songbook.service.filetree;
+package igrek.songbook.service.songtree;
 
 import java.util.HashMap;
 

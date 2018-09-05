@@ -16,12 +16,12 @@ import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.activity.ActivityController;
-import igrek.songbook.service.filetree.FileItem;
 import igrek.songbook.service.layout.LayoutController;
 import igrek.songbook.service.navmenu.NavigationMenuController;
+import igrek.songbook.service.songtree.SongTreeItem;
 import igrek.songbook.view.songselection.SongListView;
 
-public class SongSearchController {
+public class SongSearchLayoutController {
 	
 	@Inject
 	Lazy<ActivityController> activityController;
@@ -37,7 +37,7 @@ public class SongSearchController {
 	private SongListView itemsListView;
 	private Integer scrollPos;
 	
-	public SongSearchController() {
+	public SongSearchLayoutController() {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
@@ -78,8 +78,8 @@ public class SongSearchController {
 		}
 	}
 	
-	public void onItemClickedEvent(int posistion, FileItem item) {
+	public void onItemClickedEvent(int posistion, SongTreeItem item) {
 		scrollPos = getCurrentScrollPos();
-		logger.debug("item clicked: " + item.getName());
+		logger.debug("item clicked: " + item.getSimpleName());
 	}
 }

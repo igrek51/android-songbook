@@ -12,7 +12,7 @@ import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.chords.ChordsManager;
 import igrek.songbook.service.info.UiInfoService;
 import igrek.songbook.service.info.UiResourceService;
-import igrek.songbook.service.layout.songpreview.SongPreviewController;
+import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController;
 import igrek.songbook.view.songpreview.CanvasGraphics;
 
 public class AutoscrollService {
@@ -27,7 +27,7 @@ public class AutoscrollService {
 	@Inject
 	Lazy<ChordsManager> chordsManager;
 	@Inject
-	Lazy<SongPreviewController> songPreviewController;
+	Lazy<SongPreviewLayoutController> songPreviewController;
 	@Inject
 	UiResourceService uiResourceService;
 	

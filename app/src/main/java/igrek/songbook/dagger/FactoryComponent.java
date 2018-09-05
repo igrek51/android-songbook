@@ -14,24 +14,23 @@ import igrek.songbook.service.errorcheck.SafeExecutor;
 import igrek.songbook.service.errorcheck.UIErrorHandler;
 import igrek.songbook.service.filesystem.ExternalCardService;
 import igrek.songbook.service.filesystem.FilesystemService;
-import igrek.songbook.service.filetree.FileTreeManager;
-import igrek.songbook.service.filetree.ScrollPosBuffer;
 import igrek.songbook.service.info.UiInfoService;
 import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.layout.LayoutController;
 import igrek.songbook.service.layout.about.AboutLayoutController;
 import igrek.songbook.service.layout.contact.ContactLayoutController;
 import igrek.songbook.service.layout.help.HelpLayoutController;
-import igrek.songbook.service.layout.search.SongSearchController;
-import igrek.songbook.service.layout.songpreview.SongPreviewController;
-import igrek.songbook.service.layout.songtree.HomePathService;
-import igrek.songbook.service.layout.songtree.SongTreeController;
+import igrek.songbook.service.layout.search.SongSearchLayoutController;
+import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController;
+import igrek.songbook.service.layout.songtree.SongTreeLayoutController;
 import igrek.songbook.service.navmenu.NavigationMenuController;
 import igrek.songbook.service.persistence.PersistenceService;
 import igrek.songbook.service.persistence.SongsDbRepository;
 import igrek.songbook.service.persistence.database.LocalDatabaseService;
 import igrek.songbook.service.persistence.database.SqlQueryService;
 import igrek.songbook.service.preferences.PreferencesService;
+import igrek.songbook.service.songtree.ScrollPosBuffer;
+import igrek.songbook.service.songtree.SongTreeWalker;
 import igrek.songbook.service.transpose.ChordsTransposer;
 import igrek.songbook.service.window.SoftKeyboardService;
 import igrek.songbook.service.window.WindowManagerService;
@@ -69,7 +68,7 @@ public interface FactoryComponent {
 	
 	void inject(ChordsManager there);
 	
-	void inject(FileTreeManager there);
+	void inject(SongTreeWalker there);
 	
 	void inject(PreferencesService there);
 	
@@ -79,19 +78,17 @@ public interface FactoryComponent {
 	
 	void inject(LayoutController there);
 	
-	void inject(SongTreeController there);
+	void inject(SongTreeLayoutController there);
 	
-	void inject(SongPreviewController there);
+	void inject(SongPreviewLayoutController there);
 	
 	void inject(ScrollPosBuffer there);
 	
 	void inject(SystemKeyDispatcher there);
 	
-	void inject(HomePathService there);
-	
 	void inject(NavigationMenuController there);
 	
-	void inject(SongSearchController there);
+	void inject(SongSearchLayoutController there);
 	
 	void inject(AboutLayoutController there);
 	

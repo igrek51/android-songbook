@@ -16,17 +16,17 @@ import javax.inject.Inject;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
-import igrek.songbook.service.filetree.FileItem;
-import igrek.songbook.service.layout.songtree.SongTreeController;
+import igrek.songbook.service.layout.songtree.SongTreeLayoutController;
+import igrek.songbook.service.songtree.SongTreeItem;
 
 public class SongListView extends ListView implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 	
 	@Inject
-	SongTreeController songTreeController;
+	SongTreeLayoutController songTreeLayoutController;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
-	private List<FileItem> items;
+	private List<SongTreeItem> items;
 	private SongListItemAdapter adapter;
 	
 	private HashMap<Integer, Integer> itemHeights = new HashMap<>();
@@ -72,18 +72,18 @@ public class SongListView extends ListView implements AdapterView.OnItemClickLis
 	
 	@Override
 	public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-		FileItem item = adapter.getItem(position);
-		songTreeController.onItemClickedEvent(item);
+		SongTreeItem item = adapter.getItem(position);
+		songTreeLayoutController.onItemClickedEvent(item);
 	}
 	
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-		FileItem item = adapter.getItem(position);
-		songTreeController.onItemClickedEvent(item);
+		SongTreeItem item = adapter.getItem(position);
+		songTreeLayoutController.onItemClickedEvent(item);
 		return true;
 	}
 	
-	public void setItems(List<FileItem> items) {
+	public void setItems(List<SongTreeItem> items) {
 		this.items = items;
 		adapter.setDataSource(items);
 		invalidate();

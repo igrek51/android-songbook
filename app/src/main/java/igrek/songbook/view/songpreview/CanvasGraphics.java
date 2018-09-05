@@ -13,7 +13,7 @@ import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.domain.crd.CRDLine;
 import igrek.songbook.domain.crd.CRDModel;
 import igrek.songbook.service.autoscroll.AutoscrollService;
-import igrek.songbook.service.layout.songpreview.SongPreviewController;
+import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController;
 import igrek.songbook.view.songpreview.base.BaseCanvasGraphics;
 import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
 
@@ -30,7 +30,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	@Inject
 	Lazy<AutoscrollService> autoscroll;
 	@Inject
-	Lazy<SongPreviewController> songPreviewController;
+	Lazy<SongPreviewLayoutController> songPreviewController;
 	@Inject
 	Lazy<QuickMenu> quickMenu;
 	private CRDModel crdModel = null;

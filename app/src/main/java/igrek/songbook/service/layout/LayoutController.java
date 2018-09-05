@@ -13,21 +13,21 @@ import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
-import igrek.songbook.service.layout.search.SongSearchController;
-import igrek.songbook.service.layout.songpreview.SongPreviewController;
-import igrek.songbook.service.layout.songtree.SongTreeController;
+import igrek.songbook.service.layout.search.SongSearchLayoutController;
+import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController;
+import igrek.songbook.service.layout.songtree.SongTreeLayoutController;
 import igrek.songbook.service.navmenu.NavigationMenuController;
 
 public class LayoutController {
 	
 	@Inject
-	Lazy<SongTreeController> songTreeController;
+	Lazy<SongTreeLayoutController> songTreeController;
 	
 	@Inject
-	Lazy<SongSearchController> songSearchController;
+	Lazy<SongSearchLayoutController> songSearchController;
 	
 	@Inject
-	Lazy<SongPreviewController> songPreviewController;
+	Lazy<SongPreviewLayoutController> songPreviewController;
 	
 	@Inject
 	Lazy<NavigationMenuController> navigationMenuController;

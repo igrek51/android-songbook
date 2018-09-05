@@ -1,15 +1,13 @@
 package igrek.songbook.service.activity;
 
-import android.os.Handler;
-
 import javax.inject.Inject;
 
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.service.autoscroll.AutoscrollService;
-import igrek.songbook.service.filetree.FileTreeManager;
 import igrek.songbook.service.layout.LayoutController;
 import igrek.songbook.service.layout.LayoutState;
-import igrek.songbook.service.layout.songtree.SongTreeController;
+import igrek.songbook.service.layout.songtree.SongTreeLayoutController;
+import igrek.songbook.service.songtree.SongTreeWalker;
 import igrek.songbook.service.window.WindowManagerService;
 import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
 
@@ -18,13 +16,13 @@ public class SystemKeyDispatcher {
 	@Inject
 	LayoutController layoutController;
 	@Inject
-	SongTreeController songTreeController;
+	SongTreeLayoutController songTreeLayoutController;
 	@Inject
 	QuickMenu quickMenu;
 	@Inject
 	WindowManagerService windowManagerService;
 	@Inject
-	FileTreeManager fileTreeManager;
+	SongTreeWalker songTreeWalker;
 	@Inject
 	AutoscrollService autoscrollService;
 	
@@ -34,7 +32,7 @@ public class SystemKeyDispatcher {
 	
 	public boolean onKeyBack() {
 		if (layoutController.isState(LayoutState.SONGS_LIST)) {
-			songTreeController.onToolbarBackClickedEvent();
+			songTreeLayoutController.onToolbarBackClickedEvent();
 		} else if (layoutController.isState(LayoutState.SONG_PREVIEW)) {
 			if (quickMenu.isVisible()) {
 				quickMenu.onShowQuickMenuEvent(false);
@@ -46,8 +44,9 @@ public class SystemKeyDispatcher {
 				
 				windowManagerService.keepScreenOn(false);
 				
-				new Handler().post(() -> songTreeController.restoreScrollPosition(fileTreeManager
-						.getCurrentPath()));
+				// TODO
+				//new Handler().post(() -> songTreeLayoutController.restoreScrollPosition(songTreeWalker
+				//		.getCurrentCategory()));
 			}
 		}
 		return true;

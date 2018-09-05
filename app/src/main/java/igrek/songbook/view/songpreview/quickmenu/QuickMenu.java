@@ -12,7 +12,7 @@ import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.chords.ChordsManager;
 import igrek.songbook.service.info.UiResourceService;
-import igrek.songbook.service.layout.songpreview.SongPreviewController;
+import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController;
 import igrek.songbook.view.songpreview.CanvasGraphics;
 
 public class QuickMenu {
@@ -24,7 +24,7 @@ public class QuickMenu {
 	@Inject
 	AutoscrollService autoscrollService;
 	@Inject
-	Lazy<SongPreviewController> songPreviewController;
+	Lazy<SongPreviewLayoutController> songPreviewController;
 	
 	private boolean visible = false;
 	

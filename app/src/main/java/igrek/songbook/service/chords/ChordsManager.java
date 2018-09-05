@@ -14,7 +14,7 @@ import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.info.UiInfoService;
 import igrek.songbook.service.info.UiResourceService;
-import igrek.songbook.service.layout.songpreview.SongPreviewController;
+import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController;
 import igrek.songbook.service.transpose.ChordsTransposer;
 import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
 
@@ -29,7 +29,7 @@ public class ChordsManager {
 	@Inject
 	UiResourceService uiResourceService;
 	@Inject
-	Lazy<SongPreviewController> songPreviewController;
+	Lazy<SongPreviewLayoutController> songPreviewController;
 	@Inject
 	Lazy<QuickMenu> quickMenu;
 	private Logger logger = LoggerFactory.getLogger();
