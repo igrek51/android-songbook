@@ -24,6 +24,7 @@ import igrek.songbook.service.songtree.SongTreeItem
 import igrek.songbook.service.songtree.SongTreeWalker
 import igrek.songbook.service.window.WindowManagerService
 import igrek.songbook.view.songselection.SongListView
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -80,7 +81,7 @@ class SongSearchLayoutController {
         navMenuButton.setOnClickListener { _ -> navigationMenuController.navDrawerShow() }
 
         itemsListView = layout.findViewById(R.id.filesList)
-        searchFilterEdit = layout.findViewById(R.id.searchFilterEdit) as EditText?
+        searchFilterEdit = layout.findViewById(R.id.searchFilterEdit)
 
         searchFilterEdit!!.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -94,10 +95,18 @@ class SongSearchLayoutController {
             }
         })
         searchFilterSubject.debounce(500, TimeUnit.MILLISECONDS)
-                .subscribe { text -> logger.debug(text) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { text -> setSongFilter(text) }
 
         songTreeWalker.goToAllSongs()
         itemsListView!!.init(activity)
+        updateItemsList()
+    }
+
+    private fun setSongFilter(text: String?) {
+
+        val filterValue = searchFilterEdit!!.text.toString()
+        songTreeWalker.setItemFilter(filterValue)
         updateItemsList()
     }
 

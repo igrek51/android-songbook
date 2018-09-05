@@ -24,7 +24,8 @@ public class SongTreeWalker {
 	
 	private State state = State.CategoriesList;
 	
-	private Collator stringCollator = Collator.getInstance(new Locale("pl", "PL"));
+	private final Locale locale = new Locale("pl", "PL");
+	private Collator stringCollator = Collator.getInstance(locale);
 	
 	private enum State {
 		CategoriesList, CategorySongs, AllSongs
@@ -94,15 +95,17 @@ public class SongTreeWalker {
 				return -1;
 			if (lhs.isSong() && rhs.isCategory())
 				return +1;
-			return stringCollator.compare(lhs.getSimpleName().toLowerCase(), rhs.getSimpleName()
-					.toLowerCase());
+			String lName = lhs.getSimpleName().toLowerCase(locale);
+			String rName = rhs.getSimpleName().toLowerCase(locale);
+			return stringCollator.compare(lName, rName);
 		});
 	}
 	
 	private boolean containsEveryPart(String input, String partsFilter) {
+		input = input.toLowerCase(locale);
 		String[] parts = partsFilter.split(" ");
 		for (String part : parts) {
-			if (!input.contains(part))
+			if (!input.contains(part.toLowerCase(locale)))
 				return false;
 		}
 		return true;
@@ -121,6 +124,8 @@ public class SongTreeWalker {
 	}
 	
 	public void setItemFilter(String itemFilter) {
+		if (itemFilter.isEmpty())
+			itemFilter = null;
 		this.itemFilter = itemFilter;
 	}
 }
