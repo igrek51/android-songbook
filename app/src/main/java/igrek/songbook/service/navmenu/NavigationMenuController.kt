@@ -50,7 +50,7 @@ class NavigationMenuController {
     private fun initOptionActionsMap() {
         actionsMap[R.id.nav_songs_list] = Runnable { layoutController.get().showSongTree() }
         actionsMap[R.id.nav_search] = Runnable { layoutController.get().showSongSearch() }
-        actionsMap[R.id.nav_update_db] = Runnable { songsDbRepository.updateDb() }
+        actionsMap[R.id.nav_update_db] = Runnable { songsDbRepository.recreateDb() }
         actionsMap[R.id.nav_import_song] = Runnable { uiInfoService.showToast("not implemented yet") }
         actionsMap[R.id.nav_settings] = Runnable { uiInfoService.showToast("not implemented yet") }
         actionsMap[R.id.nav_help] = Runnable { helpLayoutController.get().showUIHelp() }

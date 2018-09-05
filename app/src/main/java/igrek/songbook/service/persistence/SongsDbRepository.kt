@@ -11,6 +11,7 @@ import igrek.songbook.service.info.UiInfoService
 import igrek.songbook.service.info.UiResourceService
 import igrek.songbook.service.persistence.database.LocalDatabaseService
 import igrek.songbook.service.persistence.database.SqlQueryService
+import io.reactivex.subjects.PublishSubject
 import java.util.*
 import javax.inject.Inject
 
@@ -25,6 +26,8 @@ class SongsDbRepository {
     @Inject
     lateinit var uiInfoService: UiInfoService
 
+    var dbChangeSubject: PublishSubject<SongsDb> = PublishSubject.create()
+
     var songsDb: SongsDb? = null
         private set
 
@@ -33,20 +36,20 @@ class SongsDbRepository {
     init {
         DaggerIoc.getFactoryComponent().inject(this)
         localDatabaseService.checkDatabaseValid()
-        initSongsDb()
+        initializeSongsDb()
     }
 
-    fun updateDb() {
+    fun recreateDb() {
         localDatabaseService.recreateDb()
-        initSongsDb()
+        initializeSongsDb()
         uiInfoService.showInfo(R.string.ui_db_is_uptodate)
     }
 
     fun reloadDb() {
-        initSongsDb()
+        initializeSongsDb()
     }
 
-    private fun initSongsDb() {
+    private fun initializeSongsDb() {
         val versionNumber = sqlQueryService.readDbVersionNumber()!!
 
         val categories = sqlQueryService.readAllCategories()
@@ -72,6 +75,8 @@ class SongsDbRepository {
         }
 
         songsDb = SongsDb(versionNumber, categories, songs)
+
+        dbChangeSubject.onNext(songsDb!!)
     }
 
 }

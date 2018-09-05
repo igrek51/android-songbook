@@ -24,6 +24,6 @@ data class SongCategory(
             SimpleCache { songs!!.filter { s -> !s.locked } }
 
     fun getUnlockedSongs(): List<Song> {
-        unlockedSongsCache.get()
+        return unlockedSongsCache.get()
     }
 }

@@ -7,6 +7,7 @@ import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.domain.exception.NoParentItemException
 import igrek.songbook.domain.songsdb.SongsDb
+import igrek.songbook.service.layout.LayoutState
 import igrek.songbook.service.layout.SongSelectionLayoutController
 import igrek.songbook.service.songtree.SongTreeItem
 
@@ -34,7 +35,10 @@ class SongTreeLayoutController : SongSelectionLayoutController() {
         itemsListView!!.init(activity, this)
         updateSongItemsList()
 
-        restoreScrollPosition(songTreeWalker.currentCategory)
+        songsDbRepository.dbChangeSubject.subscribe { _ ->
+            if (layoutController.isState(LayoutState.SONGS_TREE))
+                updateSongItemsList()
+        }
     }
 
     fun onBackClicked() {
@@ -50,6 +54,7 @@ class SongTreeLayoutController : SongSelectionLayoutController() {
             goBackButton!!.visibility = View.INVISIBLE
             setTitle(uiResourceService.resString(R.string.nav_songs_list))
         }
+        restoreScrollPosition(songTreeWalker.currentCategory)
     }
 
     private fun setTitle(title: String?) {
@@ -61,7 +66,6 @@ class SongTreeLayoutController : SongSelectionLayoutController() {
         try {
             songTreeWalker.goUp()
             updateSongItemsList()
-            //restoreScrollPosition(songTreeWalker.currentPath)
         } catch (e: NoParentItemException) {
             activityController.get().quit()
         }
@@ -70,7 +74,7 @@ class SongTreeLayoutController : SongSelectionLayoutController() {
     override fun getSongItems(songsDb: SongsDb): List<SongTreeItem> {
         return if (!songTreeWalker.isCategorySelected) {
             // all categories list
-            songsDb.categories
+            songsDb.getAllUnlockedCategories()
                     .map { category -> SongTreeItem.category(category) }
         } else {
             // selected category

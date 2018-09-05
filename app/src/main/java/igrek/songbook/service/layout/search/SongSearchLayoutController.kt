@@ -7,6 +7,7 @@ import android.widget.EditText
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.domain.songsdb.SongsDb
+import igrek.songbook.service.layout.LayoutState
 import igrek.songbook.service.layout.SongSelectionLayoutController
 import igrek.songbook.service.songtree.SongTreeFilter
 import igrek.songbook.service.songtree.SongTreeItem
@@ -44,7 +45,15 @@ class SongSearchLayoutController : SongSelectionLayoutController() {
         itemsListView!!.init(activity, this)
         updateSongItemsList()
 
-        restoreScrollPosition(null)
+        songsDbRepository.dbChangeSubject.subscribe { _ ->
+            if (layoutController.isState(LayoutState.SONGS_TREE))
+                updateSongItemsList()
+        }
+    }
+
+    override fun updateSongItemsList() {
+        super.updateSongItemsList()
+        restoreScrollPosition(songTreeWalker.currentCategory)
     }
 
     private fun setSongFilter() {
@@ -54,10 +63,16 @@ class SongSearchLayoutController : SongSelectionLayoutController() {
     }
 
     override fun getSongItems(songsDb: SongsDb): List<SongTreeItem> {
-        val songNameFilter = SongTreeFilter(itemNameFilter)
-        return songsDb.getAllUnlockedSongs()
-                .map { song -> SongTreeItem.song(song) }
-                .filter { item -> songNameFilter.matchesNameFilter(item) }
+        // no filter
+        if (itemNameFilter == null || itemNameFilter!!.isEmpty()) {
+            val songNameFilter = SongTreeFilter(itemNameFilter)
+            return songsDb.getAllUnlockedSongs()
+                    .map { song -> SongTreeItem.song(song) }
+                    .filter { item -> songNameFilter.matchesNameFilter(item) }
+        } else {
+            return songsDb.getAllUnlockedSongs()
+                    .map { song -> SongTreeItem.song(song) }
+        }
     }
 
     fun onBackClicked() {
