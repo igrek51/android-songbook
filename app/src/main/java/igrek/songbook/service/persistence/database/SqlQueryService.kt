@@ -1,5 +1,6 @@
 package igrek.songbook.service.persistence.database
 
+import android.content.ContentValues
 import android.database.Cursor
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.domain.songsdb.Song
@@ -7,6 +8,7 @@ import igrek.songbook.domain.songsdb.SongCategory
 import igrek.songbook.domain.songsdb.SongCategoryType
 import igrek.songbook.logger.LoggerFactory
 import javax.inject.Inject
+
 
 class SqlQueryService {
 
@@ -113,6 +115,16 @@ class SqlQueryService {
             logger.error(e)
         }
         return null
+    }
+
+    fun unlockSong(id: Long) {
+        val db = localDatabaseService.get().dbHelper.writableDatabase
+        val values = ContentValues()
+        values.put("locked", 0)
+        db.update("songs",
+                values,
+                "id = ?",
+                arrayOf(id.toString()))
     }
 
     private fun sqlQuery(sql: String, vararg args: Any): Cursor {

@@ -1,6 +1,7 @@
 package igrek.songbook.domain.songsdb
 
 import com.google.common.base.Objects
+import igrek.songbook.domain.cache.SimpleCache
 
 data class SongCategory(
         val id: Long,
@@ -17,5 +18,12 @@ data class SongCategory(
 
     override fun hashCode(): Int {
         return Objects.hashCode(id)
+    }
+
+    private var unlockedSongsCache: SimpleCache<List<Song>> =
+            SimpleCache { songs!!.filter { s -> !s.locked } }
+
+    fun getUnlockedSongs(): List<Song> {
+        unlockedSongsCache.get()
     }
 }

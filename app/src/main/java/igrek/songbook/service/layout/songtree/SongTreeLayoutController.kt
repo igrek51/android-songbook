@@ -74,7 +74,7 @@ class SongTreeLayoutController : SongSelectionLayoutController() {
                     .map { category -> SongTreeItem.category(category) }
         } else {
             // selected category
-            songTreeWalker.currentCategory.songs!!
+            songTreeWalker.currentCategory.getUnlockedSongs()
                     .map { song -> SongTreeItem.song(song) }
         }
     }

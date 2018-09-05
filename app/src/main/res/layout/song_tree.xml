@@ -47,8 +47,8 @@
                 android:focusable="true"
                 android:padding="10dp"
                 android:scaleType="fitCenter"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"/>
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"/>
 
             <TextView
                 android:id="@+id/toolbarTitle"

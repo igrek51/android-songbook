@@ -55,7 +55,7 @@ class SongSearchLayoutController : SongSelectionLayoutController() {
 
     override fun getSongItems(songsDb: SongsDb): List<SongTreeItem> {
         val songNameFilter = SongTreeFilter(itemNameFilter)
-        return songsDb.allSongs
+        return songsDb.getAllUnlockedSongs()
                 .map { song -> SongTreeItem.song(song) }
                 .filter { item -> songNameFilter.matchesNameFilter(item) }
     }

@@ -47,4 +47,6 @@
     <string name="contact_send">Send</string>
     <string name="unlock_action">Unlock</string>
     <string name="action_cancel">Cancel</string>
+    <string name="unlock_key_invalid">Key is not valid</string>
+    <string name="unlock_new_songs_unlocked">New songs unlocked: </string>
 </resources>

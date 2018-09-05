@@ -117,6 +117,11 @@ public class UiInfoService {
 		Toast.makeText(activity.getApplicationContext(), message, Toast.LENGTH_LONG).show();
 	}
 	
+	public void showToast(int messageRes) {
+		String message = uiResourceService.resString(messageRes);
+		showToast(message);
+	}
+	
 	public void showDialog(String title, String message) {
 		AlertDialog.Builder dlgAlert = new AlertDialog.Builder(activity);
 		dlgAlert.setMessage(message);

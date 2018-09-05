@@ -29,6 +29,7 @@ import igrek.songbook.service.persistence.SongsDbRepository;
 import igrek.songbook.service.persistence.database.LocalDatabaseService;
 import igrek.songbook.service.persistence.database.SqlQueryService;
 import igrek.songbook.service.preferences.PreferencesService;
+import igrek.songbook.service.secret.SecretUnlockerService;
 import igrek.songbook.service.songtree.ScrollPosBuffer;
 import igrek.songbook.service.songtree.SongTreeWalker;
 import igrek.songbook.service.system.SoftKeyboardService;
@@ -103,6 +104,8 @@ public interface FactoryComponent {
 	void inject(SongsDbRepository there);
 	
 	void inject(PermissionService there);
+	
+	void inject(SecretUnlockerService there);
 	
 	
 	void inject(UIErrorHandler there);
