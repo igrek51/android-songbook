@@ -4,6 +4,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.domain.songsdb.SongsDb
@@ -47,6 +48,9 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
         searchFilterSubject.debounce(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { _ -> setSongFilter() }
+        if (itemNameFilter != null && itemNameFilter!!.isNotEmpty()) {
+            searchFilterEdit!!.setText(itemNameFilter, TextView.BufferType.EDITABLE)
+        }
         searchFilterEdit!!.requestFocus()
         softKeyboardService.showSoftKeyboard()
 
@@ -85,13 +89,13 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
     override fun getSongItems(songsDb: SongsDb): List<SongTreeItem> {
         // no filter
         if (itemNameFilter == null || itemNameFilter!!.isEmpty()) {
+            return songsDb.getAllUnlockedSongs()
+                    .map { song -> SongTreeItem.song(song) }
+        } else {
             val songNameFilter = SongTreeFilter(itemNameFilter)
             return songsDb.getAllUnlockedSongs()
                     .map { song -> SongTreeItem.song(song) }
                     .filter { item -> songNameFilter.matchesNameFilter(item) }
-        } else {
-            return songsDb.getAllUnlockedSongs()
-                    .map { song -> SongTreeItem.song(song) }
         }
     }
 
