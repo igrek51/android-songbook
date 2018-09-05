@@ -13,6 +13,7 @@ import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
+import igrek.songbook.service.layout.contact.ContactLayoutController;
 import igrek.songbook.service.layout.search.SongSearchLayoutController;
 import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController;
 import igrek.songbook.service.layout.songtree.SongTreeLayoutController;
@@ -28,6 +29,9 @@ public class LayoutController {
 	
 	@Inject
 	Lazy<SongPreviewLayoutController> songPreviewController;
+	
+	@Inject
+	Lazy<ContactLayoutController> contactLayoutController;
 	
 	@Inject
 	Lazy<NavigationMenuController> navigationMenuController;
@@ -53,19 +57,25 @@ public class LayoutController {
 	public void showSongTree() {
 		state = LayoutState.SONGS_TREE;
 		View layout = setMainContentLayout(R.layout.song_tree);
-		songTreeController.get().showSongTree(layout);
+		songTreeController.get().showLayout(layout);
 	}
 	
 	public void showSongSearch() {
 		state = LayoutState.SEARCH_SONG;
 		View layout = setMainContentLayout(R.layout.song_search);
-		songSearchController.get().showSongSearch(layout);
+		songSearchController.get().showLayout(layout);
 	}
 	
 	public void showSongPreview() {
 		state = LayoutState.SONG_PREVIEW;
 		View layout = setMainContentLayout(R.layout.song_preview);
-		songPreviewController.get().showSongPreview(layout);
+		songPreviewController.get().showLayout(layout);
+	}
+	
+	public void showContact() {
+		state = LayoutState.CONTACT;
+		View layout = setMainContentLayout(R.layout.contact);
+		contactLayoutController.get().showLayout(layout);
 	}
 	
 	public boolean isState(LayoutState compare) {

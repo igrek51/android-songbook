@@ -46,7 +46,7 @@ public class SongPreviewLayoutController {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
-	public void showSongPreview(View layout) {
+	public void showLayout(View layout) {
 		canvas = new CanvasGraphics(activity);
 		canvas.reset();
 		

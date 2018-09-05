@@ -18,7 +18,7 @@ class SongTreeLayoutController : SongSelectionLayoutController() {
         DaggerIoc.getFactoryComponent().inject(this)
     }
 
-    fun showSongTree(layout: View) {
+    fun showLayout(layout: View) {
         initSongSelectionLayout(layout)
 
         val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)

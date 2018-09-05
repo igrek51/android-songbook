@@ -56,7 +56,7 @@ class NavigationMenuController {
         actionsMap[R.id.nav_help] = Runnable { helpLayoutController.get().showUIHelp() }
         actionsMap[R.id.nav_about] = Runnable { aboutLayoutController.get().showAbout() }
         actionsMap[R.id.nav_exit] = Runnable { activityController.get().quit() }
-        actionsMap[R.id.nav_contact] = Runnable { contactLayoutController.get().showContact() }
+        actionsMap[R.id.nav_contact] = Runnable { layoutController.get().showContact() }
     }
 
     fun init() {

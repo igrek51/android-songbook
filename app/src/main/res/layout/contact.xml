@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/mainLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/contactText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/ui_contact_content"
+        android:gravity="bottom"
+        android:textSize="18sp"/>
+
+    <EditText
+        android:id="@+id/contactMessageEdit"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:inputType="text|textMultiLine"
+        android:gravity="top"
+        android:hint="@string/contact_message_hint"/>
+
+    <Button
+        android:id="@+id/contactSendButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/contact_send"/>
+
+</LinearLayout>

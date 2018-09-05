@@ -10,4 +10,6 @@ public enum LayoutState {
 	
 	SETTINGS,
 	
+	CONTACT,
+	
 }

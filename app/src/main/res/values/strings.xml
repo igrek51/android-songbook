@@ -39,7 +39,10 @@
     <string name="ui_about">About</string>
     <string name="ui_about_content">Author: igrek51 - Ireneusz Szulc</string>
     <string name="ui_contact">Contact</string>
-    <string name="ui_contact_content">Contact me if you have noticed some bugs or you have any ideas how to improve an application</string>
+    <string name="ui_contact_content">You can contact me if you have noticed some bugs or you have any ideas how to improve this application:</string>
     <string name="song_category_others">Others</string>
     <string name="song_category_custom">Custom</string>
+    <string name="contact_message_hint">Message…</string>
+    <string name="song_search_edit_hint">Song title or artist</string>
+    <string name="contact_send">Send</string>
 </resources>

@@ -24,7 +24,7 @@ class SongSearchLayoutController : SongSelectionLayoutController() {
         DaggerIoc.getFactoryComponent().inject(this)
     }
 
-    fun showSongSearch(layout: View) {
+    fun showLayout(layout: View) {
         initSongSelectionLayout(layout)
 
         searchFilterEdit = layout.findViewById(R.id.searchFilterEdit)

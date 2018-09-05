@@ -1,8 +1,9 @@
 package igrek.songbook.service.layout.contact;
 
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import javax.inject.Inject;
 
@@ -12,11 +13,11 @@ import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.activity.ActivityController;
+import igrek.songbook.service.errorcheck.SafeClickListener;
 import igrek.songbook.service.info.UiInfoService;
 import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.layout.LayoutController;
 import igrek.songbook.service.navmenu.NavigationMenuController;
-import igrek.songbook.view.songselection.SongListView;
 
 public class ContactLayoutController {
 	
@@ -34,17 +35,27 @@ public class ContactLayoutController {
 	NavigationMenuController navigationMenuController;
 	
 	private Logger logger = LoggerFactory.getLogger();
-	private ActionBar actionBar;
-	private SongListView itemsListView;
-	private TextView toolbarTitle;
+	private EditText contactMessageEdit;
 	
 	public ContactLayoutController() {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
-	public void showContact() {
-		String message = uiResourceService.resString(R.string.ui_contact_content);
-		String title = uiResourceService.resString(R.string.ui_contact);
-		uiInfoService.showDialog(title, message);
+	public void showLayout(View layout) {
+		contactMessageEdit = layout.findViewById(R.id.contactMessageEdit);
+		Button contactSendButton = layout.findViewById(R.id.contactSendButton);
+		contactSendButton.setOnClickListener(new SafeClickListener() {
+			@Override
+			public void onClick() {
+				sendContactMessage();
+			}
+		});
+		
+	}
+	
+	private void sendContactMessage() {
+		String message = contactMessageEdit.getText().toString();
+		// TODO
+		uiInfoService.showToast("not implemented yet");
 	}
 }

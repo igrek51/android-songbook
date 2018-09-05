@@ -53,7 +53,8 @@
                 android:id="@+id/toolbarTitle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Title"/>
+                android:text=""
+                android:textSize="18sp"/>
 
         </android.support.v7.widget.Toolbar>
 
