@@ -1,15 +1,16 @@
-package igrek.songbook.service.layout.songtree
+package igrek.songbook.service.layout.search
 
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.TextView
 import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.domain.exception.NoParentItemException
 import igrek.songbook.logger.LoggerFactory
 import igrek.songbook.service.activity.ActivityController
 import igrek.songbook.service.info.UiInfoService
@@ -23,9 +24,11 @@ import igrek.songbook.service.songtree.SongTreeItem
 import igrek.songbook.service.songtree.SongTreeWalker
 import igrek.songbook.service.window.WindowManagerService
 import igrek.songbook.view.songselection.SongListView
+import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class SongTreeLayoutController {
+class SongSearchLayoutController {
 
     @Inject
     lateinit var songTreeWalker: SongTreeWalker
@@ -53,7 +56,8 @@ class SongTreeLayoutController {
     private val logger = LoggerFactory.getLogger()
     private var actionBar: ActionBar? = null
     private var itemsListView: SongListView? = null
-    private var toolbarTitle: TextView? = null
+    private var searchFilterEdit: EditText? = null
+    private var searchFilterSubject: PublishSubject<String> = PublishSubject.create()
 
     val currentScrollPos: Int?
         get() = itemsListView!!.currentScrollPosition
@@ -62,7 +66,7 @@ class SongTreeLayoutController {
         DaggerIoc.getFactoryComponent().inject(this)
     }
 
-    fun showSongTree(layout: View) {
+    fun showSongSearch(layout: View) {
         // toolbar
         val toolbar1 = layout.findViewById<Toolbar>(R.id.toolbar1)
         activity.setSupportActionBar(toolbar1)
@@ -75,13 +79,24 @@ class SongTreeLayoutController {
         val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)
         navMenuButton.setOnClickListener { _ -> navigationMenuController.navDrawerShow() }
 
-        val goBackButton = layout.findViewById<ImageButton>(R.id.goBackButton)
-        goBackButton.setOnClickListener { _ -> onToolbarBackClickedEvent() }
-
-        toolbarTitle = layout.findViewById(R.id.toolbarTitle)
         itemsListView = layout.findViewById(R.id.filesList)
+        searchFilterEdit = layout.findViewById(R.id.searchFilterEdit) as EditText?
 
-        songTreeWalker.goToAllCategories()
+        searchFilterEdit!!.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                searchFilterSubject.onNext(s.toString());
+            }
+        })
+        searchFilterSubject.debounce(500, TimeUnit.MILLISECONDS)
+                .subscribe { text -> logger.debug(text) }
+
+        songTreeWalker.goToAllSongs()
         itemsListView!!.init(activity)
         updateItemsList()
     }
@@ -89,45 +104,10 @@ class SongTreeLayoutController {
     fun updateItemsList() {
         songTreeWalker.updateItems(songsDbRepository.songsDb)
         itemsListView!!.setItems(songTreeWalker.currentItems)
-        if (songTreeWalker.isCategorySelected) {
-            setTitle(songTreeWalker.currentCategory.name)
-        } else {
-            setTitle("Songs")
-        }
-    }
-
-    fun setTitle(title: String?) {
-        actionBar!!.title = title
-        toolbarTitle!!.text = title
     }
 
     fun scrollToItem(position: Int) {
         itemsListView!!.scrollTo(position)
-    }
-
-    fun scrollToPosition(y: Int) {
-        itemsListView!!.scrollToPosition(y)
-    }
-
-    fun goUp() {
-        try {
-            songTreeWalker.goUp()
-            updateItemsList()
-            //restoreScrollPosition(songTreeWalker.currentPath)
-        } catch (e: NoParentItemException) {
-            activityController.get().quit()
-        }
-    }
-
-    fun restoreScrollPosition(path: String) {
-        val savedScrollPos = scrollPosBuffer.restoreScrollPosition(path)
-        if (savedScrollPos != null) {
-            scrollToPosition(savedScrollPos)
-        }
-    }
-
-    fun onToolbarBackClickedEvent() {
-        goUp()
     }
 
     fun onItemClickedEvent(item: SongTreeItem) {

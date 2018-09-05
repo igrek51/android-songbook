@@ -35,21 +35,14 @@
                 android:scaleType="fitCenter"
                 />
 
-            <TextView
-                android:id="@+id/toolbarTitle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Song search"/>
-
             <android.widget.EditText
-                android:id="@+id/etEditItemContent"
-                android:layout_width="wrap_content"
+                android:id="@+id/searchFilterEdit"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:layout_gravity="left|center_vertical"
-                android:layout_toLeftOf="@+id/rotateScreenBtn"
                 android:gravity="left|center_vertical"
                 android:imeOptions="flagNoExtractUi"
                 android:inputType="textMultiLine"
