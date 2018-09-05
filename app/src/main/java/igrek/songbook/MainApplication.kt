@@ -21,7 +21,7 @@ class MainApplication : Application() {
         // catch all uncaught exceptions
         val defaultUEH = Thread.getDefaultUncaughtExceptionHandler()
         Thread.setDefaultUncaughtExceptionHandler { thread, th ->
-            logger.error(th)
+            logger.fatal(currentActivity, th)
             //pass further to OS
             defaultUEH.uncaughtException(thread, th)
         }

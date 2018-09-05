@@ -129,7 +129,7 @@ public class SongListView extends ListView implements AdapterView.OnItemClickLis
 	public void scrollToPosition(int y) {
 		// determine nearest element and scroll relative to it
 		int position = 0;
-		while (y > itemHeights.get(position)) {
+		while (itemHeights.get(position) != null && y > itemHeights.get(position)) {
 			y -= itemHeights.get(position);
 			position++;
 		}
