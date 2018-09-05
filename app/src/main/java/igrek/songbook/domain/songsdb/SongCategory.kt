@@ -6,6 +6,7 @@ data class SongCategory(
         val id: Long,
         val type: SongCategoryType,
         val name: String? = null,
+        var displayName: String? = null,
         var songs: List<Song>? = null
 ) {
     override fun equals(other: Any?): Boolean {

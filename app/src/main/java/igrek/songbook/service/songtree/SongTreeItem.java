@@ -23,7 +23,7 @@ public class SongTreeItem {
 	
 	public String getSimpleName() {
 		if (isCategory()) {
-			return category.getName();
+			return category.getDisplayName();
 		} else {
 			return song.getTitle();
 		}
@@ -48,9 +48,9 @@ public class SongTreeItem {
 	@Override
 	public String toString() {
 		if (isCategory()) {
-			return "[" + category.getName() + "]";
+			return "[" + category.getDisplayName() + "]";
 		} else {
-			return song.getCategory().getName() + " - " + song.getTitle();
+			return "" + song.getCategory().getDisplayName() + " - " + song.getTitle();
 		}
 	}
 }

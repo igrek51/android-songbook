@@ -13,7 +13,7 @@ class SongTreeFilter(val nameFilter: String?) {
         if (nameFilter == null || nameFilter.isEmpty())
             return true
 
-        val fullName: String = songItem.song.category.name + " - " + songItem.song.title
+        val fullName: String = songItem.song.category.displayName + " - " + songItem.song.title
         // must contain every part
         return containsEveryFilterPart(fullName, nameFilter)
     }

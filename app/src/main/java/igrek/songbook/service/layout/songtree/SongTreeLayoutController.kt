@@ -43,7 +43,7 @@ class SongTreeLayoutController : SongSelectionLayoutController() {
     override fun updateSongItemsList() {
         super.updateSongItemsList()
         if (songTreeWalker.isCategorySelected) {
-            setTitle(songTreeWalker.currentCategory.name)
+            setTitle(songTreeWalker.currentCategory.displayName)
         } else {
             setTitle("Songs")
         }

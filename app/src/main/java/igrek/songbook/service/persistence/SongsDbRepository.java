@@ -55,6 +55,14 @@ public class SongsDbRepository {
 		for (SongCategory category : categories) {
 			Collection<Song> songsOfCategory = categorySongs.get(category);
 			category.setSongs(new ArrayList<>(songsOfCategory));
+			// refill category display name
+			if (category.getName() != null) {
+				category.setDisplayName(category.getName());
+			} else {
+				String displayName = uiResourceService.resString(category.getType()
+						.getLocaleStringId());
+				category.setDisplayName(displayName);
+			}
 		}
 		
 		long versionNumber = sqlQueryService.readDbVersionNumber();
