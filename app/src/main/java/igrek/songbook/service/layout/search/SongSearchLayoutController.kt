@@ -1,8 +1,10 @@
 package igrek.songbook.service.layout.search
 
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
 import igrek.songbook.R
@@ -18,6 +20,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
 
 class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
 
@@ -51,7 +54,21 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
         if (isFilterSet()) {
             searchFilterEdit!!.setText(itemNameFilter, TextView.BufferType.EDITABLE)
         }
+        searchFilterEdit!!.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus)
+                softKeyboardService.hideSoftKeyboard(searchFilterEdit)
+        }
         searchFilterEdit!!.requestFocus()
+        Handler().post { softKeyboardService.showSoftKeyboard(searchFilterEdit) }
+
+        searchFilterEdit!!.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                searchFilterEdit?.clearFocus()
+                softKeyboardService.hideSoftKeyboard(searchFilterEdit)
+                return@setOnEditorActionListener true
+            }
+            false
+        }
 
         itemsListView!!.init(activity, this)
         updateSongItemsList()
@@ -101,7 +118,7 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
     }
 
     private fun isFilterSet(): Boolean {
-        return itemNameFilter != null && itemNameFilter!!.isEmpty()
+        return itemNameFilter != null && !itemNameFilter!!.isEmpty()
     }
 
     fun onBackClicked() {

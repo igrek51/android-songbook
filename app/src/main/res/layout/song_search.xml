@@ -44,7 +44,7 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="left|center_vertical"
                 android:gravity="left|center_vertical"
-                android:imeOptions="actionSearch"
+                android:imeOptions="actionSearch|flagNoExtractUi"
                 android:inputType="text"
                 android:paddingBottom="16dp"
                 android:paddingTop="16dp"
