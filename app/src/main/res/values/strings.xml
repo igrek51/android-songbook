@@ -18,16 +18,16 @@
     <string name="message_home_not_set">Home category is not set.</string>
     <string name="ui_help">Help</string>
     <string name="ui_help_content">
-    FILE PREVIEW:
-\nScaling with two fingers - changing font size.
+    SONG PREVIEW:
+\nPinch with two fingers in order to change font size scale.
     \n\nQUICK MENU:
-\nClick on top of the screen - show / hide quick menu.
+\nClick on top of the screen in order to show / hide quick menu.
 \n-5, -1, +1, +5 buttons - tranposition by number of semitones.
 \n0 button - restore original key.
     \n\nAUTOSCROLL:
-\nClick on bottom of the screen - turn on / off autoscrolling. If beginning of the file is visible, autoscrolling starts with counting down.
-\nManual scrolling down while autoscrolling - skip counting down or speed up autoscrolling.
-\nManual scrolling up while autoscrolling - enable counting down or slow down autoscrolling.
+\nClick on bottom of the screen to turn on / off autoscrolling. If beginning of the file is visible, autoscrolling starts with counting down.
+\nScroll down manually while autoscrolling to omit counting down or speed up autoscrolling.
+\nScroll up manually while autoscrolling to enable counting down or slow down autoscrolling.
     </string>
     <string name="nav_songs_list">Songs</string>
     <string name="nav_search_song">Search</string>
@@ -52,6 +52,7 @@
         \nJoda Time
         \njUnit
         \nKotlin
+        \nMaterial Design icons
         \nMockito
         \nRoboelectric
         \nRxAndroid
@@ -61,7 +62,7 @@
     <string name="ui_contact_content">You can contact me if you have noticed some bugs or you have any ideas how to improve this application:</string>
     <string name="song_category_others">Others</string>
     <string name="song_category_custom">Custom</string>
-    <string name="contact_message_hint">Message…</string>
+    <string name="contact_message_hint">Message for igrek…</string>
     <string name="song_search_edit_hint">Song title or artist</string>
     <string name="contact_send">Send</string>
     <string name="unlock_action">Unlock</string>

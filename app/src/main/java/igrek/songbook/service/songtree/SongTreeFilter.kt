@@ -1,12 +1,24 @@
 package igrek.songbook.service.songtree
 
-import java.text.Collator
 import java.util.*
 
-class SongTreeFilter(val nameFilter: String?) {
+class SongTreeFilter(private val nameFilter: String?) {
 
     private val locale = Locale("pl", "PL")
-    private val stringCollator = Collator.getInstance(locale)
+    private val specialCharsMapping = mutableMapOf<Char, Char>()
+
+    init {
+        // special polish letters transformation
+        specialCharsMapping['ą'] = 'a'
+        specialCharsMapping['ż'] = 'z'
+        specialCharsMapping['ś'] = 's'
+        specialCharsMapping['ź'] = 'z'
+        specialCharsMapping['ę'] = 'e'
+        specialCharsMapping['ć'] = 'c'
+        specialCharsMapping['ń'] = 'n'
+        specialCharsMapping['ó'] = 'o'
+        specialCharsMapping['ł'] = 'l'
+    }
 
     fun matchesNameFilter(songItem: SongTreeItem): Boolean {
         // no filter set
@@ -19,8 +31,15 @@ class SongTreeFilter(val nameFilter: String?) {
     }
 
     private fun containsEveryFilterPart(input: String, partsFilter: String): Boolean {
-        val input2 = input.toLowerCase(locale)
+        val input2 = toSimplifiedString(input)
         return partsFilter.split(" ")
-                .all { part -> input2.contains(part.toLowerCase(locale)) }
+                .all { part -> input2.contains(toSimplifiedString(part)) }
+    }
+
+    private fun toSimplifiedString(s: String): String {
+        var s2 = s.toLowerCase(locale);
+        // special chars mapping
+        specialCharsMapping.forEach { k, v -> s2 = s2.replace(k, v) }
+        return s2
     }
 }

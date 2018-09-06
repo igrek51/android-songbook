@@ -2,10 +2,10 @@ package igrek.songbook.domain.songsdb
 
 import com.google.common.base.Objects
 
-data class Song(
+open class Song(
         val id: Long,
-        var title: String,
-        var category: SongCategory,
+        open var title: String,
+        open var category: SongCategory,
         var fileContent: String? = null,
         var versionNumber: Long = 1,
         var updateTime: Long = 0,

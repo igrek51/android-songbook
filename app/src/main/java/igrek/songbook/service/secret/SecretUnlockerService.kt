@@ -54,7 +54,7 @@ class SecretUnlockerService {
         logger.info("unlocking attempt with a key: $key0")
         val key = key0.toLowerCase(locale)
         when (key) {
-            "dupa" -> uiInfoService.showInfo("Congratulations! You have discovered an Easter Egg :)")
+            "dupa", "okoń", "okon" -> uiInfoService.showInfo("Congratulations! You have discovered an Easter Egg :)")
             "engineer", "inżynier", "inzynier" -> unlockSongs("engineer")
             "zjajem", "z jajem" -> unlockSongs("zjajem")
             "bff" -> unlockSongs("bff")
