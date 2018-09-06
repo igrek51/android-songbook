@@ -12,6 +12,7 @@ import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.chords.transpose.ChordsTransposerManager;
 import igrek.songbook.service.preferences.PreferencesDefinition;
 import igrek.songbook.service.preferences.PreferencesService;
+import igrek.songbook.service.system.WindowManagerService;
 
 public class LyricsManager {
 	
@@ -21,6 +22,8 @@ public class LyricsManager {
 	Lazy<AutoscrollService> autoscrollService;
 	@Inject
 	PreferencesService preferencesService;
+	@Inject
+	WindowManagerService windowManagerService;
 	
 	private CRDParser crdParser;
 	private CRDModel crdModel;
@@ -82,7 +85,8 @@ public class LyricsManager {
 	private void parseAndTranspose(String originalFileContent) {
 		String transposedContent = chordsTransposerManager.get()
 				.transposeContent(originalFileContent);
-		crdModel = crdParser.parseFileContent(transposedContent, screenW, fontsize, paint);
+		float realFontsize = windowManagerService.dp2px(this.fontsize);
+		crdModel = crdParser.parseFileContent(transposedContent, screenW, realFontsize, paint);
 	}
 	
 }

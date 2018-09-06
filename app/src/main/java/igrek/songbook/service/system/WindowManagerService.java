@@ -54,4 +54,8 @@ public class WindowManagerService {
 		DisplayMetrics metrics = activity.getResources().getDisplayMetrics();
 		return metrics.densityDpi;
 	}
+	
+	public float dp2px(float dp) {
+		return dp * ((float) getDpi() / DisplayMetrics.DENSITY_DEFAULT);
+	}
 }

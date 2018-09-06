@@ -4,9 +4,9 @@ public enum PreferencesDefinition {
 	
 	fontsize(24.0f), // dp
 	
-	autoscrollInitialPause(35000L), // ms
+	autoscrollInitialPause(36000L), // ms
 	
-	autoscrollSpeed(0.1f); // em / s
+	autoscrollSpeed(0.15f); // em / s
 	
 	private Object defaultValue;
 	private PropertyType type;

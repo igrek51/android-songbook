@@ -1,7 +1,6 @@
 package igrek.songbook.view.songpreview;
 
 import android.content.Context;
-import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -187,15 +186,11 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	}
 	
 	private float getFontsizePx() {
-		return dp2px(this.fontsizeTmp, dpi);
+		return windowManagerService.dp2px(this.fontsizeTmp);
 	}
 	
 	private float getLineheightPx() {
 		return getFontsizePx() * LINEHEIGHT_SCALE_FACTOR;
-	}
-	
-	private float dp2px(float dp, int dpi) {
-		return dp * ((float) dpi / DisplayMetrics.DENSITY_DEFAULT);
 	}
 	
 	private void drawBackground() {

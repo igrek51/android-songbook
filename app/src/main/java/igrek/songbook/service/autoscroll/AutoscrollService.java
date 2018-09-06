@@ -20,7 +20,7 @@ public class AutoscrollService {
 	
 	private final float MIN_SPEED = 0.001f;
 	private final float START_NO_WAITING_MIN_SCROLL = 24.0f;
-	private final float AUTOCHANGE_SPEED_SCALE = 0.0003f;
+	private final float AUTOCHANGE_SPEED_SCALE = 0.00025f;
 	private final float AUTOCHANGE_MAX_SCROLL = 150f; // [px]
 	private final float AUTOCHANGE_WAITING_SCALE = 9.0f;
 	private final float AUTOSCROLL_INTERVAL_TIME = 100; // [ms]
