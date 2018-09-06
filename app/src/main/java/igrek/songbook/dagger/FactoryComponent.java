@@ -8,7 +8,7 @@ import igrek.songbook.service.activity.ActivityController;
 import igrek.songbook.service.activity.AppInitializer;
 import igrek.songbook.service.activity.OptionSelectDispatcher;
 import igrek.songbook.service.autoscroll.AutoscrollService;
-import igrek.songbook.service.chords.ChordsManager;
+import igrek.songbook.service.chords.LyricsManager;
 import igrek.songbook.service.chords.transpose.ChordsTransposer;
 import igrek.songbook.service.errorcheck.SafeExecutor;
 import igrek.songbook.service.errorcheck.UIErrorHandler;
@@ -68,7 +68,7 @@ public interface FactoryComponent {
 	
 	void inject(AutoscrollService there);
 	
-	void inject(ChordsManager there);
+	void inject(LyricsManager there);
 	
 	void inject(SongTreeWalker there);
 	

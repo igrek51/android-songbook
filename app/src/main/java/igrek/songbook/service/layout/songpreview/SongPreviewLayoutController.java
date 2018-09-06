@@ -16,7 +16,7 @@ import igrek.songbook.domain.songsdb.Song;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.autoscroll.AutoscrollService;
-import igrek.songbook.service.chords.ChordsManager;
+import igrek.songbook.service.chords.LyricsManager;
 import igrek.songbook.service.layout.LayoutController;
 import igrek.songbook.service.layout.LayoutState;
 import igrek.songbook.service.layout.MainLayout;
@@ -28,7 +28,7 @@ import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
 public class SongPreviewLayoutController implements MainLayout {
 	
 	@Inject
-	ChordsManager chordsManager;
+	LyricsManager lyricsManager;
 	@Inject
 	Lazy<LayoutController> layoutController;
 	@Inject
@@ -85,19 +85,19 @@ public class SongPreviewLayoutController implements MainLayout {
 		// load file and parse it
 		String fileContent = currentSong.getFileContent();
 		// initialize - first file loading
-		chordsManager.load(fileContent, w, h, paint);
+		lyricsManager.load(fileContent, w, h, paint);
 		
-		canvas.setFontSizes(chordsManager.getFontsize());
-		canvas.setCRDModel(chordsManager.getCRDModel());
+		canvas.setFontSizes(lyricsManager.getFontsize());
+		canvas.setCRDModel(lyricsManager.getCRDModel());
 		
 		//logger.debug("canvas graphics " + w + "x" + h + " has been initialized");
 	}
 	
 	public void onFontsizeChangedEvent(float fontsize) {
-		chordsManager.setFontsize(fontsize);
+		lyricsManager.setFontsize(fontsize);
 		// parse without reading a whole file again
-		chordsManager.reparse();
-		canvas.setCRDModel(chordsManager.getCRDModel());
+		lyricsManager.reparse();
+		canvas.setCRDModel(lyricsManager.getCRDModel());
 	}
 	
 	public CanvasGraphics getCanvas() {

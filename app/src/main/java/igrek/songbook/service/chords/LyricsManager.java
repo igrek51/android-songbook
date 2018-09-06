@@ -16,9 +16,11 @@ import igrek.songbook.service.chords.transpose.ChordsTransposer;
 import igrek.songbook.service.info.UiInfoService;
 import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController;
+import igrek.songbook.service.preferences.PreferencesDefinition;
+import igrek.songbook.service.preferences.PreferencesService;
 import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
 
-public class ChordsManager {
+public class LyricsManager {
 	
 	@Inject
 	UiInfoService userInfo;
@@ -32,18 +34,22 @@ public class ChordsManager {
 	Lazy<SongPreviewLayoutController> songPreviewController;
 	@Inject
 	Lazy<QuickMenu> quickMenu;
+	@Inject
+	PreferencesService preferencesService;
+	
 	private Logger logger = LoggerFactory.getLogger();
-	private int transposed = 0;
+	private int transposed;
 	private CRDParser crdParser;
 	private CRDModel crdModel;
 	private int screenW = 0;
-	private Paint paint = null;
-	private float fontsize = 26.0f;
-	private String originalFileContent = null;
+	private Paint paint;
+	private float fontsize;
+	private String originalFileContent;
 	
-	public ChordsManager() {
+	public LyricsManager() {
 		DaggerIoc.getFactoryComponent().inject(this);
 		crdParser = new CRDParser();
+		loadPreferences();
 	}
 	
 	public void reset() {
@@ -127,6 +133,10 @@ public class ChordsManager {
 	
 	public void onTransposeResetEvent() {
 		onTransposeEvent(-getTransposed());
+	}
+	
+	private void loadPreferences() {
+		fontsize = preferencesService.getValue(PreferencesDefinition.fontsize, Float.class);
 	}
 	
 }

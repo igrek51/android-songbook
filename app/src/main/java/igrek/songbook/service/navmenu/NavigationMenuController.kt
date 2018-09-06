@@ -12,9 +12,9 @@ import igrek.songbook.service.errorcheck.SafeExecutor
 import igrek.songbook.service.info.UiInfoService
 import igrek.songbook.service.layout.LayoutController
 import igrek.songbook.service.layout.about.AboutLayoutController
-import igrek.songbook.service.layout.contact.ContactLayoutController
 import igrek.songbook.service.layout.help.HelpLayoutController
 import igrek.songbook.service.persistence.SongsDbRepository
+import igrek.songbook.service.system.SoftKeyboardService
 import java.util.*
 import javax.inject.Inject
 
@@ -32,8 +32,6 @@ class NavigationMenuController {
     @Inject
     lateinit var activityController: dagger.Lazy<ActivityController>
     @Inject
-    lateinit var contactLayoutController: dagger.Lazy<ContactLayoutController>
-    @Inject
     lateinit var helpLayoutController: dagger.Lazy<HelpLayoutController>
     @Inject
     lateinit var aboutLayoutController: dagger.Lazy<AboutLayoutController>
@@ -41,6 +39,8 @@ class NavigationMenuController {
     lateinit var layoutController: dagger.Lazy<LayoutController>
     @Inject
     lateinit var songsDbRepository: SongsDbRepository
+    @Inject
+    lateinit var softKeyboardService: SoftKeyboardService
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
@@ -83,6 +83,7 @@ class NavigationMenuController {
         // unhighlight all menu items
         for (id in 0 until navigationView!!.menu.size())
             navigationView!!.menu.getItem(id).isChecked = false
+        softKeyboardService.hideSoftKeyboard()
     }
 
 }

@@ -2,11 +2,11 @@ package igrek.songbook.service.preferences;
 
 public enum PreferencesDefinition {
 	
-	homePath(""),
+	fontsize(24.0f), // dp
 	
-	fontsize(23.0f),
+	autoscrollInitialPause(300), // ms
 	
-	autoscrollInterval(300.0f);
+	autoscrollSpeed(300.0f); // em / s
 	
 	private Object defaultValue;
 	private PropertyType type;

@@ -9,7 +9,10 @@ import javax.inject.Inject;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
+import igrek.songbook.service.autoscroll.AutoscrollService;
+import igrek.songbook.service.chords.LyricsManager;
 import igrek.songbook.service.persistence.database.LocalDatabaseService;
+import igrek.songbook.service.preferences.PreferencesDefinition;
 import igrek.songbook.service.preferences.PreferencesService;
 import igrek.songbook.service.system.WindowManagerService;
 
@@ -23,6 +26,10 @@ public class ActivityController {
 	PreferencesService preferencesService;
 	@Inject
 	LocalDatabaseService localDatabaseService;
+	@Inject
+	LyricsManager lyricsManager;
+	@Inject
+	AutoscrollService autoscrollService;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
@@ -46,7 +53,14 @@ public class ActivityController {
 	
 	public void onDestroy() {
 		localDatabaseService.closeDatabase();
+		savePreferences();
 		logger.info("Activity has been destroyed.");
+	}
+	
+	private void savePreferences() {
+		float fontsize = lyricsManager.getFontsize();
+		preferencesService.setValue(PreferencesDefinition.fontsize, fontsize);
+		preferencesService.saveAll();
 	}
 	
 	public void onStart() {

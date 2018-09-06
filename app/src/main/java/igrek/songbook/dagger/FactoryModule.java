@@ -15,7 +15,7 @@ import igrek.songbook.service.activity.ActivityController;
 import igrek.songbook.service.activity.AppInitializer;
 import igrek.songbook.service.activity.OptionSelectDispatcher;
 import igrek.songbook.service.autoscroll.AutoscrollService;
-import igrek.songbook.service.chords.ChordsManager;
+import igrek.songbook.service.chords.LyricsManager;
 import igrek.songbook.service.chords.transpose.ChordsTransposer;
 import igrek.songbook.service.filesystem.ExternalCardService;
 import igrek.songbook.service.filesystem.FilesystemService;
@@ -139,8 +139,8 @@ public class FactoryModule {
 	
 	@Provides
 	@Singleton
-	protected ChordsManager provideChordsManager() {
-		return new ChordsManager();
+	protected LyricsManager provideChordsManager() {
+		return new LyricsManager();
 	}
 	
 	@Provides
