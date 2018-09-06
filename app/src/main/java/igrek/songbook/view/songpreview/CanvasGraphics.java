@@ -1,6 +1,7 @@
 package igrek.songbook.view.songpreview;
 
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -14,6 +15,7 @@ import igrek.songbook.domain.crd.CRDLine;
 import igrek.songbook.domain.crd.CRDModel;
 import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController;
+import igrek.songbook.service.system.WindowManagerService;
 import igrek.songbook.view.songpreview.base.BaseCanvasGraphics;
 import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
 
@@ -27,17 +29,24 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	private final float GESTURE_CLICK_MAX_HYPOT = 20.0f;
 	private final long GESTURE_CLICK_MAX_TIME = 500;
 	private final float MIN_SCROLL_EVENT = 15f;
+	
 	@Inject
 	Lazy<AutoscrollService> autoscroll;
 	@Inject
 	Lazy<SongPreviewLayoutController> songPreviewController;
 	@Inject
 	Lazy<QuickMenu> quickMenu;
+	@Inject
+	WindowManagerService windowManagerService;
+	
 	private CRDModel crdModel = null;
 	private float scroll = 0;
 	private float startScroll = 0;
+	/**
+	 * fontsize in dp (density independent pixels)
+	 */
 	private float fontsize;
-	private float lineheight;
+	private int dpi;
 	private Float pointersDst0 = null;
 	private Float fontsize0 = null;
 	private LyricsRenderer lyricsRenderer;
@@ -55,6 +64,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		pointersDst0 = null;
 		fontsize0 = null;
 		crdModel = null;
+		dpi = windowManagerService.getDpi();
 	}
 	
 	public void setCRDModel(CRDModel crdModel) {
@@ -63,9 +73,20 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		repaint();
 	}
 	
-	public void setFontSizes(float fontsize) {
-		this.fontsize = fontsize;
-		this.lineheight = fontsize * LINEHEIGHT_SCALE_FACTOR;
+	public void setFontSizes(float fontsizeDp) {
+		this.fontsize = fontsizeDp;
+	}
+	
+	private float getFontsizePx() {
+		return dp2px(this.fontsize, dpi);
+	}
+	
+	private float getLineheightPx() {
+		return getFontsizePx() * LINEHEIGHT_SCALE_FACTOR;
+	}
+	
+	private float dp2px(float dp, int dpi) {
+		return dp * ((float) dpi / DisplayMetrics.DENSITY_DEFAULT);
 	}
 	
 	public float getScroll() {
@@ -82,7 +103,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		drawBackground();
 		if (this.lyricsRenderer != null) {
 			lyricsRenderer.drawScrollBar();
-			lyricsRenderer.drawFileContent(fontsize, lineheight);
+			lyricsRenderer.drawFileContent(getFontsizePx(), getLineheightPx());
 		}
 		quickMenu.get().draw();
 	}
@@ -204,6 +225,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		CRDLine lastLine = lines.get(lines.size() - 1);
 		if (lastLine == null)
 			return 0;
+		float lineheight = getLineheightPx();
 		return lastLine.getY() * lineheight + lineheight;
 	}
 	

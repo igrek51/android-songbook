@@ -20,6 +20,10 @@ public class LyricsRenderer {
 		h = canvas.getH();
 	}
 	
+	/**
+	 * @param fontsize   fontsize in pixels
+	 * @param lineheight
+	 */
 	public void drawFileContent(float fontsize, float lineheight) {
 		canvas.setFontSize(fontsize);
 		canvas.setColor(0xffffff);

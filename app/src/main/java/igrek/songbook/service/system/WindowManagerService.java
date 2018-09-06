@@ -1,6 +1,7 @@
 package igrek.songbook.service.system;
 
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
 import javax.inject.Inject;
@@ -47,5 +48,10 @@ public class WindowManagerService {
 		} else {
 			activity.getWindow().clearFlags(flag);
 		}
+	}
+	
+	public int getDpi() {
+		DisplayMetrics metrics = activity.getResources().getDisplayMetrics();
+		return metrics.densityDpi;
 	}
 }
