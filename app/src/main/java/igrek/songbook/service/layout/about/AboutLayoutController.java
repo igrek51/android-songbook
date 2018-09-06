@@ -14,6 +14,7 @@ import igrek.songbook.service.info.UiInfoService;
 import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.layout.LayoutController;
 import igrek.songbook.service.secret.SecretUnlockerService;
+import igrek.songbook.service.system.PackageInfoService;
 
 public class AboutLayoutController {
 	
@@ -29,6 +30,8 @@ public class AboutLayoutController {
 	AppCompatActivity activity;
 	@Inject
 	SecretUnlockerService secretUnlockerService;
+	@Inject
+	PackageInfoService packageInfoService;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
@@ -37,7 +40,8 @@ public class AboutLayoutController {
 	}
 	
 	public void showAbout() {
-		String message = uiResourceService.resString(R.string.ui_about_content);
+		String versionName = packageInfoService.getVersionName();
+		String message = String.format(uiResourceService.resString(R.string.ui_about_content), versionName);
 		String title = uiResourceService.resString(R.string.ui_about);
 		String unlockActionName = uiResourceService.resString(R.string.unlock_action);
 		Runnable unlockAction = secretUnlockerService::showUnlockAlert;

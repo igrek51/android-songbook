@@ -32,6 +32,7 @@ import igrek.songbook.service.preferences.PreferencesService;
 import igrek.songbook.service.secret.SecretUnlockerService;
 import igrek.songbook.service.songtree.ScrollPosBuffer;
 import igrek.songbook.service.songtree.SongTreeWalker;
+import igrek.songbook.service.system.PackageInfoService;
 import igrek.songbook.service.system.SoftKeyboardService;
 import igrek.songbook.service.system.SystemKeyDispatcher;
 import igrek.songbook.service.system.WindowManagerService;
@@ -106,6 +107,8 @@ public interface FactoryComponent {
 	void inject(PermissionService there);
 	
 	void inject(SecretUnlockerService there);
+	
+	void inject(PackageInfoService there);
 	
 	
 	void inject(UIErrorHandler there);

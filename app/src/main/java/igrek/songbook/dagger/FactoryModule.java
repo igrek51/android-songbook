@@ -37,6 +37,7 @@ import igrek.songbook.service.preferences.PreferencesService;
 import igrek.songbook.service.secret.SecretUnlockerService;
 import igrek.songbook.service.songtree.ScrollPosBuffer;
 import igrek.songbook.service.songtree.SongTreeWalker;
+import igrek.songbook.service.system.PackageInfoService;
 import igrek.songbook.service.system.SoftKeyboardService;
 import igrek.songbook.service.system.SystemKeyDispatcher;
 import igrek.songbook.service.system.WindowManagerService;
@@ -254,6 +255,12 @@ public class FactoryModule {
 	@Singleton
 	protected SecretUnlockerService provideSecretUnlockerService() {
 		return new SecretUnlockerService();
+	}
+	
+	@Provides
+	@Singleton
+	protected PackageInfoService providePackageInfoService() {
+		return new PackageInfoService();
 	}
 	
 	/*
