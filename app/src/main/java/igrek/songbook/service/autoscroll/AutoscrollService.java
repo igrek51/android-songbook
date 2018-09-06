@@ -20,10 +20,10 @@ public class AutoscrollService {
 	
 	private final float MIN_SPEED = 0.001f;
 	private final float START_NO_WAITING_MIN_SCROLL = 24.0f;
-	private final float AUTOCHANGE_SPEED_SCALE = 0.05f;
+	private final float AUTOCHANGE_SPEED_SCALE = 0.0003f;
+	private final float AUTOCHANGE_MAX_SCROLL = 150f; // [px]
 	private final float AUTOCHANGE_WAITING_SCALE = 9.0f;
-	private final float MANUAL_SCROLL_MAX_RANGE = 150f; // [px]
-	private final float AUTOSCROLL_INTERVAL_TIME = 400; // [ms]
+	private final float AUTOSCROLL_INTERVAL_TIME = 100; // [ms]
 	@Inject
 	UiInfoService userInfo;
 	@Inject
@@ -53,7 +53,7 @@ public class AutoscrollService {
 	}
 	
 	private void loadPreferences() {
-		initialPause = preferencesService.getValue(PreferencesDefinition.autoscrollInitialPause, Integer.class);
+		initialPause = preferencesService.getValue(PreferencesDefinition.autoscrollInitialPause, Long.class);
 		autoscrollSpeed = preferencesService.getValue(PreferencesDefinition.autoscrollSpeed, Float.class);
 	}
 	
@@ -111,7 +111,9 @@ public class AutoscrollService {
 				onAutoscrollRemainingWaitTimeEvent(remainingTimeMs);
 			}
 		} else if (state == AutoscrollState.SCROLLING) {
-			if (getCanvas().scrollBy(autoscrollSpeed)) {
+			// em = speed * time
+			float lineheightPart = autoscrollSpeed * AUTOSCROLL_INTERVAL_TIME / 1000;
+			if (getCanvas().scrollBy(lineheightPart)) {
 				// scroll once again later
 				timerHandler.postDelayed(timerRunnable, (long) AUTOSCROLL_INTERVAL_TIME);
 			} else {
@@ -135,7 +137,7 @@ public class AutoscrollService {
 		} else if (state == AutoscrollState.SCROLLING) {
 			if (dScroll > 0) { // speed up scrolling
 				
-				dScroll = dScroll > MANUAL_SCROLL_MAX_RANGE ? MANUAL_SCROLL_MAX_RANGE : dScroll;
+				dScroll = dScroll > AUTOCHANGE_MAX_SCROLL ? AUTOCHANGE_MAX_SCROLL : dScroll;
 				autoscrollSpeed += dScroll * AUTOCHANGE_SPEED_SCALE;
 				
 			} else if (dScroll < 0) {
@@ -149,7 +151,7 @@ public class AutoscrollService {
 				} else {
 					// slow down scrolling
 					float dScrollAbs = -dScroll;
-					dScrollAbs = dScrollAbs > MANUAL_SCROLL_MAX_RANGE ? MANUAL_SCROLL_MAX_RANGE : dScrollAbs;
+					dScrollAbs = dScrollAbs > AUTOCHANGE_MAX_SCROLL ? AUTOCHANGE_MAX_SCROLL : dScrollAbs;
 					autoscrollSpeed -= dScrollAbs * AUTOCHANGE_SPEED_SCALE;
 				}
 			}

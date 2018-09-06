@@ -2,12 +2,23 @@ package igrek.songbook.service.preferences;
 
 enum PropertyType {
 	
-	STRING,
+	STRING(String.class),
 	
-	BOOLEAN,
+	BOOLEAN(Boolean.class),
 	
-	INTEGER,
+	INTEGER(Integer.class),
 	
-	FLOAT
+	LONG(Long.class),
 	
+	FLOAT(Float.class);
+	
+	private Class<?> clazz;
+	
+	PropertyType(Class<?> clazz) {
+		this.clazz = clazz;
+	}
+	
+	public Class<?> getClazz() {
+		return clazz;
+	}
 }

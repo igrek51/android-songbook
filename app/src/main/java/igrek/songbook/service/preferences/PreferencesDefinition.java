@@ -4,7 +4,7 @@ public enum PreferencesDefinition {
 	
 	fontsize(24.0f), // dp
 	
-	autoscrollInitialPause(35000), // ms
+	autoscrollInitialPause(35000L), // ms
 	
 	autoscrollSpeed(0.1f); // em / s
 	
@@ -19,8 +19,8 @@ public enum PreferencesDefinition {
 		this(PropertyType.BOOLEAN, defaultValue);
 	}
 	
-	PreferencesDefinition(Integer defaultValue) {
-		this(PropertyType.INTEGER, defaultValue);
+	PreferencesDefinition(Long defaultValue) {
+		this(PropertyType.LONG, defaultValue);
 	}
 	
 	PreferencesDefinition(Float defaultValue) {

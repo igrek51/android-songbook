@@ -18,7 +18,7 @@ import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.dagger.FactoryModule;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
-import igrek.songbook.service.persistence.SongsDbRepository;
+import igrek.songbook.service.preferences.PreferencesService;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -35,28 +35,25 @@ public class WIPFeatureTest {
 	
 	@Inject
 	Activity activity;
-	
 	@Inject
-	SongsDbRepository songsDbRepository;
+	PreferencesService preferencesService;
 	
 	@Before
 	public void setUpDagger() {
 		MainActivity activity = rule.getActivity();
-		
 		AndroidTestComponent component = DaggerAndroidTestComponent.builder()
 				.factoryModule(new FactoryModule(activity))
 				.build();
-		
 		DaggerIoc.setFactoryComponent(component);
 		component.inject(this);
-		
 		logger.warn("====== Running Android Instrumentation Test: WIPFeatureTest ======");
 	}
 	
 	@Test
 	//@Ignore
 	public void testWipFeature() {
-	
+		
+		preferencesService.clear();
 		
 	}
 	

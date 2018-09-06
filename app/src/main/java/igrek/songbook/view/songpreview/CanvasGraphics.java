@@ -240,12 +240,12 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	}
 	
 	/**
-	 * @param autoscrollSpeed speed in lineheight part per second [em / s]
+	 * @param lineheightPart lineheight part to move [em]
 	 * @return
 	 */
-	public boolean scrollBy(float autoscrollSpeed) {
+	public boolean scrollBy(float lineheightPart) {
 		boolean scrollable = true;
-		scroll += autoscrollSpeed * getLineheightPx();
+		scroll += lineheightPart * getLineheightPx();
 		float maxScroll = getMaxScroll();
 		if (scroll < 0) {
 			scroll = 0;

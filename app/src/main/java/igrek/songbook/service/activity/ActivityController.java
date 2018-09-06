@@ -51,10 +51,11 @@ public class ActivityController {
 		}
 	}
 	
-	public void onDestroy() {
+	public void quit() {
 		localDatabaseService.closeDatabase();
 		savePreferences();
-		logger.info("Activity has been destroyed.");
+		windowManagerService.keepScreenOn(false);
+		activity.finish();
 	}
 	
 	private void savePreferences() {
@@ -70,10 +71,8 @@ public class ActivityController {
 	public void onStop() {
 	}
 	
-	public void quit() {
-		preferencesService.saveAll();
-		windowManagerService.keepScreenOn(false);
-		activity.finish();
+	public void onDestroy() {
+		logger.info("Activity has been destroyed.");
 	}
 	
 	public void minimize() {

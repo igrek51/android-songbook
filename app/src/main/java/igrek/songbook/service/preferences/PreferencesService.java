@@ -43,21 +43,29 @@ public class PreferencesService {
 		String propertyName = propertyDefinition.name();
 		Object value = null;
 		if (exists(propertyName)) {
-			switch (propertyDefinition.getType()) {
-				case STRING:
-					value = sharedPreferences.getString(propertyName, null);
-					break;
-				case BOOLEAN:
-					value = sharedPreferences.getBoolean(propertyName, false);
-					break;
-				case INTEGER:
-					value = sharedPreferences.getInt(propertyName, 0);
-					break;
-				case FLOAT:
-					value = sharedPreferences.getFloat(propertyName, 0.0f);
-					break;
+			try {
+				switch (propertyDefinition.getType()) {
+					case STRING:
+						value = sharedPreferences.getString(propertyName, null);
+						break;
+					case BOOLEAN:
+						value = sharedPreferences.getBoolean(propertyName, false);
+						break;
+					case INTEGER:
+						value = sharedPreferences.getInt(propertyName, 0);
+						break;
+					case LONG:
+						value = sharedPreferences.getLong(propertyName, 0);
+						break;
+					case FLOAT:
+						value = sharedPreferences.getFloat(propertyName, 0.0f);
+						break;
+				}
+				logger.debug("preferences property loaded: " + propertyName + " = " + value);
+			} catch (ClassCastException e) {
+				value = propertyDefinition.getDefaultValue();
+				logger.debug("Invalid property type, loading default value: " + propertyName + " = " + value);
 			}
-			logger.debug("preferences property loaded: " + propertyName + " = " + value);
 		} else {
 			value = propertyDefinition.getDefaultValue();
 			logger.debug("Missing preferences property, loading default value: " + propertyName + " = " + value);
@@ -84,6 +92,9 @@ public class PreferencesService {
 					break;
 				case INTEGER:
 					setInt(propertyName, castIfNotNull(propertyValue, Integer.class));
+					break;
+				case LONG:
+					setLong(propertyName, castIfNotNull(propertyValue, Long.class));
 					break;
 				case FLOAT:
 					setFloat(propertyName, castIfNotNull(propertyValue, Float.class));
@@ -114,6 +125,13 @@ public class PreferencesService {
 	
 	public void setValue(PreferencesDefinition propertyDefinition, Object value) {
 		String propertyName = propertyDefinition.name();
+		// class type validation
+		if (value != null) {
+			String validClazz = propertyDefinition.getType().getClazz().getName();
+			String givenClazz = value.getClass().getName();
+			if (!givenClazz.equals(validClazz))
+				throw new IllegalArgumentException("invalid value type, expected: " + validClazz + ", but given: " + givenClazz);
+		}
 		propertyValues.put(propertyName, value);
 	}
 	
@@ -139,6 +157,16 @@ public class PreferencesService {
 			editor.remove(name);
 		} else {
 			editor.putInt(name, value);
+		}
+		editor.apply();
+	}
+	
+	private void setLong(String name, Long value) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		if (value == null) {
+			editor.remove(name);
+		} else {
+			editor.putLong(name, value);
 		}
 		editor.apply();
 	}
