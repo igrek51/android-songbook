@@ -47,12 +47,11 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
         // refresh only after some inactive time
         searchFilterSubject.debounce(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { _ -> setSongFilter() }
-        if (itemNameFilter != null && itemNameFilter!!.isNotEmpty()) {
+                .subscribe { _ -> setSongFilter(searchFilterEdit!!.text.toString()) }
+        if (isFilterSet()) {
             searchFilterEdit!!.setText(itemNameFilter, TextView.BufferType.EDITABLE)
         }
         searchFilterEdit!!.requestFocus()
-        softKeyboardService.showSoftKeyboard()
 
         itemsListView!!.init(activity, this)
         updateSongItemsList()
@@ -79,8 +78,10 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
         }
     }
 
-    private fun setSongFilter() {
-        itemNameFilter = searchFilterEdit!!.text.toString()
+    private fun setSongFilter(itemNameFilter: String?) {
+        this.itemNameFilter = itemNameFilter
+        if (itemNameFilter == null)
+            searchFilterEdit?.setText("", TextView.BufferType.EDITABLE)
         // reset scroll
         storedScroll = null
         updateSongItemsList()
@@ -88,7 +89,7 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
 
     override fun getSongItems(songsDb: SongsDb): List<SongTreeItem> {
         // no filter
-        if (itemNameFilter == null || itemNameFilter!!.isEmpty()) {
+        if (!isFilterSet()) {
             return songsDb.getAllUnlockedSongs()
                     .map { song -> SongTreeItem.song(song) }
         } else {
@@ -99,8 +100,16 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
         }
     }
 
+    private fun isFilterSet(): Boolean {
+        return itemNameFilter != null && itemNameFilter!!.isEmpty()
+    }
+
     fun onBackClicked() {
-        activityController.get().quit()
+        if (isFilterSet()) {
+            setSongFilter(null)
+        } else {
+            activityController.get().quit()
+        }
     }
 
     override fun onSongItemClick(item: SongTreeItem) {
