@@ -17,6 +17,8 @@ import igrek.songbook.dagger.base.DaggerTestComponent;
 import igrek.songbook.dagger.base.TestComponent;
 import igrek.songbook.dagger.base.TestModule;
 
+import static org.assertj.core.api.Java6Assertions.assertThat;
+
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21, application = MainApplication.class)
 public class DaggerInjectionTest {
@@ -39,6 +41,7 @@ public class DaggerInjectionTest {
 	
 	@Test
 	public void testApplicationInjection() {
+		assertThat(activity).isNotNull();
 		System.out.println("injected activity: " + activity.toString());
 	}
 	

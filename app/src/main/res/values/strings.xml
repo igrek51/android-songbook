@@ -40,12 +40,19 @@
     <string name="ui_about_content">
         AUTHOR:
         \nigrek51 - Ireneusz Szulc
-        \n\nLIBRARIES USED:
+        \n\nTECHNOLOGIES USED:
+        \nAndroid SDK
+        \nAssertJ
         \nDagger 2
+        \nEspresso
+        \nGradle
         \nGuava
+        \nJava 8
         \nJoda Time
+        \njUnit
         \nKotlin
         \nMockito
+        \nRoboelectric
         \nRxAndroid
         \nRxJava
     </string>
