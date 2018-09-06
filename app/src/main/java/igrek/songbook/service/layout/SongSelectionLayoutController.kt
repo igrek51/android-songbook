@@ -69,7 +69,7 @@ abstract class SongSelectionLayoutController : OnSongClickListener {
     }
 
     fun openSongPreview(item: SongTreeItem) {
-        songPreviewLayoutController.get().currentSong = item.song
+        songPreviewLayoutController.get().setCurrentSong(item.song)
         layoutController.showSongPreview()
     }
 }

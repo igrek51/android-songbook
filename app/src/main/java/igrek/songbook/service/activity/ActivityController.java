@@ -58,8 +58,9 @@ public class ActivityController {
 	}
 	
 	private void savePreferences() {
-		float fontsize = lyricsManager.getFontsize();
-		preferencesService.setValue(PreferencesDefinition.fontsize, fontsize);
+		preferencesService.setValue(PreferencesDefinition.fontsize, lyricsManager.getFontsize());
+		preferencesService.setValue(PreferencesDefinition.autoscrollInitialPause, autoscrollService.getInitialPause());
+		preferencesService.setValue(PreferencesDefinition.autoscrollSpeed, autoscrollService.getAutoscrollSpeed());
 		preferencesService.saveAll();
 	}
 	

@@ -93,6 +93,10 @@ public class SongPreviewLayoutController implements MainLayout {
 		//logger.debug("canvas graphics " + w + "x" + h + " has been initialized");
 	}
 	
+	public void onCrdModelUpdated() {
+		canvas.setCRDModel(lyricsManager.getCRDModel());
+	}
+	
 	public void onFontsizeChangedEvent(float fontsize) {
 		lyricsManager.setFontsize(fontsize);
 		// parse without reading a whole file again
@@ -104,10 +108,6 @@ public class SongPreviewLayoutController implements MainLayout {
 		return canvas;
 	}
 	
-	public Song getCurrentSong() {
-		return currentSong;
-	}
-	
 	public void setCurrentSong(Song currentSong) {
 		this.currentSong = currentSong;
 	}
@@ -116,7 +116,7 @@ public class SongPreviewLayoutController implements MainLayout {
 		if (quickMenu.isVisible()) {
 			quickMenu.onShowQuickMenuEvent(false);
 		} else {
-			autoscrollService.onAutoscrollStopEvent();
+			autoscrollService.stop();
 			
 			layoutController.get().showPreviousLayout();
 			

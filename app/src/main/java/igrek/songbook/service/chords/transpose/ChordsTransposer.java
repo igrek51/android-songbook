@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 
@@ -46,7 +45,6 @@ public class ChordsTransposer {
 	private Map<String, Integer> soundNumbers;
 	
 	public ChordsTransposer() {
-		DaggerIoc.getFactoryComponent().inject(this);
 		// keys sorted by length descending
 		soundNumbers = new TreeMap<>(lengthComparator);
 		for (int i = 0; i < soundNames.length; i++) {

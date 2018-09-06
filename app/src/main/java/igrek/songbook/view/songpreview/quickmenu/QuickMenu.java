@@ -11,6 +11,7 @@ import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.chords.LyricsManager;
+import igrek.songbook.service.chords.transpose.ChordsTransposerManager;
 import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController;
 import igrek.songbook.view.songpreview.CanvasGraphics;
@@ -18,7 +19,9 @@ import igrek.songbook.view.songpreview.CanvasGraphics;
 public class QuickMenu {
 	
 	@Inject
-	Lazy<LyricsManager> chordsManager;
+	Lazy<LyricsManager> lyricsManager;
+	@Inject
+	Lazy<ChordsTransposerManager> chordsTransposerManager;
 	@Inject
 	UiResourceService infoService;
 	@Inject
@@ -31,12 +34,6 @@ public class QuickMenu {
 	private View quickMenuView;
 	
 	private TextView tvTransposition;
-	private Button btnTransposeM5;
-	private Button btnTransposeM1;
-	private Button btnTranspose0;
-	private Button btnTransposeP1;
-	private Button btnTransposeP5;
-	private Button btnAutoscrollToggle;
 	
 	public QuickMenu() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -51,22 +48,23 @@ public class QuickMenu {
 		
 		tvTransposition = quickMenuView.findViewById(R.id.tvTransposition);
 		
-		btnTransposeM5 = quickMenuView.findViewById(R.id.btnTransposeM5);
-		btnTransposeM5.setOnClickListener(v -> chordsManager.get().onTransposeEvent(-5));
+		Button btnTransposeM5 = quickMenuView.findViewById(R.id.btnTransposeM5);
+		btnTransposeM5.setOnClickListener(v -> chordsTransposerManager.get().onTransposeEvent(-5));
 		
-		btnTransposeM1 = quickMenuView.findViewById(R.id.btnTransposeM1);
-		btnTransposeM1.setOnClickListener(v -> chordsManager.get().onTransposeEvent(-1));
+		Button btnTransposeM1 = quickMenuView.findViewById(R.id.btnTransposeM1);
+		btnTransposeM1.setOnClickListener(v -> chordsTransposerManager.get().onTransposeEvent(-1));
 		
-		btnTranspose0 = quickMenuView.findViewById(R.id.btnTranspose0);
-		btnTranspose0.setOnClickListener(v -> chordsManager.get().onTransposeResetEvent());
+		Button btnTranspose0 = quickMenuView.findViewById(R.id.btnTranspose0);
+		btnTranspose0.setOnClickListener(v -> chordsTransposerManager.get()
+				.onTransposeResetEvent());
 		
-		btnTransposeP1 = quickMenuView.findViewById(R.id.btnTransposeP1);
-		btnTransposeP1.setOnClickListener(v -> chordsManager.get().onTransposeEvent(+1));
+		Button btnTransposeP1 = quickMenuView.findViewById(R.id.btnTransposeP1);
+		btnTransposeP1.setOnClickListener(v -> chordsTransposerManager.get().onTransposeEvent(+1));
 		
-		btnTransposeP5 = quickMenuView.findViewById(R.id.btnTransposeP5);
-		btnTransposeP5.setOnClickListener(v -> chordsManager.get().onTransposeEvent(+5));
+		Button btnTransposeP5 = quickMenuView.findViewById(R.id.btnTransposeP5);
+		btnTransposeP5.setOnClickListener(v -> chordsTransposerManager.get().onTransposeEvent(+5));
 		
-		btnAutoscrollToggle = quickMenuView.findViewById(R.id.btnAutoscrollToggle);
+		Button btnAutoscrollToggle = quickMenuView.findViewById(R.id.btnAutoscrollToggle);
 		btnAutoscrollToggle.setOnClickListener(v -> {
 			if (autoscrollService.isRunning()) {
 				autoscrollService.onAutoscrollStopUIEvent();
@@ -81,9 +79,8 @@ public class QuickMenu {
 	}
 	
 	private void updateTranspositionText() {
-		String tvTranspositionText = infoService.resString(R.string.transposition) + ": " + chordsManager
-				.get()
-				.getTransposedString();
+		String tvTranspositionText = infoService.resString(R.string.transposition) + ": " + chordsTransposerManager
+				.get().getTransposedByDisplayName();
 		tvTransposition.setText(tvTranspositionText);
 	}
 	

@@ -5,40 +5,23 @@ import android.graphics.Paint;
 import javax.inject.Inject;
 
 import dagger.Lazy;
-import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.domain.crd.CRDModel;
 import igrek.songbook.domain.crd.CRDParser;
-import igrek.songbook.logger.Logger;
-import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.autoscroll.AutoscrollService;
-import igrek.songbook.service.chords.transpose.ChordsTransposer;
-import igrek.songbook.service.info.UiInfoService;
-import igrek.songbook.service.info.UiResourceService;
-import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController;
+import igrek.songbook.service.chords.transpose.ChordsTransposerManager;
 import igrek.songbook.service.preferences.PreferencesDefinition;
 import igrek.songbook.service.preferences.PreferencesService;
-import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
 
 public class LyricsManager {
 	
 	@Inject
-	UiInfoService userInfo;
-	@Inject
-	ChordsTransposer chordsTransposer;
+	Lazy<ChordsTransposerManager> chordsTransposerManager;
 	@Inject
 	Lazy<AutoscrollService> autoscrollService;
 	@Inject
-	UiResourceService uiResourceService;
-	@Inject
-	Lazy<SongPreviewLayoutController> songPreviewController;
-	@Inject
-	Lazy<QuickMenu> quickMenu;
-	@Inject
 	PreferencesService preferencesService;
 	
-	private Logger logger = LoggerFactory.getLogger();
-	private int transposed;
 	private CRDParser crdParser;
 	private CRDModel crdModel;
 	private int screenW = 0;
@@ -52,8 +35,12 @@ public class LyricsManager {
 		loadPreferences();
 	}
 	
-	public void reset() {
-		transposed = 0;
+	private void loadPreferences() {
+		fontsize = preferencesService.getValue(PreferencesDefinition.fontsize, Float.class);
+	}
+	
+	private void reset() {
+		chordsTransposerManager.get().reset();
 		autoscrollService.get().reset();
 	}
 	
@@ -90,53 +77,12 @@ public class LyricsManager {
 		if (fontsize < 1)
 			fontsize = 1;
 		this.fontsize = fontsize;
-		autoscrollService.get().setFontsize(fontsize);
 	}
 	
 	private void parseAndTranspose(String originalFileContent) {
-		String transposedContent = chordsTransposer.transposeContent(originalFileContent, transposed);
+		String transposedContent = chordsTransposerManager.get()
+				.transposeContent(originalFileContent);
 		crdModel = crdParser.parseFileContent(transposedContent, screenW, fontsize, paint);
-	}
-	
-	public void transpose(int t) {
-		transposed += t;
-		if (transposed >= 12)
-			transposed -= 12;
-		if (transposed <= -12)
-			transposed += 12;
-		parseAndTranspose(originalFileContent);
-	}
-	
-	public int getTransposed() {
-		return transposed;
-	}
-	
-	public String getTransposedString() {
-		return (transposed > 0 ? "+" : "") + transposed;
-	}
-	
-	public void onTransposeEvent(int t) {
-		transpose(t);
-		
-		songPreviewController.get().getCanvas().setCRDModel(crdModel);
-		
-		String info = uiResourceService.resString(R.string.transposition) + ": " + getTransposedString();
-		
-		if (getTransposed() != 0) { //włączono niezerową transpozycję
-			userInfo.showInfoWithAction(info, R.string.transposition_reset, () -> onTransposeResetEvent());
-		} else {
-			userInfo.showInfo(info);
-		}
-		
-		quickMenu.get().onTransposedEvent();
-	}
-	
-	public void onTransposeResetEvent() {
-		onTransposeEvent(-getTransposed());
-	}
-	
-	private void loadPreferences() {
-		fontsize = preferencesService.getValue(PreferencesDefinition.fontsize, Float.class);
 	}
 	
 }

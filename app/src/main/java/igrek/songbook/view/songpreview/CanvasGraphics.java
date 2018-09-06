@@ -31,24 +31,21 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	private final float MIN_SCROLL_EVENT = 15f;
 	
 	@Inject
-	Lazy<AutoscrollService> autoscroll;
-	@Inject
 	Lazy<SongPreviewLayoutController> songPreviewController;
+	@Inject
+	Lazy<AutoscrollService> autoscroll;
 	@Inject
 	Lazy<QuickMenu> quickMenu;
 	@Inject
 	WindowManagerService windowManagerService;
 	
-	private CRDModel crdModel = null;
-	private float scroll = 0;
-	private float startScroll = 0;
-	/**
-	 * fontsize in dp (density independent pixels)
-	 */
-	private float fontsize;
+	private CRDModel crdModel;
+	private float scroll;
+	private float startScroll;
+	private float fontsizeTmp;
 	private int dpi;
-	private Float pointersDst0 = null;
-	private Float fontsize0 = null;
+	private Float pointersDst0;
+	private Float fontsize0;
 	private LyricsRenderer lyricsRenderer;
 	
 	public CanvasGraphics(Context context) {
@@ -67,32 +64,6 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		dpi = windowManagerService.getDpi();
 	}
 	
-	public void setCRDModel(CRDModel crdModel) {
-		this.crdModel = crdModel;
-		this.lyricsRenderer = new LyricsRenderer(this, crdModel);
-		repaint();
-	}
-	
-	public void setFontSizes(float fontsizeDp) {
-		this.fontsize = fontsizeDp;
-	}
-	
-	private float getFontsizePx() {
-		return dp2px(this.fontsize, dpi);
-	}
-	
-	private float getLineheightPx() {
-		return getFontsizePx() * LINEHEIGHT_SCALE_FACTOR;
-	}
-	
-	private float dp2px(float dp, int dpi) {
-		return dp * ((float) dpi / DisplayMetrics.DENSITY_DEFAULT);
-	}
-	
-	public float getScroll() {
-		return scroll;
-	}
-	
 	@Override
 	public void init() {
 		songPreviewController.get().onGraphicsInitializedEvent(w, h, paint);
@@ -106,11 +77,6 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 			lyricsRenderer.drawFileContent(getFontsizePx(), getLineheightPx());
 		}
 		quickMenu.get().draw();
-	}
-	
-	private void drawBackground() {
-		setColor(0x000000);
-		clearScreen();
 	}
 	
 	@Override
@@ -141,17 +107,6 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		}
 	}
 	
-	float getMaxScroll() {
-		float bottomY = getTextBottomY();
-		float reserve = EOF_SCROLL_RESERVE * h;
-		if (bottomY > h) {
-			return bottomY + reserve - h;
-		} else {
-			// no scroll possibility
-			return 0;
-		}
-	}
-	
 	@Override
 	protected void onTouchUp(MotionEvent event) {
 		float deltaX = event.getX() - startTouchX;
@@ -173,26 +128,15 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		}
 	}
 	
-	private boolean onScreenClicked(float x, float y) {
-		if (quickMenu.get().isVisible()) {
-			return quickMenu.get().onScreenClicked(x, y);
-		} else {
-			if (autoscroll.get().isRunning()) {
-				autoscroll.get().onAutoscrollStopUIEvent();
-			} else {
-				if (y >= h * GESTURE_AUTOSCROLL_BOTTOM_REGION) {  //tap on a screen bottom
-					autoscroll.get().onAutoscrollStartUIEvent();
-				} else {
-					quickMenu.get().setVisible(true);
-				}
-			}
-			return true;
-		}
+	@Override
+	protected void onTouchPointerDown(MotionEvent event) {
+		pointersDst0 = (float) Math.hypot(event.getX(1) - event.getX(0), event.getY(1) - event.getY(0));
+		fontsize0 = fontsizeTmp;
 	}
 	
 	@Override
 	protected void onTouchPointerUp(MotionEvent event) {
-		songPreviewController.get().onFontsizeChangedEvent(fontsize);
+		songPreviewController.get().onFontsizeChangedEvent(fontsizeTmp);
 		
 		pointersDst0 = null; // reset initial length
 		startScroll = scroll;
@@ -210,10 +154,68 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		startTouchY = event.getY(pointerIndex);
 	}
 	
-	@Override
-	protected void onTouchPointerDown(MotionEvent event) {
-		pointersDst0 = (float) Math.hypot(event.getX(1) - event.getX(0), event.getY(1) - event.getY(0));
-		fontsize0 = fontsize;
+	
+	private boolean onScreenClicked(float x, float y) {
+		if (quickMenu.get().isVisible()) {
+			return quickMenu.get().onScreenClicked(x, y);
+		} else {
+			if (autoscroll.get().isRunning()) {
+				autoscroll.get().onAutoscrollStopUIEvent();
+			} else {
+				if (y >= h * GESTURE_AUTOSCROLL_BOTTOM_REGION) {  //tap on a screen bottom
+					autoscroll.get().onAutoscrollStartUIEvent();
+				} else {
+					quickMenu.get().setVisible(true);
+				}
+			}
+			return true;
+		}
+	}
+	
+	public void setCRDModel(CRDModel crdModel) {
+		this.crdModel = crdModel;
+		this.lyricsRenderer = new LyricsRenderer(this, crdModel);
+		repaint();
+	}
+	
+	/**
+	 * updates fontsizes after
+	 * @param fontsizeDp
+	 */
+	public void setFontSizes(float fontsizeDp) {
+		this.fontsizeTmp = fontsizeDp;
+	}
+	
+	private float getFontsizePx() {
+		return dp2px(this.fontsizeTmp, dpi);
+	}
+	
+	private float getLineheightPx() {
+		return getFontsizePx() * LINEHEIGHT_SCALE_FACTOR;
+	}
+	
+	private float dp2px(float dp, int dpi) {
+		return dp * ((float) dpi / DisplayMetrics.DENSITY_DEFAULT);
+	}
+	
+	private void drawBackground() {
+		setColor(0x000000);
+		clearScreen();
+	}
+	
+	public float getScroll() {
+		return scroll;
+	}
+	
+	float getMaxScroll() {
+		float bottomY = getTextBottomY();
+		float reserve = EOF_SCROLL_RESERVE * h;
+		if (bottomY > h) {
+			return bottomY + reserve - h;
+		} else {
+			// no scroll possibility
+			return 0;
+		}
 	}
 	
 	private float getTextBottomY() {
@@ -237,9 +239,13 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		}
 	}
 	
-	public boolean autoscrollBy(float intervalStep) {
+	/**
+	 * @param autoscrollSpeed speed in lineheight part per second [em / s]
+	 * @return
+	 */
+	public boolean scrollBy(float autoscrollSpeed) {
 		boolean scrollable = true;
-		scroll += intervalStep;
+		scroll += autoscrollSpeed * getLineheightPx();
 		float maxScroll = getMaxScroll();
 		if (scroll < 0) {
 			scroll = 0;
@@ -253,7 +259,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		return scrollable;
 	}
 	
-	public boolean canAutoScroll() {
+	public boolean canScrollDown() {
 		return scroll < getMaxScroll();
 	}
 	
