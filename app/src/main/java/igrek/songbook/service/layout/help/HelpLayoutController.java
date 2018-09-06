@@ -16,7 +16,7 @@ import igrek.songbook.service.info.UiInfoService;
 import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.layout.LayoutController;
 import igrek.songbook.service.navmenu.NavigationMenuController;
-import igrek.songbook.view.songselection.SongListView;
+import igrek.songbook.view.songlist.SongListView;
 
 public class HelpLayoutController {
 	

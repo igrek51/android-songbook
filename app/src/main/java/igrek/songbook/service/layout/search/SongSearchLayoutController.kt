@@ -17,6 +17,7 @@ import igrek.songbook.service.layout.SongSelectionLayoutController
 import igrek.songbook.service.songtree.SongTreeFilter
 import igrek.songbook.service.songtree.SongTreeItem
 import igrek.songbook.service.system.SoftKeyboardService
+import igrek.songbook.view.songlist.ListScrollPosition
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
@@ -28,7 +29,7 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
     private var searchFilterEdit: EditText? = null
     private var searchFilterSubject: PublishSubject<String> = PublishSubject.create()
     private var itemNameFilter: String? = null
-    private var storedScroll: Int? = null
+    private var storedScroll: ListScrollPosition? = null
 
     @Inject
     lateinit var softKeyboardService: SoftKeyboardService
@@ -96,7 +97,7 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
         super.updateSongItemsList()
         // restore Scroll Position
         if (storedScroll != null) {
-            itemsListView?.scrollToPosition(storedScroll!!)
+            Handler().post { itemsListView?.restoreScrollPosition(storedScroll) }
         }
     }
 
@@ -136,7 +137,7 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
 
     override fun onSongItemClick(item: SongTreeItem) {
         // store Scroll Position
-        storedScroll = itemsListView!!.currentScrollPosition
+        storedScroll = itemsListView?.currentScrollPosition
         if (item.isSong) {
             openSongPreview(item)
         }

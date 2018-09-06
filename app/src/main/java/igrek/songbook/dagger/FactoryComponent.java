@@ -36,9 +36,9 @@ import igrek.songbook.service.system.PackageInfoService;
 import igrek.songbook.service.system.SoftKeyboardService;
 import igrek.songbook.service.system.SystemKeyDispatcher;
 import igrek.songbook.service.system.WindowManagerService;
+import igrek.songbook.view.songlist.SongListView;
 import igrek.songbook.view.songpreview.CanvasGraphics;
 import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
-import igrek.songbook.view.songselection.SongListView;
 
 /**
  * Dagger will be injecting to those classes

@@ -38,7 +38,7 @@
     <string name="ui_db_is_uptodate">Songs database is already up-to-date.</string>
     <string name="ui_about">About</string>
     <string name="ui_about_content">
-        SongBook version %s
+        SongBook v%s
         \n\nAUTHOR:
         \nigrek51 - Ireneusz Szulc
         \n\nTECHNOLOGIES USED:

@@ -17,8 +17,8 @@ import igrek.songbook.service.navmenu.NavigationMenuController
 import igrek.songbook.service.persistence.SongsDbRepository
 import igrek.songbook.service.songtree.SongTreeItem
 import igrek.songbook.service.songtree.SongTreeSorter
-import igrek.songbook.view.songselection.OnSongClickListener
-import igrek.songbook.view.songselection.SongListView
+import igrek.songbook.view.songlist.OnSongClickListener
+import igrek.songbook.view.songlist.SongListView
 import javax.inject.Inject
 
 abstract class SongSelectionLayoutController : OnSongClickListener {

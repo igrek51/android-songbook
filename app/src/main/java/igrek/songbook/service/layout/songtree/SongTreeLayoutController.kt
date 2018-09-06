@@ -101,13 +101,12 @@ class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
     }
 
     private fun storeScrollPosition() {
-        scrollPosBuffer.storeScrollPosition(songTreeWalker.currentCategory, itemsListView!!.currentScrollPosition)
+        scrollPosBuffer.storeScrollPosition(songTreeWalker.currentCategory, itemsListView?.currentScrollPosition)
     }
 
     private fun restoreScrollPosition(category: SongCategory?) {
-        val savedScrollPos = scrollPosBuffer.restoreScrollPosition(category)
-        if (savedScrollPos != null) {
-            itemsListView!!.scrollToPosition(savedScrollPos)
+        if (scrollPosBuffer.hasScrollPositionStored(category)) {
+            itemsListView?.restoreScrollPosition(scrollPosBuffer.restoreScrollPosition(category))
         }
     }
 
@@ -117,7 +116,7 @@ class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
             songTreeWalker.goToCategory(item.category)
             updateSongItemsList()
             // scroll to beginning
-            itemsListView!!.scrollTo(0)
+            itemsListView?.scrollToBeginning()
         } else {
             openSongPreview(item)
         }
