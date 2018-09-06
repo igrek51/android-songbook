@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
@@ -69,6 +70,10 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
             }
             false
         }
+
+        val searchFilterClearButton: ImageButton = layout.findViewById(R.id.searchFilterClearButton)
+        searchFilterClearButton.setOnClickListener { _ -> setSongFilter(null) }
+
 
         itemsListView!!.init(activity, this)
         updateSongItemsList()

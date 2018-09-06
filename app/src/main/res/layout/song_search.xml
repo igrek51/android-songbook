@@ -29,28 +29,44 @@
                 android:layout_gravity="start|center_vertical"
                 android:adjustViewBounds="true"
                 android:background="@drawable/menu"
-                android:clickable="true"
-                android:focusable="true"
                 android:padding="10dp"
                 android:scaleType="fitCenter"
                 />
 
-            <android.widget.EditText
-                android:id="@+id/searchFilterEdit"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_gravity="left|center_vertical"
-                android:gravity="left|center_vertical"
-                android:imeOptions="actionSearch|flagNoExtractUi"
-                android:inputType="text"
-                android:paddingBottom="16dp"
-                android:paddingTop="16dp"
-                android:scrollbars="vertical"
-                android:hint="@string/song_search_edit_hint"
-                />
+                android:layout_centerVertical="true">
+
+                <android.widget.EditText
+                    android:id="@+id/searchFilterEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|center_vertical"
+                    android:gravity="left|center_vertical"
+                    android:hint="@string/song_search_edit_hint"
+                    android:imeOptions="actionSearch|flagNoExtractUi"
+                    android:inputType="text"
+                    android:paddingBottom="16dp"
+                    android:paddingTop="16dp"
+                    android:scrollbars="vertical"
+                    />
+
+                <ImageButton
+                    android:id="@+id/searchFilterClearButton"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="right|center_vertical"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/close"
+                    android:scaleType="fitCenter"
+                    android:padding="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"/>
+
+            </FrameLayout>
 
         </android.support.v7.widget.Toolbar>
 
