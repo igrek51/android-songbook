@@ -73,7 +73,7 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
         }
 
         val searchFilterClearButton: ImageButton = layout.findViewById(R.id.searchFilterClearButton)
-        searchFilterClearButton.setOnClickListener { _ -> setSongFilter(null) }
+        searchFilterClearButton.setOnClickListener { _ -> onClearFilterClicked() }
 
 
         itemsListView!!.init(activity, this)
@@ -132,6 +132,14 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
             setSongFilter(null)
         } else {
             activityController.get().quit()
+        }
+    }
+
+    private fun onClearFilterClicked() {
+        if (isFilterSet()) {
+            setSongFilter(null)
+        } else {
+            softKeyboardService.hideSoftKeyboard(searchFilterEdit)
         }
     }
 
