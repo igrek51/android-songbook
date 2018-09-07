@@ -48,7 +48,7 @@ public class SongPreviewLayoutController implements MainLayout {
 	SoftKeyboardService softKeyboardService;
 	
 	private Logger logger = LoggerFactory.getLogger();
-	private SongPreview canvas;
+	private SongPreview songPreview;
 	private Song currentSong;
 	private OverlayRecyclerAdapter overlayAdapter;
 	private RecyclerView overlayRecyclerView;
@@ -61,12 +61,14 @@ public class SongPreviewLayoutController implements MainLayout {
 	public void showLayout(View layout) {
 		windowManagerService.keepScreenOn(true);
 		softKeyboardService.hideSoftKeyboard();
-		// create canvas
-		canvas = new SongPreview(activity);
-		canvas.reset();
+		
+		// create songPreview
+		songPreview = new SongPreview(activity);
+		songPreview.reset();
 		FrameLayout mainFrame = layout.findViewById(R.id.mainFrame);
 		mainFrame.removeAllViews();
-		mainFrame.addView(canvas);
+		mainFrame.addView(songPreview);
+		
 		// create quick menu
 		LayoutInflater inflater = activity.getLayoutInflater();
 		View quickMenuView = inflater.inflate(R.layout.quick_menu, null);
@@ -77,22 +79,23 @@ public class SongPreviewLayoutController implements MainLayout {
 		overlayRecyclerView = activity.findViewById(R.id.overlayRecyclerView);
 		overlayRecyclerView.setHasFixedSize(true); // improve performance
 		overlayRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
-		overlayAdapter = new OverlayRecyclerAdapter(canvas);
+		overlayAdapter = new OverlayRecyclerAdapter(songPreview);
 		overlayRecyclerView.setAdapter(overlayAdapter);
 		overlayRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 			}
 			
 			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-				canvas.scrollByPx(dy);
+				songPreview.scrollByPx(dy);
+				songPreview.onManuallyScrolled(dy);
 			}
 		});
-		//		overlayRecyclerView.setVerticalScrollBarEnabled(false);
-		overlayRecyclerView.setScrollbarFadingEnabled(false);
+		overlayRecyclerView.setVerticalScrollBarEnabled(true);
 		overlayRecyclerView.setOverScrollMode(OVER_SCROLL_ALWAYS);
-		overlayRecyclerView.setOnTouchListener(canvas);
+		overlayRecyclerView.setOnClickListener((v) -> songPreview.onClick());
+		overlayRecyclerView.setOnTouchListener(songPreview);
 		
-		canvas.setQuickMenuView(quickMenuView);
+		songPreview.setQuickMenuView(quickMenuView);
 	}
 	
 	@Override
@@ -111,24 +114,33 @@ public class SongPreviewLayoutController implements MainLayout {
 		// initialize - first file loading
 		lyricsManager.load(fileContent, w, h, paint);
 		
-		canvas.setFontSizes(lyricsManager.getFontsize());
-		canvas.setCRDModel(lyricsManager.getCRDModel());
+		songPreview.setFontSizes(lyricsManager.getFontsize());
+		songPreview.setCRDModel(lyricsManager.getCRDModel());
 		overlayRecyclerView.setAdapter(overlayAdapter); // refresh
+		overlayRecyclerView.setScrollY((int) songPreview.getScroll());
 	}
 	
 	public void onCrdModelUpdated() {
-		canvas.setCRDModel(lyricsManager.getCRDModel());
+		songPreview.setCRDModel(lyricsManager.getCRDModel());
+		overlayRecyclerView.setAdapter(overlayAdapter); // refresh
+		overlayRecyclerView.setScrollY((int) songPreview.getScroll());
 	}
 	
 	public void onFontsizeChangedEvent(float fontsize) {
 		lyricsManager.setFontsize(fontsize);
 		// parse without reading a whole file again
 		lyricsManager.reparse();
-		canvas.setCRDModel(lyricsManager.getCRDModel());
+		songPreview.setCRDModel(lyricsManager.getCRDModel());
+		overlayRecyclerView.setAdapter(overlayAdapter); // refresh
+		overlayRecyclerView.setScrollY((int) songPreview.getScroll());
 	}
 	
-	public SongPreview getCanvas() {
-		return canvas;
+	public void setRecyclerScroll(float value) {
+		overlayRecyclerView.setScrollY((int) value);
+	}
+	
+	public SongPreview getSongPreview() {
+		return songPreview;
 	}
 	
 	public void setCurrentSong(Song currentSong) {
@@ -145,9 +157,5 @@ public class SongPreviewLayoutController implements MainLayout {
 			
 			windowManagerService.keepScreenOn(false);
 		}
-	}
-	
-	public void setRecyclerScroll(float value) {
-		overlayRecyclerView.setScrollY((int) value);
 	}
 }

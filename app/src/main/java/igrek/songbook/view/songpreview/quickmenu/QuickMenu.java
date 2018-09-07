@@ -40,7 +40,7 @@ public class QuickMenu {
 	}
 	
 	private SongPreview getCanvas() {
-		return songPreviewController.get().getCanvas();
+		return songPreviewController.get().getSongPreview();
 	}
 	
 	public void setQuickMenuView(View quickMenuView) {
@@ -96,9 +96,8 @@ public class QuickMenu {
 		}
 	}
 	
-	public boolean onScreenClicked(float x, float y) {
+	public void onScreenClicked() {
 		setVisible(false);
-		return true;
 	}
 	
 	public boolean isVisible() {

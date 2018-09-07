@@ -17,10 +17,10 @@ import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController;
 import igrek.songbook.service.system.WindowManagerService;
-import igrek.songbook.view.songpreview.base.BaseCanvasGraphics;
+import igrek.songbook.view.songpreview.canvas.BaseCanvasView;
 import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
 
-public class SongPreview extends BaseCanvasGraphics implements View.OnTouchListener {
+public class SongPreview extends BaseCanvasView implements View.OnTouchListener {
 	
 	private final float EOF_SCROLL_RESERVE = 0.09f;
 	private final float LINEHEIGHT_SCALE_FACTOR = 1.02f;
@@ -108,7 +108,7 @@ public class SongPreview extends BaseCanvasGraphics implements View.OnTouchListe
 		return false;
 	}
 	
-	protected void onTouchDown(MotionEvent event) {
+	private void onTouchDown(MotionEvent event) {
 		startTouchX = event.getX();
 		startTouchY = event.getY();
 		startTouchTime = System.currentTimeMillis();
@@ -116,7 +116,7 @@ public class SongPreview extends BaseCanvasGraphics implements View.OnTouchListe
 		pointersDst0 = null;
 	}
 	
-	protected void onTouchMove(MotionEvent event) {
+	private void onTouchMove(MotionEvent event) {
 		if (event.getPointerCount() >= 2) {
 			// pinch to font scaling
 			if (pointersDst0 != null) {
@@ -128,54 +128,23 @@ public class SongPreview extends BaseCanvasGraphics implements View.OnTouchListe
 				songPreviewController.get().setRecyclerScroll(scroll);
 				previewFontsize(fontsize1);
 			}
-		} else {
-			// only if it's first pointer
-			//			if (secondPointerIndex == null || event.getActionIndex() != secondPointerIndex) {
-			//				scroll = startScroll + startTouchY - event.getY();
-			//				float maxScroll = getMaxScroll();
-			//				if (scroll < 0)
-			//					scroll = 0; // too much scrolling up
-			//				if (scroll > maxScroll)
-			//					scroll = maxScroll; // too much scrolling down
-			//				repaint();
-			//			}
 		}
 	}
 	
-	protected void onTouchUp(MotionEvent event) {
-		float deltaX = event.getX() - startTouchX;
-		float deltaY = event.getY() - startTouchY;
-		// monitor scroll changes
-		float dScroll = -deltaY;
-		if (Math.abs(dScroll) > MIN_SCROLL_EVENT) {
-			autoscroll.get().onCanvasScrollEvent(dScroll, scroll);
-		}
-		
-		// quick tap on bottom - turn on autoscroll
-		float hypot = (float) Math.hypot(deltaX, deltaY);
-		if (hypot <= GESTURE_CLICK_MAX_HYPOT) { // tap in one area
-			if (System.currentTimeMillis() - startTouchTime <= GESTURE_CLICK_MAX_TIME) { //quick tap
-				if (onScreenClicked(event.getX(), event.getY())) {
-					repaint();
-				}
-			}
-		}
+	private void onTouchUp(MotionEvent event) {
 	}
 	
-	protected void onTouchPointerDown(MotionEvent event) {
+	private void onTouchPointerDown(MotionEvent event) {
 		secondPointerIndex = event.getActionIndex();
 		pointersDst0 = (float) Math.hypot(event.getX(1) - event.getX(0), event.getY(1) - event.getY(0));
 		fontsize0 = fontsizeTmp;
 		startScroll = scroll;
 	}
 	
-	protected void onTouchPointerUp(MotionEvent event) {
-		songPreviewController.get().onFontsizeChangedEvent(fontsizeTmp);
-		
+	private void onTouchPointerUp(MotionEvent event) {
 		pointersDst0 = null; // reset initial length
 		startScroll = scroll;
 		secondPointerIndex = null;
-		
 		// leave a pointer which is still active
 		Integer pointerIndex = 0;
 		if (event.getPointerCount() >= 2) {
@@ -187,27 +156,19 @@ public class SongPreview extends BaseCanvasGraphics implements View.OnTouchListe
 			}
 		}
 		startTouchY = event.getY(pointerIndex);
+		
+		songPreviewController.get().onFontsizeChangedEvent(fontsizeTmp);
 	}
 	
 	public void onClick() {
-		logger.debug("canvas click me");
-	}
-	
-	
-	private boolean onScreenClicked(float x, float y) {
 		if (quickMenu.get().isVisible()) {
-			return quickMenu.get().onScreenClicked(x, y);
+			quickMenu.get().onScreenClicked();
 		} else {
 			if (autoscroll.get().isRunning()) {
 				autoscroll.get().onAutoscrollStopUIEvent();
 			} else {
-				if (y >= h * GESTURE_AUTOSCROLL_BOTTOM_REGION) {  //tap on a screen bottom
-					autoscroll.get().onAutoscrollStartUIEvent();
-				} else {
-					quickMenu.get().setVisible(true);
-				}
+				quickMenu.get().setVisible(true);
 			}
-			return true;
 		}
 	}
 	
@@ -288,6 +249,7 @@ public class SongPreview extends BaseCanvasGraphics implements View.OnTouchListe
 		scroll += px;
 		boolean scrollable = true;
 		float maxScroll = getMaxScroll();
+		// cut off
 		if (scroll < 0) {
 			scroll = 0;
 			scrollable = false;
@@ -296,6 +258,7 @@ public class SongPreview extends BaseCanvasGraphics implements View.OnTouchListe
 			scroll = maxScroll;
 			scrollable = false;
 		}
+		songPreviewController.get().setRecyclerScroll(scroll);
 		repaint();
 		return scrollable;
 	}
@@ -310,4 +273,11 @@ public class SongPreview extends BaseCanvasGraphics implements View.OnTouchListe
 	}
 	
 	
+	public void onManuallyScrolled(int dy) {
+		// monitor scroll changes
+		float dScroll = -dy;
+		if (Math.abs(dScroll) > MIN_SCROLL_EVENT) {
+			autoscroll.get().onCanvasScrollEvent(dScroll, scroll);
+		}
+	}
 }

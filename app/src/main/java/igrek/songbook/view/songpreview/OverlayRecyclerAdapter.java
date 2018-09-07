@@ -8,31 +8,31 @@ import android.widget.LinearLayout;
 
 public class OverlayRecyclerAdapter extends RecyclerView.Adapter<OverlayRecyclerAdapter.OverlayViewHolder> {
 	
-	private SongPreview canvas;
-	private View emptyView;
+	private SongPreview songPreview;
+	private View overlayView;
 	
-	public OverlayRecyclerAdapter(SongPreview canvas) {
-		this.canvas = canvas;
+	public OverlayRecyclerAdapter(SongPreview songPreview) {
+		this.songPreview = songPreview;
 	}
 	
 	@Override
 	public OverlayViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		emptyView = new View(parent.getContext());
-		
 		int height = getContentHeight();
 		if (height < parent.getMeasuredHeight())
 			height = parent.getMeasuredHeight();
 		
-		emptyView.setLayoutParams(new LinearLayout.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT, height));
-		emptyView.setMinimumHeight(height);
-		emptyView.setOnClickListener((v) -> canvas.onClick());
+		overlayView = new View(parent.getContext());
+		overlayView.setLayoutParams(new LinearLayout.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT, height));
+		overlayView.setMinimumHeight(height);
+		overlayView.setOnClickListener((v) -> songPreview.onClick());
+		overlayView.setOnTouchListener(songPreview);
 		
-		return new OverlayViewHolder(emptyView);
+		return new OverlayViewHolder(overlayView);
 	}
 	
-	public int getContentHeight() {
-		int maxContentHeight = canvas.getMaxContentHeight();
-		// add some reserve
+	private int getContentHeight() {
+		int maxContentHeight = songPreview.getMaxContentHeight();
+		// add some reserve (2 %)
 		return maxContentHeight + maxContentHeight / 50;
 	}
 	

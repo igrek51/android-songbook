@@ -4,8 +4,8 @@ import igrek.songbook.domain.lyrics.LyricsFragment;
 import igrek.songbook.domain.lyrics.LyricsLine;
 import igrek.songbook.domain.lyrics.LyricsModel;
 import igrek.songbook.domain.lyrics.LyricsTextType;
-import igrek.songbook.view.songpreview.base.Align;
-import igrek.songbook.view.songpreview.base.Font;
+import igrek.songbook.view.songpreview.canvas.Align;
+import igrek.songbook.view.songpreview.canvas.Font;
 
 public class LyricsRenderer {
 	

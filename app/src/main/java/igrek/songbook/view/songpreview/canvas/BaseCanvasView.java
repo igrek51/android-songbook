@@ -1,4 +1,4 @@
-package igrek.songbook.view.songpreview.base;
+package igrek.songbook.view.songpreview.canvas;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,7 +9,7 @@ import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.view.View;
 
-public abstract class BaseCanvasGraphics extends View {
+public abstract class BaseCanvasView extends View {
 	
 	protected int w = 0;
 	protected int h = 0;
@@ -18,7 +18,7 @@ public abstract class BaseCanvasGraphics extends View {
 	protected Canvas canvas = null;
 	private boolean initialized = false;
 	
-	public BaseCanvasGraphics(Context context) {
+	public BaseCanvasView(Context context) {
 		super(context);
 		
 		getViewTreeObserver().addOnGlobalLayoutListener(() -> {

@@ -95,7 +95,7 @@ public class AutoscrollService {
 	}
 	
 	private SongPreview getCanvas() {
-		return songPreviewController.get().getCanvas();
+		return songPreviewController.get().getSongPreview();
 	}
 	
 	private void handleAutoscrollStep() {

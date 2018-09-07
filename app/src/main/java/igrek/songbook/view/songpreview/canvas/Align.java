@@ -1,4 +1,4 @@
-package igrek.songbook.view.songpreview.base;
+package igrek.songbook.view.songpreview.canvas;
 
 public class Align {
 	public static final int DEFAULT = 0x000;
