@@ -52,6 +52,7 @@ public class SongPreviewLayoutController implements MainLayout {
 	private Song currentSong;
 	private OverlayRecyclerAdapter overlayAdapter;
 	private RecyclerView overlayRecyclerView;
+	private LinearLayoutManager overlayLayoutManger;
 	
 	public SongPreviewLayoutController() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -78,7 +79,9 @@ public class SongPreviewLayoutController implements MainLayout {
 		// overlaying RecyclerView
 		overlayRecyclerView = activity.findViewById(R.id.overlayRecyclerView);
 		overlayRecyclerView.setHasFixedSize(true); // improve performance
-		overlayRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
+		overlayLayoutManger = new LinearLayoutManager(activity);
+		overlayLayoutManger.setOrientation(LinearLayoutManager.VERTICAL);
+		overlayRecyclerView.setLayoutManager(overlayLayoutManger);
 		overlayAdapter = new OverlayRecyclerAdapter(songPreview);
 		overlayRecyclerView.setAdapter(overlayAdapter);
 		overlayRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -94,6 +97,7 @@ public class SongPreviewLayoutController implements MainLayout {
 		overlayRecyclerView.setOverScrollMode(OVER_SCROLL_ALWAYS);
 		overlayRecyclerView.setOnClickListener((v) -> songPreview.onClick());
 		overlayRecyclerView.setOnTouchListener(songPreview);
+		overlayRecyclerView.getLayoutManager().scrollToPosition(1);
 		
 		songPreview.setQuickMenuView(quickMenuView);
 	}
@@ -116,14 +120,12 @@ public class SongPreviewLayoutController implements MainLayout {
 		
 		songPreview.setFontSizes(lyricsManager.getFontsize());
 		songPreview.setCRDModel(lyricsManager.getCRDModel());
-		overlayRecyclerView.setAdapter(overlayAdapter); // refresh
-		overlayRecyclerView.setScrollY((int) songPreview.getScroll());
+		overlayRecyclerView.getLayoutManager().scrollToPosition(1); // refresh
 	}
 	
 	public void onCrdModelUpdated() {
 		songPreview.setCRDModel(lyricsManager.getCRDModel());
-		overlayRecyclerView.setAdapter(overlayAdapter); // refresh
-		overlayRecyclerView.setScrollY((int) songPreview.getScroll());
+		overlayRecyclerView.getLayoutManager().scrollToPosition(1); // refresh
 	}
 	
 	public void onFontsizeChangedEvent(float fontsize) {
@@ -131,12 +133,7 @@ public class SongPreviewLayoutController implements MainLayout {
 		// parse without reading a whole file again
 		lyricsManager.reparse();
 		songPreview.setCRDModel(lyricsManager.getCRDModel());
-		overlayRecyclerView.setAdapter(overlayAdapter); // refresh
-		overlayRecyclerView.setScrollY((int) songPreview.getScroll());
-	}
-	
-	public void setRecyclerScroll(float value) {
-		overlayRecyclerView.setScrollY((int) value);
+		overlayRecyclerView.getLayoutManager().scrollToPosition(1); // refresh
 	}
 	
 	public SongPreview getSongPreview() {
@@ -152,9 +149,7 @@ public class SongPreviewLayoutController implements MainLayout {
 			quickMenu.onShowQuickMenuEvent(false);
 		} else {
 			autoscrollService.stop();
-			
 			layoutController.get().showPreviousLayout();
-			
 			windowManagerService.keepScreenOn(false);
 		}
 	}

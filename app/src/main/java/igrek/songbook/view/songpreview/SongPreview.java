@@ -25,10 +25,6 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	private final float EOF_SCROLL_RESERVE = 0.09f;
 	private final float LINEHEIGHT_SCALE_FACTOR = 1.02f;
 	private final float FONTSIZE_SCALE_FACTOR = 0.6f;
-	private final float GESTURE_TRANSPOSE_MIN_DX = 0.4f;
-	private final float GESTURE_AUTOSCROLL_BOTTOM_REGION = 0.8f;
-	private final float GESTURE_CLICK_MAX_HYPOT = 20.0f;
-	private final long GESTURE_CLICK_MAX_TIME = 500;
 	private final float MIN_SCROLL_EVENT = 15f;
 	
 	@Inject
@@ -46,7 +42,6 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	private float fontsizeTmp;
 	private Float pointersDst0;
 	private Float fontsize0;
-	private Integer secondPointerIndex;
 	private LyricsRenderer lyricsRenderer;
 	protected float startTouchX = 0;
 	protected float startTouchY = 0;
@@ -125,7 +120,6 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 				float scale = (pointersDst1 / pointersDst0 - 1) * FONTSIZE_SCALE_FACTOR + 1;
 				float fontsize1 = fontsize0 * scale;
 				scroll = startScroll * scale;
-				songPreviewController.get().setRecyclerScroll(scroll);
 				previewFontsize(fontsize1);
 			}
 		}
@@ -135,7 +129,6 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	}
 	
 	private void onTouchPointerDown(MotionEvent event) {
-		secondPointerIndex = event.getActionIndex();
 		pointersDst0 = (float) Math.hypot(event.getX(1) - event.getX(0), event.getY(1) - event.getY(0));
 		fontsize0 = fontsizeTmp;
 		startScroll = scroll;
@@ -144,7 +137,6 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	private void onTouchPointerUp(MotionEvent event) {
 		pointersDst0 = null; // reset initial length
 		startScroll = scroll;
-		secondPointerIndex = null;
 		// leave a pointer which is still active
 		Integer pointerIndex = 0;
 		if (event.getPointerCount() >= 2) {
@@ -200,8 +192,7 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 		if (bottomY > h) {
 			return bottomY + reserve - h;
 		} else {
-			// no scroll possibility
-			return 0;
+			return 0; // no scrolling possibility
 		}
 	}
 	
@@ -224,8 +215,7 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 		if (bottomY > h) {
 			return (int) (bottomY + reserve);
 		} else {
-			// no scroll possibility
-			return h;
+			return h; // no scroll possibility
 		}
 	}
 	
@@ -258,7 +248,6 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 			scroll = maxScroll;
 			scrollable = false;
 		}
-		songPreviewController.get().setRecyclerScroll(scroll);
 		repaint();
 		return scrollable;
 	}

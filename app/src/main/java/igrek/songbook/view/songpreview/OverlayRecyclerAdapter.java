@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 
 public class OverlayRecyclerAdapter extends RecyclerView.Adapter<OverlayRecyclerAdapter.OverlayViewHolder> {
 	
@@ -17,23 +16,17 @@ public class OverlayRecyclerAdapter extends RecyclerView.Adapter<OverlayRecycler
 	
 	@Override
 	public OverlayViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		int height = getContentHeight();
-		if (height < parent.getMeasuredHeight())
-			height = parent.getMeasuredHeight();
+		// Scrolling in Android is so fukced up!!
+		// The only workaround seems to be make the almost indefinite views and put the scroll somewhere in the middle
+		int height = Integer.MAX_VALUE / getItemCount();
 		
 		overlayView = new View(parent.getContext());
-		overlayView.setLayoutParams(new LinearLayout.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT, height));
+		overlayView.setLayoutParams(new ViewGroup.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT, height));
 		overlayView.setMinimumHeight(height);
 		overlayView.setOnClickListener((v) -> songPreview.onClick());
 		overlayView.setOnTouchListener(songPreview);
 		
 		return new OverlayViewHolder(overlayView);
-	}
-	
-	private int getContentHeight() {
-		int maxContentHeight = songPreview.getMaxContentHeight();
-		// add some reserve (2 %)
-		return maxContentHeight + maxContentHeight / 50;
 	}
 	
 	@Override
@@ -42,7 +35,7 @@ public class OverlayRecyclerAdapter extends RecyclerView.Adapter<OverlayRecycler
 	
 	@Override
 	public int getItemCount() {
-		return 1;
+		return 3;
 	}
 	
 	static class OverlayViewHolder extends RecyclerView.ViewHolder {
