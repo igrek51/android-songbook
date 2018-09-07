@@ -3,9 +3,6 @@ package igrek.songbook.service.songtree;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import igrek.songbook.domain.songsdb.Song;
-import igrek.songbook.domain.songsdb.SongCategory;
-
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -16,16 +13,10 @@ public class SongTreeFilterTest {
 	public void test_matchesNameFilter() {
 		
 		SongTreeItem songItem = mock(SongTreeItem.class, Mockito.RETURNS_DEEP_STUBS);
-		Song song = mock(Song.class);
-		SongCategory songCategory = mock(SongCategory.class);
 		
 		when(songItem.getSong().getCategory().getDisplayName()).thenReturn("Budka suflera");
-		
-		when(songCategory.getDisplayName()).thenReturn("Budka suflera");
-		when(song.getCategory()).thenReturn(songCategory);
-		when(song.getTitle()).thenReturn("Jolka jolka ążśźęćół ĄĄŻŚŹĘĆ Żółć Łódź");
-		when(songItem.getSong()).thenReturn(song);
-		
+		when(songItem.getSong().getTitle()).thenReturn("Jolka jolka ążśźęćół ĄĄŻŚŹĘĆ Żółć Łódź");
+		// test mockito
 		assertThat(songItem.getSong().getCategory().getDisplayName()).isEqualTo("Budka suflera");
 		
 		assertThat(new SongTreeFilter("Budka").matchesNameFilter(songItem)).isTrue();
