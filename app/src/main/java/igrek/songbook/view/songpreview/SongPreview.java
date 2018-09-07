@@ -25,7 +25,6 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	private final float EOF_SCROLL_RESERVE = 0.09f;
 	private final float LINEHEIGHT_SCALE_FACTOR = 1.02f;
 	private final float FONTSIZE_SCALE_FACTOR = 0.6f;
-	private final float MIN_SCROLL_EVENT = 15f;
 	
 	@Inject
 	Lazy<SongPreviewLayoutController> songPreviewController;
@@ -257,9 +256,12 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	}
 	
 	public void onManuallyScrolled(int dy) {
+		// lines scrolled
+		float linePartScrolled = ((float) dy) / getLineheightPx();
 		// monitor scroll changes
-		if (Math.abs(dy) > MIN_SCROLL_EVENT) {
-			autoscroll.get().onCanvasScrollEvent(dy, scroll);
+		// TODO use rx to debounce or aggregate events
+		if (Math.abs(linePartScrolled) > 0.1f) {
+			autoscroll.get().onCanvasScrollEvent(linePartScrolled, scroll);
 		}
 	}
 }

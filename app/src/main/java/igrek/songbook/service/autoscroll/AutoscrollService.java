@@ -20,9 +20,8 @@ public class AutoscrollService {
 	
 	private final float MIN_SPEED = 0.001f;
 	private final float START_NO_WAITING_MIN_SCROLL = 24.0f;
-	private final float AUTOCHANGE_SPEED_SCALE = 0.0003f;
-	private final float AUTOCHANGE_MAX_SCROLL = 100f; // [px]
-	private final float AUTOCHANGE_WAITING_SCALE = 9.0f;
+	private final float AUTOCHANGE_SPEED_SCALE = 0.001f;
+	private final float ADD_INITIAL_PAUSE_SCALE = 200.0f;
 	private final float AUTOSCROLL_INTERVAL_TIME = 100; // [ms]
 	@Inject
 	UiInfoService userInfo;
@@ -124,34 +123,36 @@ public class AutoscrollService {
 		}
 	}
 	
+	/**
+	 * @param dScroll line Part Scrolled
+	 * @param scroll  current scroll
+	 */
 	public void onCanvasScrollEvent(float dScroll, float scroll) {
 		if (state == AutoscrollState.WAITING) {
 			if (dScroll > 0) { // skip counting down immediately
 				state = AutoscrollState.SCROLLING;
 				onAutoscrollStartedEvent();
 			} else if (dScroll < 0) { // increase inital waitng time
-				startTime -= (long) (dScroll * AUTOCHANGE_WAITING_SCALE);
+				startTime -= (long) (dScroll * ADD_INITIAL_PAUSE_SCALE);
 				long remainingTimeMs = initialPause + startTime - System.currentTimeMillis();
 				onAutoscrollRemainingWaitTimeEvent(remainingTimeMs);
 			}
 		} else if (state == AutoscrollState.SCROLLING) {
 			if (dScroll > 0) { // speed up scrolling
 				
-				dScroll = dScroll > AUTOCHANGE_MAX_SCROLL ? AUTOCHANGE_MAX_SCROLL : dScroll;
 				autoscrollSpeed += dScroll * AUTOCHANGE_SPEED_SCALE;
 				
 			} else if (dScroll < 0) {
 				if (scroll <= 0) { // scrolling up to the beginning
 					// set counting down state with additional time
 					state = AutoscrollState.WAITING;
-					startTime = System.currentTimeMillis() - initialPause - (long) (dScroll * AUTOCHANGE_WAITING_SCALE);
+					startTime = System.currentTimeMillis() - initialPause - (long) (dScroll * ADD_INITIAL_PAUSE_SCALE);
 					long remainingTimeMs = initialPause + startTime - System.currentTimeMillis();
 					onAutoscrollRemainingWaitTimeEvent(remainingTimeMs);
 					return;
 				} else {
 					// slow down scrolling
 					float dScrollAbs = -dScroll;
-					dScrollAbs = dScrollAbs > AUTOCHANGE_MAX_SCROLL ? AUTOCHANGE_MAX_SCROLL : dScrollAbs;
 					autoscrollSpeed -= dScrollAbs * AUTOCHANGE_SPEED_SCALE;
 				}
 			}
