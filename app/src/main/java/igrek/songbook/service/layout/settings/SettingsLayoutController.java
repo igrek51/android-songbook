@@ -4,7 +4,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 
 import javax.inject.Inject;
@@ -38,7 +37,6 @@ public class SettingsLayoutController implements MainLayout {
 	NavigationMenuController navigationMenuController;
 	
 	private Logger logger = LoggerFactory.getLogger();
-	private EditText contactMessageEdit;
 	
 	public SettingsLayoutController() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -57,7 +55,6 @@ public class SettingsLayoutController implements MainLayout {
 		// navigation menu button
 		ImageButton navMenuButton = layout.findViewById(R.id.navMenuButton);
 		navMenuButton.setOnClickListener((v) -> navigationMenuController.navDrawerShow());
-		
 		
 	}
 	

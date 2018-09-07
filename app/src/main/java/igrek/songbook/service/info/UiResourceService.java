@@ -19,4 +19,13 @@ public class UiResourceService {
 		return activity.getResources().getString(resourceId);
 	}
 	
+	public String resString(int resourceId, Object... args) {
+		String message = resString(resourceId);
+		if (args.length > 0) {
+			return String.format(message, args);
+		} else {
+			return message;
+		}
+	}
+	
 }

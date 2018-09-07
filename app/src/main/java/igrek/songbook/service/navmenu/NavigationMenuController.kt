@@ -52,7 +52,7 @@ class NavigationMenuController {
         actionsMap[R.id.nav_search] = Runnable { layoutController.get().showSongSearch() }
         actionsMap[R.id.nav_update_db] = Runnable { songsDbRepository.recreateDb() }
         actionsMap[R.id.nav_import_song] = Runnable { uiInfoService.showToast("not implemented yet") }
-        actionsMap[R.id.nav_settings] = Runnable { uiInfoService.showToast("not implemented yet") }
+        actionsMap[R.id.nav_settings] = Runnable { layoutController.get().showSettings() }
         actionsMap[R.id.nav_help] = Runnable { helpLayoutController.get().showUIHelp() }
         actionsMap[R.id.nav_about] = Runnable { aboutLayoutController.get().showAbout() }
         actionsMap[R.id.nav_exit] = Runnable { activityController.get().quit() }

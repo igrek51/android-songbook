@@ -11,7 +11,7 @@ import igrek.songbook.service.info.UiInfoService
 import igrek.songbook.service.info.UiResourceService
 import igrek.songbook.service.persistence.SongsDbRepository
 import igrek.songbook.service.persistence.database.SqlQueryService
-import java.util.*
+import igrek.songbook.service.string.StringSimplifier
 import javax.inject.Inject
 
 class SecretUnlockerService {
@@ -27,7 +27,6 @@ class SecretUnlockerService {
     @Inject
     lateinit var sqlQueryService: SqlQueryService
 
-    private val locale = Locale("pl", "PL")
     private val logger = LoggerFactory.getLogger()
 
     init {
@@ -52,10 +51,10 @@ class SecretUnlockerService {
 
     private fun unlockAttempt(key0: String) {
         logger.info("unlocking attempt with a key: $key0")
-        val key = key0.toLowerCase(locale)
+        val key = StringSimplifier.simplify(key0)
         when (key) {
-            "dupa", "okoń", "okon" -> uiInfoService.showInfo("Congratulations! You have discovered an Easter Egg :)")
-            "engineer", "inżynier", "inzynier" -> unlockSongs("engineer")
+            "dupa", "okon" -> uiInfoService.showInfo("Congratulations!\nYou have discovered an Easter Egg :)")
+            "engineer", "inzynier" -> unlockSongs("engineer")
             "zjajem", "z jajem" -> unlockSongs("zjajem")
             "bff" -> unlockSongs("bff")
             "religijne" -> unlockSongs("religijne")
@@ -73,7 +72,7 @@ class SecretUnlockerService {
             s.locked = false
             sqlQueryService.unlockSong(s.id)
         }
-        val message = uiResourceService.resString(R.string.unlock_new_songs_unlocked) + count
+        val message = uiResourceService.resString(R.string.unlock_new_songs_unlocked, count)
         uiInfoService.showInfo(message)
         songsDbRepository.reloadDb()
     }
