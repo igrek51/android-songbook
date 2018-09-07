@@ -78,6 +78,10 @@ public class QuickMenu {
 		updateTranspositionText();
 	}
 	
+	public View getQuickMenuView() {
+		return quickMenuView;
+	}
+	
 	private void updateTranspositionText() {
 		String tvTranspositionText = infoService.resString(R.string.transposition) + ": " + chordsTransposerManager
 				.get()

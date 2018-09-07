@@ -52,7 +52,6 @@ public class SongPreviewLayoutController implements MainLayout {
 	private Song currentSong;
 	private OverlayRecyclerAdapter overlayAdapter;
 	private RecyclerView overlayRecyclerView;
-	private LinearLayoutManager overlayLayoutManger;
 	
 	public SongPreviewLayoutController() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -66,22 +65,22 @@ public class SongPreviewLayoutController implements MainLayout {
 		// create songPreview
 		songPreview = new SongPreview(activity);
 		songPreview.reset();
-		FrameLayout mainFrame = layout.findViewById(R.id.mainFrame);
-		mainFrame.removeAllViews();
-		mainFrame.addView(songPreview);
+		FrameLayout songPreviewContainer = layout.findViewById(R.id.songPreviewContainer);
+		songPreviewContainer.addView(songPreview);
 		
 		// create quick menu
+		FrameLayout quickMenuContainer = layout.findViewById(R.id.quickMenuContainer);
 		LayoutInflater inflater = activity.getLayoutInflater();
 		View quickMenuView = inflater.inflate(R.layout.quick_menu, null);
 		quickMenuView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-		mainFrame.addView(quickMenuView);
+		quickMenuContainer.addView(quickMenuView);
+		quickMenu.setQuickMenuView(quickMenuView);
+		quickMenu.setVisible(false);
 		
 		// overlaying RecyclerView
 		overlayRecyclerView = activity.findViewById(R.id.overlayRecyclerView);
 		overlayRecyclerView.setHasFixedSize(true); // improve performance
-		overlayLayoutManger = new LinearLayoutManager(activity);
-		overlayLayoutManger.setOrientation(LinearLayoutManager.VERTICAL);
-		overlayRecyclerView.setLayoutManager(overlayLayoutManger);
+		overlayRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
 		overlayAdapter = new OverlayRecyclerAdapter(songPreview);
 		overlayRecyclerView.setAdapter(overlayAdapter);
 		overlayRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -98,8 +97,6 @@ public class SongPreviewLayoutController implements MainLayout {
 		overlayRecyclerView.setOnClickListener((v) -> songPreview.onClick());
 		overlayRecyclerView.setOnTouchListener(songPreview);
 		overlayRecyclerView.getLayoutManager().scrollToPosition(1);
-		
-		songPreview.setQuickMenuView(quickMenuView);
 	}
 	
 	@Override
