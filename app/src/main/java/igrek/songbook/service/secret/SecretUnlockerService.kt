@@ -44,8 +44,8 @@ class SecretUnlockerService {
         input.inputType = InputType.TYPE_CLASS_TEXT
         dlgAlert.setView(input)
 
-        dlgAlert.setPositiveButton(unlockAction) { dialog, which -> unlockAttempt(input.text.toString()) }
-        dlgAlert.setNegativeButton(uiResourceService.resString(R.string.action_cancel)) { dialog, which -> }
+        dlgAlert.setPositiveButton(unlockAction) { _, _ -> unlockAttempt(input.text.toString()) }
+        dlgAlert.setNegativeButton(uiResourceService.resString(R.string.action_cancel)) { _, _ -> }
         dlgAlert.setCancelable(true)
         dlgAlert.create().show()
     }
