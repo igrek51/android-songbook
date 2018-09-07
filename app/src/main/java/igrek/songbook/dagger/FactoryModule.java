@@ -27,6 +27,7 @@ import igrek.songbook.service.layout.about.AboutLayoutController;
 import igrek.songbook.service.layout.contact.ContactLayoutController;
 import igrek.songbook.service.layout.help.HelpLayoutController;
 import igrek.songbook.service.layout.search.SongSearchLayoutController;
+import igrek.songbook.service.layout.settings.SettingsLayoutController;
 import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController;
 import igrek.songbook.service.layout.songtree.SongTreeLayoutController;
 import igrek.songbook.service.navmenu.NavigationMenuController;
@@ -261,6 +262,12 @@ public class FactoryModule {
 	@Singleton
 	protected PackageInfoService providePackageInfoService() {
 		return new PackageInfoService();
+	}
+	
+	@Provides
+	@Singleton
+	protected SettingsLayoutController provideSettingsLayoutController() {
+		return new SettingsLayoutController();
 	}
 	
 	/*

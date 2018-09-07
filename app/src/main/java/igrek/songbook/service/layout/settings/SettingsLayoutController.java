@@ -1,10 +1,9 @@
-package igrek.songbook.service.layout.contact;
+package igrek.songbook.service.layout.settings;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -16,7 +15,6 @@ import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.activity.ActivityController;
-import igrek.songbook.service.errorcheck.SafeClickListener;
 import igrek.songbook.service.info.UiInfoService;
 import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.layout.LayoutController;
@@ -24,7 +22,7 @@ import igrek.songbook.service.layout.LayoutState;
 import igrek.songbook.service.layout.MainLayout;
 import igrek.songbook.service.navmenu.NavigationMenuController;
 
-public class ContactLayoutController implements MainLayout {
+public class SettingsLayoutController implements MainLayout {
 	
 	@Inject
 	Lazy<ActivityController> activityController;
@@ -42,7 +40,7 @@ public class ContactLayoutController implements MainLayout {
 	private Logger logger = LoggerFactory.getLogger();
 	private EditText contactMessageEdit;
 	
-	public ContactLayoutController() {
+	public SettingsLayoutController() {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
@@ -60,31 +58,17 @@ public class ContactLayoutController implements MainLayout {
 		ImageButton navMenuButton = layout.findViewById(R.id.navMenuButton);
 		navMenuButton.setOnClickListener((v) -> navigationMenuController.navDrawerShow());
 		
-		contactMessageEdit = layout.findViewById(R.id.contactMessageEdit);
-		Button contactSendButton = layout.findViewById(R.id.contactSendButton);
-		contactSendButton.setOnClickListener(new SafeClickListener() {
-			@Override
-			public void onClick() {
-				sendContactMessage();
-			}
-		});
+		
 	}
 	
 	@Override
 	public LayoutState getLayoutState() {
-		return LayoutState.CONTACT;
+		return LayoutState.SETTINGS;
 	}
 	
 	@Override
 	public int getLayoutResourceId() {
-		return R.layout.contact;
+		return R.layout.settings;
 	}
 	
-	private void sendContactMessage() {
-		String message = contactMessageEdit.getText().toString();
-		// TODO
-		uiInfoService.showToast("not implemented yet");
-		
-		uiInfoService.showToast("Thanks :)");
-	}
 }

@@ -36,7 +36,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/ui_contact"
+                android:text="@string/nav_settings"
                 android:textSize="18sp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginStart="20dp"/>
@@ -46,26 +46,16 @@
     </android.support.design.widget.AppBarLayout>
 
     <TextView
-        android:id="@+id/contactText"
+        android:layout_margin="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/ui_contact_content"
-        android:gravity="bottom"
-        android:textSize="18sp"
-        android:layout_margin="20dp"/>
+        android:text="Font size:"/>
 
-    <EditText
-        android:id="@+id/contactMessageEdit"
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:max="100"
+        android:progress="50"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:inputType="text|textMultiLine"
-        android:gravity="top"
-        android:hint="@string/contact_message_hint"/>
-
-    <Button
-        android:id="@+id/contactSendButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/contact_send"/>
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>
