@@ -4,7 +4,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import javax.inject.Inject;
 
@@ -14,6 +18,7 @@ import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.activity.ActivityController;
+import igrek.songbook.service.chords.LyricsManager;
 import igrek.songbook.service.info.UiInfoService;
 import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.layout.LayoutController;
@@ -35,6 +40,8 @@ public class SettingsLayoutController implements MainLayout {
 	AppCompatActivity activity;
 	@Inject
 	NavigationMenuController navigationMenuController;
+	@Inject
+	LyricsManager lyricsManager;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
@@ -55,6 +62,39 @@ public class SettingsLayoutController implements MainLayout {
 		// navigation menu button
 		ImageButton navMenuButton = layout.findViewById(R.id.navMenuButton);
 		navMenuButton.setOnClickListener((v) -> navigationMenuController.navDrawerShow());
+		
+		TextView fontsizeLabel = layout.findViewById(R.id.fontsizeLabel);
+		SeekBar fontsizeSeekbar = layout.findViewById(R.id.fontsizeSeekbar);
+		TextView autoscrollPauseLabel = layout.findViewById(R.id.autoscrollPauseLabel);
+		SeekBar autoscrollPauseSeekbar = layout.findViewById(R.id.autoscrollPauseSeekbar);
+		TextView autoscrollSpeedLabel = layout.findViewById(R.id.autoscrollSpeedLabel);
+		SeekBar autoscrollSpeedSeekbar = layout.findViewById(R.id.autoscrollSpeedSeekbar);
+		CheckBox fullscreenCheckbox = layout.findViewById(R.id.fullscreenCheckbox);
+		Spinner chordsNotationSpinner = layout.findViewById(R.id.chordsNotationSpinner);
+		
+		fontsizeSeekbar.setMax(100);
+		fontsizeSeekbar.setProgress(80);
+		fontsizeSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				float minValue = 5;
+				float maxValue = 50;
+				
+				float value = minValue + (maxValue - minValue) * progress / seekBar.getMax();
+				
+				String label = uiResourceService.resString(R.string.settings_font_size, Float.toString(value));
+				fontsizeLabel.setText(label);
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+			}
+			
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+			}
+		});
+		int progress = fontsizeSeekbar.getProgress();
 		
 	}
 	
