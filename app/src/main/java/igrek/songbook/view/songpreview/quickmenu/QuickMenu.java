@@ -80,7 +80,8 @@ public class QuickMenu {
 	
 	private void updateTranspositionText() {
 		String tvTranspositionText = infoService.resString(R.string.transposition) + ": " + chordsTransposerManager
-				.get().getTransposedByDisplayName();
+				.get()
+				.getTransposedByDisplayName();
 		tvTransposition.setText(tvTranspositionText);
 	}
 	
