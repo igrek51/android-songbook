@@ -12,6 +12,8 @@ import dagger.Lazy;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.domain.crd.CRDLine;
 import igrek.songbook.domain.crd.CRDModel;
+import igrek.songbook.logger.Logger;
+import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController;
 import igrek.songbook.service.system.WindowManagerService;
@@ -42,10 +44,11 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	private float scroll;
 	private float startScroll;
 	private float fontsizeTmp;
-	private int dpi;
 	private Float pointersDst0;
 	private Float fontsize0;
+	private Integer secondPointerIndex;
 	private LyricsRenderer lyricsRenderer;
+	private Logger logger = LoggerFactory.getLogger();
 	
 	public CanvasGraphics(Context context) {
 		super(context);
@@ -60,7 +63,6 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		pointersDst0 = null;
 		fontsize0 = null;
 		crdModel = null;
-		dpi = windowManagerService.getDpi();
 	}
 	
 	@Override
@@ -80,7 +82,9 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	
 	@Override
 	protected void onTouchDown(MotionEvent event) {
-		super.onTouchDown(event);
+		startTouchX = event.getX();
+		startTouchY = event.getY();
+		startTouchTime = System.currentTimeMillis();
 		startScroll = scroll;
 		pointersDst0 = null;
 	}
@@ -88,21 +92,26 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	@Override
 	protected void onTouchMove(MotionEvent event) {
 		if (event.getPointerCount() >= 2) {
+			// pinch to font scaling
 			if (pointersDst0 != null) {
 				Float pointersDst1 = (float) Math.hypot(event.getX(1) - event.getX(0), event.getY(1) - event
 						.getY(0));
 				float scale = (pointersDst1 / pointersDst0 - 1) * FONTSIZE_SCALE_FACTOR + 1;
 				float fontsize1 = fontsize0 * scale;
+				scroll = startScroll * scale;
 				previewFontsize(fontsize1);
 			}
 		} else {
-			scroll = startScroll + startTouchY - event.getY();
-			float maxScroll = getMaxScroll();
-			if (scroll < 0)
-				scroll = 0; // too much scrolling up
-			if (scroll > maxScroll)
-				scroll = maxScroll; // too much scrolling down
-			repaint();
+			// only if it's first pointer
+			if (secondPointerIndex == null || event.getActionIndex() != secondPointerIndex) {
+				scroll = startScroll + startTouchY - event.getY();
+				float maxScroll = getMaxScroll();
+				if (scroll < 0)
+					scroll = 0; // too much scrolling up
+				if (scroll > maxScroll)
+					scroll = maxScroll; // too much scrolling down
+				repaint();
+			}
 		}
 	}
 	
@@ -129,8 +138,10 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	
 	@Override
 	protected void onTouchPointerDown(MotionEvent event) {
+		secondPointerIndex = event.getActionIndex();
 		pointersDst0 = (float) Math.hypot(event.getX(1) - event.getX(0), event.getY(1) - event.getY(0));
 		fontsize0 = fontsizeTmp;
+		startScroll = scroll;
 	}
 	
 	@Override
@@ -139,6 +150,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		
 		pointersDst0 = null; // reset initial length
 		startScroll = scroll;
+		secondPointerIndex = null;
 		
 		// leave a pointer which is still active
 		Integer pointerIndex = 0;

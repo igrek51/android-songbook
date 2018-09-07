@@ -119,9 +119,6 @@ public abstract class BaseCanvasGraphics extends View {
 	}
 	
 	protected void onTouchDown(MotionEvent event) {
-		startTouchX = event.getX();
-		startTouchY = event.getY();
-		startTouchTime = System.currentTimeMillis();
 	}
 	
 	protected void onTouchMove(MotionEvent event) {
