@@ -58,4 +58,9 @@ public class WindowManagerService {
 	public float dp2px(float dp) {
 		return dp * ((float) getDpi() / DisplayMetrics.DENSITY_DEFAULT);
 	}
+	
+	public void showAppWhenLocked() {
+		activity.getWindow()
+				.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+	}
 }

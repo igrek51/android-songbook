@@ -8,6 +8,7 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import igrek.songbook.BuildConfig;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
@@ -34,6 +35,11 @@ public class AppInitializer {
 			windowManagerService.hideTaskbar();
 			layoutController.init();
 			layoutController.showSongTree();
+			// Allow showing the activity even if the device is locked
+			if (BuildConfig.DEBUG) {
+				windowManagerService.showAppWhenLocked();
+			}
+			
 			logger.info("Application has been initialized.");
 		} catch (Exception ex) {
 			logger.fatal(activity, ex);
@@ -42,7 +48,7 @@ public class AppInitializer {
 	
 	/**
 	 * forces locale settings
-	 * @param langCode
+	 * @param langCode language code
 	 */
 	private void setLocale(String langCode) {
 		Resources res = activity.getResources();
