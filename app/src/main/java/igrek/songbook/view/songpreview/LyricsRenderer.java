@@ -1,21 +1,21 @@
 package igrek.songbook.view.songpreview;
 
-import igrek.songbook.domain.crd.CRDFragment;
-import igrek.songbook.domain.crd.CRDLine;
-import igrek.songbook.domain.crd.CRDModel;
-import igrek.songbook.domain.crd.CRDTextType;
+import igrek.songbook.domain.lyrics.LyricsFragment;
+import igrek.songbook.domain.lyrics.LyricsLine;
+import igrek.songbook.domain.lyrics.LyricsModel;
+import igrek.songbook.domain.lyrics.LyricsTextType;
 import igrek.songbook.view.songpreview.base.Align;
 import igrek.songbook.view.songpreview.base.Font;
 
 public class LyricsRenderer {
 	
 	private CanvasGraphics canvas;
-	private CRDModel crdModel;
+	private LyricsModel lyricsModel;
 	private float w, h;
 	
-	LyricsRenderer(CanvasGraphics canvas, CRDModel crdModel) {
+	LyricsRenderer(CanvasGraphics canvas, LyricsModel lyricsModel) {
 		this.canvas = canvas;
-		this.crdModel = crdModel;
+		this.lyricsModel = lyricsModel;
 		w = canvas.getW();
 		h = canvas.getH();
 	}
@@ -28,14 +28,14 @@ public class LyricsRenderer {
 		canvas.setFontSize(fontsize);
 		canvas.setColor(0xffffff);
 		
-		if (crdModel != null) {
-			for (CRDLine line : crdModel.getLines()) {
+		if (lyricsModel != null) {
+			for (LyricsLine line : lyricsModel.getLines()) {
 				drawTextLine(line, canvas.getScroll(), fontsize, lineheight);
 			}
 		}
 	}
 	
-	private void drawTextLine(CRDLine line, float scroll, float fontsize, float lineheight) {
+	private void drawTextLine(LyricsLine line, float scroll, float fontsize, float lineheight) {
 		float y = line.getY() * lineheight - scroll;
 		if (y > h)
 			return;
@@ -44,21 +44,21 @@ public class LyricsRenderer {
 		
 		// line wrapper on bottom layer
 		if (line.getFragments().size() > 0) {
-			CRDFragment lastFragment = line.getFragments().get(line.getFragments().size() - 1);
-			if (lastFragment.getType() == CRDTextType.LINEWRAPPER) {
+			LyricsFragment lastFragment = line.getFragments().get(line.getFragments().size() - 1);
+			if (lastFragment.getType() == LyricsTextType.LINEWRAPPER) {
 				canvas.setFont(Font.FONT_NORMAL);
 				canvas.setColor(0xa0a0a0);
 				canvas.drawText(lastFragment.getText(), w, y + 0.85f * lineheight, Align.RIGHT);
 			}
 		}
 		
-		for (CRDFragment fragment : line.getFragments()) {
+		for (LyricsFragment fragment : line.getFragments()) {
 			
-			if (fragment.getType() == CRDTextType.REGULAR_TEXT) {
+			if (fragment.getType() == LyricsTextType.REGULAR_TEXT) {
 				canvas.setFont(Font.FONT_NORMAL);
 				canvas.setColor(0xffffff);
 				canvas.drawText(fragment.getText(), fragment.getX() * fontsize, y + lineheight, Align.LEFT);
-			} else if (fragment.getType() == CRDTextType.CHORDS) {
+			} else if (fragment.getType() == LyricsTextType.CHORDS) {
 				canvas.setFont(Font.FONT_BOLD);
 				canvas.setColor(0xf00000);
 				canvas.drawText(fragment.getText(), fragment.getX() * fontsize, y + lineheight, Align.LEFT);

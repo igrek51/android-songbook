@@ -113,7 +113,7 @@ public class AutoscrollService {
 		} else if (state == AutoscrollState.SCROLLING) {
 			// em = speed * time
 			float lineheightPart = autoscrollSpeed * AUTOSCROLL_INTERVAL_TIME / 1000;
-			if (getCanvas().scrollBy(lineheightPart)) {
+			if (getCanvas().scrollByLines(lineheightPart)) {
 				// scroll once again later
 				timerHandler.postDelayed(timerRunnable, (long) AUTOSCROLL_INTERVAL_TIME);
 			} else {

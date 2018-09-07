@@ -1,6 +1,6 @@
-package igrek.songbook.domain.crd;
+package igrek.songbook.domain.lyrics;
 
-public enum CRDTextType {
+public enum LyricsTextType {
 	
 	REGULAR_TEXT(true),
 	
@@ -12,7 +12,7 @@ public enum CRDTextType {
 	
 	private boolean displayable;
 	
-	CRDTextType(boolean displayable) {
+	LyricsTextType(boolean displayable) {
 		this.displayable = displayable;
 	}
 	

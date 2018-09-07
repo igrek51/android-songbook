@@ -1,12 +1,12 @@
-package igrek.songbook.domain.crd;
+package igrek.songbook.domain.lyrics;
 
-public class CRDFragment {
+public class LyricsFragment {
 	
 	private float x;
 	private String text;
-	private CRDTextType type;
+	private LyricsTextType type;
 	
-	public CRDFragment(float x, String text, CRDTextType type) {
+	public LyricsFragment(float x, String text, LyricsTextType type) {
 		this.x = x;
 		this.text = text;
 		this.type = type;
@@ -28,11 +28,11 @@ public class CRDFragment {
 		this.text = text;
 	}
 	
-	public CRDTextType getType() {
+	public LyricsTextType getType() {
 		return type;
 	}
 	
-	public void setType(CRDTextType type) {
+	public void setType(LyricsTextType type) {
 		this.type = type;
 	}
 	

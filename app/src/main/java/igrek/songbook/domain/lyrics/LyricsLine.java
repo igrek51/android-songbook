@@ -1,24 +1,24 @@
-package igrek.songbook.domain.crd;
+package igrek.songbook.domain.lyrics;
 
 import com.google.common.base.Joiner;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CRDLine {
+public class LyricsLine {
 	
 	private int y;
 	
-	private List<CRDFragment> fragments = new ArrayList<>();
+	private List<LyricsFragment> fragments = new ArrayList<>();
 	
-	public CRDLine() {
+	public LyricsLine() {
 	}
 	
-	public void addFragment(CRDFragment fragment) {
+	public void addFragment(LyricsFragment fragment) {
 		fragments.add(fragment);
 	}
 	
-	public List<CRDFragment> getFragments() {
+	public List<LyricsFragment> getFragments() {
 		return fragments;
 	}
 	

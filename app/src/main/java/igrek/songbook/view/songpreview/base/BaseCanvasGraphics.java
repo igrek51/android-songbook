@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
-import android.view.MotionEvent;
 import android.view.View;
 
 public abstract class BaseCanvasGraphics extends View {
@@ -16,15 +15,8 @@ public abstract class BaseCanvasGraphics extends View {
 	protected int h = 0;
 	
 	protected Paint paint;
-	
 	protected Canvas canvas = null;
-	
-	protected boolean initialized = false;
-	
-	protected float startTouchX = 0;
-	protected float startTouchY = 0;
-	protected long startTouchTime;
-	private Rect textBounds = new Rect();
+	private boolean initialized = false;
 	
 	public BaseCanvasGraphics(Context context) {
 		super(context);
@@ -57,10 +49,6 @@ public abstract class BaseCanvasGraphics extends View {
 		return h;
 	}
 	
-	public int getSmallerScreenSize() {
-		return w < h ? w : h;
-	}
-	
 	/**
 	 * repaint screen method to override
 	 */
@@ -86,8 +74,8 @@ public abstract class BaseCanvasGraphics extends View {
 			h = getHeight();
 		}
 		if (!initialized) {
-			init();
 			initialized = true;
+			init();
 		}
 		onRepaint();
 	}
@@ -96,42 +84,7 @@ public abstract class BaseCanvasGraphics extends View {
 		invalidate();
 	}
 	
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		switch (event.getActionMasked()) {
-			case MotionEvent.ACTION_DOWN:
-				onTouchDown(event);
-				break;
-			case MotionEvent.ACTION_MOVE:
-				onTouchMove(event);
-				break;
-			case MotionEvent.ACTION_UP:
-				onTouchUp(event);
-				break;
-			case MotionEvent.ACTION_POINTER_DOWN:
-				onTouchPointerDown(event);
-				break;
-			case MotionEvent.ACTION_POINTER_UP:
-				onTouchPointerUp(event);
-				break;
-		}
-		return true;
-	}
 	
-	protected void onTouchDown(MotionEvent event) {
-	}
-	
-	protected void onTouchMove(MotionEvent event) {
-	}
-	
-	protected void onTouchUp(MotionEvent event) {
-	}
-	
-	protected void onTouchPointerDown(MotionEvent event) {
-	}
-	
-	protected void onTouchPointerUp(MotionEvent event) {
-	}
 	
 	public void drawTextUnaligned(String s, float x, float y) {
 		paint.setTextAlign(Paint.Align.LEFT);
@@ -167,6 +120,7 @@ public abstract class BaseCanvasGraphics extends View {
 		} else { // right
 			paint.setTextAlign(Paint.Align.RIGHT);
 		}
+		Rect textBounds = new Rect();
 		paint.getTextBounds(text, 0, text.length(), textBounds);
 		float y_pos = cy - (paint.descent() + paint.ascent()) / 2;
 		if (isFlagSet(align, Align.TOP)) {

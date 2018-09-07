@@ -5,16 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                 android:id="@+id/mainFrame"
+    <FrameLayout android:id="@+id/mainFrame"
+                 xmlns:android="http://schemas.android.com/apk/res/android"
                  android:layout_width="match_parent"
                  android:layout_height="match_parent"
-                 android:layout_alignParentLeft="true"
-                 android:layout_alignParentStart="true">
+                 android:fillViewport="true">
 
         <!-- Canvas Graphics -->
         <!-- Quick Menu -->
 
     </FrameLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/overlayRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:fillViewport="true"/>
 
 </android.support.design.widget.CoordinatorLayout>

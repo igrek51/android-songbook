@@ -1,14 +1,14 @@
-package igrek.songbook.domain.crd;
+package igrek.songbook.domain.lyrics;
 
-public class CRDChar {
+public class LyricsChar {
 	
 	public String c;
 	
 	public float width;
 	
-	public CRDTextType type;
+	public LyricsTextType type;
 	
-	public CRDChar(String c, float width, CRDTextType type) {
+	public LyricsChar(String c, float width, LyricsTextType type) {
 		this.c = c;
 		this.width = width;
 		this.type = type;

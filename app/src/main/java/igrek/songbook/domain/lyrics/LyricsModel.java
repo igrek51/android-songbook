@@ -1,27 +1,27 @@
-package igrek.songbook.domain.crd;
+package igrek.songbook.domain.lyrics;
 
 import com.google.common.base.Joiner;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CRDModel {
+public class LyricsModel {
 	
-	private List<CRDLine> lines;
+	private List<LyricsLine> lines;
 	
-	public CRDModel() {
+	public LyricsModel() {
 		lines = new ArrayList<>();
 	}
 	
-	public void addLines(List<CRDLine> lines) {
+	public void addLines(List<LyricsLine> lines) {
 		this.lines.addAll(lines);
 	}
 	
-	public void addLine(CRDLine line) {
+	public void addLine(LyricsLine line) {
 		lines.add(line);
 	}
 	
-	public List<CRDLine> getLines() {
+	public List<LyricsLine> getLines() {
 		return lines;
 	}
 	

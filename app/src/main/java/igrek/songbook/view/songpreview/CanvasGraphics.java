@@ -10,8 +10,8 @@ import javax.inject.Inject;
 
 import dagger.Lazy;
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.domain.crd.CRDLine;
-import igrek.songbook.domain.crd.CRDModel;
+import igrek.songbook.domain.lyrics.LyricsLine;
+import igrek.songbook.domain.lyrics.LyricsModel;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.service.autoscroll.AutoscrollService;
@@ -20,7 +20,7 @@ import igrek.songbook.service.system.WindowManagerService;
 import igrek.songbook.view.songpreview.base.BaseCanvasGraphics;
 import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
 
-public class CanvasGraphics extends BaseCanvasGraphics {
+public class CanvasGraphics extends BaseCanvasGraphics implements View.OnTouchListener {
 	
 	private final float EOF_SCROLL_RESERVE = 0.09f;
 	private final float LINEHEIGHT_SCALE_FACTOR = 1.02f;
@@ -40,7 +40,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	@Inject
 	WindowManagerService windowManagerService;
 	
-	private CRDModel crdModel;
+	private LyricsModel lyricsModel;
 	private float scroll;
 	private float startScroll;
 	private float fontsizeTmp;
@@ -48,6 +48,9 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	private Float fontsize0;
 	private Integer secondPointerIndex;
 	private LyricsRenderer lyricsRenderer;
+	protected float startTouchX = 0;
+	protected float startTouchY = 0;
+	protected long startTouchTime;
 	private Logger logger = LoggerFactory.getLogger();
 	
 	public CanvasGraphics(Context context) {
@@ -62,7 +65,7 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		startScroll = 0;
 		pointersDst0 = null;
 		fontsize0 = null;
-		crdModel = null;
+		lyricsModel = null;
 	}
 	
 	@Override
@@ -80,7 +83,6 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		quickMenu.get().draw();
 	}
 	
-	@Override
 	protected void onTouchDown(MotionEvent event) {
 		startTouchX = event.getX();
 		startTouchY = event.getY();
@@ -89,7 +91,6 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		pointersDst0 = null;
 	}
 	
-	@Override
 	protected void onTouchMove(MotionEvent event) {
 		if (event.getPointerCount() >= 2) {
 			// pinch to font scaling
@@ -115,7 +116,6 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		}
 	}
 	
-	@Override
 	protected void onTouchUp(MotionEvent event) {
 		float deltaX = event.getX() - startTouchX;
 		float deltaY = event.getY() - startTouchY;
@@ -136,7 +136,6 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		}
 	}
 	
-	@Override
 	protected void onTouchPointerDown(MotionEvent event) {
 		secondPointerIndex = event.getActionIndex();
 		pointersDst0 = (float) Math.hypot(event.getX(1) - event.getX(0), event.getY(1) - event.getY(0));
@@ -144,7 +143,6 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		startScroll = scroll;
 	}
 	
-	@Override
 	protected void onTouchPointerUp(MotionEvent event) {
 		songPreviewController.get().onFontsizeChangedEvent(fontsizeTmp);
 		
@@ -165,6 +163,10 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		startTouchY = event.getY(pointerIndex);
 	}
 	
+	public void onClick() {
+		logger.debug("canvas click me");
+	}
+	
 	
 	private boolean onScreenClicked(float x, float y) {
 		if (quickMenu.get().isVisible()) {
@@ -183,9 +185,9 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		}
 	}
 	
-	public void setCRDModel(CRDModel crdModel) {
-		this.crdModel = crdModel;
-		this.lyricsRenderer = new LyricsRenderer(this, crdModel);
+	public void setCRDModel(LyricsModel lyricsModel) {
+		this.lyricsModel = lyricsModel;
+		this.lyricsRenderer = new LyricsRenderer(this, lyricsModel);
 		repaint();
 	}
 	
@@ -226,16 +228,27 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	}
 	
 	private float getTextBottomY() {
-		if (crdModel == null)
+		if (lyricsModel == null)
 			return 0;
-		List<CRDLine> lines = crdModel.getLines();
+		List<LyricsLine> lines = lyricsModel.getLines();
 		if (lines == null || lines.isEmpty())
 			return 0;
-		CRDLine lastLine = lines.get(lines.size() - 1);
+		LyricsLine lastLine = lines.get(lines.size() - 1);
 		if (lastLine == null)
 			return 0;
 		float lineheight = getLineheightPx();
 		return lastLine.getY() * lineheight + lineheight;
+	}
+	
+	public int getMaxContentHeight() {
+		float bottomY = getTextBottomY();
+		float reserve = EOF_SCROLL_RESERVE * h;
+		if (bottomY > h) {
+			return (int) (bottomY + reserve);
+		} else {
+			// no scroll possibility
+			return h;
+		}
 	}
 	
 	private void previewFontsize(float fontsize1) {
@@ -250,9 +263,13 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 	 * @param lineheightPart lineheight part to move [em]
 	 * @return
 	 */
-	public boolean scrollBy(float lineheightPart) {
+	public boolean scrollByLines(float lineheightPart) {
+		return scrollByPx(lineheightPart * getLineheightPx());
+	}
+	
+	public boolean scrollByPx(float px) {
+		scroll += px;
 		boolean scrollable = true;
-		scroll += lineheightPart * getLineheightPx();
 		float maxScroll = getMaxScroll();
 		if (scroll < 0) {
 			scroll = 0;
@@ -274,4 +291,27 @@ public class CanvasGraphics extends BaseCanvasGraphics {
 		quickMenu.get().setQuickMenuView(quickMenuView);
 		quickMenu.get().setVisible(false);
 	}
+	
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		switch (event.getActionMasked()) {
+			case MotionEvent.ACTION_DOWN:
+				onTouchDown(event);
+				break;
+			case MotionEvent.ACTION_MOVE:
+				onTouchMove(event);
+				break;
+			case MotionEvent.ACTION_UP:
+				onTouchUp(event);
+				break;
+			case MotionEvent.ACTION_POINTER_DOWN:
+				onTouchPointerDown(event);
+				break;
+			case MotionEvent.ACTION_POINTER_UP:
+				onTouchPointerUp(event);
+				break;
+		}
+		return false;
+	}
+	
 }

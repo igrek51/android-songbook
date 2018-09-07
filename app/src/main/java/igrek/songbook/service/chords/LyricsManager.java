@@ -6,8 +6,8 @@ import javax.inject.Inject;
 
 import dagger.Lazy;
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.domain.crd.CRDModel;
-import igrek.songbook.domain.crd.CRDParser;
+import igrek.songbook.domain.lyrics.LyricsModel;
+import igrek.songbook.domain.lyrics.LyricsParser;
 import igrek.songbook.service.autoscroll.AutoscrollService;
 import igrek.songbook.service.chords.transpose.ChordsTransposerManager;
 import igrek.songbook.service.preferences.PreferencesDefinition;
@@ -25,8 +25,8 @@ public class LyricsManager {
 	@Inject
 	WindowManagerService windowManagerService;
 	
-	private CRDParser crdParser;
-	private CRDModel crdModel;
+	private LyricsParser lyricsParser;
+	private LyricsModel lyricsModel;
 	private int screenW = 0;
 	private Paint paint;
 	private float fontsize;
@@ -34,7 +34,7 @@ public class LyricsManager {
 	
 	public LyricsManager() {
 		DaggerIoc.getFactoryComponent().inject(this);
-		crdParser = new CRDParser();
+		lyricsParser = new LyricsParser();
 		loadPreferences();
 	}
 	
@@ -58,7 +58,7 @@ public class LyricsManager {
 			this.paint = paint;
 		}
 		
-		crdParser = new CRDParser();
+		lyricsParser = new LyricsParser();
 		
 		parseAndTranspose(originalFileContent);
 	}
@@ -68,8 +68,8 @@ public class LyricsManager {
 		parseAndTranspose(originalFileContent);
 	}
 	
-	public CRDModel getCRDModel() {
-		return crdModel;
+	public LyricsModel getCRDModel() {
+		return lyricsModel;
 	}
 	
 	public float getFontsize() {
@@ -86,7 +86,7 @@ public class LyricsManager {
 		String transposedContent = chordsTransposerManager.get()
 				.transposeContent(originalFileContent);
 		float realFontsize = windowManagerService.dp2px(this.fontsize);
-		crdModel = crdParser.parseFileContent(transposedContent, screenW, realFontsize, paint);
+		lyricsModel = lyricsParser.parseFileContent(transposedContent, screenW, realFontsize, paint);
 	}
 	
 }

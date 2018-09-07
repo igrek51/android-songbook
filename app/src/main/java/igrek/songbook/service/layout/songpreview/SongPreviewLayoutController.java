@@ -2,6 +2,8 @@ package igrek.songbook.service.layout.songpreview;
 
 import android.graphics.Paint;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,8 @@ import igrek.songbook.service.system.WindowManagerService;
 import igrek.songbook.view.songpreview.CanvasGraphics;
 import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
 
+import static android.view.View.OVER_SCROLL_ALWAYS;
+
 public class SongPreviewLayoutController implements MainLayout {
 	
 	@Inject
@@ -45,6 +49,8 @@ public class SongPreviewLayoutController implements MainLayout {
 	private Logger logger = LoggerFactory.getLogger();
 	private CanvasGraphics canvas;
 	private Song currentSong;
+	private OverlayRecyclerAdapter overlayAdapter;
+	private RecyclerView overlayRecyclerView;
 	
 	public SongPreviewLayoutController() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -52,21 +58,38 @@ public class SongPreviewLayoutController implements MainLayout {
 	
 	@Override
 	public void showLayout(View layout) {
+		windowManagerService.keepScreenOn(true);
+		softKeyboardService.hideSoftKeyboard();
+		// create canvas
 		canvas = new CanvasGraphics(activity);
 		canvas.reset();
-		
-		windowManagerService.keepScreenOn(true);
-		
 		FrameLayout mainFrame = layout.findViewById(R.id.mainFrame);
 		mainFrame.removeAllViews();
 		mainFrame.addView(canvas);
-		
+		// create quick menu
 		LayoutInflater inflater = activity.getLayoutInflater();
 		View quickMenuView = inflater.inflate(R.layout.quick_menu, null);
 		quickMenuView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 		mainFrame.addView(quickMenuView);
 		
-		softKeyboardService.hideSoftKeyboard();
+		// overlaying RecyclerView
+		overlayRecyclerView = activity.findViewById(R.id.overlayRecyclerView);
+		overlayRecyclerView.setHasFixedSize(true); // improve performance
+		overlayRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
+		overlayAdapter = new OverlayRecyclerAdapter(canvas);
+		overlayRecyclerView.setAdapter(overlayAdapter);
+		overlayRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+			}
+			
+			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+				canvas.scrollByPx(dy);
+			}
+		});
+		overlayRecyclerView.setVerticalScrollBarEnabled(true);
+		overlayRecyclerView.setFadingEdgeLength(0);
+		overlayRecyclerView.setOverScrollMode(OVER_SCROLL_ALWAYS);
+		overlayRecyclerView.setOnTouchListener(canvas);
 		
 		canvas.setQuickMenuView(quickMenuView);
 	}
@@ -89,8 +112,7 @@ public class SongPreviewLayoutController implements MainLayout {
 		
 		canvas.setFontSizes(lyricsManager.getFontsize());
 		canvas.setCRDModel(lyricsManager.getCRDModel());
-		
-		//logger.debug("canvas graphics " + w + "x" + h + " has been initialized");
+		overlayRecyclerView.setAdapter(overlayAdapter);
 	}
 	
 	public void onCrdModelUpdated() {
