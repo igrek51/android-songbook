@@ -1,6 +1,7 @@
 package igrek.songbook.service.navmenu
 
 import android.app.Activity
+import android.os.Handler
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
@@ -74,15 +75,19 @@ class NavigationMenuController {
             } else {
                 logger.warn("unknown navigation item has been selected.")
             }
+            Handler().postDelayed({
+                // unhighlight all menu items
+                if (navigationView != null) {
+                    for (id in 0 until navigationView!!.menu.size())
+                        navigationView!!.menu.getItem(id).isChecked = false
+                }
+            }, 500)
             true
         }
     }
 
     fun navDrawerShow() {
         drawerLayout!!.openDrawer(GravityCompat.START)
-        // unhighlight all menu items
-        for (id in 0 until navigationView!!.menu.size())
-            navigationView!!.menu.getItem(id).isChecked = false
         softKeyboardService.hideSoftKeyboard()
     }
 
