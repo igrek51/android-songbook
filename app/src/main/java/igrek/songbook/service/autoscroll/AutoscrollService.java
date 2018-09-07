@@ -20,8 +20,8 @@ public class AutoscrollService {
 	
 	private final float MIN_SPEED = 0.001f;
 	private final float START_NO_WAITING_MIN_SCROLL = 24.0f;
-	private final float AUTOCHANGE_SPEED_SCALE = 0.001f;
-	private final float ADD_INITIAL_PAUSE_SCALE = 200.0f;
+	private final float AUTOCHANGE_SPEED_SCALE = 0.002f;
+	private final float ADD_INITIAL_PAUSE_SCALE = 400.0f;
 	private final float AUTOSCROLL_INTERVAL_TIME = 100; // [ms]
 	@Inject
 	UiInfoService userInfo;
