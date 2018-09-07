@@ -92,7 +92,7 @@ public class SongPreviewLayoutController implements MainLayout {
 				songPreview.onManuallyScrolled(dy);
 			}
 		});
-		overlayRecyclerView.setVerticalScrollBarEnabled(true);
+		overlayRecyclerView.setVerticalScrollBarEnabled(false);
 		overlayRecyclerView.setOverScrollMode(OVER_SCROLL_ALWAYS);
 		overlayRecyclerView.setOnClickListener((v) -> songPreview.onClick());
 		overlayRecyclerView.setOnTouchListener(songPreview);

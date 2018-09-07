@@ -83,11 +83,6 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
-		logger.debug("onTouch");
-		// quick menu on top
-		if (quickMenu.get().getQuickMenuView().onTouchEvent(event)) {
-			return true; // touch event interception
-		}
 		switch (event.getActionMasked()) {
 			case MotionEvent.ACTION_DOWN:
 				onTouchDown(event);
@@ -158,7 +153,6 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	}
 	
 	public void onClick() {
-		logger.debug("onClick");
 		if (quickMenu.get().isVisible()) {
 			quickMenu.get().onScreenClicked();
 		} else {
@@ -262,12 +256,10 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 		return scroll < getMaxScroll();
 	}
 	
-	
 	public void onManuallyScrolled(int dy) {
 		// monitor scroll changes
-		float dScroll = -dy;
-		if (Math.abs(dScroll) > MIN_SCROLL_EVENT) {
-			autoscroll.get().onCanvasScrollEvent(dScroll, scroll);
+		if (Math.abs(dy) > MIN_SCROLL_EVENT) {
+			autoscroll.get().onCanvasScrollEvent(dy, scroll);
 		}
 	}
 }
