@@ -14,7 +14,7 @@ import igrek.songbook.service.chords.LyricsManager;
 import igrek.songbook.service.chords.transpose.ChordsTransposerManager;
 import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController;
-import igrek.songbook.view.songpreview.CanvasGraphics;
+import igrek.songbook.view.songpreview.SongPreview;
 
 public class QuickMenu {
 	
@@ -39,7 +39,7 @@ public class QuickMenu {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
-	private CanvasGraphics getCanvas() {
+	private SongPreview getCanvas() {
 		return songPreviewController.get().getCanvas();
 	}
 	
@@ -93,7 +93,6 @@ public class QuickMenu {
 			
 			getCanvas().setColor(0x000000, 130);
 			getCanvas().fillRect(0, 0, w, h);
-			
 		}
 	}
 	

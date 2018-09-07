@@ -38,7 +38,7 @@ import igrek.songbook.service.system.SoftKeyboardService;
 import igrek.songbook.service.system.SystemKeyDispatcher;
 import igrek.songbook.service.system.WindowManagerService;
 import igrek.songbook.view.songlist.SongListView;
-import igrek.songbook.view.songpreview.CanvasGraphics;
+import igrek.songbook.view.songpreview.SongPreview;
 import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
 
 /**
@@ -122,6 +122,6 @@ public interface FactoryComponent {
 	
 	void inject(QuickMenu there);
 	
-	void inject(CanvasGraphics there);
+	void inject(SongPreview there);
 	
 }

@@ -1,4 +1,4 @@
-package igrek.songbook.service.layout.songpreview;
+package igrek.songbook.view.songpreview;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -6,14 +6,12 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
-import igrek.songbook.view.songpreview.CanvasGraphics;
-
 public class OverlayRecyclerAdapter extends RecyclerView.Adapter<OverlayRecyclerAdapter.OverlayViewHolder> {
 	
-	private CanvasGraphics canvas;
+	private SongPreview canvas;
 	private View emptyView;
 	
-	public OverlayRecyclerAdapter(CanvasGraphics canvas) {
+	public OverlayRecyclerAdapter(SongPreview canvas) {
 		this.canvas = canvas;
 	}
 	
@@ -21,7 +19,7 @@ public class OverlayRecyclerAdapter extends RecyclerView.Adapter<OverlayRecycler
 	public OverlayViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		emptyView = new View(parent.getContext());
 		
-		int height = canvas.getMaxContentHeight();
+		int height = getContentHeight();
 		if (height < parent.getMeasuredHeight())
 			height = parent.getMeasuredHeight();
 		
@@ -30,6 +28,12 @@ public class OverlayRecyclerAdapter extends RecyclerView.Adapter<OverlayRecycler
 		emptyView.setOnClickListener((v) -> canvas.onClick());
 		
 		return new OverlayViewHolder(emptyView);
+	}
+	
+	public int getContentHeight() {
+		int maxContentHeight = canvas.getMaxContentHeight();
+		// add some reserve
+		return maxContentHeight + maxContentHeight / 50;
 	}
 	
 	@Override

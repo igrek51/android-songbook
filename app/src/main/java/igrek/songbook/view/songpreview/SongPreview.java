@@ -20,7 +20,7 @@ import igrek.songbook.service.system.WindowManagerService;
 import igrek.songbook.view.songpreview.base.BaseCanvasGraphics;
 import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
 
-public class CanvasGraphics extends BaseCanvasGraphics implements View.OnTouchListener {
+public class SongPreview extends BaseCanvasGraphics implements View.OnTouchListener {
 	
 	private final float EOF_SCROLL_RESERVE = 0.09f;
 	private final float LINEHEIGHT_SCALE_FACTOR = 1.02f;
@@ -53,7 +53,7 @@ public class CanvasGraphics extends BaseCanvasGraphics implements View.OnTouchLi
 	protected long startTouchTime;
 	private Logger logger = LoggerFactory.getLogger();
 	
-	public CanvasGraphics(Context context) {
+	public SongPreview(Context context) {
 		super(context);
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
@@ -75,12 +75,37 @@ public class CanvasGraphics extends BaseCanvasGraphics implements View.OnTouchLi
 	
 	@Override
 	public void onRepaint() {
-		drawBackground();
+		// draw Background
+		setColor(0x000000);
+		clearScreen();
+		
 		if (this.lyricsRenderer != null) {
 			lyricsRenderer.drawScrollBar();
 			lyricsRenderer.drawFileContent(getFontsizePx(), getLineheightPx());
 		}
 		quickMenu.get().draw();
+	}
+	
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		switch (event.getActionMasked()) {
+			case MotionEvent.ACTION_DOWN:
+				onTouchDown(event);
+				break;
+			case MotionEvent.ACTION_MOVE:
+				onTouchMove(event);
+				break;
+			case MotionEvent.ACTION_UP:
+				onTouchUp(event);
+				break;
+			case MotionEvent.ACTION_POINTER_DOWN:
+				onTouchPointerDown(event);
+				break;
+			case MotionEvent.ACTION_POINTER_UP:
+				onTouchPointerUp(event);
+				break;
+		}
+		return false;
 	}
 	
 	protected void onTouchDown(MotionEvent event) {
@@ -100,19 +125,20 @@ public class CanvasGraphics extends BaseCanvasGraphics implements View.OnTouchLi
 				float scale = (pointersDst1 / pointersDst0 - 1) * FONTSIZE_SCALE_FACTOR + 1;
 				float fontsize1 = fontsize0 * scale;
 				scroll = startScroll * scale;
+				songPreviewController.get().setRecyclerScroll(scroll);
 				previewFontsize(fontsize1);
 			}
 		} else {
 			// only if it's first pointer
-			if (secondPointerIndex == null || event.getActionIndex() != secondPointerIndex) {
-				scroll = startScroll + startTouchY - event.getY();
-				float maxScroll = getMaxScroll();
-				if (scroll < 0)
-					scroll = 0; // too much scrolling up
-				if (scroll > maxScroll)
-					scroll = maxScroll; // too much scrolling down
-				repaint();
-			}
+			//			if (secondPointerIndex == null || event.getActionIndex() != secondPointerIndex) {
+			//				scroll = startScroll + startTouchY - event.getY();
+			//				float maxScroll = getMaxScroll();
+			//				if (scroll < 0)
+			//					scroll = 0; // too much scrolling up
+			//				if (scroll > maxScroll)
+			//					scroll = maxScroll; // too much scrolling down
+			//				repaint();
+			//			}
 		}
 	}
 	
@@ -191,10 +217,6 @@ public class CanvasGraphics extends BaseCanvasGraphics implements View.OnTouchLi
 		repaint();
 	}
 	
-	/**
-	 * updates fontsizes after
-	 * @param fontsizeDp
-	 */
 	public void setFontSizes(float fontsizeDp) {
 		this.fontsizeTmp = fontsizeDp;
 	}
@@ -205,11 +227,6 @@ public class CanvasGraphics extends BaseCanvasGraphics implements View.OnTouchLi
 	
 	private float getLineheightPx() {
 		return getFontsizePx() * LINEHEIGHT_SCALE_FACTOR;
-	}
-	
-	private void drawBackground() {
-		setColor(0x000000);
-		clearScreen();
 	}
 	
 	public float getScroll() {
@@ -292,26 +309,5 @@ public class CanvasGraphics extends BaseCanvasGraphics implements View.OnTouchLi
 		quickMenu.get().setVisible(false);
 	}
 	
-	@Override
-	public boolean onTouch(View v, MotionEvent event) {
-		switch (event.getActionMasked()) {
-			case MotionEvent.ACTION_DOWN:
-				onTouchDown(event);
-				break;
-			case MotionEvent.ACTION_MOVE:
-				onTouchMove(event);
-				break;
-			case MotionEvent.ACTION_UP:
-				onTouchUp(event);
-				break;
-			case MotionEvent.ACTION_POINTER_DOWN:
-				onTouchPointerDown(event);
-				break;
-			case MotionEvent.ACTION_POINTER_UP:
-				onTouchPointerUp(event);
-				break;
-		}
-		return false;
-	}
 	
 }

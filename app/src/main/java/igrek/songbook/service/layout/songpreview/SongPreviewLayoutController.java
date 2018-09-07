@@ -24,7 +24,8 @@ import igrek.songbook.service.layout.LayoutState;
 import igrek.songbook.service.layout.MainLayout;
 import igrek.songbook.service.system.SoftKeyboardService;
 import igrek.songbook.service.system.WindowManagerService;
-import igrek.songbook.view.songpreview.CanvasGraphics;
+import igrek.songbook.view.songpreview.OverlayRecyclerAdapter;
+import igrek.songbook.view.songpreview.SongPreview;
 import igrek.songbook.view.songpreview.quickmenu.QuickMenu;
 
 import static android.view.View.OVER_SCROLL_ALWAYS;
@@ -47,7 +48,7 @@ public class SongPreviewLayoutController implements MainLayout {
 	SoftKeyboardService softKeyboardService;
 	
 	private Logger logger = LoggerFactory.getLogger();
-	private CanvasGraphics canvas;
+	private SongPreview canvas;
 	private Song currentSong;
 	private OverlayRecyclerAdapter overlayAdapter;
 	private RecyclerView overlayRecyclerView;
@@ -61,7 +62,7 @@ public class SongPreviewLayoutController implements MainLayout {
 		windowManagerService.keepScreenOn(true);
 		softKeyboardService.hideSoftKeyboard();
 		// create canvas
-		canvas = new CanvasGraphics(activity);
+		canvas = new SongPreview(activity);
 		canvas.reset();
 		FrameLayout mainFrame = layout.findViewById(R.id.mainFrame);
 		mainFrame.removeAllViews();
@@ -86,8 +87,8 @@ public class SongPreviewLayoutController implements MainLayout {
 				canvas.scrollByPx(dy);
 			}
 		});
-		overlayRecyclerView.setVerticalScrollBarEnabled(true);
-		overlayRecyclerView.setFadingEdgeLength(0);
+		//		overlayRecyclerView.setVerticalScrollBarEnabled(false);
+		overlayRecyclerView.setScrollbarFadingEnabled(false);
 		overlayRecyclerView.setOverScrollMode(OVER_SCROLL_ALWAYS);
 		overlayRecyclerView.setOnTouchListener(canvas);
 		
@@ -112,7 +113,7 @@ public class SongPreviewLayoutController implements MainLayout {
 		
 		canvas.setFontSizes(lyricsManager.getFontsize());
 		canvas.setCRDModel(lyricsManager.getCRDModel());
-		overlayRecyclerView.setAdapter(overlayAdapter);
+		overlayRecyclerView.setAdapter(overlayAdapter); // refresh
 	}
 	
 	public void onCrdModelUpdated() {
@@ -126,7 +127,7 @@ public class SongPreviewLayoutController implements MainLayout {
 		canvas.setCRDModel(lyricsManager.getCRDModel());
 	}
 	
-	public CanvasGraphics getCanvas() {
+	public SongPreview getCanvas() {
 		return canvas;
 	}
 	
@@ -144,5 +145,9 @@ public class SongPreviewLayoutController implements MainLayout {
 			
 			windowManagerService.keepScreenOn(false);
 		}
+	}
+	
+	public void setRecyclerScroll(float value) {
+		overlayRecyclerView.setScrollY((int) value);
 	}
 }

@@ -9,11 +9,11 @@ import igrek.songbook.view.songpreview.base.Font;
 
 public class LyricsRenderer {
 	
-	private CanvasGraphics canvas;
+	private SongPreview canvas;
 	private LyricsModel lyricsModel;
 	private float w, h;
 	
-	LyricsRenderer(CanvasGraphics canvas, LyricsModel lyricsModel) {
+	LyricsRenderer(SongPreview canvas, LyricsModel lyricsModel) {
 		this.canvas = canvas;
 		this.lyricsModel = lyricsModel;
 		w = canvas.getW();

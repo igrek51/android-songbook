@@ -14,7 +14,7 @@ import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController;
 import igrek.songbook.service.preferences.PreferencesDefinition;
 import igrek.songbook.service.preferences.PreferencesService;
-import igrek.songbook.view.songpreview.CanvasGraphics;
+import igrek.songbook.view.songpreview.SongPreview;
 
 public class AutoscrollService {
 	
@@ -94,7 +94,7 @@ public class AutoscrollService {
 		return state == AutoscrollState.WAITING || state == AutoscrollState.SCROLLING;
 	}
 	
-	private CanvasGraphics getCanvas() {
+	private SongPreview getCanvas() {
 		return songPreviewController.get().getCanvas();
 	}
 	
