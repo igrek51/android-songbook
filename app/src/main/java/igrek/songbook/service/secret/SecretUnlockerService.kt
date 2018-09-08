@@ -12,6 +12,7 @@ import igrek.songbook.service.info.UiResourceService
 import igrek.songbook.service.persistence.SongsDbRepository
 import igrek.songbook.service.persistence.database.SqlQueryService
 import igrek.songbook.service.string.StringSimplifier
+import igrek.songbook.service.system.SoftKeyboardService
 import javax.inject.Inject
 
 class SecretUnlockerService {
@@ -26,6 +27,8 @@ class SecretUnlockerService {
     lateinit var songsDbRepository: SongsDbRepository
     @Inject
     lateinit var sqlQueryService: SqlQueryService
+    @Inject
+    lateinit var softKeyboardService: SoftKeyboardService
 
     private val logger = LoggerFactory.getLogger()
 
@@ -62,6 +65,7 @@ class SecretUnlockerService {
                 uiInfoService.showToast(R.string.unlock_key_invalid)
             }
         }
+        softKeyboardService.hideSoftKeyboard()
     }
 
     private fun unlockSongs(key: String) {
