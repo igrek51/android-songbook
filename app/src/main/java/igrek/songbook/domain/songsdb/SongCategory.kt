@@ -2,14 +2,12 @@ package igrek.songbook.domain.songsdb
 
 import com.google.common.base.Objects
 import igrek.songbook.domain.cache.SimpleCache
-import igrek.songbook.domain.kotlin.Open
 
-@Open
-class SongCategory(
+open class SongCategory(
         val id: Long,
         val type: SongCategoryType,
         val name: String? = null,
-        var displayName: String? = null,
+        open var displayName: String? = null,
         var songs: List<Song>? = null
 ) {
 
