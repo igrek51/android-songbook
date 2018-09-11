@@ -1,5 +1,6 @@
 package igrek.songbook.service.secret
 
+import android.os.Handler
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.text.InputType
@@ -51,14 +52,16 @@ class SecretUnlockerService {
         dlgAlert.setCancelable(true)
         dlgAlert.create().show()
 
-        softKeyboardService.showSoftKeyboard(input)
+        Handler().post {
+            softKeyboardService.showSoftKeyboard(input)
+        }
     }
 
     private fun unlockAttempt(key0: String) {
         logger.info("unlocking attempt with a key: $key0")
         val key = StringSimplifier.simplify(key0)
         when (key) {
-            "dupa", "okon" -> uiInfoService.showInfo("Congratulations!\nYou have discovered an Easter Egg :)")
+            "dupa", "okon" -> uiInfoService.showToast("Congratulations!\nYou have discovered an Easter Egg :)")
             "engineer", "inzynier" -> unlockSongs("engineer")
             "zjajem", "z jajem" -> unlockSongs("zjajem")
             "bff" -> unlockSongs("bff")
