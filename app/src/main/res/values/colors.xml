@@ -5,6 +5,7 @@
     <color name="colorAccent">#7982e1</color>
 
     <color name="colorQuickMenuText">#ffffff</color>
+    <color name="unlockAction">#505050</color>
 
     <color name="chordsBackground">#000000</color>
 </resources>

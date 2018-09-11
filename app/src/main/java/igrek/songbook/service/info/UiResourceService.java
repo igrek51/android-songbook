@@ -1,6 +1,9 @@
 package igrek.songbook.service.info;
 
 import android.app.Activity;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
+import android.support.v4.content.ContextCompat;
 
 import javax.inject.Inject;
 
@@ -26,6 +29,11 @@ public class UiResourceService {
 		} else {
 			return message;
 		}
+	}
+	
+	@ColorInt
+	public int getColor(@ColorRes int resourceId) {
+		return ContextCompat.getColor(activity, resourceId);
 	}
 	
 }

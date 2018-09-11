@@ -50,6 +50,8 @@ class SecretUnlockerService {
         dlgAlert.setNegativeButton(uiResourceService.resString(R.string.action_cancel)) { _, _ -> }
         dlgAlert.setCancelable(true)
         dlgAlert.create().show()
+
+        softKeyboardService.showSoftKeyboard(input)
     }
 
     private fun unlockAttempt(key0: String) {
@@ -77,7 +79,7 @@ class SecretUnlockerService {
             sqlQueryService.unlockSong(s.id)
         }
         val message = uiResourceService.resString(R.string.unlock_new_songs_unlocked, count)
-        uiInfoService.showInfo(message)
+        uiInfoService.showToast(message)
         songsDbRepository.reloadDb()
     }
 }

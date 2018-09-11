@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">SongBook</string>
+    <string name="app_name" translatable="false">Guitar SongBook</string>
     <string name="action_minimize">Minimize</string>
     <string name="action_exit">Exit</string>
     <string name="action_home">Go to root</string>
@@ -38,7 +38,8 @@
     <string name="ui_db_is_uptodate">Songs database is already up-to-date.</string>
     <string name="ui_about">About</string>
     <string name="ui_about_content">
-        SongBook v%s
+        Guitar SongBook v%s
+        \nSongs database version: %s
         \n\nAUTHOR:
         \nigrek51 - Ireneusz Szulc
         \n\nTECHNOLOGIES USED:
