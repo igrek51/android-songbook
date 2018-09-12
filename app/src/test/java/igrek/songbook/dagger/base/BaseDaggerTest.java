@@ -4,19 +4,16 @@ import android.app.Activity;
 
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
-import org.robolectric.annotation.Config;
 
 import javax.inject.Inject;
 
-import igrek.songbook.BuildConfig;
-import igrek.songbook.MainApplication;
+import igrek.songbook.activity.MainActivity;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21, application = MainApplication.class, manifest = "src/main/AndroidManifest.xml", packageName = "igrek.songbook")
 public abstract class BaseDaggerTest {
 	
 	@Inject
@@ -25,13 +22,12 @@ public abstract class BaseDaggerTest {
 	@Inject
 	protected Logger logger;
 	
-	
 	@Before
 	public void setUp() {
-		MainApplication application = (MainApplication) RuntimeEnvironment.application;
+		MainActivity activity = Robolectric.setupActivity(MainActivity.class);
 		
 		TestComponent component = DaggerTestComponent.builder()
-				.factoryModule(new TestModule(application))
+				.factoryModule(new TestModule(activity))
 				.build();
 		
 		DaggerIoc.setFactoryComponent(component);

@@ -5,14 +5,12 @@ import android.app.Activity;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
-import org.robolectric.annotation.Config;
 
 import javax.inject.Inject;
 
-import igrek.songbook.BuildConfig;
-import igrek.songbook.MainApplication;
+import igrek.songbook.activity.MainActivity;
 import igrek.songbook.dagger.base.DaggerTestComponent;
 import igrek.songbook.dagger.base.TestComponent;
 import igrek.songbook.dagger.base.TestModule;
@@ -20,7 +18,6 @@ import igrek.songbook.dagger.base.TestModule;
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21, application = MainApplication.class)
 public class DaggerInjectionTest {
 	
 	@Inject
@@ -28,10 +25,10 @@ public class DaggerInjectionTest {
 	
 	@Before
 	public void setUp() {
-		MainApplication application = (MainApplication) RuntimeEnvironment.application;
+		MainActivity activity = Robolectric.setupActivity(MainActivity.class);
 		
 		TestComponent component = DaggerTestComponent.builder()
-				.factoryModule(new TestModule(application))
+				.factoryModule(new TestModule(activity))
 				.build();
 		
 		DaggerIoc.setFactoryComponent(component);
@@ -40,7 +37,7 @@ public class DaggerInjectionTest {
 	}
 	
 	@Test
-	public void testApplicationInjection() {
+	public void testActivityInjection() {
 		assertThat(activity).isNotNull();
 		System.out.println("injected activity: " + activity.toString());
 	}
