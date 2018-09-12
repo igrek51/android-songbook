@@ -85,7 +85,6 @@ public abstract class BaseCanvasView extends View {
 	}
 	
 	
-	
 	public void drawTextUnaligned(String s, float x, float y) {
 		paint.setTextAlign(Paint.Align.LEFT);
 		canvas.drawText(s, x, y, paint);
