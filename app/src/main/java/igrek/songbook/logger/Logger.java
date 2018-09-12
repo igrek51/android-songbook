@@ -56,7 +56,7 @@ public class Logger {
 	
 	public void debug(Object... objs) {
 		String message = Joiner.on(", ").join(objs);
-		log(message, LogLevel.DEBUG, "[debug] ", 4);
+		log(message, LogLevel.DEBUG, "[debug] ");
 	}
 	
 	/**
@@ -74,23 +74,18 @@ public class Logger {
 		log("Quick Trace: " + System.currentTimeMillis(), LogLevel.DEBUG, "[trace] ");
 	}
 	
-	private void log(String message, LogLevel level, String logPrefix) {
-		log(message, level, logPrefix, 5);
-	}
-	
-	protected void log(String message, LogLevel level, String logPrefix, int stackTraceIndex) {
+	protected void log(String message, LogLevel level, String logPrefix) {
 		if (level.moreOrEqualImportant(LoggerFactory.CONSOLE_LEVEL)) {
 			
 			String consoleMessage;
 			if (level.lessOrEqualImportant(LoggerFactory.SHOW_TRACE_DETAILS_LEVEL)) {
-				// depends on nested methods count
-				StackTraceElement ste = Thread.currentThread().getStackTrace()[stackTraceIndex];
+				StackTraceElement externalTrace = getFirstExternalTrace(Thread.currentThread()
+						.getStackTrace());
 				
-				String methodName = ste.getMethodName();
-				String fileName = ste.getFileName();
-				int lineNumber = ste.getLineNumber();
+				String fileName = externalTrace.getFileName();
+				int lineNumber = externalTrace.getLineNumber();
 				
-				consoleMessage = logPrefix + "(" + fileName + ":" + lineNumber + "): " + message;
+				consoleMessage = String.format("%s(%s:%d): %s", logPrefix, fileName, lineNumber, message);
 			} else {
 				consoleMessage = logPrefix + message;
 			}
@@ -105,6 +100,27 @@ public class Logger {
 				printDebug(consoleMessage);
 			}
 		}
+	}
+	
+	/**
+	 * @param stackTraces array of stack traces
+	 * @return first external stack trace (not in this class)
+	 */
+	private StackTraceElement getFirstExternalTrace(StackTraceElement[] stackTraces) {
+		boolean loggerClassFound = false;
+		// skip first stack traces: dalvik.system.VMStack, java.lang.Thread
+		for (int i = 2; i < stackTraces.length; i++) {
+			StackTraceElement stackTrace = stackTraces[i];
+			String className = stackTrace.getClassName();
+			// if it's not from this logger class
+			if (className.equals(this.getClass().getName())) {
+				loggerClassFound = true;
+			} else if (loggerClassFound) {
+				// only when there are previous Logger found
+				return stackTrace;
+			}
+		}
+		return stackTraces[0];
 	}
 	
 	private void printExceptionStackTrace(Throwable ex) {
@@ -139,6 +155,10 @@ public class Logger {
 		return LoggerFactory.LOG_TAG + incrementTagKey();
 	}
 	
+	/**
+	 * method synchronized due to multithreading
+	 * @return next (incremented) tag key number
+	 */
 	private static synchronized int incrementTagKey() {
 		lastTagKey = (lastTagKey + 1) % 10;
 		return lastTagKey;
