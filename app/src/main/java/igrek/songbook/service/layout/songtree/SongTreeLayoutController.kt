@@ -25,6 +25,7 @@ class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
 
     private var toolbarTitle: TextView? = null
     private var goBackButton: ImageButton? = null
+    private var searchSongButton: ImageButton? = null
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
@@ -37,7 +38,10 @@ class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
         navMenuButton.setOnClickListener { _ -> navigationMenuController.navDrawerShow() }
 
         goBackButton = layout.findViewById(R.id.goBackButton)
-        goBackButton!!.setOnClickListener { _ -> onBackClicked() }
+        goBackButton?.setOnClickListener { _ -> onBackClicked() }
+
+        searchSongButton = layout.findViewById(R.id.searchSongButton)
+        searchSongButton?.setOnClickListener { _ -> goToSearchSong() }
 
         toolbarTitle = layout.findViewById(R.id.toolbarTitle)
 
@@ -58,7 +62,7 @@ class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
         return R.layout.song_tree
     }
 
-    fun onBackClicked() {
+    override fun onBackClicked() {
         goUp()
     }
 
@@ -89,6 +93,10 @@ class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
     private fun setTitle(title: String?) {
         actionBar!!.title = title
         toolbarTitle!!.text = title
+    }
+
+    private fun goToSearchSong() {
+        layoutController.showSongSearch()
     }
 
     private fun goUp() {

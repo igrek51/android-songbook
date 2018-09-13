@@ -52,7 +52,7 @@
         android:text="@string/ui_contact_content"
         android:gravity="bottom"
         android:textSize="18sp"
-        android:layout_margin="20dp"/>
+        android:layout_margin="8dp"/>
 
     <EditText
         android:id="@+id/contactMessageEdit"
@@ -60,12 +60,23 @@
         android:layout_height="300dp"
         android:inputType="text|textMultiLine"
         android:gravity="top"
-        android:hint="@string/contact_message_hint"/>
+        android:hint="@string/contact_message_hint"
+        android:layout_margin="8dp"/>
+
+    <EditText
+        android:id="@+id/contactAuthorEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:gravity="top"
+        android:hint="@string/contact_author_hint"
+        android:layout_margin="8dp"/>
 
     <Button
         android:id="@+id/contactSendButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/contact_send"/>
+        android:text="@string/contact_send"
+        android:layout_margin="8dp"/>
 
 </LinearLayout>

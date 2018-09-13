@@ -141,6 +141,7 @@ public class SongPreviewLayoutController implements MainLayout {
 		this.currentSong = currentSong;
 	}
 	
+	@Override
 	public void onBackClicked() {
 		if (quickMenu.isVisible()) {
 			quickMenu.onShowQuickMenuEvent(false);

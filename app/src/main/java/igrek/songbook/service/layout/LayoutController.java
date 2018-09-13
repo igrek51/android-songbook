@@ -40,8 +40,8 @@ public class LayoutController {
 	
 	private FrameLayout mainContentLayout;
 	private Logger logger = LoggerFactory.getLogger();
-	private MainLayout previouslyShown;
-	private MainLayout currentlyShown;
+	private MainLayout previouslyShownLayout;
+	private MainLayout currentlyShownLayout;
 	
 	private LayoutState state = LayoutState.SONGS_TREE;
 	
@@ -77,8 +77,8 @@ public class LayoutController {
 	
 	
 	private void showMainLayout(MainLayout mainLayout) {
-		previouslyShown = currentlyShown;
-		currentlyShown = mainLayout;
+		previouslyShownLayout = currentlyShownLayout;
+		currentlyShownLayout = mainLayout;
 		
 		int layoutResource = mainLayout.getLayoutResourceId();
 		state = mainLayout.getLayoutState();
@@ -94,12 +94,16 @@ public class LayoutController {
 	}
 	
 	public void showPreviousLayout() {
-		if (previouslyShown != null) {
-			showMainLayout(previouslyShown);
+		if (previouslyShownLayout != null) {
+			showMainLayout(previouslyShownLayout);
 		}
 	}
 	
 	public boolean isState(LayoutState compare) {
 		return state == compare;
+	}
+	
+	public void onBackClicked() {
+		currentlyShownLayout.onBackClicked();
 	}
 }

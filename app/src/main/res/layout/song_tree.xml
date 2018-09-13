@@ -31,7 +31,7 @@
                 android:background="@drawable/menu"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="10dp"
+                android:padding="16dp"
                 android:scaleType="fitCenter"
                 />
 
@@ -45,7 +45,7 @@
                 android:background="@drawable/arrow_back"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="10dp"
+                android:padding="16dp"
                 android:scaleType="fitCenter"
                 android:layout_marginLeft="20dp"
                 android:layout_marginStart="20dp"/>
@@ -56,6 +56,21 @@
                 android:layout_height="match_parent"
                 android:text=""
                 android:textSize="18sp"/>
+
+            <ImageButton
+                android:id="@+id/searchSongButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="end|center_vertical"
+                android:adjustViewBounds="true"
+                android:background="@drawable/search"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="16dp"
+                android:scaleType="fitCenter"
+                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"/>
 
         </android.support.v7.widget.Toolbar>
 

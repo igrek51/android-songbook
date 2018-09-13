@@ -10,4 +10,6 @@ public interface MainLayout {
 	
 	int getLayoutResourceId();
 	
+	void onBackClicked();
+	
 }

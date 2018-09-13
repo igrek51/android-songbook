@@ -59,11 +59,11 @@
         \nRxAndroid
         \nRxJava
     </string>
-    <string name="ui_contact">Contact</string>
+    <string name="ui_contact">Send feedback</string>
     <string name="ui_contact_content">You can contact me if you have noticed some bugs or you have any ideas how to improve this application. I would be very grateful for your comments.</string>
     <string name="song_category_others">Others</string>
     <string name="song_category_custom">Custom</string>
-    <string name="contact_message_hint">Message for igrek…</string>
+    <string name="contact_message_hint">Your message…</string>
     <string name="song_search_edit_hint">Song title or artist</string>
     <string name="contact_send">Send</string>
     <string name="unlock_action">Unlock</string>
@@ -75,4 +75,5 @@
     <string name="settings_autoscroll_speed">Autoscroll speed: %s line / s</string>
     <string name="settings_fullscreen">Fullscreen</string>
     <string name="settings_chords_notation">Chords notation:</string>
+    <string name="contact_author_hint">Your name or contact (optional)</string>
 </resources>

@@ -108,4 +108,9 @@ public class SettingsLayoutController implements MainLayout {
 		return R.layout.settings;
 	}
 	
+	@Override
+	public void onBackClicked() {
+		layoutController.showPreviousLayout();
+	}
+	
 }

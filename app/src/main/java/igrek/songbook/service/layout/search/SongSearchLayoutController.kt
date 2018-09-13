@@ -127,11 +127,11 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
         return itemNameFilter != null && !itemNameFilter!!.isEmpty()
     }
 
-    fun onBackClicked() {
+    override fun onBackClicked() {
         if (isFilterSet()) {
             setSongFilter(null)
         } else {
-            activityController.get().quit()
+            layoutController.showSongTree()
         }
     }
 

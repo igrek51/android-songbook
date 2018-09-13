@@ -41,6 +41,7 @@ public class ContactLayoutController implements MainLayout {
 	
 	private Logger logger = LoggerFactory.getLogger();
 	private EditText contactMessageEdit;
+	private EditText contactAuthorEdit;
 	
 	public ContactLayoutController() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -61,6 +62,7 @@ public class ContactLayoutController implements MainLayout {
 		navMenuButton.setOnClickListener((v) -> navigationMenuController.navDrawerShow());
 		
 		contactMessageEdit = layout.findViewById(R.id.contactMessageEdit);
+		contactAuthorEdit = layout.findViewById(R.id.contactAuthorEdit);
 		Button contactSendButton = layout.findViewById(R.id.contactSendButton);
 		contactSendButton.setOnClickListener(new SafeClickListener() {
 			@Override
@@ -80,8 +82,14 @@ public class ContactLayoutController implements MainLayout {
 		return R.layout.contact;
 	}
 	
+	@Override
+	public void onBackClicked() {
+		layoutController.showPreviousLayout();
+	}
+	
 	private void sendContactMessage() {
 		String message = contactMessageEdit.getText().toString();
+		String author = contactAuthorEdit.getText().toString();
 		// TODO
 		uiInfoService.showToast("not implemented yet");
 		
