@@ -31,19 +31,15 @@ public class AppInitializer {
 	}
 	
 	public void init() {
-		try {
-			windowManagerService.hideTaskbar();
-			layoutController.init();
-			layoutController.showSongTree();
-			// Allow showing the activity even if the device is locked
-			if (BuildConfig.DEBUG) {
-				windowManagerService.showAppWhenLocked();
-			}
-			
-			logger.info("Application has been initialized.");
-		} catch (Exception ex) {
-			logger.fatal(activity, ex);
+		windowManagerService.hideTaskbar();
+		layoutController.init();
+		layoutController.showSongTree();
+		// Allow showing the activity even if the device is locked
+		if (BuildConfig.DEBUG) {
+			windowManagerService.showAppWhenLocked();
 		}
+		
+		logger.info("Application has been initialized.");
 	}
 	
 	/**

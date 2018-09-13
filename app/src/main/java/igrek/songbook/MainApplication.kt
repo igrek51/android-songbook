@@ -5,6 +5,7 @@ import android.app.Application
 import igrek.songbook.activity.CurrentActivityListener
 import igrek.songbook.logger.LoggerFactory
 
+
 class MainApplication : Application() {
 
     private val logger = LoggerFactory.getLogger()
