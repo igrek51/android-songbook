@@ -25,6 +25,7 @@ import igrek.songbook.service.info.UiResourceService;
 import igrek.songbook.service.layout.LayoutController;
 import igrek.songbook.service.layout.about.AboutLayoutController;
 import igrek.songbook.service.layout.contact.ContactLayoutController;
+import igrek.songbook.service.layout.contact.SendFeedbackService;
 import igrek.songbook.service.layout.help.HelpLayoutController;
 import igrek.songbook.service.layout.search.SongSearchLayoutController;
 import igrek.songbook.service.layout.settings.SettingsLayoutController;
@@ -275,6 +276,12 @@ public class FactoryModule {
 	@Singleton
 	protected SongDetailsService provideSongDetailsService() {
 		return new SongDetailsService();
+	}
+	
+	@Provides
+	@Singleton
+	protected SendFeedbackService provideSendFeedbackService() {
+		return new SendFeedbackService();
 	}
 	
 	/*

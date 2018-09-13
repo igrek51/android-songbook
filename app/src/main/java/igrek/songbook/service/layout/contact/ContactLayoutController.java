@@ -38,6 +38,8 @@ public class ContactLayoutController implements MainLayout {
 	AppCompatActivity activity;
 	@Inject
 	NavigationMenuController navigationMenuController;
+	@Inject
+	SendFeedbackService sendFeedbackService;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	private EditText contactMessageEdit;
@@ -90,9 +92,6 @@ public class ContactLayoutController implements MainLayout {
 	private void sendContactMessage() {
 		String message = contactMessageEdit.getText().toString();
 		String author = contactAuthorEdit.getText().toString();
-		// TODO
-		uiInfoService.showToast("not implemented yet");
-		
-		uiInfoService.showToast("Thanks :)");
+		sendFeedbackService.sendFeedback(message, author);
 	}
 }

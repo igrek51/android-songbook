@@ -57,7 +57,7 @@
     <EditText
         android:id="@+id/contactMessageEdit"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="240dp"
         android:inputType="text|textMultiLine"
         android:gravity="top"
         android:hint="@string/contact_message_hint"
