@@ -26,4 +26,12 @@ open class Song(
     override fun hashCode(): Int {
         return Objects.hashCode(id, versionNumber)
     }
+
+    fun displayName(): String {
+        if (category.type == SongCategoryType.ARTIST) {
+            return title + " - " + category.name
+        } else {
+            return title
+        }
+    }
 }

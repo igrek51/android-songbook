@@ -1,31 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    android:id="@+id/coordinator_layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-    <FrameLayout android:id="@+id/songPreviewContainer"
-                 xmlns:android="http://schemas.android.com/apk/res/android"
-                 android:layout_width="match_parent"
-                 android:layout_height="match_parent"
-                 android:fillViewport="true">
-        <!-- Song Preview -->
-    </FrameLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/overlayRecyclerView"
+<LinearLayout android:id="@+id/songPreviewLinearLayout"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_gravity="center_horizontal"
+              android:fillViewport="true"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:scrollbars="vertical"/>
+        android:layout_height="48dp">
 
-    <FrameLayout android:id="@+id/quickMenuContainer"
-                 xmlns:android="http://schemas.android.com/apk/res/android"
-                 android:layout_width="match_parent"
-                 android:layout_height="match_parent"
-                 android:fillViewport="true">
-        <!-- Quick Menu -->
-    </FrameLayout>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary">
 
-</android.support.design.widget.CoordinatorLayout>
+            <ImageButton
+                android:id="@+id/navMenuButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="start|center_vertical"
+                android:adjustViewBounds="true"
+                android:background="@drawable/menu"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                />
+
+            <ImageButton
+                android:id="@+id/goBackButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="start|center_vertical"
+                android:adjustViewBounds="true"
+                android:background="@drawable/arrow_back"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="16dp"
+                android:scaleType="fitCenter"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"/>
+
+            <ImageButton
+                android:id="@+id/songInfoButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="start|center_vertical"
+                android:adjustViewBounds="true"
+                android:background="@drawable/info"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="16dp"
+                android:scaleType="fitCenter"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"/>
+
+            <ImageButton
+                android:id="@+id/transposeButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="start|center_vertical"
+                android:adjustViewBounds="true"
+                android:background="@drawable/transpose"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="16dp"
+                android:scaleType="fitCenter"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"/>
+
+            <ImageButton
+                android:id="@+id/autoscrollButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="start|center_vertical"
+                android:adjustViewBounds="true"
+                android:background="@drawable/scroll1"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="16dp"
+                android:scaleType="fitCenter"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"/>
+
+            <ImageButton
+                android:id="@+id/goBeginningButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="start|center_vertical"
+                android:adjustViewBounds="true"
+                android:background="@drawable/restore"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="16dp"
+                android:scaleType="fitCenter"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"/>
+
+            <TextView
+                android:id="@+id/songTitleLabel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:textSize="18sp"/>
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout android:id="@+id/songPreviewContainer"
+                     xmlns:android="http://schemas.android.com/apk/res/android"
+                     android:layout_width="match_parent"
+                     android:layout_height="match_parent"
+                     android:fillViewport="true">
+            <!-- Song Preview -->
+        </FrameLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/overlayRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:scrollbars="vertical"/>
+
+        <FrameLayout android:id="@+id/quickMenuContainer"
+                     xmlns:android="http://schemas.android.com/apk/res/android"
+                     android:layout_width="match_parent"
+                     android:layout_height="match_parent"
+                     android:fillViewport="true">
+            <!-- Quick Menu -->
+        </FrameLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</LinearLayout>

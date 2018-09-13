@@ -76,4 +76,12 @@
     <string name="settings_fullscreen">Fullscreen</string>
     <string name="settings_chords_notation">Chords notation:</string>
     <string name="contact_author_hint">Your name or contact (optional)</string>
+    <string name="song_details_title">Song details</string>
+    <string name="song_details">
+        Title: %s
+        \nCategory: %s
+        \nComment: %s
+        \nPreferred key: %s
+        \nVersion: %d
+    </string>
 </resources>

@@ -23,6 +23,7 @@ import igrek.songbook.service.layout.contact.ContactLayoutController;
 import igrek.songbook.service.layout.help.HelpLayoutController;
 import igrek.songbook.service.layout.search.SongSearchLayoutController;
 import igrek.songbook.service.layout.settings.SettingsLayoutController;
+import igrek.songbook.service.layout.songpreview.SongDetailsService;
 import igrek.songbook.service.layout.songpreview.SongPreviewLayoutController;
 import igrek.songbook.service.layout.songtree.SongTreeLayoutController;
 import igrek.songbook.service.navmenu.NavigationMenuController;
@@ -112,6 +113,8 @@ public interface FactoryComponent {
 	void inject(PackageInfoService there);
 	
 	void inject(SettingsLayoutController there);
+	
+	void inject(SongDetailsService there);
 	
 	
 	void inject(UIErrorHandler there);

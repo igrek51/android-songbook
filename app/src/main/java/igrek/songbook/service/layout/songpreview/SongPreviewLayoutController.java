@@ -1,13 +1,17 @@
 package igrek.songbook.service.layout.songpreview;
 
 import android.graphics.Paint;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import javax.inject.Inject;
 
@@ -22,6 +26,7 @@ import igrek.songbook.service.chords.LyricsManager;
 import igrek.songbook.service.layout.LayoutController;
 import igrek.songbook.service.layout.LayoutState;
 import igrek.songbook.service.layout.MainLayout;
+import igrek.songbook.service.navmenu.NavigationMenuController;
 import igrek.songbook.service.system.SoftKeyboardService;
 import igrek.songbook.service.system.WindowManagerService;
 import igrek.songbook.view.songpreview.OverlayRecyclerAdapter;
@@ -39,6 +44,8 @@ public class SongPreviewLayoutController implements MainLayout {
 	@Inject
 	WindowManagerService windowManagerService;
 	@Inject
+	NavigationMenuController navigationMenuController;
+	@Inject
 	AppCompatActivity activity;
 	@Inject
 	QuickMenu quickMenu;
@@ -46,12 +53,15 @@ public class SongPreviewLayoutController implements MainLayout {
 	AutoscrollService autoscrollService;
 	@Inject
 	SoftKeyboardService softKeyboardService;
+	@Inject
+	SongDetailsService songDetailsService;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	private SongPreview songPreview;
 	private Song currentSong;
 	private OverlayRecyclerAdapter overlayAdapter;
 	private RecyclerView overlayRecyclerView;
+	private TextView songTitleLabel;
 	
 	public SongPreviewLayoutController() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -62,10 +72,22 @@ public class SongPreviewLayoutController implements MainLayout {
 		windowManagerService.keepScreenOn(true);
 		softKeyboardService.hideSoftKeyboard();
 		
+		// Toolbar
+		Toolbar toolbar1 = layout.findViewById(R.id.toolbar1);
+		activity.setSupportActionBar(toolbar1);
+		ActionBar actionBar = activity.getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setDisplayHomeAsUpEnabled(false);
+			actionBar.setDisplayShowHomeEnabled(false);
+		}
+		// navigation menu button
+		ImageButton navMenuButton = layout.findViewById(R.id.navMenuButton);
+		navMenuButton.setOnClickListener((v) -> navigationMenuController.navDrawerShow());
+		
 		// create songPreview
 		songPreview = new SongPreview(activity);
 		songPreview.reset();
-		FrameLayout songPreviewContainer = layout.findViewById(R.id.songPreviewContainer);
+		ViewGroup songPreviewContainer = layout.findViewById(R.id.songPreviewContainer);
 		songPreviewContainer.addView(songPreview);
 		
 		// create quick menu
@@ -97,6 +119,17 @@ public class SongPreviewLayoutController implements MainLayout {
 		overlayRecyclerView.setOnClickListener((v) -> songPreview.onClick());
 		overlayRecyclerView.setOnTouchListener(songPreview);
 		overlayRecyclerView.getLayoutManager().scrollToPosition(1);
+		
+		songTitleLabel = layout.findViewById(R.id.songTitleLabel);
+		String title = currentSong.displayName();
+		songTitleLabel.setText(title);
+		
+		ImageButton goBackButton = layout.findViewById(R.id.goBackButton);
+		ImageButton transposeButton = layout.findViewById(R.id.transposeButton);
+		ImageButton autoscrollButton = layout.findViewById(R.id.autoscrollButton);
+		ImageButton goBeginningButton = layout.findViewById(R.id.goBeginningButton);
+		ImageButton songInfoButton = layout.findViewById(R.id.songInfoButton);
+		songInfoButton.setOnClickListener((v) -> songDetailsService.showSongDetails(currentSong));
 	}
 	
 	@Override
