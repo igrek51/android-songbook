@@ -92,6 +92,10 @@ public class ContactLayoutController implements MainLayout {
 	private void sendContactMessage() {
 		String message = contactMessageEdit.getText().toString();
 		String author = contactAuthorEdit.getText().toString();
+		if (message == null || message.isEmpty()) {
+			uiInfoService.showToast("Message field can't be empty.");
+			return;
+		}
 		sendFeedbackService.sendFeedback(message, author);
 	}
 }

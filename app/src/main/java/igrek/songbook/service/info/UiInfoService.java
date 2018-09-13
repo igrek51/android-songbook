@@ -40,7 +40,7 @@ public class UiInfoService {
 	 * @param actionName action button text value (if null - no action button)
 	 * @param action     action perforfmed on button click (if null - dismiss displayed snackbar)
 	 */
-	private void showActionInfo(String info, View view, String actionName, InfoBarClickAction action, Integer color) {
+	private void showActionInfo(String info, View view, String actionName, InfoBarClickAction action, Integer color, int snackbarLength) {
 		
 		if (view == null) {
 			view = activity.findViewById(android.R.id.content);
@@ -49,8 +49,7 @@ public class UiInfoService {
 		// dont create new snackbars if one is already shown
 		Snackbar snackbar = infobars.get(view);
 		if (snackbar == null || !snackbar.isShown()) { // a new one
-			int duration = info.length() > 50 ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_SHORT;
-			snackbar = Snackbar.make(view, info, duration);
+			snackbar = Snackbar.make(view, info, snackbarLength);
 			snackbar.setActionTextColor(Color.WHITE);
 		} else { // visible - use it one more time
 			snackbar.setText(info);
@@ -79,17 +78,11 @@ public class UiInfoService {
 	}
 	
 	public void showInfo(String info, String dismissName) {
-		showActionInfo(info, null, dismissName, null, null);
+		showActionInfo(info, null, dismissName, null, null, Snackbar.LENGTH_LONG);
 	}
 	
 	public void showInfo(String info) {
 		String dismissName = uiResourceService.resString(R.string.action_info_ok);
-		showInfo(info, dismissName);
-	}
-	
-	public void showInfo(int infoRes, int dismissNameRes) {
-		String info = uiResourceService.resString(infoRes);
-		String dismissName = uiResourceService.resString(dismissNameRes);
 		showInfo(info, dismissName);
 	}
 	
@@ -98,8 +91,18 @@ public class UiInfoService {
 		showInfo(info);
 	}
 	
+	public void showInfoIndefinite(String info) {
+		String dismissName = uiResourceService.resString(R.string.action_info_ok);
+		showActionInfo(info, null, dismissName, null, null, Snackbar.LENGTH_INDEFINITE);
+	}
+	
+	public void showInfoIndefinite(int infoRes) {
+		String info = uiResourceService.resString(infoRes);
+		showInfoIndefinite(info);
+	}
+	
 	public void showInfoWithAction(String info, String actionName, InfoBarClickAction actionCallback) {
-		showActionInfo(info, null, actionName, actionCallback, ContextCompat.getColor(activity, R.color.colorPrimary));
+		showActionInfo(info, null, actionName, actionCallback, ContextCompat.getColor(activity, R.color.colorPrimary), Snackbar.LENGTH_LONG);
 	}
 	
 	public void showInfoWithAction(String info, int actionNameRes, InfoBarClickAction actionCallback) {

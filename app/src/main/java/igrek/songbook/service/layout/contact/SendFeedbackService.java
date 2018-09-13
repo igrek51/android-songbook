@@ -31,31 +31,31 @@ public class SendFeedbackService {
 	}
 	
 	public void sendFeedback(String message, String author) {
-		uiInfoService.showToast("Sending...");
+		uiInfoService.showInfo("Sending...");
 		
 		Map<String, String> params = new HashMap<>();
 		params.put("message", message);
 		params.put("author", author);
 		params.put("application_id", Integer.toString(APPLICATION_ID));
 		
-		new PostRequestTask(url, params, response -> {
+		new Handler().post(() -> new PostRequestTask(url, params, response -> {
 			onResponseReceived(response);
 		}, error -> {
 			onErrorReceived(error);
-		}).execute();
+		}).execute());
 	}
 	
 	private void onResponseReceived(String response) {
 		logger.debug("HTTP response: " + response);
 		new Handler(Looper.getMainLooper()).post(() -> {
-			uiInfoService.showToast("Your message has been sent. Thanks :)");
+			uiInfoService.showInfo("Your message has been sent. Thanks :)");
 		});
 	}
 	
 	private void onErrorReceived(Throwable error) {
 		logger.error(error.getMessage());
 		new Handler(Looper.getMainLooper()).post(() -> {
-			uiInfoService.showToast("Sorry, an error has occurred while sending your message :(");
+			uiInfoService.showInfoIndefinite("Sorry, an error has occurred while sending your message :(");
 		});
 	}
 	

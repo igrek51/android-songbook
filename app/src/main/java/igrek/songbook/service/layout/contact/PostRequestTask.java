@@ -40,7 +40,6 @@ public class PostRequestTask extends AsyncTask<String, String, String> {
 	
 	@Override
 	protected String doInBackground(String... argParams) {
-		StringBuilder response = new StringBuilder();
 		try {
 			String postDataString = getPostDataString(postParams);
 			// set up connection
@@ -65,6 +64,7 @@ public class PostRequestTask extends AsyncTask<String, String, String> {
 			urlConnection.connect();
 			
 			// get response
+			StringBuilder response = new StringBuilder();
 			int responseCode = urlConnection.getResponseCode();
 			if (responseCode == HttpsURLConnection.HTTP_OK) {
 				String line;
@@ -73,15 +73,17 @@ public class PostRequestTask extends AsyncTask<String, String, String> {
 					response.append(line);
 				}
 			}
+			return response.toString();
 		} catch (Throwable e) {
 			errorConsumer.accept(e);
+			return null;
 		}
-		return response.toString();
 	}
 	
 	@Override
 	protected void onPostExecute(String response) {
-		responseConsumer.accept(response);
+		if (response != null && responseConsumer != null)
+			responseConsumer.accept(response);
 	}
 	
 	private String getPostDataString(Map<String, String> params) throws UnsupportedEncodingException {
