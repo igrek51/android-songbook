@@ -52,6 +52,7 @@ public class UiInfoService {
 			snackbar = Snackbar.make(view, info, snackbarLength);
 			snackbar.setActionTextColor(Color.WHITE);
 		} else { // visible - use it one more time
+			snackbar.setDuration(snackbarLength);
 			snackbar.setText(info);
 		}
 		

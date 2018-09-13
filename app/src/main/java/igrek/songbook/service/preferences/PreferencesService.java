@@ -61,10 +61,9 @@ public class PreferencesService {
 						value = sharedPreferences.getFloat(propertyName, 0.0f);
 						break;
 				}
-				logger.debug("preferences property loaded: " + propertyName + " = " + value);
 			} catch (ClassCastException e) {
 				value = propertyDefinition.getDefaultValue();
-				logger.debug("Invalid property type, loading default value: " + propertyName + " = " + value);
+				logger.warn("Invalid property type, loading default value: " + propertyName + " = " + value);
 			}
 		} else {
 			value = propertyDefinition.getDefaultValue();
