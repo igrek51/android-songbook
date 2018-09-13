@@ -84,7 +84,7 @@ public class ContactLayoutController implements MainLayout {
 	
 	@Override
 	public void onBackClicked() {
-		layoutController.showPreviousLayout();
+		layoutController.showSongTree();
 	}
 	
 	private void sendContactMessage() {

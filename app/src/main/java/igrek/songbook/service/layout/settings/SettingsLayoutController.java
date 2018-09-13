@@ -110,7 +110,7 @@ public class SettingsLayoutController implements MainLayout {
 	
 	@Override
 	public void onBackClicked() {
-		layoutController.showPreviousLayout();
+		layoutController.showSongTree();
 	}
 	
 }
