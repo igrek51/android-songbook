@@ -25,7 +25,7 @@ class StringSimplifier {
         fun simplify(s: String): String {
             var s2 = s.toLowerCase(locale)
             // special chars mapping
-            specialCharsMapping.forEach { k, v -> s2 = s2.replace(k, v) }
+            specialCharsMapping.forEach { (k, v) -> s2 = s2.replace(k, v) }
             return s2
         }
 
