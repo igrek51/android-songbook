@@ -99,7 +99,6 @@ public class PreferencesService {
 					setFloat(propertyName, castIfNotNull(propertyValue, Float.class));
 					break;
 			}
-			logger.debug("Shared preferences property saved: " + propertyName + " = " + propertyValue);
 		} else {
 			logger.warn("No shared preferences property found in map");
 		}
