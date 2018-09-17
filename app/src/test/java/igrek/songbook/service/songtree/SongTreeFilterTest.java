@@ -3,6 +3,9 @@ package igrek.songbook.service.songtree;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import igrek.songbook.songlist.tree.SongTreeFilter;
+import igrek.songbook.songlist.tree.SongTreeItem;
+
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

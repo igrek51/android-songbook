@@ -10,11 +10,8 @@ import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.logger.Logger
 import igrek.songbook.logger.LoggerFactory
-import igrek.songbook.service.activity.ActivityController
-import igrek.songbook.service.activity.AppInitializer
-import igrek.songbook.service.activity.OptionSelectDispatcher
-import igrek.songbook.service.filesystem.PermissionService
-import igrek.songbook.service.system.SystemKeyDispatcher
+import igrek.songbook.filesystem.PermissionService
+import igrek.songbook.system.SystemKeyDispatcher
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
