@@ -71,7 +71,7 @@
     <string name="unlock_key_invalid">Key is not valid</string>
     <string name="unlock_new_songs_unlocked">New songs unlocked: %d</string>
     <string name="settings_font_size">Font size: %s dp</string>
-    <string name="settings_scroll_initial_pause">Autoscroll initial pause: %d s</string>
+    <string name="settings_scroll_initial_pause">Autoscroll initial pause: %s s</string>
     <string name="settings_autoscroll_speed">Autoscroll speed: %s line / s</string>
     <string name="settings_fullscreen">Fullscreen</string>
     <string name="settings_chords_notation">Chords notation:</string>

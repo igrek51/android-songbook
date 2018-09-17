@@ -6,15 +6,15 @@ import javax.inject.Inject;
 
 import dagger.Lazy;
 import igrek.songbook.R;
+import igrek.songbook.chords.SongPreviewLayoutController;
+import igrek.songbook.chords.view.SongPreview;
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.logger.Logger;
-import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.info.UiInfoService;
 import igrek.songbook.info.UiResourceService;
-import igrek.songbook.chords.SongPreviewLayoutController;
+import igrek.songbook.logger.Logger;
+import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.settings.preferences.PreferencesDefinition;
 import igrek.songbook.settings.preferences.PreferencesService;
-import igrek.songbook.chords.view.SongPreview;
 
 public class AutoscrollService {
 	
@@ -22,7 +22,7 @@ public class AutoscrollService {
 	private final float START_NO_WAITING_MIN_SCROLL = 24.0f;
 	private final float AUTOCHANGE_SPEED_SCALE = 0.002f;
 	private final float ADD_INITIAL_PAUSE_SCALE = 400.0f;
-	private final float AUTOSCROLL_INTERVAL_TIME = 100; // [ms]
+	private final float AUTOSCROLL_INTERVAL_TIME = 70; // [ms]
 	@Inject
 	UiInfoService userInfo;
 	@Inject
@@ -207,4 +207,11 @@ public class AutoscrollService {
 		return autoscrollSpeed;
 	}
 	
+	public void setInitialPause(long initialPause) {
+		this.initialPause = initialPause;
+	}
+	
+	public void setAutoscrollSpeed(float autoscrollSpeed) {
+		this.autoscrollSpeed = autoscrollSpeed;
+	}
 }

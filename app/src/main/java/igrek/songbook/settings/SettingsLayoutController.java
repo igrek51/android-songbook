@@ -4,27 +4,33 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
-import android.widget.Spinner;
 import android.widget.TextView;
+
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import dagger.Lazy;
-import igrek.songbook.chords.LyricsManager;
 import igrek.songbook.R;
+import igrek.songbook.activity.ActivityController;
+import igrek.songbook.chords.LyricsManager;
+import igrek.songbook.chords.autoscroll.AutoscrollService;
 import igrek.songbook.dagger.DaggerIoc;
+import igrek.songbook.info.UiInfoService;
+import igrek.songbook.info.UiResourceService;
 import igrek.songbook.layout.LayoutController;
 import igrek.songbook.layout.LayoutState;
 import igrek.songbook.layout.MainLayout;
+import igrek.songbook.layout.navigation.NavigationMenuController;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
-import igrek.songbook.activity.ActivityController;
-import igrek.songbook.info.UiInfoService;
-import igrek.songbook.info.UiResourceService;
-import igrek.songbook.layout.navigation.NavigationMenuController;
+import igrek.songbook.settings.preferences.PreferencesService;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 public class SettingsLayoutController implements MainLayout {
 	
@@ -42,6 +48,14 @@ public class SettingsLayoutController implements MainLayout {
 	NavigationMenuController navigationMenuController;
 	@Inject
 	LyricsManager lyricsManager;
+	@Inject
+	AutoscrollService autoscrollService;
+	@Inject
+	PreferencesService preferencesService;
+	
+	private SeekbarController fontsizeSlider;
+	private SeekbarController autoscrollPauseSlider;
+	private SeekbarController autoscrollSpeedSlider;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
@@ -63,39 +77,64 @@ public class SettingsLayoutController implements MainLayout {
 		ImageButton navMenuButton = layout.findViewById(R.id.navMenuButton);
 		navMenuButton.setOnClickListener((v) -> navigationMenuController.navDrawerShow());
 		
-		TextView fontsizeLabel = layout.findViewById(R.id.fontsizeLabel);
 		SeekBar fontsizeSeekbar = layout.findViewById(R.id.fontsizeSeekbar);
-		TextView autoscrollPauseLabel = layout.findViewById(R.id.autoscrollPauseLabel);
+		TextView fontsizeLabel = layout.findViewById(R.id.fontsizeLabel);
 		SeekBar autoscrollPauseSeekbar = layout.findViewById(R.id.autoscrollPauseSeekbar);
-		TextView autoscrollSpeedLabel = layout.findViewById(R.id.autoscrollSpeedLabel);
+		TextView autoscrollPauseLabel = layout.findViewById(R.id.autoscrollPauseLabel);
 		SeekBar autoscrollSpeedSeekbar = layout.findViewById(R.id.autoscrollSpeedSeekbar);
-		CheckBox fullscreenCheckbox = layout.findViewById(R.id.fullscreenCheckbox);
-		Spinner chordsNotationSpinner = layout.findViewById(R.id.chordsNotationSpinner);
+		TextView autoscrollSpeedLabel = layout.findViewById(R.id.autoscrollSpeedLabel);
 		
-		fontsizeSeekbar.setMax(100);
-		fontsizeSeekbar.setProgress(80);
-		fontsizeSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+		float fontsize = lyricsManager.getFontsize();
+		fontsizeSlider = new SeekbarController(fontsizeSeekbar, fontsizeLabel, fontsize, 5, 100) {
 			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				float minValue = 5;
-				float maxValue = 50;
-				
-				float value = minValue + (maxValue - minValue) * progress / seekBar.getMax();
-				
-				String label = uiResourceService.resString(R.string.settings_font_size, Float.toString(value));
-				fontsizeLabel.setText(label);
+			public String generateLabelText(float value) {
+				return uiResourceService.resString(R.string.settings_font_size, roundDecimal(value));
 			}
-			
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-			}
-			
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-			}
-		});
-		int progress = fontsizeSeekbar.getProgress();
+		};
 		
+		float autoscrollInitialPause = autoscrollService.getInitialPause();
+		autoscrollPauseSlider = new SeekbarController(autoscrollPauseSeekbar, autoscrollPauseLabel, autoscrollInitialPause, 0, 90000) {
+			@Override
+			public String generateLabelText(float value) {
+				return uiResourceService.resString(R.string.settings_scroll_initial_pause, Integer.toString((int) (value / 1000)));
+			}
+		};
+		
+		float autoscrollSpeed = autoscrollService.getAutoscrollSpeed();
+		autoscrollSpeedSlider = new SeekbarController(autoscrollSpeedSeekbar, autoscrollSpeedLabel, autoscrollSpeed, 0, 1.0f) {
+			@Override
+			public String generateLabelText(float value) {
+				return uiResourceService.resString(R.string.settings_autoscroll_speed, roundDecimal(value));
+			}
+		};
+		
+		Observable.merge(fontsizeSlider.getValueSubject(), autoscrollPauseSlider.getValueSubject(), autoscrollSpeedSlider
+				.getValueSubject())
+				.debounce(200, TimeUnit.MILLISECONDS)
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(value -> saveSettings());
+		
+		// TODO
+		//		CheckBox fullscreenCheckbox = layout.findViewById(R.id.fullscreenCheckbox);
+		//		Spinner chordsNotationSpinner = layout.findViewById(R.id.chordsNotationSpinner);
+		
+	}
+	
+	private String roundDecimal(float f) {
+		DecimalFormat df = new DecimalFormat("#.####");
+		df.setRoundingMode(RoundingMode.HALF_UP);
+		return df.format(f);
+	}
+	
+	private void saveSettings() {
+		float fontsize = fontsizeSlider.getValue();
+		lyricsManager.setFontsize(fontsize);
+		float autoscrollInitialPause = autoscrollPauseSlider.getValue();
+		autoscrollService.setInitialPause((int) autoscrollInitialPause);
+		float autoscrollSpeed = autoscrollSpeedSlider.getValue();
+		autoscrollService.setAutoscrollSpeed(autoscrollSpeed);
+		
+		preferencesService.saveAll();
 	}
 	
 	@Override
@@ -110,7 +149,7 @@ public class SettingsLayoutController implements MainLayout {
 	
 	@Override
 	public void onBackClicked() {
-		layoutController.showSongTree();
+		layoutController.showPreviousLayout();
 	}
 	
 }

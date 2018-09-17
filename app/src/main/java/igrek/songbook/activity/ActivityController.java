@@ -6,11 +6,11 @@ import android.content.res.Configuration;
 
 import javax.inject.Inject;
 
+import igrek.songbook.chords.LyricsManager;
+import igrek.songbook.chords.autoscroll.AutoscrollService;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
-import igrek.songbook.chords.autoscroll.AutoscrollService;
-import igrek.songbook.chords.LyricsManager;
 import igrek.songbook.persistence.LocalDatabaseService;
 import igrek.songbook.settings.preferences.PreferencesDefinition;
 import igrek.songbook.settings.preferences.PreferencesService;
@@ -69,6 +69,7 @@ public class ActivityController {
 	}
 	
 	public void onStop() {
+		savePreferences();
 	}
 	
 	public void onDestroy() {
