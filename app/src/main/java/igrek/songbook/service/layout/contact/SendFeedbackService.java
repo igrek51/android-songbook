@@ -48,7 +48,11 @@ public class SendFeedbackService {
 	private void onResponseReceived(String response) {
 		logger.debug("HTTP response: " + response);
 		new Handler(Looper.getMainLooper()).post(() -> {
-			uiInfoService.showInfo("Your message has been sent. Thanks :)");
+			if (response.startsWith("200")) {
+				uiInfoService.showInfo("Your message has been sent. Thanks :)");
+			} else {
+				uiInfoService.showInfoIndefinite("Sorry, an error has occurred while sending your message:\n" + response);
+			}
 		});
 	}
 	
