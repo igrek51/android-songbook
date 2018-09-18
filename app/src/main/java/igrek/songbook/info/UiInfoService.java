@@ -14,9 +14,9 @@ import javax.inject.Inject;
 
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
+import igrek.songbook.info.errorcheck.SafeClickListener;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
-import igrek.songbook.info.errorcheck.SafeClickListener;
 
 public class UiInfoService {
 	
@@ -103,7 +103,8 @@ public class UiInfoService {
 	}
 	
 	public void showInfoWithAction(String info, String actionName, InfoBarClickAction actionCallback) {
-		showActionInfo(info, null, actionName, actionCallback, ContextCompat.getColor(activity, R.color.colorPrimary), Snackbar.LENGTH_LONG);
+		int color = ContextCompat.getColor(activity, R.color.colorAccent);
+		showActionInfo(info, null, actionName, actionCallback, color, Snackbar.LENGTH_LONG);
 	}
 	
 	public void showInfoWithAction(String info, int actionNameRes, InfoBarClickAction actionCallback) {

@@ -29,6 +29,7 @@ import igrek.songbook.layout.navigation.NavigationMenuController;
 import igrek.songbook.layout.songpreview.LyricsManager;
 import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
 import igrek.songbook.layout.view.ButtonClickEffect;
+import igrek.songbook.layout.view.SliderController;
 import igrek.songbook.persistence.preferences.PreferencesService;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;

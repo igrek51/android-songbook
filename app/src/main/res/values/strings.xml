@@ -7,7 +7,7 @@
     <string name="starting_directory_saved">Current category saved as starting category.</string>
     <string name="transposed_by">Chords transposed by %s semitones</string>
     <string name="transposition_reset">Reset</string>
-    <string name="stop_autoscroll">Stop</string>
+    <string name="stop_autoscroll_action">Stop</string>
     <string name="autoscroll_starts_in">Autoscroll starts in</string>
     <string name="autoscroll_started">Autoscroll started.</string>
     <string name="action_info_ok">OK</string>
@@ -84,4 +84,6 @@
         \nPreferred key: %s
         \nVersion: %d
     </string>
+    <string name="start_autoscroll">Start autoscroll</string>
+    <string name="stop_autoscroll">Stop autoscroll</string>
 </resources>

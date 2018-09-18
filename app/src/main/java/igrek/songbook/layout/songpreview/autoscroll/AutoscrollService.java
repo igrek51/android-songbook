@@ -6,13 +6,13 @@ import javax.inject.Inject;
 
 import dagger.Lazy;
 import igrek.songbook.R;
-import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
-import igrek.songbook.layout.songpreview.view.SongPreview;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.UiInfoService;
 import igrek.songbook.info.UiResourceService;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
+import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
+import igrek.songbook.layout.songpreview.view.SongPreview;
 import igrek.songbook.persistence.preferences.PreferencesDefinition;
 import igrek.songbook.persistence.preferences.PreferencesService;
 import io.reactivex.subjects.PublishSubject;
@@ -173,14 +173,14 @@ public class AutoscrollService {
 		int seconds = (int) ((ms + 500) / 1000);
 		
 		String info = uiResourceService.resString(R.string.autoscroll_starts_in) + " " + seconds + " s.";
-		userInfo.showInfoWithAction(info, R.string.stop_autoscroll, this::stop);
+		userInfo.showInfoWithAction(info, R.string.stop_autoscroll_action, this::stop);
 	}
 	
 	public void onAutoscrollStartUIEvent() {
 		if (!isRunning()) {
 			if (getCanvas().canScrollDown()) {
 				start();
-				userInfo.showInfoWithAction(R.string.autoscroll_started, R.string.stop_autoscroll, this::stop);
+				userInfo.showInfoWithAction(R.string.autoscroll_started, R.string.stop_autoscroll_action, this::stop);
 			} else {
 				userInfo.showInfo(uiResourceService.resString(R.string.end_of_file) + "\n" + uiResourceService
 						.resString(R.string.autoscroll_not_started));
@@ -191,7 +191,7 @@ public class AutoscrollService {
 	}
 	
 	private void onAutoscrollStartedEvent() {
-		userInfo.showInfoWithAction(R.string.autoscroll_started, R.string.stop_autoscroll, this::stop);
+		userInfo.showInfoWithAction(R.string.autoscroll_started, R.string.stop_autoscroll_action, this::stop);
 	}
 	
 	private void onAutoscrollEndedEvent() {

@@ -1,4 +1,4 @@
-package igrek.songbook.layout.settings;
+package igrek.songbook.layout.view;
 
 import android.widget.SeekBar;
 import android.widget.TextView;

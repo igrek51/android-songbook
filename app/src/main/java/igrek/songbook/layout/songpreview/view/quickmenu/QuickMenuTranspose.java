@@ -22,7 +22,7 @@ public class QuickMenuTranspose {
 	@Inject
 	Lazy<ChordsTransposerManager> chordsTransposerManager;
 	@Inject
-	UiResourceService infoService;
+	UiResourceService uiResourceService;
 	@Inject
 	Lazy<SongPreviewLayoutController> songPreviewController;
 	
@@ -68,7 +68,7 @@ public class QuickMenuTranspose {
 	
 	private void updateTranspositionText() {
 		String semitonesDisplayName = chordsTransposerManager.get().getTransposedByDisplayName();
-		String transposedByText = infoService.resString(R.string.transposed_by, semitonesDisplayName);
+		String transposedByText = uiResourceService.resString(R.string.transposed_by, semitonesDisplayName);
 		transposedByLabel.setText(transposedByText);
 	}
 	
