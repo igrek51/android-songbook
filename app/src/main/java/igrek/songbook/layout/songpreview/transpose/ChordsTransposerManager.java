@@ -44,10 +44,10 @@ public class ChordsTransposerManager {
 		
 		songPreviewController.get().onCrdModelUpdated();
 		
-		String info = uiResourceService.resString(R.string.transposed_by, getTransposedByDisplayName());
+		String info = uiResourceService.resString(R.string.transposed_by_semitones, getTransposedByDisplayName());
 		
 		if (getTransposedBy() != 0) {
-			userInfo.showInfoWithAction(info, R.string.transposition_reset, this::onTransposeResetEvent);
+			userInfo.showInfoWithAction(info, R.string.action_transposition_reset, this::onTransposeResetEvent);
 		} else {
 			userInfo.showInfo(info);
 		}

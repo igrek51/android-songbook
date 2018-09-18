@@ -176,17 +176,16 @@ public class AutoscrollService {
 	}
 	
 	private void onAutoscrollRemainingWaitTimeEvent(long ms) {
-		int seconds = (int) ((ms + 500) / 1000);
-		
-		String info = uiResourceService.resString(R.string.autoscroll_starts_in) + " " + seconds + " s.";
-		userInfo.showInfoWithAction(info, R.string.stop_autoscroll_action, this::stop);
+		String seconds = Long.toString((ms + 500) / 1000);
+		String info = uiResourceService.resString(R.string.autoscroll_starts_in, seconds);
+		userInfo.showInfoWithAction(info, R.string.action_stop_autoscroll, this::stop);
 	}
 	
 	public void onAutoscrollStartUIEvent() {
 		if (!isRunning()) {
 			if (getCanvas().canScrollDown()) {
 				start();
-				userInfo.showInfoWithAction(R.string.autoscroll_started, R.string.stop_autoscroll_action, this::stop);
+				userInfo.showInfoWithAction(R.string.autoscroll_started, R.string.action_stop_autoscroll, this::stop);
 			} else {
 				userInfo.showInfo(uiResourceService.resString(R.string.end_of_file_autoscroll_stopped));
 			}
@@ -196,7 +195,7 @@ public class AutoscrollService {
 	}
 	
 	private void onAutoscrollStartedEvent() {
-		userInfo.showInfoWithAction(R.string.autoscroll_started, R.string.stop_autoscroll_action, this::stop);
+		userInfo.showInfoWithAction(R.string.autoscroll_started, R.string.action_stop_autoscroll, this::stop);
 	}
 	
 	private void onAutoscrollEndedEvent() {

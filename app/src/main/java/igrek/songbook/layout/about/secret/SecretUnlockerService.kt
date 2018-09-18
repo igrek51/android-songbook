@@ -7,13 +7,13 @@ import android.text.InputType
 import android.widget.EditText
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.persistence.SongsDbRepository
 import igrek.songbook.persistence.SqlQueryService
-import igrek.songbook.system.locale.StringSimplifier
 import igrek.songbook.system.SoftKeyboardService
+import igrek.songbook.system.locale.StringSimplifier
 import javax.inject.Inject
 
 class SecretUnlockerService {
@@ -38,7 +38,7 @@ class SecretUnlockerService {
     }
 
     fun showUnlockAlert() {
-        val unlockAction = uiResourceService.resString(R.string.unlock_action)
+        val unlockAction = uiResourceService.resString(R.string.action_unlock)
         val dlgAlert = AlertDialog.Builder(activity)
         dlgAlert.setMessage("Type in a secret key:")
         dlgAlert.setTitle(unlockAction)

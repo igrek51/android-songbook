@@ -7,11 +7,11 @@ import javax.inject.Inject;
 
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
+import igrek.songbook.info.UiResourceService;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
-import igrek.songbook.info.UiResourceService;
-import igrek.songbook.persistence.SongsDbRepository;
 import igrek.songbook.layout.about.secret.SecretUnlockerService;
+import igrek.songbook.persistence.SongsDbRepository;
 import igrek.songbook.system.PackageInfoService;
 
 public class AboutLayoutController {
@@ -36,10 +36,10 @@ public class AboutLayoutController {
 	public void showAbout() {
 		String appVersionName = packageInfoService.getVersionName();
 		String dbVersionNumber = Long.toString(songsDbRepository.getSongsDb().getVersionNumber());
-		String title = uiResourceService.resString(R.string.ui_about);
+		String title = uiResourceService.resString(R.string.nav_about);
 		String message = uiResourceService.resString(R.string.ui_about_content, appVersionName, dbVersionNumber);
 		
-		String unlockActionName = uiResourceService.resString(R.string.unlock_action);
+		String unlockActionName = uiResourceService.resString(R.string.action_unlock);
 		Runnable unlockAction = secretUnlockerService::showUnlockAlert;
 		showDialogWithActions(title, message, unlockActionName, unlockAction);
 	}

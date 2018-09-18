@@ -24,7 +24,7 @@ public class HelpLayoutController {
 	
 	public void showUIHelp() {
 		String message = uiResourceService.resString(R.string.ui_help_content);
-		String title = uiResourceService.resString(R.string.ui_help);
+		String title = uiResourceService.resString(R.string.nav_help);
 		uiInfoService.showDialog(title, message);
 	}
 }

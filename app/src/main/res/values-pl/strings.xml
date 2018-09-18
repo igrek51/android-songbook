@@ -7,7 +7,7 @@
     <string name="action_sethomedir">Ustaw tu folder startowy</string>
     <string name="action_info_ok">OK</string>
     <string name="starting_directory_saved">Zapisano obecny folder jako startowy.</string>
-    <string name="transposed_by">Transpozycja</string>
+    <string name="transposed_by_semitones">Transpozycja</string>
     <string name="autoscroll_starts_in">Autoprzewijanie za</string>
     <string name="autoscroll">Autoprzewijanie</string>
     <string name="autoscroll_started">Rozpoczęto autoprzewijanie.</string>
@@ -15,8 +15,8 @@
     <string name="autoscroll_not_started">Autoprzewijanie wyłączone.</string>
     <string name="autoscroll_stopped">Zatrzymano autoprzewijanie.</string>
     <string name="stop_autoscroll">Zatrzymaj</string>
-    <string name="transposition_reset">Reset</string>
-    <string name="ui_help">Interfejs użytkownika</string>
+    <string name="action_transposition_reset">Reset</string>
+    <string name="nav_help">Interfejs użytkownika</string>
     <string name="ui_help_content">
     WIDOK OTWARTEGO PLIKU:
 \nSkalowanie dwoma palcami - zmiana rozmiaru czcionki.

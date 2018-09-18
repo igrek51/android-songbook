@@ -57,7 +57,7 @@ public class QuickMenuTranspose {
 	
 	private void updateTranspositionText() {
 		String semitonesDisplayName = chordsTransposerManager.get().getTransposedByDisplayName();
-		String transposedByText = uiResourceService.resString(R.string.transposed_by, semitonesDisplayName);
+		String transposedByText = uiResourceService.resString(R.string.transposed_by_semitones, semitonesDisplayName);
 		transposedByLabel.setText(transposedByText);
 	}
 	

@@ -1,42 +1,33 @@
 <resources>
     <string name="app_name" translatable="false">Guitar Songbook</string>
-    <string name="action_minimize">Minimize</string>
-    <string name="action_exit">Exit</string>
-    <string name="action_home">Go to root</string>
-    <string name="action_sethomedir">Set starting category here</string>
-    <string name="starting_directory_saved">Current category saved as starting category.</string>
-    <string name="transposed_by">Chords transposed by %s semitones</string>
-    <string name="transposition_reset">Reset</string>
-    <string name="stop_autoscroll_action">Stop</string>
-    <string name="autoscroll_starts_in">Autoscroll starts in</string>
-    <string name="autoscroll_started">Autoscroll has been started.</string>
-    <string name="action_info_ok">OK</string>
-    <string name="end_of_file_autoscroll_stopped">End of file - Autoscroll has been stopped.</string>
-    <string name="autoscroll_not_started">Autoscroll not started.</string>
-    <string name="autoscroll_stopped">Autoscroll has been stopped.</string>
-    <string name="autoscroll">Autoscroll</string>
-    <string name="message_home_not_set">Home category is not set.</string>
-    <string name="ui_help">Help</string>
-    <string name="ui_help_content">
-    SONG PREVIEW:
-\nPinch with two fingers in order to change font size scale.
-    \n\nQUICK MENU:
-\nClick on top of the screen in order to show / hide quick menu.
-\n-5, -1, +1, +5 buttons - tranposition by number of semitones.
-\n0 button - restore original key.
-    \n\nAUTOSCROLL:
-\nClick on bottom of the screen to turn on / off autoscrolling. If beginning of the file is visible, autoscrolling starts with counting down.
-\nScroll down manually while autoscrolling to omit counting down or speed up autoscrolling.
-\nScroll up manually while autoscrolling to enable counting down or slow down autoscrolling.
-    </string>
+
     <string name="nav_songs_list">Songs</string>
     <string name="nav_search_song">Search</string>
     <string name="nav_update_songs">Update songs</string>
     <string name="nav_import_song">Import song</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_exit">Exit</string>
-    <string name="ui_db_is_uptodate">Songs database is already up-to-date.</string>
-    <string name="ui_about">About</string>
+    <string name="nav_about">About</string>
+    <string name="nav_contact">Send feedback</string>
+    <string name="nav_help">Help</string>
+    <string name="ui_help_content">
+        SONG PREVIEW:
+        \nPinch with two fingers to change font size scale.
+        \n
+        \nTRANSPOSING:
+        \nYou can transpose any song with chords to any key.
+        Click transposing icon on top of song preview to show transposing panel.
+        \n-5, -1, +1, +5 buttons - tranposition by number of semitones.
+        \n0 button - restore original key.
+        \n
+        \nAUTOSCROLL:
+        \nClick autoscroll icon on top of song preview screen to show autoscroll panel.
+        Starting autoscroll causes the lyrics to be scrolled automatically by some timer.
+        If lyrics are at the beginning, autoscrolling will be started with some delay (counting down before scrolling).
+        If you scroll down manually while this countdown, the scroll will be started immediately.
+        You can adjust scrolling speed or initial delay of autoscroll in settings or in autoscroll panel.
+        Scrolling up or down manually while autoscrolling enabled causes autoscroll speed to be auto-adjusted (speed up or slow down).
+    </string>
     <string name="ui_about_content">
         Guitar SongBook v%s
         \nSongs database version: %s
@@ -59,23 +50,39 @@
         \nRxAndroid
         \nRxJava
     </string>
-    <string name="ui_contact">Send feedback</string>
-    <string name="ui_contact_content">You can contact me if you have noticed some bugs or you have any ideas how to improve this application. I would be very grateful for your comments.</string>
+
+    <string name="action_info_ok">OK</string>
+    <string name="action_unlock">Unlock</string>
+    <string name="action_cancel">Cancel</string>
+
+    <string name="ui_db_is_uptodate">Songs database is already up-to-date.</string>
+    <string name="contact_label">You can contact me if you have noticed some bugs or you have any ideas how to improve this application. I would be very grateful for your comments.</string>
+    <string name="contact_message_hint">Your message…</string>
+    <string name="contact_send">Send</string>
+    <string name="contact_author_hint">Your name (optional)</string>
+
+    <string name="transposed_by_semitones">Transposed by %s semitones</string>
+    <string name="action_transposition_reset">Reset</string>
+
+    <string name="action_stop_autoscroll">Stop</string>
+    <string name="autoscroll_starts_in">Autoscroll starts in %s s</string>
+    <string name="autoscroll_started">Autoscroll has been started.</string>
+    <string name="autoscroll_stopped">Autoscroll has been stopped.</string>
+    <string name="start_autoscroll">Start autoscroll</string>
+    <string name="stop_autoscroll">Stop autoscroll</string>
+    <string name="end_of_file_autoscroll_stopped">End of file - Autoscroll has been stopped.</string>
+
     <string name="song_category_others">Others</string>
     <string name="song_category_custom">Custom</string>
-    <string name="contact_message_hint">Your message…</string>
     <string name="song_search_edit_hint">Song title or artist</string>
-    <string name="contact_send">Send</string>
-    <string name="unlock_action">Unlock</string>
-    <string name="action_cancel">Cancel</string>
+
     <string name="unlock_key_invalid">Key is not valid</string>
-    <string name="unlock_new_songs_unlocked">New songs unlocked: %d</string>
+    <string name="unlock_new_songs_unlocked">New songs have been unlocked: %d</string>
     <string name="settings_font_size">Font size: %s dp</string>
     <string name="settings_scroll_initial_pause">Autoscroll initial delay: %s s</string>
     <string name="settings_autoscroll_speed">Autoscroll speed: %s line / s</string>
     <string name="settings_fullscreen">Fullscreen</string>
-    <string name="settings_chords_notation">Chords notation:</string>
-    <string name="contact_author_hint">Your name or contact (optional)</string>
+
     <string name="song_details_title">Song details</string>
     <string name="song_details">
         Title: %s
@@ -84,6 +91,4 @@
         \nPreferred key: %s
         \nVersion: %d
     </string>
-    <string name="start_autoscroll">Start autoscroll</string>
-    <string name="stop_autoscroll">Stop autoscroll</string>
 </resources>
