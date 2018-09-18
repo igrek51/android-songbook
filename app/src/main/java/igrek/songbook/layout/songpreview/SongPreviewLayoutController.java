@@ -19,6 +19,8 @@ import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.domain.songsdb.Song;
+import igrek.songbook.info.UiInfoService;
+import igrek.songbook.info.UiResourceService;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.layout.LayoutController;
@@ -58,6 +60,10 @@ public class SongPreviewLayoutController implements MainLayout {
 	SoftKeyboardService softKeyboardService;
 	@Inject
 	SongDetailsService songDetailsService;
+	@Inject
+	UiInfoService uiInfoService;
+	@Inject
+	UiResourceService uiResourceService;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	private SongPreview songPreview;
@@ -157,6 +163,7 @@ public class SongPreviewLayoutController implements MainLayout {
 		
 		ImageButton fullscreenButton = layout.findViewById(R.id.fullscreenButton);
 		ButtonClickEffect.addClickEffect(fullscreenButton);
+		fullscreenButton.setOnClickListener((v) -> uiInfoService.showToast(uiResourceService.resString(R.string.feature_not_implemented)));
 	}
 	
 	@Override
@@ -220,6 +227,9 @@ public class SongPreviewLayoutController implements MainLayout {
 	
 	private void goToBeginning() {
 		resetOverlayScroll();
+		if (songPreview.getScroll() == 0f && !autoscrollService.isRunning()) {
+			uiInfoService.showInfo(R.string.scroll_at_the_beginning_already);
+		}
 		songPreview.goToBeginning();
 		if (autoscrollService.isRunning()) {
 			// restart autoscrolling

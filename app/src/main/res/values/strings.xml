@@ -107,4 +107,5 @@
     <string name="contact_error_sending">An error has occurred while sending your message.</string>
     <string name="details_none">None</string>
     <string name="feature_not_implemented">Sorry, not implemented yet</string>
+    <string name="scroll_at_the_beginning_already">You are at the beginning already.</string>
 </resources>

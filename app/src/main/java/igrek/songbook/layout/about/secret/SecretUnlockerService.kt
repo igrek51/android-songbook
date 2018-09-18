@@ -66,6 +66,7 @@ class SecretUnlockerService {
             "zjajem", "z jajem" -> unlockSongs("zjajem")
             "bff" -> unlockSongs("bff")
             "religijne" -> unlockSongs("religijne")
+            "truptutupta" -> uiInfoService.showToast("Słyszałem zaklęcie przyzwania?")
             else -> {
                 uiInfoService.showToast(R.string.unlock_key_invalid)
             }
