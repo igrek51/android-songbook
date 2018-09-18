@@ -75,18 +75,10 @@ public class QuickMenuAutoscroll {
 			setVisible(false);
 		});
 		
-		updateTranspositionText();
 	}
 	
 	public View getQuickMenuView() {
 		return quickMenuView;
-	}
-	
-	private void updateTranspositionText() {
-		String tvTranspositionText = infoService.resString(R.string.transposed_by) + ": " + chordsTransposerManager
-				.get()
-				.getTransposedByDisplayName();
-		tvTransposition.setText(tvTranspositionText);
 	}
 	
 	public void draw() {
@@ -113,7 +105,6 @@ public class QuickMenuAutoscroll {
 		
 		if (visible) {
 			quickMenuView.setVisibility(View.VISIBLE);
-			updateTranspositionText();
 		} else {
 			quickMenuView.setVisibility(View.GONE);
 		}
@@ -127,7 +118,6 @@ public class QuickMenuAutoscroll {
 	
 	public void onTransposedEvent() {
 		if (visible) {
-			updateTranspositionText();
 		}
 	}
 	

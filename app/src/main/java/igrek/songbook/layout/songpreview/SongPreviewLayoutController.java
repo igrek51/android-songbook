@@ -131,6 +131,7 @@ public class SongPreviewLayoutController implements MainLayout {
 		
 		ImageButton transposeButton = layout.findViewById(R.id.transposeButton);
 		ButtonClickEffect.addClickEffect(transposeButton);
+		transposeButton.setOnClickListener((v) -> toggleTransposePanel());
 		
 		ImageButton autoscrollButton = layout.findViewById(R.id.autoscrollButton);
 		ButtonClickEffect.addClickEffect(autoscrollButton);
@@ -193,6 +194,14 @@ public class SongPreviewLayoutController implements MainLayout {
 	
 	public void setCurrentSong(Song currentSong) {
 		this.currentSong = currentSong;
+	}
+	
+	private void toggleTransposePanel() {
+		if (quickMenuTransposeTranspose.isVisible()) {
+			quickMenuTransposeTranspose.setVisible(false);
+		} else {
+			quickMenuTransposeTranspose.setVisible(true);
+		}
 	}
 	
 	private void goToBeginning() {

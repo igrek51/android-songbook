@@ -153,7 +153,7 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	
 	public void onClick() {
 		if (quickMenu.get().isVisible()) {
-			quickMenu.get().onScreenClicked();
+			quickMenu.get().setVisible(false);
 		} else {
 			if (autoscroll.get().isRunning()) {
 				autoscroll.get().onAutoscrollStopUIEvent();

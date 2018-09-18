@@ -80,10 +80,6 @@ public class QuickMenuTranspose {
 		}
 	}
 	
-	public void onScreenClicked() {
-		setVisible(false);
-	}
-	
 	public boolean isVisible() {
 		return visible;
 	}
