@@ -20,10 +20,11 @@ import igrek.songbook.layout.songpreview.view.canvas.BaseCanvasView;
 import igrek.songbook.layout.songpreview.view.quickmenu.QuickMenuAutoscroll;
 import igrek.songbook.layout.songpreview.view.quickmenu.QuickMenuTranspose;
 import igrek.songbook.system.WindowManagerService;
+import igrek.songbook.system.cache.SimpleCache;
 
 public class SongPreview extends BaseCanvasView implements View.OnTouchListener {
 	
-	private final float EOF_SCROLL_RESERVE = 0.09f;
+	private final float EOF_BOTTOM_RESERVE = 50; // padding bottom [dp]
 	private final float LINEHEIGHT_SCALE_FACTOR = 1.02f;
 	private final float FONTSIZE_SCALE_FACTOR = 0.6f;
 	
@@ -49,6 +50,9 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	protected float startTouchY = 0;
 	protected long startTouchTime;
 	private Logger logger = LoggerFactory.getLogger();
+	private SimpleCache<Float> bottomMargin = new SimpleCache<>(() -> {
+		return windowManagerService.dp2px(EOF_BOTTOM_RESERVE);
+	});
 	
 	public SongPreview(Context context) {
 		super(context);
@@ -199,7 +203,7 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	
 	float getMaxScroll() {
 		float bottomY = getTextBottomY();
-		float reserve = EOF_SCROLL_RESERVE * h;
+		float reserve = bottomMargin.get();
 		if (bottomY > h) {
 			return bottomY + reserve - h;
 		} else {
@@ -222,7 +226,7 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	
 	public int getMaxContentHeight() {
 		float bottomY = getTextBottomY();
-		float reserve = EOF_SCROLL_RESERVE * h;
+		float reserve = bottomMargin.get();
 		if (bottomY > h) {
 			return (int) (bottomY + reserve);
 		} else {
