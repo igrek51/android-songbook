@@ -69,7 +69,7 @@
     <string name="song_category_others">Inne</string>
     <string name="song_category_custom">Moje piosenki</string>
     <string name="song_search_edit_hint">Tytuł piosenki lub artysta</string>
-    <string name="unlock_key_invalid">Klucz nie jest poprawny.</string>
+    <string name="unlock_key_invalid">Hasło nie jest poprawne.</string>
     <string name="unlock_new_songs_unlocked">Udblokowano nowe piosenki: %d</string>
     <string name="settings_font_size">Rozmiar czcionki: %s dp</string>
     <string name="settings_scroll_initial_pause">Opóźnienie autoprzewijania: %s s</string>
@@ -83,4 +83,13 @@
         \nPreferowana tonacja: %s
         \nWersja: %d
     </string>
+    <string name="easter_egg_discovered">Gratulacje!
+        \nOdnalazłeś Easter Egga :)</string>
+    <string name="error_occurred">Wystąpił błąd: %s</string>
+    <string name="unlock_type_in_secret_key">Podaj sekretne hasło:</string>
+    <string name="contact_message_field_empty">Pole wiadomości nie może być puste.</string>
+    <string name="contact_sending">Wysyłanie…</string>
+    <string name="contact_message_sent_successfully">Twoja wiadomość została wysłana. Dzięki :)</string>
+    <string name="contact_error_sending">Wystąpił błąd podczas wysyłania.</string>
+    <string name="details_none">Brak</string>
 </resources>
