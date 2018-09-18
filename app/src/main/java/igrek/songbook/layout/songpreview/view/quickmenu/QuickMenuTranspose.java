@@ -9,14 +9,13 @@ import javax.inject.Inject;
 import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
-import igrek.songbook.layout.songpreview.LyricsManager;
-import igrek.songbook.layout.songpreview.transpose.ChordsTransposerManager;
 import igrek.songbook.info.UiResourceService;
+import igrek.songbook.layout.songpreview.LyricsManager;
 import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
+import igrek.songbook.layout.songpreview.transpose.ChordsTransposerManager;
 import igrek.songbook.layout.songpreview.view.SongPreview;
 
-public class QuickMenu {
+public class QuickMenuTranspose {
 	
 	@Inject
 	Lazy<LyricsManager> lyricsManager;
@@ -25,17 +24,13 @@ public class QuickMenu {
 	@Inject
 	UiResourceService infoService;
 	@Inject
-	AutoscrollService autoscrollService;
-	@Inject
 	Lazy<SongPreviewLayoutController> songPreviewController;
 	
 	private boolean visible = false;
-	
 	private View quickMenuView;
+	private TextView transposedByLabel;
 	
-	private TextView tvTransposition;
-	
-	public QuickMenu() {
+	public QuickMenuTranspose() {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
@@ -46,7 +41,7 @@ public class QuickMenu {
 	public void setQuickMenuView(View quickMenuView) {
 		this.quickMenuView = quickMenuView;
 		
-		tvTransposition = quickMenuView.findViewById(R.id.tvTransposition);
+		transposedByLabel = quickMenuView.findViewById(R.id.transposedByLabel);
 		
 		Button btnTransposeM5 = quickMenuView.findViewById(R.id.btnTransposeM5);
 		btnTransposeM5.setOnClickListener(v -> chordsTransposerManager.get().onTransposeEvent(-5));
@@ -64,29 +59,15 @@ public class QuickMenu {
 		Button btnTransposeP5 = quickMenuView.findViewById(R.id.btnTransposeP5);
 		btnTransposeP5.setOnClickListener(v -> chordsTransposerManager.get().onTransposeEvent(+5));
 		
-		Button btnAutoscrollToggle = quickMenuView.findViewById(R.id.btnAutoscrollToggle);
-		btnAutoscrollToggle.setOnClickListener(v -> {
-			if (autoscrollService.isRunning()) {
-				autoscrollService.onAutoscrollStopUIEvent();
-			} else {
-				autoscrollService.onAutoscrollStartUIEvent();
-			}
-			
-			setVisible(false);
-		});
-		
 		updateTranspositionText();
 	}
 	
-	public View getQuickMenuView() {
-		return quickMenuView;
-	}
-	
 	private void updateTranspositionText() {
-		String tvTranspositionText = infoService.resString(R.string.transposition) + ": " + chordsTransposerManager
+		String semitonesDisplayName = chordsTransposerManager
 				.get()
 				.getTransposedByDisplayName();
-		tvTransposition.setText(tvTranspositionText);
+		String transposedByText = infoService.resString(R.string.transposed_by, semitonesDisplayName);
+		transposedByLabel.setText(transposedByText);
 	}
 	
 	public void draw() {
@@ -94,8 +75,7 @@ public class QuickMenu {
 			//dimmed background
 			float w = getCanvas().getW();
 			float h = getCanvas().getH();
-			
-			getCanvas().setColor(0x000000, 130);
+			getCanvas().setColor(0x000000, 110);
 			getCanvas().fillRect(0, 0, w, h);
 		}
 	}

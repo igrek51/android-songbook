@@ -17,7 +17,7 @@ import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
 import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
 import igrek.songbook.layout.songpreview.view.canvas.BaseCanvasView;
-import igrek.songbook.layout.songpreview.view.quickmenu.QuickMenu;
+import igrek.songbook.layout.songpreview.view.quickmenu.QuickMenuTranspose;
 import igrek.songbook.system.WindowManagerService;
 
 public class SongPreview extends BaseCanvasView implements View.OnTouchListener {
@@ -31,7 +31,7 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	@Inject
 	Lazy<AutoscrollService> autoscroll;
 	@Inject
-	Lazy<QuickMenu> quickMenu;
+	Lazy<QuickMenuTranspose> quickMenu;
 	@Inject
 	WindowManagerService windowManagerService;
 	

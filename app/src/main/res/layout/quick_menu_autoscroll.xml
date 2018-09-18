@@ -14,12 +14,12 @@
         android:layout_weight="0.7"/>
 
     <TextView
-        android:id="@+id/tvTransposition"
+        android:id="@+id/transposedByLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.1"
         android:gravity="bottom|center_horizontal"
-        android:text="@string/transposition"
+        android:text="@string/transposed_by"
         android:textAlignment="center"
         android:textColor="@color/colorQuickMenuText"
         android:textSize="20sp"

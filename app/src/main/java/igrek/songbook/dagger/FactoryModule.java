@@ -9,42 +9,43 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import igrek.songbook.info.logger.Logger;
-import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.activity.ActivityController;
 import igrek.songbook.activity.AppInitializer;
 import igrek.songbook.activity.OptionSelectDispatcher;
-import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
-import igrek.songbook.layout.songpreview.LyricsManager;
-import igrek.songbook.layout.songpreview.transpose.ChordsTransposerManager;
-import igrek.songbook.system.filesystem.ExternalCardService;
-import igrek.songbook.system.filesystem.FilesystemService;
-import igrek.songbook.system.PermissionService;
 import igrek.songbook.info.UiInfoService;
 import igrek.songbook.info.UiResourceService;
+import igrek.songbook.info.logger.Logger;
+import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.layout.LayoutController;
 import igrek.songbook.layout.about.AboutLayoutController;
+import igrek.songbook.layout.about.HelpLayoutController;
+import igrek.songbook.layout.about.secret.SecretUnlockerService;
 import igrek.songbook.layout.contact.ContactLayoutController;
 import igrek.songbook.layout.contact.SendFeedbackService;
-import igrek.songbook.layout.about.HelpLayoutController;
-import igrek.songbook.layout.songsearch.SongSearchLayoutController;
+import igrek.songbook.layout.navigation.NavigationMenuController;
 import igrek.songbook.layout.settings.SettingsLayoutController;
+import igrek.songbook.layout.songpreview.LyricsManager;
 import igrek.songbook.layout.songpreview.SongDetailsService;
 import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
+import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
+import igrek.songbook.layout.songpreview.transpose.ChordsTransposerManager;
+import igrek.songbook.layout.songpreview.view.quickmenu.QuickMenuAutoscroll;
+import igrek.songbook.layout.songpreview.view.quickmenu.QuickMenuTranspose;
+import igrek.songbook.layout.songsearch.SongSearchLayoutController;
+import igrek.songbook.layout.songtree.ScrollPosBuffer;
 import igrek.songbook.layout.songtree.SongTreeLayoutController;
-import igrek.songbook.layout.navigation.NavigationMenuController;
-import igrek.songbook.persistence.SongsDbRepository;
+import igrek.songbook.layout.songtree.SongTreeWalker;
 import igrek.songbook.persistence.LocalDatabaseService;
+import igrek.songbook.persistence.SongsDbRepository;
 import igrek.songbook.persistence.SqlQueryService;
 import igrek.songbook.persistence.preferences.PreferencesService;
-import igrek.songbook.layout.about.secret.SecretUnlockerService;
-import igrek.songbook.layout.songtree.ScrollPosBuffer;
-import igrek.songbook.layout.songtree.SongTreeWalker;
 import igrek.songbook.system.PackageInfoService;
+import igrek.songbook.system.PermissionService;
 import igrek.songbook.system.SoftKeyboardService;
 import igrek.songbook.system.SystemKeyDispatcher;
 import igrek.songbook.system.WindowManagerService;
-import igrek.songbook.layout.songpreview.view.quickmenu.QuickMenu;
+import igrek.songbook.system.filesystem.ExternalCardService;
+import igrek.songbook.system.filesystem.FilesystemService;
 
 /**
  * Module with providers. These classes can be injected
@@ -196,8 +197,14 @@ public class FactoryModule {
 	
 	@Provides
 	@Singleton
-	protected QuickMenu provideQuickMenu() {
-		return new QuickMenu();
+	protected QuickMenuTranspose provideQuickMenu() {
+		return new QuickMenuTranspose();
+	}
+	
+	@Provides
+	@Singleton
+	protected QuickMenuAutoscroll provideQuickMenuAutoscroll() {
+		return new QuickMenuAutoscroll();
 	}
 	
 	@Provides

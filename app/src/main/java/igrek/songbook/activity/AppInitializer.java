@@ -36,10 +36,14 @@ public class AppInitializer {
 		layoutController.showSongTree();
 		// Allow showing the activity even if the device is locked
 		if (BuildConfig.DEBUG) {
-			windowManagerService.showAppWhenLocked();
+			debugMode();
 		}
 		
 		logger.info("Application has been initialized.");
+	}
+	
+	private void debugMode() {
+		windowManagerService.showAppWhenLocked();
 	}
 	
 	/**

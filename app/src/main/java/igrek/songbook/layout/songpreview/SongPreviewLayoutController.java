@@ -28,7 +28,7 @@ import igrek.songbook.layout.navigation.NavigationMenuController;
 import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
 import igrek.songbook.layout.songpreview.view.OverlayRecyclerAdapter;
 import igrek.songbook.layout.songpreview.view.SongPreview;
-import igrek.songbook.layout.songpreview.view.quickmenu.QuickMenu;
+import igrek.songbook.layout.songpreview.view.quickmenu.QuickMenuTranspose;
 import igrek.songbook.layout.view.ButtonClickEffect;
 import igrek.songbook.system.SoftKeyboardService;
 import igrek.songbook.system.WindowManagerService;
@@ -48,7 +48,7 @@ public class SongPreviewLayoutController implements MainLayout {
 	@Inject
 	AppCompatActivity activity;
 	@Inject
-	QuickMenu quickMenu;
+	QuickMenuTranspose quickMenuTransposeTranspose;
 	@Inject
 	AutoscrollService autoscrollService;
 	@Inject
@@ -94,11 +94,11 @@ public class SongPreviewLayoutController implements MainLayout {
 		// create quick menu
 		FrameLayout quickMenuContainer = layout.findViewById(R.id.quickMenuContainer);
 		LayoutInflater inflater = activity.getLayoutInflater();
-		View quickMenuView = inflater.inflate(R.layout.quick_menu, null);
+		View quickMenuView = inflater.inflate(R.layout.quick_menu_transpose, null);
 		quickMenuView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 		quickMenuContainer.addView(quickMenuView);
-		quickMenu.setQuickMenuView(quickMenuView);
-		quickMenu.setVisible(false);
+		quickMenuTransposeTranspose.setQuickMenuView(quickMenuView);
+		quickMenuTransposeTranspose.setVisible(false);
 		
 		// overlaying RecyclerView
 		overlayRecyclerView = activity.findViewById(R.id.overlayRecyclerView);
@@ -169,7 +169,9 @@ public class SongPreviewLayoutController implements MainLayout {
 	}
 	
 	private void resetOverlayScroll() {
-		overlayRecyclerView.getLayoutManager().scrollToPosition(1); // refresh
+		// refresh
+		overlayRecyclerView.getLayoutManager().scrollToPosition(1);
+		overlayRecyclerView.scrollToPosition(1);
 	}
 	
 	public void onCrdModelUpdated() {
@@ -204,8 +206,8 @@ public class SongPreviewLayoutController implements MainLayout {
 	
 	@Override
 	public void onBackClicked() {
-		if (quickMenu.isVisible()) {
-			quickMenu.onShowQuickMenuEvent(false);
+		if (quickMenuTransposeTranspose.isVisible()) {
+			quickMenuTransposeTranspose.onShowQuickMenuEvent(false);
 		} else {
 			autoscrollService.stop();
 			layoutController.get().showPreviousLayout();

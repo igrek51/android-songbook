@@ -5,7 +5,7 @@
     <string name="action_home">Go to root</string>
     <string name="action_sethomedir">Set starting category here</string>
     <string name="starting_directory_saved">Current category saved as starting category.</string>
-    <string name="transposition">Transposition</string>
+    <string name="transposed_by">Chords transposed by %s semitones</string>
     <string name="transposition_reset">Reset</string>
     <string name="stop_autoscroll">Stop</string>
     <string name="autoscroll_starts_in">Autoscroll starts in</string>

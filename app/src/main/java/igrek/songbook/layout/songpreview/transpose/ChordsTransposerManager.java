@@ -5,11 +5,11 @@ import javax.inject.Inject;
 import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.layout.songpreview.LyricsManager;
 import igrek.songbook.info.UiInfoService;
 import igrek.songbook.info.UiResourceService;
+import igrek.songbook.layout.songpreview.LyricsManager;
 import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
-import igrek.songbook.layout.songpreview.view.quickmenu.QuickMenu;
+import igrek.songbook.layout.songpreview.view.quickmenu.QuickMenuTranspose;
 
 public class ChordsTransposerManager {
 	
@@ -25,7 +25,7 @@ public class ChordsTransposerManager {
 	@Inject
 	UiInfoService userInfo;
 	@Inject
-	Lazy<QuickMenu> quickMenu;
+	Lazy<QuickMenuTranspose> quickMenu;
 	
 	public ChordsTransposerManager() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -44,7 +44,7 @@ public class ChordsTransposerManager {
 		
 		songPreviewController.get().onCrdModelUpdated();
 		
-		String info = uiResourceService.resString(R.string.transposition) + ": " + getTransposedByDisplayName();
+		String info = uiResourceService.resString(R.string.transposed_by) + ": " + getTransposedByDisplayName();
 		
 		if (getTransposedBy() != 0) {
 			userInfo.showInfoWithAction(info, R.string.transposition_reset, this::onTransposeResetEvent);

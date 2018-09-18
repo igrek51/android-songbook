@@ -7,7 +7,7 @@
     <string name="action_sethomedir">Ustaw tu folder startowy</string>
     <string name="action_info_ok">OK</string>
     <string name="starting_directory_saved">Zapisano obecny folder jako startowy.</string>
-    <string name="transposition">Transpozycja</string>
+    <string name="transposed_by">Transpozycja</string>
     <string name="autoscroll_starts_in">Autoprzewijanie za</string>
     <string name="autoscroll">Autoprzewijanie</string>
     <string name="autoscroll_started">Rozpoczęto autoprzewijanie.</string>
