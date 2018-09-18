@@ -44,11 +44,12 @@ public class AppInitializer {
 	
 	private void debugMode() {
 		windowManagerService.showAppWhenLocked();
+		setLocale("pl");
 	}
 	
 	/**
 	 * forces locale settings
-	 * @param langCode language code
+	 * @param langCode language code (pl)
 	 */
 	private void setLocale(String langCode) {
 		Resources res = activity.getResources();

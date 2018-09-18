@@ -11,21 +11,24 @@
     <string name="nav_contact">Send feedback</string>
     <string name="nav_help">Help</string>
     <string name="ui_help_content">
-        SONG PREVIEW:
-        \nPinch with two fingers to change font size scale.
+        SONG SELECTION:
+        \nYou can choose a song from a categories tree or search it by title or artist.
+        \n
+        \nSONG PREVIEW:
+        \nPinch with two fingers to change font size.
         \n
         \nTRANSPOSING:
         \nYou can transpose any song with chords to any key.
-        Click transposing icon on top of action bar to show transposing panel.
-        \n-5, -1, +1, +5 buttons - tranposition by number of semitones.
-        \n0 button - restore original key.
+        Click transposing icon on top action bar to show transposing panel.
+        \n"-5, -1, +1, +5" buttons - tranposition by number of semitones.
+        \n"0" button - restore original key.
         \n
         \nAUTOSCROLL:
-        \nClick autoscroll icon on top of action bar to show autoscroll panel.
+        \nClick autoscroll icon on top action bar to show autoscroll panel.
         Starting autoscroll causes the lyrics to be scrolled automatically by some timer.
-        If lyrics are at the beginning, autoscrolling will be started with some delay (counting down before scrolling).
+        \nIf lyrics are at the beginning, autoscrolling will be started with some delay (counting down before scrolling).
         If you scroll down manually while this countdown, the scroll will be started immediately.
-        You can adjust scrolling speed or initial delay of autoscroll in settings or in autoscroll panel.
+        \nYou can adjust scrolling speed or initial delay of autoscroll in settings or in autoscroll panel.
         Scrolling up or down manually while autoscrolling enabled causes autoscroll speed to be auto-adjusted (speed up or slow down).
     </string>
     <string name="ui_about_content">

@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="ui_help_content">
-        PODGLĄD PIOSENKI:
+        WYBÓR PIOSENKI:
+        \nMożesz wybrać piosenkę z drzewa kategorii lub wyszukać ją po tytule lub nazwie artysty.
+        \n
+        \nPODGLĄD PIOSENKI:
         \nSkalowanie dwoma palcami zmienia rozmiar czcionki na podglądzie.
         \n
         \nTRANSPOZYCJA:
         \nMożesz przetransponować piosenki z akordami do dowolnej tonacji.
-        Naciśnij ikonę tranpozycji na górze paska, aby wyświetlić panel transpozycji.
-        \nPrzyciski -5, -1, +1, +5 - zmiana tonacji o liczbę półtonów.
-        \nPrzycisk 0 - przywrócenie oryginalnej tonacji.
+        Naciśnij ikonę tranpozycji na górnym pasku, aby wyświetlić panel transpozycji.
+        \nPrzyciski "-5, -1, +1, +5" - zmiana tonacji o liczbę półtonów.
+        \nPrzycisk "0" - przywrócenie oryginalnej tonacji.
         \n
         \AUTOPRZEWIJANIE:
-        \nNaciśnij ikonę autoprzewijania na górze paska, aby wyświetlić panel autoprzewijania.
+        \nNaciśnij ikonę autoprzewijania na górnym pasku, aby wyświetlić panel autoprzewijania.
         Rozpoczęcie autoprzewijania powoduje, że tekst przwijany jest automatycznie w odstępach czasowych.
-        Jeśli jest to początek tekstu, autoprzewijanie włączy się po pewnym czasie (odliczanie przed przewijaniem).
+        \nJeśli jest to początek tekstu, autoprzewijanie włączy się po pewnym czasie (odliczanie przed przewijaniem).
         Jeśli przewiniesz tekst ręcznie podczas odliczania, autoprzewijanie włączy się natychmiast.
-        Możesz dostosować prędkość przewijania oraz długość początkowej pauzy w ustawieniach lub w panelu autoprzewijania.
+        \nMożesz dostosować prędkość przewijania oraz długość początkowej pauzy w ustawieniach lub w panelu autoprzewijania.
         Ręczne przewijanie przy włączonym autoprzewijaniu spowoduje, że prędkosć przewijania automatycznie zostanie skorygowana (przyspieszona lub zwolniona).
     </string>
     <string name="ui_about_content">

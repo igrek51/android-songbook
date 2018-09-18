@@ -28,13 +28,13 @@
             android:icon="@drawable/settings"
             android:title="@string/nav_settings"/>
         <item
-            android:id="@+id/nav_help"
-            android:icon="@drawable/help"
-            android:title="@string/nav_help"/>
-        <item
             android:id="@+id/nav_contact"
             android:icon="@drawable/send"
             android:title="@string/nav_contact"/>
+        <item
+            android:id="@+id/nav_help"
+            android:icon="@drawable/help"
+            android:title="@string/nav_help"/>
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/info"
