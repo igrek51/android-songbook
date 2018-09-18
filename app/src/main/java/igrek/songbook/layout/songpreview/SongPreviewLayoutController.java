@@ -119,7 +119,7 @@ public class SongPreviewLayoutController implements MainLayout {
 		overlayRecyclerView.setOverScrollMode(OVER_SCROLL_ALWAYS);
 		overlayRecyclerView.setOnClickListener((v) -> songPreview.onClick());
 		overlayRecyclerView.setOnTouchListener(songPreview);
-		overlayRecyclerView.getLayoutManager().scrollToPosition(1);
+		resetOverlayScroll();
 		
 		songTitleLabel = layout.findViewById(R.id.songTitleLabel);
 		String title = currentSong.displayName();
@@ -136,6 +136,7 @@ public class SongPreviewLayoutController implements MainLayout {
 		ButtonClickEffect.addClickEffect(autoscrollButton);
 		
 		ImageButton goBeginningButton = layout.findViewById(R.id.goBeginningButton);
+		goBeginningButton.setOnClickListener((v) -> goToBeginning());
 		ButtonClickEffect.addClickEffect(goBeginningButton);
 		
 		ImageButton songInfoButton = layout.findViewById(R.id.songInfoButton);
@@ -164,12 +165,16 @@ public class SongPreviewLayoutController implements MainLayout {
 		
 		songPreview.setFontSizes(lyricsManager.getFontsize());
 		songPreview.setCRDModel(lyricsManager.getCRDModel());
+		resetOverlayScroll();
+	}
+	
+	private void resetOverlayScroll() {
 		overlayRecyclerView.getLayoutManager().scrollToPosition(1); // refresh
 	}
 	
 	public void onCrdModelUpdated() {
 		songPreview.setCRDModel(lyricsManager.getCRDModel());
-		overlayRecyclerView.getLayoutManager().scrollToPosition(1); // refresh
+		resetOverlayScroll();
 	}
 	
 	public void onFontsizeChangedEvent(float fontsize) {
@@ -177,7 +182,7 @@ public class SongPreviewLayoutController implements MainLayout {
 		// parse without reading a whole file again
 		lyricsManager.reparse();
 		songPreview.setCRDModel(lyricsManager.getCRDModel());
-		overlayRecyclerView.getLayoutManager().scrollToPosition(1); // refresh
+		resetOverlayScroll();
 	}
 	
 	public SongPreview getSongPreview() {
@@ -186,6 +191,15 @@ public class SongPreviewLayoutController implements MainLayout {
 	
 	public void setCurrentSong(Song currentSong) {
 		this.currentSong = currentSong;
+	}
+	
+	private void goToBeginning() {
+		resetOverlayScroll();
+		songPreview.goToBeginning();
+		if (autoscrollService.isRunning()) {
+			// restart autoscrolling
+			autoscrollService.start();
+		}
 	}
 	
 	@Override

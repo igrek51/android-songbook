@@ -9,15 +9,15 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.Lazy;
-import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
-import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
-import igrek.songbook.layout.songpreview.view.canvas.BaseCanvasView;
-import igrek.songbook.layout.songpreview.view.quickmenu.QuickMenu;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.domain.lyrics.LyricsLine;
 import igrek.songbook.domain.lyrics.LyricsModel;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
+import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
+import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
+import igrek.songbook.layout.songpreview.view.canvas.BaseCanvasView;
+import igrek.songbook.layout.songpreview.view.quickmenu.QuickMenu;
 import igrek.songbook.system.WindowManagerService;
 
 public class SongPreview extends BaseCanvasView implements View.OnTouchListener {
@@ -264,5 +264,10 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 			autoscroll.get().getCanvasScrollSubject().onNext(linePartScrolled);
 			//			autoscroll.get().onCanvasScrollEvent(linePartScrolled, scroll);
 		}
+	}
+	
+	public void goToBeginning() {
+		scroll = 0;
+		repaint();
 	}
 }
