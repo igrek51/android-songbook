@@ -8,7 +8,7 @@
     android:layout_gravity="center_horizontal">
 
     <TextView
-        android:id="@+id/tvItemContent"
+        android:id="@+id/itemContentLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="7dp"
@@ -17,7 +17,7 @@
         android:gravity="left|center_vertical"
         android:layout_gravity="left|center_vertical"
         android:layout_centerVertical="true"
-        android:text="Item"
+        android:text=""
         android:textSize="16sp"/>
 
 </RelativeLayout>

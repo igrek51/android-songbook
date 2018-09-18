@@ -10,8 +10,6 @@ import android.widget.ListView;
 
 import java.util.List;
 
-import igrek.songbook.layout.songtree.SongTreeItem;
-
 public class SongListView extends ListView implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 	
 	private List<SongTreeItem> items;

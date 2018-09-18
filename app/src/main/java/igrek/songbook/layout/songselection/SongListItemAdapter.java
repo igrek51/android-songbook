@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import igrek.songbook.R;
-import igrek.songbook.layout.songtree.SongTreeItem;
 
 public class SongListItemAdapter extends ArrayAdapter<SongTreeItem> {
 	
@@ -32,6 +31,7 @@ public class SongListItemAdapter extends ArrayAdapter<SongTreeItem> {
 		notifyDataSetChanged();
 	}
 	
+	@Override
 	public SongTreeItem getItem(int position) {
 		return dataSource.get(position);
 	}
@@ -55,17 +55,30 @@ public class SongListItemAdapter extends ArrayAdapter<SongTreeItem> {
 		
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
-		final View itemView = inflater.inflate(R.layout.song_list_item, parent, false);
-		final SongTreeItem item = dataSource.get(position);
+		View itemView = inflater.inflate(R.layout.song_list_item, parent, false);
+		SongTreeItem item = dataSource.get(position);
 		
-		//zawartość tekstowa elementu
-		TextView textView = itemView.findViewById(R.id.tvItemContent);
+		// set item title
+		TextView itemContentLabel = itemView.findViewById(R.id.itemContentLabel);
 		if (item.isCategory()) {
-			textView.setTypeface(null, Typeface.BOLD);
+			itemContentLabel.setTypeface(null, Typeface.BOLD);
 		} else {
-			textView.setTypeface(null, Typeface.NORMAL);
+			itemContentLabel.setTypeface(null, Typeface.NORMAL);
 		}
-		textView.setText(item.getSimpleName());
+		if (item instanceof SongSearchItem) {
+			// search item: title - category
+			String songTitle = item.getSong().getTitle();
+			String categoryName = item.getSong().getCategory().getName();
+			String displayName;
+			if (categoryName != null) {
+				displayName = songTitle + " - " + categoryName;
+			} else {
+				displayName = songTitle;
+			}
+			itemContentLabel.setText(displayName);
+		} else {
+			itemContentLabel.setText(item.getSimpleName());
+		}
 		
 		return itemView;
 	}

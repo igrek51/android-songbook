@@ -26,14 +26,16 @@
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:fillViewport="true"
-                          android:orientation="vertical">
+                          android:orientation="vertical"
+                          android:padding="0dp">
 
                 <LinearLayout android:id="@+id/toolbarHorizontalLayout"
                               xmlns:android="http://schemas.android.com/apk/res/android"
                               android:layout_width="match_parent"
                               android:layout_height="40dp"
                               android:fillViewport="true"
-                              android:orientation="horizontal">
+                              android:orientation="horizontal"
+                              android:padding="0dp">
 
                     <ImageButton
                         android:id="@+id/navMenuButton"
@@ -145,8 +147,8 @@
                     android:id="@+id/songTitleLabel"
                     android:layout_width="match_parent"
                     android:layout_height="24dp"
-                    android:layout_marginLeft="4dp"
-                    android:layout_marginStart="4dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginStart="0dp"
                     android:paddingTop="0dp"
                     android:textSize="16sp"
                     />

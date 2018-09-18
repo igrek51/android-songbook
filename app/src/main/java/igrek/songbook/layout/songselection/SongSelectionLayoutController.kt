@@ -15,7 +15,6 @@ import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.layout.songpreview.SongPreviewLayoutController
-import igrek.songbook.layout.songtree.SongTreeItem
 import igrek.songbook.layout.songtree.SongTreeSorter
 import igrek.songbook.layout.view.ButtonClickEffect
 import igrek.songbook.persistence.SongsDbRepository

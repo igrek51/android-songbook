@@ -11,6 +11,7 @@ import igrek.songbook.domain.songsdb.SongsDb
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.songselection.SongSelectionLayoutController
+import igrek.songbook.layout.songselection.SongTreeItem
 import igrek.songbook.layout.view.ButtonClickEffect
 import javax.inject.Inject
 
@@ -103,11 +104,6 @@ class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
         } catch (e: NoParentItemException) {
             activityController.get().quit()
         }
-    }
-
-    fun goToRoot() {
-        songTreeWalker.goToAllCategories()
-        updateSongItemsList()
     }
 
     private fun storeScrollPosition() {

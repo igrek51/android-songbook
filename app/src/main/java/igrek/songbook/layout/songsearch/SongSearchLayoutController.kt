@@ -14,9 +14,10 @@ import igrek.songbook.domain.songsdb.SongsDb
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.songselection.ListScrollPosition
+import igrek.songbook.layout.songselection.SongSearchItem
 import igrek.songbook.layout.songselection.SongSelectionLayoutController
+import igrek.songbook.layout.songselection.SongTreeItem
 import igrek.songbook.layout.songtree.SongTreeFilter
-import igrek.songbook.layout.songtree.SongTreeItem
 import igrek.songbook.layout.view.ButtonClickEffect
 import igrek.songbook.system.SoftKeyboardService
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -115,11 +116,11 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
         // no filter
         if (!isFilterSet()) {
             return songsDb.getAllUnlockedSongs()
-                    .map { song -> SongTreeItem.song(song) }
+                    .map { song -> SongSearchItem.song(song) }
         } else {
             val songNameFilter = SongTreeFilter(itemNameFilter)
             return songsDb.getAllUnlockedSongs()
-                    .map { song -> SongTreeItem.song(song) }
+                    .map { song -> SongSearchItem.song(song) }
                     .filter { item -> songNameFilter.matchesNameFilter(item) }
         }
     }

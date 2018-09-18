@@ -1,5 +1,6 @@
 package igrek.songbook.layout.songtree
 
+import igrek.songbook.layout.songselection.SongTreeItem
 import igrek.songbook.system.locale.StringSimplifier
 
 class SongTreeFilter(private val nameFilter: String?) {
@@ -9,7 +10,7 @@ class SongTreeFilter(private val nameFilter: String?) {
         if (nameFilter == null || nameFilter.isEmpty())
             return true
 
-        val fullName: String = songItem.song.category.displayName + " - " + songItem.song.title
+        val fullName: String = songItem.song.category.displayName + songItem.song.title
         // must contain every part
         return containsEveryFilterPart(fullName, nameFilter)
     }

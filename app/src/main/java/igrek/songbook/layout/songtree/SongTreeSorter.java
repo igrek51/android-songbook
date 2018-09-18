@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 
 import igrek.songbook.domain.songsdb.SongCategoryType;
+import igrek.songbook.layout.songselection.SongTreeItem;
 
 public class SongTreeSorter {
 	
