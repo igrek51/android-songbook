@@ -10,21 +10,14 @@ import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.UiResourceService;
-import igrek.songbook.layout.songpreview.LyricsManager;
-import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
 import igrek.songbook.layout.songpreview.transpose.ChordsTransposerManager;
-import igrek.songbook.layout.songpreview.view.SongPreview;
 
 public class QuickMenuTranspose {
 	
 	@Inject
-	Lazy<LyricsManager> lyricsManager;
-	@Inject
 	Lazy<ChordsTransposerManager> chordsTransposerManager;
 	@Inject
 	UiResourceService uiResourceService;
-	@Inject
-	Lazy<SongPreviewLayoutController> songPreviewController;
 	
 	private boolean visible = false;
 	private View quickMenuView;
@@ -32,10 +25,6 @@ public class QuickMenuTranspose {
 	
 	public QuickMenuTranspose() {
 		DaggerIoc.getFactoryComponent().inject(this);
-	}
-	
-	private SongPreview getCanvas() {
-		return songPreviewController.get().getSongPreview();
 	}
 	
 	public void setQuickMenuView(View quickMenuView) {
@@ -78,15 +67,12 @@ public class QuickMenuTranspose {
 	
 	public void setVisible(boolean visible) {
 		this.visible = visible;
-		
 		if (visible) {
 			quickMenuView.setVisibility(View.VISIBLE);
 			updateTranspositionText();
 		} else {
 			quickMenuView.setVisibility(View.GONE);
 		}
-		
-		getCanvas().repaint();
 	}
 	
 	public void onTransposedEvent() {

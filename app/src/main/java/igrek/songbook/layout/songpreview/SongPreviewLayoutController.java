@@ -210,6 +210,7 @@ public class SongPreviewLayoutController implements MainLayout {
 	private void toggleTransposePanel() {
 		quickMenuAutoscroll.setVisible(false);
 		quickMenuTranspose.setVisible(!quickMenuTranspose.isVisible());
+		songPreview.repaint();
 	}
 	
 	private void toggleAutoscrollPanel() {
@@ -235,6 +236,7 @@ public class SongPreviewLayoutController implements MainLayout {
 		if (isQuickMenuVisible()) {
 			if (quickMenuTranspose.isVisible()) {
 				quickMenuTranspose.setVisible(false);
+				songPreview.repaint();
 			} else if (quickMenuAutoscroll.isVisible()) {
 				quickMenuAutoscroll.setVisible(false);
 			}

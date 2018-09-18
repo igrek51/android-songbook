@@ -40,6 +40,7 @@ public class AutoscrollService {
 	private long startTime; // [ms]
 	
 	private PublishSubject<Float> canvasScrollSubject = PublishSubject.create();
+	private PublishSubject<AutoscrollState> scrollStateSubject = PublishSubject.create();
 	
 	private Handler timerHandler = new Handler();
 	private Runnable timerRunnable = () -> {
@@ -89,11 +90,13 @@ public class AutoscrollService {
 			startTime = System.currentTimeMillis();
 			timerHandler.postDelayed(timerRunnable, 0);
 		}
+		scrollStateSubject.onNext(state);
 	}
 	
 	public void stop() {
 		state = AutoscrollState.OFF;
 		timerHandler.removeCallbacks(timerRunnable);
+		scrollStateSubject.onNext(state);
 	}
 	
 	public boolean isRunning() {
@@ -224,5 +227,9 @@ public class AutoscrollService {
 	
 	public PublishSubject<Float> getCanvasScrollSubject() {
 		return canvasScrollSubject;
+	}
+	
+	public PublishSubject<AutoscrollState> getScrollStateSubject() {
+		return scrollStateSubject;
 	}
 }

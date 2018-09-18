@@ -167,6 +167,7 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 		if (songPreviewController.get().isQuickMenuVisible()) {
 			quickMenuTranspose.get().setVisible(false);
 			quickMenuAutoscroll.get().setVisible(false);
+			repaint();
 		} else {
 			if (autoscroll.get().isRunning()) {
 				autoscroll.get().onAutoscrollStopUIEvent();
