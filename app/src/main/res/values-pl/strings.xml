@@ -1,32 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SongBook</string>
-    <string name="action_exit">Wyjście</string>
-    <string name="action_home">Przejdź do root</string>
-    <string name="action_minimize">Minimalizuj</string>
-    <string name="action_sethomedir">Ustaw tu folder startowy</string>
-    <string name="action_info_ok">OK</string>
-    <string name="starting_directory_saved">Zapisano obecny folder jako startowy.</string>
-    <string name="transposed_by_semitones">Transpozycja</string>
-    <string name="autoscroll_starts_in">Autoprzewijanie za</string>
-    <string name="autoscroll">Autoprzewijanie</string>
-    <string name="autoscroll_started">Rozpoczęto autoprzewijanie.</string>
-    <string name="end_of_file">Koniec pliku</string>
-    <string name="autoscroll_not_started">Autoprzewijanie wyłączone.</string>
-    <string name="autoscroll_stopped">Zatrzymano autoprzewijanie.</string>
-    <string name="stop_autoscroll">Zatrzymaj</string>
-    <string name="action_transposition_reset">Reset</string>
-    <string name="nav_help">Interfejs użytkownika</string>
     <string name="ui_help_content">
-    WIDOK OTWARTEGO PLIKU:
-\nSkalowanie dwoma palcami - zmiana rozmiaru czcionki.
-    \n\nSZYBKIE MENU:
-\nKliknięcie w górnej części ekranu - pokazuje / chowa szybkie menu.
-\nPrzyciski -5, -1, +1, +5 - zmiana tonacji o liczbę półtonów.
-\nPrzycisk 0 - przywrócenie oryginalnej tonacji.
-    \n\nAUTOPRZEWIJANIE:
-\nKliknięcie w dolnej części ekranu - włącza / wyłącza autoprzwijanie. Jeśli widoczny jest początek pliku, autoprzewijanie włącza się z odliczaniem. Jeśli plik jest już przewinięty, autoprzewijanie włącza się natychmiast.
-\nRęczne przewijanie w dół pliku podczas autoprzewijania pomija odliczanie lub przyspiesza autoprzewijanie.
-\nRęczne przewijanie w górę pliku podczas autoprzewijania włącza odliczanie lub spowalnia autoprzewijanie.
+        PODGLĄD PIOSENKI:
+        \nSkalowanie dwoma palcami zmienia rozmiar czcionki na podglądzie.
+        \n
+        \nTRANSPOZYCJA:
+        \nMożesz przetransponować piosenki z akordami do dowolnej tonacji.
+        Naciśnij ikonę tranpozycji na górze paska, aby wyświetlić panel transpozycji.
+        \nPrzyciski -5, -1, +1, +5 - zmiana tonacji o liczbę półtonów.
+        \nPrzycisk 0 - przywrócenie oryginalnej tonacji.
+        \n
+        \AUTOPRZEWIJANIE:
+        \nNaciśnij ikonę autoprzewijania na górze paska, aby wyświetlić panel autoprzewijania.
+        Rozpoczęcie autoprzewijania powoduje, że tekst przwijany jest automatycznie w odstępach czasowych.
+        Jeśli jest to początek tekstu, autoprzewijanie włączy się po pewnym czasie (odliczanie przed przewijaniem).
+        Jeśli przewiniesz tekst ręcznie podczas odliczania, autoprzewijanie włączy się natychmiast.
+        Możesz dostosować prędkość przewijania oraz długość początkowej pauzy w ustawieniach lub w panelu autoprzewijania.
+        Ręczne przewijanie przy włączonym autoprzewijaniu spowoduje, że prędkosć przewijania automatycznie zostanie skorygowana (przyspieszona lub zwolniona).
     </string>
+    <string name="ui_about_content">
+        Guitar SongBook v%s
+        \nWersja bazy piosenek: %s
+        \n\nAUTOR:
+        \nigrek51 - Ireneusz Szulc
+        \n\nWYKORZYSTANE TECHNOLOGIE:
+        \nAndroid SDK
+        \nAssertJ
+        \nDagger 2
+        \nEspresso
+        \nGradle
+        \nGuava
+        \nJava 8
+        \nJoda Time
+        \njUnit
+        \nKotlin
+        \nMaterial Design icons
+        \nMockito
+        \nRoboelectric
+        \nRxAndroid
+        \nRxJava
+    </string>
+    <string name="nav_songs_list">Piosenki</string>
+    <string name="nav_search_song">Szukaj</string>
+    <string name="nav_update_songs">Aktualizuj piosenki</string>
+    <string name="nav_import_song">Import piosenki</string>
+    <string name="nav_settings">Ustawienia</string>
+    <string name="nav_exit">Wyjście</string>
+    <string name="nav_about">O aplikacji</string>
+    <string name="nav_contact">Kontakt</string>
+    <string name="nav_help">Pomoc</string>
 </resources>

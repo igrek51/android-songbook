@@ -16,12 +16,12 @@
         \n
         \nTRANSPOSING:
         \nYou can transpose any song with chords to any key.
-        Click transposing icon on top of song preview to show transposing panel.
+        Click transposing icon on top of action bar to show transposing panel.
         \n-5, -1, +1, +5 buttons - tranposition by number of semitones.
         \n0 button - restore original key.
         \n
         \nAUTOSCROLL:
-        \nClick autoscroll icon on top of song preview screen to show autoscroll panel.
+        \nClick autoscroll icon on top of action bar to show autoscroll panel.
         Starting autoscroll causes the lyrics to be scrolled automatically by some timer.
         If lyrics are at the beginning, autoscrolling will be started with some delay (counting down before scrolling).
         If you scroll down manually while this countdown, the scroll will be started immediately.
