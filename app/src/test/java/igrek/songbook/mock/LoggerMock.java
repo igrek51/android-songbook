@@ -10,7 +10,7 @@ public class LoggerMock extends Logger {
 	
 	@Override
 	public void fatal(Activity activity, String e) {
-		log(e, LogLevel.FATAL, "[FATAL ERROR] ", 4);
+		log(e, LogLevel.FATAL, "[FATAL ERROR] ");
 	}
 	
 	@Override

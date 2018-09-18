@@ -13,7 +13,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="wrap_content">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar1"
@@ -21,102 +21,135 @@
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary">
 
-            <ImageButton
-                android:id="@+id/navMenuButton"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_centerVertical="true"
-                android:layout_gravity="start|center_vertical"
-                android:adjustViewBounds="true"
-                android:background="@drawable/menu"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="10dp"
-                android:scaleType="fitCenter"
-                />
+            <LinearLayout android:id="@+id/toolbarVerticalLayout"
+                          xmlns:android="http://schemas.android.com/apk/res/android"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:fillViewport="true"
+                          android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/goBackButton"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_centerVertical="true"
-                android:layout_gravity="start|center_vertical"
-                android:adjustViewBounds="true"
-                android:background="@drawable/arrow_back"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="16dp"
-                android:scaleType="fitCenter"
-                android:layout_marginLeft="20dp"
-                android:layout_marginStart="20dp"/>
+                <LinearLayout android:id="@+id/toolbarHorizontalLayout"
+                              xmlns:android="http://schemas.android.com/apk/res/android"
+                              android:layout_width="match_parent"
+                              android:layout_height="36dp"
+                              android:fillViewport="true"
+                              android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/songInfoButton"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_centerVertical="true"
-                android:layout_gravity="start|center_vertical"
-                android:adjustViewBounds="true"
-                android:background="@drawable/info"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="16dp"
-                android:scaleType="fitCenter"
-                android:layout_marginLeft="20dp"
-                android:layout_marginStart="20dp"/>
+                    <ImageButton
+                        android:id="@+id/navMenuButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="start|center_vertical"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/menu"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="16dp"
+                        android:scaleType="fitCenter"
+                        />
 
-            <ImageButton
-                android:id="@+id/transposeButton"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_centerVertical="true"
-                android:layout_gravity="start|center_vertical"
-                android:adjustViewBounds="true"
-                android:background="@drawable/transpose"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="16dp"
-                android:scaleType="fitCenter"
-                android:layout_marginLeft="20dp"
-                android:layout_marginStart="20dp"/>
+                    <ImageButton
+                        android:id="@+id/goBackButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/arrow_back"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="16dp"
+                        android:scaleType="fitCenter"/>
 
-            <ImageButton
-                android:id="@+id/autoscrollButton"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_centerVertical="true"
-                android:layout_gravity="start|center_vertical"
-                android:adjustViewBounds="true"
-                android:background="@drawable/scroll1"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="16dp"
-                android:scaleType="fitCenter"
-                android:layout_marginLeft="20dp"
-                android:layout_marginStart="20dp"/>
+                    <ImageButton
+                        android:id="@+id/songInfoButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/info"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="16dp"
+                        android:scaleType="fitCenter"/>
 
-            <ImageButton
-                android:id="@+id/goBeginningButton"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_centerVertical="true"
-                android:layout_gravity="start|center_vertical"
-                android:adjustViewBounds="true"
-                android:background="@drawable/restore"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="16dp"
-                android:scaleType="fitCenter"
-                android:layout_marginLeft="20dp"
-                android:layout_marginStart="20dp"/>
+                    <ImageButton
+                        android:id="@+id/transposeButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/transpose"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="16dp"
+                        android:scaleType="fitCenter"/>
 
-            <TextView
-                android:id="@+id/songTitleLabel"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginStart="20dp"
-                android:textSize="18sp"/>
+                    <ImageButton
+                        android:id="@+id/autoscrollButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/scroll1"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="16dp"
+                        android:scaleType="fitCenter"/>
+
+                    <ImageButton
+                        android:id="@+id/goBeginningButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/restore"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="16dp"
+                        android:scaleType="fitCenter"/>
+
+                    <ImageButton
+                        android:id="@+id/fullscreenButton"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="start|center_vertical"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginStart="20dp"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/fullscreen1"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="16dp"
+                        android:scaleType="fitCenter"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/songTitleLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="24dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:textSize="16sp"/>
+
+            </LinearLayout>
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
