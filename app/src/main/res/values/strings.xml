@@ -73,10 +73,10 @@
     <string name="end_of_file_autoscroll_stopped">End of file - Autoscroll has been stopped.</string>
 
     <string name="song_category_others">Others</string>
-    <string name="song_category_custom">Custom</string>
+    <string name="song_category_custom">My songs</string>
     <string name="song_search_edit_hint">Song title or artist</string>
 
-    <string name="unlock_key_invalid">Key is not valid</string>
+    <string name="unlock_key_invalid">Key is not valid.</string>
     <string name="unlock_new_songs_unlocked">New songs have been unlocked: %d</string>
     <string name="settings_font_size">Font size: %s dp</string>
     <string name="settings_scroll_initial_pause">Autoscroll initial delay: %s s</string>

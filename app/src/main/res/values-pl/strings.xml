@@ -49,4 +49,38 @@
     <string name="nav_about">O aplikacji</string>
     <string name="nav_contact">Kontakt</string>
     <string name="nav_help">Pomoc</string>
+    <string name="action_info_ok">OK</string>
+    <string name="action_unlock">Odblokuj</string>
+    <string name="action_cancel">Anuluj</string>
+    <string name="ui_db_is_uptodate">Baza piosenek jest już aktualna.</string>
+    <string name="contact_label">Możesz przesłać wiadomość do autora, jeśli zauważyłeś jakieś błędy lub jeśli masz pomysły na usprawnienie tej aplikacji. Będę wdzięczny za Twój komentarz.</string>
+    <string name="contact_message_hint">Twoja wiadomość…</string>
+    <string name="contact_send">Wyślij</string>
+    <string name="contact_author_hint">Twoje imię (opcjonalne)</string>
+    <string name="transposed_by_semitones">Transpozycja o %s półtonów</string>
+    <string name="action_transposition_reset">Reset</string>
+    <string name="action_stop_autoscroll">Stop</string>
+    <string name="autoscroll_starts_in">Autoprzewijanie zacznie się za %s s</string>
+    <string name="autoscroll_started">Autoprzewijanie rozpoczęte.</string>
+    <string name="autoscroll_stopped">Autoprzewijanie zatrzymane.</string>
+    <string name="start_autoscroll">Uruchom autoprzewijanie</string>
+    <string name="stop_autoscroll">Zatrzymaj autoprzewijanie</string>
+    <string name="end_of_file_autoscroll_stopped">Koniec pliku - Autoprzewijanie zatrzymane.</string>
+    <string name="song_category_others">Inne</string>
+    <string name="song_category_custom">Moje piosenki</string>
+    <string name="song_search_edit_hint">Tytuł piosenki lub artysta</string>
+    <string name="unlock_key_invalid">Klucz nie jest poprawny.</string>
+    <string name="unlock_new_songs_unlocked">Udblokowano nowe piosenki: %d</string>
+    <string name="settings_font_size">Rozmiar czcionki: %s dp</string>
+    <string name="settings_scroll_initial_pause">Opóźnienie autoprzewijania: %s s</string>
+    <string name="settings_autoscroll_speed">Szybkość autoprzewijania: %s linii / s</string>
+    <string name="settings_fullscreen">Pełny ekran</string>
+    <string name="song_details_title">Szczegóły piosenki</string>
+    <string name="song_details">
+        Tytuł: %s
+        \nKategoria: %s
+        \nKomentarz: %s
+        \nPreferowana tonacja: %s
+        \nWersja: %d
+    </string>
 </resources>
