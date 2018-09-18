@@ -73,9 +73,9 @@ public class QuickMenuAutoscroll {
 			}
 		};
 		ImageButton initialPauseMinusButton = quickMenuView.findViewById(R.id.initialPauseMinusButton);
-		initialPauseMinusButton.setOnClickListener(v -> addInitialPause(-1));
+		initialPauseMinusButton.setOnClickListener(v -> addInitialPause(-1000));
 		ImageButton initialPausePlusButton = quickMenuView.findViewById(R.id.initialPausePlusButton);
-		initialPausePlusButton.setOnClickListener(v -> addInitialPause(1));
+		initialPausePlusButton.setOnClickListener(v -> addInitialPause(1000));
 		
 		// autoscroll speed
 		speedLabel = quickMenuView.findViewById(R.id.speedLabel);
