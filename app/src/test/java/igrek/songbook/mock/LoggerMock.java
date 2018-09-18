@@ -3,8 +3,8 @@ package igrek.songbook.mock;
 
 import android.app.Activity;
 
-import igrek.songbook.logger.LogLevel;
-import igrek.songbook.logger.Logger;
+import igrek.songbook.info.logger.LogLevel;
+import igrek.songbook.info.logger.Logger;
 
 public class LoggerMock extends Logger {
 	

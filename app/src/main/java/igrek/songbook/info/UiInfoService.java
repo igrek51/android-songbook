@@ -14,9 +14,9 @@ import javax.inject.Inject;
 
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.logger.Logger;
-import igrek.songbook.logger.LoggerFactory;
-import igrek.songbook.errorcheck.SafeClickListener;
+import igrek.songbook.info.logger.Logger;
+import igrek.songbook.info.logger.LoggerFactory;
+import igrek.songbook.info.errorcheck.SafeClickListener;
 
 public class UiInfoService {
 	

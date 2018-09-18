@@ -16,9 +16,9 @@ import igrek.songbook.dagger.AndroidTestComponent;
 import igrek.songbook.dagger.DaggerAndroidTestComponent;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.dagger.FactoryModule;
-import igrek.songbook.logger.Logger;
-import igrek.songbook.logger.LoggerFactory;
-import igrek.songbook.settings.preferences.PreferencesService;
+import igrek.songbook.info.logger.Logger;
+import igrek.songbook.info.logger.LoggerFactory;
+import igrek.songbook.persistence.preferences.PreferencesService;
 
 /**
  * Instrumented test, which will execute on an Android device.

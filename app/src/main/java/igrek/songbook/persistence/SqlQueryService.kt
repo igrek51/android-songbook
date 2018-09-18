@@ -6,7 +6,7 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.domain.songsdb.Song
 import igrek.songbook.domain.songsdb.SongCategory
 import igrek.songbook.domain.songsdb.SongCategoryType
-import igrek.songbook.logger.LoggerFactory
+import igrek.songbook.info.logger.LoggerFactory
 import javax.inject.Inject
 
 

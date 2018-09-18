@@ -3,7 +3,7 @@ package igrek.songbook
 import android.app.Activity
 import android.app.Application
 import igrek.songbook.activity.CurrentActivityListener
-import igrek.songbook.logger.LoggerFactory
+import igrek.songbook.info.logger.LoggerFactory
 
 
 class MainApplication : Application() {

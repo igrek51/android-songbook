@@ -1,7 +1,7 @@
 package igrek.songbook.domain.songsdb
 
 import com.google.common.base.Objects
-import igrek.songbook.domain.cache.SimpleCache
+import igrek.songbook.system.cache.SimpleCache
 
 open class SongCategory(
         val id: Long,

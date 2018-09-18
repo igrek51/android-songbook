@@ -11,7 +11,7 @@ import javax.inject.Inject;
 
 import igrek.songbook.activity.MainActivity;
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.logger.Logger;
+import igrek.songbook.info.logger.Logger;
 
 @RunWith(RobolectricTestRunner.class)
 public abstract class BaseDaggerTest {

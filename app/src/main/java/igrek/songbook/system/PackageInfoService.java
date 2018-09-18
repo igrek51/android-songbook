@@ -7,8 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import javax.inject.Inject;
 
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.logger.Logger;
-import igrek.songbook.logger.LoggerFactory;
+import igrek.songbook.info.logger.Logger;
+import igrek.songbook.info.logger.LoggerFactory;
 
 public class PackageInfoService {
 	

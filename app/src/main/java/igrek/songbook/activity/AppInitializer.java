@@ -10,8 +10,8 @@ import javax.inject.Inject;
 
 import igrek.songbook.BuildConfig;
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.logger.Logger;
-import igrek.songbook.logger.LoggerFactory;
+import igrek.songbook.info.logger.Logger;
+import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.layout.LayoutController;
 import igrek.songbook.system.WindowManagerService;
 

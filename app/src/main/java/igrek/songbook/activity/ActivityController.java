@@ -6,14 +6,14 @@ import android.content.res.Configuration;
 
 import javax.inject.Inject;
 
-import igrek.songbook.chords.LyricsManager;
-import igrek.songbook.chords.autoscroll.AutoscrollService;
+import igrek.songbook.layout.songpreview.LyricsManager;
+import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.logger.Logger;
-import igrek.songbook.logger.LoggerFactory;
+import igrek.songbook.info.logger.Logger;
+import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.persistence.LocalDatabaseService;
-import igrek.songbook.settings.preferences.PreferencesDefinition;
-import igrek.songbook.settings.preferences.PreferencesService;
+import igrek.songbook.persistence.preferences.PreferencesDefinition;
+import igrek.songbook.persistence.preferences.PreferencesService;
 import igrek.songbook.system.WindowManagerService;
 
 public class ActivityController {

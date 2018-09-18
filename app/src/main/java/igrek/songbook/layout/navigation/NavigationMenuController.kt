@@ -7,13 +7,13 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.logger.LoggerFactory
+import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.activity.ActivityController
-import igrek.songbook.errorcheck.SafeExecutor
+import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.about.AboutLayoutController
-import igrek.songbook.about.HelpLayoutController
+import igrek.songbook.layout.about.AboutLayoutController
+import igrek.songbook.layout.about.HelpLayoutController
 import igrek.songbook.persistence.SongsDbRepository
 import igrek.songbook.system.SoftKeyboardService
 import java.util.*

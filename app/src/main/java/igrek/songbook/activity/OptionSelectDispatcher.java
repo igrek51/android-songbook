@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.errorcheck.SafeExecutor;
+import igrek.songbook.info.errorcheck.SafeExecutor;
 
 public class OptionSelectDispatcher {
 	

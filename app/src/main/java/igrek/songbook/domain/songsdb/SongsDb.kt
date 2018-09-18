@@ -1,6 +1,6 @@
 package igrek.songbook.domain.songsdb
 
-import igrek.songbook.domain.cache.SimpleCache
+import igrek.songbook.system.cache.SimpleCache
 
 data class SongsDb(
         val versionNumber: Long,

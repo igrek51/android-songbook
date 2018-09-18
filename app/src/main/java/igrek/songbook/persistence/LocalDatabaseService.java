@@ -15,9 +15,9 @@ import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.domain.exception.WrongDbVersionException;
-import igrek.songbook.logger.Logger;
-import igrek.songbook.logger.LoggerFactory;
-import igrek.songbook.filesystem.PermissionService;
+import igrek.songbook.info.logger.Logger;
+import igrek.songbook.info.logger.LoggerFactory;
+import igrek.songbook.system.PermissionService;
 
 public class LocalDatabaseService {
 	
