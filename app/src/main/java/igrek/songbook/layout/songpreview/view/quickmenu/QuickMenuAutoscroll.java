@@ -39,9 +39,8 @@ public class QuickMenuAutoscroll {
 	
 	public QuickMenuAutoscroll() {
 		DaggerIoc.getFactoryComponent().inject(this);
-		autoscrollService.getScrollStateSubject().subscribe(autoscrollState -> {
-			updateView();
-		});
+		autoscrollService.getScrollStateSubject().subscribe(autoscrollState -> updateView());
+		autoscrollService.getScrollSpeedSubject().subscribe(scrollSpeed -> updateView());
 	}
 	
 	// TODO refactor: repeated code: same sliders in settings

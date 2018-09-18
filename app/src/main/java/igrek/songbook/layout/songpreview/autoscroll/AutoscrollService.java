@@ -41,6 +41,7 @@ public class AutoscrollService {
 	
 	private PublishSubject<Float> canvasScrollSubject = PublishSubject.create();
 	private PublishSubject<AutoscrollState> scrollStateSubject = PublishSubject.create();
+	private PublishSubject<Float> scrollSpeedSubject = PublishSubject.create();
 	
 	private Handler timerHandler = new Handler();
 	private Runnable timerRunnable = () -> {
@@ -168,6 +169,8 @@ public class AutoscrollService {
 			}
 			if (autoscrollSpeed < MIN_SPEED)
 				autoscrollSpeed = MIN_SPEED;
+			
+			scrollSpeedSubject.onNext(autoscrollSpeed);
 			logger.info("new autoscroll speed: " + autoscrollSpeed + " em / s");
 		}
 	}
@@ -185,8 +188,7 @@ public class AutoscrollService {
 				start();
 				userInfo.showInfoWithAction(R.string.autoscroll_started, R.string.stop_autoscroll_action, this::stop);
 			} else {
-				userInfo.showInfo(uiResourceService.resString(R.string.end_of_file) + "\n" + uiResourceService
-						.resString(R.string.autoscroll_not_started));
+				userInfo.showInfo(uiResourceService.resString(R.string.end_of_file_autoscroll_stopped));
 			}
 		} else {
 			onAutoscrollStopUIEvent();
@@ -198,8 +200,7 @@ public class AutoscrollService {
 	}
 	
 	private void onAutoscrollEndedEvent() {
-		userInfo.showInfo(uiResourceService.resString(R.string.end_of_file) + "\n" + uiResourceService
-				.resString(R.string.autoscroll_stopped));
+		userInfo.showInfo(uiResourceService.resString(R.string.end_of_file_autoscroll_stopped));
 	}
 	
 	public void onAutoscrollStopUIEvent() {
@@ -223,6 +224,7 @@ public class AutoscrollService {
 	
 	public void setAutoscrollSpeed(float autoscrollSpeed) {
 		this.autoscrollSpeed = autoscrollSpeed;
+		scrollSpeedSubject.onNext(autoscrollSpeed);
 	}
 	
 	public PublishSubject<Float> getCanvasScrollSubject() {
@@ -231,5 +233,9 @@ public class AutoscrollService {
 	
 	public PublishSubject<AutoscrollState> getScrollStateSubject() {
 		return scrollStateSubject;
+	}
+	
+	public PublishSubject<Float> getScrollSpeedSubject() {
+		return scrollSpeedSubject;
 	}
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name" translatable="false">Guitar SongBook</string>
+    <string name="app_name" translatable="false">Guitar Songbook</string>
     <string name="action_minimize">Minimize</string>
     <string name="action_exit">Exit</string>
     <string name="action_home">Go to root</string>
@@ -11,7 +11,7 @@
     <string name="autoscroll_starts_in">Autoscroll starts in</string>
     <string name="autoscroll_started">Autoscroll has been started.</string>
     <string name="action_info_ok">OK</string>
-    <string name="end_of_file">End of file</string>
+    <string name="end_of_file_autoscroll_stopped">End of file - Autoscroll has been stopped.</string>
     <string name="autoscroll_not_started">Autoscroll not started.</string>
     <string name="autoscroll_stopped">Autoscroll has been stopped.</string>
     <string name="autoscroll">Autoscroll</string>
