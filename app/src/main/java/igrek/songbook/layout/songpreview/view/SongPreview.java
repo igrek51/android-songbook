@@ -17,6 +17,7 @@ import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
 import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
 import igrek.songbook.layout.songpreview.view.canvas.BaseCanvasView;
+import igrek.songbook.layout.songpreview.view.quickmenu.QuickMenuAutoscroll;
 import igrek.songbook.layout.songpreview.view.quickmenu.QuickMenuTranspose;
 import igrek.songbook.system.WindowManagerService;
 
@@ -31,7 +32,9 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	@Inject
 	Lazy<AutoscrollService> autoscroll;
 	@Inject
-	Lazy<QuickMenuTranspose> quickMenu;
+	Lazy<QuickMenuTranspose> quickMenuTranspose;
+	@Inject
+	Lazy<QuickMenuAutoscroll> quickMenuAutoscroll;
 	@Inject
 	WindowManagerService windowManagerService;
 	
@@ -77,7 +80,16 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 			lyricsRenderer.drawScrollBar();
 			lyricsRenderer.drawFileContent(getFontsizePx(), getLineheightPx());
 		}
-		quickMenu.get().draw();
+		
+		drawQuickMenuOverlay();
+	}
+	
+	private void drawQuickMenuOverlay() {
+		if (quickMenuTranspose.get().isVisible()) {
+			//dimmed background
+			setColor(0x000000, 110);
+			fillRect(0, 0, w, h);
+		}
 	}
 	
 	@Override
@@ -152,13 +164,12 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	}
 	
 	public void onClick() {
-		if (quickMenu.get().isVisible()) {
-			quickMenu.get().setVisible(false);
+		if (songPreviewController.get().isQuickMenuVisible()) {
+			quickMenuTranspose.get().setVisible(false);
+			quickMenuAutoscroll.get().setVisible(false);
 		} else {
 			if (autoscroll.get().isRunning()) {
 				autoscroll.get().onAutoscrollStopUIEvent();
-			} else {
-				quickMenu.get().setVisible(true);
 			}
 		}
 	}

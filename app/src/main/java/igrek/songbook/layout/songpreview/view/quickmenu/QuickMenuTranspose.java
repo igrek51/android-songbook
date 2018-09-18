@@ -43,41 +43,33 @@ public class QuickMenuTranspose {
 		
 		transposedByLabel = quickMenuView.findViewById(R.id.transposedByLabel);
 		
-		Button btnTransposeM5 = quickMenuView.findViewById(R.id.btnTransposeM5);
-		btnTransposeM5.setOnClickListener(v -> chordsTransposerManager.get().onTransposeEvent(-5));
+		Button transposeM5Button = quickMenuView.findViewById(R.id.transposeM5Button);
+		transposeM5Button.setOnClickListener(v -> chordsTransposerManager.get()
+				.onTransposeEvent(-5));
 		
-		Button btnTransposeM1 = quickMenuView.findViewById(R.id.btnTransposeM1);
-		btnTransposeM1.setOnClickListener(v -> chordsTransposerManager.get().onTransposeEvent(-1));
+		Button transposeM1Button = quickMenuView.findViewById(R.id.transposeM1Button);
+		transposeM1Button.setOnClickListener(v -> chordsTransposerManager.get()
+				.onTransposeEvent(-1));
 		
-		Button btnTranspose0 = quickMenuView.findViewById(R.id.btnTranspose0);
-		btnTranspose0.setOnClickListener(v -> chordsTransposerManager.get()
+		Button transpose0Button = quickMenuView.findViewById(R.id.transpose0Button);
+		transpose0Button.setOnClickListener(v -> chordsTransposerManager.get()
 				.onTransposeResetEvent());
 		
-		Button btnTransposeP1 = quickMenuView.findViewById(R.id.btnTransposeP1);
-		btnTransposeP1.setOnClickListener(v -> chordsTransposerManager.get().onTransposeEvent(+1));
+		Button transposeP1Button = quickMenuView.findViewById(R.id.transposeP1Button);
+		transposeP1Button.setOnClickListener(v -> chordsTransposerManager.get()
+				.onTransposeEvent(+1));
 		
-		Button btnTransposeP5 = quickMenuView.findViewById(R.id.btnTransposeP5);
-		btnTransposeP5.setOnClickListener(v -> chordsTransposerManager.get().onTransposeEvent(+5));
+		Button transposeP5Button = quickMenuView.findViewById(R.id.transposeP5Button);
+		transposeP5Button.setOnClickListener(v -> chordsTransposerManager.get()
+				.onTransposeEvent(+5));
 		
 		updateTranspositionText();
 	}
 	
 	private void updateTranspositionText() {
-		String semitonesDisplayName = chordsTransposerManager
-				.get()
-				.getTransposedByDisplayName();
+		String semitonesDisplayName = chordsTransposerManager.get().getTransposedByDisplayName();
 		String transposedByText = infoService.resString(R.string.transposed_by, semitonesDisplayName);
 		transposedByLabel.setText(transposedByText);
-	}
-	
-	public void draw() {
-		if (visible) {
-			//dimmed background
-			float w = getCanvas().getW();
-			float h = getCanvas().getH();
-			getCanvas().setColor(0x000000, 110);
-			getCanvas().fillRect(0, 0, w, h);
-		}
 	}
 	
 	public boolean isVisible() {
@@ -95,10 +87,6 @@ public class QuickMenuTranspose {
 		}
 		
 		getCanvas().repaint();
-	}
-	
-	public void onShowQuickMenuEvent(boolean visible) {
-		setVisible(visible);
 	}
 	
 	public void onTransposedEvent() {

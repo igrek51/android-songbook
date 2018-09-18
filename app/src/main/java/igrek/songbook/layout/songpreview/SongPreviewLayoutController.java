@@ -28,6 +28,7 @@ import igrek.songbook.layout.navigation.NavigationMenuController;
 import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
 import igrek.songbook.layout.songpreview.view.OverlayRecyclerAdapter;
 import igrek.songbook.layout.songpreview.view.SongPreview;
+import igrek.songbook.layout.songpreview.view.quickmenu.QuickMenuAutoscroll;
 import igrek.songbook.layout.songpreview.view.quickmenu.QuickMenuTranspose;
 import igrek.songbook.layout.view.ButtonClickEffect;
 import igrek.songbook.system.SoftKeyboardService;
@@ -48,7 +49,9 @@ public class SongPreviewLayoutController implements MainLayout {
 	@Inject
 	AppCompatActivity activity;
 	@Inject
-	QuickMenuTranspose quickMenuTransposeTranspose;
+	QuickMenuTranspose quickMenuTranspose;
+	@Inject
+	QuickMenuAutoscroll quickMenuAutoscroll;
 	@Inject
 	AutoscrollService autoscrollService;
 	@Inject
@@ -91,14 +94,21 @@ public class SongPreviewLayoutController implements MainLayout {
 		ViewGroup songPreviewContainer = layout.findViewById(R.id.songPreviewContainer);
 		songPreviewContainer.addView(songPreview);
 		
-		// create quick menu
+		// create quick menu panels
 		FrameLayout quickMenuContainer = layout.findViewById(R.id.quickMenuContainer);
 		LayoutInflater inflater = activity.getLayoutInflater();
-		View quickMenuView = inflater.inflate(R.layout.quick_menu_transpose, null);
-		quickMenuView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-		quickMenuContainer.addView(quickMenuView);
-		quickMenuTransposeTranspose.setQuickMenuView(quickMenuView);
-		quickMenuTransposeTranspose.setVisible(false);
+		// transpose panel
+		View quickMenuTransposeView = inflater.inflate(R.layout.quick_menu_transpose, null);
+		quickMenuTransposeView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		quickMenuContainer.addView(quickMenuTransposeView);
+		quickMenuTranspose.setQuickMenuView(quickMenuTransposeView);
+		quickMenuTranspose.setVisible(false);
+		// autoscroll panel
+		View quickMenuAutoscrollView = inflater.inflate(R.layout.quick_menu_autoscroll, null);
+		quickMenuAutoscrollView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		quickMenuContainer.addView(quickMenuAutoscrollView);
+		quickMenuAutoscroll.setQuickMenuView(quickMenuAutoscrollView);
+		quickMenuAutoscroll.setVisible(false);
 		
 		// overlaying RecyclerView
 		overlayRecyclerView = activity.findViewById(R.id.overlayRecyclerView);
@@ -135,6 +145,7 @@ public class SongPreviewLayoutController implements MainLayout {
 		
 		ImageButton autoscrollButton = layout.findViewById(R.id.autoscrollButton);
 		ButtonClickEffect.addClickEffect(autoscrollButton);
+		autoscrollButton.setOnClickListener((v) -> toggleAutoscrollPanel());
 		
 		ImageButton goBeginningButton = layout.findViewById(R.id.goBeginningButton);
 		goBeginningButton.setOnClickListener((v) -> goToBeginning());
@@ -197,11 +208,13 @@ public class SongPreviewLayoutController implements MainLayout {
 	}
 	
 	private void toggleTransposePanel() {
-		if (quickMenuTransposeTranspose.isVisible()) {
-			quickMenuTransposeTranspose.setVisible(false);
-		} else {
-			quickMenuTransposeTranspose.setVisible(true);
-		}
+		quickMenuAutoscroll.setVisible(false);
+		quickMenuTranspose.setVisible(!quickMenuTranspose.isVisible());
+	}
+	
+	private void toggleAutoscrollPanel() {
+		quickMenuTranspose.setVisible(false);
+		quickMenuAutoscroll.setVisible(!quickMenuAutoscroll.isVisible());
 	}
 	
 	private void goToBeginning() {
@@ -213,10 +226,18 @@ public class SongPreviewLayoutController implements MainLayout {
 		}
 	}
 	
+	public boolean isQuickMenuVisible() {
+		return quickMenuTranspose.isVisible() || quickMenuAutoscroll.isVisible();
+	}
+	
 	@Override
 	public void onBackClicked() {
-		if (quickMenuTransposeTranspose.isVisible()) {
-			quickMenuTransposeTranspose.onShowQuickMenuEvent(false);
+		if (isQuickMenuVisible()) {
+			if (quickMenuTranspose.isVisible()) {
+				quickMenuTranspose.setVisible(false);
+			} else if (quickMenuAutoscroll.isVisible()) {
+				quickMenuAutoscroll.setVisible(false);
+			}
 		} else {
 			autoscrollService.stop();
 			layoutController.get().showPreviousLayout();

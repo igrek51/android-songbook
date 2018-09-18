@@ -25,7 +25,7 @@ public class ChordsTransposerManager {
 	@Inject
 	UiInfoService userInfo;
 	@Inject
-	Lazy<QuickMenuTranspose> quickMenu;
+	Lazy<QuickMenuTranspose> quickMenuTranspose;
 	
 	public ChordsTransposerManager() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -52,7 +52,7 @@ public class ChordsTransposerManager {
 			userInfo.showInfo(info);
 		}
 		
-		quickMenu.get().onTransposedEvent();
+		quickMenuTranspose.get().onTransposedEvent();
 	}
 	
 	public void onTransposeResetEvent() {
