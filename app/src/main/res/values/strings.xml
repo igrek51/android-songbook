@@ -91,4 +91,13 @@
         \nPreferred key: %s
         \nVersion: %d
     </string>
+    <string name="error_occurred">Error occurred: %s</string>
+    <string name="unlock_type_in_secret_key">Type in a secret key:</string>
+    <string name="easter_egg_discovered">Congratulations!
+        \nYou have discovered an Easter Egg :)</string>
+    <string name="contact_message_field_empty">Message field can\'t be empty.</string>
+    <string name="contact_sending">Sending...</string>
+    <string name="contact_message_sent_successfully">Your message has been sent. Thanks :)</string>
+    <string name="contact_error_sending">An error has occurred while sending your message.</string>
+    <string name="details_none">None</string>
 </resources>

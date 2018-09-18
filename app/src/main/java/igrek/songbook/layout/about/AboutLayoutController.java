@@ -8,8 +8,6 @@ import javax.inject.Inject;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.UiResourceService;
-import igrek.songbook.info.logger.Logger;
-import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.layout.about.secret.SecretUnlockerService;
 import igrek.songbook.persistence.SongsDbRepository;
 import igrek.songbook.system.PackageInfoService;
@@ -26,8 +24,6 @@ public class AboutLayoutController {
 	PackageInfoService packageInfoService;
 	@Inject
 	SongsDbRepository songsDbRepository;
-	
-	private Logger logger = LoggerFactory.getLogger();
 	
 	public AboutLayoutController() {
 		DaggerIoc.getFactoryComponent().inject(this);

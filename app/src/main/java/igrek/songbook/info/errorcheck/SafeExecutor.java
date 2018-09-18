@@ -3,15 +3,19 @@ package igrek.songbook.info.errorcheck;
 
 import javax.inject.Inject;
 
+import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
+import igrek.songbook.info.UiInfoService;
+import igrek.songbook.info.UiResourceService;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
-import igrek.songbook.info.UiInfoService;
 
 public class SafeExecutor {
 	
 	@Inject
 	UiInfoService uiInfoService;
+	@Inject
+	UiResourceService uiResourceService;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
@@ -21,7 +25,7 @@ public class SafeExecutor {
 		} catch (Throwable t) {
 			logger.error(t);
 			DaggerIoc.getFactoryComponent().inject(this);
-			uiInfoService.showInfo("Error occurred: " + t.getMessage());
+			uiInfoService.showInfo(uiResourceService.resString(R.string.error_occurred, t.getMessage()));
 		}
 	}
 	

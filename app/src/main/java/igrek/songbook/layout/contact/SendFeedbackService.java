@@ -9,10 +9,12 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
+import igrek.songbook.info.UiInfoService;
+import igrek.songbook.info.UiResourceService;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
-import igrek.songbook.info.UiInfoService;
 
 public class SendFeedbackService {
 	
@@ -20,6 +22,8 @@ public class SendFeedbackService {
 	UiInfoService uiInfoService;
 	@Inject
 	Activity activity;
+	@Inject
+	UiResourceService uiResourceService;
 	
 	private static final int APPLICATION_ID = 1;
 	private static final String url = "http://51.38.128.10:8006/contact/send/";
@@ -31,7 +35,7 @@ public class SendFeedbackService {
 	}
 	
 	public void sendFeedback(String message, String author) {
-		uiInfoService.showInfo("Sending...");
+		uiInfoService.showInfo(uiResourceService.resString(R.string.contact_sending));
 		
 		Map<String, String> params = new HashMap<>();
 		params.put("message", message);
@@ -46,20 +50,21 @@ public class SendFeedbackService {
 	}
 	
 	private void onResponseReceived(String response) {
-		logger.debug("HTTP response: " + response);
+		logger.debug("Feedback sent response: " + response);
 		new Handler(Looper.getMainLooper()).post(() -> {
 			if (response.startsWith("200")) {
-				uiInfoService.showInfo("Your message has been sent. Thanks :)");
+				uiInfoService.showInfo(uiResourceService.resString(R.string.contact_message_sent_successfully));
 			} else {
-				uiInfoService.showInfoIndefinite("An error has occurred while sending your message:\n" + response);
+				logger.error("Feedback sent bad response: " + response);
+				uiInfoService.showInfoIndefinite(uiResourceService.resString(R.string.contact_error_sending));
 			}
 		});
 	}
 	
 	private void onErrorReceived(Throwable error) {
-		logger.error(error.getMessage());
+		logger.error("Feedback sending error: " + error.getMessage());
 		new Handler(Looper.getMainLooper()).post(() -> {
-			uiInfoService.showInfoIndefinite("An error has occurred while sending your message :(");
+			uiInfoService.showInfoIndefinite(uiResourceService.resString(R.string.contact_error_sending));
 		});
 	}
 	

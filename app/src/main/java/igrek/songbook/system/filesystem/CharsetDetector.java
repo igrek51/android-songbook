@@ -19,20 +19,19 @@ public class CharsetDetector {
 	}
 	
 	public String detect(byte[] bytes) {
-		
-		//jeśli plik zawiera znaki specjalne z UTF8
+		// if file contains special characters from utf8
 		if (containsBytes(bytes, utf8PLPrefixBytes)) {
-			logger.info("Wykryte kodowanie: " + CHARSET_UTF8);
+			logger.info("Encoding detected: " + CHARSET_UTF8);
 			return CHARSET_UTF8;
 		}
 		
-		//jeśli plik zawiera polskie litery z CP1250
+		// if file contains polish letters from CP1250
 		if (containsBytes(bytes, cp1250PLBytes)) {
-			logger.info("Wykryte kodowanie: " + CHARSET_CP1250);
+			logger.info("Encoding detected: " + CHARSET_CP1250);
 			return CHARSET_CP1250;
 		}
 		
-		logger.info("Domyślne kodowanie: " + CHARSET_UTF8);
+		logger.info("Default encoding: " + CHARSET_UTF8);
 		return CHARSET_UTF8;
 	}
 	

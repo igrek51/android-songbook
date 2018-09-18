@@ -6,11 +6,11 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.activity.ActivityController
-import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
+import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.about.AboutLayoutController
 import igrek.songbook.layout.about.HelpLayoutController
@@ -52,7 +52,7 @@ class NavigationMenuController {
         actionsMap[R.id.nav_songs_list] = Runnable { layoutController.get().showSongTree() }
         actionsMap[R.id.nav_search] = Runnable { layoutController.get().showSongSearch() }
         actionsMap[R.id.nav_update_db] = Runnable { songsDbRepository.recreateDb() }
-        actionsMap[R.id.nav_import_song] = Runnable { uiInfoService.showToast("not implemented yet") }
+        actionsMap[R.id.nav_import_song] = Runnable { uiInfoService.showToast("Sorry, not implemented yet") }
         actionsMap[R.id.nav_settings] = Runnable { layoutController.get().showSettings() }
         actionsMap[R.id.nav_help] = Runnable { helpLayoutController.get().showUIHelp() }
         actionsMap[R.id.nav_about] = Runnable { aboutLayoutController.get().showAbout() }

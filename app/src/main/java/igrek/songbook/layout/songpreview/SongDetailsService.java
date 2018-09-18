@@ -28,8 +28,8 @@ public class SongDetailsService {
 	}
 	
 	public void showSongDetails(Song song) {
-		String comment = or(song.getComment(), "None");
-		String preferredKey = or(song.getPreferredKey(), "None");
+		String comment = or(song.getComment(), uiResourceService.resString(R.string.details_none));
+		String preferredKey = or(song.getPreferredKey(), uiResourceService.resString(R.string.details_none));
 		String message = uiResourceService.resString(R.string.song_details, song.getTitle(), song.getCategory()
 				.getDisplayName(), comment, preferredKey, song.getVersionNumber());
 		String title = uiResourceService.resString(R.string.song_details_title);

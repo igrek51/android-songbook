@@ -95,7 +95,7 @@ public class ContactLayoutController implements MainLayout {
 		String message = contactMessageEdit.getText().toString();
 		String author = contactAuthorEdit.getText().toString();
 		if (message == null || message.isEmpty()) {
-			uiInfoService.showToast("Message field can't be empty.");
+			uiInfoService.showToast(uiResourceService.resString(R.string.contact_message_field_empty));
 			return;
 		}
 		sendFeedbackService.sendFeedback(message, author);

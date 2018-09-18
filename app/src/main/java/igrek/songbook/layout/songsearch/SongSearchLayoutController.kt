@@ -120,8 +120,10 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
         } else {
             val songNameFilter = SongTreeFilter(itemNameFilter)
             return songsDb.getAllUnlockedSongs()
+                    .asSequence()
                     .map { song -> SongSearchItem.song(song) }
                     .filter { item -> songNameFilter.matchesNameFilter(item) }
+                    .toList()
         }
     }
 

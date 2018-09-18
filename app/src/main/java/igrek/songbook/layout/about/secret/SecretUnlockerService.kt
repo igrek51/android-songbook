@@ -40,7 +40,7 @@ class SecretUnlockerService {
     fun showUnlockAlert() {
         val unlockAction = uiResourceService.resString(R.string.action_unlock)
         val dlgAlert = AlertDialog.Builder(activity)
-        dlgAlert.setMessage("Type in a secret key:")
+        dlgAlert.setMessage(uiResourceService.resString(R.string.unlock_type_in_secret_key))
         dlgAlert.setTitle(unlockAction)
 
         val input = EditText(activity)
@@ -61,7 +61,7 @@ class SecretUnlockerService {
         logger.info("unlocking attempt with a key: $key0")
         val key = StringSimplifier.simplify(key0)
         when (key) {
-            "dupa", "okon" -> uiInfoService.showToast("Congratulations!\nYou have discovered an Easter Egg :)")
+            "dupa", "okon" -> uiInfoService.showToast(uiResourceService.resString(R.string.easter_egg_discovered))
             "engineer", "inzynier" -> unlockSongs("engineer")
             "zjajem", "z jajem" -> unlockSongs("zjajem")
             "bff" -> unlockSongs("bff")

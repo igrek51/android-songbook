@@ -6,8 +6,6 @@ import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.UiInfoService;
 import igrek.songbook.info.UiResourceService;
-import igrek.songbook.info.logger.Logger;
-import igrek.songbook.info.logger.LoggerFactory;
 
 public class HelpLayoutController {
 	
@@ -15,8 +13,6 @@ public class HelpLayoutController {
 	UiInfoService uiInfoService;
 	@Inject
 	UiResourceService uiResourceService;
-	
-	private Logger logger = LoggerFactory.getLogger();
 	
 	public HelpLayoutController() {
 		DaggerIoc.getFactoryComponent().inject(this);
