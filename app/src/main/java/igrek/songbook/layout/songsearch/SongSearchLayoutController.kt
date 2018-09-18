@@ -132,6 +132,7 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
         if (isFilterSet()) {
             setSongFilter(null)
         } else {
+            softKeyboardService.hideSoftKeyboard(searchFilterEdit)
             layoutController.showSongTree()
         }
     }
@@ -141,6 +142,7 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
             setSongFilter(null)
         } else {
             softKeyboardService.hideSoftKeyboard(searchFilterEdit)
+            layoutController.showSongTree()
         }
     }
 

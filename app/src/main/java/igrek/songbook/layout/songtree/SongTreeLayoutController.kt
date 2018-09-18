@@ -105,6 +105,11 @@ class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
         }
     }
 
+    fun goToRoot() {
+        songTreeWalker.goToAllCategories()
+        updateSongItemsList()
+    }
+
     private fun storeScrollPosition() {
         scrollPosBuffer.storeScrollPosition(songTreeWalker.currentCategory, itemsListView?.currentScrollPosition)
     }
