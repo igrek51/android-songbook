@@ -19,18 +19,19 @@ import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.domain.songsdb.Song;
+import igrek.songbook.info.logger.Logger;
+import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.layout.LayoutController;
 import igrek.songbook.layout.LayoutState;
 import igrek.songbook.layout.MainLayout;
-import igrek.songbook.info.logger.Logger;
-import igrek.songbook.info.logger.LoggerFactory;
-import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
 import igrek.songbook.layout.navigation.NavigationMenuController;
-import igrek.songbook.system.SoftKeyboardService;
-import igrek.songbook.system.WindowManagerService;
+import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
 import igrek.songbook.layout.songpreview.view.OverlayRecyclerAdapter;
 import igrek.songbook.layout.songpreview.view.SongPreview;
 import igrek.songbook.layout.songpreview.view.quickmenu.QuickMenu;
+import igrek.songbook.layout.view.ButtonClickEffect;
+import igrek.songbook.system.SoftKeyboardService;
+import igrek.songbook.system.WindowManagerService;
 
 import static android.view.View.OVER_SCROLL_ALWAYS;
 
@@ -82,6 +83,7 @@ public class SongPreviewLayoutController implements MainLayout {
 		// navigation menu button
 		ImageButton navMenuButton = layout.findViewById(R.id.navMenuButton);
 		navMenuButton.setOnClickListener((v) -> navigationMenuController.navDrawerShow());
+		ButtonClickEffect.addClickEffect(navMenuButton);
 		
 		// create songPreview
 		songPreview = new SongPreview(activity);
@@ -124,11 +126,24 @@ public class SongPreviewLayoutController implements MainLayout {
 		songTitleLabel.setText(title);
 		
 		ImageButton goBackButton = layout.findViewById(R.id.goBackButton);
+		goBackButton.setOnClickListener((v) -> onBackClicked());
+		ButtonClickEffect.addClickEffect(goBackButton);
+		
 		ImageButton transposeButton = layout.findViewById(R.id.transposeButton);
+		ButtonClickEffect.addClickEffect(transposeButton);
+		
 		ImageButton autoscrollButton = layout.findViewById(R.id.autoscrollButton);
+		ButtonClickEffect.addClickEffect(autoscrollButton);
+		
 		ImageButton goBeginningButton = layout.findViewById(R.id.goBeginningButton);
+		ButtonClickEffect.addClickEffect(goBeginningButton);
+		
 		ImageButton songInfoButton = layout.findViewById(R.id.songInfoButton);
 		songInfoButton.setOnClickListener((v) -> songDetailsService.showSongDetails(currentSong));
+		ButtonClickEffect.addClickEffect(songInfoButton);
+		
+		ImageButton fullscreenButton = layout.findViewById(R.id.fullscreenButton);
+		ButtonClickEffect.addClickEffect(fullscreenButton);
 	}
 	
 	@Override

@@ -13,11 +13,12 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.domain.songsdb.SongsDb
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
+import igrek.songbook.layout.songselection.ListScrollPosition
 import igrek.songbook.layout.songselection.SongSelectionLayoutController
 import igrek.songbook.layout.songtree.SongTreeFilter
 import igrek.songbook.layout.songtree.SongTreeItem
+import igrek.songbook.layout.view.ButtonClickEffect
 import igrek.songbook.system.SoftKeyboardService
-import igrek.songbook.layout.songselection.ListScrollPosition
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
@@ -74,7 +75,7 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
 
         val searchFilterClearButton: ImageButton = layout.findViewById(R.id.searchFilterClearButton)
         searchFilterClearButton.setOnClickListener { _ -> onClearFilterClicked() }
-
+        ButtonClickEffect.addClickEffect(searchFilterClearButton)
 
         itemsListView!!.init(activity, this)
         updateSongItemsList()

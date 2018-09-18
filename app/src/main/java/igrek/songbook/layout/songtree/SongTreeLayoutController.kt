@@ -11,6 +11,7 @@ import igrek.songbook.domain.songsdb.SongsDb
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.songselection.SongSelectionLayoutController
+import igrek.songbook.layout.view.ButtonClickEffect
 import javax.inject.Inject
 
 class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
@@ -31,14 +32,13 @@ class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
     override fun showLayout(layout: View) {
         initSongSelectionLayout(layout)
 
-        val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)
-        navMenuButton.setOnClickListener { _ -> navigationMenuController.navDrawerShow() }
-
         goBackButton = layout.findViewById(R.id.goBackButton)
         goBackButton?.setOnClickListener { _ -> onBackClicked() }
+        ButtonClickEffect.addClickEffect(goBackButton)
 
         searchSongButton = layout.findViewById(R.id.searchSongButton)
         searchSongButton?.setOnClickListener { _ -> goToSearchSong() }
+        ButtonClickEffect.addClickEffect(searchSongButton)
 
         toolbarTitle = layout.findViewById(R.id.toolbarTitle)
 

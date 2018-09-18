@@ -7,17 +7,18 @@ import android.view.View
 import android.widget.ImageButton
 import dagger.Lazy
 import igrek.songbook.R
+import igrek.songbook.activity.ActivityController
 import igrek.songbook.domain.songsdb.SongsDb
+import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
-import igrek.songbook.activity.ActivityController
-import igrek.songbook.info.UiResourceService
-import igrek.songbook.layout.songpreview.SongPreviewLayoutController
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.navigation.NavigationMenuController
-import igrek.songbook.persistence.SongsDbRepository
+import igrek.songbook.layout.songpreview.SongPreviewLayoutController
 import igrek.songbook.layout.songtree.SongTreeItem
 import igrek.songbook.layout.songtree.SongTreeSorter
+import igrek.songbook.layout.view.ButtonClickEffect
+import igrek.songbook.persistence.SongsDbRepository
 import javax.inject.Inject
 
 abstract class SongSelectionLayoutController : OnSongClickListener {
@@ -53,6 +54,7 @@ abstract class SongSelectionLayoutController : OnSongClickListener {
         // navigation menu button
         val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)
         navMenuButton.setOnClickListener { _ -> navigationMenuController.navDrawerShow() }
+        ButtonClickEffect.addClickEffect(navMenuButton)
 
         itemsListView = layout.findViewById(R.id.filesList)
     }

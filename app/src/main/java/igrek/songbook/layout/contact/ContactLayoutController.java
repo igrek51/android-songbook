@@ -12,17 +12,18 @@ import javax.inject.Inject;
 
 import dagger.Lazy;
 import igrek.songbook.R;
+import igrek.songbook.activity.ActivityController;
 import igrek.songbook.dagger.DaggerIoc;
+import igrek.songbook.info.UiInfoService;
+import igrek.songbook.info.UiResourceService;
+import igrek.songbook.info.errorcheck.SafeClickListener;
+import igrek.songbook.info.logger.Logger;
+import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.layout.LayoutController;
 import igrek.songbook.layout.LayoutState;
 import igrek.songbook.layout.MainLayout;
-import igrek.songbook.info.logger.Logger;
-import igrek.songbook.info.logger.LoggerFactory;
-import igrek.songbook.activity.ActivityController;
-import igrek.songbook.info.errorcheck.SafeClickListener;
-import igrek.songbook.info.UiInfoService;
-import igrek.songbook.info.UiResourceService;
 import igrek.songbook.layout.navigation.NavigationMenuController;
+import igrek.songbook.layout.view.ButtonClickEffect;
 
 public class ContactLayoutController implements MainLayout {
 	
@@ -62,6 +63,7 @@ public class ContactLayoutController implements MainLayout {
 		// navigation menu button
 		ImageButton navMenuButton = layout.findViewById(R.id.navMenuButton);
 		navMenuButton.setOnClickListener((v) -> navigationMenuController.navDrawerShow());
+		ButtonClickEffect.addClickEffect(navMenuButton);
 		
 		contactMessageEdit = layout.findViewById(R.id.contactMessageEdit);
 		contactAuthorEdit = layout.findViewById(R.id.contactAuthorEdit);
