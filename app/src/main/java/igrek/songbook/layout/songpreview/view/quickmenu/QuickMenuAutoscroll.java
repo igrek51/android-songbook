@@ -39,8 +39,12 @@ public class QuickMenuAutoscroll {
 	
 	public QuickMenuAutoscroll() {
 		DaggerIoc.getFactoryComponent().inject(this);
-		autoscrollService.getScrollStateSubject().subscribe(autoscrollState -> updateView());
-		autoscrollService.getScrollSpeedSubject().subscribe(scrollSpeed -> updateView());
+		autoscrollService.getScrollStateSubject()
+				.debounce(200, TimeUnit.MILLISECONDS)
+				.subscribe(autoscrollState -> updateView());
+		autoscrollService.getScrollSpeedSubject()
+				.debounce(200, TimeUnit.MILLISECONDS)
+				.subscribe(scrollSpeed -> updateView());
 	}
 	
 	// TODO refactor: repeated code: same sliders in settings
@@ -141,20 +145,22 @@ public class QuickMenuAutoscroll {
 	}
 	
 	private void updateView() {
-		// set toggle button text
-		if (autoscrollToggleButton != null) {
-			if (autoscrollService.isRunning()) {
-				autoscrollToggleButton.setText(uiResourceService.resString(R.string.stop_autoscroll));
-			} else {
-				autoscrollToggleButton.setText(uiResourceService.resString(R.string.start_autoscroll));
+		if (visible) {
+			// set toggle button text
+			if (autoscrollToggleButton != null) {
+				if (autoscrollService.isRunning()) {
+					autoscrollToggleButton.setText(uiResourceService.resString(R.string.stop_autoscroll));
+				} else {
+					autoscrollToggleButton.setText(uiResourceService.resString(R.string.start_autoscroll));
+				}
 			}
-		}
-		if (autoscrollPauseSlider != null && autoscrollSpeedSlider != null) {
-			// set sliders value
-			float autoscrollInitialPause = autoscrollService.getInitialPause();
-			autoscrollPauseSlider.setValue(autoscrollInitialPause);
-			float autoscrollSpeed = autoscrollService.getAutoscrollSpeed();
-			autoscrollSpeedSlider.setValue(autoscrollSpeed);
+			if (autoscrollPauseSlider != null && autoscrollSpeedSlider != null) {
+				// set sliders value
+				float autoscrollInitialPause = autoscrollService.getInitialPause();
+				autoscrollPauseSlider.setValue(autoscrollInitialPause);
+				float autoscrollSpeed = autoscrollService.getAutoscrollSpeed();
+				autoscrollSpeedSlider.setValue(autoscrollSpeed);
+			}
 		}
 	}
 	
