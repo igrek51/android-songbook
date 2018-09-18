@@ -5,26 +5,24 @@ import android.widget.TextView;
 
 import io.reactivex.subjects.PublishSubject;
 
-public class SeekbarController {
+public class SliderController {
 	
 	private SeekBar seekBar;
 	private TextView label;
-	private float currentValue;
 	private float min;
 	private float max;
 	PublishSubject<Float> valueSubject = PublishSubject.create();
 	
-	public SeekbarController(SeekBar seekBar, TextView label, float currentValue, float min, float max) {
+	public SliderController(SeekBar seekBar, TextView label, float currentValue, float min, float max) {
 		this.seekBar = seekBar;
 		this.label = label;
-		this.currentValue = currentValue;
 		this.min = min;
 		this.max = max;
 		
 		setValue(currentValue);
 		updateLabel(currentValue);
 		
-		seekBar.setMax(100);
+		seekBar.setMax(1000);
 		seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -53,12 +51,11 @@ public class SeekbarController {
 	}
 	
 	public void setValue(float value) {
-		this.currentValue = value;
 		float progress = (value - min) * seekBar.getMax() / (max - min);
 		if (progress < 0)
 			progress = 0;
-		if (progress > 100)
-			progress = 100;
+		if (progress > 1000)
+			progress = 1000;
 		seekBar.setProgress((int) progress);
 	}
 	

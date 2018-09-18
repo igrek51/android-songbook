@@ -53,9 +53,9 @@ public class SettingsLayoutController implements MainLayout {
 	@Inject
 	PreferencesService preferencesService;
 	
-	private SeekbarController fontsizeSlider;
-	private SeekbarController autoscrollPauseSlider;
-	private SeekbarController autoscrollSpeedSlider;
+	private SliderController fontsizeSlider;
+	private SliderController autoscrollPauseSlider;
+	private SliderController autoscrollSpeedSlider;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
@@ -85,15 +85,15 @@ public class SettingsLayoutController implements MainLayout {
 		TextView autoscrollSpeedLabel = layout.findViewById(R.id.autoscrollSpeedLabel);
 		
 		float fontsize = lyricsManager.getFontsize();
-		fontsizeSlider = new SeekbarController(fontsizeSeekbar, fontsizeLabel, fontsize, 5, 100) {
+		fontsizeSlider = new SliderController(fontsizeSeekbar, fontsizeLabel, fontsize, 5, 100) {
 			@Override
 			public String generateLabelText(float value) {
-				return uiResourceService.resString(R.string.settings_font_size, roundDecimal(value));
+				return uiResourceService.resString(R.string.settings_font_size, roundDecimal(value, "#.#"));
 			}
 		};
 		
 		float autoscrollInitialPause = autoscrollService.getInitialPause();
-		autoscrollPauseSlider = new SeekbarController(autoscrollPauseSeekbar, autoscrollPauseLabel, autoscrollInitialPause, 0, 90000) {
+		autoscrollPauseSlider = new SliderController(autoscrollPauseSeekbar, autoscrollPauseLabel, autoscrollInitialPause, 0, 90000) {
 			@Override
 			public String generateLabelText(float value) {
 				return uiResourceService.resString(R.string.settings_scroll_initial_pause, Integer.toString((int) (value / 1000)));
@@ -101,10 +101,10 @@ public class SettingsLayoutController implements MainLayout {
 		};
 		
 		float autoscrollSpeed = autoscrollService.getAutoscrollSpeed();
-		autoscrollSpeedSlider = new SeekbarController(autoscrollSpeedSeekbar, autoscrollSpeedLabel, autoscrollSpeed, 0, 1.0f) {
+		autoscrollSpeedSlider = new SliderController(autoscrollSpeedSeekbar, autoscrollSpeedLabel, autoscrollSpeed, 0, 1.0f) {
 			@Override
 			public String generateLabelText(float value) {
-				return uiResourceService.resString(R.string.settings_autoscroll_speed, roundDecimal(value));
+				return uiResourceService.resString(R.string.settings_autoscroll_speed, roundDecimal(value, "#.####"));
 			}
 		};
 		
@@ -120,8 +120,8 @@ public class SettingsLayoutController implements MainLayout {
 		
 	}
 	
-	private String roundDecimal(float f) {
-		DecimalFormat df = new DecimalFormat("#.####");
+	private String roundDecimal(float f, String format) {
+		DecimalFormat df = new DecimalFormat(format);
 		df.setRoundingMode(RoundingMode.HALF_UP);
 		return df.format(f);
 	}

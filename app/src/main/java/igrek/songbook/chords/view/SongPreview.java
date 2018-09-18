@@ -9,16 +9,16 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.Lazy;
+import igrek.songbook.chords.SongPreviewLayoutController;
+import igrek.songbook.chords.autoscroll.AutoscrollService;
+import igrek.songbook.chords.view.canvas.BaseCanvasView;
+import igrek.songbook.chords.view.quickmenu.QuickMenu;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.domain.lyrics.LyricsLine;
 import igrek.songbook.domain.lyrics.LyricsModel;
 import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
-import igrek.songbook.chords.autoscroll.AutoscrollService;
-import igrek.songbook.chords.SongPreviewLayoutController;
 import igrek.songbook.system.WindowManagerService;
-import igrek.songbook.chords.view.canvas.BaseCanvasView;
-import igrek.songbook.chords.view.quickmenu.QuickMenu;
 
 public class SongPreview extends BaseCanvasView implements View.OnTouchListener {
 	
@@ -261,7 +261,8 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 		// monitor scroll changes
 		// TODO use rx to debounce or aggregate events
 		if (Math.abs(linePartScrolled) > 0.1f) {
-			autoscroll.get().onCanvasScrollEvent(linePartScrolled, scroll);
+			autoscroll.get().getCanvasScrollSubject().onNext(linePartScrolled);
+			//			autoscroll.get().onCanvasScrollEvent(linePartScrolled, scroll);
 		}
 	}
 }

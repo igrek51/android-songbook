@@ -15,6 +15,7 @@ import igrek.songbook.logger.Logger;
 import igrek.songbook.logger.LoggerFactory;
 import igrek.songbook.settings.preferences.PreferencesDefinition;
 import igrek.songbook.settings.preferences.PreferencesService;
+import io.reactivex.subjects.PublishSubject;
 
 public class AutoscrollService {
 	
@@ -38,6 +39,8 @@ public class AutoscrollService {
 	private float autoscrollSpeed; // [em / s]
 	private long startTime; // [ms]
 	
+	private PublishSubject<Float> canvasScrollSubject = PublishSubject.create();
+	
 	private Handler timerHandler = new Handler();
 	private Runnable timerRunnable = () -> {
 		if (state == AutoscrollState.OFF)
@@ -49,6 +52,10 @@ public class AutoscrollService {
 		DaggerIoc.getFactoryComponent().inject(this);
 		loadPreferences();
 		reset();
+		
+		canvasScrollSubject.subscribe(linePartScrolled -> {
+			onCanvasScrollEvent(linePartScrolled, getCanvas().getScroll());
+		});
 	}
 	
 	private void loadPreferences() {
@@ -213,5 +220,9 @@ public class AutoscrollService {
 	
 	public void setAutoscrollSpeed(float autoscrollSpeed) {
 		this.autoscrollSpeed = autoscrollSpeed;
+	}
+	
+	public PublishSubject<Float> getCanvasScrollSubject() {
+		return canvasScrollSubject;
 	}
 }
