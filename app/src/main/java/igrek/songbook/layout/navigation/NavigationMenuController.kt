@@ -9,6 +9,7 @@ import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
+import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
@@ -31,6 +32,8 @@ class NavigationMenuController {
     @Inject
     lateinit var uiInfoService: UiInfoService
     @Inject
+    lateinit var uiResourceService: UiResourceService
+    @Inject
     lateinit var activityController: dagger.Lazy<ActivityController>
     @Inject
     lateinit var helpLayoutController: dagger.Lazy<HelpLayoutController>
@@ -52,7 +55,7 @@ class NavigationMenuController {
         actionsMap[R.id.nav_songs_list] = Runnable { layoutController.get().showSongTree() }
         actionsMap[R.id.nav_search] = Runnable { layoutController.get().showSongSearch() }
         actionsMap[R.id.nav_update_db] = Runnable { songsDbRepository.recreateDb() }
-        actionsMap[R.id.nav_import_song] = Runnable { uiInfoService.showToast("Sorry, not implemented yet") }
+        actionsMap[R.id.nav_import_song] = Runnable { uiInfoService.showToast(uiResourceService.resString(R.string.feature_not_implemented)) }
         actionsMap[R.id.nav_settings] = Runnable { layoutController.get().showSettings() }
         actionsMap[R.id.nav_help] = Runnable { helpLayoutController.get().showUIHelp() }
         actionsMap[R.id.nav_about] = Runnable { aboutLayoutController.get().showAbout() }

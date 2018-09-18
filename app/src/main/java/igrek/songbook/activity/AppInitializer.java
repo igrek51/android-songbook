@@ -31,18 +31,19 @@ public class AppInitializer {
 	}
 	
 	public void init() {
+		if (BuildConfig.DEBUG) {
+			debugInit();
+		}
+		
 		windowManagerService.hideTaskbar();
 		layoutController.init();
 		layoutController.showSongTree();
-		// Allow showing the activity even if the device is locked
-		if (BuildConfig.DEBUG) {
-			debugMode();
-		}
 		
 		logger.info("Application has been initialized.");
 	}
 	
-	private void debugMode() {
+	private void debugInit() {
+		// Allow showing the activity even if the device is locked
 		windowManagerService.showAppWhenLocked();
 		setLocale("pl");
 	}

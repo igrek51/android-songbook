@@ -15,6 +15,7 @@
         \nYou can choose a song from a categories tree or search it by title or artist.
         \n
         \nSONG PREVIEW:
+        \nOn a song preview screen the display is always on.
         \nPinch with two fingers to change font size.
         \n
         \nTRANSPOSING:
@@ -34,9 +35,11 @@
     <string name="ui_about_content">
         Guitar SongBook v%s
         \nSongs database version: %s
-        \n\nAUTHOR:
+        \n
+        \nAUTHOR:
         \nigrek51 - Ireneusz Szulc
-        \n\nTECHNOLOGIES USED:
+        \n
+        \nTECHNOLOGIES USED:
         \nAndroid SDK
         \nAssertJ
         \nDagger 2
@@ -103,4 +106,5 @@
     <string name="contact_message_sent_successfully">Your message has been sent. Thanks :)</string>
     <string name="contact_error_sending">An error has occurred while sending your message.</string>
     <string name="details_none">None</string>
+    <string name="feature_not_implemented">Sorry, not implemented yet</string>
 </resources>

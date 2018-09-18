@@ -42,9 +42,9 @@ public class QuickMenuAutoscroll {
 		autoscrollService.getScrollStateSubject()
 				.debounce(200, TimeUnit.MILLISECONDS)
 				.subscribe(autoscrollState -> updateView());
-		autoscrollService.getScrollSpeedSubject()
-				.debounce(200, TimeUnit.MILLISECONDS)
-				.subscribe(scrollSpeed -> updateView());
+		//		autoscrollService.getScrollSpeedSubject()
+		//				.debounce(200, TimeUnit.MILLISECONDS)
+		//				.subscribe(scrollSpeed -> updateView());
 	}
 	
 	// TODO refactor: repeated code: same sliders in settings

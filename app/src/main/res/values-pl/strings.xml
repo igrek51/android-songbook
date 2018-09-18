@@ -5,6 +5,7 @@
         \nMożesz wybrać piosenkę z drzewa kategorii lub wyszukać ją po tytule lub nazwie artysty.
         \n
         \nPODGLĄD PIOSENKI:
+        \nNa ekranie podglądu piosenki wyświetlacz jest stale włączony.
         \nSkalowanie dwoma palcami zmienia rozmiar czcionki na podglądzie.
         \n
         \nTRANSPOZYCJA:
@@ -13,7 +14,7 @@
         \nPrzyciski "-5, -1, +1, +5" - zmiana tonacji o liczbę półtonów.
         \nPrzycisk "0" - przywrócenie oryginalnej tonacji.
         \n
-        \AUTOPRZEWIJANIE:
+        \nAUTOPRZEWIJANIE:
         \nNaciśnij ikonę autoprzewijania na górnym pasku, aby wyświetlić panel autoprzewijania.
         Rozpoczęcie autoprzewijania powoduje, że tekst przwijany jest automatycznie w odstępach czasowych.
         \nJeśli jest to początek tekstu, autoprzewijanie włączy się po pewnym czasie (odliczanie przed przewijaniem).
@@ -24,9 +25,11 @@
     <string name="ui_about_content">
         Guitar SongBook v%s
         \nWersja bazy piosenek: %s
-        \n\nAUTOR:
+        \n
+        \nAUTOR:
         \nigrek51 - Ireneusz Szulc
-        \n\nWYKORZYSTANE TECHNOLOGIE:
+        \n
+        \nWYKORZYSTANE TECHNOLOGIE:
         \nAndroid SDK
         \nAssertJ
         \nDagger 2
@@ -60,7 +63,7 @@
     <string name="contact_message_hint">Twoja wiadomość…</string>
     <string name="contact_send">Wyślij</string>
     <string name="contact_author_hint">Twoje imię (opcjonalne)</string>
-    <string name="transposed_by_semitones">Transpozycja o %s półtonów</string>
+    <string name="transposed_by_semitones">Transpozycja: %s półtonów</string>
     <string name="action_transposition_reset">Reset</string>
     <string name="action_stop_autoscroll">Stop</string>
     <string name="autoscroll_starts_in">Autoprzewijanie zacznie się za %s s</string>
@@ -95,4 +98,5 @@
     <string name="contact_message_sent_successfully">Twoja wiadomość została wysłana. Dzięki :)</string>
     <string name="contact_error_sending">Wystąpił błąd podczas wysyłania.</string>
     <string name="details_none">Brak</string>
+    <string name="feature_not_implemented">Ta funkcja jeszcze nie działa ;(</string>
 </resources>
