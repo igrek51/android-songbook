@@ -7,10 +7,10 @@ import javax.inject.Inject;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.domain.songsdb.Song;
-import igrek.songbook.info.logger.Logger;
-import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.info.UiInfoService;
 import igrek.songbook.info.UiResourceService;
+import igrek.songbook.info.logger.Logger;
+import igrek.songbook.info.logger.LoggerFactory;
 
 public class SongDetailsService {
 	
@@ -28,16 +28,16 @@ public class SongDetailsService {
 	}
 	
 	public void showSongDetails(Song song) {
-		String comment = orEmpty(song.getComment());
-		String preferredKey = orEmpty(song.getPreferredKey());
+		String comment = or(song.getComment(), "None");
+		String preferredKey = or(song.getPreferredKey(), "None");
 		String message = uiResourceService.resString(R.string.song_details, song.getTitle(), song.getCategory()
 				.getDisplayName(), comment, preferredKey, song.getVersionNumber());
 		String title = uiResourceService.resString(R.string.song_details_title);
 		uiInfoService.showDialog(title, message);
 	}
 	
-	private String orEmpty(String s) {
-		return s == null ? "" : s;
+	private String or(String s, String defaultValue) {
+		return s == null ? defaultValue : s;
 	}
 	
 }

@@ -31,7 +31,7 @@
                 <LinearLayout android:id="@+id/toolbarHorizontalLayout"
                               xmlns:android="http://schemas.android.com/apk/res/android"
                               android:layout_width="match_parent"
-                              android:layout_height="36dp"
+                              android:layout_height="40dp"
                               android:fillViewport="true"
                               android:orientation="horizontal">
 
@@ -145,9 +145,11 @@
                     android:id="@+id/songTitleLabel"
                     android:layout_width="match_parent"
                     android:layout_height="24dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginStart="8dp"
-                    android:textSize="16sp"/>
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginStart="4dp"
+                    android:paddingTop="0dp"
+                    android:textSize="16sp"
+                    />
 
             </LinearLayout>
 
