@@ -73,7 +73,22 @@ public class ChordsTransposerManager {
 	}
 	
 	public String getTransposedByDisplayName() {
-		return (transposed > 0 ? "+" : "") + transposed;
+		return (transposed > 0 ? "+" : "") + transposed + " " + getSemitonesDisplayName(transposed);
+	}
+	
+	private String getSemitonesDisplayName(int transposed) {
+		int absTransposed = transposed >= 0 ? transposed : -transposed;
+		int stringResId;
+		if (absTransposed == 0) {
+			stringResId = R.string.transpose_0_semitones;
+		} else if (absTransposed == 1) {
+			stringResId = R.string.transpose_1_semitones;
+		} else if (absTransposed <= 4) { // 2,3,4
+			stringResId = R.string.transpose_234_semitones;
+		} else {
+			stringResId = R.string.transpose_5_semitones;
+		}
+		return uiResourceService.resString(stringResId);
 	}
 	
 }

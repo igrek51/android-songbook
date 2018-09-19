@@ -34,7 +34,7 @@
     </string>
     <string name="ui_about_content">
         Guitar SongBook v%s
-        \nSongs database version: %s
+        \nSongs database version: v%s
         \n
         \nAUTHOR:
         \nigrek51 - Ireneusz Szulc
@@ -67,7 +67,11 @@
     <string name="contact_send">Send</string>
     <string name="contact_author_hint">Your name (optional)</string>
 
-    <string name="transposed_by_semitones">Transposed by %s semitones</string>
+    <string name="transposed_by_semitones">Transposed by %s</string>
+    <string name="transpose_0_semitones">semitones</string>
+    <string name="transpose_1_semitones">semitone</string>
+    <string name="transpose_234_semitones">semitones</string>
+    <string name="transpose_5_semitones">semitones</string>
     <string name="action_transposition_reset">Reset</string>
 
     <string name="action_stop_autoscroll">Stop</string>
@@ -107,5 +111,5 @@
     <string name="contact_error_sending">An error has occurred while sending your message.</string>
     <string name="details_none">None</string>
     <string name="feature_not_implemented">Sorry, not implemented yet</string>
-    <string name="scroll_at_the_beginning_already">You are at the beginning already.</string>
+    <string name="scroll_at_the_beginning_already">Back to the beginning.</string>
 </resources>

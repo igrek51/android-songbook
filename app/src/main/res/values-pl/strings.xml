@@ -24,10 +24,10 @@
     </string>
     <string name="ui_about_content">
         Guitar SongBook v%s
-        \nWersja bazy piosenek: %s
+        \nWersja bazy piosenek: v%s
         \n
         \nAUTOR:
-        \nigrek51 - Ireneusz Szulc
+        \nIreneusz Szulc
         \n
         \nWYKORZYSTANE TECHNOLOGIE:
         \nAndroid SDK
@@ -63,7 +63,11 @@
     <string name="contact_message_hint">Twoja wiadomość…</string>
     <string name="contact_send">Wyślij</string>
     <string name="contact_author_hint">Twoje imię (opcjonalne)</string>
-    <string name="transposed_by_semitones">Transpozycja: %s półtonów</string>
+    <string name="transposed_by_semitones">Transpozycja: %s</string>
+    <string name="transpose_0_semitones">półtonów</string>
+    <string name="transpose_1_semitones">półton</string>
+    <string name="transpose_234_semitones">półtony</string>
+    <string name="transpose_5_semitones">półtonów</string>
     <string name="action_transposition_reset">Reset</string>
     <string name="action_stop_autoscroll">Stop</string>
     <string name="autoscroll_starts_in">Autoprzewijanie zacznie się za %s s</string>
@@ -99,5 +103,5 @@
     <string name="contact_error_sending">Wystąpił błąd podczas wysyłania.</string>
     <string name="details_none">Brak</string>
     <string name="feature_not_implemented">Ta funkcja jeszcze nie działa ;(</string>
-    <string name="scroll_at_the_beginning_already">To już jest początek piosenki.</string>
+    <string name="scroll_at_the_beginning_already">Powrót na początek piosenki</string>
 </resources>
