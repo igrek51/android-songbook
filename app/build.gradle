@@ -3,8 +3,15 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
+    signingConfigs {
+        sign {
+            keyAlias 'songbook-key'
+            keyPassword 'songbook-key'
+            storeFile file('/home/igrek/.android/songbook.jks')
+            storePassword 'songbook-key'
+        }
+    }
     compileSdkVersion 27
-
     // automatic version incrementer
     def versionPropsFile = file('version.properties')
     if (versionPropsFile.canRead()) {
@@ -26,7 +33,6 @@ android {
     } else {
         throw new GradleException("Could not read version.properties!")
     }
-
     defaultConfig {
         applicationId "igrek.songbook"
         minSdkVersion 16
@@ -34,29 +40,25 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.sign
         }
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     configurations.all {
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
     }
-
     testOptions {
         unitTests {
             includeAndroidResources = true
         }
     }
-
 }
 
 dependencies {

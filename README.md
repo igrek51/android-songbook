@@ -9,14 +9,18 @@ The guitar songs database is included and is easily extensible.
 
 Example application screenshots are shown below:
 
-![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/songbook-04-mix.png)
+![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/songbook-05-mix.png)
 
-## Features
+![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/songbook-06-mix.png)
 
+## Main features
+
+* Lyrics viewer
 * Chords highlighting
 * Chords transposition (to any key)
-* Always-on screen
 * Auto scrolling
+* Always-on display
+* Songs database included
+* Songs browser with search engine
 * Scroll speed auto-adjustment
-* Offline songs database
 * Font size scaling
