@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
-    android:id="@+id/mainLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:orientation="vertical">
 
@@ -35,47 +35,61 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/nav_contact"
-                android:textSize="18sp"
                 android:layout_marginLeft="20dp"
-                android:layout_marginStart="20dp"/>
-
+                android:layout_marginStart="20dp"
+                android:text="@string/nav_contact"
+                android:textSize="18sp"/>
         </android.support.v7.widget.Toolbar>
-
     </android.support.design.widget.AppBarLayout>
 
-    <TextView
-        android:id="@+id/contactText"
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/contact_label"
-        android:gravity="bottom"
-        android:textSize="18sp"
-        android:layout_margin="8dp"/>
+        android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/contactMessageEdit"
-        android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:inputType="text|textMultiLine"
-        android:gravity="top"
-        android:hint="@string/contact_message_hint"
-        android:layout_margin="8dp"/>
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/contactAuthorEdit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text"
-        android:gravity="top"
-        android:hint="@string/contact_author_hint"
-        android:layout_margin="8dp"/>
+            <TextView
+                android:id="@+id/contactText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:gravity="bottom"
+                android:text="@string/contact_label"
+                android:textSize="18sp"/>
 
-    <Button
-        android:id="@+id/contactSendButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/contact_send"
-        android:layout_margin="8dp"/>
+            <EditText
+                android:id="@+id/contactMessageEdit"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:layout_margin="6dp"
+                android:gravity="top"
+                android:hint="@string/contact_message_hint"
+                android:inputType="text|textMultiLine"
+                android:background="#0affffff"/>
+
+            <EditText
+                android:id="@+id/contactAuthorEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:gravity="top"
+                android:hint="@string/contact_author_hint"
+                android:inputType="text"
+                android:background="#0affffff"/>
+
+            <Button
+                android:id="@+id/contactSendButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:text="@string/contact_send"/>
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
