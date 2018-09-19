@@ -99,7 +99,7 @@ public class SettingsLayoutController implements MainLayout {
 		autoscrollPauseSlider = new SliderController(autoscrollPauseSeekbar, autoscrollPauseLabel, autoscrollInitialPause, 0, 90000) {
 			@Override
 			public String generateLabelText(float value) {
-				return uiResourceService.resString(R.string.settings_scroll_initial_pause, Integer.toString((int) (value / 1000)));
+				return uiResourceService.resString(R.string.settings_scroll_initial_pause, msToS(value));
 			}
 		};
 		
@@ -121,6 +121,10 @@ public class SettingsLayoutController implements MainLayout {
 		//		CheckBox fullscreenCheckbox = layout.findViewById(R.id.fullscreenCheckbox);
 		//		Spinner chordsNotationSpinner = layout.findViewById(R.id.chordsNotationSpinner);
 		
+	}
+	
+	private String msToS(float ms) {
+		return Integer.toString((int) ((ms + 500) / 1000));
 	}
 	
 	private String roundDecimal(float f, String format) {

@@ -21,8 +21,8 @@
         \nTRANSPOSING:
         \nYou can transpose any song with chords to any key.
         Click transposing icon on top action bar to show transposing panel.
-        \n"-5, -1, +1, +5" buttons - tranposition by number of semitones.
-        \n"0" button - restore original key.
+        \n\"-5, -1, +1, +5\" buttons - tranposition by number of semitones.
+        \n\"0\" button - restore original key.
         \n
         \nAUTOSCROLL:
         \nClick autoscroll icon on top action bar to show autoscroll panel.
@@ -33,7 +33,7 @@
         Scrolling up or down manually while autoscrolling enabled causes autoscroll speed to be auto-adjusted (speed up or slow down).
     </string>
     <string name="ui_about_content">
-        Guitar SongBook v%s
+        Guitar Songbook v%s
         \nSongs database version: v%s
         \n
         \nAUTHOR:

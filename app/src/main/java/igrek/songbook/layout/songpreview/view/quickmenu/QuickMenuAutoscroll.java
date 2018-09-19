@@ -40,7 +40,7 @@ public class QuickMenuAutoscroll {
 	public QuickMenuAutoscroll() {
 		DaggerIoc.getFactoryComponent().inject(this);
 		autoscrollService.getScrollStateSubject()
-				.debounce(200, TimeUnit.MILLISECONDS)
+				.debounce(200, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread())
 				.subscribe(autoscrollState -> updateView());
 		//		autoscrollService.getScrollSpeedSubject()
 		//				.debounce(200, TimeUnit.MILLISECONDS)

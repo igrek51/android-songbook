@@ -11,8 +11,8 @@
         \nTRANSPOZYCJA:
         \nMożesz przetransponować piosenki z akordami do dowolnej tonacji.
         Naciśnij ikonę tranpozycji na górnym pasku, aby wyświetlić panel transpozycji.
-        \nPrzyciski "-5, -1, +1, +5" - zmiana tonacji o liczbę półtonów.
-        \nPrzycisk "0" - przywrócenie oryginalnej tonacji.
+        \nPrzyciski \"-5, -1, +1, +5\" - zmiana tonacji o liczbę półtonów.
+        \nPrzycisk \"0\" - przywrócenie oryginalnej tonacji.
         \n
         \nAUTOPRZEWIJANIE:
         \nNaciśnij ikonę autoprzewijania na górnym pasku, aby wyświetlić panel autoprzewijania.
@@ -23,7 +23,7 @@
         Ręczne przewijanie przy włączonym autoprzewijaniu spowoduje, że prędkosć przewijania automatycznie zostanie skorygowana (przyspieszona lub zwolniona).
     </string>
     <string name="ui_about_content">
-        Guitar SongBook v%s
+        Guitar Songbook v%s
         \nWersja bazy piosenek: v%s
         \n
         \nAUTOR:
@@ -79,7 +79,7 @@
     <string name="song_category_others">Inne</string>
     <string name="song_category_custom">Moje piosenki</string>
     <string name="song_search_edit_hint">Tytuł piosenki lub artysta</string>
-    <string name="unlock_key_invalid">Hasło nie jest poprawne.</string>
+    <string name="unlock_key_invalid">Hasło jest niepoprawne.</string>
     <string name="unlock_new_songs_unlocked">Udblokowano nowe piosenki: %d</string>
     <string name="settings_font_size">Rozmiar czcionki: %s dp</string>
     <string name="settings_scroll_initial_pause">Opóźnienie autoprzewijania: %s s</string>

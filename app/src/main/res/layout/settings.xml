@@ -55,9 +55,8 @@
         android:id="@+id/fontsizeSeekbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:max="1000"
-        android:padding="16dp"
-        android:progress="50"/>
+        android:max="10000"
+        android:padding="16dp"/>
 
 
     <TextView
@@ -71,9 +70,8 @@
         android:id="@+id/autoscrollPauseSeekbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:max="1000"
-        android:padding="16dp"
-        android:progress="50"/>
+        android:max="10000"
+        android:padding="16dp"/>
 
 
     <TextView
@@ -87,9 +85,8 @@
         android:id="@+id/autoscrollSpeedSeekbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:max="1000"
-        android:padding="16dp"
-        android:progress="50"/>
+        android:max="10000"
+        android:padding="16dp"/>
 
 
     <!--<CheckBox-->
