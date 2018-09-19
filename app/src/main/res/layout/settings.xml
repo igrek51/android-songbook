@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/mainLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -44,69 +43,83 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <TextView
-        android:id="@+id/fontsizeLabel"
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:text="@string/settings_font_size"/>
+        android:layout_height="wrap_content">
 
-    <SeekBar
-        android:id="@+id/fontsizeSeekbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="10000"
-        android:padding="16dp"/>
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/fontsizeLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:text="@string/settings_font_size"/>
 
-    <TextView
-        android:id="@+id/autoscrollPauseLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:text="@string/settings_scroll_initial_pause"/>
-
-    <SeekBar
-        android:id="@+id/autoscrollPauseSeekbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="10000"
-        android:padding="16dp"/>
+            <SeekBar
+                android:id="@+id/fontsizeSeekbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="10000"
+                android:padding="16dp"/>
 
 
-    <TextView
-        android:id="@+id/autoscrollSpeedLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:text="@string/settings_autoscroll_speed"/>
+            <TextView
+                android:id="@+id/autoscrollPauseLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:text="@string/settings_scroll_initial_pause"/>
 
-    <SeekBar
-        android:id="@+id/autoscrollSpeedSeekbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="10000"
-        android:padding="16dp"/>
-
-
-    <!--<CheckBox-->
-    <!--android:id="@+id/fullscreenCheckbox"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_margin="20dp"-->
-    <!--android:text="@string/settings_fullscreen"/>-->
+            <SeekBar
+                android:id="@+id/autoscrollPauseSeekbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="10000"
+                android:padding="16dp"/>
 
 
-    <!--<TextView-->
-    <!--android:id="@+id/ChordsNotationLabel"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_margin="20dp"-->
-    <!--android:text="@string/settings_chords_notation"/>-->
+            <TextView
+                android:id="@+id/autoscrollSpeedLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:text="@string/settings_autoscroll_speed"/>
 
-    <!--<Spinner-->
-    <!--android:id="@+id/chordsNotationSpinner"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="wrap_content"/>-->
+            <SeekBar
+                android:id="@+id/autoscrollSpeedSeekbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="10000"
+                android:padding="16dp"/>
+
+
+            <!--<CheckBox-->
+            <!--android:id="@+id/fullscreenCheckbox"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="20dp"-->
+            <!--android:text="@string/settings_fullscreen"/>-->
+
+
+            <!--<TextView-->
+            <!--android:id="@+id/ChordsNotationLabel"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="20dp"-->
+            <!--android:text="@string/settings_chords_notation"/>-->
+
+            <!--<Spinner-->
+            <!--android:id="@+id/chordsNotationSpinner"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="wrap_content"/>-->
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
