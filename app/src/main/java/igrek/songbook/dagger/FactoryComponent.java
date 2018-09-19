@@ -32,6 +32,7 @@ import igrek.songbook.layout.songselection.SongListView;
 import igrek.songbook.layout.songtree.ScrollPosBuffer;
 import igrek.songbook.layout.songtree.SongTreeLayoutController;
 import igrek.songbook.layout.songtree.SongTreeWalker;
+import igrek.songbook.layout.view.ButtonClickEffect;
 import igrek.songbook.persistence.LocalDatabaseService;
 import igrek.songbook.persistence.SongsDbRepository;
 import igrek.songbook.persistence.SqlQueryService;
@@ -132,5 +133,7 @@ public interface FactoryComponent {
 	void inject(QuickMenuTranspose there);
 	
 	void inject(SongPreview there);
+	
+	void inject(ButtonClickEffect there);
 	
 }

@@ -6,6 +6,7 @@
 
     <color name="colorQuickMenuText">#ffffff</color>
     <color name="unlockAction">#505050</color>
+    <color name="buttonDownColor">#b81196ef</color>
 
     <color name="chordsBackground">#000000</color>
 </resources>

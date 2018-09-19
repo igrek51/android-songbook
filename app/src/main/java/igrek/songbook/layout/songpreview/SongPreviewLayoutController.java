@@ -165,6 +165,7 @@ public class SongPreviewLayoutController implements MainLayout {
 		ImageButton fullscreenButton = layout.findViewById(R.id.fullscreenButton);
 		ButtonClickEffect.addClickEffect(fullscreenButton);
 		fullscreenButton.setOnClickListener((v) -> uiInfoService.showToast(uiResourceService.resString(R.string.feature_not_implemented)));
+		
 	}
 	
 	@Override
