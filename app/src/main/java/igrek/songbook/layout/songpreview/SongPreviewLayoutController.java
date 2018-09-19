@@ -100,6 +100,7 @@ public class SongPreviewLayoutController implements MainLayout {
 		ViewGroup songPreviewContainer = layout.findViewById(R.id.songPreviewContainer);
 		songPreviewContainer.addView(songPreview);
 		
+		// TODO lazy load quick menu panels - load on use only
 		// create quick menu panels
 		FrameLayout quickMenuContainer = layout.findViewById(R.id.quickMenuContainer);
 		LayoutInflater inflater = activity.getLayoutInflater();
