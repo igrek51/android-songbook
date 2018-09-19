@@ -1,6 +1,7 @@
 package igrek.songbook.layout.songtree;
 
 import java.text.Collator;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -38,7 +39,10 @@ public class SongTreeSorter {
 	public SongTreeSorter() {
 	}
 	
-	public void sort(List<SongTreeItem> items) {
-		Collections.sort(items, songTreeItemComparator);
+	public List<SongTreeItem> sort(List<SongTreeItem> items) {
+		// make it modifiable
+		List<SongTreeItem> modifiableList = new ArrayList<>(items);
+		Collections.sort(modifiableList, songTreeItemComparator);
+		return modifiableList;
 	}
 }

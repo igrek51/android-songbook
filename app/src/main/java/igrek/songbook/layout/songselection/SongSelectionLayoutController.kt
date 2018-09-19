@@ -60,8 +60,8 @@ abstract class SongSelectionLayoutController : OnSongClickListener {
 
     open fun updateSongItemsList() {
         val items: List<SongTreeItem> = getSongItems(songsDbRepository.songsDb!!)
-        SongTreeSorter().sort(items)
-        itemsListView!!.setItems(items)
+        val sortedItems = SongTreeSorter().sort(items)
+        itemsListView!!.setItems(sortedItems)
     }
 
     open fun getSongItems(songsDb: SongsDb): List<SongTreeItem> {
