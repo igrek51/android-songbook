@@ -79,7 +79,7 @@
     <string name="song_category_custom">Moje piosenki</string>
     <string name="song_search_edit_hint">Tytuł piosenki lub artysta</string>
     <string name="unlock_key_invalid">Hasło jest niepoprawne.</string>
-    <string name="unlock_new_songs_unlocked">Udblokowano nowe piosenki: %d</string>
+    <string name="unlock_new_songs_unlocked">Odblokowano nowe piosenki: %d</string>
     <string name="settings_font_size">Rozmiar czcionki: %s dp</string>
     <string name="settings_scroll_initial_pause">Opóźnienie autoprzewijania: %s s</string>
     <string name="settings_autoscroll_speed">Szybkość autoprzewijania: %s linii / s</string>

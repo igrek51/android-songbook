@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songpreview.view;
+package igrek.songbook.layout.songpreview.render;
 
 import android.content.Context;
 import android.view.MotionEvent;
@@ -16,9 +16,9 @@ import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
 import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
-import igrek.songbook.layout.songpreview.view.canvas.BaseCanvasView;
-import igrek.songbook.layout.songpreview.view.quickmenu.QuickMenuAutoscroll;
-import igrek.songbook.layout.songpreview.view.quickmenu.QuickMenuTranspose;
+import igrek.songbook.layout.songpreview.render.canvas.BaseCanvasView;
+import igrek.songbook.layout.songpreview.quickmenu.QuickMenuAutoscroll;
+import igrek.songbook.layout.songpreview.quickmenu.QuickMenuTranspose;
 import igrek.songbook.system.WindowManagerService;
 import igrek.songbook.system.cache.SimpleCache;
 

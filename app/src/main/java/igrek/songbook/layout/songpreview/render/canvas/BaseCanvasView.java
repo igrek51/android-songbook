@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songpreview.view.canvas;
+package igrek.songbook.layout.songpreview.render.canvas;
 
 import android.content.Context;
 import android.graphics.Canvas;

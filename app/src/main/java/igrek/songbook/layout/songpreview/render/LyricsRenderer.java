@@ -1,11 +1,11 @@
-package igrek.songbook.layout.songpreview.view;
+package igrek.songbook.layout.songpreview.render;
 
 import igrek.songbook.domain.lyrics.LyricsFragment;
 import igrek.songbook.domain.lyrics.LyricsLine;
 import igrek.songbook.domain.lyrics.LyricsModel;
 import igrek.songbook.domain.lyrics.LyricsTextType;
-import igrek.songbook.layout.songpreview.view.canvas.Align;
-import igrek.songbook.layout.songpreview.view.canvas.Font;
+import igrek.songbook.layout.songpreview.render.canvas.Align;
+import igrek.songbook.layout.songpreview.render.canvas.Font;
 
 public class LyricsRenderer {
 	

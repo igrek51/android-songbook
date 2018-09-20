@@ -12,7 +12,7 @@ import igrek.songbook.info.UiResourceService;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
-import igrek.songbook.layout.songpreview.view.SongPreview;
+import igrek.songbook.layout.songpreview.render.SongPreview;
 import igrek.songbook.persistence.preferences.PreferencesDefinition;
 import igrek.songbook.persistence.preferences.PreferencesService;
 import io.reactivex.subjects.PublishSubject;

@@ -9,7 +9,7 @@ import igrek.songbook.info.UiInfoService;
 import igrek.songbook.info.UiResourceService;
 import igrek.songbook.layout.songpreview.LyricsManager;
 import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
-import igrek.songbook.layout.songpreview.view.quickmenu.QuickMenuTranspose;
+import igrek.songbook.layout.songpreview.quickmenu.QuickMenuTranspose;
 
 public class ChordsTransposerManager {
 	
