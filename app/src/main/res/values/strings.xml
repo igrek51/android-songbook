@@ -30,7 +30,7 @@
         \nIf lyrics are at the beginning, autoscrolling will be started with some delay (counting down before scrolling).
         If you scroll down manually while this countdown, the scroll will be started immediately.
         \nYou can adjust scrolling speed or initial delay of autoscroll in settings or in autoscroll panel.
-        Scrolling up or down manually while autoscrolling enabled causes autoscroll speed to be auto-adjusted (speed up or slow down).
+        Scrolling up or down manually while autoscrolling is enabled causes autoscroll speed to be auto-adjusted (speed up or slow down).
         \nDouble click on screen toggles autoscrolling.
     </string>
     <string name="ui_about_content">
@@ -75,6 +75,7 @@
     <string name="action_transposition_reset">Reset</string>
 
     <string name="action_stop_autoscroll">Stop</string>
+    <string name="action_start_now_autoscroll">Start now</string>
     <string name="autoscroll_starts_in">Autoscroll starts in %s s</string>
     <string name="autoscroll_started">Autoscroll has been started.</string>
     <string name="autoscroll_stopped">Autoscroll has been stopped.</string>
@@ -110,6 +111,6 @@
     <string name="contact_message_sent_successfully">Your message has been sent. Thanks :)</string>
     <string name="contact_error_sending">An error has occurred while sending your message.</string>
     <string name="details_none">None</string>
-    <string name="feature_not_implemented">Sorry, not implemented yet</string>
+    <string name="feature_not_implemented">This feature will be available soon.</string>
     <string name="scroll_at_the_beginning_already">Back to the beginning.</string>
 </resources>

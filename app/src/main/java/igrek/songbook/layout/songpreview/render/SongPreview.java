@@ -292,7 +292,7 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 		float linePartScrolled = ((float) dy) / getLineheightPx();
 		// monitor scroll changes
 		// TODO use rx to debounce or aggregate events
-		if (Math.abs(linePartScrolled) > 0.1f) {
+		if (Math.abs(linePartScrolled) > 0.16f) {
 			autoscroll.get().getCanvasScrollSubject().onNext(linePartScrolled);
 			//			autoscroll.get().onCanvasScrollEvent(linePartScrolled, scroll);
 		}

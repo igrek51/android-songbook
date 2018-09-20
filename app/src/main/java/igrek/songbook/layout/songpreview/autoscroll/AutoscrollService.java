@@ -15,6 +15,7 @@ import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
 import igrek.songbook.layout.songpreview.render.SongPreview;
 import igrek.songbook.persistence.preferences.PreferencesDefinition;
 import igrek.songbook.persistence.preferences.PreferencesService;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.subjects.PublishSubject;
 
 public class AutoscrollService {
@@ -25,7 +26,7 @@ public class AutoscrollService {
 	private final float ADD_INITIAL_PAUSE_SCALE = 400.0f;
 	private final float AUTOSCROLL_INTERVAL_TIME = 70; // [ms]
 	@Inject
-	UiInfoService userInfo;
+	UiInfoService uiInfoService;
 	@Inject
 	Lazy<SongPreviewLayoutController> songPreviewController;
 	@Inject
@@ -55,9 +56,10 @@ public class AutoscrollService {
 		loadPreferences();
 		reset();
 		
-		canvasScrollSubject.subscribe(linePartScrolled -> {
-			onCanvasScrollEvent(linePartScrolled, getCanvas().getScroll());
-		});
+		canvasScrollSubject.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(linePartScrolled -> {
+					onCanvasScrollEvent(linePartScrolled, getCanvas().getScroll());
+				});
 	}
 	
 	private void loadPreferences() {
@@ -141,8 +143,7 @@ public class AutoscrollService {
 	public void onCanvasScrollEvent(float dScroll, float scroll) {
 		if (state == AutoscrollState.WAITING) {
 			if (dScroll > 0) { // skip counting down immediately
-				state = AutoscrollState.SCROLLING;
-				onAutoscrollStartedEvent();
+				skipInitialPause();
 			} else if (dScroll < 0) { // increase inital waitng time
 				startTime -= (long) (dScroll * ADD_INITIAL_PAUSE_SCALE);
 				long remainingTimeMs = initialPause + startTime - System.currentTimeMillis();
@@ -178,16 +179,22 @@ public class AutoscrollService {
 	private void onAutoscrollRemainingWaitTimeEvent(long ms) {
 		String seconds = Long.toString((ms + 500) / 1000);
 		String info = uiResourceService.resString(R.string.autoscroll_starts_in, seconds);
-		userInfo.showInfoWithAction(info, R.string.action_stop_autoscroll, this::stop);
+		uiInfoService.showInfoWithAction(info, R.string.action_start_now_autoscroll, this::skipInitialPause);
+	}
+	
+	private void skipInitialPause() {
+		state = AutoscrollState.SCROLLING;
+		uiInfoService.clearSnackBars();
+		onAutoscrollStartedEvent();
 	}
 	
 	public void onAutoscrollStartUIEvent() {
 		if (!isRunning()) {
 			if (getCanvas().canScrollDown()) {
 				start();
-				userInfo.showInfoWithAction(R.string.autoscroll_started, R.string.action_stop_autoscroll, this::stop);
+				uiInfoService.showInfoWithAction(R.string.autoscroll_started, R.string.action_stop_autoscroll, this::stop);
 			} else {
-				userInfo.showInfo(uiResourceService.resString(R.string.end_of_file_autoscroll_stopped));
+				uiInfoService.showInfo(uiResourceService.resString(R.string.end_of_file_autoscroll_stopped));
 			}
 		} else {
 			onAutoscrollStopUIEvent();
@@ -195,17 +202,17 @@ public class AutoscrollService {
 	}
 	
 	private void onAutoscrollStartedEvent() {
-		userInfo.showInfoWithAction(R.string.autoscroll_started, R.string.action_stop_autoscroll, this::stop);
+		uiInfoService.showInfoWithAction(R.string.autoscroll_started, R.string.action_stop_autoscroll, this::stop);
 	}
 	
 	private void onAutoscrollEndedEvent() {
-		userInfo.showInfo(uiResourceService.resString(R.string.end_of_file_autoscroll_stopped));
+		uiInfoService.showInfo(uiResourceService.resString(R.string.end_of_file_autoscroll_stopped));
 	}
 	
 	public void onAutoscrollStopUIEvent() {
 		if (isRunning()) {
 			stop();
-			userInfo.showInfo(R.string.autoscroll_stopped);
+			uiInfoService.showInfo(R.string.autoscroll_stopped);
 		}
 	}
 	

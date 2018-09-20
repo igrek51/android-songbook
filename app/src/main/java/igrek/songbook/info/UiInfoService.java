@@ -137,4 +137,8 @@ public class UiInfoService {
 		alertBuilder.create().show();
 	}
 	
+	public void clearSnackBars() {
+		infobars.clear();
+	}
+	
 }

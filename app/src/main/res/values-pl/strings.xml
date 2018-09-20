@@ -70,6 +70,7 @@
     <string name="transpose_5_semitones">półtonów</string>
     <string name="action_transposition_reset">Reset</string>
     <string name="action_stop_autoscroll">Stop</string>
+    <string name="action_start_now_autoscroll">Zacznij teraz</string>
     <string name="autoscroll_starts_in">Autoprzewijanie zacznie się za %s s</string>
     <string name="autoscroll_started">Autoprzewijanie rozpoczęte.</string>
     <string name="autoscroll_stopped">Autoprzewijanie zatrzymane.</string>
@@ -102,6 +103,6 @@
     <string name="contact_message_sent_successfully">Twoja wiadomość została wysłana. Dzięki :)</string>
     <string name="contact_error_sending">Wystąpił błąd podczas wysyłania.</string>
     <string name="details_none">Brak</string>
-    <string name="feature_not_implemented">Ta funkcja jeszcze nie działa ;(</string>
+    <string name="feature_not_implemented">Ta funkcja zostanie niedługo dodana.</string>
     <string name="scroll_at_the_beginning_already">Powrót na początek piosenki</string>
 </resources>
