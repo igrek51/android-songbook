@@ -16,14 +16,15 @@ import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
 import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
-import igrek.songbook.layout.songpreview.render.canvas.BaseCanvasView;
 import igrek.songbook.layout.songpreview.quickmenu.QuickMenuAutoscroll;
 import igrek.songbook.layout.songpreview.quickmenu.QuickMenuTranspose;
+import igrek.songbook.layout.songpreview.render.canvas.BaseCanvasView;
 import igrek.songbook.system.WindowManagerService;
 import igrek.songbook.system.cache.SimpleCache;
 
 public class SongPreview extends BaseCanvasView implements View.OnTouchListener {
 	
+	private static final long DOUBLE_CLICK_INTERVAL = 500; // [ms]
 	private final float EOF_BOTTOM_RESERVE = 50; // padding bottom [dp]
 	private final float LINEHEIGHT_SCALE_FACTOR = 1.02f;
 	private final float FONTSIZE_SCALE_FACTOR = 0.6f;
@@ -53,6 +54,7 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	private SimpleCache<Float> bottomMargin = new SimpleCache<>(() -> {
 		return windowManagerService.dp2px(EOF_BOTTOM_RESERVE);
 	});
+	private Long lastClickTime;
 	
 	public SongPreview(Context context) {
 		super(context);
@@ -168,6 +170,7 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	}
 	
 	public void onClick() {
+		long now = System.currentTimeMillis();
 		if (songPreviewController.get().isQuickMenuVisible()) {
 			quickMenuTranspose.get().setVisible(false);
 			quickMenuAutoscroll.get().setVisible(false);
@@ -175,8 +178,21 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 		} else {
 			if (autoscroll.get().isRunning()) {
 				autoscroll.get().onAutoscrollStopUIEvent();
+				// reset double click
+				lastClickTime = null;
+				return;
+			} else {
+				// double tap
+				if (lastClickTime != null && now - lastClickTime <= DOUBLE_CLICK_INTERVAL) {
+					onDoubleClick();
+				}
 			}
 		}
+		lastClickTime = now;
+	}
+	
+	private void onDoubleClick() {
+		autoscroll.get().onAutoscrollToggleUIEvent();
 	}
 	
 	public void setCRDModel(LyricsModel lyricsModel) {

@@ -28,9 +28,9 @@ import igrek.songbook.layout.LayoutState;
 import igrek.songbook.layout.MainLayout;
 import igrek.songbook.layout.navigation.NavigationMenuController;
 import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
-import igrek.songbook.layout.songpreview.render.SongPreview;
 import igrek.songbook.layout.songpreview.quickmenu.QuickMenuAutoscroll;
 import igrek.songbook.layout.songpreview.quickmenu.QuickMenuTranspose;
+import igrek.songbook.layout.songpreview.render.SongPreview;
 import igrek.songbook.layout.view.ButtonClickEffect;
 import igrek.songbook.system.SoftKeyboardService;
 import igrek.songbook.system.WindowManagerService;
@@ -224,6 +224,7 @@ public class SongPreviewLayoutController implements MainLayout {
 	private void toggleAutoscrollPanel() {
 		quickMenuTranspose.setVisible(false);
 		quickMenuAutoscroll.setVisible(!quickMenuAutoscroll.isVisible());
+		songPreview.repaint();
 	}
 	
 	private void goToBeginning() {

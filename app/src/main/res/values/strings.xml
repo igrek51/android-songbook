@@ -31,6 +31,7 @@
         If you scroll down manually while this countdown, the scroll will be started immediately.
         \nYou can adjust scrolling speed or initial delay of autoscroll in settings or in autoscroll panel.
         Scrolling up or down manually while autoscrolling enabled causes autoscroll speed to be auto-adjusted (speed up or slow down).
+        \nDouble click on screen toggles autoscrolling.
     </string>
     <string name="ui_about_content">
         Guitar Songbook v%s

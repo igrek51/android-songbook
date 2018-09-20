@@ -21,6 +21,7 @@
         Jeśli przewiniesz tekst ręcznie podczas odliczania, autoprzewijanie włączy się natychmiast.
         \nMożesz dostosować prędkość przewijania oraz długość początkowej pauzy w ustawieniach lub w panelu autoprzewijania.
         Ręczne przewijanie przy włączonym autoprzewijaniu spowoduje, że prędkosć przewijania automatycznie zostanie skorygowana (przyspieszona lub zwolniona).
+        \nPodwójne kliknięcie na ekran włącza autoprzewijanie.
     </string>
     <string name="ui_about_content">
         Guitar Songbook v%s

@@ -209,6 +209,14 @@ public class AutoscrollService {
 		}
 	}
 	
+	public void onAutoscrollToggleUIEvent() {
+		if (isRunning()) {
+			onAutoscrollStopUIEvent();
+		} else {
+			onAutoscrollStartUIEvent();
+		}
+	}
+	
 	public long getInitialPause() {
 		return initialPause;
 	}
