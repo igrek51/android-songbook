@@ -68,17 +68,17 @@ public class LocalDatabaseService {
 	@SuppressLint("SdCardPath")
 	private File getSongDbDir() {
 		File dir;
+		// /data/data/PACKAGE/files
+		dir = activity.getFilesDir();
+		if (dir != null && dir.isDirectory())
+			return dir;
+		
 		// INTERNAL_STORAGE/Android/data/PACKAGE/files/data
 		if (permissionService.isStoragePermissionGranted()) {
 			dir = activity.getExternalFilesDir("data");
 			if (dir != null && dir.isDirectory())
 				return dir;
 		}
-		
-		// /data/data/PACKAGE/files
-		dir = activity.getFilesDir();
-		if (dir != null && dir.isDirectory())
-			return dir;
 		
 		return new File("/data/data/" + activity.getPackageName() + "/files");
 	}
