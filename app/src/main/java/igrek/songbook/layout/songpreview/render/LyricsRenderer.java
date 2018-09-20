@@ -47,7 +47,7 @@ public class LyricsRenderer {
 			LyricsFragment lastFragment = line.getFragments().get(line.getFragments().size() - 1);
 			if (lastFragment.getType() == LyricsTextType.LINEWRAPPER) {
 				canvas.setFont(Font.FONT_NORMAL);
-				canvas.setColor(0xa0a0a0);
+				canvas.setColor(0x707070);
 				canvas.drawText(lastFragment.getText(), w, y + 0.85f * lineheight, Align.RIGHT);
 			}
 		}

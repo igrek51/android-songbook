@@ -4,13 +4,16 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class LyricsParser {
 	
 	private boolean bracket;
-	
 	private Paint paint;
+	private final Set<String> wordSplitters = new HashSet<>(Arrays.asList(" ", ".", ",", "-", ":", ";", "/"));
 	
 	public LyricsParser() {
 	}
@@ -41,7 +44,7 @@ public class LyricsParser {
 	
 	private List<LyricsLine> parseLine(String line, float screenW, float fontsize) {
 		
-		List<LyricsChar> chars = str2chars(line);
+		List<LyricsChar> chars = str2chars(line.trim());
 		
 		List<List<LyricsChar>> lines2 = wrapLine(chars, screenW);
 		
@@ -56,7 +59,7 @@ public class LyricsParser {
 	private List<LyricsChar> str2chars(String line) {
 		List<LyricsChar> chars = new ArrayList<>();
 		for (int i = 0; i < line.length(); i++) {
-			String c = line.substring(i, i + 1);
+			String c = Character.toString(line.charAt(i));
 			
 			float charWidth;
 			LyricsTextType type;
@@ -99,9 +102,28 @@ public class LyricsParser {
 		while (textWidth(chars.subList(0, l)) > screenW && l > 1) {
 			l--;
 		}
-		return l;
+		// do not wrap in the middle of the word, try to step back until word splitter found
+		int lastWordSplitter = findLastWordSplitter(chars, l);
+		if (lastWordSplitter == -1) {
+			// it's one long word only - no way to split
+			return l;
+		} else if (lastWordSplitter == l - 1) {
+			// last char is already a word splitter
+			return l;
+		} else {
+			// split after last word splitter
+			return lastWordSplitter + 1;
+		}
 	}
 	
+	private int findLastWordSplitter(List<LyricsChar> chars, int toIndex) {
+		while (--toIndex > 1) {
+			// is word splitter
+			if (wordSplitters.contains(chars.get(toIndex).c))
+				return toIndex;
+		}
+		return -1;
+	}
 	
 	private List<List<LyricsChar>> wrapLine(List<LyricsChar> chars, float screenW) {
 		List<List<LyricsChar>> lines = new ArrayList<>();
@@ -110,7 +132,9 @@ public class LyricsParser {
 		} else {
 			int maxLength = maxScreenStringLength(chars, screenW);
 			List<LyricsChar> before = chars.subList(0, maxLength);
+			// copying due to subsequent modifications
 			ArrayList<LyricsChar> newBefore = new ArrayList<>(before);
+			// add special line wrapper
 			newBefore.add(new LyricsChar("\u21B5", 0, LyricsTextType.LINEWRAPPER));
 			List<LyricsChar> after = chars.subList(maxLength, chars.size());
 			lines.add(newBefore);
