@@ -1,6 +1,8 @@
 package igrek.songbook.layout.songpreview;
 
 import android.graphics.Paint;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -69,6 +71,9 @@ public class SongPreviewLayoutController implements MainLayout {
 	private OverlayRecyclerAdapter overlayAdapter;
 	private RecyclerView overlayRecyclerView;
 	private TextView songTitleLabel;
+	private boolean fullscreen = false;
+	private AppBarLayout appBarLayout;
+	private FloatingActionButton disableFullscreenButton;
 	
 	public SongPreviewLayoutController() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -90,6 +95,8 @@ public class SongPreviewLayoutController implements MainLayout {
 		// navigation menu button
 		ImageButton navMenuButton = layout.findViewById(R.id.navMenuButton);
 		navMenuButton.setOnClickListener((v) -> navigationMenuController.navDrawerShow());
+		
+		appBarLayout = layout.findViewById(R.id.appBarLayout);
 		
 		// create songPreview
 		songPreview = new SongPreview(activity);
@@ -155,8 +162,11 @@ public class SongPreviewLayoutController implements MainLayout {
 		songInfoButton.setOnClickListener((v) -> songDetailsService.showSongDetails(currentSong));
 		
 		ImageButton fullscreenButton = layout.findViewById(R.id.fullscreenButton);
-		fullscreenButton.setOnClickListener((v) -> uiInfoService.showToast(uiResourceService.resString(R.string.feature_not_implemented)));
+		fullscreenButton.setOnClickListener((v) -> setFullscreen(true));
 		
+		disableFullscreenButton = layout.findViewById(R.id.disableFullscreenButton);
+		disableFullscreenButton.setOnClickListener((v) -> setFullscreen(false));
+		setFullscreen(false);
 	}
 	
 	@Override
@@ -235,6 +245,19 @@ public class SongPreviewLayoutController implements MainLayout {
 		return quickMenuTranspose.isVisible() || quickMenuAutoscroll.isVisible();
 	}
 	
+	private void setFullscreen(boolean fullscreen) {
+		this.fullscreen = fullscreen;
+		windowManagerService.setFullscreen(fullscreen);
+		
+		if (fullscreen) {
+			appBarLayout.setVisibility(View.GONE);
+			disableFullscreenButton.setVisibility(View.VISIBLE);
+		} else {
+			appBarLayout.setVisibility(View.VISIBLE);
+			disableFullscreenButton.setVisibility(View.GONE);
+		}
+	}
+	
 	@Override
 	public void onBackClicked() {
 		if (isQuickMenuVisible()) {
@@ -245,10 +268,16 @@ public class SongPreviewLayoutController implements MainLayout {
 				quickMenuAutoscroll.setVisible(false);
 			}
 		} else {
-			autoscrollService.stop();
 			layoutController.get().showPreviousLayout();
-			windowManagerService.keepScreenOn(false);
 		}
+	}
+	
+	@Override
+	public void onLayoutExit() {
+		autoscrollService.stop();
+		windowManagerService.keepScreenOn(false);
+		if (fullscreen)
+			setFullscreen(false);
 	}
 	
 	public void onPreviewSizeChanged() {

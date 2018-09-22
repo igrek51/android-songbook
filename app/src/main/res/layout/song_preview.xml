@@ -196,8 +196,22 @@
                      android:layout_width="match_parent"
                      android:layout_height="match_parent"
                      android:fillViewport="true">
-            <!-- Quick Menu -->
+            <!-- Quick Menus -->
         </FrameLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/disableFullscreenButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="10dp"
+            android:background="?android:selectableItemBackground"
+            android:src="@drawable/fullscreen_exit"
+            android:visibility="gone"
+            app:backgroundTint="@color/colorFloatingButton"
+            app:elevation="6dp"
+            app:fabSize="mini"
+            app:rippleColor="@color/colorFloatingButtonClicked"/>
 
     </android.support.design.widget.CoordinatorLayout>
 

@@ -10,10 +10,10 @@ import javax.inject.Inject;
 
 import dagger.Lazy;
 import igrek.songbook.R;
-import igrek.songbook.layout.contact.ContactLayoutController;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
+import igrek.songbook.layout.contact.ContactLayoutController;
 import igrek.songbook.layout.navigation.NavigationMenuController;
 import igrek.songbook.layout.settings.SettingsLayoutController;
 import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
@@ -77,6 +77,10 @@ public class LayoutController {
 	
 	
 	private void showMainLayout(MainLayout mainLayout) {
+		// leave previous (current) layout
+		if (currentlyShownLayout != null)
+			currentlyShownLayout.onLayoutExit();
+		
 		previouslyShownLayout = currentlyShownLayout;
 		currentlyShownLayout = mainLayout;
 		

@@ -70,13 +70,13 @@
     <string name="transpose_5_semitones">półtonów</string>
     <string name="action_transposition_reset">Reset</string>
     <string name="action_stop_autoscroll">Stop</string>
-    <string name="action_start_now_autoscroll">Zacznij teraz</string>
+    <string name="action_start_now_autoscroll">Start</string>
     <string name="autoscroll_starts_in">Autoprzewijanie zacznie się za %s s</string>
     <string name="autoscroll_started">Autoprzewijanie rozpoczęte.</string>
     <string name="autoscroll_stopped">Autoprzewijanie zatrzymane.</string>
     <string name="start_autoscroll">Uruchom autoprzewijanie</string>
     <string name="stop_autoscroll">Zatrzymaj autoprzewijanie</string>
-    <string name="end_of_file_autoscroll_stopped">Koniec pliku - Autoprzewijanie zatrzymane.</string>
+    <string name="end_of_song_autoscroll_stopped">Autoprzewijanie zatrzymane.</string>
     <string name="song_category_others">Inne</string>
     <string name="song_category_custom">Moje piosenki</string>
     <string name="song_search_edit_hint">Tytuł piosenki lub artysta</string>

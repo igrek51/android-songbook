@@ -12,4 +12,6 @@ public interface MainLayout {
 	
 	void onBackClicked();
 	
+	void onLayoutExit();
+	
 }

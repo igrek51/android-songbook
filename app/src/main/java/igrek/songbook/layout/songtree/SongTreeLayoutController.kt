@@ -124,4 +124,7 @@ class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
             openSongPreview(item)
         }
     }
+
+    override fun onLayoutExit() {}
 }
+

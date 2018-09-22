@@ -89,6 +89,10 @@ public class ContactLayoutController implements MainLayout {
 		layoutController.showSongTree();
 	}
 	
+	@Override
+	public void onLayoutExit() {
+	}
+	
 	private void sendContactMessage() {
 		String message = contactMessageEdit.getText().toString();
 		String author = contactAuthorEdit.getText().toString();

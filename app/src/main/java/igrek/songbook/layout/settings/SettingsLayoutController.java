@@ -157,4 +157,7 @@ public class SettingsLayoutController implements MainLayout {
 		layoutController.showPreviousLayout();
 	}
 	
+	@Override
+	public void onLayoutExit() {
+	}
 }

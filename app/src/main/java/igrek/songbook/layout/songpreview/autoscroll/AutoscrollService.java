@@ -194,7 +194,7 @@ public class AutoscrollService {
 				start();
 				uiInfoService.showInfoWithAction(R.string.autoscroll_started, R.string.action_stop_autoscroll, this::stop);
 			} else {
-				uiInfoService.showInfo(uiResourceService.resString(R.string.end_of_file_autoscroll_stopped));
+				uiInfoService.showInfo(uiResourceService.resString(R.string.end_of_song_autoscroll_stopped));
 			}
 		} else {
 			onAutoscrollStopUIEvent();
@@ -206,7 +206,7 @@ public class AutoscrollService {
 	}
 	
 	private void onAutoscrollEndedEvent() {
-		uiInfoService.showInfo(uiResourceService.resString(R.string.end_of_file_autoscroll_stopped));
+		uiInfoService.showInfo(uiResourceService.resString(R.string.end_of_song_autoscroll_stopped));
 	}
 	
 	public void onAutoscrollStopUIEvent() {

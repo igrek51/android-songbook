@@ -155,4 +155,5 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
         }
     }
 
+    override fun onLayoutExit() {}
 }
