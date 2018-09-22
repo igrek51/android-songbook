@@ -250,4 +250,8 @@ public class SongPreviewLayoutController implements MainLayout {
 			windowManagerService.keepScreenOn(false);
 		}
 	}
+	
+	public void onPreviewSizeChanged() {
+		songPreview.reset();
+	}
 }

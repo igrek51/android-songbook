@@ -195,6 +195,12 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 		autoscroll.get().onAutoscrollToggleUIEvent();
 	}
 	
+	@Override
+	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+		super.onSizeChanged(w, h, oldw, oldh);
+		songPreviewController.get().onPreviewSizeChanged();
+	}
+	
 	public void setCRDModel(LyricsModel lyricsModel) {
 		this.lyricsModel = lyricsModel;
 		this.lyricsRenderer = new LyricsRenderer(this, lyricsModel);
