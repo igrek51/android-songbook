@@ -15,7 +15,6 @@ import igrek.songbook.persistence.LocalDatabaseService;
 import igrek.songbook.persistence.preferences.PreferencesDefinition;
 import igrek.songbook.persistence.preferences.PreferencesService;
 import igrek.songbook.system.WindowManagerService;
-import io.reactivex.subjects.PublishSubject;
 
 public class ActivityController {
 	
@@ -32,8 +31,6 @@ public class ActivityController {
 	@Inject
 	AutoscrollService autoscrollService;
 	
-	private PublishSubject<Configuration> configurationSubject = PublishSubject.create();
-	
 	private Logger logger = LoggerFactory.getLogger();
 	
 	public ActivityController() {
@@ -46,7 +43,6 @@ public class ActivityController {
 		int screenHeightDp = newConfig.screenHeightDp;
 		String orientationName = getOrientationName(newConfig.orientation);
 		logger.debug("Screen resized: " + screenWidthDp + "dp x " + screenHeightDp + "dp - " + orientationName);
-		configurationSubject.onNext(newConfig);
 	}
 	
 	private String getOrientationName(int orientation) {
@@ -90,7 +86,4 @@ public class ActivityController {
 		activity.startActivity(startMain);
 	}
 	
-	public PublishSubject<Configuration> getConfigurationSubject() {
-		return configurationSubject;
-	}
 }

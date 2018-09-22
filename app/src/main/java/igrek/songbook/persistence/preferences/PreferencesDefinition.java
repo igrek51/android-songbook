@@ -2,7 +2,7 @@ package igrek.songbook.persistence.preferences;
 
 public enum PreferencesDefinition {
 	
-	fontsize(24.0f), // dp
+	fontsize(20.0f), // dp
 	
 	autoscrollInitialPause(36000L), // ms
 	
