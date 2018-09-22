@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
-import igrek.songbook.layout.songpreview.render.SongPreview;
+import igrek.songbook.layout.songpreview.renderer.SongPreview;
 
 public class OverlayRecyclerAdapter extends RecyclerView.Adapter<OverlayRecyclerAdapter.OverlayViewHolder> {
 	

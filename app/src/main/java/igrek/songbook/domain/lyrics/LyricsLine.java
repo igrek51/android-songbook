@@ -22,7 +22,7 @@ public class LyricsLine {
 		return fragments;
 	}
 	
-	public float getY() {
+	public int getY() {
 		return y;
 	}
 	

@@ -1,11 +1,11 @@
-package igrek.songbook.layout.songpreview.render;
+package igrek.songbook.layout.songpreview.renderer;
 
 import igrek.songbook.domain.lyrics.LyricsFragment;
 import igrek.songbook.domain.lyrics.LyricsLine;
 import igrek.songbook.domain.lyrics.LyricsModel;
 import igrek.songbook.domain.lyrics.LyricsTextType;
-import igrek.songbook.layout.songpreview.render.canvas.Align;
-import igrek.songbook.layout.songpreview.render.canvas.Font;
+import igrek.songbook.layout.songpreview.renderer.canvas.Align;
+import igrek.songbook.layout.songpreview.renderer.canvas.Font;
 
 public class LyricsRenderer {
 	
@@ -36,7 +36,7 @@ public class LyricsRenderer {
 	}
 	
 	private void drawTextLine(LyricsLine line, float scroll, float fontsize, float lineheight) {
-		float y = line.getY() * lineheight - scroll;
+		float y = line.getY() * (int) lineheight - scroll;
 		if (y > h)
 			return;
 		if (y + lineheight < 0)

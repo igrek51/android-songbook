@@ -12,7 +12,7 @@ import igrek.songbook.info.UiResourceService;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
-import igrek.songbook.layout.songpreview.render.SongPreview;
+import igrek.songbook.layout.songpreview.renderer.SongPreview;
 import igrek.songbook.persistence.preferences.PreferencesDefinition;
 import igrek.songbook.persistence.preferences.PreferencesService;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -24,7 +24,7 @@ public class AutoscrollService {
 	private final float START_NO_WAITING_MIN_SCROLL = 24.0f;
 	private final float AUTOCHANGE_SPEED_SCALE = 0.002f;
 	private final float ADD_INITIAL_PAUSE_SCALE = 400.0f;
-	private final float AUTOSCROLL_INTERVAL_TIME = 70; // [ms]
+	private final float AUTOSCROLL_INTERVAL_TIME = 60; // [ms]
 	@Inject
 	UiInfoService uiInfoService;
 	@Inject

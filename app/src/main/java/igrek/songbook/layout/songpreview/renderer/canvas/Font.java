@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songpreview.render.canvas;
+package igrek.songbook.layout.songpreview.renderer.canvas;
 
 public class Font {
 	//family

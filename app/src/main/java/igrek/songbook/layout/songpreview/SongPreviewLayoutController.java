@@ -32,7 +32,7 @@ import igrek.songbook.layout.navigation.NavigationMenuController;
 import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
 import igrek.songbook.layout.songpreview.quickmenu.QuickMenuAutoscroll;
 import igrek.songbook.layout.songpreview.quickmenu.QuickMenuTranspose;
-import igrek.songbook.layout.songpreview.render.SongPreview;
+import igrek.songbook.layout.songpreview.renderer.SongPreview;
 import igrek.songbook.system.SoftKeyboardService;
 import igrek.songbook.system.WindowManagerService;
 
