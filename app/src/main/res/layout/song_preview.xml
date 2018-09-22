@@ -3,6 +3,7 @@
 
 <LinearLayout android:id="@+id/songPreviewLinearLayout"
               xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:layout_gravity="center_horizontal"
@@ -18,12 +19,19 @@
             android:id="@+id/toolbar1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary">
+            android:layout_margin="0dp"
+            android:background="@color/colorPrimary"
+            android:padding="0dp"
+            app:contentInsetEnd="0dp"
+            app:contentInsetLeft="0dp"
+            app:contentInsetRight="0dp"
+            app:contentInsetStart="0dp">
 
             <LinearLayout android:id="@+id/toolbarVerticalLayout"
                           xmlns:android="http://schemas.android.com/apk/res/android"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
+                          android:layout_margin="0dp"
                           android:fillViewport="true"
                           android:orientation="vertical"
                           android:padding="0dp">
@@ -31,107 +39,119 @@
                 <LinearLayout android:id="@+id/toolbarHorizontalLayout"
                               xmlns:android="http://schemas.android.com/apk/res/android"
                               android:layout_width="match_parent"
-                              android:layout_height="40dp"
+                              android:layout_height="34dp"
                               android:fillViewport="true"
                               android:orientation="horizontal"
                               android:padding="0dp">
 
-                    <ImageButton
-                        android:id="@+id/navMenuButton"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_gravity="start|center_vertical"
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
                         android:adjustViewBounds="true"
-                        android:background="@drawable/menu"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:padding="16dp"
-                        android:scaleType="fitCenter"
-                        />
+                        android:orientation="horizontal"
+                        android:padding="0dp">
+
+                        <ImageButton
+                            android:id="@+id/navMenuButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="start|center_vertical"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginStart="16dp"
+                            android:adjustViewBounds="true"
+                            android:background="?android:selectableItemBackground"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:maxWidth="32dp"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/menu"/>
+
+                    </LinearLayout>
 
                     <ImageButton
                         android:id="@+id/goBackButton"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_gravity="start|center_vertical"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginStart="20dp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
                         android:adjustViewBounds="true"
-                        android:background="@drawable/arrow_back"
+                        android:background="?android:selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:padding="16dp"
-                        android:scaleType="fitCenter"/>
+                        android:scaleType="centerInside"
+                        android:src="@drawable/arrow_back"/>
 
                     <ImageButton
                         android:id="@+id/songInfoButton"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_gravity="start|center_vertical"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginStart="20dp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
                         android:adjustViewBounds="true"
-                        android:background="@drawable/info"
+                        android:background="?android:selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:padding="16dp"
-                        android:scaleType="fitCenter"/>
+                        android:scaleType="centerInside"
+                        android:src="@drawable/info"
+                        />
 
                     <ImageButton
                         android:id="@+id/transposeButton"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_gravity="start|center_vertical"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginStart="20dp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
                         android:adjustViewBounds="true"
-                        android:background="@drawable/transpose"
+                        android:background="?android:selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:padding="16dp"
-                        android:scaleType="fitCenter"/>
+                        android:scaleType="centerInside"
+                        android:src="@drawable/transpose"
+                        />
 
                     <ImageButton
                         android:id="@+id/autoscrollButton"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_gravity="start|center_vertical"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginStart="20dp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
                         android:adjustViewBounds="true"
-                        android:background="@drawable/scroll1"
+                        android:background="?android:selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:padding="16dp"
-                        android:scaleType="fitCenter"/>
+                        android:scaleType="centerInside"
+                        android:src="@drawable/scroll1"
+                        />
 
                     <ImageButton
                         android:id="@+id/goBeginningButton"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_gravity="start|center_vertical"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginStart="20dp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
                         android:adjustViewBounds="true"
-                        android:background="@drawable/restore"
+                        android:background="?android:selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:padding="16dp"
-                        android:scaleType="fitCenter"/>
+                        android:scaleType="centerInside"
+                        android:src="@drawable/restore"
+                        />
 
                     <ImageButton
                         android:id="@+id/fullscreenButton"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_gravity="start|center_vertical"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginStart="20dp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
                         android:adjustViewBounds="true"
-                        android:background="@drawable/fullscreen1"
+                        android:background="?android:selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:padding="16dp"
-                        android:scaleType="fitCenter"/>
+                        android:scaleType="centerInside"
+                        android:src="@drawable/fullscreen1"
+                        />
 
                 </LinearLayout>
 
@@ -139,8 +159,8 @@
                     android:id="@+id/songTitleLabel"
                     android:layout_width="match_parent"
                     android:layout_height="24dp"
-                    android:layout_marginLeft="0dp"
-                    android:layout_marginStart="0dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
                     android:paddingTop="0dp"
                     android:textSize="16sp"
                     />

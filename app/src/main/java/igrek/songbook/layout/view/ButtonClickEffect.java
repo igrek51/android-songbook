@@ -1,6 +1,5 @@
 package igrek.songbook.layout.view;
 
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.TouchDelegate;
@@ -27,21 +26,21 @@ public class ButtonClickEffect implements View.OnTouchListener {
 	
 	public static void addClickEffect(ImageButton imageButton) {
 		imageButton.setOnTouchListener(new ButtonClickEffect());
-		expandTouchArea(imageButton, 0.3f);
+		//		expandTouchArea(imageButton, 0.3f);
 	}
 	
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		switch (event.getAction()) {
 			case MotionEvent.ACTION_DOWN: {
-				v.getBackground().setColorFilter(downColor, PorterDuff.Mode.SRC_ATOP);
-				v.invalidate();
+				//				v.getBackground().setColorFilter(downColor, PorterDuff.Mode.SRC_ATOP);
+				//				v.invalidate();
 				break;
 			}
 			case MotionEvent.ACTION_UP:
 			case MotionEvent.ACTION_CANCEL: {
-				v.getBackground().clearColorFilter();
-				v.invalidate();
+				//				v.getBackground().clearColorFilter();
+				//				v.invalidate();
 				break;
 			}
 		}
