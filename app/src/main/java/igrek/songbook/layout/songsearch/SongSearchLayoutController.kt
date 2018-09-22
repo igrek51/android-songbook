@@ -18,7 +18,6 @@ import igrek.songbook.layout.songselection.SongSearchItem
 import igrek.songbook.layout.songselection.SongSelectionLayoutController
 import igrek.songbook.layout.songselection.SongTreeItem
 import igrek.songbook.layout.songtree.SongTreeFilter
-import igrek.songbook.layout.view.ButtonClickEffect
 import igrek.songbook.system.SoftKeyboardService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
@@ -76,7 +75,6 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
 
         val searchFilterClearButton: ImageButton = layout.findViewById(R.id.searchFilterClearButton)
         searchFilterClearButton.setOnClickListener { _ -> onClearFilterClicked() }
-        ButtonClickEffect.addClickEffect(searchFilterClearButton)
 
         itemsListView!!.init(activity, this)
         updateSongItemsList()

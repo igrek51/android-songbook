@@ -25,11 +25,11 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="start|center_vertical"
                 android:adjustViewBounds="true"
-                android:background="@drawable/menu"
+                android:background="?android:selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="10dp"
-                android:scaleType="fitCenter"
+                android:scaleType="centerInside"
+                android:src="@drawable/menu"
                 />
 
             <TextView
@@ -67,20 +67,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="240dp"
                 android:layout_margin="8dp"
+                android:padding="8dp"
                 android:gravity="top"
                 android:hint="@string/contact_message_hint"
                 android:inputType="text|textMultiLine"
-                android:background="#07ffffff"/>
+                android:background="#05ffffff"/>
 
             <EditText
                 android:id="@+id/contactAuthorEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:gravity="top"
+                android:padding="8dp"
+                android:gravity="center_vertical"
                 android:hint="@string/contact_author_hint"
                 android:inputType="text"
-                android:background="#07ffffff"/>
+                android:background="#05ffffff"/>
 
             <Button
                 android:id="@+id/contactSendButton"

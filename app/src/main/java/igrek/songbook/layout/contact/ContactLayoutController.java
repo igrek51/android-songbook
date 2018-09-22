@@ -23,7 +23,6 @@ import igrek.songbook.layout.LayoutController;
 import igrek.songbook.layout.LayoutState;
 import igrek.songbook.layout.MainLayout;
 import igrek.songbook.layout.navigation.NavigationMenuController;
-import igrek.songbook.layout.view.ButtonClickEffect;
 
 public class ContactLayoutController implements MainLayout {
 	
@@ -63,7 +62,6 @@ public class ContactLayoutController implements MainLayout {
 		// navigation menu button
 		ImageButton navMenuButton = layout.findViewById(R.id.navMenuButton);
 		navMenuButton.setOnClickListener((v) -> navigationMenuController.navDrawerShow());
-		ButtonClickEffect.addClickEffect(navMenuButton);
 		
 		contactMessageEdit = layout.findViewById(R.id.contactMessageEdit);
 		contactAuthorEdit = layout.findViewById(R.id.contactAuthorEdit);

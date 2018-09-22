@@ -31,7 +31,6 @@ import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
 import igrek.songbook.layout.songpreview.quickmenu.QuickMenuAutoscroll;
 import igrek.songbook.layout.songpreview.quickmenu.QuickMenuTranspose;
 import igrek.songbook.layout.songpreview.render.SongPreview;
-import igrek.songbook.layout.view.ButtonClickEffect;
 import igrek.songbook.system.SoftKeyboardService;
 import igrek.songbook.system.WindowManagerService;
 
@@ -91,7 +90,6 @@ public class SongPreviewLayoutController implements MainLayout {
 		// navigation menu button
 		ImageButton navMenuButton = layout.findViewById(R.id.navMenuButton);
 		navMenuButton.setOnClickListener((v) -> navigationMenuController.navDrawerShow());
-		ButtonClickEffect.addClickEffect(navMenuButton);
 		
 		// create songPreview
 		songPreview = new SongPreview(activity);
@@ -143,26 +141,20 @@ public class SongPreviewLayoutController implements MainLayout {
 		
 		ImageButton goBackButton = layout.findViewById(R.id.goBackButton);
 		goBackButton.setOnClickListener((v) -> onBackClicked());
-		ButtonClickEffect.addClickEffect(goBackButton);
 		
 		ImageButton transposeButton = layout.findViewById(R.id.transposeButton);
-		ButtonClickEffect.addClickEffect(transposeButton);
 		transposeButton.setOnClickListener((v) -> toggleTransposePanel());
 		
 		ImageButton autoscrollButton = layout.findViewById(R.id.autoscrollButton);
-		ButtonClickEffect.addClickEffect(autoscrollButton);
 		autoscrollButton.setOnClickListener((v) -> toggleAutoscrollPanel());
 		
 		ImageButton goBeginningButton = layout.findViewById(R.id.goBeginningButton);
 		goBeginningButton.setOnClickListener((v) -> goToBeginning());
-		ButtonClickEffect.addClickEffect(goBeginningButton);
 		
 		ImageButton songInfoButton = layout.findViewById(R.id.songInfoButton);
 		songInfoButton.setOnClickListener((v) -> songDetailsService.showSongDetails(currentSong));
-		ButtonClickEffect.addClickEffect(songInfoButton);
 		
 		ImageButton fullscreenButton = layout.findViewById(R.id.fullscreenButton);
-		ButtonClickEffect.addClickEffect(fullscreenButton);
 		fullscreenButton.setOnClickListener((v) -> uiInfoService.showToast(uiResourceService.resString(R.string.feature_not_implemented)));
 		
 	}

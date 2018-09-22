@@ -24,11 +24,11 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="start|center_vertical"
                 android:adjustViewBounds="true"
-                android:background="@drawable/menu"
+                android:background="?android:selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="10dp"
-                android:scaleType="fitCenter"
+                android:scaleType="centerInside"
+                android:src="@drawable/menu"
                 />
 
             <TextView

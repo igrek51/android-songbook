@@ -26,11 +26,11 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="start|center_vertical"
                 android:adjustViewBounds="true"
-                android:background="@drawable/menu"
+                android:background="?android:selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="16dp"
-                android:scaleType="fitCenter"
+                android:scaleType="centerInside"
+                android:src="@drawable/menu"
                 />
 
             <ImageButton
@@ -39,14 +39,14 @@
                 android:layout_height="32dp"
                 android:layout_centerVertical="true"
                 android:layout_gravity="start|center_vertical"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
                 android:adjustViewBounds="true"
-                android:background="@drawable/arrow_back"
+                android:background="?android:selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="16dp"
-                android:scaleType="fitCenter"
-                android:layout_marginLeft="20dp"
-                android:layout_marginStart="20dp"/>
+                android:scaleType="centerInside"
+                android:src="@drawable/arrow_back"/>
 
             <TextView
                 android:id="@+id/toolbarTitle"
@@ -61,14 +61,14 @@
                 android:layout_height="32dp"
                 android:layout_centerVertical="true"
                 android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:adjustViewBounds="true"
-                android:background="@drawable/search"
+                android:background="?android:selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="16dp"
-                android:scaleType="fitCenter"
-                android:layout_marginRight="8dp"
-                android:layout_marginEnd="8dp"/>
+                android:scaleType="centerInside"
+                android:src="@drawable/search"/>
 
         </android.support.v7.widget.Toolbar>
 

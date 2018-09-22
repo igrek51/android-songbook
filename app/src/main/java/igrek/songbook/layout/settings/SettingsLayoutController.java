@@ -28,7 +28,6 @@ import igrek.songbook.layout.MainLayout;
 import igrek.songbook.layout.navigation.NavigationMenuController;
 import igrek.songbook.layout.songpreview.LyricsManager;
 import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
-import igrek.songbook.layout.view.ButtonClickEffect;
 import igrek.songbook.layout.view.SliderController;
 import igrek.songbook.persistence.preferences.PreferencesService;
 import io.reactivex.Observable;
@@ -78,7 +77,6 @@ public class SettingsLayoutController implements MainLayout {
 		// navigation menu button
 		ImageButton navMenuButton = layout.findViewById(R.id.navMenuButton);
 		navMenuButton.setOnClickListener((v) -> navigationMenuController.navDrawerShow());
-		ButtonClickEffect.addClickEffect(navMenuButton);
 		
 		SeekBar fontsizeSeekbar = layout.findViewById(R.id.fontsizeSeekbar);
 		TextView fontsizeLabel = layout.findViewById(R.id.fontsizeLabel);
