@@ -42,7 +42,7 @@ public class ChordsTransposerManager {
 	public void onTransposeEvent(int semitones) {
 		transposeBy(semitones);
 		
-		songPreviewController.get().onCrdModelUpdated();
+		songPreviewController.get().onLyricsModelUpdated();
 		
 		String info = uiResourceService.resString(R.string.transposed_by_semitones, getTransposedByDisplayName());
 		

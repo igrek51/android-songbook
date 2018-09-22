@@ -16,7 +16,7 @@ public abstract class BaseCanvasView extends View {
 	
 	protected Paint paint;
 	protected Canvas canvas = null;
-	private boolean initialized = false;
+	private Boolean initialized = false;
 	
 	public BaseCanvasView(Context context) {
 		super(context);
@@ -49,6 +49,10 @@ public abstract class BaseCanvasView extends View {
 		return h;
 	}
 	
+	public Paint getPaint() {
+		return paint;
+	}
+	
 	/**
 	 * repaint screen method to override
 	 */
@@ -74,8 +78,12 @@ public abstract class BaseCanvasView extends View {
 			h = getHeight();
 		}
 		if (!initialized) {
-			initialized = true;
-			init();
+			synchronized (initialized) {
+				if (!initialized) {
+					init();
+					initialized = true;
+				}
+			}
 		}
 		onRepaint();
 	}
@@ -84,6 +92,9 @@ public abstract class BaseCanvasView extends View {
 		invalidate();
 	}
 	
+	public synchronized boolean isInitialized() {
+		return initialized;
+	}
 	
 	public void drawTextUnaligned(String s, float x, float y) {
 		paint.setTextAlign(Paint.Align.LEFT);

@@ -198,7 +198,9 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
-		songPreviewController.get().onPreviewSizeChanged();
+		if (isInitialized()) {
+			songPreviewController.get().onPreviewSizeChange(w, h);
+		}
 	}
 	
 	public void setCRDModel(LyricsModel lyricsModel) {

@@ -6,15 +6,16 @@ import android.content.res.Configuration;
 
 import javax.inject.Inject;
 
-import igrek.songbook.layout.songpreview.LyricsManager;
-import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
+import igrek.songbook.layout.songpreview.LyricsManager;
+import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
 import igrek.songbook.persistence.LocalDatabaseService;
 import igrek.songbook.persistence.preferences.PreferencesDefinition;
 import igrek.songbook.persistence.preferences.PreferencesService;
 import igrek.songbook.system.WindowManagerService;
+import io.reactivex.subjects.PublishSubject;
 
 public class ActivityController {
 	
@@ -31,6 +32,8 @@ public class ActivityController {
 	@Inject
 	AutoscrollService autoscrollService;
 	
+	private PublishSubject<Configuration> configurationSubject = PublishSubject.create();
+	
 	private Logger logger = LoggerFactory.getLogger();
 	
 	public ActivityController() {
@@ -41,14 +44,18 @@ public class ActivityController {
 		// resize event
 		int screenWidthDp = newConfig.screenWidthDp;
 		int screenHeightDp = newConfig.screenHeightDp;
-		int orientation = newConfig.orientation;
-		int densityDpi = newConfig.densityDpi;
-		logger.debug("Screen resized: " + screenWidthDp + "dp x " + screenHeightDp + "dp (DPI = " + densityDpi + ")");
+		String orientationName = getOrientationName(newConfig.orientation);
+		logger.debug("Screen resized: " + screenWidthDp + "dp x " + screenHeightDp + "dp - " + orientationName);
+		configurationSubject.onNext(newConfig);
+	}
+	
+	private String getOrientationName(int orientation) {
 		if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			logger.debug("Screen orientation: landscape");
+			return "landscape";
 		} else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-			logger.debug("Screen orientation: portrait");
+			return "portrait";
 		}
+		return Integer.toString(orientation);
 	}
 	
 	public void quit() {
@@ -83,4 +90,7 @@ public class ActivityController {
 		activity.startActivity(startMain);
 	}
 	
+	public PublishSubject<Configuration> getConfigurationSubject() {
+		return configurationSubject;
+	}
 }

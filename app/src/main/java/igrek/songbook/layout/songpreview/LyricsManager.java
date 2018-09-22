@@ -51,18 +51,21 @@ public class LyricsManager {
 		reset();
 		originalFileContent = fileContent;
 		
-		if (screenW != null) {
+		if (screenW != null)
 			this.screenW = screenW;
-		}
-		if (paint != null) {
+		if (paint != null)
 			this.paint = paint;
-		}
 		
 		lyricsParser = new LyricsParser();
 		
 		parseAndTranspose(originalFileContent);
 	}
 	
+	public void onPreviewSizeChange(int screenW, int screenH, Paint paint) {
+		this.screenW = screenW;
+		this.paint = paint;
+		reparse();
+	}
 	
 	public void reparse() {
 		parseAndTranspose(originalFileContent);

@@ -196,7 +196,7 @@ public class SongPreviewLayoutController implements MainLayout {
 		overlayRecyclerView.scrollToPosition(1);
 	}
 	
-	public void onCrdModelUpdated() {
+	public void onLyricsModelUpdated() {
 		songPreview.setCRDModel(lyricsManager.getCRDModel());
 		resetOverlayScroll();
 	}
@@ -205,8 +205,7 @@ public class SongPreviewLayoutController implements MainLayout {
 		lyricsManager.setFontsize(fontsize);
 		// parse without reading a whole file again
 		lyricsManager.reparse();
-		songPreview.setCRDModel(lyricsManager.getCRDModel());
-		resetOverlayScroll();
+		onLyricsModelUpdated();
 	}
 	
 	public SongPreview getSongPreview() {
@@ -280,7 +279,9 @@ public class SongPreviewLayoutController implements MainLayout {
 			setFullscreen(false);
 	}
 	
-	public void onPreviewSizeChanged() {
-		songPreview.reset();
+	public void onPreviewSizeChange(int w, int h) {
+		lyricsManager.onPreviewSizeChange(w, h, songPreview.getPaint());
+		onLyricsModelUpdated();
 	}
+	
 }
