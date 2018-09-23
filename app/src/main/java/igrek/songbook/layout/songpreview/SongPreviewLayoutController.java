@@ -259,15 +259,13 @@ public class SongPreviewLayoutController implements MainLayout {
 	
 	@Override
 	public void onBackClicked() {
-		if (isQuickMenuVisible()) {
-			if (quickMenuTranspose.isVisible()) {
-				quickMenuTranspose.setVisible(false);
-				songPreview.repaint();
-			} else if (quickMenuAutoscroll.isVisible()) {
-				quickMenuAutoscroll.setVisible(false);
-			}
+		if (quickMenuTranspose.isVisible()) {
+			quickMenuTranspose.setVisible(false);
+			songPreview.repaint();
+		} else if (quickMenuAutoscroll.isVisible()) {
+			quickMenuAutoscroll.setVisible(false);
 		} else {
-			layoutController.get().showPreviousLayout();
+			layoutController.get().showLastSongSelectionLayout();
 		}
 	}
 	

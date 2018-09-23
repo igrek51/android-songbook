@@ -42,6 +42,7 @@ public class LayoutController {
 	private Logger logger = LoggerFactory.getLogger();
 	private MainLayout previouslyShownLayout;
 	private MainLayout currentlyShownLayout;
+	private MainLayout lastSongSelectionLayout;
 	
 	private LayoutState state = LayoutState.SONGS_TREE;
 	
@@ -57,10 +58,12 @@ public class LayoutController {
 	
 	public void showSongTree() {
 		showMainLayout(songTreeController.get());
+		lastSongSelectionLayout = songTreeController.get();
 	}
 	
 	public void showSongSearch() {
 		showMainLayout(songSearchController.get());
+		lastSongSelectionLayout = songSearchController.get();
 	}
 	
 	public void showSongPreview() {
@@ -100,6 +103,12 @@ public class LayoutController {
 	public void showPreviousLayout() {
 		if (previouslyShownLayout != null) {
 			showMainLayout(previouslyShownLayout);
+		}
+	}
+	
+	public void showLastSongSelectionLayout() {
+		if (lastSongSelectionLayout != null) {
+			showMainLayout(lastSongSelectionLayout);
 		}
 	}
 	
