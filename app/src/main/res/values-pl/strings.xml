@@ -76,7 +76,7 @@
     <string name="autoscroll_stopped">Autoprzewijanie zatrzymane.</string>
     <string name="start_autoscroll">Uruchom autoprzewijanie</string>
     <string name="stop_autoscroll">Zatrzymaj autoprzewijanie</string>
-    <string name="end_of_song_autoscroll_stopped">Autoprzewijanie zatrzymane.</string>
+    <string name="end_of_song_autoscroll_stopped">Koniec piosenki</string>
     <string name="song_category_others">Inne</string>
     <string name="song_category_custom">Moje piosenki</string>
     <string name="song_search_edit_hint">Tytuł piosenki lub artysta</string>

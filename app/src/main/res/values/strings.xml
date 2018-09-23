@@ -81,7 +81,7 @@
     <string name="autoscroll_stopped">Autoscroll has been stopped.</string>
     <string name="start_autoscroll">Start autoscroll</string>
     <string name="stop_autoscroll">Stop autoscroll</string>
-    <string name="end_of_song_autoscroll_stopped">Autoscroll has been stopped.</string>
+    <string name="end_of_song_autoscroll_stopped">End of song</string>
 
     <string name="song_category_others">Others</string>
     <string name="song_category_custom">My songs</string>
