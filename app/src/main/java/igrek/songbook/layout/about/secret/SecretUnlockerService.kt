@@ -63,10 +63,11 @@ class SecretUnlockerService {
         when (key) {
             "dupa", "okon" -> uiInfoService.showToast(uiResourceService.resString(R.string.easter_egg_discovered))
             "engineer", "inzynier" -> unlockSongs("engineer")
-            "zjajem", "z jajem" -> unlockSongs("zjajem")
             "bff" -> unlockSongs("bff")
+            "zjajem", "z jajem" -> unlockSongs("zjajem")
             "religijne" -> unlockSongs("religijne")
-            "truptutupta" -> uiInfoService.showToast("Słyszałem zaklęcie przyzwania?")
+            "arthas" -> uiInfoService.showToast("\"Nie trzeba mi się kłaniać.\"")
+            "lich", "lisz" -> uiInfoService.showToast("\"Trup tu tupta...\"")
             else -> {
                 uiInfoService.showToast(R.string.unlock_key_invalid)
             }
