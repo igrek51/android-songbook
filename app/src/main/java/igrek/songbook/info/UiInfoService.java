@@ -43,7 +43,7 @@ public class UiInfoService {
 	private void showActionInfo(String info, View view, String actionName, InfoBarClickAction action, Integer color, int snackbarLength) {
 		
 		if (view == null) {
-			view = activity.findViewById(android.R.id.content);
+			view = activity.findViewById(R.id.main_content);
 		}
 		
 		// dont create new snackbars if one is already shown

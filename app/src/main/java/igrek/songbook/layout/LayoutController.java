@@ -1,10 +1,10 @@
 package igrek.songbook.layout;
 
 import android.app.Activity;
+import android.support.design.widget.CoordinatorLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import javax.inject.Inject;
 
@@ -38,7 +38,7 @@ public class LayoutController {
 	@Inject
 	Activity activity;
 	
-	private FrameLayout mainContentLayout;
+	private CoordinatorLayout mainContentLayout;
 	private Logger logger = LoggerFactory.getLogger();
 	private MainLayout previouslyShownLayout;
 	private MainLayout currentlyShownLayout;
