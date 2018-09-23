@@ -36,7 +36,7 @@ public class LyricsRenderer {
 	}
 	
 	private void drawTextLine(LyricsLine line, float scroll, float fontsize, float lineheight) {
-		float y = line.getY() * (int) lineheight - scroll;
+		float y = lineheight * line.getY() - scroll;
 		if (y > h)
 			return;
 		if (y + lineheight < 0)
@@ -48,7 +48,7 @@ public class LyricsRenderer {
 			if (lastFragment.getType() == LyricsTextType.LINEWRAPPER) {
 				canvas.setFont(Font.FONT_NORMAL);
 				canvas.setColor(0x707070);
-				canvas.drawText(lastFragment.getText(), w, y + 0.85f * lineheight, Align.RIGHT);
+				canvas.drawText(lastFragment.getText(), w, y + 0.9f * lineheight, Align.RIGHT);
 			}
 		}
 		
@@ -75,6 +75,7 @@ public class LyricsRenderer {
 		float bottom = (scroll + h) / range;
 		
 		canvas.setColor(0xAEC3E0);
+		// TODO dp
 		int scrollWidth = 3;
 		canvas.fillRect(w - scrollWidth, top * h, w, bottom * h);
 	}
