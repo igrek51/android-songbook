@@ -15,6 +15,7 @@ import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.about.AboutLayoutController
 import igrek.songbook.layout.about.HelpLayoutController
+import igrek.songbook.layout.songimport.SongImportFileChooser
 import igrek.songbook.persistence.SongsDbRepository
 import igrek.songbook.system.SoftKeyboardService
 import java.util.*
@@ -45,6 +46,8 @@ class NavigationMenuController {
     lateinit var songsDbRepository: SongsDbRepository
     @Inject
     lateinit var softKeyboardService: SoftKeyboardService
+    @Inject
+    lateinit var songImportFileChooser: SongImportFileChooser
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
@@ -55,7 +58,7 @@ class NavigationMenuController {
         actionsMap[R.id.nav_songs_list] = Runnable { layoutController.get().showSongTree() }
         actionsMap[R.id.nav_search] = Runnable { layoutController.get().showSongSearch() }
         actionsMap[R.id.nav_update_db] = Runnable { songsDbRepository.recreateDb() }
-        actionsMap[R.id.nav_import_song] = Runnable { uiInfoService.showToast(uiResourceService.resString(R.string.feature_not_implemented)) }
+        actionsMap[R.id.nav_import_song] = Runnable { songImportFileChooser.showFileChooser() }
         actionsMap[R.id.nav_settings] = Runnable { layoutController.get().showSettings() }
         actionsMap[R.id.nav_help] = Runnable { helpLayoutController.get().showUIHelp() }
         actionsMap[R.id.nav_about] = Runnable { aboutLayoutController.get().showAbout() }
@@ -81,8 +84,8 @@ class NavigationMenuController {
             Handler().postDelayed({
                 // unhighlight all menu items
                 if (navigationView != null) {
-                    for (id in 0 until navigationView!!.menu.size())
-                        navigationView!!.menu.getItem(id).isChecked = false
+                    for (id1 in 0 until navigationView!!.menu.size())
+                        navigationView!!.menu.getItem(id1).isChecked = false
                 }
             }, 500)
             true

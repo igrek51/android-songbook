@@ -84,6 +84,8 @@ dependencies {
     // RX
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.0'
+    // OkHttp
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     // Unit tests
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.robolectric:robolectric:3.8'

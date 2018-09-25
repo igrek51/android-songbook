@@ -24,13 +24,14 @@ import igrek.songbook.layout.contact.ContactLayoutController;
 import igrek.songbook.layout.contact.SendFeedbackService;
 import igrek.songbook.layout.navigation.NavigationMenuController;
 import igrek.songbook.layout.settings.SettingsLayoutController;
+import igrek.songbook.layout.songimport.SongImportFileChooser;
 import igrek.songbook.layout.songpreview.LyricsManager;
 import igrek.songbook.layout.songpreview.SongDetailsService;
 import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
 import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
-import igrek.songbook.layout.songpreview.transpose.ChordsTransposerManager;
 import igrek.songbook.layout.songpreview.quickmenu.QuickMenuAutoscroll;
 import igrek.songbook.layout.songpreview.quickmenu.QuickMenuTranspose;
+import igrek.songbook.layout.songpreview.transpose.ChordsTransposerManager;
 import igrek.songbook.layout.songsearch.SongSearchLayoutController;
 import igrek.songbook.layout.songtree.ScrollPosBuffer;
 import igrek.songbook.layout.songtree.SongTreeLayoutController;
@@ -46,6 +47,7 @@ import igrek.songbook.system.SystemKeyDispatcher;
 import igrek.songbook.system.WindowManagerService;
 import igrek.songbook.system.filesystem.ExternalCardService;
 import igrek.songbook.system.filesystem.FilesystemService;
+import okhttp3.OkHttpClient;
 
 /**
  * Module with providers. These classes can be injected
@@ -289,6 +291,18 @@ public class FactoryModule {
 	@Singleton
 	protected SendFeedbackService provideSendFeedbackService() {
 		return new SendFeedbackService();
+	}
+	
+	@Provides
+	@Singleton
+	protected SongImportFileChooser provideSongImportFileChooser() {
+		return new SongImportFileChooser();
+	}
+	
+	@Provides
+	@Singleton
+	protected OkHttpClient provideOkHttpClient() {
+		return new OkHttpClient();
 	}
 	
 	/*

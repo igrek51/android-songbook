@@ -1,5 +1,7 @@
 package igrek.songbook.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -10,9 +12,11 @@ import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.layout.songimport.SongImportFileChooser
 import igrek.songbook.system.PermissionService
 import igrek.songbook.system.SystemKeyDispatcher
 import javax.inject.Inject
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,6 +30,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var systemKeyDispatcher: SystemKeyDispatcher
     @Inject
     lateinit var permissionService: PermissionService
+    @Inject
+    lateinit var songImportFileChooser: SongImportFileChooser
 
     private val logger: Logger = LoggerFactory.getLogger()
 
@@ -88,5 +94,14 @@ class MainActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         permissionService.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        when (requestCode) {
+            SongImportFileChooser.FILE_SELECT_CODE -> if (resultCode == Activity.RESULT_OK) {
+                songImportFileChooser.onFileSelect(data.data)
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }
