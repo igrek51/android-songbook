@@ -43,12 +43,14 @@ public class SongImportFileChooser {
 	
 	public void onFileSelect(Uri selectedUri) {
 		try {
-			InputStream inputStream = activity.getContentResolver().openInputStream(selectedUri);
-			
-			int length = inputStream.available();
-			
-			uiInfoService.showToast("" + length);
-			
+			if (selectedUri != null) {
+				InputStream inputStream = activity.getContentResolver()
+						.openInputStream(selectedUri);
+				
+				int length = inputStream.available();
+				
+				uiInfoService.showToast("" + length);
+			}
 		} catch (IOException e) {
 			logger.error(e);
 		}

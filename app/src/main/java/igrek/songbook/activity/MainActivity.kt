@@ -96,10 +96,10 @@ class MainActivity : AppCompatActivity() {
         permissionService.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             SongImportFileChooser.FILE_SELECT_CODE -> if (resultCode == Activity.RESULT_OK) {
-                songImportFileChooser.onFileSelect(data.data)
+                songImportFileChooser.onFileSelect(data?.data)
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
