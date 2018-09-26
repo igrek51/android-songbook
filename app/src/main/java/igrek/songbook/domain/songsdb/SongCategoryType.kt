@@ -4,11 +4,11 @@ import igrek.songbook.R
 
 enum class SongCategoryType(val id: Long, val localeStringId: Int?) {
 
-    ARTIST(1, null),
+    CUSTOM(1, R.string.song_category_custom),
 
-    CUSTOM(2, R.string.song_category_custom),
+    OTHERS(2, R.string.song_category_others),
 
-    OTHERS(3, R.string.song_category_others);
+    ARTIST(3, null);
 
     companion object {
         fun parseById(id: Long): SongCategoryType {

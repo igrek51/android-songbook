@@ -36,9 +36,11 @@ import igrek.songbook.layout.songsearch.SongSearchLayoutController;
 import igrek.songbook.layout.songtree.ScrollPosBuffer;
 import igrek.songbook.layout.songtree.SongTreeLayoutController;
 import igrek.songbook.layout.songtree.SongTreeWalker;
-import igrek.songbook.persistence.LocalDatabaseService;
-import igrek.songbook.persistence.SongsDbRepository;
-import igrek.songbook.persistence.SqlQueryService;
+import igrek.songbook.persistence.CustomSongsDao;
+import igrek.songbook.persistence.LocalDbService;
+import igrek.songbook.persistence.SongsDao;
+import igrek.songbook.persistence.SongsRepository;
+import igrek.songbook.persistence.UnlockedSongsDao;
 import igrek.songbook.persistence.preferences.PreferencesService;
 import igrek.songbook.system.PackageInfoService;
 import igrek.songbook.system.PermissionService;
@@ -241,20 +243,14 @@ public class FactoryModule {
 	
 	@Provides
 	@Singleton
-	protected LocalDatabaseService provideSongsDbService() {
-		return new LocalDatabaseService();
+	protected LocalDbService provideSongsDbService() {
+		return new LocalDbService();
 	}
 	
 	@Provides
 	@Singleton
-	protected SqlQueryService provideSqlQueryService() {
-		return new SqlQueryService();
-	}
-	
-	@Provides
-	@Singleton
-	protected SongsDbRepository provideSongsDbRepository() {
-		return new SongsDbRepository();
+	protected SongsRepository provideSongsRepository() {
+		return new SongsRepository();
 	}
 	
 	@Provides
@@ -303,6 +299,24 @@ public class FactoryModule {
 	@Singleton
 	protected OkHttpClient provideOkHttpClient() {
 		return new OkHttpClient();
+	}
+	
+	@Provides
+	@Singleton
+	protected SongsDao provideSongsDao() {
+		return new SongsDao();
+	}
+	
+	@Provides
+	@Singleton
+	protected CustomSongsDao provideCustomSongsDao() {
+		return new CustomSongsDao();
+	}
+	
+	@Provides
+	@Singleton
+	protected UnlockedSongsDao provideUnlockedSongsDao() {
+		return new UnlockedSongsDao();
 	}
 	
 	/*

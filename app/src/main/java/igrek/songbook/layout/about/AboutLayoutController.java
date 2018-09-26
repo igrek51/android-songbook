@@ -9,7 +9,7 @@ import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.UiResourceService;
 import igrek.songbook.layout.about.secret.SecretUnlockerService;
-import igrek.songbook.persistence.SongsDbRepository;
+import igrek.songbook.persistence.SongsRepository;
 import igrek.songbook.system.PackageInfoService;
 
 public class AboutLayoutController {
@@ -23,7 +23,7 @@ public class AboutLayoutController {
 	@Inject
 	PackageInfoService packageInfoService;
 	@Inject
-	SongsDbRepository songsDbRepository;
+	SongsRepository songsRepository;
 	
 	public AboutLayoutController() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -31,7 +31,7 @@ public class AboutLayoutController {
 	
 	public void showAbout() {
 		String appVersionName = packageInfoService.getVersionName();
-		String dbVersionNumber = Long.toString(songsDbRepository.getSongsDb().getVersionNumber());
+		String dbVersionNumber = Long.toString(songsRepository.getSongsDb().getVersionNumber());
 		String title = uiResourceService.resString(R.string.nav_about);
 		String message = uiResourceService.resString(R.string.ui_about_content, appVersionName, dbVersionNumber);
 		

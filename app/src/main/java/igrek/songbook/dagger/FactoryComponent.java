@@ -34,9 +34,11 @@ import igrek.songbook.layout.songtree.ScrollPosBuffer;
 import igrek.songbook.layout.songtree.SongTreeLayoutController;
 import igrek.songbook.layout.songtree.SongTreeWalker;
 import igrek.songbook.layout.view.ButtonClickEffect;
-import igrek.songbook.persistence.LocalDatabaseService;
-import igrek.songbook.persistence.SongsDbRepository;
-import igrek.songbook.persistence.SqlQueryService;
+import igrek.songbook.persistence.CustomSongsDao;
+import igrek.songbook.persistence.LocalDbService;
+import igrek.songbook.persistence.SongsDao;
+import igrek.songbook.persistence.SongsRepository;
+import igrek.songbook.persistence.UnlockedSongsDao;
 import igrek.songbook.persistence.preferences.PreferencesService;
 import igrek.songbook.system.PackageInfoService;
 import igrek.songbook.system.PermissionService;
@@ -104,11 +106,9 @@ public interface FactoryComponent {
 	
 	void inject(HelpLayoutController there);
 	
-	void inject(LocalDatabaseService there);
+	void inject(LocalDbService there);
 	
-	void inject(SqlQueryService there);
-	
-	void inject(SongsDbRepository there);
+	void inject(SongsRepository there);
 	
 	void inject(PermissionService there);
 	
@@ -123,6 +123,12 @@ public interface FactoryComponent {
 	void inject(SendFeedbackService there);
 	
 	void inject(SongImportFileChooser there);
+	
+	void inject(UnlockedSongsDao there);
+	
+	void inject(SongsDao there);
+	
+	void inject(CustomSongsDao there);
 	
 	
 	void inject(QuickMenuAutoscroll there);

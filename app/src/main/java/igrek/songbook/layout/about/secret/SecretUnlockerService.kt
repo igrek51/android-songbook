@@ -10,8 +10,7 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
-import igrek.songbook.persistence.SongsDbRepository
-import igrek.songbook.persistence.SqlQueryService
+import igrek.songbook.persistence.SongsRepository
 import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.locale.StringSimplifier
 import javax.inject.Inject
@@ -25,9 +24,7 @@ class SecretUnlockerService {
     @Inject
     lateinit var uiInfoService: UiInfoService
     @Inject
-    lateinit var songsDbRepository: SongsDbRepository
-    @Inject
-    lateinit var sqlQueryService: SqlQueryService
+    lateinit var songsRepository: SongsRepository
     @Inject
     lateinit var softKeyboardService: SoftKeyboardService
 
@@ -61,30 +58,39 @@ class SecretUnlockerService {
         logger.info("unlocking attempt with a key: $key0")
         val key = StringSimplifier.simplify(key0)
         when (key) {
-            "dupa", "okon" -> uiInfoService.showToast(uiResourceService.resString(R.string.easter_egg_discovered))
+            "dupa", "okon" -> toast(R.string.easter_egg_discovered)
             "engineer", "inzynier" -> unlockSongs("engineer")
             "bff" -> unlockSongs("bff")
             "zjajem", "z jajem" -> unlockSongs("zjajem")
             "religijne" -> unlockSongs("religijne")
-            "arthas" -> uiInfoService.showToast("\"Nie trzeba mi się kłaniać.\"")
-            "lich", "lisz" -> uiInfoService.showToast("\"Trup tu tupta...\"")
+            "arthas" -> toast("\"Nie trzeba mi się kłaniać.\"")
+            "lich", "lisz" -> toast("\"Trup tu tupta...\"")
+            "reset" -> songsRepository.factoryReset()
             else -> {
-                uiInfoService.showToast(R.string.unlock_key_invalid)
+                toast(R.string.unlock_key_invalid)
             }
         }
         softKeyboardService.hideSoftKeyboard()
     }
 
+    private fun toast(message: String) {
+        uiInfoService.showToast(message)
+    }
+
+    private fun toast(resId: Int) {
+        uiInfoService.showToast(resId)
+    }
+
     private fun unlockSongs(key: String) {
-        val toUnlock = songsDbRepository.songsDb!!.allSongs
+        val toUnlock = songsRepository.songsDb!!.allSongs
                 .filter { s -> s.locked && s.lockPassword == key }
         val count = toUnlock.count()
         toUnlock.forEach { s ->
             s.locked = false
-            sqlQueryService.unlockSong(s.id)
+            songsRepository.unlockSong(s.id)
         }
         val message = uiResourceService.resString(R.string.unlock_new_songs_unlocked, count)
         uiInfoService.showToast(message)
-        songsDbRepository.reloadDb()
+        songsRepository.initializeSongsDb()
     }
 }

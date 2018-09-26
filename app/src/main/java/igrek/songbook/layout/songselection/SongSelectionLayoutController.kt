@@ -16,7 +16,7 @@ import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.layout.songpreview.SongPreviewLayoutController
 import igrek.songbook.layout.songtree.SongTreeSorter
-import igrek.songbook.persistence.SongsDbRepository
+import igrek.songbook.persistence.SongsRepository
 import javax.inject.Inject
 
 abstract class SongSelectionLayoutController : OnSongClickListener {
@@ -30,7 +30,7 @@ abstract class SongSelectionLayoutController : OnSongClickListener {
     @Inject
     lateinit var navigationMenuController: NavigationMenuController
     @Inject
-    lateinit var songsDbRepository: SongsDbRepository
+    lateinit var songsRepository: SongsRepository
     @Inject
     lateinit var uiResourceService: UiResourceService
     @Inject
@@ -57,7 +57,7 @@ abstract class SongSelectionLayoutController : OnSongClickListener {
     }
 
     open fun updateSongItemsList() {
-        val items: List<SongTreeItem> = getSongItems(songsDbRepository.songsDb!!)
+        val items: List<SongTreeItem> = getSongItems(songsRepository.songsDb!!)
         val sortedItems = SongTreeSorter().sort(items)
         itemsListView!!.setItems(sortedItems)
     }

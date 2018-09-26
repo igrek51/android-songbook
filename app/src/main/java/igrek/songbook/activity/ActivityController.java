@@ -11,7 +11,7 @@ import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.layout.songpreview.LyricsManager;
 import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
-import igrek.songbook.persistence.LocalDatabaseService;
+import igrek.songbook.persistence.LocalDbService;
 import igrek.songbook.persistence.preferences.PreferencesDefinition;
 import igrek.songbook.persistence.preferences.PreferencesService;
 import igrek.songbook.system.WindowManagerService;
@@ -25,7 +25,7 @@ public class ActivityController {
 	@Inject
 	PreferencesService preferencesService;
 	@Inject
-	LocalDatabaseService localDatabaseService;
+	LocalDbService localDbService;
 	@Inject
 	LyricsManager lyricsManager;
 	@Inject
@@ -55,7 +55,7 @@ public class ActivityController {
 	}
 	
 	public void quit() {
-		localDatabaseService.closeDatabase();
+		localDbService.closeDatabases();
 		savePreferences();
 		windowManagerService.keepScreenOn(false);
 		activity.finish();

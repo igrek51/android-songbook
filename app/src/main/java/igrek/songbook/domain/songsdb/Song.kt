@@ -15,16 +15,19 @@ open class Song(
         var preferredKey: String? = null,
         var locked: Boolean = false,
         var lockPassword: String? = null,
-        var author: String? = null
+        var author: String? = null,
+        var status: SongStatus
 ) {
     override fun equals(other: Any?): Boolean {
         if (other !is Song)
             return false
-        return Objects.equal(id, other.id) && Objects.equal(versionNumber, other.versionNumber)
+        return Objects.equal(id, other.id)
+                && Objects.equal(category, other.category)
+                && Objects.equal(versionNumber, other.versionNumber)
     }
 
     override fun hashCode(): Int {
-        return Objects.hashCode(id, versionNumber)
+        return Objects.hashCode(id, category.id, versionNumber)
     }
 
     fun displayName(): String {
