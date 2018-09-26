@@ -73,15 +73,19 @@ class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
         restoreScrollPosition(songTreeWalker.currentCategory)
     }
 
-    override fun getSongItems(songsDb: SongsDb): List<SongTreeItem> {
+    override fun getSongItems(songsDb: SongsDb): MutableList<SongTreeItem> {
         return if (!songTreeWalker.isCategorySelected) {
             // all categories list
             songsDb.getAllUnlockedCategories()
+                    .asSequence()
                     .map { category -> SongTreeItem.category(category) }
+                    .toMutableList()
         } else {
             // selected category
             songTreeWalker.currentCategory.getUnlockedSongs()
+                    .asSequence()
                     .map { song -> SongTreeItem.song(song) }
+                    .toMutableList()
         }
     }
 

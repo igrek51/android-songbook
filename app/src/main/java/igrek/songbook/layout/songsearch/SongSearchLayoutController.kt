@@ -110,18 +110,20 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
         updateSongItemsList()
     }
 
-    override fun getSongItems(songsDb: SongsDb): List<SongTreeItem> {
+    override fun getSongItems(songsDb: SongsDb): MutableList<SongTreeItem> {
         // no filter
         if (!isFilterSet()) {
             return songsDb.getAllUnlockedSongs()
+                    .asSequence()
                     .map { song -> SongSearchItem.song(song) }
+                    .toMutableList()
         } else {
             val songNameFilter = SongTreeFilter(itemNameFilter)
             return songsDb.getAllUnlockedSongs()
                     .asSequence()
                     .map { song -> SongSearchItem.song(song) }
                     .filter { item -> songNameFilter.matchesNameFilter(item) }
-                    .toList()
+                    .toMutableList()
         }
     }
 

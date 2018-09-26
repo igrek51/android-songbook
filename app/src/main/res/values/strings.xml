@@ -114,4 +114,8 @@
     <string name="details_none">None</string>
     <string name="feature_not_implemented">This feature will be available soon.</string>
     <string name="scroll_at_the_beginning_already">Back to the beginning.</string>
+    <string name="file_manager_not_found">Please install a File Manager.</string>
+    <string name="select_file_to_import">Select a file to import</string>
+    <string name="selected_file_is_too_big">Selected file is too big.</string>
+    <string name="new_song_has_been_imported">New song has been imported.</string>
 </resources>

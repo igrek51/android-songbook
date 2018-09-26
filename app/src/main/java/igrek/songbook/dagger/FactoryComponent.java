@@ -20,6 +20,7 @@ import igrek.songbook.layout.contact.SendFeedbackService;
 import igrek.songbook.layout.navigation.NavigationMenuController;
 import igrek.songbook.layout.settings.SettingsLayoutController;
 import igrek.songbook.layout.songimport.SongImportFileChooser;
+import igrek.songbook.layout.songimport.SongImportService;
 import igrek.songbook.layout.songpreview.LyricsManager;
 import igrek.songbook.layout.songpreview.SongDetailsService;
 import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
@@ -129,6 +130,8 @@ public interface FactoryComponent {
 	void inject(SongsDao there);
 	
 	void inject(CustomSongsDao there);
+	
+	void inject(SongImportService there);
 	
 	
 	void inject(QuickMenuAutoscroll there);

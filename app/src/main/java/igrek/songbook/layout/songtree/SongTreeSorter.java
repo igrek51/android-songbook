@@ -25,7 +25,7 @@ public class SongTreeSorter {
 		if (lhs.isCategory() && rhs.isCategory()) {
 			if (lhs.getCategory().getType() != SongCategoryType.ARTIST || rhs.getCategory()
 					.getType() != SongCategoryType.ARTIST) {
-				return Long.compare(lhs.getCategory().getType().getId(), rhs.getCategory()
+				return Long.compare(rhs.getCategory().getType().getId(), lhs.getCategory()
 						.getType()
 						.getId());
 			}

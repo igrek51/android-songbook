@@ -2,16 +2,24 @@ package igrek.songbook.layout.songimport;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
-import android.widget.Toast;
+import android.provider.OpenableColumns;
+
+import com.google.common.io.CharStreams;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 
 import javax.inject.Inject;
 
+import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.UiInfoService;
+import igrek.songbook.info.UiResourceService;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
 
@@ -22,6 +30,10 @@ public class SongImportFileChooser {
 	Activity activity;
 	@Inject
 	UiInfoService uiInfoService;
+	@Inject
+	UiResourceService uiResourceService;
+	@Inject
+	SongImportService songImportService;
 	
 	public static final int FILE_SELECT_CODE = 7;
 	
@@ -35,9 +47,10 @@ public class SongImportFileChooser {
 		intent.addCategory(Intent.CATEGORY_OPENABLE);
 		
 		try {
-			activity.startActivityForResult(Intent.createChooser(intent, "Select a file to import"), FILE_SELECT_CODE);
+			String title = uiResourceService.resString(R.string.select_file_to_import);
+			activity.startActivityForResult(Intent.createChooser(intent, title), FILE_SELECT_CODE);
 		} catch (android.content.ActivityNotFoundException ex) {
-			Toast.makeText(activity, "Please install a File Manager.", Toast.LENGTH_SHORT).show();
+			uiInfoService.showToast(R.string.file_manager_not_found);
 		}
 	}
 	
@@ -46,15 +59,46 @@ public class SongImportFileChooser {
 			if (selectedUri != null) {
 				InputStream inputStream = activity.getContentResolver()
 						.openInputStream(selectedUri);
+				String filename = getFileNameFromUri(selectedUri);
 				
 				int length = inputStream.available();
+				if (length > 50 * 1024) {
+					uiInfoService.showToast(R.string.selected_file_is_too_big);
+					return;
+				}
 				
-				uiInfoService.showToast("" + length);
+				String content = convert(inputStream, Charset.forName("UTF-8"));
+				
+				songImportService.importSong(filename, content);
 			}
-		} catch (IOException e) {
+		} catch (IOException | UnsupportedCharsetException e) {
 			logger.error(e);
 		}
 	}
 	
+	public String convert(InputStream inputStream, Charset charset) throws IOException {
+		return CharStreams.toString(new InputStreamReader(inputStream, charset));
+	}
 	
+	public String getFileNameFromUri(Uri uri) {
+		String result = null;
+		if (uri.getScheme().equals("content")) {
+			Cursor cursor = activity.getContentResolver().query(uri, null, null, null, null);
+			try {
+				if (cursor != null && cursor.moveToFirst()) {
+					result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+				}
+			} finally {
+				cursor.close();
+			}
+		}
+		if (result == null) {
+			result = uri.getPath();
+			int cut = result.lastIndexOf('/');
+			if (cut != -1) {
+				result = result.substring(cut + 1);
+			}
+		}
+		return result;
+	}
 }

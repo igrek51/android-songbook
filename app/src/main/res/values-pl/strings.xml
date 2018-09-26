@@ -105,5 +105,9 @@
     <string name="contact_error_sending">Wystąpił błąd podczas wysyłania.</string>
     <string name="details_none">Brak</string>
     <string name="feature_not_implemented">Ta funkcja zostanie niedługo dodana.</string>
-    <string name="scroll_at_the_beginning_already">Powrót na początek</string>
+    <string name="scroll_at_the_beginning_already">Powrót na początek.</string>
+    <string name="file_manager_not_found">Brak systemowej przeglądarki plików.</string>
+    <string name="select_file_to_import">Wybierz plik do zaimportowania.</string>
+    <string name="selected_file_is_too_big">Wybrany plik jest za duży.</string>
+    <string name="new_song_has_been_imported">Nowa piosenka została zaimportowana.</string>
 </resources>
