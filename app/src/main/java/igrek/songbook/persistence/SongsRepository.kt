@@ -79,6 +79,26 @@ class SongsRepository {
             songIds[song.id] = song
         }
 
+        // unlock songs
+        val unlockedSongIds: List<Long> = unlockedSongsDao.readUnlockedSongIds()
+        for (unlockedSongId in unlockedSongIds) {
+            val song: Song? = songIds[unlockedSongId]
+            if (song != null) {
+                song.locked = false
+            }
+        }
+
+        // add custom songs
+        val customSongs = customSongsDao.readAllSongs(categories)
+        if (customSongs.isNotEmpty()) {
+            songs.addAll(customSongs)
+            // add custom category
+            for (song in customSongs) {
+                categorySongs.put(song.category, song)
+            }
+        }
+
+        // build category tree
         for (category in categories) {
             val songsOfCategory = categorySongs.get(category)
             category.songs = ArrayList(songsOfCategory)
@@ -91,19 +111,6 @@ class SongsRepository {
                 category.displayName = displayName
             }
         }
-
-        // unlock songs
-        val unlockedSongIds: List<Long> = unlockedSongsDao.readUnlockedSongIds()
-        for (unlockedSongId in unlockedSongIds) {
-            val song: Song? = songIds[unlockedSongId]
-            if (song != null) {
-                song.locked = false
-            }
-        }
-
-        // add custom songs
-        val customSongs = customSongsDao.readAllSongs(categories)
-        songs.addAll(customSongs)
 
         songsDb = SongsDb(versionNumber, categories, songs)
 
