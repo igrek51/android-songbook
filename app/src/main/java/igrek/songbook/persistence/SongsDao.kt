@@ -1,5 +1,6 @@
 package igrek.songbook.persistence
 
+import android.database.Cursor
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.domain.songsdb.Song
 import igrek.songbook.domain.songsdb.SongCategory
@@ -52,13 +53,7 @@ class Info(models.Model):
             val cursor = sqlQuery("SELECT * FROM songs_category ORDER BY id")
 
             while (cursor.moveToNext()) {
-                val id = cursor.getLong(cursor.getColumnIndexOrThrow("id"))
-                val typeId = cursor.getLong(cursor.getColumnIndexOrThrow("type_id"))
-                val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
-                val type = SongCategoryType.parseById(typeId)
-
-                val entity = SongCategory(id, type, name)
-                entities.add(entity)
+                entities.add(mapSongCategory(cursor))
             }
 
             cursor.close()
@@ -66,6 +61,14 @@ class Info(models.Model):
             logger.error(e)
         }
         return entities
+    }
+
+    fun mapSongCategory(cursor: Cursor): SongCategory {
+        val id = cursor.getLong(cursor.getColumnIndexOrThrow("id"))
+        val typeId = cursor.getLong(cursor.getColumnIndexOrThrow("type_id"))
+        val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+        val type = SongCategoryType.parseById(typeId)
+        return SongCategory(id, type, name)
     }
 
     fun readAllSongs(categories: List<SongCategory>): MutableList<Song> {
@@ -94,7 +97,7 @@ class Info(models.Model):
                 val songStatus = SongStatus.parseById(stateId)
                 val category = categories.first { category -> category.id == categoryId }
 
-                val song = Song(id, title, category, fileContent, versionNumber, updateTime, custom, filename, comment, preferredKey, locked, lockPassword, author, songStatus)
+                val song = Song(id, title, category, fileContent, versionNumber, createTime, updateTime, custom, filename, comment, preferredKey, locked, lockPassword, author, songStatus)
                 songs.add(song)
             }
 

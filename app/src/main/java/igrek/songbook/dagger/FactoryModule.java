@@ -24,6 +24,7 @@ import igrek.songbook.layout.contact.ContactLayoutController;
 import igrek.songbook.layout.contact.SendFeedbackService;
 import igrek.songbook.layout.navigation.NavigationMenuController;
 import igrek.songbook.layout.settings.SettingsLayoutController;
+import igrek.songbook.layout.songimport.ImportSongLayoutController;
 import igrek.songbook.layout.songimport.SongImportFileChooser;
 import igrek.songbook.layout.songimport.SongImportService;
 import igrek.songbook.layout.songpreview.LyricsManager;
@@ -325,6 +326,13 @@ public class FactoryModule {
 	@Singleton
 	protected SongImportService provideSongImportService() {
 		return new SongImportService();
+	}
+	
+	
+	@Provides
+	@Singleton
+	protected ImportSongLayoutController provideEditImportSongLayoutController() {
+		return new ImportSongLayoutController();
 	}
 	
 	/*

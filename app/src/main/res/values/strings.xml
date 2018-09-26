@@ -117,5 +117,15 @@
     <string name="file_manager_not_found">Please install a File Manager.</string>
     <string name="select_file_to_import">Select a file to import</string>
     <string name="selected_file_is_too_big">Selected file is too big.</string>
-    <string name="new_song_has_been_imported">New song has been imported.</string>
+    <string name="new_song_has_been_imported">New song has been added.</string>
+    <string name="editing_song">Edit song</string>
+    <string name="import_song_title_label">Song Title:</string>
+    <string name="import_song_title_hint">Title…</string>
+    <string name="import_song_content_label">Song lyrics with chords:</string>
+    <string name="import_song_content_hint">
+        Song lyrics with [chords in brackets]
+        \nExample text [a F C G]
+        \n…
+    </string>
+    <string name="import_song_save">Save</string>
 </resources>

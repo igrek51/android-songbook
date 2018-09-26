@@ -11,11 +11,16 @@ abstract class AbstractSqliteDao {
     lateinit var localDbService: LocalDbService
 
     protected val logger = LoggerFactory.getLogger()
-    private val iso8601Format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    protected val iso8601Format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
     protected abstract fun getDbHelper(): SQLiteDbHelper
 
     protected fun sqlQuery(sql: String, vararg args: Any): Cursor {
+        val strings: Array<String> = args.map { arg -> arg.toString() }.toTypedArray()
+        return sqlQuery(sql, strings)
+    }
+
+    protected fun sqlQueryArray(sql: String, args: Array<out Any>): Cursor {
         val strings: Array<String> = args.map { arg -> arg.toString() }.toTypedArray()
         return sqlQuery(sql, strings)
     }
@@ -43,18 +48,22 @@ abstract class AbstractSqliteDao {
     }
 
     fun readDbVersionNumber(): Long? {
+        val mapper: (Cursor) -> Long = { cursor -> cursor.getLong(cursor.getColumnIndexOrThrow("value")) }
+        return queryOneValue(mapper, null, "SELECT value FROM songs_info WHERE name = 'version_number'")
+    }
+
+    protected fun <T> queryOneValue(mapper: (Cursor) -> T, defaultValue: T, sql: String, vararg args: Any): T {
         try {
-            val cursor = sqlQuery("SELECT value FROM songs_info WHERE name = 'version_number'")
-            try {
+            val cursor = sqlQueryArray(sql, args)
+            cursor.use { cursor ->
                 if (cursor.moveToNext()) {
-                    return cursor.getLong(cursor.getColumnIndexOrThrow("value"))
+                    return mapper.invoke(cursor)
                 }
-            } finally {
-                cursor.close()
             }
         } catch (e: IllegalArgumentException) {
             logger.error(e)
         }
-        return null
+        return defaultValue
     }
+
 }

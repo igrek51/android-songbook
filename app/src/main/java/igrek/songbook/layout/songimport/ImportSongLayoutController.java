@@ -1,4 +1,4 @@
-package igrek.songbook.layout.contact;
+package igrek.songbook.layout.songimport;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +12,6 @@ import javax.inject.Inject;
 
 import dagger.Lazy;
 import igrek.songbook.R;
-import igrek.songbook.activity.ActivityController;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.UiInfoService;
 import igrek.songbook.info.UiResourceService;
@@ -24,10 +23,8 @@ import igrek.songbook.layout.LayoutState;
 import igrek.songbook.layout.MainLayout;
 import igrek.songbook.layout.navigation.NavigationMenuController;
 
-public class ContactLayoutController implements MainLayout {
+public class ImportSongLayoutController implements MainLayout {
 	
-	@Inject
-	Lazy<ActivityController> activityController;
 	@Inject
 	LayoutController layoutController;
 	@Inject
@@ -39,13 +36,16 @@ public class ContactLayoutController implements MainLayout {
 	@Inject
 	NavigationMenuController navigationMenuController;
 	@Inject
-	SendFeedbackService sendFeedbackService;
+	Lazy<SongImportService> songImportService;
+	
+	private String songTitle;
+	private String songContent;
 	
 	private Logger logger = LoggerFactory.getLogger();
-	private EditText contactMessageEdit;
-	private EditText contactAuthorEdit;
+	private EditText songTitleEdit;
+	private EditText songContentEdit;
 	
-	public ContactLayoutController() {
+	public ImportSongLayoutController() {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
@@ -63,25 +63,40 @@ public class ContactLayoutController implements MainLayout {
 		ImageButton navMenuButton = layout.findViewById(R.id.navMenuButton);
 		navMenuButton.setOnClickListener((v) -> navigationMenuController.navDrawerShow());
 		
-		contactMessageEdit = layout.findViewById(R.id.contactMessageEdit);
-		contactAuthorEdit = layout.findViewById(R.id.contactAuthorEdit);
-		Button contactSendButton = layout.findViewById(R.id.contactSendButton);
-		contactSendButton.setOnClickListener(new SafeClickListener() {
+		songTitleEdit = layout.findViewById(R.id.songTitleEdit);
+		songContentEdit = layout.findViewById(R.id.songContentEdit);
+		Button saveSongButton = layout.findViewById(R.id.saveSongButton);
+		saveSongButton.setOnClickListener(new SafeClickListener() {
 			@Override
 			public void onClick() {
-				sendContactMessage();
+				saveSong();
 			}
 		});
+		
+		songTitleEdit.setText(songTitle);
+		songContentEdit.setText(songContent);
+	}
+	
+	public void setImportedSong(String title, String content) {
+		this.songTitle = title;
+		this.songContent = content;
+	}
+	
+	
+	private void saveSong() {
+		songTitle = songTitleEdit.getText().toString();
+		songContent = songContentEdit.getText().toString();
+		songImportService.get().importSong(songTitle, songContent);
 	}
 	
 	@Override
 	public LayoutState getLayoutState() {
-		return LayoutState.CONTACT;
+		return LayoutState.IMPORT_SONG;
 	}
 	
 	@Override
 	public int getLayoutResourceId() {
-		return R.layout.contact;
+		return R.layout.import_song;
 	}
 	
 	@Override
@@ -93,13 +108,4 @@ public class ContactLayoutController implements MainLayout {
 	public void onLayoutExit() {
 	}
 	
-	private void sendContactMessage() {
-		String message = contactMessageEdit.getText().toString();
-		String author = contactAuthorEdit.getText().toString();
-		if (message == null || message.isEmpty()) {
-			uiInfoService.showToast(uiResourceService.resString(R.string.contact_message_field_empty));
-			return;
-		}
-		sendFeedbackService.sendFeedback(message, author);
-	}
 }

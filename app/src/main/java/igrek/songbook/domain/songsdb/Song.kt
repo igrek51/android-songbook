@@ -3,11 +3,12 @@ package igrek.songbook.domain.songsdb
 import com.google.common.base.Objects
 
 open class Song(
-        val id: Long,
+        var id: Long,
         open var title: String,
         open var category: SongCategory,
         var fileContent: String? = null,
         var versionNumber: Long = 1,
+        var createTime: Long = 0,
         var updateTime: Long = 0,
         var custom: Boolean = false,
         var filename: String? = null,

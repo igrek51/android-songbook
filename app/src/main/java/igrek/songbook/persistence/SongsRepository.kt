@@ -115,7 +115,8 @@ class SongsRepository {
     }
 
     fun saveImportedSong(song: Song) {
-        // TODO add or update
+        customSongsDao.saveCustomSong(song)
+        initializeSongsDb()
     }
 
     fun removeImportedSong(song: Song) {
@@ -124,6 +125,10 @@ class SongsRepository {
 
     fun getSongsDbVersion(): Long? {
         return songsDao.readDbVersionNumber()
+    }
+
+    fun getCustomCategoryByTypeId(categoryTypeId: Long): SongCategory? {
+        return customSongsDao.getCategoryByTypeId(categoryTypeId)
     }
 
 }

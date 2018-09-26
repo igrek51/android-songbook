@@ -69,7 +69,7 @@ public class SongImportFileChooser {
 				
 				String content = convert(inputStream, Charset.forName("UTF-8"));
 				
-				songImportService.importSong(filename, content);
+				songImportService.showImportSongScreen(filename, content);
 			}
 		} catch (IOException | UnsupportedCharsetException e) {
 			logger.error(e);

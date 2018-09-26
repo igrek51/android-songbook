@@ -37,7 +37,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
                 android:layout_marginStart="20dp"
-                android:text="@string/nav_contact"
+                android:text="@string/editing_song"
                 android:textSize="18sp"/>
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
@@ -58,38 +58,47 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:gravity="bottom"
-                android:text="@string/contact_label"
+                android:text="@string/import_song_title_label"
                 android:textSize="18sp"/>
 
             <EditText
-                android:id="@+id/contactMessageEdit"
+                android:id="@+id/songTitleEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="200dp"
-                android:layout_margin="8dp"
-                android:padding="8dp"
-                android:gravity="top"
-                android:hint="@string/contact_message_hint"
-                android:inputType="text|textMultiLine"
-                android:background="#07ffffff"/>
-
-            <EditText
-                android:id="@+id/contactAuthorEdit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                android:layout_marginBottom="8dp"
                 android:padding="8dp"
                 android:gravity="center_vertical"
-                android:hint="@string/contact_author_hint"
+                android:hint="@string/import_song_title_hint"
                 android:inputType="text"
                 android:background="#07ffffff"/>
 
-            <Button
-                android:id="@+id/contactSendButton"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:text="@string/contact_send"/>
+                android:gravity="bottom"
+                android:text="@string/import_song_content_label"
+                android:textSize="18sp"/>
+
+            <EditText
+                android:id="@+id/songContentEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="200dp"
+                android:layout_marginBottom="8dp"
+                android:padding="8dp"
+                android:gravity="top"
+                android:hint="@string/import_song_content_hint"
+                android:text=""
+                android:inputType="text|textMultiLine"
+                android:background="#07ffffff"/>
+
+            <Button
+                android:id="@+id/saveSongButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/import_song_save"/>
 
         </LinearLayout>
     </ScrollView>

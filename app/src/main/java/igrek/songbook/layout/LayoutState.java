@@ -12,4 +12,6 @@ public enum LayoutState {
 	
 	CONTACT,
 	
+	IMPORT_SONG,
+	
 }
