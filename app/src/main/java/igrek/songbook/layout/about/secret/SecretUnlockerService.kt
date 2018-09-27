@@ -11,6 +11,7 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.persistence.SongsRepository
+import igrek.songbook.persistence.preferences.PreferencesService
 import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.locale.StringSimplifier
 import javax.inject.Inject
@@ -27,6 +28,8 @@ class SecretUnlockerService {
     lateinit var songsRepository: SongsRepository
     @Inject
     lateinit var softKeyboardService: SoftKeyboardService
+    @Inject
+    lateinit var preferencesService: PreferencesService
 
     private val logger = LoggerFactory.getLogger()
 
@@ -65,12 +68,17 @@ class SecretUnlockerService {
             "religijne" -> unlockSongs("religijne")
             "arthas" -> toast("\"Nie trzeba mi się kłaniać.\"")
             "lich", "lisz" -> toast("\"Trup tu tupta...\"")
-            "reset" -> songsRepository.factoryReset()
+            "reset" -> reset()
             else -> {
                 toast(R.string.unlock_key_invalid)
             }
         }
         softKeyboardService.hideSoftKeyboard()
+    }
+
+    private fun reset() {
+        songsRepository.factoryReset()
+        preferencesService.clear()
     }
 
     private fun toast(message: String) {
