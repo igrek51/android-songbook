@@ -58,6 +58,7 @@
                 android:id="@+id/fontsizeLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="6dp"
                 android:layout_marginTop="12dp"
                 android:text="@string/settings_font_size"/>
 
@@ -73,6 +74,7 @@
                 android:id="@+id/autoscrollPauseLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="6dp"
                 android:layout_marginTop="12dp"
                 android:text="@string/settings_scroll_initial_pause"/>
 
@@ -88,6 +90,7 @@
                 android:id="@+id/autoscrollSpeedLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="6dp"
                 android:layout_marginTop="12dp"
                 android:text="@string/settings_autoscroll_speed"/>
 
@@ -103,6 +106,7 @@
                 android:id="@+id/chordsNotationLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="6dp"
                 android:layout_marginTop="12dp"
                 android:text="@string/settings_chords_notation"/>
 

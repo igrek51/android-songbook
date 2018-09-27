@@ -4,7 +4,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -20,6 +19,7 @@ import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.activity.ActivityController;
 import igrek.songbook.dagger.DaggerIoc;
+import igrek.songbook.domain.chords.ChordsNotation;
 import igrek.songbook.info.UiInfoService;
 import igrek.songbook.info.UiResourceService;
 import igrek.songbook.info.logger.Logger;
@@ -112,15 +112,10 @@ public class SettingsLayoutController implements MainLayout {
 			}
 		};
 		
-		
 		chordsNotationSpinner = layout.findViewById(R.id.chordsNotationSpinner);
-		String[] arraySpinner = new String[]{
-				"German / European (a b B H C d)", "English / American (Am Bbm Bb B C Dm)"
-		};
-		ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, arraySpinner);
+		ChordsNotationAdapter adapter = new ChordsNotationAdapter(activity, ChordsNotation.values(), uiResourceService);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		chordsNotationSpinner.setAdapter(adapter);
-		
 		
 		Observable.merge(fontsizeSlider.getValueSubject(), autoscrollPauseSlider.getValueSubject(), autoscrollSpeedSlider
 				.getValueSubject())
@@ -151,6 +146,14 @@ public class SettingsLayoutController implements MainLayout {
 		autoscrollService.setInitialPause((int) autoscrollInitialPause);
 		float autoscrollSpeed = autoscrollSpeedSlider.getValue();
 		autoscrollService.setAutoscrollSpeed(autoscrollSpeed);
+		
+		Object selectedItem = chordsNotationSpinner.getSelectedItem();
+		if (selectedItem != null) {
+			ChordsNotation chordsNotation = (ChordsNotation) selectedItem;
+			lyricsManager.setChordsNotation(chordsNotation);
+		}
+		
+		// TODO save preferences properties
 		
 		preferencesService.saveAll();
 	}

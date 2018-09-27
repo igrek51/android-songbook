@@ -129,4 +129,6 @@
     </string>
     <string name="import_song_save">Save</string>
     <string name="settings_chords_notation">Chords notation:</string>
+    <string name="notation_german">German / European (a b B H C d)</string>
+    <string name="notation_english">English / American (Am Bbm Bb B C Dm)</string>
 </resources>

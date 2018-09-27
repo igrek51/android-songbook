@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import dagger.Lazy;
 import igrek.songbook.dagger.DaggerIoc;
+import igrek.songbook.domain.chords.ChordsNotation;
 import igrek.songbook.domain.lyrics.LyricsModel;
 import igrek.songbook.domain.lyrics.LyricsParser;
 import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
@@ -30,6 +31,7 @@ public class LyricsManager {
 	private int screenW = 0;
 	private Paint paint;
 	private float fontsize;
+	private ChordsNotation chordsNotation;
 	private String originalFileContent;
 	
 	public LyricsManager() {
@@ -40,6 +42,7 @@ public class LyricsManager {
 	
 	private void loadPreferences() {
 		fontsize = preferencesService.getValue(PreferencesDefinition.fontsize, Float.class);
+		// TODO get chords notation
 	}
 	
 	private void reset() {
@@ -83,6 +86,10 @@ public class LyricsManager {
 		if (fontsize < 1)
 			fontsize = 1;
 		this.fontsize = fontsize;
+	}
+	
+	public void setChordsNotation(ChordsNotation chordsNotation) {
+		this.chordsNotation = chordsNotation;
 	}
 	
 	private void parseAndTranspose(String originalFileContent) {
