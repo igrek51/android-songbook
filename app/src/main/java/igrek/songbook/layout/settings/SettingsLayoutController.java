@@ -4,8 +4,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.math.RoundingMode;
@@ -57,6 +59,7 @@ public class SettingsLayoutController implements MainLayout {
 	private SliderController fontsizeSlider;
 	private SliderController autoscrollPauseSlider;
 	private SliderController autoscrollSpeedSlider;
+	private Spinner chordsNotationSpinner;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
@@ -108,6 +111,16 @@ public class SettingsLayoutController implements MainLayout {
 				return uiResourceService.resString(R.string.settings_autoscroll_speed, roundDecimal(value, "#.####"));
 			}
 		};
+		
+		
+		chordsNotationSpinner = layout.findViewById(R.id.chordsNotationSpinner);
+		String[] arraySpinner = new String[]{
+				"German / European (a b B H C d)", "English / American (Am Bbm Bb B C Dm)"
+		};
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, arraySpinner);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		chordsNotationSpinner.setAdapter(adapter);
+		
 		
 		Observable.merge(fontsizeSlider.getValueSubject(), autoscrollPauseSlider.getValueSubject(), autoscrollSpeedSlider
 				.getValueSubject())

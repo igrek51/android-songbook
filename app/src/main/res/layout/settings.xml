@@ -58,7 +58,7 @@
                 android:id="@+id/fontsizeLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="12dp"
+                android:layout_marginTop="12dp"
                 android:text="@string/settings_font_size"/>
 
             <SeekBar
@@ -73,7 +73,7 @@
                 android:id="@+id/autoscrollPauseLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="12dp"
+                android:layout_marginTop="12dp"
                 android:text="@string/settings_scroll_initial_pause"/>
 
             <SeekBar
@@ -88,7 +88,7 @@
                 android:id="@+id/autoscrollSpeedLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="12dp"
+                android:layout_marginTop="12dp"
                 android:text="@string/settings_autoscroll_speed"/>
 
             <SeekBar
@@ -99,25 +99,19 @@
                 android:padding="16dp"/>
 
 
-            <!--<CheckBox-->
-            <!--android:id="@+id/fullscreenCheckbox"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="20dp"-->
-            <!--android:text="@string/settings_fullscreen"/>-->
+            <TextView
+                android:id="@+id/chordsNotationLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/settings_chords_notation"/>
 
-
-            <!--<TextView-->
-            <!--android:id="@+id/ChordsNotationLabel"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_margin="20dp"-->
-            <!--android:text="@string/settings_chords_notation"/>-->
-
-            <!--<Spinner-->
-            <!--android:id="@+id/chordsNotationSpinner"-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="wrap_content"/>-->
+            <Spinner
+                android:id="@+id/chordsNotationSpinner"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:drawSelectorOnTop="true"
+                />
 
         </LinearLayout>
     </ScrollView>
