@@ -41,8 +41,8 @@ class UnlockedSongsDao : AbstractSqliteDao() {
     }
 
     fun isSongUnlocked(id: Long): Boolean {
-        val mapper: (Cursor) -> Boolean = { cursor -> cursor.count > 0 }
-        return queryOneValue(mapper, true, "SELECT * FROM songs_unlocked WHERE id = ?", id)
+        val mapper: (Cursor) -> Boolean = { cursor -> cursor.getColumnIndexOrThrow("count") > 0 }
+        return queryOneValue(mapper, false, "SELECT COUNT(*) AS count FROM songs_unlocked WHERE id = ?", id)
     }
 
 }
