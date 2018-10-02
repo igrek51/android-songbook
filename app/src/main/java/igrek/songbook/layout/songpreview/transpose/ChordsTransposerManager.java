@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
+import igrek.songbook.domain.chords.ChordsNotation;
 import igrek.songbook.info.UiInfoService;
 import igrek.songbook.info.UiResourceService;
 import igrek.songbook.layout.songpreview.LyricsManager;
@@ -14,7 +15,7 @@ import igrek.songbook.layout.songpreview.quickmenu.QuickMenuTranspose;
 public class ChordsTransposerManager {
 	
 	private int transposed = 0;
-	private ChordsTransposer chordsTransposer = new ChordsTransposer();
+	private ChordsTransposer chordsTransposer;
 	
 	@Inject
 	Lazy<LyricsManager> lyricsManager;
@@ -33,6 +34,8 @@ public class ChordsTransposerManager {
 	
 	public void reset() {
 		transposed = 0;
+		ChordsNotation chordsNotation = lyricsManager.get().getChordsNotation();
+		chordsTransposer = new ChordsTransposer(chordsNotation);
 	}
 	
 	public String transposeContent(String fileContent) {

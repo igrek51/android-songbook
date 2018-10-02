@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import igrek.songbook.domain.chords.ChordsNotation;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
 
@@ -15,13 +16,20 @@ public class ChordsTransposer {
 	 * supported chords formats:
 	 * d, d#, D, D#, Dm, D#m, Dmaj7, D#maj7, d7, d#7, D#m7, D#7, Dadd9, Dsus
 	 */
-	private final String soundNames[] = {
+	private final String germanSoundNames[] = {
 			// minor
 			"c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "b", "h",
-			// major (or minor prefix: F#m)
+			// major
 			"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "B", "H",
 			// american notation (major or minor with prefix)
 			//"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "Bb", "B",
+	};
+	
+	private final String englishSoundNames[] = {
+			// minor
+			"Cm", "C#m", "Dm", "D#m", "Em", "Fm", "F#m", "Gm", "G#m", "Am", "Bbm", "Bm",
+			// major
+			"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "Bb", "B",
 	};
 	
 	private final String chordsDelimiters[] = {
@@ -43,12 +51,14 @@ public class ChordsTransposer {
 	 * map: chord name (prefix) -> chord number
 	 */
 	private Map<String, Integer> soundNumbers;
+	private ChordsNotation chordsNotation;
 	
-	public ChordsTransposer() {
+	public ChordsTransposer(ChordsNotation chordsNotation) {
+		this.chordsNotation = chordsNotation;
 		// keys sorted by length descending
 		soundNumbers = new TreeMap<>(lengthComparator);
-		for (int i = 0; i < soundNames.length; i++) {
-			soundNumbers.put(soundNames[i], i);
+		for (int i = 0; i < germanSoundNames.length; i++) {
+			soundNumbers.put(germanSoundNames[i], i);
 		}
 	}
 	
@@ -90,7 +100,18 @@ public class ChordsTransposer {
 		return soundNumbers.get(chord);
 	}
 	
+	private String[] getChordsNotationSoundNames() {
+		switch (chordsNotation) {
+			case ENGLISH:
+				return englishSoundNames;
+			case GERMAN:
+			default:
+				return germanSoundNames;
+		}
+	}
+	
 	private String getChordName(int chordNr) {
+		String[] soundNames = getChordsNotationSoundNames();
 		if (chordNr < 0 || chordNr >= soundNames.length)
 			return null;
 		return soundNames[chordNr];
