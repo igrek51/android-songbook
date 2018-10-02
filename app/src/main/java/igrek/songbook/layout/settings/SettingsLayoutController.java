@@ -114,7 +114,6 @@ public class SettingsLayoutController implements MainLayout {
 		
 		chordsNotationSpinner = layout.findViewById(R.id.chordsNotationSpinner);
 		ChordsNotationAdapter adapter = new ChordsNotationAdapter(activity, ChordsNotation.values(), uiResourceService);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		chordsNotationSpinner.setAdapter(adapter);
 		
 		Observable.merge(fontsizeSlider.getValueSubject(), autoscrollPauseSlider.getValueSubject(), autoscrollSpeedSlider
@@ -122,10 +121,6 @@ public class SettingsLayoutController implements MainLayout {
 				.debounce(200, TimeUnit.MILLISECONDS)
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(value -> saveSettings());
-		
-		// TODO
-		//		CheckBox fullscreenCheckbox = layout.findViewById(R.id.fullscreenCheckbox);
-		//		Spinner chordsNotationSpinner = layout.findViewById(R.id.chordsNotationSpinner);
 		
 	}
 	

@@ -1,6 +1,8 @@
 package igrek.songbook.layout.settings;
 
 import android.content.Context;
+import android.support.annotation.IdRes;
+import android.support.annotation.LayoutRes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,47 +14,32 @@ import igrek.songbook.info.UiResourceService;
 
 public class ChordsNotationAdapter extends ArrayAdapter<ChordsNotation> {
 	
-	private Context context;
-	private ChordsNotation[] dataSource;
-	
-	UiResourceService uiResourceService;
+	private LayoutInflater inflater;
+	private UiResourceService uiResourceService;
 	
 	public ChordsNotationAdapter(Context context, ChordsNotation[] dataSource, UiResourceService uiResourceService) {
 		super(context, 0, dataSource);
-		this.context = context;
-		this.dataSource = dataSource;
 		this.uiResourceService = uiResourceService;
-	}
-	
-	public void setDataSource(ChordsNotation[] dataSource) {
-		this.dataSource = dataSource;
-		notifyDataSetChanged();
+		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	}
 	
 	@Override
-	public ChordsNotation getItem(int position) {
-		return dataSource[position];
+	public View getView(int position, View convertView, ViewGroup parent) {
+		return createItemTextView(position, parent, android.R.layout.simple_spinner_item, android.R.id.text1);
 	}
 	
 	@Override
-	public int getCount() {
-		return dataSource.length;
+	public View getDropDownView(int position, View convertView, ViewGroup parent) {
+		return createItemTextView(position, parent, android.R.layout.simple_spinner_dropdown_item, android.R.id.text1);
 	}
 	
-	@Override
-	public long getItemId(int position) {
-		if (position < 0 || position >= dataSource.length)
-			return -1;
-		return (long) position;
-	}
-	
-	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) {
-		ChordsNotation item = dataSource[position];
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	private View createItemTextView(int position, ViewGroup parent, @LayoutRes int layoutResource, @IdRes int textViewId) {
+		ChordsNotation item = getItem(position);
 		
-		View itemView = inflater.inflate(android.R.layout.simple_spinner_item, parent, false);
-		TextView text1 = itemView.findViewById(android.R.id.text1);
+		View itemView = inflater.inflate(layoutResource, parent, false);
+		TextView text1 = itemView.findViewById(textViewId);
+		
 		// set item title
 		String displayName = uiResourceService.resString(item.getDisplayNameResId());
 		text1.setText(displayName);
