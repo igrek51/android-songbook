@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import javax.inject.Inject;
 
 import igrek.songbook.dagger.DaggerIoc;
+import igrek.songbook.domain.chords.ChordsNotation;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.layout.songpreview.LyricsManager;
@@ -65,6 +66,12 @@ public class ActivityController {
 		preferencesService.setValue(PreferencesDefinition.fontsize, lyricsManager.getFontsize());
 		preferencesService.setValue(PreferencesDefinition.autoscrollInitialPause, autoscrollService.getInitialPause());
 		preferencesService.setValue(PreferencesDefinition.autoscrollSpeed, autoscrollService.getAutoscrollSpeed());
+		
+		ChordsNotation chordsNotation = lyricsManager.getChordsNotation();
+		if (chordsNotation != null) {
+			preferencesService.setValue(PreferencesDefinition.chordsNotationId, chordsNotation.getId());
+		}
+		
 		preferencesService.saveAll();
 	}
 	

@@ -42,7 +42,8 @@ public class LyricsManager {
 	
 	private void loadPreferences() {
 		fontsize = preferencesService.getValue(PreferencesDefinition.fontsize, Float.class);
-		// TODO get chords notation
+		long chordsNotationId = preferencesService.getValue(PreferencesDefinition.chordsNotationId, Long.class);
+		chordsNotation = ChordsNotation.Companion.parseById(chordsNotationId);
 	}
 	
 	private void reset() {
@@ -90,6 +91,10 @@ public class LyricsManager {
 	
 	public void setChordsNotation(ChordsNotation chordsNotation) {
 		this.chordsNotation = chordsNotation;
+	}
+	
+	public ChordsNotation getChordsNotation() {
+		return chordsNotation;
 	}
 	
 	private void parseAndTranspose(String originalFileContent) {

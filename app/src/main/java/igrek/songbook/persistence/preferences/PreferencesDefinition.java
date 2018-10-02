@@ -6,7 +6,10 @@ public enum PreferencesDefinition {
 	
 	autoscrollInitialPause(36000L), // ms
 	
-	autoscrollSpeed(0.15f); // em / s
+	autoscrollSpeed(0.15f), // em / s
+	
+	chordsNotationId(1L);
+	
 	
 	private Object defaultValue;
 	private PropertyType type;

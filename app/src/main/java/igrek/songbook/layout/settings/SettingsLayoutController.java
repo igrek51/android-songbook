@@ -4,6 +4,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -34,6 +35,7 @@ import igrek.songbook.layout.view.SliderController;
 import igrek.songbook.persistence.preferences.PreferencesService;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.subjects.PublishSubject;
 
 public class SettingsLayoutController implements MainLayout {
 	
@@ -59,7 +61,10 @@ public class SettingsLayoutController implements MainLayout {
 	private SliderController fontsizeSlider;
 	private SliderController autoscrollPauseSlider;
 	private SliderController autoscrollSpeedSlider;
+	
 	private Spinner chordsNotationSpinner;
+	private ChordsNotation currentChordsNotation;
+	PublishSubject<ChordsNotation> chordsNotationSubject = PublishSubject.create();
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
@@ -112,16 +117,38 @@ public class SettingsLayoutController implements MainLayout {
 			}
 		};
 		
+		// chords notation
+		currentChordsNotation = lyricsManager.getChordsNotation();
 		chordsNotationSpinner = layout.findViewById(R.id.chordsNotationSpinner);
 		ChordsNotationAdapter adapter = new ChordsNotationAdapter(activity, ChordsNotation.values(), uiResourceService);
 		chordsNotationSpinner.setAdapter(adapter);
+		chordsNotationSpinner.setSelection(adapter.getPosition(currentChordsNotation));
+		chordsNotationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				onChordsNotationSelected(position);
+			}
+			
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+			}
+		});
 		
 		Observable.merge(fontsizeSlider.getValueSubject(), autoscrollPauseSlider.getValueSubject(), autoscrollSpeedSlider
-				.getValueSubject())
+				.getValueSubject(), chordsNotationSubject)
 				.debounce(200, TimeUnit.MILLISECONDS)
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(value -> saveSettings());
 		
+	}
+	
+	private void onChordsNotationSelected(int position) {
+		Object selectedItem = chordsNotationSpinner.getSelectedItem();
+		if (selectedItem != null) {
+			currentChordsNotation = (ChordsNotation) selectedItem;
+		}
+		chordsNotationSubject.onNext(currentChordsNotation);
 	}
 	
 	private String msToS(float ms) {
@@ -137,6 +164,7 @@ public class SettingsLayoutController implements MainLayout {
 	private void saveSettings() {
 		float fontsize = fontsizeSlider.getValue();
 		lyricsManager.setFontsize(fontsize);
+		
 		float autoscrollInitialPause = autoscrollPauseSlider.getValue();
 		autoscrollService.setInitialPause((int) autoscrollInitialPause);
 		float autoscrollSpeed = autoscrollSpeedSlider.getValue();
@@ -144,13 +172,11 @@ public class SettingsLayoutController implements MainLayout {
 		
 		Object selectedItem = chordsNotationSpinner.getSelectedItem();
 		if (selectedItem != null) {
-			ChordsNotation chordsNotation = (ChordsNotation) selectedItem;
-			lyricsManager.setChordsNotation(chordsNotation);
+			currentChordsNotation = (ChordsNotation) selectedItem;
+			lyricsManager.setChordsNotation(currentChordsNotation);
 		}
 		
-		// TODO save preferences properties
-		
-		preferencesService.saveAll();
+		// do not save to preferences service, they will be saved on activity stop
 	}
 	
 	@Override
