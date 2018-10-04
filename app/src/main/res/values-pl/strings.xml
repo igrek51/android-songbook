@@ -109,6 +109,20 @@
     <string name="file_manager_not_found">Brak systemowej przeglądarki plików.</string>
     <string name="select_file_to_import">Wybierz plik do zaimportowania.</string>
     <string name="selected_file_is_too_big">Wybrany plik jest za duży.</string>
-    <string name="song_has_been_saved">Piosenka została zapisana.</string>
+    <string name="song_has_been_saved">Zapisano piosenkę.</string>
     <string name="editing_song">Edycja piosenki</string>
+    <string name="import_song_title_label">Tytuł piosenki:</string>
+    <string name="import_song_title_hint">Tytuł…</string>
+    <string name="import_song_content_label">Tekst piosenki z akordami:</string>
+    <string name="import_song_content_hint">
+        Tekst piosenki z [akordami w nawiasach]
+        \nPrzykładowy tekst [a F C G]
+        \n…
+    </string>
+    <string name="import_song_save">Zapisz piosenkę</string>
+    <string name="settings_chords_notation">Notacja akordów:</string>
+    <string name="notation_german">Niemiecka / Europejska (a b B H C d)</string>
+    <string name="notation_english">Angielska / Amerykańska (Am Bbm Bb B C Dm)</string>
+    <string name="import_song_remove">Usuń piosenkę</string>
+    <string name="new_song_has_been_removed">Usunięto piosenkę.</string>
 </resources>

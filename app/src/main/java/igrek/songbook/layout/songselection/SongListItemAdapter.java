@@ -117,9 +117,7 @@ public class SongListItemAdapter extends ArrayAdapter<SongTreeItem> {
 		itemSongTitleLabel.setText(item.getSimpleName());
 		// edit button
 		ImageButton itemSongEditButton = itemView.findViewById(R.id.itemSongEditButton);
-		itemSongEditButton.setOnClickListener(v -> {
-			songImportService.showEditSongScreen(item.getSong());
-		});
+		itemSongEditButton.setOnClickListener(v -> songImportService.showEditSongScreen(item.getSong()));
 		
 		return itemView;
 	}
