@@ -1,9 +1,11 @@
 package igrek.songbook.layout.songtree;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Ordering;
+
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -15,34 +17,35 @@ public class SongTreeSorter {
 	private final Locale locale = new Locale("pl", "PL");
 	private Collator stringCollator = Collator.getInstance(locale);
 	
-	private Comparator<SongTreeItem> songTreeItemComparator = (lhs, rhs) -> {
-		// categories first
-		if (lhs.isCategory() && rhs.isSong())
-			return -1;
-		if (lhs.isSong() && rhs.isCategory())
-			return +1;
-		// special categories at the end
-		if (lhs.isCategory() && rhs.isCategory()) {
-			if (lhs.getCategory().getType() != SongCategoryType.ARTIST || rhs.getCategory()
-					.getType() != SongCategoryType.ARTIST) {
-				return Long.compare(rhs.getCategory().getType().getId(), lhs.getCategory()
-						.getType()
-						.getId());
-			}
-		}
-		// string comparison with localisation support
+	private Function<SongTreeItem, SongCategoryType> categoryTypeExtractor = (item) -> {
+		if (item == null || item.getCategory() == null)
+			return null;
+		return item.getCategory().getType();
+	};
+	
+	private Ordering<SongTreeItem> categorySongOrdering = Ordering.natural()
+			.onResultOf(SongTreeItem::isSong);
+	
+	private Ordering<SongTreeItem> categoryTypeOrdering = //
+			Ordering.explicit(SongCategoryType.CUSTOM, SongCategoryType.ARTIST, SongCategoryType.OTHERS)
+					.nullsLast()
+					.onResultOf(categoryTypeExtractor);
+	
+	private Ordering<SongTreeItem> itemNameOrdering = Ordering.from((lhs, rhs) -> {
 		String lName = lhs.getSimpleName().toLowerCase(locale);
 		String rName = rhs.getSimpleName().toLowerCase(locale);
 		return stringCollator.compare(lName, rName);
-	};
+	});
 	
-	public SongTreeSorter() {
-	}
+	private Ordering<SongTreeItem> songTreeItemOrdering = categorySongOrdering //
+			.compound(categoryTypeOrdering) //
+			.compound(itemNameOrdering); //
+	
 	
 	public List<SongTreeItem> sort(List<SongTreeItem> items) {
 		// make it modifiable
 		List<SongTreeItem> modifiableList = new ArrayList<>(items);
-		Collections.sort(modifiableList, songTreeItemComparator);
+		Collections.sort(modifiableList, songTreeItemOrdering);
 		return modifiableList;
 	}
 }
