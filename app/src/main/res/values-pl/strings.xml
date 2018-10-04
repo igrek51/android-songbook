@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Guitar Songbook</string>
     <string name="nav_songs_list">Piosenki</string>
     <string name="nav_search_song">Szukaj</string>
     <string name="nav_update_songs">Aktualizuj piosenki</string>
