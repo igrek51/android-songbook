@@ -23,6 +23,7 @@ import igrek.songbook.layout.LayoutController;
 import igrek.songbook.layout.LayoutState;
 import igrek.songbook.layout.MainLayout;
 import igrek.songbook.layout.navigation.NavigationMenuController;
+import igrek.songbook.system.SoftKeyboardService;
 
 public class ContactLayoutController implements MainLayout {
 	
@@ -40,6 +41,8 @@ public class ContactLayoutController implements MainLayout {
 	NavigationMenuController navigationMenuController;
 	@Inject
 	SendFeedbackService sendFeedbackService;
+	@Inject
+	SoftKeyboardService softKeyboardService;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	private EditText contactMessageEdit;
@@ -91,6 +94,7 @@ public class ContactLayoutController implements MainLayout {
 	
 	@Override
 	public void onLayoutExit() {
+		softKeyboardService.hideSoftKeyboard();
 	}
 	
 	private void sendContactMessage() {

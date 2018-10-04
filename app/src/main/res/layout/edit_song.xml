@@ -37,7 +37,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
                 android:layout_marginStart="20dp"
-                android:text="@string/editing_song"
+                android:text="@string/editing_custom_song"
                 android:textSize="18sp"/>
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
@@ -92,6 +92,13 @@
                 android:text=""
                 android:inputType="text|textMultiLine"
                 android:background="#07ffffff"/>
+
+            <Button
+                android:id="@+id/importFromFileButotn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/import_content_from_file"/>
 
             <Button
                 android:id="@+id/saveSongButton"

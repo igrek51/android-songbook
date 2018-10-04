@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songimport;
+package igrek.songbook.layout.edit;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,6 +16,7 @@ import java.nio.charset.UnsupportedCharsetException;
 
 import javax.inject.Inject;
 
+import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.UiInfoService;
@@ -33,7 +34,7 @@ public class SongImportFileChooser {
 	@Inject
 	UiResourceService uiResourceService;
 	@Inject
-	SongImportService songImportService;
+	Lazy<EditSongLayoutController> editSongLayoutController;
 	
 	public static final int FILE_SELECT_CODE = 7;
 	
@@ -69,18 +70,18 @@ public class SongImportFileChooser {
 				
 				String content = convert(inputStream, Charset.forName("UTF-8"));
 				
-				songImportService.showImportSongScreen(filename, content);
+				editSongLayoutController.get().setSongFromFile(filename, content);
 			}
 		} catch (IOException | UnsupportedCharsetException e) {
 			logger.error(e);
 		}
 	}
 	
-	public String convert(InputStream inputStream, Charset charset) throws IOException {
+	private String convert(InputStream inputStream, Charset charset) throws IOException {
 		return CharStreams.toString(new InputStreamReader(inputStream, charset));
 	}
 	
-	public String getFileNameFromUri(Uri uri) {
+	private String getFileNameFromUri(Uri uri) {
 		String result = null;
 		if (uri.getScheme().equals("content")) {
 			Cursor cursor = activity.getContentResolver().query(uri, null, null, null, null);

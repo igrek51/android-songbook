@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songimport;
+package igrek.songbook.layout.edit;
 
 import java.util.Date;
 
@@ -16,7 +16,7 @@ import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.layout.LayoutController;
 import igrek.songbook.persistence.SongsRepository;
 
-public class SongImportService {
+public class SongEditService {
 	
 	@Inject
 	UiInfoService uiInfoService;
@@ -25,36 +25,31 @@ public class SongImportService {
 	@Inject
 	LayoutController layoutController;
 	@Inject
-	Lazy<ImportSongLayoutController> importSongLayoutController;
+	Lazy<EditSongLayoutController> importSongLayoutController;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
-	public SongImportService() {
+	public SongEditService() {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
-	public Song importSong(String title, String content) {
-		
-		long versionNumber = 1;
-		long now = new Date().getTime();
-		SongCategory category = songsRepository.getCustomCategoryByTypeId(SongCategoryType.CUSTOM.getId());
-		Song newSong = new Song(0, title, category, content, versionNumber, now, now, true, title, null, null, false, null, null, SongStatus.PROPOSED);
-		
-		songsRepository.saveImportedSong(newSong);
-		
-		return newSong;
-	}
-	
-	public void showImportSongScreen(String filename, String content) {
-		importSongLayoutController.get().setCurrentSong(null, filename, content);
+	public void showAddSongScreen() {
+		importSongLayoutController.get().setCurrentSong(null);
 		layoutController.showImportSong();
 	}
 	
 	public void showEditSongScreen(Song song) {
-		String title = song.getTitle();
-		String content = song.getContent();
-		importSongLayoutController.get().setCurrentSong(song, title, content);
+		importSongLayoutController.get().setCurrentSong(song);
 		layoutController.showImportSong();
+	}
+	
+	public Song addCustomSong(String title, String content) {
+		long versionNumber = 1;
+		long now = new Date().getTime();
+		SongCategory category = songsRepository.getCustomCategoryByTypeId(SongCategoryType.CUSTOM.getId());
+		Song newSong = new Song(0, title, category, content, versionNumber, now, now, true, title, null, null, false, null, null, SongStatus.PROPOSED);
+		songsRepository.saveImportedSong(newSong);
+		return newSong;
 	}
 	
 	public void updateSong(Song currentSong, String songTitle, String songContent) {

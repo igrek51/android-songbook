@@ -15,7 +15,7 @@ import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.about.AboutLayoutController
 import igrek.songbook.layout.about.HelpLayoutController
-import igrek.songbook.layout.songimport.SongImportFileChooser
+import igrek.songbook.layout.edit.SongEditService
 import igrek.songbook.persistence.SongsRepository
 import igrek.songbook.system.SoftKeyboardService
 import java.util.*
@@ -47,7 +47,7 @@ class NavigationMenuController {
     @Inject
     lateinit var softKeyboardService: SoftKeyboardService
     @Inject
-    lateinit var songImportFileChooser: SongImportFileChooser
+    lateinit var songEditService: SongEditService
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
@@ -58,7 +58,7 @@ class NavigationMenuController {
         actionsMap[R.id.nav_songs_list] = Runnable { layoutController.get().showSongTree() }
         actionsMap[R.id.nav_search] = Runnable { layoutController.get().showSongSearch() }
         actionsMap[R.id.nav_update_db] = Runnable { songsRepository.updateSongsDb() }
-        actionsMap[R.id.nav_import_song] = Runnable { songImportFileChooser.showFileChooser() }
+        actionsMap[R.id.nav_add_custom_song] = Runnable { songEditService.showAddSongScreen() }
         actionsMap[R.id.nav_settings] = Runnable { layoutController.get().showSettings() }
         actionsMap[R.id.nav_help] = Runnable { helpLayoutController.get().showUIHelp() }
         actionsMap[R.id.nav_about] = Runnable { aboutLayoutController.get().showAbout() }

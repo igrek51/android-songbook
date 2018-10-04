@@ -22,11 +22,11 @@ import igrek.songbook.layout.about.HelpLayoutController;
 import igrek.songbook.layout.about.secret.SecretUnlockerService;
 import igrek.songbook.layout.contact.ContactLayoutController;
 import igrek.songbook.layout.contact.SendFeedbackService;
+import igrek.songbook.layout.edit.EditSongLayoutController;
+import igrek.songbook.layout.edit.SongEditService;
+import igrek.songbook.layout.edit.SongImportFileChooser;
 import igrek.songbook.layout.navigation.NavigationMenuController;
 import igrek.songbook.layout.settings.SettingsLayoutController;
-import igrek.songbook.layout.songimport.ImportSongLayoutController;
-import igrek.songbook.layout.songimport.SongImportFileChooser;
-import igrek.songbook.layout.songimport.SongImportService;
 import igrek.songbook.layout.songpreview.LyricsManager;
 import igrek.songbook.layout.songpreview.SongDetailsService;
 import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
@@ -151,7 +151,7 @@ public class FactoryModule {
 	protected LyricsManager provideChordsManager() {
 		return new LyricsManager();
 	}
-	
+
 	@Provides
 	@Singleton
 	protected PreferencesService providePreferencesService() {
@@ -317,15 +317,15 @@ public class FactoryModule {
 	
 	@Provides
 	@Singleton
-	protected SongImportService provideSongImportService() {
-		return new SongImportService();
+	protected SongEditService provideSongImportService() {
+		return new SongEditService();
 	}
 	
 	
 	@Provides
 	@Singleton
-	protected ImportSongLayoutController provideEditImportSongLayoutController() {
-		return new ImportSongLayoutController();
+	protected EditSongLayoutController provideEditImportSongLayoutController() {
+		return new EditSongLayoutController();
 	}
 	
 	/*

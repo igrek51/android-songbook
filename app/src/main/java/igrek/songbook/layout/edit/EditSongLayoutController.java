@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songimport;
+package igrek.songbook.layout.edit;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -25,7 +25,7 @@ import igrek.songbook.layout.MainLayout;
 import igrek.songbook.layout.navigation.NavigationMenuController;
 import igrek.songbook.system.SoftKeyboardService;
 
-public class ImportSongLayoutController implements MainLayout {
+public class EditSongLayoutController implements MainLayout {
 	
 	@Inject
 	LayoutController layoutController;
@@ -38,19 +38,21 @@ public class ImportSongLayoutController implements MainLayout {
 	@Inject
 	NavigationMenuController navigationMenuController;
 	@Inject
-	Lazy<SongImportService> songImportService;
+	Lazy<SongEditService> songImportService;
 	@Inject
 	SoftKeyboardService softKeyboardService;
+	@Inject
+	Lazy<SongImportFileChooser> songImportFileChooser;
 	
+	private Song currentSong;
 	private String songTitle;
 	private String songContent;
-	private Song currentSong;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	private EditText songTitleEdit;
 	private EditText songContentEdit;
 	
-	public ImportSongLayoutController() {
+	public EditSongLayoutController() {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
@@ -86,27 +88,47 @@ public class ImportSongLayoutController implements MainLayout {
 			}
 		});
 		
+		Button importFromFileButotn = layout.findViewById(R.id.importFromFileButotn);
+		importFromFileButotn.setOnClickListener(new SafeClickListener() {
+			@Override
+			public void onClick() {
+				importContentFromFile();
+			}
+		});
+		
 		songTitleEdit.setText(songTitle);
 		songContentEdit.setText(songContent);
 	}
 	
-	public void setCurrentSong(Song song, String title, String content) {
-		this.currentSong = song;
-		this.songTitle = title;
-		this.songContent = content;
+	private void importContentFromFile() {
+		songImportFileChooser.get().showFileChooser();
 	}
 	
+	public void setCurrentSong(Song song) {
+		this.currentSong = song;
+		if (currentSong == null) {
+			songTitle = null;
+			songContent = null;
+		} else {
+			songTitle = currentSong.getTitle();
+			songContent = currentSong.getContent();
+		}
+	}
 	
 	private void saveSong() {
+		songTitle = songTitleEdit.getText().toString();
+		songContent = songContentEdit.getText().toString();
+		
+		if (songTitle.isEmpty() || songContent.isEmpty()) {
+			uiInfoService.showInfo(R.string.fill_in_all_fields);
+			return;
+		}
+		
 		if (currentSong == null) {
 			// add
-			songTitle = songTitleEdit.getText().toString();
-			songContent = songContentEdit.getText().toString();
-			currentSong = songImportService.get().importSong(songTitle, songContent);
+			currentSong = songImportService.get().addCustomSong(songTitle, songContent);
 		} else {
 			// update
-			songTitle = songTitleEdit.getText().toString();
-			songContent = songContentEdit.getText().toString();
 			songImportService.get().updateSong(currentSong, songTitle, songContent);
 		}
 		uiInfoService.showInfo(R.string.song_has_been_saved);
@@ -126,12 +148,12 @@ public class ImportSongLayoutController implements MainLayout {
 	
 	@Override
 	public LayoutState getLayoutState() {
-		return LayoutState.IMPORT_SONG;
+		return LayoutState.EDIT_SONG;
 	}
 	
 	@Override
 	public int getLayoutResourceId() {
-		return R.layout.import_song;
+		return R.layout.edit_song;
 	}
 	
 	@Override
@@ -144,4 +166,16 @@ public class ImportSongLayoutController implements MainLayout {
 		softKeyboardService.hideSoftKeyboard();
 	}
 	
+	public void setSongFromFile(String filename, String content) {
+		songTitle = songTitleEdit.getText().toString();
+		songContent = songContentEdit.getText().toString();
+		
+		if (songTitle.isEmpty()) {
+			songTitle = filename;
+			songTitleEdit.setText(songTitle);
+		}
+		
+		songContent = content;
+		songContentEdit.setText(songContent);
+	}
 }

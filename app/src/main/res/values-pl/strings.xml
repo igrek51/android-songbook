@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name" translatable="false">Guitar Songbook</string>
+    <string name="nav_songs_list">Piosenki</string>
+    <string name="nav_search_song">Szukaj</string>
+    <string name="nav_update_songs">Aktualizuj piosenki</string>
+    <string name="nav_custom_song">Dodaj piosenkę</string>
+    <string name="nav_settings">Ustawienia</string>
+    <string name="nav_exit">Wyjście</string>
+    <string name="nav_about">O aplikacji</string>
+    <string name="nav_contact">Kontakt</string>
+    <string name="nav_help">Pomoc</string>
     <string name="ui_help_content">
         WYBÓR PIOSENKI:
         \nMożesz wybrać piosenkę z drzewa kategorii lub wyszukać ją po tytule lub nazwie artysty.
@@ -22,6 +32,14 @@
         \nMożesz dostosować prędkość przewijania oraz długość początkowej pauzy w ustawieniach lub w panelu autoprzewijania.
         Ręczne przewijanie przy włączonym autoprzewijaniu spowoduje, że prędkosć przewijania automatycznie zostanie skorygowana (przyspieszona lub zwolniona).
         \nPodwójne kliknięcie na ekran włącza autoprzewijanie.
+        \n
+        \nWŁASNE PIOSENKI:
+        \nMożesz dodawać własne piosenki, wybierając opcję z menu głównego.
+        \nWpisz słowa piosenki jako zwykły teskt razem z akordami w nawiasach kwadratowych, używając notacji:
+        \ntekst [a B h C C# f f# F#7 Cmaj7 D-Dsus2-Dsus4]
+        \nMożesz dodawać akordy gdziekolwiek: "w śro[d]dku sł[C]ów lub na końcu linii [d C]".
+        \nPo zapisaniu piosenki, znajdziesz ją w kategorii \"Moje piosenki\".
+        \nMożesz edytować dodaną piosenkę, usunąć lub zaimportować zawartość z wybranego pliku.
     </string>
     <string name="ui_about_content">
         Guitar Songbook v%s
@@ -47,15 +65,6 @@
         \nRxAndroid
         \nRxJava
     </string>
-    <string name="nav_songs_list">Piosenki</string>
-    <string name="nav_search_song">Szukaj</string>
-    <string name="nav_update_songs">Aktualizuj piosenki</string>
-    <string name="nav_import_song">Import piosenki</string>
-    <string name="nav_settings">Ustawienia</string>
-    <string name="nav_exit">Wyjście</string>
-    <string name="nav_about">O aplikacji</string>
-    <string name="nav_contact">Kontakt</string>
-    <string name="nav_help">Pomoc</string>
     <string name="action_info_ok">OK</string>
     <string name="action_unlock">Odblokuj</string>
     <string name="action_cancel">Anuluj</string>
@@ -109,8 +118,7 @@
     <string name="file_manager_not_found">Brak systemowej przeglądarki plików.</string>
     <string name="select_file_to_import">Wybierz plik do zaimportowania.</string>
     <string name="selected_file_is_too_big">Wybrany plik jest za duży.</string>
-    <string name="song_has_been_saved">Zapisano piosenkę.</string>
-    <string name="editing_song">Edycja piosenki</string>
+    <string name="editing_custom_song">Moja piosenka</string>
     <string name="import_song_title_label">Tytuł piosenki:</string>
     <string name="import_song_title_hint">Tytuł…</string>
     <string name="import_song_content_label">Tekst piosenki z akordami:</string>
@@ -119,10 +127,13 @@
         \nPrzykładowy tekst [a F C G]
         \n…
     </string>
+    <string name="import_content_from_file">Importuj z pliku</string>
     <string name="import_song_save">Zapisz piosenkę</string>
+    <string name="import_song_remove">Usuń piosenkę</string>
+    <string name="song_has_been_saved">Zapisano piosenkę.</string>
+    <string name="new_song_has_been_removed">Usunięto piosenkę.</string>
     <string name="settings_chords_notation">Notacja akordów:</string>
     <string name="notation_german">Niemiecka / Europejska (a b B H C d)</string>
     <string name="notation_english">Angielska / Amerykańska (Am Bbm Bb B C Dm)</string>
-    <string name="import_song_remove">Usuń piosenkę</string>
-    <string name="new_song_has_been_removed">Usunięto piosenkę.</string>
+    <string name="fill_in_all_fields">Wypełnij wszystkie wymagane pola.</string>
 </resources>

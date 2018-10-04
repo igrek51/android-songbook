@@ -16,9 +16,9 @@
             android:icon="@drawable/sync"
             android:title="@string/nav_update_songs"/>
         <item
-            android:id="@+id/nav_import_song"
+            android:id="@+id/nav_add_custom_song"
             android:icon="@drawable/add"
-            android:title="@string/nav_import_song"/>
+            android:title="@string/nav_custom_song"/>
     </group>
     <group
         android:id="@+id/nav_group2"

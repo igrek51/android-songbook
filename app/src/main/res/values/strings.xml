@@ -1,10 +1,9 @@
 <resources>
     <string name="app_name" translatable="false">Guitar Songbook</string>
-
     <string name="nav_songs_list">Songs</string>
     <string name="nav_search_song">Search</string>
     <string name="nav_update_songs">Update songs</string>
-    <string name="nav_import_song">Import song</string>
+    <string name="nav_custom_song">Add custom song</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_exit">Exit</string>
     <string name="nav_about">About</string>
@@ -32,6 +31,14 @@
         \nYou can adjust scrolling speed or initial delay of autoscroll in settings or in autoscroll panel.
         Scrolling up or down manually while autoscrolling is enabled causes autoscroll speed to be auto-adjusted (speed up or slow down).
         \nDouble click on screen toggles autoscrolling.
+        \n
+        \nCUSTOM SONGS:
+        \nYou can add custom songs by clicking an option in main menu.
+        \nAdd lyrics as a simple text with chords in square brackets using notation:
+        \nlyrics [a B h C C# f f# F#7 Cmaj7 D-Dsus2-Dsus4]
+        \nYou can add chords anywhere: "in the mi[d]ddle of the wo[C]rd or at the end of lines [d C]".
+        \nAfter saving a song you can find it in \"My songs\" category.
+        \nYou can also edit it, remove or import song content from file.
     </string>
     <string name="ui_about_content">
         Guitar Songbook v%s
@@ -57,24 +64,20 @@
         \nRxAndroid
         \nRxJava
     </string>
-
     <string name="action_info_ok">OK</string>
     <string name="action_unlock">Unlock</string>
     <string name="action_cancel">Cancel</string>
-
     <string name="ui_db_is_uptodate">Songs database is already up-to-date.</string>
     <string name="contact_label">You can contact me if you have noticed some bugs or you have any ideas how to improve this application. I would be very grateful for your comments.</string>
     <string name="contact_message_hint">Your message…</string>
     <string name="contact_send">Send</string>
     <string name="contact_author_hint">Your name (optional)</string>
-
     <string name="transposed_by_semitones">Transposed by %s</string>
     <string name="transpose_0_semitones">semitones</string>
     <string name="transpose_1_semitones">semitone</string>
     <string name="transpose_234_semitones">semitones</string>
     <string name="transpose_5_semitones">semitones</string>
     <string name="action_transposition_reset">Reset</string>
-
     <string name="action_stop_autoscroll">Stop</string>
     <string name="action_start_now_autoscroll">Start now</string>
     <string name="autoscroll_starts_in">Autoscroll starts in %s s</string>
@@ -83,18 +86,15 @@
     <string name="start_autoscroll">Start autoscroll</string>
     <string name="stop_autoscroll">Stop autoscroll</string>
     <string name="end_of_song_autoscroll_stopped">End of song</string>
-
     <string name="song_category_others">Others</string>
     <string name="song_category_custom">My songs</string>
     <string name="song_search_edit_hint">Song title or artist</string>
-
     <string name="unlock_key_invalid">Key is not valid.</string>
     <string name="unlock_new_songs_unlocked">New songs have been unlocked: %d</string>
     <string name="settings_font_size">Font size: %s dp</string>
     <string name="settings_scroll_initial_pause">Autoscroll initial delay: %s s</string>
     <string name="settings_autoscroll_speed">Autoscroll speed: %s line / s</string>
     <string name="settings_fullscreen">Fullscreen</string>
-
     <string name="song_details_title">Song details</string>
     <string name="song_details">
         Title: %s
@@ -103,10 +103,10 @@
         \nPreferred key: %s
         \nVersion: %d
     </string>
-    <string name="error_occurred">Error occurred: %s</string>
-    <string name="unlock_type_in_secret_key">Type in a secret key:</string>
     <string name="easter_egg_discovered">Congratulations!
         \nYou have discovered an Easter Egg :)</string>
+    <string name="error_occurred">Error occurred: %s</string>
+    <string name="unlock_type_in_secret_key">Type in a secret key:</string>
     <string name="contact_message_field_empty">Message field can\'t be empty.</string>
     <string name="contact_sending">Sending…</string>
     <string name="contact_message_sent_successfully">Your message has been sent. Thanks :)</string>
@@ -115,10 +115,9 @@
     <string name="feature_not_implemented">This feature will be available soon.</string>
     <string name="scroll_at_the_beginning_already">Back to the beginning.</string>
     <string name="file_manager_not_found">Please install a File Manager.</string>
-    <string name="select_file_to_import">Select a file to import</string>
+    <string name="select_file_to_import">Select a file to import.</string>
     <string name="selected_file_is_too_big">Selected file is too big.</string>
-    <string name="song_has_been_saved">Song has been saved.</string>
-    <string name="editing_song">Edit song</string>
+    <string name="editing_custom_song">Custom song</string>
     <string name="import_song_title_label">Song Title:</string>
     <string name="import_song_title_hint">Title…</string>
     <string name="import_song_content_label">Song lyrics with chords:</string>
@@ -127,10 +126,13 @@
         \nExample text [a F C G]
         \n…
     </string>
+    <string name="import_content_from_file">Import from file</string>
     <string name="import_song_save">Save song</string>
+    <string name="import_song_remove">Remove song</string>
+    <string name="song_has_been_saved">Song has been saved.</string>
+    <string name="new_song_has_been_removed">Song has been removed.</string>
     <string name="settings_chords_notation">Chords notation:</string>
     <string name="notation_german">German / European (a b B H C d)</string>
     <string name="notation_english">English / American (Am Bbm Bb B C Dm)</string>
-    <string name="import_song_remove">Remove song</string>
-    <string name="new_song_has_been_removed">Song has been removed.</string>
+    <string name="fill_in_all_fields">Please fill in all required fields.</string>
 </resources>
