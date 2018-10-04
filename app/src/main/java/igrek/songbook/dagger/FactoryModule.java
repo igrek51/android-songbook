@@ -37,7 +37,6 @@ import igrek.songbook.layout.songpreview.transpose.ChordsTransposerManager;
 import igrek.songbook.layout.songsearch.SongSearchLayoutController;
 import igrek.songbook.layout.songtree.ScrollPosBuffer;
 import igrek.songbook.layout.songtree.SongTreeLayoutController;
-import igrek.songbook.layout.songtree.SongTreeWalker;
 import igrek.songbook.persistence.CustomSongsDao;
 import igrek.songbook.persistence.LocalDbService;
 import igrek.songbook.persistence.SongsDao;
@@ -151,12 +150,6 @@ public class FactoryModule {
 	@Singleton
 	protected LyricsManager provideChordsManager() {
 		return new LyricsManager();
-	}
-	
-	@Provides
-	@Singleton
-	protected SongTreeWalker provideFileTreeManager() {
-		return new SongTreeWalker();
 	}
 	
 	@Provides

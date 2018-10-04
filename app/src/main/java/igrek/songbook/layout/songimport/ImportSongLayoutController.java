@@ -115,7 +115,7 @@ public class ImportSongLayoutController implements MainLayout {
 	
 	private void removeSong() {
 		if (currentSong == null) {
-			// cancel
+			// just cancel
 		} else {
 			// remove song from database
 			songImportService.get().removeSong(currentSong);

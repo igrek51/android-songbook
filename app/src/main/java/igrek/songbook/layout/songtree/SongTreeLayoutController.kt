@@ -17,10 +17,9 @@ import javax.inject.Inject
 class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
 
     @Inject
-    lateinit var songTreeWalker: SongTreeWalker
-    @Inject
     lateinit var scrollPosBuffer: ScrollPosBuffer
 
+    private var currentCategory: SongCategory? = null
     private var toolbarTitle: TextView? = null
     private var goBackButton: ImageButton? = null
     private var searchSongButton: ImageButton? = null
@@ -61,30 +60,39 @@ class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
         goUp()
     }
 
+    private fun isCategorySelected(): Boolean {
+        return currentCategory != null
+    }
+
     override fun updateSongItemsList() {
+        // reload current category
+        if (isCategorySelected()) {
+            val songsDb = songsRepository.songsDb!!
+            currentCategory = songsDb.getAllUnlockedCategories().firstOrNull { category -> category.id == currentCategory?.id }
+        }
         super.updateSongItemsList()
-        if (songTreeWalker.isCategorySelected) {
+        if (isCategorySelected()) {
             goBackButton!!.visibility = View.VISIBLE
-            setTitle(songTreeWalker.currentCategory.displayName)
+            setTitle(currentCategory?.displayName)
         } else {
             goBackButton!!.visibility = View.INVISIBLE
             setTitle(uiResourceService.resString(R.string.nav_songs_list))
         }
-        restoreScrollPosition(songTreeWalker.currentCategory)
+        restoreScrollPosition(currentCategory)
     }
 
     override fun getSongItems(songsDb: SongsDb): MutableList<SongTreeItem> {
-        return if (!songTreeWalker.isCategorySelected) {
+        return if (isCategorySelected()) {
+            // selected category
+            currentCategory!!.getUnlockedSongs()
+                    .asSequence()
+                    .map { song -> SongTreeItem.song(song) }
+                    .toMutableList()
+        } else {
             // all categories list
             songsDb.getAllUnlockedCategories()
                     .asSequence()
                     .map { category -> SongTreeItem.category(category) }
-                    .toMutableList()
-        } else {
-            // selected category
-            songTreeWalker.currentCategory.getUnlockedSongs()
-                    .asSequence()
-                    .map { song -> SongTreeItem.song(song) }
                     .toMutableList()
         }
     }
@@ -100,7 +108,10 @@ class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
 
     private fun goUp() {
         try {
-            songTreeWalker.goUp()
+            if (currentCategory == null)
+                throw NoParentItemException()
+            // go to all categories
+            currentCategory = null
             updateSongItemsList()
         } catch (e: NoParentItemException) {
             activityController.get().quit()
@@ -108,7 +119,7 @@ class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
     }
 
     private fun storeScrollPosition() {
-        scrollPosBuffer.storeScrollPosition(songTreeWalker.currentCategory, itemsListView?.currentScrollPosition)
+        scrollPosBuffer.storeScrollPosition(currentCategory, itemsListView?.currentScrollPosition)
     }
 
     private fun restoreScrollPosition(category: SongCategory?) {
@@ -120,7 +131,8 @@ class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
     override fun onSongItemClick(item: SongTreeItem) {
         storeScrollPosition()
         if (item.isCategory) {
-            songTreeWalker.goToCategory(item.category)
+            // go to category
+            currentCategory = item.category
             updateSongItemsList()
             // scroll to beginning
             itemsListView?.scrollToBeginning()

@@ -35,7 +35,6 @@ import igrek.songbook.layout.songselection.SongListItemAdapter;
 import igrek.songbook.layout.songselection.SongListView;
 import igrek.songbook.layout.songtree.ScrollPosBuffer;
 import igrek.songbook.layout.songtree.SongTreeLayoutController;
-import igrek.songbook.layout.songtree.SongTreeWalker;
 import igrek.songbook.layout.view.ButtonClickEffect;
 import igrek.songbook.persistence.CustomSongsDao;
 import igrek.songbook.persistence.LocalDbService;
@@ -80,8 +79,6 @@ public interface FactoryComponent {
 	void inject(AutoscrollService there);
 	
 	void inject(LyricsManager there);
-	
-	void inject(SongTreeWalker there);
 	
 	void inject(PreferencesService there);
 	
