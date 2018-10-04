@@ -2,6 +2,7 @@ package igrek.songbook.persistence;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,43 +26,43 @@ public class LocalDbService {
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
-	private SQLiteDbHelper songsDbHelper;
-	private SQLiteDbHelper customSongsDbHelper;
-	private SQLiteDbHelper unlockedSongsDbHelper;
+	private SQLiteDatabase songsDbHelper;
+	private SQLiteDatabase customSongsDbHelper;
+	private SQLiteDatabase unlockedSongsDbHelper;
 	
 	public LocalDbService() {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
-	public SQLiteDbHelper openSongsDb() {
+	public SQLiteDatabase openSongsDb() {
 		if (songsDbHelper == null) {
 			File dbFile = getSongsDbFile();
 			// always copy latest songs db from resources
 			removeDb(dbFile);
 			copyFileFromResources(R.raw.songs, dbFile);
-			songsDbHelper = initDbHelper(dbFile);
+			songsDbHelper = openDatabase(dbFile);
 		}
 		return songsDbHelper;
 	}
 	
-	public SQLiteDbHelper openCustomSongsDb() {
+	public SQLiteDatabase openCustomSongsDb() {
 		if (customSongsDbHelper == null) {
 			File dbFile = getCustomSongsDbFile();
 			// if file does not exist - copy initial db from resources
 			if (!dbFile.exists())
 				copyFileFromResources(R.raw.custom_songs, dbFile);
-			customSongsDbHelper = initDbHelper(dbFile);
+			customSongsDbHelper = openDatabase(dbFile);
 		}
 		return customSongsDbHelper;
 	}
 	
-	public SQLiteDbHelper openUnlockedSongsDb() {
+	public SQLiteDatabase openUnlockedSongsDb() {
 		if (unlockedSongsDbHelper == null) {
 			File dbFile = getUnlockedSongsDbFile();
 			// if file does not exist - copy initial db from resources
 			if (!dbFile.exists())
 				copyFileFromResources(R.raw.unlocked_songs, dbFile);
-			unlockedSongsDbHelper = initDbHelper(dbFile);
+			unlockedSongsDbHelper = openDatabase(dbFile);
 		}
 		return unlockedSongsDbHelper;
 	}
@@ -97,10 +98,10 @@ public class LocalDbService {
 		}
 	}
 	
-	private SQLiteDbHelper initDbHelper(File songsDbFile) {
+	private SQLiteDatabase openDatabase(File songsDbFile) {
 		if (!songsDbFile.exists())
 			logger.warn("Database file does not exist: " + songsDbFile.getAbsolutePath());
-		return new SQLiteDbHelper(activity, songsDbFile.getAbsolutePath());
+		return SQLiteDatabase.openDatabase(songsDbFile.getAbsolutePath(), null, SQLiteDatabase.OPEN_READWRITE);
 	}
 	
 	private void copyFileFromResources(int resourceId, File targetPath) {
@@ -111,6 +112,7 @@ public class LocalDbService {
 			while ((read = in.read(buff)) > 0) {
 				out.write(buff, 0, read);
 			}
+			out.flush();
 		} catch (IOException e) {
 			logger.error(e);
 		}
@@ -119,6 +121,7 @@ public class LocalDbService {
 	@SuppressLint("SdCardPath")
 	private File getSongDbDir() {
 		File dir;
+		
 		// /data/data/PACKAGE/files
 		dir = activity.getFilesDir();
 		if (dir != null && dir.isDirectory())

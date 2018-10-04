@@ -49,12 +49,16 @@ class SongsRepository {
     private fun checkDbVersion() {
         // check migrations
         val songsDbVersion = songsDao.readDbVersionNumber()
-        if (songsDbVersion == null || songsDbVersion < 1) {
+        val customSongsDbVersion = customSongsDao.readDbVersionNumber()
+        val unlockedSongsDbVersion = unlockedSongsDao.readDbVersionNumber()
+
+        if (songsDbVersion == null || customSongsDbVersion == null || unlockedSongsDbVersion == null || songsDbVersion < 1) {
             factoryReset()
         }
     }
 
     fun factoryReset() {
+        logger.warn("Databases factory reset...")
         localDbService.factoryResetDbs()
         initializeSongsDb()
     }

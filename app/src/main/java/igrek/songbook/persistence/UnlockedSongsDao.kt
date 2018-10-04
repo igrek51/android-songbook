@@ -2,6 +2,7 @@ package igrek.songbook.persistence
 
 import android.content.ContentValues
 import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 import igrek.songbook.dagger.DaggerIoc
 
 
@@ -11,7 +12,7 @@ class UnlockedSongsDao : AbstractSqliteDao() {
         DaggerIoc.getFactoryComponent().inject(this)
     }
 
-    override fun getDbHelper(): SQLiteDbHelper {
+    override fun getDatabase(): SQLiteDatabase {
         return localDbService.openUnlockedSongsDb()
     }
 
@@ -34,7 +35,7 @@ class UnlockedSongsDao : AbstractSqliteDao() {
         if (isSongUnlocked(id))
             return
         // if song is not locked
-        val db = getDbHelper().writableDatabase
+        val db = getDatabase()
         val values = ContentValues()
         values.put("id", id)
         db.insert("songs_unlocked", null, values)

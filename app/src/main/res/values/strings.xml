@@ -35,8 +35,8 @@
         \nCUSTOM SONGS:
         \nYou can add custom songs by clicking an option in main menu.
         \nAdd lyrics as a simple text with chords in square brackets using notation:
-        \nlyrics [a B h C C# f f# F#7 Cmaj7 D-Dsus2-Dsus4]
-        \nYou can add chords anywhere: "in the mi[d]ddle of the wo[C]rd or at the end of lines [d C]".
+        \n\"lyrics [a B h C C# f f# F#7 Cmaj7 D-Dsus2-Dsus4]\"
+        \nYou can add chords anywhere: \"in the mi[d]ddle of the wo[C]rd or at the end of lines [d C]\".
         \nAfter saving a song you can find it in \"My songs\" category.
         \nYou can also edit it, remove or import song content from file.
     </string>

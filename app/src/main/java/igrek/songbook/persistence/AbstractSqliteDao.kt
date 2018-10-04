@@ -1,6 +1,9 @@
 package igrek.songbook.persistence
 
 import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteException
+import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -10,10 +13,10 @@ abstract class AbstractSqliteDao {
     @Inject
     lateinit var localDbService: LocalDbService
 
-    protected val logger = LoggerFactory.getLogger()
+    protected val logger: Logger = LoggerFactory.getLogger()
     protected val iso8601Format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
-    protected abstract fun getDbHelper(): SQLiteDbHelper
+    protected abstract fun getDatabase(): SQLiteDatabase
 
     protected fun sqlQuery(sql: String, vararg args: Any): Cursor {
         val strings: Array<String> = args.map { arg -> arg.toString() }.toTypedArray()
@@ -26,7 +29,7 @@ abstract class AbstractSqliteDao {
     }
 
     protected fun sqlQuery(sql: String, selectionArgs: Array<String> = arrayOf()): Cursor {
-        val db = getDbHelper().readableDatabase
+        val db = getDatabase()
         return db.rawQuery(sql, selectionArgs)
     }
 
@@ -55,12 +58,14 @@ abstract class AbstractSqliteDao {
     protected fun <T> queryOneValue(mapper: (Cursor) -> T, defaultValue: T, sql: String, vararg args: Any): T {
         try {
             val cursor = sqlQueryArray(sql, args)
-            cursor.use { cursor ->
-                if (cursor.moveToNext()) {
-                    return mapper.invoke(cursor)
+            cursor.use { cursorIn ->
+                if (cursorIn.moveToNext()) {
+                    return mapper.invoke(cursorIn)
                 }
             }
         } catch (e: IllegalArgumentException) {
+            logger.error(e)
+        } catch (e: SQLiteException) {
             logger.error(e)
         }
         return defaultValue

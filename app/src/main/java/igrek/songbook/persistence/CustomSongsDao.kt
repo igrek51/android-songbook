@@ -2,6 +2,7 @@ package igrek.songbook.persistence
 
 import android.content.ContentValues
 import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.domain.songsdb.Song
 import igrek.songbook.domain.songsdb.SongCategory
@@ -45,7 +46,7 @@ class Info(models.Model):
 
      */
 
-    override fun getDbHelper(): SQLiteDbHelper {
+    override fun getDatabase(): SQLiteDatabase {
         return localDbService.openCustomSongsDb()
     }
 
@@ -125,7 +126,7 @@ class Info(models.Model):
         // auto increment id
         song.id = getNextSongId()
         // insert new song
-        val db = getDbHelper().writableDatabase
+        val db = getDatabase()
         val values = ContentValues()
         values.put("id", song.id)
         values.put("title", song.title)
@@ -149,7 +150,7 @@ class Info(models.Model):
         // next version
         song.versionNumber = song.versionNumber + 1
         // insert new song
-        val db = getDbHelper().writableDatabase
+        val db = getDatabase()
         val values = ContentValues()
         values.put("title", song.title)
         values.put("file_content", song.content)
@@ -161,7 +162,7 @@ class Info(models.Model):
     }
 
     fun removeCustomSong(song: Song) {
-        val db = getDbHelper().writableDatabase
+        val db = getDatabase()
         val whereArgs: Array<String> = arrayOf(song.id.toString())
         db.delete("songs_song", "id = ?", whereArgs)
     }

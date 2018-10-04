@@ -1,6 +1,7 @@
 package igrek.songbook.persistence
 
 import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.domain.songsdb.Song
 import igrek.songbook.domain.songsdb.SongCategory
@@ -43,7 +44,7 @@ class Info(models.Model):
 
      */
 
-    override fun getDbHelper(): SQLiteDbHelper {
+    override fun getDatabase(): SQLiteDatabase {
         return localDbService.openSongsDb()
     }
 

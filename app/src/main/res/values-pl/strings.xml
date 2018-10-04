@@ -35,9 +35,9 @@
         \n
         \nWŁASNE PIOSENKI:
         \nMożesz dodawać własne piosenki, wybierając opcję z menu głównego.
-        \nWpisz słowa piosenki jako zwykły teskt razem z akordami w nawiasach kwadratowych, używając notacji:
-        \ntekst [a B h C C# f f# F#7 Cmaj7 D-Dsus2-Dsus4]
-        \nMożesz dodawać akordy gdziekolwiek: "w śro[d]dku sł[C]ów lub na końcu linii [d C]".
+        \nWpisz słowa piosenki w postaci zwykłego tesktu razem z akordami w nawiasach kwadratowych, używając notacji w formacie:
+        \n\"tekst [a B h C C# f f# F#7 Cmaj7 D-Dsus2-Dsus4]\"
+        \nMożesz dodawać akordy gdziekolwiek: \"w śro[d]dku sł[C]ów lub na końcu linii [d C]\".
         \nPo zapisaniu piosenki, znajdziesz ją w kategorii \"Moje piosenki\".
         \nMożesz edytować dodaną piosenkę, usunąć lub zaimportować zawartość z wybranego pliku.
     </string>

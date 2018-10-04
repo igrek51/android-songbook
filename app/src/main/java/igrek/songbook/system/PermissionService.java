@@ -52,10 +52,12 @@ public class PermissionService {
 	}
 	
 	public void onRequestPermissionsResult(int requestCode, @NotNull String[] permissions, @NotNull int[] grantResults) {
-		if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-			onPermissionGranted(permissions[0]);
-		} else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-			onPermissionDenied(permissions[0]);
+		if (grantResults.length > 0) {
+			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+				onPermissionGranted(permissions[0]);
+			} else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+				onPermissionDenied(permissions[0]);
+			}
 		}
 	}
 }
