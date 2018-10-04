@@ -100,6 +100,13 @@
                 android:layout_margin="8dp"
                 android:text="@string/import_song_save"/>
 
+            <Button
+                android:id="@+id/removeSongButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/import_song_remove"/>
+
         </LinearLayout>
     </ScrollView>
 

@@ -6,7 +6,7 @@ open class Song(
         var id: Long,
         open var title: String,
         open var category: SongCategory,
-        var fileContent: String? = null,
+        var content: String? = null,
         var versionNumber: Long = 1,
         var createTime: Long = 0,
         var updateTime: Long = 0,

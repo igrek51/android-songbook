@@ -126,8 +126,14 @@ class SongsRepository {
         initializeSongsDb()
     }
 
-    fun removeImportedSong(song: Song) {
-        // TODO
+    fun removeCustomSong(song: Song) {
+        customSongsDao.removeCustomSong(song)
+        initializeSongsDb()
+    }
+
+    fun updateCustomSong(song: Song) {
+        customSongsDao.updateCustomSong(song)
+        initializeSongsDb()
     }
 
     fun getSongsDbVersion(): Long? {

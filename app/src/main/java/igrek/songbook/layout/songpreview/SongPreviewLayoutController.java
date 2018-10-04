@@ -181,7 +181,7 @@ public class SongPreviewLayoutController implements MainLayout {
 	
 	public void onGraphicsInitializedEvent(int w, int h, Paint paint) {
 		// load file and parse it
-		String fileContent = currentSong.getFileContent();
+		String fileContent = currentSong.getContent();
 		// initialize - first file loading
 		lyricsManager.load(fileContent, w, h, paint);
 		

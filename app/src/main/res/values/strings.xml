@@ -117,7 +117,7 @@
     <string name="file_manager_not_found">Please install a File Manager.</string>
     <string name="select_file_to_import">Select a file to import</string>
     <string name="selected_file_is_too_big">Selected file is too big.</string>
-    <string name="new_song_has_been_imported">New song has been added.</string>
+    <string name="song_has_been_saved">Song has been saved.</string>
     <string name="editing_song">Edit song</string>
     <string name="import_song_title_label">Song Title:</string>
     <string name="import_song_title_hint">Title…</string>
@@ -127,8 +127,10 @@
         \nExample text [a F C G]
         \n…
     </string>
-    <string name="import_song_save">Save</string>
+    <string name="import_song_save">Save song</string>
     <string name="settings_chords_notation">Chords notation:</string>
     <string name="notation_german">German / European (a b B H C d)</string>
     <string name="notation_english">English / American (Am Bbm Bb B C Dm)</string>
+    <string name="import_song_remove">Remove song</string>
+    <string name="new_song_has_been_removed">Song has been removed.</string>
 </resources>

@@ -5,7 +5,6 @@ import java.util.Date;
 import javax.inject.Inject;
 
 import dagger.Lazy;
-import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.domain.songsdb.Song;
 import igrek.songbook.domain.songsdb.SongCategory;
@@ -34,7 +33,7 @@ public class SongImportService {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
-	public void importSong(String title, String content) {
+	public Song importSong(String title, String content) {
 		
 		long versionNumber = 1;
 		long now = new Date().getTime();
@@ -43,11 +42,28 @@ public class SongImportService {
 		
 		songsRepository.saveImportedSong(newSong);
 		
-		uiInfoService.showInfo(R.string.new_song_has_been_imported);
+		return newSong;
 	}
 	
 	public void showImportSongScreen(String filename, String content) {
-		importSongLayoutController.get().setImportedSong(filename, content);
+		importSongLayoutController.get().setCurrentSong(null, filename, content);
 		layoutController.showImportSong();
+	}
+	
+	public void showEditSongScreen(Song song) {
+		String title = song.getTitle();
+		String content = song.getContent();
+		importSongLayoutController.get().setCurrentSong(song, title, content);
+		layoutController.showImportSong();
+	}
+	
+	public void updateSong(Song currentSong, String songTitle, String songContent) {
+		currentSong.setTitle(songTitle);
+		currentSong.setContent(songContent);
+		songsRepository.updateCustomSong(currentSong);
+	}
+	
+	public void removeSong(Song currentSong) {
+		songsRepository.removeCustomSong(currentSong);
 	}
 }

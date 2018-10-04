@@ -31,6 +31,7 @@ import igrek.songbook.layout.songpreview.quickmenu.QuickMenuTranspose;
 import igrek.songbook.layout.songpreview.renderer.SongPreview;
 import igrek.songbook.layout.songpreview.transpose.ChordsTransposerManager;
 import igrek.songbook.layout.songsearch.SongSearchLayoutController;
+import igrek.songbook.layout.songselection.SongListItemAdapter;
 import igrek.songbook.layout.songselection.SongListView;
 import igrek.songbook.layout.songtree.ScrollPosBuffer;
 import igrek.songbook.layout.songtree.SongTreeLayoutController;
@@ -136,6 +137,8 @@ public interface FactoryComponent {
 	
 	void inject(ImportSongLayoutController there);
 	
+	
+	void inject(SongListItemAdapter there);
 	
 	void inject(QuickMenuAutoscroll there);
 	

@@ -109,6 +109,6 @@
     <string name="file_manager_not_found">Brak systemowej przeglądarki plików.</string>
     <string name="select_file_to_import">Wybierz plik do zaimportowania.</string>
     <string name="selected_file_is_too_big">Wybrany plik jest za duży.</string>
-    <string name="new_song_has_been_imported">Nowa piosenka została dodana.</string>
+    <string name="song_has_been_saved">Piosenka została zapisana.</string>
     <string name="editing_song">Edycja piosenki</string>
 </resources>

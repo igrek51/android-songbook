@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
+import igrek.songbook.domain.songsdb.Song;
 import igrek.songbook.info.UiInfoService;
 import igrek.songbook.info.UiResourceService;
 import igrek.songbook.info.errorcheck.SafeClickListener;
@@ -22,6 +23,7 @@ import igrek.songbook.layout.LayoutController;
 import igrek.songbook.layout.LayoutState;
 import igrek.songbook.layout.MainLayout;
 import igrek.songbook.layout.navigation.NavigationMenuController;
+import igrek.songbook.system.SoftKeyboardService;
 
 public class ImportSongLayoutController implements MainLayout {
 	
@@ -37,9 +39,12 @@ public class ImportSongLayoutController implements MainLayout {
 	NavigationMenuController navigationMenuController;
 	@Inject
 	Lazy<SongImportService> songImportService;
+	@Inject
+	SoftKeyboardService softKeyboardService;
 	
 	private String songTitle;
 	private String songContent;
+	private Song currentSong;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	private EditText songTitleEdit;
@@ -73,20 +78,50 @@ public class ImportSongLayoutController implements MainLayout {
 			}
 		});
 		
+		Button removeSongButton = layout.findViewById(R.id.removeSongButton);
+		removeSongButton.setOnClickListener(new SafeClickListener() {
+			@Override
+			public void onClick() {
+				removeSong();
+			}
+		});
+		
 		songTitleEdit.setText(songTitle);
 		songContentEdit.setText(songContent);
 	}
 	
-	public void setImportedSong(String title, String content) {
+	public void setCurrentSong(Song song, String title, String content) {
+		this.currentSong = song;
 		this.songTitle = title;
 		this.songContent = content;
 	}
 	
 	
 	private void saveSong() {
-		songTitle = songTitleEdit.getText().toString();
-		songContent = songContentEdit.getText().toString();
-		songImportService.get().importSong(songTitle, songContent);
+		if (currentSong == null) {
+			// add
+			songTitle = songTitleEdit.getText().toString();
+			songContent = songContentEdit.getText().toString();
+			currentSong = songImportService.get().importSong(songTitle, songContent);
+		} else {
+			// update
+			songTitle = songTitleEdit.getText().toString();
+			songContent = songContentEdit.getText().toString();
+			songImportService.get().updateSong(currentSong, songTitle, songContent);
+		}
+		uiInfoService.showInfo(R.string.song_has_been_saved);
+		layoutController.showLastSongSelectionLayout();
+	}
+	
+	private void removeSong() {
+		if (currentSong == null) {
+			// cancel
+		} else {
+			// remove song from database
+			songImportService.get().removeSong(currentSong);
+		}
+		uiInfoService.showInfo(R.string.new_song_has_been_removed);
+		layoutController.showLastSongSelectionLayout();
 	}
 	
 	@Override
@@ -106,6 +141,7 @@ public class ImportSongLayoutController implements MainLayout {
 	
 	@Override
 	public void onLayoutExit() {
+		softKeyboardService.hideSoftKeyboard();
 	}
 	
 }

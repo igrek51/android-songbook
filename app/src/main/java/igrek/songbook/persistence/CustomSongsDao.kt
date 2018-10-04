@@ -130,7 +130,7 @@ class Info(models.Model):
         values.put("id", song.id)
         values.put("title", song.title)
         values.put("category_id", song.category.id)
-        values.put("file_content", song.fileContent)
+        values.put("file_content", song.content)
         values.put("version_number", song.versionNumber)
         values.put("create_time", iso8601Format.format(Date(song.createTime)))
         values.put("update_time", iso8601Format.format(Date(song.updateTime)))
@@ -143,6 +143,27 @@ class Info(models.Model):
         values.put("author", song.author)
         values.put("state", song.status.id)
         db.insert("songs_song", null, values)
+    }
+
+    fun updateCustomSong(song: Song) {
+        // next version
+        song.versionNumber = song.versionNumber + 1
+        // insert new song
+        val db = getDbHelper().writableDatabase
+        val values = ContentValues()
+        values.put("title", song.title)
+        values.put("file_content", song.content)
+        values.put("version_number", song.versionNumber)
+        values.put("update_time", iso8601Format.format(Date()))
+
+        val whereArgs: Array<String> = arrayOf(song.id.toString())
+        db.update("songs_song", values, "id = ?", whereArgs)
+    }
+
+    fun removeCustomSong(song: Song) {
+        val db = getDbHelper().writableDatabase
+        val whereArgs: Array<String> = arrayOf(song.id.toString())
+        db.delete("songs_song", "id = ?", whereArgs)
     }
 
 }
