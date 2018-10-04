@@ -21,6 +21,8 @@ The guitar songs database is included and is easily extensible.
 * Songs browser with search engine
 * Scroll speed auto-adjustment
 * Font size scaling
+* Custom songs adding
+* English (American) / German (European) chords notation support
 
 ## Example Screenshots
 Example application screenshots are shown below:
@@ -31,4 +33,4 @@ Example application screenshots are shown below:
 
 ## Available on Google Play
 
-[Guitar Songbook on Google Play](https://play.google.com/store/apps/details?id=igrek.songbook)
+[Guitar Songbook is available on Google Play](https://play.google.com/store/apps/details?id=igrek.songbook)
