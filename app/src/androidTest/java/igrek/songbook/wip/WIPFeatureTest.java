@@ -52,9 +52,8 @@ public class WIPFeatureTest {
 	@Test
 	//@Ignore
 	public void testWipFeature() {
-		
-		preferencesService.clear();
-		
+	
+	
 	}
 	
 }
