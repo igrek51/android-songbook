@@ -55,8 +55,10 @@ public class QuickMenuAutoscroll {
 		
 		autoscrollToggleButton = quickMenuView.findViewById(R.id.autoscrollToggleButton);
 		autoscrollToggleButton.setOnClickListener(v -> {
+			if (!autoscrollService.isRunning()) {
+				setVisible(false);
+			}
 			autoscrollService.onAutoscrollToggleUIEvent();
-			updateView();
 		});
 		
 		// initial pause
