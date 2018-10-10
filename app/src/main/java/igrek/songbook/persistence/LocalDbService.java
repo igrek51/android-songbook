@@ -37,9 +37,9 @@ public class LocalDbService {
 	public SQLiteDatabase openSongsDb() {
 		if (songsDbHelper == null) {
 			File dbFile = getSongsDbFile();
-			// always copy latest songs db from resources
-			removeDb(dbFile);
-			copyFileFromResources(R.raw.songs, dbFile);
+			// if file does not exist - copy initial db from resources
+			if (!dbFile.exists())
+				copyFileFromResources(R.raw.songs, dbFile);
 			songsDbHelper = openDatabase(dbFile);
 		}
 		return songsDbHelper;
@@ -88,7 +88,7 @@ public class LocalDbService {
 		removeDb(getSongsDbFile());
 		removeDb(getCustomSongsDbFile());
 		removeDb(getUnlockedSongsDbFile());
-		// need to reopen dbs again (from external dependencies)
+		// need to reopen dbs again (in external dependencies)
 	}
 	
 	private void removeDb(File songsDbFile) {
