@@ -131,7 +131,7 @@ public class EditSongLayoutController implements MainLayout {
 			// update
 			songImportService.get().updateSong(currentSong, songTitle, songContent);
 		}
-		uiInfoService.showInfo(R.string.song_has_been_saved);
+		uiInfoService.showInfo(R.string.edit_song_has_been_saved);
 		layoutController.showLastSongSelectionLayout();
 	}
 	
@@ -142,7 +142,7 @@ public class EditSongLayoutController implements MainLayout {
 			// remove song from database
 			songImportService.get().removeSong(currentSong);
 		}
-		uiInfoService.showInfo(R.string.new_song_has_been_removed);
+		uiInfoService.showInfo(R.string.edit_song_has_been_removed);
 		layoutController.showLastSongSelectionLayout();
 	}
 	

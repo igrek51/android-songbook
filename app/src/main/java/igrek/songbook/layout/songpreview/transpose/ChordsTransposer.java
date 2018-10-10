@@ -33,7 +33,7 @@ public class ChordsTransposer {
 	};
 	
 	private final String chordsDelimiters[] = {
-			" ", "-", "(", ")", "/", ","
+			" ", "-", "(", ")", "/", ",", "\n"
 	};
 	
 	private final int MAX_LENGTH_ANALYZE = 2;
@@ -122,7 +122,7 @@ public class ChordsTransposer {
 	 * @param t  shift semitones count
 	 * @return chords section transposed by semitones
 	 */
-	public String transposeChords(String in, int t) {
+	private String transposeChords(String in, int t) {
 		StringBuilder out = new StringBuilder();
 		
 		//podział na poszczególne akordy
@@ -131,7 +131,7 @@ public class ChordsTransposer {
 		for (StringWithDelimiter chord : chords) {
 			String transposedChord = transposeChord(chord.str, t);
 			out.append(transposedChord);
-			out.append(chord.delimiter); //dopisanie tego samego separatora, który rozdzielił akord
+			out.append(chord.delimiter); // append the same delimiter which was splitting a chord
 		}
 		
 		return out.toString();
@@ -144,7 +144,7 @@ public class ChordsTransposer {
 	 */
 	private String transposeChord(String chord, int t) {
 		
-		if (chord.isEmpty())
+		if (chord.trim().isEmpty())
 			return chord;
 		
 		// chord recognition
@@ -161,7 +161,7 @@ public class ChordsTransposer {
 					break; // a chord with suffix has been recognized
 			}
 			if (chordNumber == null) { // a chord was not recognized
-				logger.warn("Transpose: Chord not recognized: " + chord);
+				logger.warn("Transpose: Chord not recognized [" + chord.length() + "]: " + chord);
 				return chord;
 			}
 		}
