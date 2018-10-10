@@ -66,32 +66,55 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:padding="8dp"
+                android:background="#07ffffff"
                 android:gravity="center_vertical"
                 android:hint="@string/import_song_title_hint"
                 android:inputType="text"
-                android:background="#07ffffff"/>
+                android:padding="8dp"/>
 
-            <TextView
+            <RelativeLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:gravity="bottom"
-                android:text="@string/import_song_content_label"
-                android:textSize="18sp"/>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_gravity="start|bottom"
+                    android:gravity="bottom"
+                    android:text="@string/import_song_content_label"
+                    android:textSize="18sp"
+                    android:layout_alignParentLeft="true"/>
+
+                <Button
+                    android:id="@+id/addChordButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="end|bottom"
+                    android:text="@string/edit_song_add_chord"/>
+
+            </RelativeLayout>
 
             <EditText
                 android:id="@+id/songContentEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="300dp"
                 android:layout_marginBottom="8dp"
-                android:padding="8dp"
+                android:background="#07ffffff"
                 android:gravity="top"
                 android:hint="@string/import_song_content_hint"
-                android:text=""
                 android:inputType="text|textMultiLine"
-                android:background="#07ffffff"/>
+                android:minHeight="300dp"
+                android:padding="8dp"
+                android:text=""/>
 
             <Button
                 android:id="@+id/importFromFileButotn"

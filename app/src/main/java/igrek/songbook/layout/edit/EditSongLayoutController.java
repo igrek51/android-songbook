@@ -96,8 +96,52 @@ public class EditSongLayoutController implements MainLayout {
 			}
 		});
 		
+		Button addChordButton = layout.findViewById(R.id.addChordButton);
+		addChordButton.setOnClickListener(new SafeClickListener() {
+			@Override
+			public void onClick() {
+				onAddChordClick();
+			}
+		});
+		
 		songTitleEdit.setText(songTitle);
 		songContentEdit.setText(songContent);
+	}
+	
+	private void onAddChordClick() {
+		String edited = songContentEdit.getText().toString();
+		int selStart = songContentEdit.getSelectionStart();
+		int selEnd = songContentEdit.getSelectionEnd();
+		
+		String before = edited.substring(0, selStart);
+		String after = edited.substring(selEnd);
+		
+		// if there's nonempty selection
+		if (selStart < selEnd) {
+			
+			String selected = edited.substring(selStart, selEnd);
+			edited = before + "[" + selected + "]" + after;
+			selStart++;
+			selEnd++;
+			
+		} else { // just single cursor
+			
+			// if it's the end of line AND there is no space before
+			if ((after.isEmpty() || after.startsWith("\n")) && !before.isEmpty() && !before.endsWith(" ")) {
+				// insert missing space
+				edited = before + " []" + after;
+				selStart += 2;
+			} else {
+				edited = before + "[]" + after;
+				selStart += 1;
+			}
+			selEnd = selStart;
+			
+		}
+		
+		songContentEdit.setText(edited);
+		songContentEdit.setSelection(selStart, selEnd);
+		songContentEdit.requestFocus();
 	}
 	
 	private void importContentFromFile() {

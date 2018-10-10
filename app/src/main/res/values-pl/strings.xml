@@ -37,6 +37,7 @@
         \nWpisz słowa piosenki w postaci zwykłego tesktu razem z akordami w nawiasach kwadratowych, używając notacji w formacie:
         \n\"tekst [a B h C C# f f# F#7 Cmaj7 D-Dsus2-Dsus4]\"
         \nMożesz dodawać akordy gdziekolwiek: \"w śro[d]dku sł[C]ów lub na końcu linii [d C]\".
+        \nUżyj przycisku \"[akord]\", aby szybko dodać akord w nawiasach kwadratowych.
         \nPo zapisaniu piosenki, znajdziesz ją w kategorii \"Moje piosenki\".
         \nMożesz edytować dodaną piosenkę, usunąć lub zaimportować zawartość z wybranego pliku.
     </string>
@@ -101,7 +102,7 @@
         \nKategoria: %s
         \nKomentarz: %s
         \nPreferowana tonacja: %s
-        \nWersja: %d
+        \nWersja piosenki: %d
     </string>
     <string name="easter_egg_discovered">Gratulacje!
         \nOdnalazłeś Easter Egga :)</string>
@@ -137,4 +138,5 @@
     <string name="fill_in_all_fields">Wypełnij wszystkie wymagane pola.</string>
     <string name="connection_error">Błąd połączenia</string>
     <string name="updating_db_in_progress">Aktualizuję piosenki…</string>
+    <string name="edit_song_add_chord">[akord]</string>
 </resources>
