@@ -34,6 +34,8 @@ class SongsRepository {
 
     var dbChangeSubject: PublishSubject<SongsDb> = PublishSubject.create()
 
+    private val minDbVersionCompatibility = 18
+
     var songsDb: SongsDb? = null
         private set
         get() {
@@ -53,7 +55,7 @@ class SongsRepository {
         val customSongsDbVersion = customSongsDao.readDbVersionNumber()
         val unlockedSongsDbVersion = unlockedSongsDao.readDbVersionNumber()
 
-        if (songsDbVersion == null || customSongsDbVersion == null || unlockedSongsDbVersion == null || songsDbVersion < 1) {
+        if (songsDbVersion == null || customSongsDbVersion == null || unlockedSongsDbVersion == null || songsDbVersion < minDbVersionCompatibility) {
             factoryReset()
         }
     }
