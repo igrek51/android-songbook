@@ -42,7 +42,7 @@
         \nYou can also edit it, remove or import song content from file.
     </string>
     <string name="ui_about_content">
-        Guitar Songbook v%s
+        Guitar Songbook v%s (%s)
         \nSongs database version: v%s
         \n
         \nAUTHOR:

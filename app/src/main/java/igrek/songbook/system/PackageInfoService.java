@@ -17,6 +17,7 @@ public class PackageInfoService {
 	
 	private Logger logger = LoggerFactory.getLogger();
 	private String versionName;
+	private int versionCode;
 	
 	public PackageInfoService() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -25,6 +26,7 @@ public class PackageInfoService {
 			PackageInfo pInfo = activity.getPackageManager()
 					.getPackageInfo(activity.getPackageName(), 0);
 			versionName = pInfo.versionName;
+			versionCode = pInfo.versionCode;
 		} catch (PackageManager.NameNotFoundException e) {
 			logger.error(e);
 		}
@@ -32,5 +34,9 @@ public class PackageInfoService {
 	
 	public String getVersionName() {
 		return versionName;
+	}
+	
+	public int getVersionCode() {
+		return versionCode;
 	}
 }

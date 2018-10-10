@@ -42,7 +42,7 @@
         \nMożesz edytować dodaną piosenkę, usunąć lub zaimportować zawartość z wybranego pliku.
     </string>
     <string name="ui_about_content">
-        Guitar Songbook v%s
+        Guitar Songbook v%s (%s)
         \nWersja bazy piosenek: v%s
         \n
         \nAUTOR:

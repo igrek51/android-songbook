@@ -31,9 +31,10 @@ public class AboutLayoutController {
 	
 	public void showAbout() {
 		String appVersionName = packageInfoService.getVersionName();
+		String appVersionCode = Integer.toString(packageInfoService.getVersionCode());
 		String dbVersionNumber = Long.toString(songsRepository.getSongsDb().getVersionNumber());
 		String title = uiResourceService.resString(R.string.nav_about);
-		String message = uiResourceService.resString(R.string.ui_about_content, appVersionName, dbVersionNumber);
+		String message = uiResourceService.resString(R.string.ui_about_content, appVersionName, appVersionCode, dbVersionNumber);
 		
 		String unlockActionName = uiResourceService.resString(R.string.action_unlock);
 		Runnable unlockAction = secretUnlockerService::showUnlockAlert;
