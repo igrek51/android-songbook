@@ -129,8 +129,8 @@
     <string name="import_content_from_file">Importuj z pliku</string>
     <string name="import_song_save">Zapisz piosenkę</string>
     <string name="import_song_remove">Usuń piosenkę</string>
-    <string name="song_has_been_saved">Zapisano piosenkę.</string>
-    <string name="new_song_has_been_removed">Usunięto piosenkę.</string>
+    <string name="edit_song_has_been_saved">Zapisano piosenkę w \"Moje piosenki\".</string>
+    <string name="edit_song_has_been_removed">Usunięto piosenkę.</string>
     <string name="settings_chords_notation">Notacja akordów:</string>
     <string name="notation_german">Niemiecka / Europejska (a b B H C d)</string>
     <string name="notation_english">Angielska / Amerykańska (Am Bbm Bb B C Dm)</string>

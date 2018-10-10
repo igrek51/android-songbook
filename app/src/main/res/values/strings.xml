@@ -129,8 +129,8 @@
     <string name="import_content_from_file">Import from file</string>
     <string name="import_song_save">Save song</string>
     <string name="import_song_remove">Remove song</string>
-    <string name="song_has_been_saved">Song has been saved.</string>
-    <string name="new_song_has_been_removed">Song has been removed.</string>
+    <string name="edit_song_has_been_saved">Song has been saved in \"My songs\".</string>
+    <string name="edit_song_has_been_removed">Song has been removed.</string>
     <string name="settings_chords_notation">Chords notation:</string>
     <string name="notation_german">German / European (a b B H C d)</string>
     <string name="notation_english">English / American (Am Bbm Bb B C Dm)</string>
