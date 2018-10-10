@@ -74,7 +74,7 @@ public class SendFeedbackService {
 		logger.debug("Feedback sent response: " + response);
 		new Handler(Looper.getMainLooper()).post(() -> {
 			if (response.startsWith("200")) {
-				uiInfoService.showInfo(uiResourceService.resString(R.string.contact_message_sent_successfully));
+				uiInfoService.showInfo(R.string.contact_message_sent_successfully);
 			} else {
 				onErrorReceived("Feedback sent bad response: " + response);
 			}
@@ -84,7 +84,7 @@ public class SendFeedbackService {
 	private void onErrorReceived(String errorMessage) {
 		logger.error("Feedback sending error: " + errorMessage);
 		new Handler(Looper.getMainLooper()).post(() -> {
-			uiInfoService.showInfoIndefinite(uiResourceService.resString(R.string.contact_error_sending));
+			uiInfoService.showInfoIndefinite(R.string.contact_error_sending);
 		});
 	}
 	

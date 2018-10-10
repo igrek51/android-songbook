@@ -40,6 +40,7 @@ import igrek.songbook.persistence.CustomSongsDao;
 import igrek.songbook.persistence.LocalDbService;
 import igrek.songbook.persistence.SongsDao;
 import igrek.songbook.persistence.SongsRepository;
+import igrek.songbook.persistence.SongsUpdater;
 import igrek.songbook.persistence.UnlockedSongsDao;
 import igrek.songbook.persistence.preferences.PreferencesService;
 import igrek.songbook.system.PackageInfoService;
@@ -133,6 +134,8 @@ public interface FactoryComponent {
 	void inject(SongEditService there);
 	
 	void inject(EditSongLayoutController there);
+	
+	void inject(SongsUpdater there);
 	
 	
 	void inject(SongListItemAdapter there);

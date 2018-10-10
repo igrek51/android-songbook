@@ -137,7 +137,7 @@ public class LocalDbService {
 		return new File("/data/data/" + activity.getPackageName() + "/files");
 	}
 	
-	private File getSongsDbFile() {
+	public File getSongsDbFile() {
 		return new File(getSongDbDir(), "songs.sqlite");
 	}
 	

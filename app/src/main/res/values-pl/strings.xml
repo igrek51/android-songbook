@@ -67,7 +67,7 @@
     <string name="action_info_ok">OK</string>
     <string name="action_unlock">Odblokuj</string>
     <string name="action_cancel">Anuluj</string>
-    <string name="ui_db_is_uptodate">Baza piosenek jest już aktualna.</string>
+    <string name="ui_db_is_uptodate">Baza piosenek jest aktualna.</string>
     <string name="contact_label">Możesz przesłać wiadomość do autora, jeśli zauważyłeś jakieś błędy lub jeśli masz pomysły na usprawnienie tej aplikacji. Będę wdzięczny za Twój komentarz.</string>
     <string name="contact_message_hint">Twoja wiadomość…</string>
     <string name="contact_send">Wyślij</string>
@@ -135,4 +135,6 @@
     <string name="notation_german">Niemiecka / Europejska (a b B H C d)</string>
     <string name="notation_english">Angielska / Amerykańska (Am Bbm Bb B C Dm)</string>
     <string name="fill_in_all_fields">Wypełnij wszystkie wymagane pola.</string>
+    <string name="connection_error">Błąd połączenia</string>
+    <string name="updating_db_in_progress">Aktualizuję piosenki…</string>
 </resources>

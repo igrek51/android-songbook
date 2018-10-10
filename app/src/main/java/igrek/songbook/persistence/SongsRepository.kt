@@ -1,7 +1,6 @@
 package igrek.songbook.persistence
 
 import com.google.common.collect.ArrayListMultimap
-import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.domain.songsdb.Song
 import igrek.songbook.domain.songsdb.SongCategory
@@ -28,6 +27,8 @@ class SongsRepository {
     lateinit var uiResourceService: UiResourceService
     @Inject
     lateinit var uiInfoService: UiInfoService
+    @Inject
+    lateinit var songsUpdater: SongsUpdater
 
     private val logger = LoggerFactory.getLogger()
 
@@ -64,8 +65,7 @@ class SongsRepository {
     }
 
     fun updateSongsDb() {
-        initializeSongsDb()
-        uiInfoService.showInfo(R.string.ui_db_is_uptodate)
+        songsUpdater.updateSongsDb(localDbService.songsDbFile)
     }
 
     fun initializeSongsDb() {

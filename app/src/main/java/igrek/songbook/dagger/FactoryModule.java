@@ -41,6 +41,7 @@ import igrek.songbook.persistence.CustomSongsDao;
 import igrek.songbook.persistence.LocalDbService;
 import igrek.songbook.persistence.SongsDao;
 import igrek.songbook.persistence.SongsRepository;
+import igrek.songbook.persistence.SongsUpdater;
 import igrek.songbook.persistence.UnlockedSongsDao;
 import igrek.songbook.persistence.preferences.PreferencesService;
 import igrek.songbook.system.PackageInfoService;
@@ -326,6 +327,12 @@ public class FactoryModule {
 	@Singleton
 	protected EditSongLayoutController provideEditImportSongLayoutController() {
 		return new EditSongLayoutController();
+	}
+	
+	@Provides
+	@Singleton
+	protected SongsUpdater provideSongsUpdater() {
+		return new SongsUpdater();
 	}
 	
 	/*

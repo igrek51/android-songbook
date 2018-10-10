@@ -67,7 +67,7 @@
     <string name="action_info_ok">OK</string>
     <string name="action_unlock">Unlock</string>
     <string name="action_cancel">Cancel</string>
-    <string name="ui_db_is_uptodate">Songs database is already up-to-date.</string>
+    <string name="ui_db_is_uptodate">Songs database is up-to-date.</string>
     <string name="contact_label">You can contact me if you have noticed some bugs or you have any ideas how to improve this application. I would be very grateful for your comments.</string>
     <string name="contact_message_hint">Your message…</string>
     <string name="contact_send">Send</string>
@@ -135,4 +135,6 @@
     <string name="notation_german">German / European (a b B H C d)</string>
     <string name="notation_english">English / American (Am Bbm Bb B C Dm)</string>
     <string name="fill_in_all_fields">Please fill in all required fields.</string>
+    <string name="connection_error">Connection error</string>
+    <string name="updating_db_in_progress">Updating songs…</string>
 </resources>
