@@ -1,5 +1,6 @@
 package igrek.songbook.layout.songpreview.quickmenu;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -20,6 +21,7 @@ import igrek.songbook.layout.view.SliderController;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
+@SuppressLint("CheckResult")
 public class QuickMenuAutoscroll {
 	
 	@Inject
@@ -43,9 +45,11 @@ public class QuickMenuAutoscroll {
 				.debounce(200, TimeUnit.MILLISECONDS)
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(autoscrollState -> updateView());
-		//		autoscrollService.getScrollSpeedSubject()
-		//				.debounce(200, TimeUnit.MILLISECONDS)
-		//				.subscribe(scrollSpeed -> updateView());
+		
+		autoscrollService.getScrollSpeedAdjustmentSubject()
+				.debounce(200, TimeUnit.MILLISECONDS)
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(this::updateScrollSpeed);
 	}
 	
 	// TODO refactor: repeated code: same sliders in settings
@@ -161,6 +165,10 @@ public class QuickMenuAutoscroll {
 				autoscrollSpeedSlider.setValue(autoscrollSpeed);
 			}
 		}
+	}
+	
+	private void updateScrollSpeed(Float autoscrollSpeed) {
+		updateView();
 	}
 	
 	private String roundDecimal(float f, String format) {

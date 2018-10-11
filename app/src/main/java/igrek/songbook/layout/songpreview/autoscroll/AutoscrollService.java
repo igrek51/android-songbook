@@ -42,7 +42,7 @@ public class AutoscrollService {
 	
 	private PublishSubject<Float> canvasScrollSubject = PublishSubject.create();
 	private PublishSubject<AutoscrollState> scrollStateSubject = PublishSubject.create();
-	private PublishSubject<Float> scrollSpeedSubject = PublishSubject.create();
+	private PublishSubject<Float> scrollSpeedAdjustmentSubject = PublishSubject.create();
 	
 	private Handler timerHandler = new Handler();
 	private Runnable timerRunnable = () -> {
@@ -171,7 +171,7 @@ public class AutoscrollService {
 			if (autoscrollSpeed < MIN_SPEED)
 				autoscrollSpeed = MIN_SPEED;
 			
-			scrollSpeedSubject.onNext(autoscrollSpeed);
+			scrollSpeedAdjustmentSubject.onNext(autoscrollSpeed);
 			logger.info("new autoscroll speed: " + autoscrollSpeed + " em / s");
 		}
 	}
@@ -238,7 +238,6 @@ public class AutoscrollService {
 	
 	public void setAutoscrollSpeed(float autoscrollSpeed) {
 		this.autoscrollSpeed = autoscrollSpeed;
-		scrollSpeedSubject.onNext(autoscrollSpeed);
 	}
 	
 	public PublishSubject<Float> getCanvasScrollSubject() {
@@ -249,7 +248,7 @@ public class AutoscrollService {
 		return scrollStateSubject;
 	}
 	
-	public PublishSubject<Float> getScrollSpeedSubject() {
-		return scrollSpeedSubject;
+	public PublishSubject<Float> getScrollSpeedAdjustmentSubject() {
+		return scrollSpeedAdjustmentSubject;
 	}
 }
