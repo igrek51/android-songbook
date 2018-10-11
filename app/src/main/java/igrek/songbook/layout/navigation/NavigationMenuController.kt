@@ -77,7 +77,10 @@ class NavigationMenuController {
             val id = menuItem.itemId
             if (actionsMap.containsKey(id)) {
                 val action = actionsMap[id]
-                SafeExecutor().execute(action)
+                // postpone action - smoother navigation hide
+                Handler().post {
+                    SafeExecutor().execute(action)
+                }
             } else {
                 logger.warn("unknown navigation item has been selected.")
             }

@@ -14,4 +14,7 @@
 
     <color name="colorFloatingButton">#2d3b94</color>
     <color name="colorFloatingButtonClicked">#162060</color>
+
+    <color name="navMenuText">#ffffff</color>
+    <color name="navMenuIconTint">#ffffff</color>
 </resources>
