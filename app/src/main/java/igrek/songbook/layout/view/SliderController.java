@@ -22,7 +22,7 @@ public class SliderController {
 		setValue(currentValue);
 		updateLabel(currentValue);
 		
-		seekBar.setMax(10000);
+		seekBar.setMax(100000);
 		seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -54,8 +54,8 @@ public class SliderController {
 		float progress = (value - min) * seekBar.getMax() / (max - min);
 		if (progress < 0)
 			progress = 0;
-		if (progress > 10000)
-			progress = 10000;
+		if (progress > 100000)
+			progress = 100000;
 		seekBar.setProgress((int) progress);
 	}
 	

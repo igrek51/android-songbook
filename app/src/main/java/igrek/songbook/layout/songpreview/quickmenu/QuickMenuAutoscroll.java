@@ -31,10 +31,6 @@ public class QuickMenuAutoscroll {
 	
 	private boolean visible = false;
 	private View quickMenuView;
-	private TextView initialPauseLabel;
-	private SeekBar initialPauseSeekbar;
-	private TextView speedLabel;
-	private SeekBar speedSeekbar;
 	private Button autoscrollToggleButton;
 	private SliderController autoscrollPauseSlider;
 	private SliderController autoscrollSpeedSlider;
@@ -49,7 +45,7 @@ public class QuickMenuAutoscroll {
 		autoscrollService.getScrollSpeedAdjustmentSubject()
 				.debounce(200, TimeUnit.MILLISECONDS)
 				.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(this::updateScrollSpeed);
+				.subscribe(autoscrollSpeed -> updateView());
 	}
 	
 	// TODO refactor: repeated code: same sliders in settings
@@ -59,20 +55,20 @@ public class QuickMenuAutoscroll {
 		
 		autoscrollToggleButton = quickMenuView.findViewById(R.id.autoscrollToggleButton);
 		autoscrollToggleButton.setOnClickListener(v -> {
-			if (!autoscrollService.isRunning()) {
+			if (!autoscrollService.isRunning())
 				setVisible(false);
-			}
+			
 			autoscrollService.onAutoscrollToggleUIEvent();
 		});
 		
 		// initial pause
-		initialPauseLabel = quickMenuView.findViewById(R.id.initialPauseLabel);
-		initialPauseSeekbar = quickMenuView.findViewById(R.id.initialPauseSeekbar);
+		TextView initialPauseLabel = quickMenuView.findViewById(R.id.initialPauseLabel);
+		SeekBar initialPauseSeekbar = quickMenuView.findViewById(R.id.initialPauseSeekbar);
 		float autoscrollInitialPause = autoscrollService.getInitialPause();
 		autoscrollPauseSlider = new SliderController(initialPauseSeekbar, initialPauseLabel, autoscrollInitialPause, 0, 90000) {
 			@Override
 			public String generateLabelText(float value) {
-				return uiResourceService.resString(R.string.settings_scroll_initial_pause, Integer.toString((int) (value / 1000)));
+				return uiResourceService.resString(R.string.settings_scroll_initial_pause, roundDecimal(value / 1000, "##0"));
 			}
 		};
 		ImageButton initialPauseMinusButton = quickMenuView.findViewById(R.id.initialPauseMinusButton);
@@ -81,13 +77,13 @@ public class QuickMenuAutoscroll {
 		initialPausePlusButton.setOnClickListener(v -> addInitialPause(1000));
 		
 		// autoscroll speed
-		speedLabel = quickMenuView.findViewById(R.id.speedLabel);
-		speedSeekbar = quickMenuView.findViewById(R.id.speedSeekbar);
+		TextView speedLabel = quickMenuView.findViewById(R.id.speedLabel);
+		SeekBar speedSeekbar = quickMenuView.findViewById(R.id.speedSeekbar);
 		float autoscrollSpeed = autoscrollService.getAutoscrollSpeed();
 		autoscrollSpeedSlider = new SliderController(speedSeekbar, speedLabel, autoscrollSpeed, 0, 1.0f) {
 			@Override
 			public String generateLabelText(float value) {
-				return uiResourceService.resString(R.string.settings_autoscroll_speed, roundDecimal(value, "#.####"));
+				return uiResourceService.resString(R.string.settings_autoscroll_speed, roundDecimal(value, "0.000"));
 			}
 		};
 		ImageButton speedMinusButton = quickMenuView.findViewById(R.id.speedMinusButton);
@@ -165,10 +161,6 @@ public class QuickMenuAutoscroll {
 				autoscrollSpeedSlider.setValue(autoscrollSpeed);
 			}
 		}
-	}
-	
-	private void updateScrollSpeed(Float autoscrollSpeed) {
-		updateView();
 	}
 	
 	private String roundDecimal(float f, String format) {

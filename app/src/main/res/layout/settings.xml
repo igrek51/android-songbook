@@ -66,7 +66,7 @@
                 android:id="@+id/fontsizeSeekbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="10000"
+                android:max="100000"
                 android:padding="16dp"/>
 
 
@@ -82,7 +82,7 @@
                 android:id="@+id/autoscrollPauseSeekbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="10000"
+                android:max="100000"
                 android:padding="16dp"/>
 
 
@@ -98,7 +98,7 @@
                 android:id="@+id/autoscrollSpeedSeekbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="10000"
+                android:max="100000"
                 android:padding="16dp"/>
 
 

@@ -86,7 +86,7 @@
                     android:layout_gravity="center"
                     android:layout_margin="0dp"
                     android:layout_weight="1"
-                    android:max="10000"/>
+                    android:max="100000"/>
 
                 <ImageButton
                     android:id="@+id/initialPausePlusButton"
@@ -141,7 +141,7 @@
                     android:layout_gravity="center"
                     android:layout_margin="0dp"
                     android:layout_weight="1"
-                    android:max="10000"/>
+                    android:max="100000"/>
 
                 <ImageButton
                     android:id="@+id/speedPlusButton"

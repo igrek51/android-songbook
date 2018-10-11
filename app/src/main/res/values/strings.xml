@@ -28,6 +28,7 @@
         Starting autoscroll causes the lyrics to be scrolled automatically by some timer.
         \nIf lyrics are at the beginning, autoscrolling will be started with some delay (counting down before scrolling).
         If you scroll down manually while this countdown, the scroll will be started immediately.
+        However if you scroll up manually while countdown, the initial delay will be increased.
         \nYou can adjust scrolling speed or initial delay of autoscroll in settings or in autoscroll panel.
         Scrolling up or down manually while autoscrolling is enabled causes autoscroll speed to be auto-adjusted (speed up or slow down).
         \nDouble click on screen toggles autoscrolling.

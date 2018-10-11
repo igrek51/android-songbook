@@ -27,7 +27,8 @@
         \nNaciśnij ikonę autoprzewijania na górnym pasku, aby wyświetlić panel autoprzewijania.
         Rozpoczęcie autoprzewijania powoduje, że tekst przwijany jest automatycznie w odstępach czasowych.
         \nJeśli jest to początek tekstu, autoprzewijanie włączy się po pewnym czasie (odliczanie przed przewijaniem).
-        Jeśli przewiniesz tekst ręcznie podczas odliczania, autoprzewijanie włączy się natychmiast.
+        Ręczne przewinięcie tekstu w dół podczas odliczania spowoduje, że autoprzewijanie włączy się natychmiast.
+        Natomiast ręczne przewinięcie w górę podczas odliczania wydłuży początkową pauzę.
         \nMożesz dostosować prędkość przewijania oraz długość początkowej pauzy w ustawieniach lub w panelu autoprzewijania.
         Ręczne przewijanie przy włączonym autoprzewijaniu spowoduje, że prędkosć przewijania automatycznie zostanie skorygowana (przyspieszona lub zwolniona).
         \nPodwójne kliknięcie na ekran włącza autoprzewijanie.

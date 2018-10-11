@@ -1,6 +1,9 @@
 package igrek.songbook.layout.songpreview.autoscroll;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
+
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -18,12 +21,13 @@ import igrek.songbook.persistence.preferences.PreferencesService;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.subjects.PublishSubject;
 
+@SuppressLint("CheckResult")
 public class AutoscrollService {
 	
-	private final float MIN_SPEED = 0.001f;
-	private final float START_NO_WAITING_MIN_SCROLL = 24.0f;
-	private final float AUTOCHANGE_SPEED_SCALE = 0.002f;
-	private final float ADD_INITIAL_PAUSE_SCALE = 400.0f;
+	private final float MIN_SPEED = 0.001f; // [line / s]
+	private final float START_NO_WAITING_MIN_SCROLL = 0.9f; // [line]
+	private final float AUTOCHANGE_SPEED_SCALE = 0.0008f; // [line / s  /  scrolled lines]
+	private final float ADD_INITIAL_PAUSE_SCALE = 180.0f; // [ms  /  scrolled lines]
 	private final float AUTOSCROLL_INTERVAL_TIME = 60; // [ms]
 	@Inject
 	UiInfoService uiInfoService;
@@ -39,8 +43,10 @@ public class AutoscrollService {
 	private long initialPause; // [ms]
 	private float autoscrollSpeed; // [em / s]
 	private long startTime; // [ms]
+	private float scrolledBuffer = 0;
 	
 	private PublishSubject<Float> canvasScrollSubject = PublishSubject.create();
+	private PublishSubject<Float> aggregatedScrollSubject = PublishSubject.create();
 	private PublishSubject<AutoscrollState> scrollStateSubject = PublishSubject.create();
 	private PublishSubject<Float> scrollSpeedAdjustmentSubject = PublishSubject.create();
 	
@@ -56,9 +62,19 @@ public class AutoscrollService {
 		loadPreferences();
 		reset();
 		
-		canvasScrollSubject.observeOn(AndroidSchedulers.mainThread())
-				.subscribe(linePartScrolled -> {
-					onCanvasScrollEvent(linePartScrolled, getCanvas().getScroll());
+		// aggreagate many little scrolls into greater parts (not proper RX method found)
+		canvasScrollSubject.observeOn(AndroidSchedulers.mainThread()).subscribe(linePartScrolled -> {
+			scrolledBuffer += linePartScrolled;
+			aggregatedScrollSubject.onNext(scrolledBuffer);
+			logger.debug("scroll: " + linePartScrolled);
+		});
+		
+		aggregatedScrollSubject.throttleLast(200, TimeUnit.MILLISECONDS)
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(scrolled -> {
+					onCanvasScrollEvent(scrolledBuffer, getCanvas().getScroll());
+					scrolledBuffer = 0;
+					logger.debug("Aggregated scroll: " + scrolled);
 				});
 	}
 	
@@ -72,8 +88,8 @@ public class AutoscrollService {
 	}
 	
 	public void start() {
-		float scroll = getCanvas().getScroll();
-		if (scroll <= START_NO_WAITING_MIN_SCROLL) {
+		float linePartScroll = getCanvas().getScroll() / getCanvas().getLineheightPx();
+		if (linePartScroll <= START_NO_WAITING_MIN_SCROLL) {
 			start(true);
 		} else {
 			start(false);

@@ -217,7 +217,7 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 		return windowManagerService.dp2px(this.fontsizeTmp);
 	}
 	
-	private float getLineheightPx() {
+	public float getLineheightPx() {
 		return getFontsizePx() * LINEHEIGHT_SCALE_FACTOR;
 	}
 	
@@ -298,11 +298,9 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	public void onManuallyScrolled(int dy) {
 		// lines scrolled
 		float linePartScrolled = ((float) dy) / getLineheightPx();
-		// monitor scroll changes
-		// TODO use rx to debounce or aggregate events
-		if (Math.abs(linePartScrolled) > 0.16f) {
+		// monitor scroll changes\
+		if (Math.abs(linePartScrolled) > 0.01f) {
 			autoscroll.get().getCanvasScrollSubject().onNext(linePartScrolled);
-			//			autoscroll.get().onCanvasScrollEvent(linePartScrolled, scroll);
 		}
 	}
 	
