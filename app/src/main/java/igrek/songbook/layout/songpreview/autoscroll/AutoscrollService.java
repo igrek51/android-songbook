@@ -26,7 +26,8 @@ public class AutoscrollService {
 	
 	private final float MIN_SPEED = 0.001f; // [line / s]
 	private final float START_NO_WAITING_MIN_SCROLL = 0.9f; // [line]
-	private final float AUTOCHANGE_SPEED_SCALE = 0.0008f; // [line / s  /  scrolled lines]
+	private final float ADJUSTMENT_SPEED_SCALE = 0.0008f; // [line / s  /  scrolled lines]
+	private final float ADJUSTMENT_MAX_SPEED_CHANGE = 0.03f; // [line / s  /  scrolled lines]
 	private final float ADD_INITIAL_PAUSE_SCALE = 180.0f; // [ms  /  scrolled lines]
 	private final float AUTOSCROLL_INTERVAL_TIME = 60; // [ms]
 	@Inject
@@ -63,18 +64,17 @@ public class AutoscrollService {
 		reset();
 		
 		// aggreagate many little scrolls into greater parts (not proper RX method found)
-		canvasScrollSubject.observeOn(AndroidSchedulers.mainThread()).subscribe(linePartScrolled -> {
-			scrolledBuffer += linePartScrolled;
-			aggregatedScrollSubject.onNext(scrolledBuffer);
-			logger.debug("scroll: " + linePartScrolled);
-		});
+		canvasScrollSubject.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(linePartScrolled -> {
+					scrolledBuffer += linePartScrolled;
+					aggregatedScrollSubject.onNext(scrolledBuffer);
+				});
 		
-		aggregatedScrollSubject.throttleLast(200, TimeUnit.MILLISECONDS)
+		aggregatedScrollSubject.throttleLast(300, TimeUnit.MILLISECONDS)
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(scrolled -> {
 					onCanvasScrollEvent(scrolledBuffer, getCanvas().getScroll());
 					scrolledBuffer = 0;
-					logger.debug("Aggregated scroll: " + scrolled);
 				});
 	}
 	
@@ -156,7 +156,7 @@ public class AutoscrollService {
 	 * @param dScroll line Part Scrolled
 	 * @param scroll  current scroll
 	 */
-	public void onCanvasScrollEvent(float dScroll, float scroll) {
+	private void onCanvasScrollEvent(float dScroll, float scroll) {
 		if (state == AutoscrollState.WAITING) {
 			if (dScroll > 0) { // skip counting down immediately
 				skipInitialPause();
@@ -168,7 +168,7 @@ public class AutoscrollService {
 		} else if (state == AutoscrollState.SCROLLING) {
 			if (dScroll > 0) { // speed up scrolling
 				
-				autoscrollSpeed += dScroll * AUTOCHANGE_SPEED_SCALE;
+				autoscrollSpeed += cutOffMax(dScroll * ADJUSTMENT_SPEED_SCALE, ADJUSTMENT_MAX_SPEED_CHANGE);
 				
 			} else if (dScroll < 0) {
 				if (scroll <= 0) { // scrolling up to the beginning
@@ -181,15 +181,19 @@ public class AutoscrollService {
 				} else {
 					// slow down scrolling
 					float dScrollAbs = -dScroll;
-					autoscrollSpeed -= dScrollAbs * AUTOCHANGE_SPEED_SCALE;
+					autoscrollSpeed -= cutOffMax(dScrollAbs * ADJUSTMENT_SPEED_SCALE, ADJUSTMENT_MAX_SPEED_CHANGE);
 				}
 			}
 			if (autoscrollSpeed < MIN_SPEED)
 				autoscrollSpeed = MIN_SPEED;
 			
 			scrollSpeedAdjustmentSubject.onNext(autoscrollSpeed);
-			logger.info("new autoscroll speed: " + autoscrollSpeed + " em / s");
+			logger.info("autoscroll speed adjustment: " + autoscrollSpeed + " line / s");
 		}
+	}
+	
+	private float cutOffMax(float value, float max) {
+		return value > max ? max : value;
 	}
 	
 	private void onAutoscrollRemainingWaitTimeEvent(long ms) {
@@ -204,7 +208,7 @@ public class AutoscrollService {
 		onAutoscrollStartedEvent();
 	}
 	
-	public void onAutoscrollStartUIEvent() {
+	private void onAutoscrollStartUIEvent() {
 		if (!isRunning()) {
 			if (getCanvas().canScrollDown()) {
 				start();
