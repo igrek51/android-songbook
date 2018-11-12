@@ -35,6 +35,7 @@ import igrek.songbook.layout.songpreview.quickmenu.QuickMenuAutoscroll;
 import igrek.songbook.layout.songpreview.quickmenu.QuickMenuTranspose;
 import igrek.songbook.layout.songpreview.transpose.ChordsTransposerManager;
 import igrek.songbook.layout.songsearch.SongSearchLayoutController;
+import igrek.songbook.layout.songselection.RandomSongOpener;
 import igrek.songbook.layout.songtree.ScrollPosBuffer;
 import igrek.songbook.layout.songtree.SongTreeLayoutController;
 import igrek.songbook.persistence.CustomSongsDao;
@@ -333,6 +334,12 @@ public class FactoryModule {
 	@Singleton
 	protected SongsUpdater provideSongsUpdater() {
 		return new SongsUpdater();
+	}
+	
+	@Provides
+	@Singleton
+	protected RandomSongOpener provideRandomSongSelector() {
+		return new RandomSongOpener();
 	}
 	
 	/*

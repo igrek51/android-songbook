@@ -4,6 +4,7 @@
     <string name="nav_search_song">Szukaj</string>
     <string name="nav_update_songs">Aktualizuj piosenki</string>
     <string name="nav_custom_song">Dodaj piosenkę</string>
+    <string name="nav_random_song">Losowa piosenka</string>
     <string name="nav_settings">Ustawienia</string>
     <string name="nav_exit">Wyjście</string>
     <string name="nav_about">O aplikacji</string>

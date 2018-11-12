@@ -6,9 +6,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.KeyEvent
-import android.view.Menu
 import android.view.MenuItem
-import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
@@ -65,11 +63,6 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         activityController.onStop()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

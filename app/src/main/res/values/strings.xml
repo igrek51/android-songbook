@@ -4,6 +4,7 @@
     <string name="nav_search_song">Search</string>
     <string name="nav_update_songs">Update songs</string>
     <string name="nav_custom_song">Add custom song</string>
+    <string name="nav_random_song">Random song</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_exit">Exit</string>
     <string name="nav_about">About</string>

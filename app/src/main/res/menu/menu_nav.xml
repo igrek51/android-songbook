@@ -19,6 +19,10 @@
             android:id="@+id/nav_add_custom_song"
             android:icon="@drawable/add"
             android:title="@string/nav_custom_song"/>
+        <item
+            android:id="@+id/nav_random_song"
+            android:icon="@drawable/random"
+            android:title="@string/nav_random_song"/>
     </group>
     <group
         android:id="@+id/nav_group2"
