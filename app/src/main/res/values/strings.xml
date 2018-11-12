@@ -101,9 +101,14 @@
     <string name="song_details">
         Title: %s
         \nCategory: %s
+        \nSong version: %s
+        \nLast modification: %s
+    </string>
+    <string name="song_details_comment">
         \nComment: %s
+    </string>
+    <string name="song_details_preferred_key">
         \nPreferred key: %s
-        \nSong version: %d
     </string>
     <string name="easter_egg_discovered">Congratulations!
         \nYou have discovered an Easter Egg :)</string>
