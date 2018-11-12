@@ -41,16 +41,17 @@ class SecretUnlockerService {
     private val cowCondition: Predicate<String> = Predicate { input -> input!!.matches(Regex("^mo+")) }
 
     private val moo: String = """
- ______________________________________
-/ Congratulations!                     \
-|                                      |
-\ You have discovered an Easter Egg :) /
- --------------------------------------
-        \   ^__^
-         \  (oo)\_______
-            (__)\       )\/\
-                ||----w |
-                ||     ||
+ _____________________
+/ Congratulations!    \
+|                     |
+| You have discovered |
+\ an Easter Egg :)    /
+ ---------------------
+   \   ^__^
+    \  (oo)\_______
+       (__)\       )\/\
+           ||----w |
+           ||     ||
 """
 
     private val rules: List<UnlockerRule> = listOf(
@@ -70,7 +71,7 @@ class SecretUnlockerService {
     private fun showCowSuperPowers() {
         val alertBuilder = AlertDialog.Builder(activity)
         alertBuilder.setTitle("Moooo!")
-        alertBuilder.setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { dialog, which -> }
+        alertBuilder.setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { _, _ -> }
         alertBuilder.setCancelable(true)
         val dialog: AlertDialog = alertBuilder.create()
 
