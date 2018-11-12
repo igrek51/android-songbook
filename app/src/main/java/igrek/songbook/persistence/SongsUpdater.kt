@@ -24,6 +24,7 @@ class SongsUpdater {
     private val logger = LoggerFactory.getLogger()
 
     private val songsdbUrl = "http://51.38.128.10:8007/api/v1/songs"
+    private val songsDbVersionUrl = "http://51.38.128.10:8007/api/v1/songs_version"
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
@@ -47,13 +48,38 @@ class SongsUpdater {
                 if (!response.isSuccessful) {
                     onErrorReceived("Unexpected code: $response")
                 } else {
-                    onResponseReceived(response, songsDbFile)
+                    onSongDatabaseReceived(response, songsDbFile)
                 }
             }
         })
     }
 
-    private fun onResponseReceived(response: Response, songsDbFile: File) {
+    fun checkUpdateIsAvailable() {
+        Handler(Looper.getMainLooper()).post {
+
+            val request: Request = Request.Builder()
+                    .url(songsDbVersionUrl)
+                    .build()
+
+            okHttpClient.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    logger.error(e.message)
+                }
+
+                @Throws(IOException::class)
+                override fun onResponse(call: Call, response: Response) {
+                    if (!response.isSuccessful) {
+                        logger.error("Unexpected code: $response")
+                    } else {
+                        onSongDatabaseVersionReceived(response)
+                    }
+                }
+            })
+
+        }
+    }
+
+    private fun onSongDatabaseReceived(response: Response, songsDbFile: File) {
         try {
             val inputStream: InputStream = response.body()!!.byteStream()
 
@@ -87,10 +113,34 @@ class SongsUpdater {
         }
     }
 
+    private fun onSongDatabaseVersionReceived(response: Response) {
+        try {
+            val remoteVersion = response.body()?.string()?.toLong()
+            val localVersion = songsRepository.get().getSongsDbVersion()
+
+            logger.debug("Update availability check: local: $localVersion, remote: $remoteVersion")
+
+            if (localVersion != null && remoteVersion != null && localVersion < remoteVersion) {
+                showUpdateIsAvailable()
+            }
+
+        } catch (e: Exception) {
+            logger.error(e)
+        }
+    }
+
     private fun onErrorReceived(errorMessage: String?) {
         logger.error("Connection error: $errorMessage")
         Handler(Looper.getMainLooper()).post {
             uiInfoService.showInfoIndefinite(R.string.connection_error)
+        }
+    }
+
+    private fun showUpdateIsAvailable() {
+        Handler(Looper.getMainLooper()).post {
+            uiInfoService.showInfoWithAction(R.string.update_is_available, R.string.action_update) {
+                songsRepository.get().updateSongsDb()
+            }
         }
     }
 
