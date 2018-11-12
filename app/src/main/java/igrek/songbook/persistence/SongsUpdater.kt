@@ -139,6 +139,7 @@ class SongsUpdater {
     private fun showUpdateIsAvailable() {
         Handler(Looper.getMainLooper()).post {
             uiInfoService.showInfoWithAction(R.string.update_is_available, R.string.action_update) {
+                uiInfoService.clearSnackBars()
                 songsRepository.get().updateSongsDb()
             }
         }

@@ -145,7 +145,7 @@
     <string name="fill_in_all_fields">Please fill in all required fields.</string>
     <string name="connection_error">Connection error</string>
     <string name="updating_db_in_progress">Updating songs…</string>
-    <string name="update_is_available">Songs update is available.</string>
+    <string name="update_is_available">New songs update is available.</string>
     <string name="action_update">Update</string>
     <string name="edit_song_add_chord">[chord]</string>
 </resources>
