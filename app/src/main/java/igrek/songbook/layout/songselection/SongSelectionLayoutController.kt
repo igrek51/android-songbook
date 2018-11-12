@@ -51,7 +51,7 @@ abstract class SongSelectionLayoutController : OnSongClickListener {
         }
         // navigation menu button
         val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)
-        navMenuButton.setOnClickListener { _ -> navigationMenuController.navDrawerShow() }
+        navMenuButton.setOnClickListener { navigationMenuController.navDrawerShow() }
 
         itemsListView = layout.findViewById(R.id.filesList)
     }

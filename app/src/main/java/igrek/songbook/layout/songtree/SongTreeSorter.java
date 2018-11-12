@@ -24,7 +24,7 @@ public class SongTreeSorter {
 	};
 	
 	private Ordering<SongTreeItem> categorySongOrdering = Ordering.natural()
-			.onResultOf(SongTreeItem::isSong);
+			.onResultOf(SongTreeItem::isCategory);
 	
 	private Ordering<SongTreeItem> categoryTypeOrdering = //
 			Ordering.explicit(SongCategoryType.CUSTOM, SongCategoryType.ARTIST, SongCategoryType.OTHERS)
@@ -37,9 +37,9 @@ public class SongTreeSorter {
 		return stringCollator.compare(lName, rName);
 	});
 	
-	private Ordering<SongTreeItem> songTreeItemOrdering = categorySongOrdering //
-			.compound(categoryTypeOrdering) //
-			.compound(itemNameOrdering); //
+	private Ordering<SongTreeItem> songTreeItemOrdering = categorySongOrdering // songs before categories
+			.compound(categoryTypeOrdering) // CUSTOM, ARTIST (...), OTHERS
+			.compound(itemNameOrdering); // sort by name
 	
 	
 	public List<SongTreeItem> sort(List<SongTreeItem> items) {

@@ -18,6 +18,7 @@ import igrek.songbook.layout.songselection.SongSearchItem
 import igrek.songbook.layout.songselection.SongSelectionLayoutController
 import igrek.songbook.layout.songselection.SongTreeItem
 import igrek.songbook.layout.songtree.SongTreeFilter
+import igrek.songbook.layout.songtree.SongTreeLayoutController
 import igrek.songbook.system.SoftKeyboardService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
@@ -34,6 +35,8 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
 
     @Inject
     lateinit var softKeyboardService: SoftKeyboardService
+    @Inject
+    lateinit var songTreeLayoutController: dagger.Lazy<SongTreeLayoutController>
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
@@ -53,7 +56,7 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
         // refresh only after some inactive time
         searchFilterSubject.debounce(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { _ -> setSongFilter(searchFilterEdit!!.text.toString()) }
+                .subscribe { setSongFilter(searchFilterEdit!!.text.toString()) }
         if (isFilterSet()) {
             searchFilterEdit!!.setText(itemNameFilter, TextView.BufferType.EDITABLE)
         }
@@ -74,12 +77,12 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
         }
 
         val searchFilterClearButton: ImageButton = layout.findViewById(R.id.searchFilterClearButton)
-        searchFilterClearButton.setOnClickListener { _ -> onClearFilterClicked() }
+        searchFilterClearButton.setOnClickListener { onClearFilterClicked() }
 
         itemsListView!!.init(activity, this)
         updateSongItemsList()
 
-        songsRepository.dbChangeSubject.subscribe { _ ->
+        songsRepository.dbChangeSubject.subscribe {
             if (layoutController.isState(LayoutState.SONGS_TREE))
                 updateSongItemsList()
         }
@@ -111,18 +114,25 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
     }
 
     override fun getSongItems(songsDb: SongsDb): MutableList<SongTreeItem> {
-        // no filter
-        if (!isFilterSet()) {
+        if (!isFilterSet()) { // no filter
             return songsDb.getAllUnlockedSongs()
                     .asSequence()
                     .map { song -> SongSearchItem.song(song) }
                     .toMutableList()
         } else {
             val songNameFilter = SongTreeFilter(itemNameFilter)
-            return songsDb.getAllUnlockedSongs()
+            // filter songs
+            val songsSequence = songsDb.getAllUnlockedSongs()
                     .asSequence()
                     .map { song -> SongSearchItem.song(song) }
-                    .filter { item -> songNameFilter.matchesNameFilter(item) }
+                    .filter { item -> songNameFilter.songMatchesNameFilter(item) }
+            // filter categories
+            val categoriesSequence = songsDb.getAllUnlockedCategories()
+                    .asSequence()
+                    .map { category -> SongTreeItem.category(category) }
+                    .filter { item -> songNameFilter.categoryMatchesNameFilter(item) }
+            // display union
+            return songsSequence.plus(categoriesSequence)
                     .toMutableList()
         }
     }
@@ -154,6 +164,10 @@ class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
         storedScroll = itemsListView?.currentScrollPosition
         if (item.isSong) {
             openSongPreview(item)
+        } else {
+            // move to selected category
+            songTreeLayoutController.get().setCurrentCategory(item.category)
+            layoutController.showSongTree()
         }
     }
 

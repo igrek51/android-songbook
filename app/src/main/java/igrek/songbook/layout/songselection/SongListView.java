@@ -33,7 +33,7 @@ public class SongListView extends ListView implements AdapterView.OnItemClickLis
 		setOnItemClickListener(this);
 		setOnItemLongClickListener(this);
 		setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-		adapter = new SongListItemAdapter(context, null, this);
+		adapter = new SongListItemAdapter(context, null);
 		setAdapter(adapter);
 	}
 	
@@ -82,13 +82,9 @@ public class SongListView extends ListView implements AdapterView.OnItemClickLis
 	}
 	
 	/**
-	 * @param position of element to scroll (-1 - last element)
+	 * @param position of element to scroll
 	 */
 	private void scrollTo(int position) {
-		if (position == -1)
-			position = items.size() - 1;
-		if (position < 0)
-			position = 0;
 		setSelection(position);
 		invalidate();
 	}

@@ -5,12 +5,22 @@ import igrek.songbook.system.locale.StringSimplifier
 
 class SongTreeFilter(private val nameFilter: String?) {
 
-    fun matchesNameFilter(songItem: SongTreeItem): Boolean {
+    fun songMatchesNameFilter(songItem: SongTreeItem): Boolean {
         // no filter set
         if (nameFilter == null || nameFilter.isEmpty())
             return true
 
         val fullName: String = songItem.song.category.displayName + songItem.song.title
+        // must contain every part
+        return containsEveryFilterPart(fullName, nameFilter)
+    }
+
+    fun categoryMatchesNameFilter(songItem: SongTreeItem): Boolean {
+        // no filter set
+        if (nameFilter == null || nameFilter.isEmpty())
+            return true
+
+        val fullName: String = songItem.category.displayName ?: return false
         // must contain every part
         return containsEveryFilterPart(fullName, nameFilter)
     }

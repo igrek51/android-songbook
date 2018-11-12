@@ -22,16 +22,17 @@ public class SongTreeFilterTest {
 		// test mockito
 		assertThat(songItem.getSong().getCategory().getDisplayName()).isEqualTo("Budka suflera");
 		
-		assertThat(new SongTreeFilter("Budka").matchesNameFilter(songItem)).isTrue();
-		assertThat(new SongTreeFilter("budka").matchesNameFilter(songItem)).isTrue();
-		assertThat(new SongTreeFilter("uFL udK").matchesNameFilter(songItem)).isTrue();
-		assertThat(new SongTreeFilter("jolka suflera").matchesNameFilter(songItem)).isTrue();
-		assertThat(new SongTreeFilter("dupka").matchesNameFilter(songItem)).isFalse();
-		assertThat(new SongTreeFilter("dupka suflera").matchesNameFilter(songItem)).isFalse();
+		assertThat(new SongTreeFilter("Budka").songMatchesNameFilter(songItem)).isTrue();
+		assertThat(new SongTreeFilter("budka").songMatchesNameFilter(songItem)).isTrue();
+		assertThat(new SongTreeFilter("uFL udK").songMatchesNameFilter(songItem)).isTrue();
+		assertThat(new SongTreeFilter("jolka suflera").songMatchesNameFilter(songItem)).isTrue();
+		assertThat(new SongTreeFilter("dupka").songMatchesNameFilter(songItem)).isFalse();
+		assertThat(new SongTreeFilter("dupka suflera").songMatchesNameFilter(songItem)).isFalse();
 		// polish letters
-		assertThat(new SongTreeFilter("żółć łÓDŹ").matchesNameFilter(songItem)).isTrue();
-		assertThat(new SongTreeFilter("zolc").matchesNameFilter(songItem)).isTrue();
-		assertThat(new SongTreeFilter("azszecol aazszec lodz zolc").matchesNameFilter(songItem)).isTrue();
+		assertThat(new SongTreeFilter("żółć łÓDŹ").songMatchesNameFilter(songItem)).isTrue();
+		assertThat(new SongTreeFilter("zolc").songMatchesNameFilter(songItem)).isTrue();
+		assertThat(new SongTreeFilter("azszecol aazszec lodz zolc").songMatchesNameFilter(songItem))
+				.isTrue();
 		
 	}
 }

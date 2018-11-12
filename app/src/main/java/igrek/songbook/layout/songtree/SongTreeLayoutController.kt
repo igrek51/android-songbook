@@ -32,10 +32,10 @@ class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
         initSongSelectionLayout(layout)
 
         goBackButton = layout.findViewById(R.id.goBackButton)
-        goBackButton?.setOnClickListener { _ -> onBackClicked() }
+        goBackButton?.setOnClickListener { onBackClicked() }
 
         searchSongButton = layout.findViewById(R.id.searchSongButton)
-        searchSongButton?.setOnClickListener { _ -> goToSearchSong() }
+        searchSongButton?.setOnClickListener { goToSearchSong() }
 
         toolbarTitle = layout.findViewById(R.id.toolbarTitle)
 
@@ -132,13 +132,17 @@ class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
         storeScrollPosition()
         if (item.isCategory) {
             // go to category
-            currentCategory = item.category
+            setCurrentCategory(item.category)
             updateSongItemsList()
             // scroll to beginning
             itemsListView?.scrollToBeginning()
         } else {
             openSongPreview(item)
         }
+    }
+
+    fun setCurrentCategory(category: SongCategory) {
+        currentCategory = category
     }
 
     override fun onLayoutExit() {}

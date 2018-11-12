@@ -26,16 +26,16 @@ public class SongTreeSorterTest {
 		// empty list
 		assertSortedOrdering(Arrays.asList(), Arrays.asList());
 		
-		SongTreeItem categoryCustom = categoryItem(SongCategoryType.CUSTOM, "Custom");
-		SongTreeItem categoryBudka = categoryItem("Budka suflera");
-		SongTreeItem categoryCc = categoryItem("Ćć");
-		SongTreeItem categoryPinkFloyd = categoryItem("Pink Floyd");
-		SongTreeItem categoryOthers = categoryItem(SongCategoryType.OTHERS, "Others");
 		SongTreeItem song51 = songItem("51");
 		SongTreeItem songCma = songItem("Ćma barowa");
 		SongTreeItem songJestTaki = songItem("jest taki samotny dom");
 		SongTreeItem songJolkaJolka = songItem("Jolka, jolka");
 		SongTreeItem songZzz = songItem("Żśźęćół");
+		SongTreeItem categoryCustom = categoryItem(SongCategoryType.CUSTOM, "Custom");
+		SongTreeItem categoryBudka = categoryItem("Budka suflera");
+		SongTreeItem categoryCc = categoryItem("Ćć");
+		SongTreeItem categoryPinkFloyd = categoryItem("Pink Floyd");
+		SongTreeItem categoryOthers = categoryItem(SongCategoryType.OTHERS, "Others");
 		
 		// one song
 		assertSortedOrdering(Arrays.asList(song51), Arrays.asList(song51));
@@ -49,7 +49,7 @@ public class SongTreeSorterTest {
 		
 		// all
 		assertSortedOrdering(Arrays.asList(categoryBudka, songZzz, songCma, songJolkaJolka, song51, categoryPinkFloyd, categoryOthers, categoryCustom, songJestTaki, categoryCc), Arrays
-				.asList(categoryCustom, categoryBudka, categoryCc, categoryPinkFloyd, categoryOthers, song51, songCma, songJestTaki, songJolkaJolka, songZzz));
+				.asList(song51, songCma, songJestTaki, songJolkaJolka, songZzz, categoryCustom, categoryBudka, categoryCc, categoryPinkFloyd, categoryOthers));
 	}
 	
 	private SongTreeItem songItem(String title) {

@@ -1,6 +1,7 @@
 package igrek.songbook.layout.songselection;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +22,11 @@ public class SongListItemAdapter extends ArrayAdapter<SongTreeItem> {
 	
 	private List<SongTreeItem> dataSource;
 	private LayoutInflater inflater;
+	
 	@Inject
 	SongEditService songEditService;
 	
-	public SongListItemAdapter(Context context, List<SongTreeItem> dataSource, SongListView listView) {
+	SongListItemAdapter(Context context, List<SongTreeItem> dataSource) {
 		super(context, 0, new ArrayList<>());
 		if (dataSource == null)
 			dataSource = new ArrayList<>();
@@ -57,8 +59,9 @@ public class SongListItemAdapter extends ArrayAdapter<SongTreeItem> {
 		return (long) position;
 	}
 	
+	@NonNull
 	@Override
-	public View getView(final int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
 		SongTreeItem item = dataSource.get(position);
 		
 		if (item instanceof SongSearchItem) {
