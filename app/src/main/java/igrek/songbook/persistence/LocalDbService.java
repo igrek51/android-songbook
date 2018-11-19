@@ -27,8 +27,7 @@ public class LocalDbService {
 	private Logger logger = LoggerFactory.getLogger();
 	
 	private SQLiteDatabase songsDbHelper;
-	private SQLiteDatabase customSongsDbHelper;
-	private SQLiteDatabase unlockedSongsDbHelper;
+	private SQLiteDatabase localSongsDbHelper;
 	
 	public LocalDbService() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -45,26 +44,15 @@ public class LocalDbService {
 		return songsDbHelper;
 	}
 	
-	public SQLiteDatabase openCustomSongsDb() {
-		if (customSongsDbHelper == null) {
-			File dbFile = getCustomSongsDbFile();
+	public SQLiteDatabase openLocalSongsDb() {
+		if (localSongsDbHelper == null) {
+			File dbFile = getLocalSongsDbFile();
 			// if file does not exist - copy initial db from resources
 			if (!dbFile.exists())
-				copyFileFromResources(R.raw.custom_songs, dbFile);
-			customSongsDbHelper = openDatabase(dbFile);
+				copyFileFromResources(R.raw.local, dbFile);
+			localSongsDbHelper = openDatabase(dbFile);
 		}
-		return customSongsDbHelper;
-	}
-	
-	public SQLiteDatabase openUnlockedSongsDb() {
-		if (unlockedSongsDbHelper == null) {
-			File dbFile = getUnlockedSongsDbFile();
-			// if file does not exist - copy initial db from resources
-			if (!dbFile.exists())
-				copyFileFromResources(R.raw.unlocked_songs, dbFile);
-			unlockedSongsDbHelper = openDatabase(dbFile);
-		}
-		return unlockedSongsDbHelper;
+		return localSongsDbHelper;
 	}
 	
 	public void closeDatabases() {
@@ -72,13 +60,9 @@ public class LocalDbService {
 			songsDbHelper.close();
 			songsDbHelper = null;
 		}
-		if (customSongsDbHelper != null) {
-			customSongsDbHelper.close();
-			customSongsDbHelper = null;
-		}
-		if (unlockedSongsDbHelper != null) {
-			unlockedSongsDbHelper.close();
-			unlockedSongsDbHelper = null;
+		if (localSongsDbHelper != null) {
+			localSongsDbHelper.close();
+			localSongsDbHelper = null;
 		}
 	}
 	
@@ -86,8 +70,7 @@ public class LocalDbService {
 		closeDatabases();
 		// remove db files
 		removeDb(getSongsDbFile());
-		removeDb(getCustomSongsDbFile());
-		removeDb(getUnlockedSongsDbFile());
+		removeDb(getLocalSongsDbFile());
 		// need to reopen dbs again (in external dependencies)
 	}
 	
@@ -141,12 +124,9 @@ public class LocalDbService {
 		return new File(getSongDbDir(), "songs.sqlite");
 	}
 	
-	private File getCustomSongsDbFile() {
-		return new File(getSongDbDir(), "custom_songs.sqlite");
+	private File getLocalSongsDbFile() {
+		return new File(getSongDbDir(), "local.sqlite");
 	}
 	
-	private File getUnlockedSongsDbFile() {
-		return new File(getSongDbDir(), "unlocked_songs.sqlite");
-	}
 	
 }

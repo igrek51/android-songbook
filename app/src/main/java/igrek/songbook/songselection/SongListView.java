@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songselection;
+package igrek.songbook.songselection;
 
 import android.content.Context;
 import android.graphics.Canvas;

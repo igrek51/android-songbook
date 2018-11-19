@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songpreview.renderer.canvas;
+package igrek.songbook.songpreview.renderer.canvas;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,6 +8,11 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.view.View;
+
+import static igrek.songbook.songpreview.renderer.canvas.Font.FONT_BOLD;
+import static igrek.songbook.songpreview.renderer.canvas.Font.FONT_DEFAULT;
+import static igrek.songbook.songpreview.renderer.canvas.Font.FONT_MONOSPACE;
+import static igrek.songbook.songpreview.renderer.canvas.Font.FONT_NORMAL;
 
 public abstract class BaseCanvasView extends View {
 	
@@ -203,17 +208,17 @@ public abstract class BaseCanvasView extends View {
 	public void setFont(int fontface) {
 		// default values
 		if ((fontface & 0x0f) == 0)
-			fontface |= Font.FONT_DEFAULT;
+			fontface |= FONT_DEFAULT;
 		if ((fontface & 0xf0) == 0)
-			fontface |= Font.FONT_NORMAL;
+			fontface |= FONT_NORMAL;
 		Typeface family;
-		if (isFlagSet(fontface, Font.FONT_MONOSPACE)) {
+		if (isFlagSet(fontface, FONT_MONOSPACE)) {
 			family = Typeface.MONOSPACE;
 		} else {
 			family = Typeface.DEFAULT;
 		}
 		int style;
-		if (isFlagSet(fontface, Font.FONT_BOLD)) {
+		if (isFlagSet(fontface, FONT_BOLD)) {
 			style = Typeface.BOLD;
 		} else {
 			style = Typeface.NORMAL;
@@ -222,7 +227,7 @@ public abstract class BaseCanvasView extends View {
 	}
 	
 	public void setFont() {
-		setFont(Font.FONT_DEFAULT | Font.FONT_NORMAL); // reset font to default
+		setFont(FONT_DEFAULT | FONT_NORMAL); // reset font to default
 	}
 	
 	public void setColor(String color) {

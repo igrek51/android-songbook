@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songpreview.quickmenu;
+package igrek.songbook.songpreview.quickmenu;
 
 import android.view.View;
 import android.widget.Button;
@@ -10,7 +10,7 @@ import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.UiResourceService;
-import igrek.songbook.layout.songpreview.transpose.ChordsTransposerManager;
+import igrek.songbook.songpreview.transpose.ChordsTransposerManager;
 
 public class QuickMenuTranspose {
 	

@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songpreview;
+package igrek.songbook.songpreview;
 
 import android.graphics.Paint;
 import android.support.design.widget.AppBarLayout;
@@ -20,19 +20,18 @@ import javax.inject.Inject;
 import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.model.songsdb.Song;
 import igrek.songbook.info.UiInfoService;
-import igrek.songbook.info.UiResourceService;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.layout.LayoutController;
 import igrek.songbook.layout.LayoutState;
 import igrek.songbook.layout.MainLayout;
 import igrek.songbook.layout.navigation.NavigationMenuController;
-import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
-import igrek.songbook.layout.songpreview.quickmenu.QuickMenuAutoscroll;
-import igrek.songbook.layout.songpreview.quickmenu.QuickMenuTranspose;
-import igrek.songbook.layout.songpreview.renderer.SongPreview;
+import igrek.songbook.model.songsdb.Song;
+import igrek.songbook.songpreview.autoscroll.AutoscrollService;
+import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll;
+import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose;
+import igrek.songbook.songpreview.renderer.SongPreview;
 import igrek.songbook.system.SoftKeyboardService;
 import igrek.songbook.system.WindowManagerService;
 
@@ -62,8 +61,6 @@ public class SongPreviewLayoutController implements MainLayout {
 	SongDetailsService songDetailsService;
 	@Inject
 	UiInfoService uiInfoService;
-	@Inject
-	UiResourceService uiResourceService;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	private SongPreview songPreview;

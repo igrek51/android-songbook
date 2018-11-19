@@ -1,4 +1,4 @@
-package igrek.songbook.layout.settings;
+package igrek.songbook.settings;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +20,6 @@ import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.activity.ActivityController;
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.model.chords.ChordsNotation;
 import igrek.songbook.info.UiInfoService;
 import igrek.songbook.info.UiResourceService;
 import igrek.songbook.info.logger.Logger;
@@ -29,10 +28,11 @@ import igrek.songbook.layout.LayoutController;
 import igrek.songbook.layout.LayoutState;
 import igrek.songbook.layout.MainLayout;
 import igrek.songbook.layout.navigation.NavigationMenuController;
-import igrek.songbook.layout.songpreview.LyricsManager;
-import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
 import igrek.songbook.layout.view.SliderController;
+import igrek.songbook.model.chords.ChordsNotation;
 import igrek.songbook.persistence.preferences.PreferencesService;
+import igrek.songbook.songpreview.LyricsManager;
+import igrek.songbook.songpreview.autoscroll.AutoscrollService;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.subjects.PublishSubject;

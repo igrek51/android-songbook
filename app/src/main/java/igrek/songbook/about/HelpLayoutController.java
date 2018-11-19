@@ -1,4 +1,4 @@
-package igrek.songbook.layout.about;
+package igrek.songbook.about;
 
 import javax.inject.Inject;
 

@@ -1,4 +1,4 @@
-package igrek.songbook.layout.contact;
+package igrek.songbook.contact;
 
 import android.os.AsyncTask;
 

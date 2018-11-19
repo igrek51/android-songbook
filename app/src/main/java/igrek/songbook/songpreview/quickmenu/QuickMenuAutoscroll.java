@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songpreview.quickmenu;
+package igrek.songbook.songpreview.quickmenu;
 
 import android.annotation.SuppressLint;
 import android.view.View;
@@ -16,8 +16,8 @@ import javax.inject.Inject;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.UiResourceService;
-import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
 import igrek.songbook.layout.view.SliderController;
+import igrek.songbook.songpreview.autoscroll.AutoscrollService;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 

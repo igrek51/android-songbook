@@ -13,37 +13,37 @@ class UnlockedSongsDao : AbstractSqliteDao() {
     }
 
     override fun getDatabase(): SQLiteDatabase {
-        return localDbService.openUnlockedSongsDb()
+        return localDbService.openLocalSongsDb()
     }
 
-    fun readUnlockedSongIds(): List<Long> {
-        val songIds: MutableList<Long> = mutableListOf()
+    fun readUnlockedKeys(): List<String> {
+        val keys: MutableList<String> = mutableListOf()
         try {
-            val cursor = sqlQuery("SELECT * FROM songs_unlocked")
+            val cursor = sqlQuery("SELECT * FROM unlocked_keys")
             while (cursor.moveToNext()) {
-                val id = cursor.getLong(cursor.getColumnIndexOrThrow("id"))
-                songIds.add(id)
+                val lockPassword = cursor.getString(cursor.getColumnIndexOrThrow("lock_password"))
+                keys.add(lockPassword)
             }
             cursor.close()
         } catch (e: IllegalArgumentException) {
             logger.error(e)
         }
-        return songIds
+        return keys
     }
 
-    fun unlockSong(id: Long) {
-        if (isSongUnlocked(id))
+    fun unlockKey(key: String) {
+        if (isSongUnlocked(key))
             return
         // if song is not locked
         val db = getDatabase()
         val values = ContentValues()
-        values.put("id", id)
-        db.insert("songs_unlocked", null, values)
+        values.put("lock_password", key)
+        db.insert("unlocked_keys", null, values)
     }
 
-    fun isSongUnlocked(id: Long): Boolean {
+    fun isSongUnlocked(key: String): Boolean {
         val mapper: (Cursor) -> Boolean = { cursor -> cursor.getColumnIndexOrThrow("count") > 0 }
-        return queryOneValue(mapper, false, "SELECT COUNT(*) AS count FROM songs_unlocked WHERE id = ?", id)
+        return queryOneValue(mapper, false, "SELECT COUNT(*) AS count FROM unlocked_keys WHERE lock_password = ?", key)
     }
 
 }

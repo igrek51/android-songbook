@@ -6,6 +6,8 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import igrek.songbook.R
+import igrek.songbook.about.AboutLayoutController
+import igrek.songbook.about.HelpLayoutController
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
@@ -13,11 +15,9 @@ import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.layout.about.AboutLayoutController
-import igrek.songbook.layout.about.HelpLayoutController
-import igrek.songbook.layout.songedit.SongEditService
-import igrek.songbook.layout.songselection.RandomSongOpener
 import igrek.songbook.persistence.SongsRepository
+import igrek.songbook.songedit.SongEditService
+import igrek.songbook.songselection.RandomSongOpener
 import igrek.songbook.system.SoftKeyboardService
 import java.util.*
 import javax.inject.Inject

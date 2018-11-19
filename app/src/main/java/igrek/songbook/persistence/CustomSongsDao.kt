@@ -17,37 +17,8 @@ class CustomSongsDao : AbstractSqliteDao() {
         DaggerIoc.getFactoryComponent().inject(this)
     }
 
-    /*
-    SCHEMA:
-
-class Category(models.Model):
-    type_id = models.IntegerField()
-    name = models.CharField(blank=True, null=True, max_length=512)
-
-class Song(models.Model):
-    title = models.CharField(max_length=512)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    file_content = models.TextField(blank=True, null=True)
-    version_number = models.IntegerField()
-    create_time = models.DateTimeField()
-    update_time = models.DateTimeField()
-    is_custom = models.BooleanField(default=False)
-    filename = models.CharField(blank=True, null=True, max_length=512)
-    comment = models.CharField(blank=True, null=True, max_length=512)
-    preferred_key = models.CharField(blank=True, null=True, max_length=512)
-    is_locked = models.BooleanField(default=False)
-    lock_password = models.CharField(blank=True, null=True, max_length=512)
-    author = models.CharField(blank=True, null=True, max_length=512)
-    state = models.IntegerField(default=1)
-
-class Info(models.Model):
-    name = models.CharField(max_length=512)
-    value = models.CharField(blank=True, null=True, max_length=512)
-
-     */
-
     override fun getDatabase(): SQLiteDatabase {
-        return localDbService.openCustomSongsDb()
+        return localDbService.openLocalSongsDb()
     }
 
     fun readAllCategories(): List<SongCategory> {
@@ -70,6 +41,7 @@ class Info(models.Model):
         val id = cursor.getLong(cursor.getColumnIndexOrThrow("id"))
         val typeId = cursor.getLong(cursor.getColumnIndexOrThrow("type_id"))
         val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+        val custom = getBooleanColumn(cursor, "is_custom")
         val type = SongCategoryType.parseById(typeId)
         return SongCategory(id, type, name)
     }
@@ -96,11 +68,13 @@ class Info(models.Model):
                 val author = cursor.getString(cursor.getColumnIndexOrThrow("author"))
                 val stateId = cursor.getLong(cursor.getColumnIndexOrThrow("state"))
                 val categoryId = cursor.getLong(cursor.getColumnIndexOrThrow("category_id"))
+                val customCategoryName = cursor.getString(cursor.getColumnIndexOrThrow("custom_category_name"))
+                val language = cursor.getString(cursor.getColumnIndexOrThrow("language"))
 
                 val songStatus = SongStatus.parseById(stateId)
                 val category = categories.first { category -> category.id == categoryId }
 
-                val song = Song(id, title, category, fileContent, versionNumber, createTime, updateTime, custom, filename, comment, preferredKey, locked, lockPassword, author, songStatus)
+                val song = Song(id, title, category, fileContent, versionNumber, createTime, updateTime, custom, filename, comment, preferredKey, locked, lockPassword, author, songStatus, customCategoryName, language)
                 songs.add(song)
             }
 
@@ -143,6 +117,9 @@ class Info(models.Model):
         values.put("lock_password", song.lockPassword)
         values.put("author", song.author)
         values.put("state", song.status.id)
+        values.put("custom_category_name", song.customCategoryName)
+        values.put("language", song.language)
+
         db.insert("songs_song", null, values)
     }
 
@@ -153,7 +130,9 @@ class Info(models.Model):
         val db = getDatabase()
         val values = ContentValues()
         values.put("title", song.title)
+        values.put("custom_category_name", song.customCategoryName)
         values.put("file_content", song.content)
+        values.put("language", song.language)
         values.put("version_number", song.versionNumber)
         values.put("update_time", iso8601Format.format(Date()))
 

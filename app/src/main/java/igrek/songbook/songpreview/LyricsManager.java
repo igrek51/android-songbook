@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songpreview;
+package igrek.songbook.songpreview;
 
 import android.graphics.Paint;
 
@@ -9,10 +9,10 @@ import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.model.chords.ChordsNotation;
 import igrek.songbook.model.lyrics.LyricsModel;
 import igrek.songbook.model.lyrics.LyricsParser;
-import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
-import igrek.songbook.layout.songpreview.transpose.ChordsTransposerManager;
 import igrek.songbook.persistence.preferences.PreferencesDefinition;
 import igrek.songbook.persistence.preferences.PreferencesService;
+import igrek.songbook.songpreview.autoscroll.AutoscrollService;
+import igrek.songbook.songpreview.transpose.ChordsTransposerManager;
 import igrek.songbook.system.WindowManagerService;
 
 public class LyricsManager {

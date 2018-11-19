@@ -1,16 +1,16 @@
-package igrek.songbook.layout.songpreview.transpose;
+package igrek.songbook.songpreview.transpose;
 
 import javax.inject.Inject;
 
 import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.model.chords.ChordsNotation;
 import igrek.songbook.info.UiInfoService;
 import igrek.songbook.info.UiResourceService;
-import igrek.songbook.layout.songpreview.LyricsManager;
-import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
-import igrek.songbook.layout.songpreview.quickmenu.QuickMenuTranspose;
+import igrek.songbook.model.chords.ChordsNotation;
+import igrek.songbook.songpreview.LyricsManager;
+import igrek.songbook.songpreview.SongPreviewLayoutController;
+import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose;
 
 public class ChordsTransposerManager {
 	

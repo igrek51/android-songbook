@@ -1,4 +1,4 @@
-package igrek.songbook.layout.contact;
+package igrek.songbook.contact;
 
 @FunctionalInterface
 public interface ResponseConsumer<T> {

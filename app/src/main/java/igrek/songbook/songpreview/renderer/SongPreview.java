@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songpreview.renderer;
+package igrek.songbook.songpreview.renderer;
 
 import android.content.Context;
 import android.view.MotionEvent;
@@ -10,15 +10,15 @@ import javax.inject.Inject;
 
 import dagger.Lazy;
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.model.lyrics.LyricsLine;
-import igrek.songbook.model.lyrics.LyricsModel;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
-import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
-import igrek.songbook.layout.songpreview.autoscroll.AutoscrollService;
-import igrek.songbook.layout.songpreview.quickmenu.QuickMenuAutoscroll;
-import igrek.songbook.layout.songpreview.quickmenu.QuickMenuTranspose;
-import igrek.songbook.layout.songpreview.renderer.canvas.BaseCanvasView;
+import igrek.songbook.model.lyrics.LyricsLine;
+import igrek.songbook.model.lyrics.LyricsModel;
+import igrek.songbook.songpreview.SongPreviewLayoutController;
+import igrek.songbook.songpreview.autoscroll.AutoscrollService;
+import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll;
+import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose;
+import igrek.songbook.songpreview.renderer.canvas.BaseCanvasView;
 import igrek.songbook.system.WindowManagerService;
 import igrek.songbook.system.cache.SimpleCache;
 

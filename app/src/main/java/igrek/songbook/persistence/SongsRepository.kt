@@ -2,12 +2,12 @@ package igrek.songbook.persistence
 
 import com.google.common.collect.ArrayListMultimap
 import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.model.songsdb.Song
-import igrek.songbook.model.songsdb.SongCategory
-import igrek.songbook.model.songsdb.SongsDb
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.model.songsdb.Song
+import igrek.songbook.model.songsdb.SongCategory
+import igrek.songbook.model.songsdb.SongsDb
 import io.reactivex.subjects.PublishSubject
 import java.util.*
 import javax.inject.Inject
@@ -29,12 +29,12 @@ class SongsRepository {
     lateinit var uiInfoService: UiInfoService
     @Inject
     lateinit var songsUpdater: SongsUpdater
+    @Inject
+    lateinit var databaseMigrator: DatabaseMigrator
 
     private val logger = LoggerFactory.getLogger()
 
     var dbChangeSubject: PublishSubject<SongsDb> = PublishSubject.create()
-
-    private val minDbVersionCompatibility = 18
 
     var songsDb: SongsDb? = null
         private set
@@ -52,10 +52,10 @@ class SongsRepository {
     private fun checkDbVersion() {
         // check migrations
         val songsDbVersion = songsDao.readDbVersionNumber()
-        val customSongsDbVersion = customSongsDao.readDbVersionNumber()
-        val unlockedSongsDbVersion = unlockedSongsDao.readDbVersionNumber()
+        val localSongsDbVersion = customSongsDao.readDbVersionNumber()
 
-        if (songsDbVersion == null || customSongsDbVersion == null || unlockedSongsDbVersion == null || songsDbVersion < minDbVersionCompatibility) {
+        // TODO migration
+        if (databaseMigrator.migrationNeeded(songsDbVersion, localSongsDbVersion)) {
             factoryReset()
         }
     }
@@ -86,11 +86,11 @@ class SongsRepository {
         }
 
         // unlock songs
-        val unlockedSongIds: List<Long> = unlockedSongsDao.readUnlockedSongIds()
-        for (unlockedSongId in unlockedSongIds) {
-            val song: Song? = songIds[unlockedSongId]
-            if (song != null) {
-                song.locked = false
+        val unlockedKeys: List<String> = unlockedSongsDao.readUnlockedKeys()
+        for (unlockedKey in unlockedKeys) {
+            for (song in songs) {
+                if (song.lockPassword == unlockedKey)
+                    song.locked = false
             }
         }
 
@@ -123,8 +123,8 @@ class SongsRepository {
         dbChangeSubject.onNext(songsDb!!)
     }
 
-    fun unlockSong(songId: Long) {
-        unlockedSongsDao.unlockSong(songId)
+    fun unlockKey(key: String) {
+        unlockedSongsDao.unlockKey(key)
     }
 
     fun saveImportedSong(song: Song) {

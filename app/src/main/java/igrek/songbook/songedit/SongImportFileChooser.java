@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songedit;
+package igrek.songbook.songedit;
 
 import android.app.Activity;
 import android.content.Intent;

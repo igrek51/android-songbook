@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songselection;
+package igrek.songbook.songselection;
 
 @FunctionalInterface
 public interface OnSongClickListener {

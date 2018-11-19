@@ -1,10 +1,10 @@
-package igrek.songbook.layout.songselection.songtree;
+package igrek.songbook.songselection.songtree;
 
 import java.util.HashMap;
 
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.layout.songselection.ListScrollPosition;
 import igrek.songbook.model.songsdb.SongCategory;
+import igrek.songbook.songselection.ListScrollPosition;
 
 public class ScrollPosBuffer {
 	

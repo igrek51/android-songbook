@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songpreview.autoscroll;
+package igrek.songbook.songpreview.autoscroll;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
@@ -14,10 +14,10 @@ import igrek.songbook.info.UiInfoService;
 import igrek.songbook.info.UiResourceService;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
-import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
-import igrek.songbook.layout.songpreview.renderer.SongPreview;
 import igrek.songbook.persistence.preferences.PreferencesDefinition;
 import igrek.songbook.persistence.preferences.PreferencesService;
+import igrek.songbook.songpreview.SongPreviewLayoutController;
+import igrek.songbook.songpreview.renderer.SongPreview;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.subjects.PublishSubject;
 

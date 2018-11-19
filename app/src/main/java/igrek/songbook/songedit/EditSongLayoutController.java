@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songedit;
+package igrek.songbook.songedit;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,10 +14,7 @@ import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.UiInfoService;
-import igrek.songbook.info.UiResourceService;
 import igrek.songbook.info.errorcheck.SafeClickListener;
-import igrek.songbook.info.logger.Logger;
-import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.layout.LayoutController;
 import igrek.songbook.layout.LayoutState;
 import igrek.songbook.layout.MainLayout;
@@ -32,8 +29,6 @@ public class EditSongLayoutController implements MainLayout {
 	@Inject
 	UiInfoService uiInfoService;
 	@Inject
-	UiResourceService uiResourceService;
-	@Inject
 	AppCompatActivity activity;
 	@Inject
 	NavigationMenuController navigationMenuController;
@@ -47,10 +42,11 @@ public class EditSongLayoutController implements MainLayout {
 	private Song currentSong;
 	private String songTitle;
 	private String songContent;
+	private String customCategoryName;
 	
-	private Logger logger = LoggerFactory.getLogger();
 	private EditText songTitleEdit;
 	private EditText songContentEdit;
+	private EditText customCategoryNameEdit;
 	
 	public EditSongLayoutController() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -71,6 +67,7 @@ public class EditSongLayoutController implements MainLayout {
 		navMenuButton.setOnClickListener((v) -> navigationMenuController.navDrawerShow());
 		
 		songTitleEdit = layout.findViewById(R.id.songTitleEdit);
+		customCategoryNameEdit = layout.findViewById(R.id.customCategoryNameEdit);
 		songContentEdit = layout.findViewById(R.id.songContentEdit);
 		Button saveSongButton = layout.findViewById(R.id.saveSongButton);
 		saveSongButton.setOnClickListener(new SafeClickListener() {
@@ -106,6 +103,7 @@ public class EditSongLayoutController implements MainLayout {
 		
 		songTitleEdit.setText(songTitle);
 		songContentEdit.setText(songContent);
+		customCategoryNameEdit.setText(customCategoryName);
 	}
 	
 	private void onAddChordClick() {
@@ -153,27 +151,35 @@ public class EditSongLayoutController implements MainLayout {
 		if (currentSong == null) {
 			songTitle = null;
 			songContent = null;
+			customCategoryName = null;
 		} else {
 			songTitle = currentSong.getTitle();
 			songContent = currentSong.getContent();
+			customCategoryName = currentSong.getCustomCategoryName();
 		}
 	}
 	
 	private void saveSong() {
 		songTitle = songTitleEdit.getText().toString();
 		songContent = songContentEdit.getText().toString();
+		customCategoryName = customCategoryNameEdit.getText().toString();
 		
 		if (songTitle.isEmpty() || songContent.isEmpty()) {
 			uiInfoService.showInfo(R.string.fill_in_all_fields);
 			return;
 		}
 		
+		if (customCategoryName.isEmpty())
+			customCategoryName = null;
+		
 		if (currentSong == null) {
 			// add
-			currentSong = songImportService.get().addCustomSong(songTitle, songContent);
+			currentSong = songImportService.get()
+					.addCustomSong(songTitle, customCategoryName, songContent);
 		} else {
 			// update
-			songImportService.get().updateSong(currentSong, songTitle, songContent);
+			songImportService.get()
+					.updateSong(currentSong, songTitle, customCategoryName, songContent);
 		}
 		uiInfoService.showInfo(R.string.edit_song_has_been_saved);
 		layoutController.showLastSongSelectionLayout();
@@ -213,6 +219,7 @@ public class EditSongLayoutController implements MainLayout {
 	public void setSongFromFile(String filename, String content) {
 		songTitle = songTitleEdit.getText().toString();
 		songContent = songContentEdit.getText().toString();
+		customCategoryName = customCategoryNameEdit.getText().toString();
 		
 		if (songTitle.isEmpty()) {
 			songTitle = filename;

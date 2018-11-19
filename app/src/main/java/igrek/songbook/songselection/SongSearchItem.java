@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songselection;
+package igrek.songbook.songselection;
 
 import igrek.songbook.model.songsdb.Song;
 import igrek.songbook.model.songsdb.SongCategory;

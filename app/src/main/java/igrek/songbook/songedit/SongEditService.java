@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songedit;
+package igrek.songbook.songedit;
 
 import java.util.Date;
 
@@ -43,18 +43,19 @@ public class SongEditService {
 		layoutController.showImportSong();
 	}
 	
-	public Song addCustomSong(String title, String content) {
+	public Song addCustomSong(String title, String customCategoryName, String content) {
 		long versionNumber = 1;
 		long now = new Date().getTime();
 		SongCategory category = songsRepository.getCustomCategoryByTypeId(SongCategoryType.CUSTOM.getId());
-		Song newSong = new Song(0, title, category, content, versionNumber, now, now, true, title, null, null, false, null, null, SongStatus.PROPOSED);
+		Song newSong = new Song(0, title, category, content, versionNumber, now, now, true, title, null, null, false, null, null, SongStatus.PROPOSED, customCategoryName, null);
 		songsRepository.saveImportedSong(newSong);
 		return newSong;
 	}
 	
-	public void updateSong(Song currentSong, String songTitle, String songContent) {
+	public void updateSong(Song currentSong, String songTitle, String customCategoryName, String songContent) {
 		currentSong.setTitle(songTitle);
 		currentSong.setContent(songContent);
+		currentSong.setCustomCategoryName(customCategoryName);
 		songsRepository.updateCustomSong(currentSong);
 	}
 	

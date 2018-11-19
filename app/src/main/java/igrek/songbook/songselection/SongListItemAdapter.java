@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songselection;
+package igrek.songbook.songselection;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -16,7 +16,7 @@ import javax.inject.Inject;
 
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.layout.songedit.SongEditService;
+import igrek.songbook.songedit.SongEditService;
 
 public class SongListItemAdapter extends ArrayAdapter<SongTreeItem> {
 	

@@ -1,4 +1,4 @@
-package igrek.songbook.layout.about;
+package igrek.songbook.about;
 
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -6,9 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import javax.inject.Inject;
 
 import igrek.songbook.R;
+import igrek.songbook.about.secret.SecretUnlockerService;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.UiResourceService;
-import igrek.songbook.layout.about.secret.SecretUnlockerService;
 import igrek.songbook.persistence.SongsRepository;
 import igrek.songbook.system.PackageInfoService;
 

@@ -8,15 +8,15 @@ import android.widget.ImageButton
 import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
-import igrek.songbook.model.songsdb.SongsDb
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.navigation.NavigationMenuController
-import igrek.songbook.layout.songpreview.SongPreviewLayoutController
-import igrek.songbook.layout.songselection.songtree.SongTreeSorter
+import igrek.songbook.model.songsdb.SongsDb
 import igrek.songbook.persistence.SongsRepository
+import igrek.songbook.songpreview.SongPreviewLayoutController
+import igrek.songbook.songselection.songtree.SongTreeSorter
 import javax.inject.Inject
 
 abstract class SongSelectionLayoutController : OnSongClickListener {

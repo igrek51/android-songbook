@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songpreview.transpose;
+package igrek.songbook.songpreview.transpose;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import igrek.songbook.model.chords.ChordsNotation;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
+import igrek.songbook.model.chords.ChordsNotation;
 
 public class ChordsTransposer {
 	

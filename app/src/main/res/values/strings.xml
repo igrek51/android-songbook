@@ -148,4 +148,6 @@
     <string name="update_is_available">New songs update is available.</string>
     <string name="action_update">Update</string>
     <string name="edit_song_add_chord">[chord]</string>
+    <string name="import_song_category_name_label">Artist / category:</string>
+    <string name="import_song_category_name_hint">Artist or category name</string>
 </resources>

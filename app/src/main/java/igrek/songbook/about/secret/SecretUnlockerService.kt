@@ -38,9 +38,9 @@ class SecretUnlockerService {
 
     private val logger = LoggerFactory.getLogger()
 
-    private val cowCondition: Predicate<String> = Predicate { input -> input!!.matches(Regex("^mo+")) }
+    private val cowCondition: Predicate<String> = Predicate { input -> input!!.matches(Regex("^m[ou]+$")) }
 
-    private val moo: String = """
+    private val EA5T3R_M00: String = """
  _____________________
 / Congratulations!    \
 |                     |
@@ -78,7 +78,7 @@ class SecretUnlockerService {
         val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val itemView = inflater.inflate(R.layout.alert_monospace, null, false)
         val contentTextView = itemView.findViewById(R.id.contentTextView) as TextView
-        contentTextView.text = moo
+        contentTextView.text = EA5T3R_M00
         contentTextView.isVerticalScrollBarEnabled = true
         dialog.setView(itemView)
 
@@ -153,8 +153,8 @@ class SecretUnlockerService {
         val count = toUnlock.count()
         toUnlock.forEach { s ->
             s.locked = false
-            songsRepository.unlockSong(s.id)
         }
+        songsRepository.unlockKey(key)
         val message = uiResourceService.resString(R.string.unlock_new_songs_unlocked, count)
         uiInfoService.showToast(message)
         songsRepository.initializeSongsDb()

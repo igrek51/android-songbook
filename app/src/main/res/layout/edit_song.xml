@@ -72,6 +72,26 @@
                 android:inputType="text"
                 android:padding="8dp"/>
 
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:gravity="bottom"
+                android:text="@string/import_song_category_name_label"
+                android:textSize="18sp"/>
+
+            <EditText
+                android:id="@+id/customCategoryNameEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="#07ffffff"
+                android:gravity="center_vertical"
+                android:hint="@string/import_song_category_name_hint"
+                android:inputType="text"
+                android:padding="8dp"/>
+
             <RelativeLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"

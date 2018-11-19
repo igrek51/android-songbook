@@ -148,4 +148,6 @@
     <string name="update_is_available">Nowa aktualizacja piosenek jest dostępna.</string>
     <string name="action_update">Aktualizuj</string>
     <string name="edit_song_add_chord">[akord]</string>
+    <string name="import_song_category_name_label">Artysta / kategoria:</string>
+    <string name="import_song_category_name_hint">Artysta lub nazwa kategorii</string>
 </resources>

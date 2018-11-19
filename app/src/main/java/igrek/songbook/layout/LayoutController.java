@@ -10,16 +10,16 @@ import javax.inject.Inject;
 
 import dagger.Lazy;
 import igrek.songbook.R;
+import igrek.songbook.contact.ContactLayoutController;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
-import igrek.songbook.layout.contact.ContactLayoutController;
-import igrek.songbook.layout.songedit.EditSongLayoutController;
 import igrek.songbook.layout.navigation.NavigationMenuController;
-import igrek.songbook.layout.settings.SettingsLayoutController;
-import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
-import igrek.songbook.layout.songselection.songsearch.SongSearchLayoutController;
-import igrek.songbook.layout.songselection.songtree.SongTreeLayoutController;
+import igrek.songbook.settings.SettingsLayoutController;
+import igrek.songbook.songedit.EditSongLayoutController;
+import igrek.songbook.songpreview.SongPreviewLayoutController;
+import igrek.songbook.songselection.songsearch.SongSearchLayoutController;
+import igrek.songbook.songselection.songtree.SongTreeLayoutController;
 
 public class LayoutController {
 	

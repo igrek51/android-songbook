@@ -1,4 +1,4 @@
-package igrek.songbook.layout.songpreview.transpose;
+package igrek.songbook.songpreview.transpose;
 
 class StringWithDelimiter {
 	

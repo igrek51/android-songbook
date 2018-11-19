@@ -1,5 +1,6 @@
 package igrek.songbook.songselection.songtree
 
+import igrek.songbook.songselection.SongTreeItem
 import igrek.songbook.system.locale.StringSimplifier
 
 class SongTreeFilter(private val nameFilter: String?) {

@@ -1,4 +1,4 @@
-package igrek.songbook.layout.settings;
+package igrek.songbook.settings;
 
 import android.content.Context;
 import android.support.annotation.IdRes;
@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import igrek.songbook.model.chords.ChordsNotation;
 import igrek.songbook.info.UiResourceService;
+import igrek.songbook.model.chords.ChordsNotation;
 
 public class ChordsNotationAdapter extends ArrayAdapter<ChordsNotation> {
 	
