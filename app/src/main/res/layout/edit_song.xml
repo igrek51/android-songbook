@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:gravity="bottom"
-                android:text="@string/import_song_title_label"
+                android:text="@string/edit_song_title_label"
                 android:textSize="18sp"/>
 
             <EditText
@@ -68,7 +68,7 @@
                 android:layout_marginBottom="8dp"
                 android:background="#07ffffff"
                 android:gravity="center_vertical"
-                android:hint="@string/import_song_title_hint"
+                android:hint="@string/edit_song_title_hint"
                 android:inputType="text"
                 android:padding="8dp"/>
 
@@ -78,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:gravity="bottom"
-                android:text="@string/import_song_category_name_label"
+                android:text="@string/edit_song_category_name_label"
                 android:textSize="18sp"/>
 
             <EditText
@@ -88,7 +88,7 @@
                 android:layout_marginBottom="8dp"
                 android:background="#07ffffff"
                 android:gravity="center_vertical"
-                android:hint="@string/import_song_category_name_hint"
+                android:hint="@string/edit_song_category_name_hint"
                 android:inputType="text"
                 android:padding="8dp"/>
 
@@ -107,7 +107,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_gravity="start|bottom"
                     android:gravity="bottom"
-                    android:text="@string/import_song_content_label"
+                    android:text="@string/edit_song_content_label"
                     android:textSize="18sp"
                     android:layout_alignParentLeft="true"/>
 
@@ -148,14 +148,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:text="@string/import_song_save"/>
+                android:text="@string/edit_song_save"/>
 
             <Button
                 android:id="@+id/removeSongButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:text="@string/import_song_remove"/>
+                android:text="@string/edit_song_remove"/>
+
+            <Button
+                android:id="@+id/publishSongButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/edit_song_publish"/>
 
         </LinearLayout>
     </ScrollView>

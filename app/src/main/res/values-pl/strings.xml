@@ -126,17 +126,17 @@
     <string name="select_file_to_import">Wybierz plik do zaimportowania.</string>
     <string name="selected_file_is_too_big">Wybrany plik jest za duży.</string>
     <string name="editing_custom_song">Moja piosenka</string>
-    <string name="import_song_title_label">Tytuł piosenki:</string>
-    <string name="import_song_title_hint">Tytuł…</string>
-    <string name="import_song_content_label">Tekst piosenki z akordami:</string>
+    <string name="edit_song_title_label">Tytuł piosenki:</string>
+    <string name="edit_song_title_hint">Tytuł…</string>
+    <string name="edit_song_content_label">Tekst piosenki z akordami:</string>
     <string name="import_song_content_hint">
         Tekst piosenki z [akordami w nawiasach]
         \nPrzykładowy tekst [a F C G]
         \n…
     </string>
     <string name="import_content_from_file">Importuj z pliku</string>
-    <string name="import_song_save">Zapisz piosenkę</string>
-    <string name="import_song_remove">Usuń piosenkę</string>
+    <string name="edit_song_save">Zapisz piosenkę</string>
+    <string name="edit_song_remove">Usuń piosenkę</string>
     <string name="edit_song_has_been_saved">Zapisano piosenkę w \"Moje piosenki\".</string>
     <string name="edit_song_has_been_removed">Usunięto piosenkę.</string>
     <string name="settings_chords_notation">Notacja akordów:</string>
@@ -148,6 +148,8 @@
     <string name="update_is_available">Nowa aktualizacja piosenek jest dostępna.</string>
     <string name="action_update">Aktualizuj</string>
     <string name="edit_song_add_chord">[akord]</string>
-    <string name="import_song_category_name_label">Artysta / kategoria:</string>
-    <string name="import_song_category_name_hint">Artysta lub nazwa kategorii</string>
+    <string name="edit_song_category_name_label">Artysta / kategoria:</string>
+    <string name="edit_song_category_name_hint">Artysta lub nazwa kategorii</string>
+    <string name="contact_subject_hint">Temat</string>
+    <string name="edit_song_publish">Opublikuj piosenkę</string>
 </resources>

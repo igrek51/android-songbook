@@ -62,6 +62,17 @@
                 android:textSize="18sp"/>
 
             <EditText
+                android:id="@+id/contactSubjectEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:padding="8dp"
+                android:gravity="center_vertical"
+                android:hint="@string/contact_subject_hint"
+                android:inputType="text"
+                android:background="#07ffffff"/>
+
+            <EditText
                 android:id="@+id/contactMessageEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -126,17 +126,17 @@
     <string name="select_file_to_import">Select a file to import.</string>
     <string name="selected_file_is_too_big">Selected file is too big.</string>
     <string name="editing_custom_song">Custom song</string>
-    <string name="import_song_title_label">Song Title:</string>
-    <string name="import_song_title_hint">Title…</string>
-    <string name="import_song_content_label">Song lyrics with chords:</string>
+    <string name="edit_song_title_label">Song Title:</string>
+    <string name="edit_song_title_hint">Title…</string>
+    <string name="edit_song_content_label">Song lyrics with chords:</string>
     <string name="import_song_content_hint">
         Song lyrics with [chords in brackets]
         \nExample text [a F C G]
         \n…
     </string>
     <string name="import_content_from_file">Import from file</string>
-    <string name="import_song_save">Save song</string>
-    <string name="import_song_remove">Remove song</string>
+    <string name="edit_song_save">Save song</string>
+    <string name="edit_song_remove">Remove song</string>
     <string name="edit_song_has_been_saved">Song has been saved in \"My songs\".</string>
     <string name="edit_song_has_been_removed">Song has been removed.</string>
     <string name="settings_chords_notation">Chords notation:</string>
@@ -148,6 +148,9 @@
     <string name="update_is_available">New songs update is available.</string>
     <string name="action_update">Update</string>
     <string name="edit_song_add_chord">[chord]</string>
-    <string name="import_song_category_name_label">Artist / category:</string>
-    <string name="import_song_category_name_hint">Artist or category name</string>
+    <string name="edit_song_category_name_label">Artist / category:</string>
+    <string name="edit_song_category_name_hint">Artist or category name</string>
+    <string name="contact_subject_hint">Subject</string>
+    <string name="edit_song_publish">Publish song</string>
+    <string name="action_comment_song">Comment song</string>
 </resources>

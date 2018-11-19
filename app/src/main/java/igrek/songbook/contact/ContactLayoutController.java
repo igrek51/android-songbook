@@ -17,8 +17,6 @@ import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.UiInfoService;
 import igrek.songbook.info.UiResourceService;
 import igrek.songbook.info.errorcheck.SafeClickListener;
-import igrek.songbook.info.logger.Logger;
-import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.layout.LayoutController;
 import igrek.songbook.layout.LayoutState;
 import igrek.songbook.layout.MainLayout;
@@ -44,7 +42,7 @@ public class ContactLayoutController implements MainLayout {
 	@Inject
 	SoftKeyboardService softKeyboardService;
 	
-	private Logger logger = LoggerFactory.getLogger();
+	private EditText contactSubjectEdit;
 	private EditText contactMessageEdit;
 	private EditText contactAuthorEdit;
 	
@@ -66,8 +64,10 @@ public class ContactLayoutController implements MainLayout {
 		ImageButton navMenuButton = layout.findViewById(R.id.navMenuButton);
 		navMenuButton.setOnClickListener((v) -> navigationMenuController.navDrawerShow());
 		
+		contactSubjectEdit = layout.findViewById(R.id.contactSubjectEdit);
 		contactMessageEdit = layout.findViewById(R.id.contactMessageEdit);
 		contactAuthorEdit = layout.findViewById(R.id.contactAuthorEdit);
+		
 		Button contactSendButton = layout.findViewById(R.id.contactSendButton);
 		contactSendButton.setOnClickListener(new SafeClickListener() {
 			@Override
@@ -100,10 +100,11 @@ public class ContactLayoutController implements MainLayout {
 	private void sendContactMessage() {
 		String message = contactMessageEdit.getText().toString();
 		String author = contactAuthorEdit.getText().toString();
+		String subject = contactSubjectEdit.getText().toString();
 		if (message == null || message.isEmpty()) {
 			uiInfoService.showToast(uiResourceService.resString(R.string.contact_message_field_empty));
 			return;
 		}
-		sendFeedbackService.sendFeedback(message, author);
+		sendFeedbackService.sendFeedback(message, author, subject);
 	}
 }

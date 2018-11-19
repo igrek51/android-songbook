@@ -42,12 +42,12 @@ public class SendFeedbackService {
 		DaggerIoc.getFactoryComponent().inject(this);
 	}
 	
-	public void sendFeedback(String message, String author) {
+	public void sendFeedback(String message, String author, String subject) {
 		uiInfoService.showInfo(uiResourceService.resString(R.string.contact_sending));
 		
 		RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
 				.addFormDataPart("message", message)
-				.addFormDataPart("author", author)
+				.addFormDataPart("author", author).addFormDataPart("subject", subject)
 				.addFormDataPart("application_id", Integer.toString(APPLICATION_ID))
 				.build();
 		

@@ -85,6 +85,14 @@ public class EditSongLayoutController implements MainLayout {
 			}
 		});
 		
+		Button publishSongButton = layout.findViewById(R.id.publishSongButton);
+		publishSongButton.setOnClickListener(new SafeClickListener() {
+			@Override
+			public void onClick() {
+				publishSong();
+			}
+		});
+		
 		Button importFromFileButotn = layout.findViewById(R.id.importFromFileButotn);
 		importFromFileButotn.setOnClickListener(new SafeClickListener() {
 			@Override
@@ -104,6 +112,14 @@ public class EditSongLayoutController implements MainLayout {
 		songTitleEdit.setText(songTitle);
 		songContentEdit.setText(songContent);
 		customCategoryNameEdit.setText(customCategoryName);
+	}
+	
+	private void publishSong() {
+		songTitle = songTitleEdit.getText().toString();
+		songContent = songContentEdit.getText().toString();
+		customCategoryName = customCategoryNameEdit.getText().toString();
+		
+		// TODO redirect to creating new contact with topic: new song proposition: title - artist
 	}
 	
 	private void onAddChordClick() {
