@@ -7,7 +7,7 @@ import android.content.res.Configuration;
 import javax.inject.Inject;
 
 import igrek.songbook.dagger.DaggerIoc;
-import igrek.songbook.domain.chords.ChordsNotation;
+import igrek.songbook.model.chords.ChordsNotation;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.layout.songpreview.LyricsManager;

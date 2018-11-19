@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import igrek.songbook.layout.songselection.SongTreeItem;
-import igrek.songbook.layout.songtree.SongTreeFilter;
+import igrek.songbook.layout.songselection.songtree.SongTreeFilter;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.Mockito.mock;

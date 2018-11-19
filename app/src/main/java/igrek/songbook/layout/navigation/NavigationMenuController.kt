@@ -15,7 +15,7 @@ import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.about.AboutLayoutController
 import igrek.songbook.layout.about.HelpLayoutController
-import igrek.songbook.layout.edit.SongEditService
+import igrek.songbook.layout.songedit.SongEditService
 import igrek.songbook.layout.songselection.RandomSongOpener
 import igrek.songbook.persistence.SongsRepository
 import igrek.songbook.system.SoftKeyboardService

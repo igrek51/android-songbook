@@ -23,8 +23,8 @@ class SongsUpdater {
 
     private val logger = LoggerFactory.getLogger()
 
-    private val songsdbUrl = "http://51.38.128.10:8007/api/v1/songs"
-    private val songsDbVersionUrl = "http://51.38.128.10:8007/api/v1/songs_version"
+    private val songsdbUrl = "http://51.38.128.10:8008/api/v2/songs"
+    private val songsDbVersionUrl = "http://51.38.128.10:8008/api/v2/songs_version"
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)

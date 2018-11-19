@@ -3,10 +3,10 @@ package igrek.songbook.persistence
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.domain.songsdb.Song
-import igrek.songbook.domain.songsdb.SongCategory
-import igrek.songbook.domain.songsdb.SongCategoryType
-import igrek.songbook.domain.songsdb.SongStatus
+import igrek.songbook.model.songsdb.Song
+import igrek.songbook.model.songsdb.SongCategory
+import igrek.songbook.model.songsdb.SongCategoryType
+import igrek.songbook.model.songsdb.SongStatus
 
 
 class SongsDao : AbstractSqliteDao() {

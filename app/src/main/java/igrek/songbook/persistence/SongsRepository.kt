@@ -2,9 +2,9 @@ package igrek.songbook.persistence
 
 import com.google.common.collect.ArrayListMultimap
 import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.domain.songsdb.Song
-import igrek.songbook.domain.songsdb.SongCategory
-import igrek.songbook.domain.songsdb.SongsDb
+import igrek.songbook.model.songsdb.Song
+import igrek.songbook.model.songsdb.SongCategory
+import igrek.songbook.model.songsdb.SongsDb
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory

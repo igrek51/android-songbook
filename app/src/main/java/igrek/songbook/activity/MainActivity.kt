@@ -10,7 +10,7 @@ import android.view.MenuItem
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
-import igrek.songbook.layout.edit.SongImportFileChooser
+import igrek.songbook.songedit.SongImportFileChooser
 import igrek.songbook.system.PermissionService
 import igrek.songbook.system.SystemKeyDispatcher
 import javax.inject.Inject

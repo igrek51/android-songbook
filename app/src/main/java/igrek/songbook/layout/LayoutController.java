@@ -14,12 +14,12 @@ import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.layout.contact.ContactLayoutController;
-import igrek.songbook.layout.edit.EditSongLayoutController;
+import igrek.songbook.layout.songedit.EditSongLayoutController;
 import igrek.songbook.layout.navigation.NavigationMenuController;
 import igrek.songbook.layout.settings.SettingsLayoutController;
 import igrek.songbook.layout.songpreview.SongPreviewLayoutController;
-import igrek.songbook.layout.songsearch.SongSearchLayoutController;
-import igrek.songbook.layout.songtree.SongTreeLayoutController;
+import igrek.songbook.layout.songselection.songsearch.SongSearchLayoutController;
+import igrek.songbook.layout.songselection.songtree.SongTreeLayoutController;
 
 public class LayoutController {
 	
