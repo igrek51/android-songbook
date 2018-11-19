@@ -152,5 +152,5 @@
     <string name="edit_song_category_name_hint">Artist or category name</string>
     <string name="contact_subject_hint">Subject</string>
     <string name="edit_song_publish">Publish song</string>
-    <string name="action_comment_song">Comment song</string>
+    <string name="action_comment_song">Comment / Report</string>
 </resources>

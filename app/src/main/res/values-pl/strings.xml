@@ -152,4 +152,5 @@
     <string name="edit_song_category_name_hint">Artysta lub nazwa kategorii</string>
     <string name="contact_subject_hint">Temat</string>
     <string name="edit_song_publish">Opublikuj piosenkę</string>
+    <string name="action_comment_song">Skomentuj / Zgłoś</string>
 </resources>

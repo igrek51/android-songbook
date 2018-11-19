@@ -169,4 +169,7 @@ public class QuickMenuAutoscroll {
 		return df.format(f);
 	}
 	
+	public boolean isActive() {
+		return true; // TODO
+	}
 }

@@ -1,8 +1,10 @@
 package igrek.songbook.songpreview;
 
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -71,6 +73,8 @@ public class SongPreviewLayoutController implements MainLayout {
 	private boolean fullscreen = false;
 	private AppBarLayout appBarLayout;
 	private FloatingActionButton disableFullscreenButton;
+	private ImageButton transposeButton;
+	private ImageButton autoscrollButton;
 	
 	public SongPreviewLayoutController() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -146,10 +150,10 @@ public class SongPreviewLayoutController implements MainLayout {
 		ImageButton goBackButton = layout.findViewById(R.id.goBackButton);
 		goBackButton.setOnClickListener((v) -> onBackClicked());
 		
-		ImageButton transposeButton = layout.findViewById(R.id.transposeButton);
+		transposeButton = layout.findViewById(R.id.transposeButton);
 		transposeButton.setOnClickListener((v) -> toggleTransposePanel());
 		
-		ImageButton autoscrollButton = layout.findViewById(R.id.autoscrollButton);
+		autoscrollButton = layout.findViewById(R.id.autoscrollButton);
 		autoscrollButton.setOnClickListener((v) -> toggleAutoscrollPanel());
 		
 		ImageButton goBeginningButton = layout.findViewById(R.id.goBeginningButton);
@@ -216,6 +220,11 @@ public class SongPreviewLayoutController implements MainLayout {
 	private void toggleTransposePanel() {
 		quickMenuAutoscroll.setVisible(false);
 		quickMenuTranspose.setVisible(!quickMenuTranspose.isVisible());
+		if (quickMenuAutoscroll.isActive()) {
+			transposeButton.setColorFilter(ContextCompat.getColor(activity, R.color.activePanelButton), PorterDuff.Mode.SRC_IN);
+		} else {
+			transposeButton.clearColorFilter();
+		}
 		songPreview.repaint();
 	}
 	
