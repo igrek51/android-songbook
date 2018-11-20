@@ -25,7 +25,7 @@ import igrek.songbook.system.cache.SimpleCache;
 public class SongPreview extends BaseCanvasView implements View.OnTouchListener {
 	
 	private static final long DOUBLE_CLICK_INTERVAL = 500; // [ms]
-	private final float EOF_BOTTOM_RESERVE = 50; // padding bottom [dp]
+	private final float EOF_BOTTOM_RESERVE = 60; // padding bottom [dp]
 	private final float LINEHEIGHT_SCALE_FACTOR = 1.02f;
 	private final float FONTSIZE_SCALE_FACTOR = 0.6f;
 	
