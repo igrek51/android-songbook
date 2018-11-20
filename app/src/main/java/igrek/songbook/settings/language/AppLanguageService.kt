@@ -22,6 +22,11 @@ class AppLanguageService {
 
     var appLanguage: AppLanguage? = null
 
+    private val germanNotationLangs = setOf(
+            "pl", "de", "da", "sv", "nb", "nn", "is", "et",
+            "sr", "hr", "bs", "sl", "sk", "cs", "hu"
+    )
+
     init {
         DaggerIoc.getFactoryComponent().inject(this)
         loadPreferences()
@@ -34,7 +39,8 @@ class AppLanguageService {
         if (!preferencesService.exists(PreferencesDefinition.chordsNotationId.name)) {
             val current: Locale = getCurrentLocale()
             val lang = current.language
-            if (lang == "pl") {
+
+            if (germanNotationLangs.contains(lang)) {
                 lyricsManager.chordsNotation = ChordsNotation.GERMAN
             } else {
                 lyricsManager.chordsNotation = ChordsNotation.ENGLISH
