@@ -67,9 +67,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:padding="8dp"
-                android:gravity="center_vertical"
+                android:gravity="top"
                 android:hint="@string/contact_subject_hint"
-                android:inputType="text"
+                android:inputType="text|textMultiLine"
                 android:background="#07ffffff"/>
 
             <EditText

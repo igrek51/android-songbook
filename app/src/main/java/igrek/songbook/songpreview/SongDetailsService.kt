@@ -3,9 +3,11 @@ package igrek.songbook.songpreview
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import igrek.songbook.R
+import igrek.songbook.contact.ContactLayoutController
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.layout.LayoutController
 import igrek.songbook.model.songsdb.Song
 import java.text.SimpleDateFormat
 import java.util.*
@@ -19,6 +21,10 @@ class SongDetailsService {
     lateinit var uiInfoService: UiInfoService
     @Inject
     lateinit var uiResourceService: UiResourceService
+    @Inject
+    lateinit var layoutController: dagger.Lazy<LayoutController>
+    @Inject
+    lateinit var contactLayoutController: dagger.Lazy<ContactLayoutController>
 
     private val modificationDateFormat = SimpleDateFormat("yyyy-MM-dd")
 
@@ -66,8 +72,9 @@ class SongDetailsService {
         alertDialog.show()
     }
 
-    fun addCommentToSong(song: Song) {
-        // TODO redirect to feedback screen
+    private fun addCommentToSong(song: Song) {
+        layoutController.get().showContact()
+        contactLayoutController.get().prepareSongComment(song)
     }
 
 }

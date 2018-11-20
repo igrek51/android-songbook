@@ -155,4 +155,6 @@
     <string name="action_comment_song">Skomentuj / Zgłoś</string>
     <string name="settings_language">Język (wymagany restart):</string>
     <string name="language_default">Domyślny</string>
+    <string name="contact_subject_song_comment">Komentarz do piosenki</string>
+    <string name="contact_info_song_comment">Możesz tu wysłać komentarz do piosenki lub zaproponować zmianę w tekście lub akordach.</string>
 </resources>

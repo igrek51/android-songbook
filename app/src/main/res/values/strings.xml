@@ -157,4 +157,6 @@
     <string name="language_english" translatable="false">English</string>
     <string name="language_polish" translatable="false">Polski</string>
     <string name="language_default">System default</string>
+    <string name="contact_subject_song_comment">Song comment</string>
+    <string name="contact_info_song_comment">You can add your comments here about this song or you can suggest some improvements to the lyrics or chords.</string>
 </resources>
