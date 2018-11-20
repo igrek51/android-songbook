@@ -16,6 +16,7 @@ import javax.inject.Inject;
 
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
+import igrek.songbook.model.songsdb.Song;
 import igrek.songbook.songedit.SongEditService;
 
 public class SongListItemAdapter extends ArrayAdapter<SongTreeItem> {
@@ -100,14 +101,7 @@ public class SongListItemAdapter extends ArrayAdapter<SongTreeItem> {
 		View itemView = inflater.inflate(R.layout.song_search_song, parent, false);
 		TextView itemSongLabel = itemView.findViewById(R.id.itemSongLabel);
 		// search item: title - category
-		String songTitle = item.getSong().getTitle();
-		String categoryName = item.getSong().getCategory().getName();
-		String displayName;
-		if (categoryName != null) {
-			displayName = songTitle + " - " + categoryName;
-		} else {
-			displayName = songTitle;
-		}
+		String displayName = item.getSong().displayName();
 		itemSongLabel.setText(displayName);
 		
 		return itemView;
@@ -117,7 +111,10 @@ public class SongListItemAdapter extends ArrayAdapter<SongTreeItem> {
 		View itemView = inflater.inflate(R.layout.song_tree_custom, parent, false);
 		TextView itemSongTitleLabel = itemView.findViewById(R.id.itemSongTitleLabel);
 		// set item title
-		itemSongTitleLabel.setText(item.getSimpleName());
+		Song song = item.getSong();
+		String displayName = song.displayName();
+		
+		itemSongTitleLabel.setText(displayName);
 		// edit button
 		ImageButton itemSongEditButton = itemView.findViewById(R.id.itemSongEditButton);
 		itemSongEditButton.setOnClickListener(v -> songEditService.showEditSongScreen(item.getSong()));

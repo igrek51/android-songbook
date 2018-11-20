@@ -35,7 +35,9 @@ open class Song(
 
     fun displayName(): String {
         return if (category.type == SongCategoryType.ARTIST) {
-            title + " - " + category.name
+            "$title - ${category.name}"
+        } else if (custom && !customCategoryName.isNullOrEmpty()) {
+            "$title - $customCategoryName"
         } else {
             title
         }
