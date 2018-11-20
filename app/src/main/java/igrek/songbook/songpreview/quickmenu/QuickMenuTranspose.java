@@ -81,4 +81,11 @@ public class QuickMenuTranspose {
 		}
 	}
 	
+	/**
+	 * @return is feature active - has impact on song preview (panel may be hidden)
+	 */
+	public boolean isFeatureActive() {
+		return chordsTransposerManager.get().isTransposed();
+	}
+	
 }

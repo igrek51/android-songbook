@@ -169,7 +169,10 @@ public class QuickMenuAutoscroll {
 		return df.format(f);
 	}
 	
-	public boolean isActive() {
-		return true; // TODO
+	/**
+	 * @return is feature active - has impact on song preview (panel may be hidden)
+	 */
+	public boolean isFeatureActive() {
+		return autoscrollService.isRunning();
 	}
 }

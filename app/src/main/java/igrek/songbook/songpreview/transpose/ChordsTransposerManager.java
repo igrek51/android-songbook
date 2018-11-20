@@ -49,7 +49,7 @@ public class ChordsTransposerManager {
 		
 		String info = uiResourceService.resString(R.string.transposed_by_semitones, getTransposedByDisplayName());
 		
-		if (getTransposedBy() != 0) {
+		if (isTransposed()) {
 			userInfo.showInfoWithAction(info, R.string.action_transposition_reset, this::onTransposeResetEvent);
 		} else {
 			userInfo.showInfo(info);
@@ -73,6 +73,10 @@ public class ChordsTransposerManager {
 	
 	private int getTransposedBy() {
 		return transposed;
+	}
+	
+	public boolean isTransposed() {
+		return transposed != 0;
 	}
 	
 	public String getTransposedByDisplayName() {
