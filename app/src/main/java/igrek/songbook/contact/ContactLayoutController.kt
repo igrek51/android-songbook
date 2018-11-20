@@ -113,6 +113,11 @@ class ContactLayoutController : MainLayout {
     }
 
     fun prepareCustomSongPublishing(songTitle: String, customCategoryName: String, songContent: String) {
-
+        val subjectPrefix = uiResourceService.resString(R.string.contact_subject_publishing_song)
+        setSubject("$subjectPrefix: $songTitle - $customCategoryName")
+        contactMessageEdit!!.setText(songContent)
+        val dialogTitle = uiResourceService.resString(R.string.contact_subject_publishing_song)
+        val dialogMessage = uiResourceService.resString(R.string.contact_info_song_publishing)
+        uiInfoService.showDialog(dialogTitle, dialogMessage)
     }
 }

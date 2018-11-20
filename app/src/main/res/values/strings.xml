@@ -158,5 +158,7 @@
     <string name="language_polish" translatable="false">Polski</string>
     <string name="language_default">System default</string>
     <string name="contact_subject_song_comment">Song comment</string>
-    <string name="contact_info_song_comment">You can add your comments here about this song or you can suggest some improvements to the lyrics or chords.</string>
+    <string name="contact_info_song_comment">You can add your comments here about this song or you can suggest some improvements to the lyrics or chords. \n Thanks for contributing!</string>
+    <string name="contact_subject_publishing_song">New song</string>
+    <string name="contact_info_song_publishing">By publishing your custom song, all other users will be able to see it in songs database. Before that, your song lyrics and chords must be reviewed first. \n Thanks for contributing!</string>
 </resources>

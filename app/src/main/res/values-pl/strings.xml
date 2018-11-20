@@ -153,8 +153,10 @@
     <string name="contact_subject_hint">Temat</string>
     <string name="edit_song_publish">Opublikuj piosenkę</string>
     <string name="action_comment_song">Skomentuj / Zgłoś</string>
-    <string name="settings_language">Język (wymagany restart):</string>
+    <string name="settings_language">Język aplikacji (wymagany restart):</string>
     <string name="language_default">Domyślny</string>
     <string name="contact_subject_song_comment">Komentarz do piosenki</string>
-    <string name="contact_info_song_comment">Możesz tu wysłać komentarz do piosenki lub zaproponować zmianę w tekście lub akordach.</string>
+    <string name="contact_info_song_comment">Możesz tu wysłać komentarz do piosenki lub zaproponować zmianę w tekście lub akordach. \n Dzięki za współpracę!</string>
+    <string name="contact_subject_publishing_song">Nowa piosenka</string>
+    <string name="contact_info_song_publishing">Opublikowanie twojej piosenki w bazie piosenek pozwoli innym użytkownikom ją przeglądać. Zanim to nastąpi, tekst piosenki wraz z akordami musi zostać zweryfikowany. \n Dzięki za współpracę!</string>
 </resources>
