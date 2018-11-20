@@ -33,6 +33,7 @@ import igrek.songbook.persistence.SongsUpdater;
 import igrek.songbook.persistence.UnlockedSongsDao;
 import igrek.songbook.persistence.preferences.PreferencesService;
 import igrek.songbook.settings.SettingsLayoutController;
+import igrek.songbook.settings.language.AppLanguageService;
 import igrek.songbook.songedit.EditSongLayoutController;
 import igrek.songbook.songedit.SongEditService;
 import igrek.songbook.songedit.SongImportFileChooser;
@@ -354,6 +355,12 @@ public class FactoryModule {
 	@Singleton
 	protected FavouriteSongsDao provideFavouriteSongsDao() {
 		return new FavouriteSongsDao();
+	}
+	
+	@Provides
+	@Singleton
+	protected AppLanguageService provideAppLanguageService() {
+		return new AppLanguageService();
 	}
 	
 	/*

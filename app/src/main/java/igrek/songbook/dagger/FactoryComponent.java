@@ -29,6 +29,7 @@ import igrek.songbook.persistence.SongsUpdater;
 import igrek.songbook.persistence.UnlockedSongsDao;
 import igrek.songbook.persistence.preferences.PreferencesService;
 import igrek.songbook.settings.SettingsLayoutController;
+import igrek.songbook.settings.language.AppLanguageService;
 import igrek.songbook.songedit.EditSongLayoutController;
 import igrek.songbook.songedit.SongEditService;
 import igrek.songbook.songedit.SongImportFileChooser;
@@ -145,6 +146,8 @@ public interface FactoryComponent {
 	void inject(DatabaseMigrator there);
 	
 	void inject(FavouriteSongsDao there);
+	
+	void inject(AppLanguageService there);
 	
 	
 	void inject(SongListItemAdapter there);

@@ -8,7 +8,9 @@ public enum PreferencesDefinition {
 	
 	autoscrollSpeed(0.15f), // em / s
 	
-	chordsNotationId(1L);
+	chordsNotationId(1L),
+	
+	appLanguage("");
 	
 	
 	private Object defaultValue;

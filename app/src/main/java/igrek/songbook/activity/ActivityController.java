@@ -13,6 +13,8 @@ import igrek.songbook.model.chords.ChordsNotation;
 import igrek.songbook.persistence.LocalDbService;
 import igrek.songbook.persistence.preferences.PreferencesDefinition;
 import igrek.songbook.persistence.preferences.PreferencesService;
+import igrek.songbook.settings.language.AppLanguage;
+import igrek.songbook.settings.language.AppLanguageService;
 import igrek.songbook.songpreview.LyricsManager;
 import igrek.songbook.songpreview.autoscroll.AutoscrollService;
 import igrek.songbook.system.WindowManagerService;
@@ -31,6 +33,8 @@ public class ActivityController {
 	LyricsManager lyricsManager;
 	@Inject
 	AutoscrollService autoscrollService;
+	@Inject
+	AppLanguageService appLanguageService;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
@@ -70,6 +74,11 @@ public class ActivityController {
 		ChordsNotation chordsNotation = lyricsManager.getChordsNotation();
 		if (chordsNotation != null) {
 			preferencesService.setValue(PreferencesDefinition.chordsNotationId, chordsNotation.getId());
+		}
+		
+		AppLanguage appLanguage = appLanguageService.getAppLanguage();
+		if (appLanguage != null) {
+			preferencesService.setValue(PreferencesDefinition.appLanguage, appLanguage.getLangCode());
 		}
 		
 		preferencesService.saveAll();

@@ -31,6 +31,9 @@ import igrek.songbook.layout.navigation.NavigationMenuController;
 import igrek.songbook.layout.view.SliderController;
 import igrek.songbook.model.chords.ChordsNotation;
 import igrek.songbook.persistence.preferences.PreferencesService;
+import igrek.songbook.settings.language.AppLanguage;
+import igrek.songbook.settings.language.AppLanguageService;
+import igrek.songbook.settings.language.LanguageAdapter;
 import igrek.songbook.songpreview.LyricsManager;
 import igrek.songbook.songpreview.autoscroll.AutoscrollService;
 import io.reactivex.Observable;
@@ -57,6 +60,8 @@ public class SettingsLayoutController implements MainLayout {
 	AutoscrollService autoscrollService;
 	@Inject
 	PreferencesService preferencesService;
+	@Inject
+	AppLanguageService appLanguageService;
 	
 	private SliderController fontsizeSlider;
 	private SliderController autoscrollPauseSlider;
@@ -65,6 +70,10 @@ public class SettingsLayoutController implements MainLayout {
 	private Spinner chordsNotationSpinner;
 	private ChordsNotation currentChordsNotation;
 	PublishSubject<ChordsNotation> chordsNotationSubject = PublishSubject.create();
+	
+	private Spinner languageSpinner;
+	private AppLanguage currentLanguage;
+	PublishSubject<AppLanguage> languageSubject = PublishSubject.create();
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
@@ -135,8 +144,26 @@ public class SettingsLayoutController implements MainLayout {
 			}
 		});
 		
-		Observable.merge(fontsizeSlider.getValueSubject(), autoscrollPauseSlider.getValueSubject(), autoscrollSpeedSlider
-				.getValueSubject(), chordsNotationSubject)
+		// language
+		currentLanguage = appLanguageService.getAppLanguage();
+		languageSpinner = layout.findViewById(R.id.languageSpinner);
+		LanguageAdapter langAdapter = new LanguageAdapter(activity, AppLanguage.values(), uiResourceService);
+		languageSpinner.setAdapter(langAdapter);
+		languageSpinner.setSelection(langAdapter.getPosition(currentLanguage));
+		languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				onLanguageSelected(position);
+			}
+			
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+			}
+		});
+		
+		Observable.mergeArray(fontsizeSlider.getValueSubject(), autoscrollPauseSlider.getValueSubject(), autoscrollSpeedSlider
+				.getValueSubject(), chordsNotationSubject, languageSubject)
 				.debounce(200, TimeUnit.MILLISECONDS)
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(value -> saveSettings());
@@ -149,6 +176,14 @@ public class SettingsLayoutController implements MainLayout {
 			currentChordsNotation = (ChordsNotation) selectedItem;
 		}
 		chordsNotationSubject.onNext(currentChordsNotation);
+	}
+	
+	private void onLanguageSelected(int position) {
+		Object selectedItem = languageSpinner.getSelectedItem();
+		if (selectedItem != null) {
+			currentLanguage = (AppLanguage) selectedItem;
+		}
+		languageSubject.onNext(currentLanguage);
 	}
 	
 	private String msToS(float ms) {
@@ -174,6 +209,12 @@ public class SettingsLayoutController implements MainLayout {
 		if (selectedItem != null) {
 			currentChordsNotation = (ChordsNotation) selectedItem;
 			lyricsManager.setChordsNotation(currentChordsNotation);
+		}
+		
+		selectedItem = languageSpinner.getSelectedItem();
+		if (selectedItem != null) {
+			currentLanguage = (AppLanguage) selectedItem;
+			appLanguageService.setAppLanguage(currentLanguage);
 		}
 		
 		// do not save to preferences service, they will be saved on activity stop
