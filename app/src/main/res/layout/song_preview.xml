@@ -206,7 +206,7 @@
             android:layout_gravity="end|bottom"
             android:layout_marginRight="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="30dp"
             android:background="?android:selectableItemBackground"
             android:src="@drawable/fullscreen_exit"
             android:visibility="gone"

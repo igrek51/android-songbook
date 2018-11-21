@@ -152,7 +152,7 @@
     <string name="edit_song_category_name_hint">Artist or category name</string>
     <string name="contact_subject_hint">Subject</string>
     <string name="edit_song_publish">Publish song</string>
-    <string name="action_comment_song">Comment / Report</string>
+    <string name="action_comment_song">Comment / Fix</string>
     <string name="settings_language">Language (restart needed):</string>
     <string name="language_english" translatable="false">English</string>
     <string name="language_polish" translatable="false">Polski</string>

@@ -157,7 +157,7 @@ class EditSongLayoutController : MainLayout {
         songImportFileChooser.get().showFileChooser()
     }
 
-    fun setCurrentSong(song: Song) {
+    fun setCurrentSong(song: Song?) {
         this.currentSong = song
         if (currentSong == null) {
             songTitle = null
