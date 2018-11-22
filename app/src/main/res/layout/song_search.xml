@@ -2,6 +2,7 @@
 <RelativeLayout
     android:id="@+id/mainLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
@@ -11,25 +12,35 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
+            android:contentInsetEnd="0dp"
+            android:contentInsetLeft="0dp"
+            android:contentInsetRight="0dp"
+            android:contentInsetStart="0dp"
+            app:contentInsetEnd="0dp"
+            app:contentInsetLeft="0dp"
+            app:contentInsetRight="0dp"
+            app:contentInsetStart="0dp"
             >
 
             <ImageButton
                 android:id="@+id/navMenuButton"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:layout_gravity="start|center_vertical"
                 android:adjustViewBounds="true"
                 android:background="?android:selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
+                android:padding="8dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/menu"
                 />
@@ -57,16 +68,17 @@
 
                 <ImageButton
                     android:id="@+id/searchFilterClearButton"
-                    android:layout_width="32dp"
+                    android:layout_width="48dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="end|center_vertical"
-                    android:layout_marginEnd="2dp"
-                    android:layout_marginRight="2dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginRight="0dp"
                     android:adjustViewBounds="true"
                     android:background="?android:selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="8dp"
                     android:scaleType="centerInside"
-                    android:scaleX="0.75"
-                    android:scaleY="0.75"
                     android:src="@drawable/close"/>
 
             </FrameLayout>

@@ -161,7 +161,7 @@
     <string name="settings_language">Język aplikacji (wymagany restart):</string>
     <string name="language_default">Domyślny systemowy</string>
     <string name="contact_subject_song_comment">Komentarz do piosenki</string>
-    <string name="contact_info_song_comment">Możesz tu wysłać komentarz do piosenki lub zaproponować poprawkę w tekście lub akordach. \nDzięki za współtworzenie bazy piosenek!</string>
+    <string name="contact_info_song_comment">Wypełnij komentarz do wybranej piosenki lub zaproponuj poprawkę w tekście lub akordach. \nDzięki za współtworzenie bazy piosenek!</string>
     <string name="contact_subject_publishing_song">Nowa piosenka</string>
     <string name="contact_info_song_publishing">Opublikowanie twojej piosenki w bazie piosenek pozwoli innym użytkownikom ją przeglądać. Zanim to nastąpi, wysłany tekst Twojej piosenki wraz z akordami będzie musiał zostać zatwierdzony. \nDzięki za współtworzenie bazy piosenek!</string>
 </resources>
