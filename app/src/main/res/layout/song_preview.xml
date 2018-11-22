@@ -85,6 +85,20 @@
                         />
 
                     <ImageButton
+                        android:id="@+id/setFavouriteButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:adjustViewBounds="true"
+                        android:background="?android:selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/star_border"
+                        />
+
+                    <ImageButton
                         android:id="@+id/transposeButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

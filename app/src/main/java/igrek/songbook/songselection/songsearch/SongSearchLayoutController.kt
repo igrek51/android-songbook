@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
+open class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
 
     private var searchFilterEdit: EditText? = null
     private var searchFilterSubject: PublishSubject<String> = PublishSubject.create()

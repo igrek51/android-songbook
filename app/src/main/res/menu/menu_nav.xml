@@ -12,6 +12,10 @@
             android:icon="@drawable/search"
             android:title="@string/nav_search_song"/>
         <item
+            android:id="@+id/nav_favourites"
+            android:icon="@drawable/star_filled"
+            android:title="@string/nav_favourites_song"/>
+        <item
             android:id="@+id/nav_update_db"
             android:icon="@drawable/sync"
             android:title="@string/nav_update_songs"/>

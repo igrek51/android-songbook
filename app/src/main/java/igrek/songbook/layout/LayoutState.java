@@ -6,6 +6,8 @@ public enum LayoutState {
 	
 	SEARCH_SONG,
 	
+	FAVOURITE_SONGS,
+	
 	SONG_PREVIEW,
 	
 	SETTINGS,

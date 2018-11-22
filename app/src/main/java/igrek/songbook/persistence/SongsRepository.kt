@@ -9,6 +9,7 @@ import igrek.songbook.model.songsdb.Song
 import igrek.songbook.model.songsdb.SongCategory
 import igrek.songbook.model.songsdb.SongsDb
 import igrek.songbook.persistence.migration.DatabaseMigrator
+import igrek.songbook.system.cache.SimpleCache
 import io.reactivex.subjects.PublishSubject
 import java.util.*
 import javax.inject.Inject
@@ -23,6 +24,8 @@ class SongsRepository {
     @Inject
     lateinit var unlockedSongsDao: UnlockedSongsDao
     @Inject
+    lateinit var favouriteSongsDao: FavouriteSongsDao
+    @Inject
     lateinit var localDbService: LocalDbService
     @Inject
     lateinit var uiResourceService: UiResourceService
@@ -34,6 +37,9 @@ class SongsRepository {
     lateinit var databaseMigrator: DatabaseMigrator
 
     private val logger = LoggerFactory.getLogger()
+
+    private var favouritesCache: SimpleCache<Set<Song>> =
+            SimpleCache { HashSet(favouriteSongsDao.populateFavouriteSongs(songsDb!!.getAllUnlockedSongs())) }
 
     var dbChangeSubject: PublishSubject<SongsDb> = PublishSubject.create()
 
@@ -110,6 +116,8 @@ class SongsRepository {
 
         songsDb = SongsDb(versionNumber, categories, songs)
 
+        favouritesCache.reset()
+
         dbChangeSubject.onNext(songsDb!!)
     }
 
@@ -139,5 +147,20 @@ class SongsRepository {
     fun getCustomCategoryByTypeId(categoryTypeId: Long): SongCategory? {
         return customSongsDao.getCategoryByTypeId(categoryTypeId)
     }
+
+    fun getFavouriteSongs(): Set<Song> {
+        return favouritesCache.get()
+    }
+
+    fun setSongFavourite(song: Song) {
+        favouriteSongsDao.setAsFavourite(song)
+        favouritesCache.reset()
+    }
+
+    fun unsetSongFavourite(song: Song) {
+        favouriteSongsDao.unsetFavourite(song)
+        favouritesCache.reset()
+    }
+
 
 }

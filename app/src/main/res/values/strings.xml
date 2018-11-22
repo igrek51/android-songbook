@@ -2,6 +2,7 @@
     <string name="app_name" translatable="false">Guitar Songbook</string>
     <string name="nav_songs_list">Songs</string>
     <string name="nav_search_song">Search</string>
+    <string name="nav_favourites_song">Favourites</string>
     <string name="nav_update_songs">Update songs</string>
     <string name="nav_custom_song">Add custom song</string>
     <string name="nav_random_song">Random song</string>
@@ -166,4 +167,6 @@
     <string name="contact_info_song_comment">You can add your comments here about this song or you can suggest some improvements to the lyrics or chords. \n Thanks for contributing!</string>
     <string name="contact_subject_publishing_song">New song</string>
     <string name="contact_info_song_publishing">By publishing your custom song, all other users will be able to see it in songs database. Before that, your song lyrics and chords must be reviewed first. \n Thanks for contributing!</string>
+    <string name="favourite_song_has_been_set">Song has been added to favourites.</string>
+    <string name="favourite_song_has_been_unset">Song has been removed from favourites.</string>
 </resources>

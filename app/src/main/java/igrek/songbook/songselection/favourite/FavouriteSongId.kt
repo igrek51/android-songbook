@@ -1,4 +1,4 @@
-package igrek.songbook.model.songsdb
+package igrek.songbook.songselection.favourite
 
 import com.google.common.base.Objects
 

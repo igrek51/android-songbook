@@ -45,6 +45,8 @@ import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll;
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose;
 import igrek.songbook.songpreview.transpose.ChordsTransposerManager;
 import igrek.songbook.songselection.RandomSongOpener;
+import igrek.songbook.songselection.favourite.FavouriteSongService;
+import igrek.songbook.songselection.favourite.FavouritesLayoutController;
 import igrek.songbook.songselection.songsearch.SongSearchLayoutController;
 import igrek.songbook.songselection.songtree.ScrollPosBuffer;
 import igrek.songbook.songselection.songtree.SongTreeLayoutController;
@@ -361,6 +363,18 @@ public class FactoryModule {
 	@Singleton
 	protected AppLanguageService provideAppLanguageService() {
 		return new AppLanguageService();
+	}
+	
+	@Provides
+	@Singleton
+	protected FavouriteSongService provideFavouriteSongService() {
+		return new FavouriteSongService();
+	}
+	
+	@Provides
+	@Singleton
+	protected FavouritesLayoutController provideFavouritesLayoutController() {
+		return new FavouritesLayoutController();
 	}
 	
 	/*

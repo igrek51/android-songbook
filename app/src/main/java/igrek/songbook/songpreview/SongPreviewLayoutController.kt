@@ -29,6 +29,7 @@ import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.SongPreview
+import igrek.songbook.songselection.favourite.FavouriteSongService
 import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.WindowManagerService
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -59,6 +60,8 @@ class SongPreviewLayoutController : MainLayout {
     lateinit var songDetailsService: SongDetailsService
     @Inject
     lateinit var uiInfoService: UiInfoService
+    @Inject
+    lateinit var favouriteSongService: FavouriteSongService
 
     private val logger = LoggerFactory.getLogger()
     var songPreview: SongPreview? = null
@@ -72,6 +75,7 @@ class SongPreviewLayoutController : MainLayout {
     private var disableFullscreenButton: FloatingActionButton? = null
     private var transposeButton: ImageButton? = null
     private var autoscrollButton: ImageButton? = null
+    private var setFavouriteButton: ImageButton? = null
 
     val isQuickMenuVisible: Boolean
         get() = quickMenuTranspose.isVisible || quickMenuAutoscroll.isVisible
@@ -158,6 +162,10 @@ class SongPreviewLayoutController : MainLayout {
 
         autoscrollButton = layout.findViewById(R.id.autoscrollButton)
         autoscrollButton!!.setOnClickListener { v -> toggleAutoscrollPanel() }
+
+        setFavouriteButton = layout.findViewById(R.id.setFavouriteButton)
+        setFavouriteButton!!.setOnClickListener { v -> toggleSongFavourite() }
+        updateFavouriteButton()
 
         val goBeginningButton = layout.findViewById<ImageButton>(R.id.goBeginningButton)
         goBeginningButton.setOnClickListener { v -> goToBeginning() }
@@ -295,5 +303,25 @@ class SongPreviewLayoutController : MainLayout {
 
     private fun unhighlightButton(button: ImageButton) {
         button.clearColorFilter()
+    }
+
+    private fun toggleSongFavourite() {
+        if (!favouriteSongService.isSongFavourite(currentSong!!)) {
+            favouriteSongService.setSongFavourite(currentSong!!)
+            uiInfoService.showInfo(R.string.favourite_song_has_been_set)
+        } else {
+            favouriteSongService.unsetSongFavourite(currentSong!!)
+            uiInfoService.showInfo(R.string.favourite_song_has_been_unset)
+
+        }
+        updateFavouriteButton()
+    }
+
+    private fun updateFavouriteButton() {
+        if (favouriteSongService.isSongFavourite(currentSong!!)) {
+            setFavouriteButton!!.setImageResource(R.drawable.star_filled)
+        } else {
+            setFavouriteButton!!.setImageResource(R.drawable.star_border)
+        }
     }
 }

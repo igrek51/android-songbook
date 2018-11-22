@@ -4,8 +4,8 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.model.songsdb.FavouriteSongId
 import igrek.songbook.model.songsdb.Song
+import igrek.songbook.songselection.favourite.FavouriteSongId
 
 
 class FavouriteSongsDao : AbstractSqliteDao() {
@@ -57,6 +57,24 @@ class FavouriteSongsDao : AbstractSqliteDao() {
     fun isSongFavourite(song: Song): Boolean {
         val mapper: (Cursor) -> Boolean = { cursor -> cursor.getColumnIndexOrThrow("count") > 0 }
         return queryOneValue(mapper, false, "SELECT COUNT(*) AS count FROM favourite_songs WHERE song_id = ? AND is_custom = ?", song.id, song.custom)
+    }
+
+    fun findFavouriteSong(favouriteSongId: FavouriteSongId, songs: List<Song>): Song? {
+        for (song in songs) {
+            if (song.id == favouriteSongId.songId && song.custom == favouriteSongId.custom)
+                return song
+        }
+        return null
+    }
+
+    fun populateFavouriteSongs(allSongs: List<Song>): List<Song> {
+        val favs = mutableListOf<Song>()
+        for (favouriteSongId in readFavouriteSongs()) {
+            val favouriteSong = findFavouriteSong(favouriteSongId, allSongs)
+            if (favouriteSong != null)
+                favs.add(favouriteSong)
+        }
+        return favs
     }
 
 }

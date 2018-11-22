@@ -60,6 +60,7 @@ class NavigationMenuController {
     private fun initOptionActionsMap() {
         actionsMap[R.id.nav_songs_list] = Runnable { layoutController.get().showSongTree() }
         actionsMap[R.id.nav_search] = Runnable { layoutController.get().showSongSearch() }
+        actionsMap[R.id.nav_favourites] = Runnable { layoutController.get().showFavourites() }
         actionsMap[R.id.nav_update_db] = Runnable { songsRepository.updateSongsDb() }
         actionsMap[R.id.nav_add_custom_song] = Runnable { songEditService.showAddSongScreen() }
         actionsMap[R.id.nav_random_song] = Runnable { randomSongOpener.openRandomSong() }

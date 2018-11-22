@@ -18,6 +18,7 @@ import igrek.songbook.layout.navigation.NavigationMenuController;
 import igrek.songbook.settings.SettingsLayoutController;
 import igrek.songbook.songedit.EditSongLayoutController;
 import igrek.songbook.songpreview.SongPreviewLayoutController;
+import igrek.songbook.songselection.favourite.FavouritesLayoutController;
 import igrek.songbook.songselection.songsearch.SongSearchLayoutController;
 import igrek.songbook.songselection.songtree.SongTreeLayoutController;
 
@@ -37,6 +38,8 @@ public class LayoutController {
 	Lazy<SettingsLayoutController> settingsLayoutController;
 	@Inject
 	Lazy<EditSongLayoutController> importSongLayoutController;
+	@Inject
+	Lazy<FavouritesLayoutController> favouritesLayoutController;
 	
 	@Inject
 	Activity activity;
@@ -83,6 +86,10 @@ public class LayoutController {
 	
 	public void showImportSong() {
 		showMainLayout(importSongLayoutController.get());
+	}
+	
+	public void showFavourites() {
+		showMainLayout(favouritesLayoutController.get());
 	}
 	
 	

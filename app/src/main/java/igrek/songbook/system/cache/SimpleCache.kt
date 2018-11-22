@@ -9,4 +9,8 @@ class SimpleCache<T>(private val supplier: () -> T) {
             cachedValue = supplier.invoke()
         return cachedValue!!
     }
+
+    fun reset() {
+        cachedValue = null
+    }
 }
