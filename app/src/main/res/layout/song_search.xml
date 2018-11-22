@@ -57,15 +57,17 @@
 
                 <ImageButton
                     android:id="@+id/searchFilterClearButton"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="32dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="end|center_vertical"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginRight="2dp"
                     android:adjustViewBounds="true"
                     android:background="?android:selectableItemBackground"
-                    android:src="@drawable/close"
-                    android:scaleType="fitCenter"/>
+                    android:scaleType="centerInside"
+                    android:scaleX="0.75"
+                    android:scaleY="0.75"
+                    android:src="@drawable/close"/>
 
             </FrameLayout>
 
