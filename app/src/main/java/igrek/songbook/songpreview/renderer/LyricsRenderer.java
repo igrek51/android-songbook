@@ -75,8 +75,8 @@ public class LyricsRenderer {
 		float bottom = (scroll + h) / range;
 		
 		canvas.setColor(0xAEC3E0);
-		// TODO dp
-		int scrollWidth = 3;
+		
+		float scrollWidth = canvas.getScrollWidth();
 		canvas.fillRect(w - scrollWidth, top * h, w, bottom * h);
 	}
 }

@@ -51,8 +51,11 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	protected float startTouchY = 0;
 	protected long startTouchTime;
 	private Logger logger = LoggerFactory.getLogger();
-	private SimpleCache<Float> bottomMargin = new SimpleCache<>(() -> {
+	private SimpleCache<Float> bottomMarginCache = new SimpleCache<>(() -> {
 		return windowManagerService.dp2px(EOF_BOTTOM_RESERVE);
+	});
+	private SimpleCache<Float> scrollWidthCache = new SimpleCache<>(() -> {
+		return windowManagerService.dp2px(1);
 	});
 	private Long lastClickTime;
 	
@@ -227,7 +230,7 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	
 	float getMaxScroll() {
 		float bottomY = getTextBottomY();
-		float reserve = bottomMargin.get();
+		float reserve = bottomMarginCache.get();
 		if (bottomY > h) {
 			return bottomY + reserve - h;
 		} else {
@@ -250,7 +253,7 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	
 	public int getMaxContentHeight() {
 		float bottomY = getTextBottomY();
-		float reserve = bottomMargin.get();
+		float reserve = bottomMarginCache.get();
 		if (bottomY > h) {
 			return (int) (bottomY + reserve);
 		} else {
@@ -307,5 +310,9 @@ public class SongPreview extends BaseCanvasView implements View.OnTouchListener 
 	public void goToBeginning() {
 		scroll = 0;
 		repaint();
+	}
+	
+	public float getScrollWidth() {
+		return scrollWidthCache.get();
 	}
 }

@@ -8,6 +8,7 @@ import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.model.songsdb.Song
 import igrek.songbook.model.songsdb.SongCategory
 import igrek.songbook.model.songsdb.SongsDb
+import igrek.songbook.persistence.migration.DatabaseMigrator
 import io.reactivex.subjects.PublishSubject
 import java.util.*
 import javax.inject.Inject
@@ -46,18 +47,7 @@ class SongsRepository {
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
-        checkDbVersion()
-    }
-
-    private fun checkDbVersion() {
-        // check migrations
-        val songsDbVersion = songsDao.readDbVersionNumber()
-        val localSongsDbVersion = customSongsDao.readDbVersionNumber()
-
-        // TODO migration
-        if (databaseMigrator.migrationNeeded(songsDbVersion, localSongsDbVersion)) {
-            factoryReset()
-        }
+        databaseMigrator.checkDbVersion(this)
     }
 
     fun factoryReset() {

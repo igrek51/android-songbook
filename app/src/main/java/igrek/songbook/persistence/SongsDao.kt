@@ -54,7 +54,7 @@ class Info(models.Model):
     fun readAllCategories(): List<SongCategory> {
         val entities: MutableList<SongCategory> = mutableListOf()
         try {
-            val cursor = sqlQuery("SELECT * FROM songs_category ORDER BY id")
+            val cursor = sqlQuery("SELECT * FROM songs_category")
 
             while (cursor.moveToNext()) {
                 entities.add(mapSongCategory(cursor))
@@ -79,7 +79,7 @@ class Info(models.Model):
     fun readAllSongs(categories: List<SongCategory>): MutableList<Song> {
         val songs: MutableList<Song> = mutableListOf()
         try {
-            val cursor = sqlQuery("SELECT * FROM songs_song ORDER BY id")
+            val cursor = sqlQuery("SELECT * FROM songs_song")
 
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(cursor.getColumnIndexOrThrow("id"))

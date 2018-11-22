@@ -21,22 +21,6 @@ class CustomSongsDao : AbstractSqliteDao() {
         return localDbService.openLocalSongsDb()
     }
 
-    fun readAllCategories(): List<SongCategory> {
-        val entities: MutableList<SongCategory> = mutableListOf()
-        try {
-            val cursor = sqlQuery("SELECT * FROM songs_category ORDER BY id")
-
-            while (cursor.moveToNext()) {
-                entities.add(mapSongCategory(cursor))
-            }
-
-            cursor.close()
-        } catch (e: IllegalArgumentException) {
-            logger.error(e)
-        }
-        return entities
-    }
-
     fun mapSongCategory(cursor: Cursor): SongCategory {
         val id = cursor.getLong(cursor.getColumnIndexOrThrow("id"))
         val typeId = cursor.getLong(cursor.getColumnIndexOrThrow("type_id"))
@@ -49,14 +33,13 @@ class CustomSongsDao : AbstractSqliteDao() {
     fun readAllSongs(categories: List<SongCategory>): MutableList<Song> {
         val songs: MutableList<Song> = mutableListOf()
         try {
-            val cursor = sqlQuery("SELECT * FROM songs_song ORDER BY id")
+            val cursor = sqlQuery("SELECT * FROM songs_song")
 
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(cursor.getColumnIndexOrThrow("id"))
                 val title = cursor.getString(cursor.getColumnIndexOrThrow("title"))
                 val fileContent = cursor.getString(cursor.getColumnIndexOrThrow("file_content"))
                 val versionNumber = cursor.getLong(cursor.getColumnIndexOrThrow("version_number"))
-                // TODO get date from datetime column type
                 val createTime = getTimestampColumn(cursor, "create_time")
                 val updateTime = getTimestampColumn(cursor, "update_time")
                 val custom = getBooleanColumn(cursor, "is_custom")
