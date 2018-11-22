@@ -17,6 +17,7 @@
         \nSONG PREVIEW:
         \nOn a song preview screen the display is always on.
         \nPinch with two fingers to change font size.
+        \nYou can choose your favourite chords notation in settings.
         \n
         \nTRANSPOSING:
         \nYou can transpose any song with chords to any key.
@@ -42,6 +43,10 @@
         \nUse \"[chord]\" button to quickly add chords in brackets.
         \nAfter saving a song you can find it in \"My songs\" category.
         \nYou can also edit it, remove or import song content from file.
+        \n
+        \nSOCIAL CONTRIBUTING:
+        \nApplication allows you to publish your custom songs and share it along all the other users.
+        \nYou can also suggest improving some chords or lyrics, if you have noticed some bugs.
     </string>
     <string name="ui_about_content">
         Guitar Songbook v%s (%s)
@@ -71,7 +76,7 @@
     <string name="action_unlock">Unlock</string>
     <string name="action_cancel">Cancel</string>
     <string name="ui_db_is_uptodate">Songs database is up-to-date.</string>
-    <string name="contact_label">You can contact me if you have noticed some bugs or you have any ideas how to improve this application. I would be very grateful for your comments.</string>
+    <string name="contact_label">You can contact me if you have noticed some bugs or you have any ideas how to improve this application. You can suggest improving or adding song chords. I would be very grateful for your comments.</string>
     <string name="contact_message_hint">Your message…</string>
     <string name="contact_send">Send</string>
     <string name="contact_author_hint">Your name (optional)</string>

@@ -72,13 +72,13 @@ public class SendFeedbackService {
 	
 	private void onResponseReceived(String response) {
 		logger.debug("Feedback sent response: " + response);
-		new Handler(Looper.getMainLooper()).post(() -> {
+		new Handler(Looper.getMainLooper()).postDelayed(() -> {
 			if (response.startsWith("200")) {
 				uiInfoService.showInfo(R.string.contact_message_sent_successfully);
 			} else {
 				onErrorReceived("Feedback sent bad response: " + response);
 			}
-		});
+		}, 500); // additional delay due to sending is "too fast" (user is not sure if it has been sent)
 	}
 	
 	private void onErrorReceived(String errorMessage) {
