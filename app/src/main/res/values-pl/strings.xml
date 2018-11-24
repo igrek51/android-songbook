@@ -19,6 +19,7 @@
         \nNa ekranie podglądu piosenki wyświetlacz jest stale włączony.
         \nSkalowanie dwoma palcami zmienia rozmiar czcionki na podglądzie.
         \nW ustawieniach możesz wybrać swoją ulubioną notację akordów.
+        \nDomyślna notacja akordów została wybrana automatycznie na podstawie systemowych ustawień językowych.
         \n
         \nTRANSPOZYCJA:
         \nMożesz przetransponować piosenki z akordami do dowolnej tonacji.
@@ -40,10 +41,10 @@
         \nMożesz dodawać własne piosenki, wybierając opcję z menu głównego.
         \nWpisz słowa piosenki w postaci zwykłego tesktu razem z akordami w nawiasach kwadratowych, używając notacji w formacie:
         \n\"tekst [a B h C C# f f# F#7 Cmaj7 D-Dsus2-Dsus4]\"
-        \nMożesz dodawać akordy gdziekolwiek: \"w śro[d]dku sł[C]ów lub na końcu linii [d C]\".
+        \nMożesz dodawać akordy gdziekolwiek: \"w środ[d]ku sy[C]lab lub na końcu linii [d C]\".
         \nUżyj przycisku \"[akord]\", aby szybko dodać akord w nawiasach kwadratowych.
         \nPo zapisaniu piosenki, znajdziesz ją w kategorii \"Moje piosenki\".
-        \nMożesz edytować dodaną piosenkę, usunąć lub zaimportować zawartość z wybranego pliku.
+        \nMożesz edytować dodaną piosenkę (klikając ikonę edycji przy piosence), usunąć ją lub zaimportować zawartość z wybranego pliku.
         \n
         \nWKŁAD SPOŁECZNOŚCI:
         \nAplikacja pozwala na publikowanie dodanych przez Ciebie piosenek i współdzielenie ich z pozostałymi użytkownikami.
