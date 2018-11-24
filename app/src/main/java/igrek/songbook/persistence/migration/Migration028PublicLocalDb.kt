@@ -33,10 +33,18 @@ class Migration028PublicLocalDb(val activity: Activity) : IMigration {
         }
 
         removeDb(getOldCustomSongsDbFile())
+        removeDb(getOldUnlockedSongsDbFile())
+
+        // reinitialize db
+        migrator.songsRepository!!.initializeSongsDb()
     }
 
     private fun getOldCustomSongsDbFile(): File {
         return File(getSongDbDir(), "custom_songs.sqlite")
+    }
+
+    private fun getOldUnlockedSongsDbFile(): File {
+        return File(getSongDbDir(), "unlocked_songs.sqlite")
     }
 
     @SuppressLint("SdCardPath")
@@ -65,8 +73,8 @@ class Migration028PublicLocalDb(val activity: Activity) : IMigration {
         return SQLiteDatabase.openDatabase(songsDbFile.absolutePath, null, SQLiteDatabase.OPEN_READWRITE)
     }
 
-    private fun readAllCustomSongs(): MutableList<List<Any>> {
-        val tuples: MutableList<List<Any>> = mutableListOf()
+    private fun readAllCustomSongs(): MutableList<List<Any?>> {
+        val tuples: MutableList<List<Any?>> = mutableListOf()
         try {
             val cursor = sqlQuery("SELECT * FROM songs_song ORDER BY id")
 
@@ -87,7 +95,7 @@ class Migration028PublicLocalDb(val activity: Activity) : IMigration {
                 val stateId = cursor.getLong(cursor.getColumnIndexOrThrow("state"))
                 val categoryId = cursor.getLong(cursor.getColumnIndexOrThrow("category_id"))
 
-                val tuple = listOf<Any>(id, title, categoryId, fileContent, versionNumber, createTime, updateTime, custom, filename, comment, preferredKey, locked, lockPassword, author, stateId)
+                val tuple = mutableListOf<Any?>(id, title, categoryId, fileContent, versionNumber, createTime, updateTime, custom, filename, comment, preferredKey, locked, lockPassword, author, stateId)
                 tuples.add(tuple)
             }
 
@@ -102,24 +110,26 @@ class Migration028PublicLocalDb(val activity: Activity) : IMigration {
         return oldCustomSongsDb!!.rawQuery(sql, selectionArgs)
     }
 
-    private fun addNewCustomSong(tuple: List<Any>, newLocalDb: SQLiteDatabase) {
+    private fun addNewCustomSong(tuple: List<Any?>, newLocalDb: SQLiteDatabase) {
         // insert new song
         val values = ContentValues()
         values.put("id", tuple[0] as Long)
         values.put("title", tuple[1] as String)
         values.put("category_id", tuple[2] as Long)
-        values.put("file_content", tuple[3] as String)
+        values.put("file_content", tuple[3] as String?)
         values.put("version_number", tuple[4] as Long)
         values.put("create_time", iso8601Format.format(Date(tuple[5] as Long)))
         values.put("update_time", iso8601Format.format(Date(tuple[6] as Long)))
         values.put("is_custom", tuple[7] as Boolean)
-        values.put("filename", tuple[8] as String)
-        values.put("comment", tuple[9] as String)
-        values.put("preferred_key", tuple[10] as String)
+        values.put("filename", tuple[8] as String?)
+        values.put("comment", tuple[9] as String?)
+        values.put("preferred_key", tuple[10] as String?)
         values.put("is_locked", tuple[11] as Boolean)
-        values.put("lock_password", tuple[12] as String)
-        values.put("author", tuple[13] as String)
+        values.put("lock_password", tuple[12] as String?)
+        values.put("author", tuple[13] as String?)
         values.put("state", tuple[14] as Long)
+        values.put("custom_category_name", null as String?)
+        values.put("language", null as String?)
 
         newLocalDb.insert("songs_song", null, values)
     }
