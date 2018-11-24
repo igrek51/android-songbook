@@ -13,7 +13,7 @@
     <string name="nav_help">Help</string>
     <string name="ui_help_content">
         SONG SELECTION:
-        \nYou can choose a song from a categories tree or search it by title or artist.
+        \nYou can choose a song from a categories tree or search it by title or artist (by any word from name, uppercase doesn\'t matter).
         \n
         \nSONG PREVIEW:
         \nOn a song preview screen the display is always on.
@@ -35,7 +35,7 @@
         However if you scroll up manually while countdown, the initial delay will be increased.
         \nYou can adjust scrolling speed or initial delay of autoscroll in settings or in autoscroll panel.
         Scrolling up or down manually while autoscrolling is enabled causes autoscroll speed to be auto-adjusted (speed up or slow down).
-        \nDouble click on screen toggles autoscrolling.
+        \nDouble click on screen to toggle autoscrolling. Clicking once again will turn it off.
         \n
         \nCUSTOM SONGS:
         \nYou can add custom songs by clicking an option in main menu.
@@ -75,10 +75,11 @@
         \nRxJava
     </string>
     <string name="action_info_ok">OK</string>
-    <string name="action_unlock">Unlock</string>
+    <string name="action_secret">Secret</string>
+    <string name="action_check_secret">Check</string>
     <string name="action_cancel">Cancel</string>
     <string name="ui_db_is_uptodate">Songs database is up-to-date.</string>
-    <string name="contact_label">You can contact me if you have noticed some bugs or you have any ideas how to improve this application. You can also suggest improving or adding song chords. I would be very grateful for your comments and contributing.</string>
+    <string name="contact_label">You can contact me if you have noticed some bugs or you have any ideas how to improve this application. You can also suggest improvements to the chords or propose adding a new song. I would be very grateful for your comments and contributing.</string>
     <string name="contact_message_hint">Your message…</string>
     <string name="contact_send">Send</string>
     <string name="contact_author_hint">Your name (optional)</string>
@@ -170,5 +171,5 @@
     <string name="contact_info_song_publishing">By publishing your custom song, all other users will be able to see it in songs database. Before that, your song lyrics and chords must be reviewed first. \nThanks for contributing!</string>
     <string name="favourite_song_has_been_set">Song has been added to favourites.</string>
     <string name="favourite_song_has_been_unset">Song has been removed from favourites.</string>
-    <string name="empty_favourite_songs">No favourite songs.\nClick a star icon on song preview to add a it to favourites.</string>
+    <string name="empty_favourite_songs">No favourite songs.\nClick a star icon on a song preview to add it to favourites.</string>
 </resources>

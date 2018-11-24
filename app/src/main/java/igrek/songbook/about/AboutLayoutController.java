@@ -36,7 +36,7 @@ public class AboutLayoutController {
 		String title = uiResourceService.resString(R.string.nav_about);
 		String message = uiResourceService.resString(R.string.ui_about_content, appVersionName, appVersionCode, dbVersionNumber);
 		
-		String unlockActionName = uiResourceService.resString(R.string.action_unlock);
+		String unlockActionName = uiResourceService.resString(R.string.action_secret);
 		Runnable unlockAction = secretUnlockerService::showUnlockAlert;
 		showDialogWithActions(title, message, unlockActionName, unlockAction);
 	}

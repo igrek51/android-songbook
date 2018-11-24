@@ -13,7 +13,7 @@
     <string name="nav_help">Pomoc</string>
     <string name="ui_help_content">
         WYBÓR PIOSENKI:
-        \nMożesz wybrać piosenkę z drzewa kategorii lub wyszukać ją po tytule lub nazwie artysty.
+        \nMożesz wybrać piosenkę z drzewa kategorii lub wyszukać ją po tytule lub nazwie artysty (po dowolnym słowie z nazwy, wielkość liter i polskie znaki nie mają znaczenia).
         \n
         \nPODGLĄD PIOSENKI:
         \nNa ekranie podglądu piosenki wyświetlacz jest stale włączony.
@@ -23,19 +23,19 @@
         \n
         \nTRANSPOZYCJA:
         \nMożesz przetransponować piosenki z akordami do dowolnej tonacji.
-        Naciśnij ikonę tranpozycji na górnym pasku, aby wyświetlić panel transpozycji.
+        Wybranie ikony tranpozycji na górnym pasku wyświetla panel transpozycji.
         \nPrzyciski \"-5, -1, +1, +5\" - zmiana tonacji o liczbę półtonów.
         \nPrzycisk \"0\" - przywrócenie oryginalnej tonacji.
         \n
         \nAUTOPRZEWIJANIE:
-        \nNaciśnij ikonę autoprzewijania na górnym pasku, aby wyświetlić panel autoprzewijania.
+        \nIkona autoprzewijania na górnym pasku wyświetla panel autoprzewijania.
         Rozpoczęcie autoprzewijania powoduje, że tekst przwijany jest automatycznie w odstępach czasowych.
-        \nJeśli jest to początek tekstu, autoprzewijanie włączy się po pewnym czasie (odliczanie przed przewijaniem).
-        Ręczne przewinięcie tekstu w dół podczas odliczania spowoduje, że autoprzewijanie włączy się natychmiast.
+        \nJeśli jest to początek piosenki, autoprzewijanie włączy się po pewnym czasie (odliczanie przed przewijaniem).
+        Ręczne przewinięcie tekstu w dół przerywa odliczanie i powoduje, że autoprzewijanie włącza się natychmiast.
         Natomiast ręczne przewinięcie w górę podczas odliczania wydłuży początkową pauzę.
         \nMożesz dostosować prędkość przewijania oraz długość początkowej pauzy w ustawieniach lub w panelu autoprzewijania.
-        Ręczne przewijanie przy włączonym autoprzewijaniu spowoduje, że prędkosć przewijania automatycznie zostanie skorygowana (przyspieszona lub zwolniona).
-        \nPodwójne kliknięcie na ekran włącza autoprzewijanie.
+        Ręczne przewijanie podczas autoprzewijania spowoduje, że prędkosć autoprzewijania zostanie skorygowana (przyspieszona lub zwolniona).
+        \nPodwójne kliknięcie na ekran włącza autoprzewijanie. Ponowne kliknięcie je wyłącza.
         \n
         \nWŁASNE PIOSENKI:
         \nMożesz dodawać własne piosenki, wybierając opcję z menu głównego.
@@ -75,10 +75,11 @@
         \nRxJava
     </string>
     <string name="action_info_ok">OK</string>
-    <string name="action_unlock">Odblokuj</string>
+    <string name="action_secret">Sekret</string>
+    <string name="action_check_secret">Sprawdź</string>
     <string name="action_cancel">Anuluj</string>
     <string name="ui_db_is_uptodate">Baza piosenek jest aktualna.</string>
-    <string name="contact_label">Możesz przesłać wiadomość do autora, jeśli zauważyłeś jakieś błędy lub jeśli masz pomysły na usprawnienie tej aplikacji. Możesz zaproponować również poprawkę lub uzupełnienie akordów piosenek. Będę wdzięczny za Twój komentarz oraz wkład w rozwój aplikacji.</string>
+    <string name="contact_label">Możesz przesłać wiadomość do autora, jeśli zauważyłeś jakieś błędy lub jeśli masz pomysły na usprawnienie tej aplikacji. Możesz wysłać również poprawkę do akordów piosenki lub zaproponować dodanie nowej. Będę wdzięczny za Twój komentarz oraz wkład w rozwój aplikacji.</string>
     <string name="contact_message_hint">Twoja wiadomość…</string>
     <string name="contact_send">Wyślij</string>
     <string name="contact_author_hint">Twoje imię (opcjonalne)</string>

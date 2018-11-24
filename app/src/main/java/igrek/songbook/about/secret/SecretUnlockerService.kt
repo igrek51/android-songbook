@@ -92,16 +92,17 @@ class SecretUnlockerService {
     }
 
     fun showUnlockAlert() {
-        val unlockAction = uiResourceService.resString(R.string.action_unlock)
+        val secretTitle = uiResourceService.resString(R.string.action_secret)
         val dlgAlert = AlertDialog.Builder(activity)
         dlgAlert.setMessage(uiResourceService.resString(R.string.unlock_type_in_secret_key))
-        dlgAlert.setTitle(unlockAction)
+        dlgAlert.setTitle(secretTitle)
 
         val input = EditText(activity)
         input.inputType = InputType.TYPE_CLASS_TEXT
         dlgAlert.setView(input)
 
-        dlgAlert.setPositiveButton(unlockAction) { _, _ -> unlockAttempt(input.text.toString()) }
+        val actionCheck = uiResourceService.resString(R.string.action_check_secret)
+        dlgAlert.setPositiveButton(actionCheck) { _, _ -> unlockAttempt(input.text.toString()) }
         dlgAlert.setNegativeButton(uiResourceService.resString(R.string.action_cancel)) { _, _ -> }
         dlgAlert.setCancelable(true)
         dlgAlert.create().show()
