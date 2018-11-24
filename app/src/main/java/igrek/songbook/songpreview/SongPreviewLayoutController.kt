@@ -29,7 +29,7 @@ import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.SongPreview
-import igrek.songbook.songselection.favourite.FavouriteSongService
+import igrek.songbook.songselection.favourite.FavouriteSongsRepository
 import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.WindowManagerService
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -61,7 +61,7 @@ class SongPreviewLayoutController : MainLayout {
     @Inject
     lateinit var uiInfoService: UiInfoService
     @Inject
-    lateinit var favouriteSongService: FavouriteSongService
+    lateinit var favouriteSongsRepository: FavouriteSongsRepository
 
     private val logger = LoggerFactory.getLogger()
     var songPreview: SongPreview? = null
@@ -306,18 +306,18 @@ class SongPreviewLayoutController : MainLayout {
     }
 
     private fun toggleSongFavourite() {
-        if (!favouriteSongService.isSongFavourite(currentSong!!)) {
-            favouriteSongService.setSongFavourite(currentSong!!)
+        if (!favouriteSongsRepository.isSongFavourite(currentSong!!)) {
+            favouriteSongsRepository.setSongFavourite(currentSong!!)
             uiInfoService.showInfo(R.string.favourite_song_has_been_set)
         } else {
-            favouriteSongService.unsetSongFavourite(currentSong!!)
+            favouriteSongsRepository.unsetSongFavourite(currentSong!!)
             uiInfoService.showInfo(R.string.favourite_song_has_been_unset)
         }
         updateFavouriteButton()
     }
 
     private fun updateFavouriteButton() {
-        if (favouriteSongService.isSongFavourite(currentSong!!)) {
+        if (favouriteSongsRepository.isSongFavourite(currentSong!!)) {
             setFavouriteButton!!.setImageResource(R.drawable.star_filled)
         } else {
             setFavouriteButton!!.setImageResource(R.drawable.star_border)

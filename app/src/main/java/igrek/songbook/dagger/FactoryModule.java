@@ -45,7 +45,7 @@ import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll;
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose;
 import igrek.songbook.songpreview.transpose.ChordsTransposerManager;
 import igrek.songbook.songselection.RandomSongOpener;
-import igrek.songbook.songselection.favourite.FavouriteSongService;
+import igrek.songbook.songselection.favourite.FavouriteSongsRepository;
 import igrek.songbook.songselection.favourite.FavouritesLayoutController;
 import igrek.songbook.songselection.songsearch.SongSearchLayoutController;
 import igrek.songbook.songselection.songtree.ScrollPosBuffer;
@@ -367,8 +367,8 @@ public class FactoryModule {
 	
 	@Provides
 	@Singleton
-	protected FavouriteSongService provideFavouriteSongService() {
-		return new FavouriteSongService();
+	protected FavouriteSongsRepository provideFavouriteSongService() {
+		return new FavouriteSongsRepository();
 	}
 	
 	@Provides

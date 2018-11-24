@@ -18,7 +18,7 @@ class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
     private var storedScroll: ListScrollPosition? = null
 
     @Inject
-    lateinit var favouriteSongService: FavouriteSongService
+    lateinit var favouriteSongsRepository: FavouriteSongsRepository
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
@@ -54,7 +54,7 @@ class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
 
     override fun getSongItems(songsDb: SongsDb): MutableList<SongTreeItem> {
         // filter songs
-        val songsSequence = favouriteSongService.getFavouriteSongs()
+        val songsSequence = favouriteSongsRepository.getFavouriteSongs()
                 .asSequence()
                 .map { song -> SongSearchItem.song(song) }
         return songsSequence.toMutableList()

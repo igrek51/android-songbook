@@ -44,7 +44,7 @@ import igrek.songbook.songpreview.transpose.ChordsTransposerManager;
 import igrek.songbook.songselection.RandomSongOpener;
 import igrek.songbook.songselection.SongListItemAdapter;
 import igrek.songbook.songselection.SongListView;
-import igrek.songbook.songselection.favourite.FavouriteSongService;
+import igrek.songbook.songselection.favourite.FavouriteSongsRepository;
 import igrek.songbook.songselection.favourite.FavouritesLayoutController;
 import igrek.songbook.songselection.songsearch.SongSearchLayoutController;
 import igrek.songbook.songselection.songtree.ScrollPosBuffer;
@@ -151,7 +151,7 @@ public interface FactoryComponent {
 	
 	void inject(AppLanguageService there);
 	
-	void inject(FavouriteSongService there);
+	void inject(FavouriteSongsRepository there);
 	
 	void inject(FavouritesLayoutController there);
 	
