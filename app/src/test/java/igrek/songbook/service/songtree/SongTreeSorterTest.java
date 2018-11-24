@@ -10,8 +10,8 @@ import igrek.songbook.model.songsdb.Song;
 import igrek.songbook.model.songsdb.SongCategory;
 import igrek.songbook.model.songsdb.SongCategoryType;
 import igrek.songbook.model.songsdb.SongStatus;
-import igrek.songbook.layout.songselection.SongTreeItem;
-import igrek.songbook.layout.songselection.songtree.SongTreeSorter;
+import igrek.songbook.songselection.SongTreeItem;
+import igrek.songbook.songselection.songtree.SongTreeSorter;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
@@ -61,8 +61,8 @@ public class SongTreeSorterTest {
 	}
 	
 	private SongTreeItem songItem(String title, SongCategoryType categoryType, String categoryName, boolean custom) {
-		SongCategory category = new SongCategory(categoryType.getId(), categoryType, categoryName, categoryName, new ArrayList<>());
-		Song song = new Song(1, title, category, null, 1, 0, 0, custom, title, null, null, false, null, null, SongStatus.PUBLISHED);
+		SongCategory category = new SongCategory(categoryType.getId(), categoryType, categoryName, false, categoryName, new ArrayList<>());
+		Song song = new Song(1, title, category, null, 1, 0, 0, custom, title, null, null, false, null, null, SongStatus.PUBLISHED, null, null);
 		return SongTreeItem.song(song);
 	}
 	
@@ -71,7 +71,7 @@ public class SongTreeSorterTest {
 	}
 	
 	private SongTreeItem categoryItem(SongCategoryType categoryType, String categoryName) {
-		SongCategory category = new SongCategory(categoryType.getId(), categoryType, categoryName, categoryName, new ArrayList<>());
+		SongCategory category = new SongCategory(categoryType.getId(), categoryType, categoryName, false, categoryName, new ArrayList<>());
 		return SongTreeItem.category(category);
 	}
 	

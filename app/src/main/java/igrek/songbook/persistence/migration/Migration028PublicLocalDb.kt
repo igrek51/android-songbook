@@ -13,28 +13,29 @@ import java.util.*
 
 class Migration028PublicLocalDb(val activity: Activity) : IMigration {
 
-    private var customSongsDb: SQLiteDatabase? = null
+    private var oldCustomSongsDb: SQLiteDatabase? = null
     private val logger = LoggerFactory.getLogger()
     private val iso8601Format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
     override fun migrate(migrator: DatabaseMigrator) {
-        // get custom songs only
-        customSongsDb = openCustomSongsDb() ?: return
+        // get old custom songs
+        oldCustomSongsDb = openCustomSongsDb() ?: return
 
         val tuples = readAllCustomSongs()
-        customSongsDb!!.close()
-
+        oldCustomSongsDb!!.close()
+        // clear
         migrator.makeFactoryReset()
 
-        // insert old tuples
+        // insert old tuples to new local db
+        val newLocalDb = migrator.songsRepository!!.localDbService.openLocalSongsDb()
         for (tuple in tuples) {
-            saveCustomSong(tuple)
+            addNewCustomSong(tuple, newLocalDb)
         }
 
-        removeDb(getCustomSongsDbFile())
+        removeDb(getOldCustomSongsDbFile())
     }
 
-    private fun getCustomSongsDbFile(): File {
+    private fun getOldCustomSongsDbFile(): File {
         return File(getSongDbDir(), "custom_songs.sqlite")
     }
 
@@ -50,8 +51,8 @@ class Migration028PublicLocalDb(val activity: Activity) : IMigration {
         return File("/data/data/" + activity.getPackageName() + "/files")
     }
 
-    fun openCustomSongsDb(): SQLiteDatabase? {
-        val dbFile = getCustomSongsDbFile()
+    private fun openCustomSongsDb(): SQLiteDatabase? {
+        val dbFile = getOldCustomSongsDbFile()
         // if file does not exist - copy initial db from resources
         if (!dbFile.exists())
             return null
@@ -64,7 +65,7 @@ class Migration028PublicLocalDb(val activity: Activity) : IMigration {
         return SQLiteDatabase.openDatabase(songsDbFile.absolutePath, null, SQLiteDatabase.OPEN_READWRITE)
     }
 
-    fun readAllCustomSongs(): MutableList<List<Any>> {
+    private fun readAllCustomSongs(): MutableList<List<Any>> {
         val tuples: MutableList<List<Any>> = mutableListOf()
         try {
             val cursor = sqlQuery("SELECT * FROM songs_song ORDER BY id")
@@ -97,7 +98,12 @@ class Migration028PublicLocalDb(val activity: Activity) : IMigration {
         return tuples
     }
 
-    fun saveCustomSong(tuple: List<Any>) {
+    private fun sqlQuery(sql: String, selectionArgs: Array<String> = arrayOf()): Cursor {
+        return oldCustomSongsDb!!.rawQuery(sql, selectionArgs)
+    }
+
+    private fun addNewCustomSong(tuple: List<Any>, newLocalDb: SQLiteDatabase) {
+        // insert new song
         val values = ContentValues()
         values.put("id", tuple[0] as Long)
         values.put("title", tuple[1] as String)
@@ -115,20 +121,15 @@ class Migration028PublicLocalDb(val activity: Activity) : IMigration {
         values.put("author", tuple[13] as String)
         values.put("state", tuple[14] as Long)
 
-        customSongsDb!!.insert("songs_song", null, values)
+        newLocalDb.insert("songs_song", null, values)
     }
 
-    protected fun sqlQuery(sql: String, selectionArgs: Array<String> = arrayOf()): Cursor {
-        return customSongsDb!!.rawQuery(sql, selectionArgs)
-    }
-
-
-    protected fun getBooleanColumn(cursor: Cursor, name: String): Boolean {
+    private fun getBooleanColumn(cursor: Cursor, name: String): Boolean {
         val intValue = cursor.getInt(cursor.getColumnIndexOrThrow(name))
         return intValue != 0
     }
 
-    protected fun getTimestampColumn(cursor: Cursor, name: String): Long {
+    private fun getTimestampColumn(cursor: Cursor, name: String): Long {
         // get datetime, convert to long timestamp
         val stringValue = cursor.getString(cursor.getColumnIndexOrThrow(name))
         try {

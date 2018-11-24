@@ -13,7 +13,7 @@ class DatabaseMigrator {
     lateinit var activity: Activity
 
     private val logger = LoggerFactory.getLogger()
-    private var songsRepository: SongsRepository? = null
+    var songsRepository: SongsRepository? = null
 
     private val latestDbVersion = 28
     private val minDbVersionCompatibility = 18

@@ -90,6 +90,7 @@ public class LayoutController {
 	
 	public void showFavourites() {
 		showMainLayout(favouritesLayoutController.get());
+		lastSongSelectionLayout = favouritesLayoutController.get();
 	}
 	
 	

@@ -38,15 +38,19 @@ abstract class AbstractSqliteDao {
         return intValue != 0
     }
 
+    protected fun booleanToNum(b: Boolean): Long {
+        return if (b) 1 else 0
+    }
+
     protected fun getTimestampColumn(cursor: Cursor, name: String): Long {
         // get datetime, convert to long timestamp
         val stringValue = cursor.getString(cursor.getColumnIndexOrThrow(name))
-        try {
+        return try {
             val date = iso8601Format.parse(stringValue)
-            return date.time
+            date.time
         } catch (e: ParseException) {
             logger.error(e)
-            return 0
+            0
         }
     }
 

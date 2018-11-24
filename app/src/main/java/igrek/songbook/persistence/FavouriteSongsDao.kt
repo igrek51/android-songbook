@@ -18,7 +18,7 @@ class FavouriteSongsDao : AbstractSqliteDao() {
         return localDbService.openLocalSongsDb()
     }
 
-    fun readFavouriteSongs(): List<FavouriteSongId> {
+    private fun readFavouriteSongs(): List<FavouriteSongId> {
         val favouriteSongs: MutableList<FavouriteSongId> = mutableListOf()
         try {
             val cursor = sqlQuery("SELECT * FROM favourite_songs")
@@ -41,7 +41,7 @@ class FavouriteSongsDao : AbstractSqliteDao() {
         val db = getDatabase()
         val values = ContentValues()
         values.put("song_id", song.id)
-        values.put("is_custom", song.custom)
+        values.put("is_custom", booleanToNum(song.custom))
         db.insert("favourite_songs", null, values)
     }
 
@@ -50,16 +50,24 @@ class FavouriteSongsDao : AbstractSqliteDao() {
             return
 
         val db = getDatabase()
-        val whereArgs: Array<String> = arrayOf(song.id.toString(), song.custom.toString())
-        db.delete("favourite_songs", "song_id = ? AND is_custom = ?", whereArgs)
+        val isCustom = booleanToNum(song.custom).toString()
+        val whereArgs: Array<String> = arrayOf(song.id.toString(), isCustom)
+        val affectedRows = db.delete("favourite_songs", "song_id = ? AND is_custom = ?", whereArgs)
+        if (affectedRows != 1) {
+            logger.warn("rows affected by query: $affectedRows")
+        }
     }
 
-    fun isSongFavourite(song: Song): Boolean {
-        val mapper: (Cursor) -> Boolean = { cursor -> cursor.getColumnIndexOrThrow("count") > 0 }
-        return queryOneValue(mapper, false, "SELECT COUNT(*) AS count FROM favourite_songs WHERE song_id = ? AND is_custom = ?", song.id, song.custom)
+    private fun isSongFavourite(song: Song): Boolean {
+        val mapper: (Cursor) -> Boolean = { cursor ->
+            val count = cursor.getLong(cursor.getColumnIndexOrThrow("count"))
+            count > 0
+        }
+        val isCustom = booleanToNum(song.custom)
+        return queryOneValue(mapper, false, "SELECT COUNT(*) AS count FROM favourite_songs WHERE song_id = ? AND is_custom = ?", song.id, isCustom)
     }
 
-    fun findFavouriteSong(favouriteSongId: FavouriteSongId, songs: List<Song>): Song? {
+    private fun findFavouriteSong(favouriteSongId: FavouriteSongId, songs: List<Song>): Song? {
         for (song in songs) {
             if (song.id == favouriteSongId.songId && song.custom == favouriteSongId.custom)
                 return song

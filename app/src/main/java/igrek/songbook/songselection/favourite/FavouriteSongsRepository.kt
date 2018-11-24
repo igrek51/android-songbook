@@ -15,7 +15,7 @@ class FavouriteSongsRepository {
     @Inject
     lateinit var favouriteSongsDao: FavouriteSongsDao
 
-    private var favouritesCache: SimpleCache<Set<Song>> =
+    private var favouritesCache: SimpleCache<HashSet<Song>> =
             SimpleCache {
                 val all = songsRepository.get().songsDb!!.getAllUnlockedSongs()
                 val favourites = favouriteSongsDao.populateFavouriteSongs(all)
@@ -36,12 +36,12 @@ class FavouriteSongsRepository {
 
     fun setSongFavourite(song: Song) {
         favouriteSongsDao.setAsFavourite(song)
-        favouritesCache.reset()
+        favouritesCache.get().add(song)
     }
 
     fun unsetSongFavourite(song: Song) {
         favouriteSongsDao.unsetFavourite(song)
-        favouritesCache.reset()
+        favouritesCache.get().remove(song)
     }
 
     fun resetCache() {

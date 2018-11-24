@@ -5,8 +5,8 @@ import igrek.songbook.system.cache.SimpleCache
 
 open class SongCategory(
         val id: Long,
-        val type: SongCategoryType,
-        val name: String? = null,
+        open val type: SongCategoryType,
+        open val name: String? = null,
         var custom: Boolean = false,
         open var displayName: String? = null,
         var songs: List<Song>? = null

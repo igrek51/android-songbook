@@ -27,7 +27,7 @@ class CustomSongsDao : AbstractSqliteDao() {
         val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
         val custom = getBooleanColumn(cursor, "is_custom")
         val type = SongCategoryType.parseById(typeId)
-        return SongCategory(id, type, name)
+        return SongCategory(id, type, name, custom)
     }
 
     fun readAllSongs(categories: List<SongCategory>): MutableList<Song> {
@@ -79,7 +79,7 @@ class CustomSongsDao : AbstractSqliteDao() {
         return queryOneValue(mapper, null, "SELECT * FROM songs_category WHERE type_id = ?", categoryTypeId)
     }
 
-    fun saveCustomSong(song: Song) {
+    fun addCustomSong(song: Song) {
         // auto increment id
         song.id = getNextSongId()
         // insert new song
@@ -92,11 +92,11 @@ class CustomSongsDao : AbstractSqliteDao() {
         values.put("version_number", song.versionNumber)
         values.put("create_time", iso8601Format.format(Date(song.createTime)))
         values.put("update_time", iso8601Format.format(Date(song.updateTime)))
-        values.put("is_custom", song.custom)
+        values.put("is_custom", booleanToNum(song.custom))
         values.put("filename", song.filename)
         values.put("comment", song.comment)
         values.put("preferred_key", song.preferredKey)
-        values.put("is_locked", song.locked)
+        values.put("is_locked", booleanToNum(song.locked))
         values.put("lock_password", song.lockPassword)
         values.put("author", song.author)
         values.put("state", song.status.id)
@@ -120,13 +120,19 @@ class CustomSongsDao : AbstractSqliteDao() {
         values.put("update_time", iso8601Format.format(Date()))
 
         val whereArgs: Array<String> = arrayOf(song.id.toString())
-        db.update("songs_song", values, "id = ?", whereArgs)
+        val affectedRows = db.update("songs_song", values, "id = ?", whereArgs)
+        if (affectedRows != 1) {
+            logger.warn("rows affected by query: $affectedRows")
+        }
     }
 
     fun removeCustomSong(song: Song) {
         val db = getDatabase()
         val whereArgs: Array<String> = arrayOf(song.id.toString())
-        db.delete("songs_song", "id = ?", whereArgs)
+        val affectedRows = db.delete("songs_song", "id = ?", whereArgs)
+        if (affectedRows != 1) {
+            logger.warn("rows affected by query: $affectedRows")
+        }
     }
 
 }

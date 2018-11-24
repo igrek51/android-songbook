@@ -122,8 +122,8 @@ class SongsRepository {
         unlockedSongsDao.unlockKey(key)
     }
 
-    fun saveImportedSong(song: Song) {
-        customSongsDao.saveCustomSong(song)
+    fun addCustomSong(song: Song) {
+        customSongsDao.addCustomSong(song)
         initializeSongsDb()
     }
 

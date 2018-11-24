@@ -77,7 +77,7 @@
     <string name="action_unlock">Odblokuj</string>
     <string name="action_cancel">Anuluj</string>
     <string name="ui_db_is_uptodate">Baza piosenek jest aktualna.</string>
-    <string name="contact_label">Możesz przesłać wiadomość do autora, jeśli zauważyłeś jakieś błędy lub jeśli masz pomysły na usprawnienie tej aplikacji. Możesz zaproponować również poprawkę lub dodanie akordów piosenek. Będę wdzięczny za Twój komentarz.</string>
+    <string name="contact_label">Możesz przesłać wiadomość do autora, jeśli zauważyłeś jakieś błędy lub jeśli masz pomysły na usprawnienie tej aplikacji. Możesz zaproponować również poprawkę lub uzupełnienie akordów piosenek. Będę wdzięczny za Twój komentarz oraz wkład w rozwój aplikacji.</string>
     <string name="contact_message_hint">Twoja wiadomość…</string>
     <string name="contact_send">Wyślij</string>
     <string name="contact_author_hint">Twoje imię (opcjonalne)</string>
@@ -162,7 +162,7 @@
     <string name="settings_language">Język aplikacji (wymagany restart):</string>
     <string name="language_default">Domyślny systemowy</string>
     <string name="contact_subject_song_comment">Komentarz do piosenki</string>
-    <string name="contact_info_song_comment">Wypełnij komentarz do wybranej piosenki lub zaproponuj poprawkę w tekście lub akordach. \nDzięki za współtworzenie bazy piosenek!</string>
+    <string name="contact_info_song_comment">Do wybranej piosenki możesz dodać komentarz lub zaproponować poprawkę w tekście lub akordach. \nDzięki za współtworzenie bazy piosenek!</string>
     <string name="contact_subject_publishing_song">Nowa piosenka</string>
     <string name="contact_info_song_publishing">Opublikowanie twojej piosenki w bazie piosenek pozwoli innym użytkownikom ją przeglądać. Zanim to nastąpi, wysłany tekst Twojej piosenki wraz z akordami będzie musiał zostać zatwierdzony. \nDzięki za współtworzenie bazy piosenek!</string>
     <string name="favourite_song_has_been_set">Piosenka została dodana do ulubionych.</string>

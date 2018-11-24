@@ -77,7 +77,7 @@
     <string name="action_unlock">Unlock</string>
     <string name="action_cancel">Cancel</string>
     <string name="ui_db_is_uptodate">Songs database is up-to-date.</string>
-    <string name="contact_label">You can contact me if you have noticed some bugs or you have any ideas how to improve this application. You can suggest improving or adding song chords. I would be very grateful for your comments.</string>
+    <string name="contact_label">You can contact me if you have noticed some bugs or you have any ideas how to improve this application. You can also suggest improving or adding song chords. I would be very grateful for your comments and contributing.</string>
     <string name="contact_message_hint">Your message…</string>
     <string name="contact_send">Send</string>
     <string name="contact_author_hint">Your name (optional)</string>
@@ -164,9 +164,9 @@
     <string name="language_polish" translatable="false">Polski</string>
     <string name="language_default">System default</string>
     <string name="contact_subject_song_comment">Song comment</string>
-    <string name="contact_info_song_comment">You can add your comments here about this song or you can suggest some improvements to the lyrics or chords. \n Thanks for contributing!</string>
+    <string name="contact_info_song_comment">You can add your comments here about this song or you can suggest some improvements to the lyrics or chords. \nThanks for contributing!</string>
     <string name="contact_subject_publishing_song">New song</string>
-    <string name="contact_info_song_publishing">By publishing your custom song, all other users will be able to see it in songs database. Before that, your song lyrics and chords must be reviewed first. \n Thanks for contributing!</string>
+    <string name="contact_info_song_publishing">By publishing your custom song, all other users will be able to see it in songs database. Before that, your song lyrics and chords must be reviewed first. \nThanks for contributing!</string>
     <string name="favourite_song_has_been_set">Song has been added to favourites.</string>
     <string name="favourite_song_has_been_unset">Song has been removed from favourites.</string>
 </resources>
