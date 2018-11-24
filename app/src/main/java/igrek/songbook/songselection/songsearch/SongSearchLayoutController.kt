@@ -83,7 +83,7 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
         updateSongItemsList()
 
         songsRepository.dbChangeSubject.subscribe {
-            if (layoutController.isState(LayoutState.SONGS_TREE))
+            if (layoutController.isState(layoutState))
                 updateSongItemsList()
         }
     }

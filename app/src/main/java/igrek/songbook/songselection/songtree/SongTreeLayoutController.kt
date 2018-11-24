@@ -14,7 +14,7 @@ import igrek.songbook.songselection.SongSelectionLayoutController
 import igrek.songbook.songselection.SongTreeItem
 import javax.inject.Inject
 
-class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
+open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
 
     @Inject
     lateinit var scrollPosBuffer: ScrollPosBuffer
@@ -42,8 +42,8 @@ class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
         itemsListView!!.init(activity, this)
         updateSongItemsList()
 
-        songsRepository.dbChangeSubject.subscribe { _ ->
-            if (layoutController.isState(LayoutState.SONGS_TREE))
+        songsRepository.dbChangeSubject.subscribe {
+            if (layoutController.isState(layoutState))
                 updateSongItemsList()
         }
     }
