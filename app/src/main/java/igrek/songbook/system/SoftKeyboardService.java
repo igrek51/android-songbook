@@ -8,6 +8,8 @@ import android.view.inputmethod.InputMethodManager;
 import javax.inject.Inject;
 
 import igrek.songbook.dagger.DaggerIoc;
+import igrek.songbook.info.logger.Logger;
+import igrek.songbook.info.logger.LoggerFactory;
 
 public class SoftKeyboardService {
 	
@@ -15,6 +17,7 @@ public class SoftKeyboardService {
 	AppCompatActivity activity;
 	
 	private InputMethodManager imm;
+	private Logger logger = LoggerFactory.getLogger();
 	
 	public SoftKeyboardService() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -22,9 +25,15 @@ public class SoftKeyboardService {
 	}
 	
 	public void hideSoftKeyboard(View view) {
-		if (imm != null) {
-			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+		if (imm == null) {
+			logger.error("no input method manager");
+			return;
 		}
+		if (view == null) {
+			logger.error("view = null");
+			return;
+		}
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 	
 	public void hideSoftKeyboard() {

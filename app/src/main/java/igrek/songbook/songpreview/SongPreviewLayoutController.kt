@@ -312,7 +312,6 @@ class SongPreviewLayoutController : MainLayout {
         } else {
             favouriteSongService.unsetSongFavourite(currentSong!!)
             uiInfoService.showInfo(R.string.favourite_song_has_been_unset)
-
         }
         updateFavouriteButton()
     }
