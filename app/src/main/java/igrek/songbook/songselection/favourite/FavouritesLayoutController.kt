@@ -2,6 +2,7 @@ package igrek.songbook.songselection.favourite
 
 import android.os.Handler
 import android.view.View
+import android.widget.TextView
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.layout.LayoutState
@@ -16,6 +17,7 @@ import javax.inject.Inject
 class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
 
     private var storedScroll: ListScrollPosition? = null
+    private var emptyListLabel: TextView? = null
 
     @Inject
     lateinit var favouriteSongsRepository: FavouriteSongsRepository
@@ -26,6 +28,8 @@ class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
 
     override fun showLayout(layout: View) {
         initSongSelectionLayout(layout)
+
+        emptyListLabel = layout.findViewById(R.id.emptyListLabel)
 
         itemsListView!!.init(activity, this)
         updateSongItemsList()
@@ -49,6 +53,12 @@ class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
         // restore Scroll Position
         if (storedScroll != null) {
             Handler().post { itemsListView?.restoreScrollPosition(storedScroll) }
+        }
+
+        if (itemsListView!!.count == 0) {
+            emptyListLabel!!.visibility = View.VISIBLE
+        } else {
+            emptyListLabel!!.visibility = View.GONE
         }
     }
 

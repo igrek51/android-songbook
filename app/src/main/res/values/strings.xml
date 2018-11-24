@@ -170,4 +170,5 @@
     <string name="contact_info_song_publishing">By publishing your custom song, all other users will be able to see it in songs database. Before that, your song lyrics and chords must be reviewed first. \nThanks for contributing!</string>
     <string name="favourite_song_has_been_set">Song has been added to favourites.</string>
     <string name="favourite_song_has_been_unset">Song has been removed from favourites.</string>
+    <string name="empty_favourite_songs">No favourite songs.\nClick a star icon on song preview to add a it to favourites.</string>
 </resources>
