@@ -51,9 +51,16 @@ public class LyricsManager {
 		autoscrollService.get().reset();
 	}
 	
+	private String normalizeContent(String content) {
+		content = content.replace("\r", "");
+		content = content.replace("\t", " ");
+		content = content.replace("\u00A0", " "); // NO-BREAK SPACE (0xC2 0xA0)
+		return content;
+	}
+	
 	public void load(String fileContent, Integer screenW, Integer screenH, Paint paint) {
 		reset();
-		originalFileContent = fileContent;
+		originalFileContent = normalizeContent(fileContent);
 		
 		if (screenW != null)
 			this.screenW = screenW;

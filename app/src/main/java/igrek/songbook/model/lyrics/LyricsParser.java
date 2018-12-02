@@ -23,9 +23,6 @@ public class LyricsParser {
 		setNormalFont();
 		paint.setTextSize(fontsize);
 		
-		content = content.replace("\r", "");
-		content = content.replace("\t", " ");
-		content = content.replace("\u00A0", " "); // NO-BREAK SPACE (0xC2 0xA0)
 		LyricsModel model = new LyricsModel();
 		setBracket(false);
 		String[] lines1 = content.split("\n");
