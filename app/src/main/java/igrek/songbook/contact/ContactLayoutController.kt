@@ -93,7 +93,7 @@ class ContactLayoutController : MainLayout {
         val message = contactMessageEdit!!.text.toString()
         val author = contactAuthorEdit!!.text.toString()
         val subject = contactSubjectEdit!!.text.toString()
-        if (message == null || message.isEmpty()) {
+        if (message.isEmpty()) {
             uiInfoService.showToast(uiResourceService.resString(R.string.contact_message_field_empty))
             return
         }
@@ -109,15 +109,18 @@ class ContactLayoutController : MainLayout {
         setSubject(subjectPrefix + ": " + song.displayName())
         val dialogTitle = uiResourceService.resString(R.string.contact_subject_song_comment)
         val dialogMessage = uiResourceService.resString(R.string.contact_info_song_comment)
-        uiInfoService.showDialog(dialogTitle, dialogMessage)
     }
 
     fun prepareCustomSongPublishing(songTitle: String, customCategoryName: String, songContent: String) {
         val subjectPrefix = uiResourceService.resString(R.string.contact_subject_publishing_song)
-        setSubject("$subjectPrefix: $songTitle - $customCategoryName")
+        val fullTitle: String = if (customCategoryName.isEmpty()) {
+            songTitle
+        } else {
+            "$songTitle - $customCategoryName"
+        }
+        setSubject("$subjectPrefix: $fullTitle")
         contactMessageEdit!!.setText(songContent)
         val dialogTitle = uiResourceService.resString(R.string.contact_subject_publishing_song)
         val dialogMessage = uiResourceService.resString(R.string.contact_info_song_publishing)
-        uiInfoService.showDialog(dialogTitle, dialogMessage)
     }
 }
