@@ -79,10 +79,10 @@
     <string name="action_check_secret">Check</string>
     <string name="action_cancel">Cancel</string>
     <string name="ui_db_is_uptodate">Songs database is up-to-date.</string>
-    <string name="contact_label">You can contact me if you have noticed some bugs or you have any ideas how to improve this application. You can also suggest improvements to the chords or propose adding a new song. I would be very grateful for your comments and contributing.</string>
+    <string name="contact_label">You can contact me if you have noticed some bugs or you have any ideas how to improve this application. You can also suggest improvements to the chords or propose adding a new song. I would be very grateful for your comments and contributing. Please add your email if you wish to get a reply to your message.</string>
     <string name="contact_message_hint">Your message…</string>
     <string name="contact_send">Send</string>
-    <string name="contact_author_hint">Your name (optional)</string>
+    <string name="contact_author_hint">Your name or email (optional)</string>
     <string name="transposed_by_semitones">Transposed by %s</string>
     <string name="transpose_0_semitones">semitones</string>
     <string name="transpose_1_semitones">semitone</string>

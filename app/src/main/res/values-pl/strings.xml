@@ -79,10 +79,10 @@
     <string name="action_check_secret">Sprawdź</string>
     <string name="action_cancel">Anuluj</string>
     <string name="ui_db_is_uptodate">Baza piosenek jest aktualna.</string>
-    <string name="contact_label">Możesz przesłać wiadomość do autora, jeśli zauważyłeś jakieś błędy lub jeśli masz pomysły na usprawnienie tej aplikacji. Możesz wysłać również poprawkę do akordów piosenki lub zaproponować dodanie nowej. Będę wdzięczny za Twój komentarz oraz wkład w rozwój aplikacji.</string>
+    <string name="contact_label">Możesz przesłać wiadomość do autora, jeśli zauważyłeś jakieś błędy lub jeśli masz pomysły na usprawnienie tej aplikacji. Możesz wysłać również poprawkę do akordów piosenki lub zaproponować dodanie nowej. Będę wdzięczny za Twój komentarz oraz wkład w rozwój aplikacji. Jeśli chcesz otrzymać odpowiedź na swoją wiadomość, podaj także swój email.</string>
     <string name="contact_message_hint">Twoja wiadomość…</string>
     <string name="contact_send">Wyślij</string>
-    <string name="contact_author_hint">Twoje imię (opcjonalne)</string>
+    <string name="contact_author_hint">Twoje imię lub email (opcjonalne)</string>
     <string name="transposed_by_semitones">Transpozycja: %s</string>
     <string name="transpose_0_semitones">półtonów</string>
     <string name="transpose_1_semitones">półton</string>
