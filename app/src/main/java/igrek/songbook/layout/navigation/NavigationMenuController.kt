@@ -105,4 +105,12 @@ class NavigationMenuController {
         softKeyboardService.hideSoftKeyboard()
     }
 
+    fun navDrawerHide() {
+        drawerLayout?.closeDrawers()
+    }
+
+    fun isDrawerShown(): Boolean {
+        return drawerLayout!!.isDrawerOpen(GravityCompat.START)
+    }
+
 }

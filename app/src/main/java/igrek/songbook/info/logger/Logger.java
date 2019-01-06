@@ -55,7 +55,7 @@ public class Logger {
 	}
 	
 	public void debug(Object... objs) {
-		String message = Joiner.on(", ").join(objs);
+		String message = Joiner.on(" ").join(objs);
 		log(message, LogLevel.DEBUG, "[debug] ");
 	}
 	

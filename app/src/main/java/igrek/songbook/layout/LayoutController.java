@@ -132,6 +132,10 @@ public class LayoutController {
 	}
 	
 	public void onBackClicked() {
+		if (navigationMenuController.get().isDrawerShown()) {
+			navigationMenuController.get().navDrawerHide();
+			return;
+		}
 		currentlyShownLayout.onBackClicked();
 	}
 }
