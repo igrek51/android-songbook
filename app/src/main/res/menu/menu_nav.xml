@@ -6,7 +6,7 @@
         <item
             android:id="@+id/nav_songs_list"
             android:icon="@drawable/list"
-            android:title="@string/nav_songs_list"/>
+            android:title="@string/nav_categories_list"/>
         <item
             android:id="@+id/nav_search"
             android:icon="@drawable/search"

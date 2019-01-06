@@ -76,7 +76,7 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
             setTitle(currentCategory?.displayName)
         } else {
             goBackButton!!.visibility = View.GONE
-            setTitle(uiResourceService.resString(R.string.nav_songs_list))
+            setTitle(uiResourceService.resString(R.string.nav_categories_list))
         }
         restoreScrollPosition(currentCategory)
     }
