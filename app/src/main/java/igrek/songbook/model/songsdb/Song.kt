@@ -19,7 +19,11 @@ open class Song(
         var author: String? = null,
         var status: SongStatus,
         var customCategoryName: String? = null,
-        var language: String? = null
+        var language: String? = null,
+        var metre: String? = null,
+        var rank: Double? = null,
+        var scrollSpeed: Double? = null,
+        var initialDelay: Double? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (other !is Song)

@@ -47,7 +47,7 @@ public class SongEditService {
 		long versionNumber = 1;
 		long now = new Date().getTime();
 		SongCategory category = songsRepository.getCustomCategoryByTypeId(SongCategoryType.CUSTOM.getId());
-		Song newSong = new Song(0, title, category, content, versionNumber, now, now, true, title, null, null, false, null, null, SongStatus.PROPOSED, customCategoryName, null);
+		Song newSong = new Song(0, title, category, content, versionNumber, now, now, true, title, null, null, false, null, null, SongStatus.PROPOSED, customCategoryName, null, null, null, null, null);
 		songsRepository.addCustomSong(newSong);
 		return newSong;
 	}

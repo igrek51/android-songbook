@@ -53,11 +53,15 @@ class CustomSongsDao : AbstractSqliteDao() {
                 val categoryId = cursor.getLong(cursor.getColumnIndexOrThrow("category_id"))
                 val customCategoryName = cursor.getString(cursor.getColumnIndexOrThrow("custom_category_name"))
                 val language = cursor.getString(cursor.getColumnIndexOrThrow("language"))
+                val rank = getOptionalDouble(cursor, "rank")
+                val scrollSpeed = getOptionalDouble(cursor, "scroll_speed")
+                val initialDelay = getOptionalDouble(cursor, "initial_delay")
+                val metre = getOptionalString(cursor, "metre")
 
                 val songStatus = SongStatus.parseById(stateId)
                 val category = categories.first { category -> category.id == categoryId }
 
-                val song = Song(id, title, category, fileContent, versionNumber, createTime, updateTime, custom, filename, comment, preferredKey, locked, lockPassword, author, songStatus, customCategoryName, language)
+                val song = Song(id, title, category, fileContent, versionNumber, createTime, updateTime, custom, filename, comment, preferredKey, locked, lockPassword, author, songStatus, customCategoryName, language, metre, rank, scrollSpeed, initialDelay)
                 songs.add(song)
             }
 
@@ -102,6 +106,10 @@ class CustomSongsDao : AbstractSqliteDao() {
         values.put("state", song.status.id)
         values.put("custom_category_name", song.customCategoryName)
         values.put("language", song.language)
+        values.put("rank", song.rank)
+        values.put("scroll_speed", song.scrollSpeed)
+        values.put("initial_delay", song.initialDelay)
+        values.put("metre", song.metre)
 
         db.insert("songs_song", null, values)
     }

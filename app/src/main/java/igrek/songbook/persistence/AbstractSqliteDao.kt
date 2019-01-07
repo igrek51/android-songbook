@@ -38,6 +38,30 @@ abstract class AbstractSqliteDao {
         return intValue != 0
     }
 
+    protected fun getOptionalDouble(cursor: Cursor, columnName: String): Double? {
+        val columneIndex = cursor.getColumnIndex(columnName)
+        if (columneIndex == -1) {
+            return null
+        }
+
+        if (cursor.isNull(columneIndex))
+            return null
+
+        return cursor.getDouble(columneIndex)
+    }
+
+    protected fun getOptionalString(cursor: Cursor, columnName: String): String? {
+        val columneIndex = cursor.getColumnIndex(columnName)
+        if (columneIndex == -1) {
+            return null
+        }
+
+        if (cursor.isNull(columneIndex))
+            return null
+
+        return cursor.getString(columneIndex)
+    }
+
     protected fun booleanToNum(b: Boolean): Long {
         return if (b) 1 else 0
     }
