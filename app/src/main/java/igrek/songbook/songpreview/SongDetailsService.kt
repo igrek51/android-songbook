@@ -48,10 +48,13 @@ class SongDetailsService {
 
         val dialogTitle = uiResourceService.resString(R.string.song_details_title)
 
-        val commentActionName = uiResourceService.resString(R.string.action_comment_song)
-        val comemntAction = Runnable { addCommentToSong(song) }
+        val amendActionName = uiResourceService.resString(R.string.action_amend_song)
+        val amendAction = Runnable { amendSong(song) }
 
-        showDialogWithActions(dialogTitle, message, commentActionName, comemntAction)
+        val commentActionName = uiResourceService.resString(R.string.action_comment_song)
+        val commentAction = Runnable { commentSong(song) }
+
+        showDialogWithActions(dialogTitle, message, amendActionName, amendAction, commentActionName, commentAction)
     }
 
     private fun getLastModificationDate(song: Song): String {
@@ -61,18 +64,24 @@ class SongDetailsService {
         return modificationDateFormat.format(cal.time)
     }
 
-    private fun showDialogWithActions(title: String, message: String, neutralActionName: String, neutralAction: Runnable) {
+    private fun showDialogWithActions(title: String, message: String, neutralActionName: String, neutralAction: Runnable, negativeActionName: String, negativeAction: Runnable) {
         val alertBuilder = AlertDialog.Builder(activity)
-        alertBuilder.setMessage(message)
-        alertBuilder.setTitle(title)
-        alertBuilder.setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { dialog, which -> }
-        alertBuilder.setNeutralButton(neutralActionName) { dialog, which -> neutralAction.run() }
-        alertBuilder.setCancelable(true)
+                .setMessage(message)
+                .setTitle(title)
+                .setNeutralButton(neutralActionName) { _, _ -> neutralAction.run() }
+                .setNegativeButton(negativeActionName) { _, _ -> negativeAction.run() }
+                .setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { _, _ -> }
+                .setCancelable(true)
         val alertDialog = alertBuilder.create()
         alertDialog.show()
     }
 
-    private fun addCommentToSong(song: Song) {
+    private fun amendSong(song: Song) {
+        layoutController.get().showContact()
+        contactLayoutController.get().prepareSongAmend(song)
+    }
+
+    private fun commentSong(song: Song) {
         layoutController.get().showContact()
         contactLayoutController.get().prepareSongComment(song)
     }

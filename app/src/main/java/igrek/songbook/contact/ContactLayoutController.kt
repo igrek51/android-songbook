@@ -104,11 +104,19 @@ class ContactLayoutController : MainLayout {
         contactSubjectEdit!!.setText(subject)
     }
 
+    private fun setMessage(message: String?) {
+        contactMessageEdit!!.setText(message)
+    }
+
+    fun prepareSongAmend(song: Song) {
+        val subjectPrefix = uiResourceService.resString(R.string.contact_subject_song_amend)
+        setSubject(subjectPrefix + ": " + song.displayName())
+        setMessage(song.content)
+    }
+
     fun prepareSongComment(song: Song) {
         val subjectPrefix = uiResourceService.resString(R.string.contact_subject_song_comment)
         setSubject(subjectPrefix + ": " + song.displayName())
-        val dialogTitle = uiResourceService.resString(R.string.contact_subject_song_comment)
-        val dialogMessage = uiResourceService.resString(R.string.contact_info_song_comment)
     }
 
     fun prepareCustomSongPublishing(songTitle: String, customCategoryName: String, songContent: String) {
@@ -120,7 +128,5 @@ class ContactLayoutController : MainLayout {
         }
         setSubject("$subjectPrefix: $fullTitle")
         contactMessageEdit!!.setText(songContent)
-        val dialogTitle = uiResourceService.resString(R.string.contact_subject_publishing_song)
-        val dialogMessage = uiResourceService.resString(R.string.contact_info_song_publishing)
     }
 }
