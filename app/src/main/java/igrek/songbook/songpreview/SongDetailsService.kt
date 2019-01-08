@@ -35,6 +35,7 @@ class SongDetailsService {
     fun showSongDetails(song: Song) {
         val comment = song.comment
         val preferredKey = song.preferredKey
+        val metre = song.metre
         val songTitle = song.title
         val category = song.category.displayName
         val songVersion = song.versionNumber.toString()
@@ -42,9 +43,11 @@ class SongDetailsService {
 
         var message = uiResourceService.resString(R.string.song_details, songTitle, category, songVersion, modificationDate)
         if (preferredKey != null)
-            message += uiResourceService.resString(R.string.song_details_preferred_key, preferredKey)
+            message += "\n" + uiResourceService.resString(R.string.song_details_preferred_key, preferredKey)
+        if (metre != null)
+            message += "\n" + uiResourceService.resString(R.string.song_details_metre, metre)
         if (comment != null)
-            message += uiResourceService.resString(R.string.song_details_comment, comment)
+            message += "\n" + uiResourceService.resString(R.string.song_details_comment, comment)
 
         val dialogTitle = uiResourceService.resString(R.string.song_details_title)
 

@@ -113,12 +113,9 @@
         \nWersja piosenki: %s
         \nOstatnia modyfikacja: %s
     </string>
-    <string name="song_details_comment">
-        \nKomentarz: %s
-    </string>
-    <string name="song_details_preferred_key">
-        \nPreferowana tonacja: %s
-    </string>
+    <string name="song_details_comment">Komentarz: %s</string>
+    <string name="song_details_preferred_key">Preferowana tonacja: %s</string>
+    <string name="song_details_metre">Metrum: %s</string>
     <string name="easter_egg_discovered">Gratulacje!
         \nOdnalazłeś Easter Egga :)</string>
     <string name="error_occurred">Wystąpił błąd: %s</string>

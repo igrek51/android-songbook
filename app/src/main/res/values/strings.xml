@@ -113,12 +113,9 @@
         \nSong version: %s
         \nLast modification: %s
     </string>
-    <string name="song_details_comment">
-        \nComment: %s
-    </string>
-    <string name="song_details_preferred_key">
-        \nPreferred key: %s
-    </string>
+    <string name="song_details_comment">Comment: %s</string>
+    <string name="song_details_preferred_key">Preferred key: %s</string>
+    <string name="song_details_metre">Metre: %s</string>
     <string name="easter_egg_discovered">Congratulations!
         \nYou have discovered an Easter Egg :)</string>
     <string name="error_occurred">Error occurred: %s</string>
