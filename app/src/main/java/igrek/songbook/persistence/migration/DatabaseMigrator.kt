@@ -52,10 +52,8 @@ class DatabaseMigrator {
 
     private fun verifyLocalDb(songsRepository: SongsRepository): Long? {
         // custom songs is part of local database
-        val localSongsDbVersion = songsRepository.customSongsDao.readDbVersionNumber()
-        if (localSongsDbVersion == null)
-            throw RuntimeException("local db version error")
-        return localSongsDbVersion
+        return songsRepository.customSongsDao.readDbVersionNumber()
+                ?: throw RuntimeException("local db version error")
     }
 
     private fun isLatest(songsDbVersion: Long?): Boolean {

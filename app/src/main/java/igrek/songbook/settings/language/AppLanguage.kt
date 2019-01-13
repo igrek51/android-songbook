@@ -4,7 +4,7 @@ import igrek.songbook.R
 
 enum class AppLanguage(val langCode: String, val displayNameResId: Int) {
 
-    DEFAULT("_", R.string.language_default),
+    DEFAULT("", R.string.language_default),
 
     ENGLISH("en", R.string.language_english),
 

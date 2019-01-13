@@ -19,7 +19,6 @@ import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
-import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
@@ -66,7 +65,6 @@ class SongPreviewLayoutController : MainLayout {
     @Inject
     lateinit var favouriteSongsRepository: FavouriteSongsRepository
 
-    private val logger = LoggerFactory.getLogger()
     var songPreview: SongPreview? = null
         private set
     private var currentSong: Song? = null
@@ -277,13 +275,13 @@ class SongPreviewLayoutController : MainLayout {
     }
 
     override fun onBackClicked() {
-        if (quickMenuTranspose.isVisible) {
-            quickMenuTranspose.isVisible = false
-            songPreview!!.repaint()
-        } else if (quickMenuAutoscroll.isVisible) {
-            quickMenuAutoscroll.isVisible = false
-        } else {
-            layoutController.get().showLastSongSelectionLayout()
+        when {
+            quickMenuTranspose.isVisible -> {
+                quickMenuTranspose.isVisible = false
+                songPreview!!.repaint()
+            }
+            quickMenuAutoscroll.isVisible -> quickMenuAutoscroll.isVisible = false
+            else -> layoutController.get().showLastSongSelectionLayout()
         }
     }
 

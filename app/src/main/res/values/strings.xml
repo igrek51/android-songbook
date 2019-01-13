@@ -127,7 +127,7 @@
     <string name="contact_sending">Sending…</string>
     <string name="contact_message_sent_successfully">Your message has been sent. Thanks :)</string>
     <string name="contact_error_sending">An error has occurred while sending your message.</string>
-    <string name="details_none">None</string>
+    <string name="none">None</string>
     <string name="feature_not_implemented">This feature will be available soon.</string>
     <string name="scroll_at_the_beginning_already">Back to the beginning.</string>
     <string name="file_manager_not_found">Please install a File Manager.</string>

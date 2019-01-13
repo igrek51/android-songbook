@@ -7,21 +7,16 @@ import android.support.v7.preference.ListPreference
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.support.v7.preference.SeekBarPreference
-import dagger.Lazy
 import igrek.songbook.R
-import igrek.songbook.activity.ActivityController
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.language.AppLanguageService
-import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.PreferencesUpdater
-import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.theme.ColorScheme
 import igrek.songbook.songpreview.theme.FontTypeface
 import igrek.songbook.songpreview.theme.LyricsThemeService
@@ -33,8 +28,6 @@ import kotlin.math.roundToInt
 class SettingsFragment : PreferenceFragmentCompat() {
 
     @Inject
-    lateinit var activityController: Lazy<ActivityController>
-    @Inject
     lateinit var layoutController: LayoutController
     @Inject
     lateinit var uiInfoService: UiInfoService
@@ -43,13 +36,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     @Inject
     lateinit var activity: AppCompatActivity
     @Inject
-    lateinit var navigationMenuController: NavigationMenuController
-    @Inject
     lateinit var lyricsThemeService: LyricsThemeService
-    @Inject
-    lateinit var autoscrollService: AutoscrollService
-    @Inject
-    lateinit var preferencesService: PreferencesService
     @Inject
     lateinit var appLanguageService: AppLanguageService
     @Inject
@@ -57,10 +44,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
     @Inject
     lateinit var preferencesUpdater: PreferencesUpdater
 
-    private val SEEKBAR_RESOLUTION = 10000
-
     private var decimalFormat4: DecimalFormat
     private var decimalFormat1: DecimalFormat
+
+    companion object {
+        const val SEEKBAR_RESOLUTION = 10000
+    }
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
@@ -117,7 +106,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     preferencesUpdater.excludedLanguages = appLanguageService.string2Languages(langsStr)
                 },
                 stringConverter = { ids: Set<String>, entriesMap: LinkedHashMap<String, String> ->
-                    ids.map { id -> entriesMap[id]!! }.sorted().joinToString(separator = ", ")
+                    if (ids.isEmpty())
+                        uiResourceService.resString(R.string.none)
+                    else
+                        ids.map { id -> entriesMap[id]!! }.sorted().joinToString(separator = ", ")
                 }
         )
 

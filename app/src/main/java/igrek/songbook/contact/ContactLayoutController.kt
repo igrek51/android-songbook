@@ -6,9 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
-import dagger.Lazy
 import igrek.songbook.R
-import igrek.songbook.activity.ActivityController
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -23,8 +21,6 @@ import javax.inject.Inject
 
 class ContactLayoutController : MainLayout {
 
-    @Inject
-    lateinit var activityController: Lazy<ActivityController>
     @Inject
     lateinit var layoutController: LayoutController
     @Inject

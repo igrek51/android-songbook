@@ -127,7 +127,7 @@
     <string name="contact_sending">Wysyłanie…</string>
     <string name="contact_message_sent_successfully">Twoja wiadomość została wysłana. Dzięki :)</string>
     <string name="contact_error_sending">Wystąpił błąd podczas wysyłania.</string>
-    <string name="details_none">Brak</string>
+    <string name="none">Brak</string>
     <string name="feature_not_implemented">Ta funkcja zostanie niedługo dodana.</string>
     <string name="scroll_at_the_beginning_already">Powrót na początek.</string>
     <string name="file_manager_not_found">Brak systemowej przeglądarki plików.</string>

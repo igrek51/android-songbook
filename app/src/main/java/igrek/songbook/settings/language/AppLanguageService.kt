@@ -22,7 +22,7 @@ class AppLanguageService {
     lateinit var uiResourceService: UiResourceService
 
     var appLanguage: AppLanguage? = null
-    var excludedLanguages: List<AppLanguage> = listOf()
+    var excludedLanguages: List<SongLanguage> = listOf()
     private val logger = LoggerFactory.getLogger()
 
     init {
@@ -81,26 +81,28 @@ class AppLanguageService {
 
     fun languageFilterEntries(): LinkedHashMap<String, String> {
         val map = LinkedHashMap<String, String>()
-        for (item in AppLanguage.values()) {
-            val displayName = if (item.langCode == AppLanguage.DEFAULT.langCode) {
-                uiResourceService.resString(R.string.language_unknown)
-            } else {
-                uiResourceService.resString(item.displayNameResId)
+        for (item in SongLanguage.values()) {
+            if (item == SongLanguage.UNKNOWN) {
+                map[item.langCode] = uiResourceService.resString(R.string.language_unknown)
+                continue
             }
+
+            val locale = Locale(item.langCode)
+            val displayName = locale.getDisplayLanguage(locale)
             map[item.langCode] = displayName
         }
         return map
     }
 
-    fun lanugages2String(languages: List<AppLanguage>): String {
+    fun lanugages2String(languages: List<SongLanguage>): String {
         return languages.joinToString(separator = ";") { language -> language.langCode }
     }
 
-    fun string2Languages(languagesStr: String): List<AppLanguage> {
-        val languages = mutableListOf<AppLanguage>()
+    fun string2Languages(languagesStr: String): List<SongLanguage> {
+        val languages = mutableListOf<SongLanguage>()
         val languagesParts = languagesStr.split(";")
         for (languageCode in languagesParts) {
-            val lang = AppLanguage.parseByLangCode(languageCode)
+            val lang = SongLanguage.parseByLangCode(languageCode)
             if (lang == null) {
                 logger.warn("unknown language code: $languageCode")
                 continue

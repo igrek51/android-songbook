@@ -21,7 +21,7 @@ class CustomSongsDao : AbstractSqliteDao() {
         return localDbService.openLocalSongsDb()
     }
 
-    fun mapSongCategory(cursor: Cursor): SongCategory {
+    private fun mapSongCategory(cursor: Cursor): SongCategory {
         val id = cursor.getLong(cursor.getColumnIndexOrThrow("id"))
         val typeId = cursor.getLong(cursor.getColumnIndexOrThrow("type_id"))
         val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))

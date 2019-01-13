@@ -49,14 +49,12 @@ class Migration028PublicLocalDb(val activity: Activity) : IMigration {
 
     @SuppressLint("SdCardPath")
     private fun getSongDbDir(): File {
-        val dir: File?
-
         // /data/data/PACKAGE/files
-        dir = activity.getFilesDir()
+        val dir: File? = activity.filesDir
         if (dir != null && dir.isDirectory)
             return dir
 
-        return File("/data/data/" + activity.getPackageName() + "/files")
+        return File("/data/data/" + activity.packageName + "/files")
     }
 
     private fun openCustomSongsDb(): SQLiteDatabase? {
@@ -142,12 +140,12 @@ class Migration028PublicLocalDb(val activity: Activity) : IMigration {
     private fun getTimestampColumn(cursor: Cursor, name: String): Long {
         // get datetime, convert to long timestamp
         val stringValue = cursor.getString(cursor.getColumnIndexOrThrow(name))
-        try {
+        return try {
             val date = iso8601Format.parse(stringValue)
-            return date.time
+            date.time
         } catch (e: ParseException) {
             logger.error(e)
-            return 0
+            0
         }
     }
 

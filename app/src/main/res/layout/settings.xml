@@ -54,16 +54,9 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout
+        android:id="@+id/fragment_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <FrameLayout
-            android:id="@+id/fragment_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-    </ScrollView>
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

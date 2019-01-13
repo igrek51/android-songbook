@@ -33,6 +33,16 @@ class LyricsThemeService {
 
     private fun loadPreferences() {
         fontsize = preferencesService.getValue(PreferencesDefinition.fontsize, Float::class.java)!!
+
+        val fontTypefaceId = preferencesService.getValue(PreferencesDefinition.fontTypefaceId, String::class.java)
+        if (fontTypefaceId != null) {
+            fontTypeface = FontTypeface.parseById(fontTypefaceId)
+        }
+
+        val colorSchemeId = preferencesService.getValue(PreferencesDefinition.colorSchemeId, Long::class.java)
+        if (colorSchemeId != null) {
+            colorScheme = ColorScheme.parseById(colorSchemeId)
+        }
     }
 
     fun fontTypefaceEntries(): LinkedHashMap<String, String> {

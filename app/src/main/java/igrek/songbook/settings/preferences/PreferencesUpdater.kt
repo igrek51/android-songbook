@@ -6,6 +6,7 @@ import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.language.AppLanguageService
+import igrek.songbook.settings.language.SongLanguage
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.theme.ColorScheme
 import igrek.songbook.songpreview.theme.FontTypeface
@@ -68,7 +69,7 @@ class PreferencesUpdater {
             autoscrollService.get().autoscrollSpeed = value
         }
 
-    var excludedLanguages: List<AppLanguage>
+    var excludedLanguages: List<SongLanguage>
         get() = appLanguageService.get().excludedLanguages
         set(value) {
             appLanguageService.get().excludedLanguages = value
