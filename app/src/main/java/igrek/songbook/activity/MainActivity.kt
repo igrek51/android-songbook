@@ -7,10 +7,10 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.KeyEvent
 import android.view.MenuItem
+import igrek.songbook.custom.SongImportFileChooser
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
-import igrek.songbook.songedit.SongImportFileChooser
 import igrek.songbook.system.PermissionService
 import igrek.songbook.system.SystemKeyDispatcher
 import javax.inject.Inject

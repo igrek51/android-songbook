@@ -1,8 +1,10 @@
-package igrek.songbook.songselection.favourite
+package igrek.songbook.custom
 
 import android.os.Handler
 import android.view.View
+import android.widget.ImageButton
 import android.widget.TextView
+import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.layout.LayoutState
@@ -14,10 +16,10 @@ import igrek.songbook.songselection.SongSelectionLayoutController
 import igrek.songbook.songselection.SongTreeItem
 import javax.inject.Inject
 
-class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
+class CustomSongsLayoutController : SongSelectionLayoutController(), MainLayout {
 
     @Inject
-    lateinit var favouriteSongsRepository: FavouriteSongsRepository
+    lateinit var customSongService: Lazy<CustomSongService>
 
     private var storedScroll: ListScrollPosition? = null
     private var emptyListLabel: TextView? = null
@@ -28,6 +30,9 @@ class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
 
     override fun showLayout(layout: View) {
         initSongSelectionLayout(layout)
+
+        val addCustomSongButton: ImageButton = layout.findViewById(R.id.addCustomSongButton)
+        addCustomSongButton.setOnClickListener { addCustomSong() }
 
         emptyListLabel = layout.findViewById(R.id.emptyListLabel)
 
@@ -40,12 +45,16 @@ class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
         }
     }
 
+    private fun addCustomSong() {
+        customSongService.get().showAddSongScreen()
+    }
+
     override fun getLayoutState(): LayoutState {
-        return LayoutState.FAVOURITE_SONGS
+        return LayoutState.CUSTOM_SONGS
     }
 
     override fun getLayoutResourceId(): Int {
-        return R.layout.favourite_songs
+        return R.layout.custom_songs
     }
 
     override fun updateSongItemsList() {
@@ -64,7 +73,7 @@ class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
 
     override fun getSongItems(songsDb: SongsDb): MutableList<SongTreeItem> {
         // filter songs
-        val songsSequence = favouriteSongsRepository.getFavouriteSongs()
+        val songsSequence = songsDb.getCustomSongs()
                 .asSequence()
                 .map { song -> SongSearchItem.song(song) }
         return songsSequence.toMutableList()

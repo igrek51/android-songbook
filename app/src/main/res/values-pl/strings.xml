@@ -171,6 +171,7 @@
     <string name="favourite_song_has_been_set">Piosenka została dodana do ulubionych.</string>
     <string name="favourite_song_has_been_unset">Piosenka została usunięta z ulubionych.</string>
     <string name="empty_favourite_songs">Brak ulubionych piosenek.\nKliknij na ikonę gwiazdki na podglądzie piosenki, aby dodać ją do ulubionych.</string>
+    <string name="empty_custom_songs">Brak własnych piosenek.</string>
     <string name="color_scheme_dark">Ciemny</string>
     <string name="color_scheme_bright">Jasny</string>
     <string name="typeface_sans_serif">Bezszeryfowa (Sans Serif)</string>

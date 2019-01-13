@@ -9,6 +9,7 @@ import igrek.songbook.R
 import igrek.songbook.about.AboutLayoutController
 import igrek.songbook.about.HelpLayoutController
 import igrek.songbook.activity.ActivityController
+import igrek.songbook.custom.CustomSongService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -16,7 +17,6 @@ import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.SongsRepository
-import igrek.songbook.songedit.SongEditService
 import igrek.songbook.songselection.random.RandomSongOpener
 import igrek.songbook.system.SoftKeyboardService
 import java.util.*
@@ -48,7 +48,7 @@ class NavigationMenuController {
     @Inject
     lateinit var softKeyboardService: SoftKeyboardService
     @Inject
-    lateinit var songEditService: SongEditService
+    lateinit var customSongService: CustomSongService
     @Inject
     lateinit var randomSongOpener: RandomSongOpener
 
@@ -62,7 +62,7 @@ class NavigationMenuController {
         actionsMap[R.id.nav_search] = Runnable { layoutController.get().showSongSearch() }
         actionsMap[R.id.nav_favourites] = Runnable { layoutController.get().showFavourites() }
         actionsMap[R.id.nav_update_db] = Runnable { songsRepository.updateSongsDb() }
-        actionsMap[R.id.nav_custom_songs] = Runnable { songEditService.showAddSongScreen() }
+        actionsMap[R.id.nav_custom_songs] = Runnable { layoutController.get().showCustomSongs() }
         actionsMap[R.id.nav_random_song] = Runnable { randomSongOpener.openRandomSong() }
         actionsMap[R.id.nav_settings] = Runnable { layoutController.get().showSettings() }
         actionsMap[R.id.nav_help] = Runnable { helpLayoutController.get().showUIHelp() }

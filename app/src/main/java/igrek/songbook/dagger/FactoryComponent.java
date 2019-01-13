@@ -12,6 +12,10 @@ import igrek.songbook.activity.MainActivity;
 import igrek.songbook.activity.OptionSelectDispatcher;
 import igrek.songbook.contact.ContactLayoutController;
 import igrek.songbook.contact.SendFeedbackService;
+import igrek.songbook.custom.CustomSongEditLayoutController;
+import igrek.songbook.custom.CustomSongService;
+import igrek.songbook.custom.CustomSongsLayoutController;
+import igrek.songbook.custom.SongImportFileChooser;
 import igrek.songbook.info.UiInfoService;
 import igrek.songbook.info.UiResourceService;
 import igrek.songbook.info.errorcheck.SafeExecutor;
@@ -33,9 +37,6 @@ import igrek.songbook.settings.chordsnotation.ChordsNotationService;
 import igrek.songbook.settings.language.AppLanguageService;
 import igrek.songbook.settings.preferences.PreferencesService;
 import igrek.songbook.settings.preferences.PreferencesUpdater;
-import igrek.songbook.songedit.EditSongLayoutController;
-import igrek.songbook.songedit.SongEditService;
-import igrek.songbook.songedit.SongImportFileChooser;
 import igrek.songbook.songpreview.LyricsManager;
 import igrek.songbook.songpreview.SongDetailsService;
 import igrek.songbook.songpreview.SongPreviewLayoutController;
@@ -141,9 +142,9 @@ public interface FactoryComponent {
 	
 	void inject(CustomSongsDao there);
 	
-	void inject(SongEditService there);
+	void inject(CustomSongService there);
 	
-	void inject(EditSongLayoutController there);
+	void inject(CustomSongEditLayoutController there);
 	
 	void inject(SongsUpdater there);
 	
@@ -166,6 +167,8 @@ public interface FactoryComponent {
 	void inject(PreferencesUpdater there);
 	
 	void inject(LyricsThemeService there);
+	
+	void inject(CustomSongsLayoutController there);
 	
 	
 	void inject(SongListItemAdapter there);

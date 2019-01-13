@@ -1,4 +1,4 @@
-package igrek.songbook.songedit;
+package igrek.songbook.custom;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -34,7 +34,7 @@ public class SongImportFileChooser {
 	@Inject
 	UiResourceService uiResourceService;
 	@Inject
-	Lazy<EditSongLayoutController> editSongLayoutController;
+	Lazy<CustomSongEditLayoutController> editSongLayoutController;
 	
 	public static final int FILE_SELECT_CODE = 7;
 	

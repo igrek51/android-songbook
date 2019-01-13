@@ -15,9 +15,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import igrek.songbook.R;
+import igrek.songbook.custom.CustomSongService;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.model.songsdb.Song;
-import igrek.songbook.songedit.SongEditService;
 
 public class SongListItemAdapter extends ArrayAdapter<SongTreeItem> {
 	
@@ -25,7 +25,7 @@ public class SongListItemAdapter extends ArrayAdapter<SongTreeItem> {
 	private LayoutInflater inflater;
 	
 	@Inject
-	SongEditService songEditService;
+	CustomSongService customSongService;
 	
 	SongListItemAdapter(Context context, List<SongTreeItem> dataSource) {
 		super(context, 0, new ArrayList<>());
@@ -117,7 +117,7 @@ public class SongListItemAdapter extends ArrayAdapter<SongTreeItem> {
 		itemSongTitleLabel.setText(displayName);
 		// edit button
 		ImageButton itemSongEditButton = itemView.findViewById(R.id.itemSongEditButton);
-		itemSongEditButton.setOnClickListener(v -> songEditService.showEditSongScreen(item.getSong()));
+		itemSongEditButton.setOnClickListener(v -> customSongService.showEditSongScreen(item.getSong()));
 		
 		return itemView;
 	}

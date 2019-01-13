@@ -17,6 +17,10 @@ import igrek.songbook.activity.AppInitializer;
 import igrek.songbook.activity.OptionSelectDispatcher;
 import igrek.songbook.contact.ContactLayoutController;
 import igrek.songbook.contact.SendFeedbackService;
+import igrek.songbook.custom.CustomSongEditLayoutController;
+import igrek.songbook.custom.CustomSongService;
+import igrek.songbook.custom.CustomSongsLayoutController;
+import igrek.songbook.custom.SongImportFileChooser;
 import igrek.songbook.info.UiInfoService;
 import igrek.songbook.info.UiResourceService;
 import igrek.songbook.info.logger.Logger;
@@ -36,9 +40,6 @@ import igrek.songbook.settings.chordsnotation.ChordsNotationService;
 import igrek.songbook.settings.language.AppLanguageService;
 import igrek.songbook.settings.preferences.PreferencesService;
 import igrek.songbook.settings.preferences.PreferencesUpdater;
-import igrek.songbook.songedit.EditSongLayoutController;
-import igrek.songbook.songedit.SongEditService;
-import igrek.songbook.songedit.SongImportFileChooser;
 import igrek.songbook.songpreview.LyricsManager;
 import igrek.songbook.songpreview.SongDetailsService;
 import igrek.songbook.songpreview.SongPreviewLayoutController;
@@ -327,15 +328,15 @@ public class FactoryModule {
 	
 	@Provides
 	@Singleton
-	protected SongEditService provideSongImportService() {
-		return new SongEditService();
+	protected CustomSongService provideSongImportService() {
+		return new CustomSongService();
 	}
 	
 	
 	@Provides
 	@Singleton
-	protected EditSongLayoutController provideEditImportSongLayoutController() {
-		return new EditSongLayoutController();
+	protected CustomSongEditLayoutController provideEditImportSongLayoutController() {
+		return new CustomSongEditLayoutController();
 	}
 	
 	@Provides
@@ -396,6 +397,12 @@ public class FactoryModule {
 	@Singleton
 	protected LyricsThemeService provideLyricsThemeService() {
 		return new LyricsThemeService();
+	}
+	
+	@Provides
+	@Singleton
+	protected CustomSongsLayoutController provideCustomSongsLayoutController() {
+		return new CustomSongsLayoutController();
 	}
 	
 	/*

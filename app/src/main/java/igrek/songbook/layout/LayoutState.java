@@ -16,4 +16,6 @@ public enum LayoutState {
 	
 	EDIT_SONG,
 	
+	CUSTOM_SONGS,
+	
 }

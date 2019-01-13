@@ -14,7 +14,7 @@
             android:summary="%s"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Song preview">
+    <PreferenceCategory android:title="Song preview appearance">
         <ListPreference
             android:key="colorScheme"
             android:title="Color Scheme"
@@ -51,7 +51,7 @@
     <PreferenceCategory android:title="Random song">
         <SwitchPreference
             android:key="randomFavouriteSongsOnly"
-            android:title="Random favourite song"
+            android:title="Random favourite songs only"
             android:summary="Shuffle songs from favourite songs only"/>
     </PreferenceCategory>
 

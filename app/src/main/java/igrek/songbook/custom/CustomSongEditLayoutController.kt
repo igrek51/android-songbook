@@ -1,4 +1,4 @@
-package igrek.songbook.songedit
+package igrek.songbook.custom
 
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -20,7 +20,7 @@ import igrek.songbook.model.songsdb.Song
 import igrek.songbook.system.SoftKeyboardService
 import javax.inject.Inject
 
-class EditSongLayoutController : MainLayout {
+class CustomSongEditLayoutController : MainLayout {
 
     @Inject
     lateinit var layoutController: LayoutController
@@ -31,7 +31,7 @@ class EditSongLayoutController : MainLayout {
     @Inject
     lateinit var navigationMenuController: NavigationMenuController
     @Inject
-    lateinit var songImportService: Lazy<SongEditService>
+    lateinit var customSongService: Lazy<CustomSongService>
     @Inject
     lateinit var softKeyboardService: SoftKeyboardService
     @Inject
@@ -185,15 +185,15 @@ class EditSongLayoutController : MainLayout {
 
         if (currentSong == null) {
             // add
-            currentSong = songImportService.get()
-                    .addCustomSong(songTitle, customCategoryName, songContent)
+            currentSong = customSongService.get()
+                    .addCustomSong(songTitle!!, customCategoryName, songContent)
         } else {
             // update
-            songImportService.get()
-                    .updateSong(currentSong, songTitle, customCategoryName, songContent)
+            customSongService.get()
+                    .updateSong(currentSong!!, songTitle!!, customCategoryName, songContent)
         }
         uiInfoService.showInfo(R.string.edit_song_has_been_saved)
-        layoutController.showLastSongSelectionLayout()
+        layoutController.showCustomSongs()
     }
 
     private fun removeSong() {
@@ -201,10 +201,10 @@ class EditSongLayoutController : MainLayout {
             // just cancel
         } else {
             // remove song from database
-            songImportService.get().removeSong(currentSong)
+            customSongService.get().removeSong(currentSong!!)
         }
         uiInfoService.showInfo(R.string.edit_song_has_been_removed)
-        layoutController.showLastSongSelectionLayout()
+        layoutController.showCustomSongs()
     }
 
     override fun getLayoutState(): LayoutState {
@@ -216,7 +216,7 @@ class EditSongLayoutController : MainLayout {
     }
 
     override fun onBackClicked() {
-        layoutController.showLastSongSelectionLayout()
+        layoutController.showCustomSongs()
     }
 
     override fun onLayoutExit() {

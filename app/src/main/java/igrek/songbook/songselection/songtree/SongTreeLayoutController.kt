@@ -90,7 +90,7 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
                     .toMutableList()
         } else {
             // all categories list
-            songsDb.getAllUnlockedCategories()
+            songsDb.getPublicUnlockedCategories()
                     .asSequence()
                     .map { category -> SongTreeItem.category(category) }
                     .toMutableList()
