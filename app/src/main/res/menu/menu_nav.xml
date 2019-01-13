@@ -20,8 +20,8 @@
             android:icon="@drawable/sync"
             android:title="@string/nav_update_songs"/>
         <item
-            android:id="@+id/nav_add_custom_song"
-            android:icon="@drawable/add"
+            android:id="@+id/nav_custom_songs"
+            android:icon="@drawable/edit"
             android:title="@string/nav_custom_song"/>
         <item
             android:id="@+id/nav_random_song"

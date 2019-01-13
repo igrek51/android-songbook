@@ -9,14 +9,8 @@ import javax.inject.Inject;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
-import igrek.songbook.model.chords.ChordsNotation;
 import igrek.songbook.persistence.LocalDbService;
-import igrek.songbook.persistence.preferences.PreferencesDefinition;
-import igrek.songbook.persistence.preferences.PreferencesService;
-import igrek.songbook.settings.language.AppLanguage;
-import igrek.songbook.settings.language.AppLanguageService;
-import igrek.songbook.songpreview.LyricsManager;
-import igrek.songbook.songpreview.autoscroll.AutoscrollService;
+import igrek.songbook.settings.preferences.PreferencesUpdater;
 import igrek.songbook.system.WindowManagerService;
 
 public class ActivityController {
@@ -26,15 +20,9 @@ public class ActivityController {
 	@Inject
 	Activity activity;
 	@Inject
-	PreferencesService preferencesService;
-	@Inject
 	LocalDbService localDbService;
 	@Inject
-	LyricsManager lyricsManager;
-	@Inject
-	AutoscrollService autoscrollService;
-	@Inject
-	AppLanguageService appLanguageService;
+	PreferencesUpdater preferencesUpdater;
 	
 	private Logger logger = LoggerFactory.getLogger();
 	
@@ -61,34 +49,16 @@ public class ActivityController {
 	
 	public void quit() {
 		localDbService.closeDatabases();
-		savePreferences();
+		preferencesUpdater.updateAndSave();
 		windowManagerService.keepScreenOn(false);
 		activity.finish();
-	}
-	
-	private void savePreferences() {
-		preferencesService.setValue(PreferencesDefinition.fontsize, lyricsManager.getFontsize());
-		preferencesService.setValue(PreferencesDefinition.autoscrollInitialPause, autoscrollService.getInitialPause());
-		preferencesService.setValue(PreferencesDefinition.autoscrollSpeed, autoscrollService.getAutoscrollSpeed());
-		
-		ChordsNotation chordsNotation = lyricsManager.getChordsNotation();
-		if (chordsNotation != null) {
-			preferencesService.setValue(PreferencesDefinition.chordsNotationId, chordsNotation.getId());
-		}
-		
-		AppLanguage appLanguage = appLanguageService.getAppLanguage();
-		if (appLanguage != null) {
-			preferencesService.setValue(PreferencesDefinition.appLanguage, appLanguage.getLangCode());
-		}
-		
-		preferencesService.saveAll();
 	}
 	
 	public void onStart() {
 	}
 	
 	public void onStop() {
-		savePreferences();
+		preferencesUpdater.updateAndSave();
 	}
 	
 	public void onDestroy() {

@@ -7,7 +7,8 @@ import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.UiInfoService;
 import igrek.songbook.info.UiResourceService;
-import igrek.songbook.model.chords.ChordsNotation;
+import igrek.songbook.settings.chordsnotation.ChordsNotation;
+import igrek.songbook.settings.chordsnotation.ChordsNotationService;
 import igrek.songbook.songpreview.LyricsManager;
 import igrek.songbook.songpreview.SongPreviewLayoutController;
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose;
@@ -19,6 +20,8 @@ public class ChordsTransposerManager {
 	
 	@Inject
 	Lazy<LyricsManager> lyricsManager;
+	@Inject
+	Lazy<ChordsNotationService> chordsNotationService;
 	@Inject
 	Lazy<SongPreviewLayoutController> songPreviewController;
 	@Inject
@@ -34,7 +37,7 @@ public class ChordsTransposerManager {
 	
 	public void reset() {
 		transposed = 0;
-		ChordsNotation chordsNotation = lyricsManager.get().getChordsNotation();
+		ChordsNotation chordsNotation = chordsNotationService.get().getChordsNotation();
 		chordsTransposer = new ChordsTransposer(chordsNotation);
 	}
 	

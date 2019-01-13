@@ -59,7 +59,7 @@ class ContactLayoutController : MainLayout {
         }
         // navigation menu button
         val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)
-        navMenuButton.setOnClickListener { v -> navigationMenuController.navDrawerShow() }
+        navMenuButton.setOnClickListener { navigationMenuController.navDrawerShow() }
 
         contactSubjectEdit = layout.findViewById(R.id.contactSubjectEdit)
         contactMessageEdit = layout.findViewById(R.id.contactMessageEdit)

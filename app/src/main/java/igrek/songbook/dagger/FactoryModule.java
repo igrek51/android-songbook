@@ -31,9 +31,11 @@ import igrek.songbook.persistence.SongsRepository;
 import igrek.songbook.persistence.SongsUpdater;
 import igrek.songbook.persistence.UnlockedSongsDao;
 import igrek.songbook.persistence.migration.DatabaseMigrator;
-import igrek.songbook.persistence.preferences.PreferencesService;
 import igrek.songbook.settings.SettingsLayoutController;
+import igrek.songbook.settings.chordsnotation.ChordsNotationService;
 import igrek.songbook.settings.language.AppLanguageService;
+import igrek.songbook.settings.preferences.PreferencesService;
+import igrek.songbook.settings.preferences.PreferencesUpdater;
 import igrek.songbook.songedit.EditSongLayoutController;
 import igrek.songbook.songedit.SongEditService;
 import igrek.songbook.songedit.SongImportFileChooser;
@@ -43,6 +45,7 @@ import igrek.songbook.songpreview.SongPreviewLayoutController;
 import igrek.songbook.songpreview.autoscroll.AutoscrollService;
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll;
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose;
+import igrek.songbook.songpreview.theme.LyricsThemeService;
 import igrek.songbook.songpreview.transpose.ChordsTransposerManager;
 import igrek.songbook.songselection.RandomSongOpener;
 import igrek.songbook.songselection.favourite.FavouriteSongsRepository;
@@ -375,6 +378,24 @@ public class FactoryModule {
 	@Singleton
 	protected FavouritesLayoutController provideFavouritesLayoutController() {
 		return new FavouritesLayoutController();
+	}
+	
+	@Provides
+	@Singleton
+	protected ChordsNotationService provideChordsNotationService() {
+		return new ChordsNotationService();
+	}
+	
+	@Provides
+	@Singleton
+	protected PreferencesUpdater providePreferencesUpdater() {
+		return new PreferencesUpdater();
+	}
+	
+	@Provides
+	@Singleton
+	protected LyricsThemeService provideLyricsThemeService() {
+		return new LyricsThemeService();
 	}
 	
 	/*

@@ -29,6 +29,7 @@ import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.SongPreview
+import igrek.songbook.songpreview.theme.LyricsThemeService
 import igrek.songbook.songselection.favourite.FavouriteSongsRepository
 import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.WindowManagerService
@@ -40,6 +41,8 @@ class SongPreviewLayoutController : MainLayout {
 
     @Inject
     lateinit var lyricsManager: LyricsManager
+    @Inject
+    lateinit var lyricsThemeService: LyricsThemeService
     @Inject
     lateinit var layoutController: Lazy<LayoutController>
     @Inject
@@ -146,7 +149,7 @@ class SongPreviewLayoutController : MainLayout {
         })
         overlayRecyclerView!!.isVerticalScrollBarEnabled = false
         overlayRecyclerView!!.overScrollMode = OVER_SCROLL_ALWAYS
-        overlayRecyclerView!!.setOnClickListener { v -> songPreview!!.onClick() }
+        overlayRecyclerView!!.setOnClickListener { songPreview!!.onClick() }
         overlayRecyclerView!!.setOnTouchListener(songPreview)
         resetOverlayScroll()
 
@@ -155,29 +158,29 @@ class SongPreviewLayoutController : MainLayout {
         songTitleLabel!!.text = title
 
         val goBackButton = layout.findViewById<ImageButton>(R.id.goBackButton)
-        goBackButton.setOnClickListener { v -> onBackClicked() }
+        goBackButton.setOnClickListener { onBackClicked() }
 
         transposeButton = layout.findViewById(R.id.transposeButton)
-        transposeButton!!.setOnClickListener { v -> toggleTransposePanel() }
+        transposeButton!!.setOnClickListener { toggleTransposePanel() }
 
         autoscrollButton = layout.findViewById(R.id.autoscrollButton)
-        autoscrollButton!!.setOnClickListener { v -> toggleAutoscrollPanel() }
+        autoscrollButton!!.setOnClickListener { toggleAutoscrollPanel() }
 
         setFavouriteButton = layout.findViewById(R.id.setFavouriteButton)
-        setFavouriteButton!!.setOnClickListener { v -> toggleSongFavourite() }
+        setFavouriteButton!!.setOnClickListener { toggleSongFavourite() }
         updateFavouriteButton()
 
         val goBeginningButton = layout.findViewById<ImageButton>(R.id.goBeginningButton)
-        goBeginningButton.setOnClickListener { v -> goToBeginning() }
+        goBeginningButton.setOnClickListener { goToBeginning() }
 
         val songInfoButton = layout.findViewById<ImageButton>(R.id.songInfoButton)
-        songInfoButton.setOnClickListener { v -> songDetailsService.showSongDetails(currentSong!!) }
+        songInfoButton.setOnClickListener { songDetailsService.showSongDetails(currentSong!!) }
 
         val fullscreenButton = layout.findViewById<ImageButton>(R.id.fullscreenButton)
-        fullscreenButton.setOnClickListener { v -> setFullscreen(true) }
+        fullscreenButton.setOnClickListener { setFullscreen(true) }
 
         disableFullscreenButton = layout.findViewById(R.id.disableFullscreenButton)
-        disableFullscreenButton!!.setOnClickListener { v -> setFullscreen(false) }
+        disableFullscreenButton!!.setOnClickListener { setFullscreen(false) }
         setFullscreen(false)
     }
 
@@ -195,7 +198,7 @@ class SongPreviewLayoutController : MainLayout {
         // initialize - first file loading
         lyricsManager.load(fileContent, w, h, paint)
 
-        songPreview!!.setFontSizes(lyricsManager.fontsize)
+        songPreview!!.setFontSizes(lyricsThemeService.fontsize)
         songPreview!!.setCRDModel(lyricsManager.crdModel)
         resetOverlayScroll()
     }
@@ -226,7 +229,7 @@ class SongPreviewLayoutController : MainLayout {
     }
 
     fun onFontsizeChangedEvent(fontsize: Float) {
-        lyricsManager.fontsize = fontsize
+        lyricsThemeService.fontsize = fontsize
         // parse without reading a whole file again
         lyricsManager.reparse()
         onLyricsModelUpdated()

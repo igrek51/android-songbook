@@ -8,7 +8,7 @@ import java.util.TreeMap;
 
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
-import igrek.songbook.model.chords.ChordsNotation;
+import igrek.songbook.settings.chordsnotation.ChordsNotation;
 
 public class ChordsTransposer {
 	

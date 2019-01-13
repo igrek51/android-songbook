@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory android:title="General">
+        <ListPreference
+            android:key="applicationLanguage"
+            android:title="Application Language (Restart Needed)"
+            android:summary="%s"/>
+
+        <ListPreference
+            android:key="chordsNotation"
+            android:title="Chords notation"
+            android:summary="%s"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Song preview">
+        <ListPreference
+            android:key="colorScheme"
+            android:title="Color Scheme"
+            android:summary="%s"/>
+        <SeekBarPreference
+            android:key="fontSize"
+            android:title="Font size"
+            app:showSeekBarValue="false"/>
+        <ListPreference
+            android:key="fontTypeface"
+            android:title="Font typeface"
+            android:summary="%s"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Autoscroll">
+        <SeekBarPreference
+            android:key="autoscrollInitialPause"
+            android:title="Autoscroll initial pause"
+            app:showSeekBarValue="false"/>
+        <SeekBarPreference
+            android:key="autoscrollSpeed"
+            android:title="Autoscroll speed"
+            app:showSeekBarValue="false"/>
+        <SwitchPreference
+            android:key="autoscrollSpeedAdjustment"
+            android:title="Scroll speed auto adjustment"
+            android:defaultValue="true"
+            android:summary="Automatic correction of scroll speed when you manually scroll the song"/>
+        <SwitchPreference
+            android:key="autoscroll_dpad_keys"
+            android:title="Volume buttons changing scroll speed"
+            android:defaultValue="true"
+            android:summary="Use Up / Down volume buttons to increase and decrease scroll speed respectively"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Random song">
+        <SwitchPreference
+            android:key="random_favourite_songs"
+            android:title="Shuffle songs from favourite songs only"
+            android:defaultValue="false"
+            android:summary="summary"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Songs list">
+        <MultiSelectListPreference
+            android:key="excludedLanguagesFilter"
+            android:title="Exclude specific languages on songs list"
+            android:summary="%s"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

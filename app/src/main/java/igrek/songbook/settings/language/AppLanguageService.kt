@@ -2,11 +2,12 @@ package igrek.songbook.settings.language
 
 import android.app.Activity
 import android.os.Build
+import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.model.chords.ChordsNotation
-import igrek.songbook.persistence.preferences.PreferencesDefinition
-import igrek.songbook.persistence.preferences.PreferencesService
-import igrek.songbook.songpreview.LyricsManager
+import igrek.songbook.info.UiResourceService
+import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.settings.preferences.PreferencesDefinition
+import igrek.songbook.settings.preferences.PreferencesService
 import java.util.*
 import javax.inject.Inject
 
@@ -18,39 +19,28 @@ class AppLanguageService {
     @Inject
     lateinit var preferencesService: PreferencesService
     @Inject
-    lateinit var lyricsManager: LyricsManager
+    lateinit var uiResourceService: UiResourceService
 
     var appLanguage: AppLanguage? = null
-
-    private val germanNotationLangs = setOf(
-            "pl", "de", "da", "sv", "nb", "nn", "is", "et",
-            "sr", "hr", "bs", "sl", "sk", "cs", "hu"
-    )
+    var excludedLanguages: List<AppLanguage> = listOf()
+    private val logger = LoggerFactory.getLogger()
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
         loadPreferences()
-        setDefaultChordsNotation()
-    }
-
-    private fun setDefaultChordsNotation() {
-        // running for the first time - set german / polish notation if lang pl
-        // set default chords notation depending on locale settings
-        if (!preferencesService.exists(PreferencesDefinition.chordsNotationId.name)) {
-            val current: Locale = getCurrentLocale()
-            val lang = current.language
-
-            if (germanNotationLangs.contains(lang)) {
-                lyricsManager.chordsNotation = ChordsNotation.GERMAN
-            } else {
-                lyricsManager.chordsNotation = ChordsNotation.ENGLISH
-            }
-        }
     }
 
     private fun loadPreferences() {
         val appLanguageId = preferencesService.getValue(PreferencesDefinition.appLanguage, String::class.java)
-        appLanguage = AppLanguage.parseByLangCode(appLanguageId)
+        if (appLanguageId != null) {
+            appLanguage = AppLanguage.parseByLangCode(appLanguageId)
+            if (appLanguage == null)
+                appLanguage = AppLanguage.DEFAULT
+        }
+
+        val excludedLanguagesStr = preferencesService.getValue(PreferencesDefinition.excludedLanguages, String::class.java)
+        if (excludedLanguagesStr != null)
+            excludedLanguages = string2Languages(excludedLanguagesStr)
     }
 
     /**
@@ -67,7 +57,7 @@ class AppLanguageService {
     }
 
     fun setLocale() {
-        if (appLanguage != null && appLanguage != AppLanguage.SYSTEM_DEFAULT) {
+        if (appLanguage != null && appLanguage != AppLanguage.DEFAULT) {
             setLocale(appLanguage!!.langCode)
         }
     }
@@ -78,5 +68,45 @@ class AppLanguageService {
         } else {
             activity.resources.configuration.locale
         }
+    }
+
+    fun languageEntries(): LinkedHashMap<String, String> {
+        val map = LinkedHashMap<String, String>()
+        for (item in AppLanguage.values()) {
+            val displayName = uiResourceService.resString(item.displayNameResId)
+            map[item.langCode] = displayName
+        }
+        return map
+    }
+
+    fun languageFilterEntries(): LinkedHashMap<String, String> {
+        val map = LinkedHashMap<String, String>()
+        for (item in AppLanguage.values()) {
+            val displayName = if (item.langCode == AppLanguage.DEFAULT.langCode) {
+                uiResourceService.resString(R.string.language_unknown)
+            } else {
+                uiResourceService.resString(item.displayNameResId)
+            }
+            map[item.langCode] = displayName
+        }
+        return map
+    }
+
+    fun lanugages2String(languages: List<AppLanguage>): String {
+        return languages.joinToString(separator = ";") { language -> language.langCode }
+    }
+
+    fun string2Languages(languagesStr: String): List<AppLanguage> {
+        val languages = mutableListOf<AppLanguage>()
+        val languagesParts = languagesStr.split(";")
+        for (languageCode in languagesParts) {
+            val lang = AppLanguage.parseByLangCode(languageCode)
+            if (lang == null) {
+                logger.warn("unknown language code: $languageCode")
+                continue
+            }
+            languages.add(lang)
+        }
+        return languages
     }
 }

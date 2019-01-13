@@ -2,7 +2,7 @@ package igrek.songbook.songpreview.transpose;
 
 import org.junit.Test;
 
-import igrek.songbook.model.chords.ChordsNotation;
+import igrek.songbook.settings.chordsnotation.ChordsNotation;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 

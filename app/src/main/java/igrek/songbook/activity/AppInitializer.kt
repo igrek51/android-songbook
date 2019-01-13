@@ -46,7 +46,6 @@ class AppInitializer {
     private fun debugInit() {
         // Allow showing the activity even if the device is locked
         windowManagerService.showAppWhenLocked()
-        // appLanguageService.setLocale("pl");
     }
 
 }

@@ -3,8 +3,8 @@
     <string name="nav_categories_list">Kategorie</string>
     <string name="nav_search_song">Szukaj</string>
     <string name="nav_favourites_song">Ulubione</string>
-    <string name="nav_update_songs">Aktualizuj piosenki</string>
-    <string name="nav_custom_song">Dodaj piosenkę</string>
+    <string name="nav_update_songs">Aktualizuj</string>
+    <string name="nav_custom_song">Moje piosenki</string>
     <string name="nav_random_song">Losowa piosenka</string>
     <string name="nav_settings">Ustawienia</string>
     <string name="nav_exit">Wyjście</string>
@@ -105,6 +105,9 @@
     <string name="settings_font_size">Rozmiar czcionki: %s dp</string>
     <string name="settings_scroll_initial_pause">Opóźnienie autoprzewijania: %s s</string>
     <string name="settings_autoscroll_speed">Szybkość autoprzewijania: %s linii / s</string>
+    <string name="settings_font_size_value">%s dp</string>
+    <string name="settings_scroll_initial_pause_value">%s s</string>
+    <string name="settings_autoscroll_speed_value">%s linii / s</string>
     <string name="settings_fullscreen">Pełny ekran</string>
     <string name="song_details_title">Szczegóły piosenki</string>
     <string name="song_details">
@@ -161,10 +164,16 @@
     <string name="action_comment_song">Skomentuj</string>
     <string name="settings_language">Język aplikacji (wymagany restart):</string>
     <string name="language_default">Domyślny systemowy</string>
+    <string name="language_unknown">Nieznany</string>
     <string name="contact_subject_song_amend">Poprawka do piosenki</string>
     <string name="contact_subject_song_comment">Komentarz do piosenki</string>
     <string name="contact_subject_publishing_song">Nowa piosenka</string>
     <string name="favourite_song_has_been_set">Piosenka została dodana do ulubionych.</string>
     <string name="favourite_song_has_been_unset">Piosenka została usunięta z ulubionych.</string>
     <string name="empty_favourite_songs">Brak ulubionych piosenek.\nKliknij na ikonę gwiazdki na podglądzie piosenki, aby dodać ją do ulubionych.</string>
+    <string name="color_scheme_dark">Ciemny</string>
+    <string name="color_scheme_bright">Jasny</string>
+    <string name="typeface_sans_serif">Bezszeryfowa (Sans Serif)</string>
+    <string name="typeface_serif">Szeryfowa (Serif)</string>
+    <string name="typeface_monospace">Maszynowa (Monospace)</string>
 </resources>

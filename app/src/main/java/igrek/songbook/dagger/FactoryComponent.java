@@ -27,9 +27,12 @@ import igrek.songbook.persistence.SongsRepository;
 import igrek.songbook.persistence.SongsUpdater;
 import igrek.songbook.persistence.UnlockedSongsDao;
 import igrek.songbook.persistence.migration.DatabaseMigrator;
-import igrek.songbook.persistence.preferences.PreferencesService;
+import igrek.songbook.settings.SettingsFragment;
 import igrek.songbook.settings.SettingsLayoutController;
+import igrek.songbook.settings.chordsnotation.ChordsNotationService;
 import igrek.songbook.settings.language.AppLanguageService;
+import igrek.songbook.settings.preferences.PreferencesService;
+import igrek.songbook.settings.preferences.PreferencesUpdater;
 import igrek.songbook.songedit.EditSongLayoutController;
 import igrek.songbook.songedit.SongEditService;
 import igrek.songbook.songedit.SongImportFileChooser;
@@ -40,6 +43,7 @@ import igrek.songbook.songpreview.autoscroll.AutoscrollService;
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll;
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose;
 import igrek.songbook.songpreview.renderer.SongPreview;
+import igrek.songbook.songpreview.theme.LyricsThemeService;
 import igrek.songbook.songpreview.transpose.ChordsTransposerManager;
 import igrek.songbook.songselection.RandomSongOpener;
 import igrek.songbook.songselection.SongListItemAdapter;
@@ -154,6 +158,14 @@ public interface FactoryComponent {
 	void inject(FavouriteSongsRepository there);
 	
 	void inject(FavouritesLayoutController there);
+	
+	void inject(SettingsFragment there);
+	
+	void inject(ChordsNotationService there);
+	
+	void inject(PreferencesUpdater there);
+	
+	void inject(LyricsThemeService there);
 	
 	
 	void inject(SongListItemAdapter there);

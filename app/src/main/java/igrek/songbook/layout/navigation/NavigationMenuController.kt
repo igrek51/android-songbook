@@ -62,7 +62,7 @@ class NavigationMenuController {
         actionsMap[R.id.nav_search] = Runnable { layoutController.get().showSongSearch() }
         actionsMap[R.id.nav_favourites] = Runnable { layoutController.get().showFavourites() }
         actionsMap[R.id.nav_update_db] = Runnable { songsRepository.updateSongsDb() }
-        actionsMap[R.id.nav_add_custom_song] = Runnable { songEditService.showAddSongScreen() }
+        actionsMap[R.id.nav_custom_songs] = Runnable { songEditService.showAddSongScreen() }
         actionsMap[R.id.nav_random_song] = Runnable { randomSongOpener.openRandomSong() }
         actionsMap[R.id.nav_settings] = Runnable { layoutController.get().showSettings() }
         actionsMap[R.id.nav_help] = Runnable { helpLayoutController.get().showUIHelp() }
