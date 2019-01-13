@@ -166,9 +166,11 @@ class AutoscrollService {
                 onAutoscrollRemainingWaitTimeEvent(remainingTimeMs)
             }
         } else if (state == AutoscrollState.SCROLLING) {
-            if (dScroll > 0) { // speed up scrolling
-
-                autoscrollSpeed += cutOffMax(dScroll * ADJUSTMENT_SPEED_SCALE, ADJUSTMENT_MAX_SPEED_CHANGE)
+            if (dScroll > 0) {
+                // speed up scrolling
+                if (autoSpeedAdjustment) {
+                    autoscrollSpeed += cutOffMax(dScroll * ADJUSTMENT_SPEED_SCALE, ADJUSTMENT_MAX_SPEED_CHANGE)
+                }
 
             } else if (dScroll < 0) {
                 if (scroll <= 0) { // scrolling up to the beginning
@@ -180,15 +182,20 @@ class AutoscrollService {
                     return
                 } else {
                     // slow down scrolling
-                    val dScrollAbs = -dScroll
-                    autoscrollSpeed -= cutOffMax(dScrollAbs * ADJUSTMENT_SPEED_SCALE, ADJUSTMENT_MAX_SPEED_CHANGE)
+                    if (autoSpeedAdjustment) {
+                        val dScrollAbs = -dScroll
+                        autoscrollSpeed -= cutOffMax(dScrollAbs * ADJUSTMENT_SPEED_SCALE, ADJUSTMENT_MAX_SPEED_CHANGE)
+                    }
                 }
             }
-            if (autoscrollSpeed < MIN_SPEED)
-                autoscrollSpeed = MIN_SPEED
 
-            scrollSpeedAdjustmentSubject.onNext(autoscrollSpeed)
-            logger.info("autoscroll speed adjustment: $autoscrollSpeed line / s")
+            if (autoSpeedAdjustment) {
+                if (autoscrollSpeed < MIN_SPEED)
+                    autoscrollSpeed = MIN_SPEED
+
+                scrollSpeedAdjustmentSubject.onNext(autoscrollSpeed)
+                logger.info("autoscroll speed adjustment: $autoscrollSpeed line / s")
+            }
         }
     }
 
