@@ -58,7 +58,7 @@
     <PreferenceCategory android:title="Songs list">
         <MultiSelectListPreference
             android:key="excludedLanguagesFilter"
-            android:title="Exclude specific languages on songs list"
+            android:title="Hide specific languages on songs list"
             android:summary="%s"/>
     </PreferenceCategory>
 

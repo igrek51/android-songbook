@@ -158,7 +158,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
         )
 
-        setupSwitchPreference("autoscrollSpeedDpadKeys",
+        setupSwitchPreference("randomFavouriteSongsOnly",
                 onLoad = { preferencesUpdater.randomFavouriteSongsOnly },
                 onSave = { value: Boolean ->
                     preferencesUpdater.randomFavouriteSongsOnly = value

@@ -99,6 +99,8 @@ class AppLanguageService {
     }
 
     fun string2Languages(languagesStr: String): List<SongLanguage> {
+        if (languagesStr.isEmpty())
+            return mutableListOf()
         val languages = mutableListOf<SongLanguage>()
         val languagesParts = languagesStr.split(";")
         for (languageCode in languagesParts) {
