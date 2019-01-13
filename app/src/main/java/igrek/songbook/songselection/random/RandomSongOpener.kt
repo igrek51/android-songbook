@@ -1,10 +1,12 @@
-package igrek.songbook.songselection
+package igrek.songbook.songselection.random
 
 import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.model.songsdb.Song
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.songpreview.SongPreviewLayoutController
+import igrek.songbook.model.songsdb.Song
 import igrek.songbook.persistence.SongsRepository
+import igrek.songbook.settings.preferences.PreferencesDefinition
+import igrek.songbook.settings.preferences.PreferencesService
+import igrek.songbook.songpreview.SongPreviewLayoutController
 import java.util.*
 import javax.inject.Inject
 
@@ -16,9 +18,18 @@ class RandomSongOpener {
     lateinit var layoutController: LayoutController
     @Inject
     lateinit var songPreviewLayoutController: dagger.Lazy<SongPreviewLayoutController>
+    @Inject
+    lateinit var preferencesService: PreferencesService
+
+    var fromFavouriteSongsOnly: Boolean = false
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
+        loadPreferences()
+    }
+
+    private fun loadPreferences() {
+        fromFavouriteSongsOnly = preferencesService.getValue(PreferencesDefinition.randomFavouriteSongsOnly, Boolean::class.java)!!
     }
 
     fun openRandomSong() {

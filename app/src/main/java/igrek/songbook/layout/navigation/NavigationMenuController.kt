@@ -17,7 +17,7 @@ import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.SongsRepository
 import igrek.songbook.songedit.SongEditService
-import igrek.songbook.songselection.RandomSongOpener
+import igrek.songbook.songselection.random.RandomSongOpener
 import igrek.songbook.system.SoftKeyboardService
 import java.util.*
 import javax.inject.Inject

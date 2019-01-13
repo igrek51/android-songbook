@@ -2,6 +2,7 @@ package igrek.songbook.settings
 
 import android.os.Bundle
 import android.support.v14.preference.MultiSelectListPreference
+import android.support.v14.preference.SwitchPreference
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.ListPreference
 import android.support.v7.preference.Preference
@@ -143,6 +144,27 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
         )
 
+        setupSwitchPreference("autoscrollSpeedAutoAdjustment",
+                onLoad = { preferencesUpdater.autoscrollSpeedAutoAdjustment },
+                onSave = { value: Boolean ->
+                    preferencesUpdater.autoscrollSpeedAutoAdjustment = value
+                }
+        )
+
+        setupSwitchPreference("autoscrollSpeedDpadKeys",
+                onLoad = { preferencesUpdater.autoscrollSpeedDpadKeys },
+                onSave = { value: Boolean ->
+                    preferencesUpdater.autoscrollSpeedDpadKeys = value
+                }
+        )
+
+        setupSwitchPreference("autoscrollSpeedDpadKeys",
+                onLoad = { preferencesUpdater.randomFavouriteSongsOnly },
+                onSave = { value: Boolean ->
+                    preferencesUpdater.randomFavouriteSongsOnly = value
+                }
+        )
+
         // not saving preferences here as they will be saved on activity stop
     }
 
@@ -199,6 +221,17 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
         preference.summary = stringConverter(currentValueF)
+    }
+
+    private fun setupSwitchPreference(key: String,
+                                      onLoad: () -> Boolean,
+                                      onSave: (value: Boolean) -> Unit) {
+        val preference = findPreference(key) as SwitchPreference
+        preference.isChecked = onLoad()
+        preference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { pref, newValue ->
+            onSave(newValue as Boolean)
+            true
+        }
     }
 
     private fun calculateProgress(min: Float, max: Float, value: Float, resolution: Int): Int {

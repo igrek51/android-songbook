@@ -39,23 +39,20 @@
             android:title="Autoscroll speed"
             app:showSeekBarValue="false"/>
         <SwitchPreference
-            android:key="autoscrollSpeedAdjustment"
+            android:key="autoscrollSpeedAutoAdjustment"
             android:title="Scroll speed auto adjustment"
-            android:defaultValue="true"
             android:summary="Automatic correction of scroll speed when you manually scroll the song"/>
         <SwitchPreference
-            android:key="autoscroll_dpad_keys"
+            android:key="autoscrollSpeedDpadKeys"
             android:title="Volume buttons changing scroll speed"
-            android:defaultValue="true"
-            android:summary="Use Up / Down volume buttons to increase and decrease scroll speed respectively"/>
+            android:summary="Use Up / Down volume buttons to increase or decrease scroll speed respectively"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Random song">
         <SwitchPreference
-            android:key="random_favourite_songs"
-            android:title="Shuffle songs from favourite songs only"
-            android:defaultValue="false"
-            android:summary="summary"/>
+            android:key="randomFavouriteSongsOnly"
+            android:title="Random favourite songs"
+            android:summary="Shuffle songs from favourite songs only"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Songs list">

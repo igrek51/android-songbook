@@ -11,6 +11,7 @@ import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.theme.ColorScheme
 import igrek.songbook.songpreview.theme.FontTypeface
 import igrek.songbook.songpreview.theme.LyricsThemeService
+import igrek.songbook.songselection.random.RandomSongOpener
 import javax.inject.Inject
 
 class PreferencesUpdater {
@@ -25,6 +26,8 @@ class PreferencesUpdater {
     lateinit var appLanguageService: Lazy<AppLanguageService>
     @Inject
     lateinit var chordsNotationService: Lazy<ChordsNotationService>
+    @Inject
+    lateinit var randomSongOpener: Lazy<RandomSongOpener>
 
     // preferences getters / setters proxy
     var appLanguage: AppLanguage?
@@ -75,6 +78,24 @@ class PreferencesUpdater {
             appLanguageService.get().excludedLanguages = value
         }
 
+    var autoscrollSpeedAutoAdjustment: Boolean
+        get() = autoscrollService.get().autoSpeedAdjustment
+        set(value) {
+            autoscrollService.get().autoSpeedAdjustment = value
+        }
+
+    var autoscrollSpeedDpadKeys: Boolean
+        get() = autoscrollService.get().dpadKeysSpeedControl
+        set(value) {
+            autoscrollService.get().dpadKeysSpeedControl = value
+        }
+
+    var randomFavouriteSongsOnly: Boolean
+        get() = randomSongOpener.get().fromFavouriteSongsOnly
+        set(value) {
+            randomSongOpener.get().fromFavouriteSongsOnly = value
+        }
+
     init {
         DaggerIoc.getFactoryComponent().inject(this)
     }
@@ -86,12 +107,16 @@ class PreferencesUpdater {
 
         preferencesService.setValue(PreferencesDefinition.autoscrollInitialPause, autoscrollInitialPause)
         preferencesService.setValue(PreferencesDefinition.autoscrollSpeed, autoscrollSpeed)
-
-        preferencesService.setValue(PreferencesDefinition.chordsNotationId, chordsNotation?.id)
+        preferencesService.setValue(PreferencesDefinition.autoscrollSpeedAutoAdjustment, autoscrollSpeedAutoAdjustment)
+        preferencesService.setValue(PreferencesDefinition.autoscrollSpeedDpadKeys, autoscrollSpeedDpadKeys)
 
         preferencesService.setValue(PreferencesDefinition.appLanguage, appLanguage?.langCode)
+        preferencesService.setValue(PreferencesDefinition.chordsNotationId, chordsNotation?.id)
+
         preferencesService.setValue(PreferencesDefinition.excludedLanguages,
                 appLanguageService.get().lanugages2String(excludedLanguages))
+
+        preferencesService.setValue(PreferencesDefinition.randomFavouriteSongsOnly, randomFavouriteSongsOnly)
 
         preferencesService.saveAll()
     }

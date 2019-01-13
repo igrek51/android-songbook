@@ -23,6 +23,12 @@ enum class PreferencesDefinition constructor(val type: PropertyType, val default
 
     excludedLanguages(""),
 
+    autoscrollSpeedAutoAdjustment(true),
+
+    autoscrollSpeedDpadKeys(true),
+
+    randomFavouriteSongsOnly(false),
+
     ;
 
     constructor(defaultValue: String) : this(PropertyType.STRING, defaultValue)
