@@ -192,7 +192,7 @@ class SongPreviewLayoutController : MainLayout {
 
     fun onGraphicsInitializedEvent(w: Int, h: Int, paint: Paint) {
         // load file and parse it
-        val fileContent = currentSong!!.content
+        val fileContent = currentSong!!.content!!
         // initialize - first file loading
         lyricsManager.load(fileContent, w, h, paint)
 

@@ -51,7 +51,7 @@
     <PreferenceCategory android:title="Random song">
         <SwitchPreference
             android:key="randomFavouriteSongsOnly"
-            android:title="Random favourite songs"
+            android:title="Random favourite song"
             android:summary="Shuffle songs from favourite songs only"/>
     </PreferenceCategory>
 
