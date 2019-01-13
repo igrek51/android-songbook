@@ -178,4 +178,5 @@
     <string name="typeface_sans_serif">Sans Serif</string>
     <string name="typeface_serif">Serif</string>
     <string name="typeface_monospace">Monospace</string>
+    <string name="no_songs_to_shuffle">No songs to shuffle</string>
 </resources>
