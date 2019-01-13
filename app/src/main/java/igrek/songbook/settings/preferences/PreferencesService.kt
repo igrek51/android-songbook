@@ -61,7 +61,7 @@ class PreferencesService {
             value = propertyDefinition.defaultValue
             logger.debug("Missing preferences property, loading default value: $propertyName = $value")
         }
-        logger.debug("Property loaded: $propertyName = $value")
+        // logger.debug("Property loaded: $propertyName = $value")
         propertyValues[propertyName] = value
     }
 
@@ -72,7 +72,7 @@ class PreferencesService {
         }
 
         val propertyValue = propertyValues[propertyName]
-        logger.debug("Saving property: $propertyName = $propertyValue")
+        // logger.debug("Saving property: $propertyName = $propertyValue")
 
         if (propertyValue == null) {
             editor.remove(propertyName)

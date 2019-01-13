@@ -5,22 +5,40 @@ import igrek.songbook.model.lyrics.LyricsLine
 import igrek.songbook.model.lyrics.LyricsModel
 import igrek.songbook.model.lyrics.LyricsTextType
 import igrek.songbook.songpreview.renderer.canvas.Align
+import igrek.songbook.songpreview.theme.ColorScheme
 import igrek.songbook.songpreview.theme.FontTypeface
 
 class LyricsRenderer internal constructor(private val canvas: SongPreview,
                                           private val lyricsModel: LyricsModel?,
-                                          fontTypeface: FontTypeface) {
+                                          fontTypeface: FontTypeface,
+                                          colorScheme: ColorScheme) {
 
     private val w: Float = canvas.w.toFloat()
     private val h: Float = canvas.h.toFloat()
 
     private var normalTypeface: Typeface? = null
     private var boldTypeface: Typeface? = null
+    private var textColor: Int
+    private var chordColor: Int
+    private var linewrapperColor: Int
 
     init {
         val typefaceFamily = fontTypeface.typeface
         normalTypeface = Typeface.create(typefaceFamily, Typeface.NORMAL)
         boldTypeface = Typeface.create(typefaceFamily, Typeface.BOLD)
+
+        textColor = when (colorScheme) {
+            ColorScheme.DARK -> 0xffffff
+            ColorScheme.BRIGHT -> 0x000000
+        }
+        chordColor = when (colorScheme) {
+            ColorScheme.DARK -> 0xf00000
+            ColorScheme.BRIGHT -> 0xf00000
+        }
+        linewrapperColor = when (colorScheme) {
+            ColorScheme.DARK -> 0x707070
+            ColorScheme.BRIGHT -> 0x707070
+        }
     }
 
     /**
@@ -29,8 +47,6 @@ class LyricsRenderer internal constructor(private val canvas: SongPreview,
      */
     fun drawFileContent(fontsize: Float, lineheight: Float) {
         canvas.setFontSize(fontsize)
-        canvas.setColor(0xffffff)
-
         if (lyricsModel != null) {
             for (line in lyricsModel.lines) {
                 drawTextLine(line, canvas.scroll, fontsize, lineheight)
@@ -50,7 +66,7 @@ class LyricsRenderer internal constructor(private val canvas: SongPreview,
             val lastFragment = line.fragments[line.fragments.size - 1]
             if (lastFragment.type == LyricsTextType.LINEWRAPPER) {
                 canvas.setFontTypeface(normalTypeface)
-                canvas.setColor(0x707070)
+                canvas.setColor(linewrapperColor)
                 canvas.drawText(lastFragment.text, w, y + 0.9f * lineheight, Align.RIGHT)
             }
         }
@@ -59,11 +75,11 @@ class LyricsRenderer internal constructor(private val canvas: SongPreview,
 
             if (fragment.type == LyricsTextType.REGULAR_TEXT) {
                 canvas.setFontTypeface(normalTypeface)
-                canvas.setColor(0xffffff)
+                canvas.setColor(textColor)
                 canvas.drawText(fragment.text, fragment.x * fontsize, y + lineheight, Align.LEFT)
             } else if (fragment.type == LyricsTextType.CHORDS) {
                 canvas.setFontTypeface(boldTypeface)
-                canvas.setColor(0xf00000)
+                canvas.setColor(chordColor)
                 canvas.drawText(fragment.text, fragment.x * fontsize, y + lineheight, Align.LEFT)
             }
 

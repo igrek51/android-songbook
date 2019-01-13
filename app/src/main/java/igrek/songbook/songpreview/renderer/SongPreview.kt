@@ -11,6 +11,7 @@ import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.canvas.BaseCanvasView
+import igrek.songbook.songpreview.theme.ColorScheme
 import igrek.songbook.songpreview.theme.LyricsThemeService
 import igrek.songbook.system.WindowManagerService
 import igrek.songbook.system.cache.SimpleCache
@@ -104,16 +105,24 @@ class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListe
     }
 
     override fun onRepaint() {
-        // draw Background
-        setColor(0x000000)
-        clearScreen()
+        drawBackground()
 
         if (this.lyricsRenderer != null) {
-            lyricsRenderer!!.drawScrollBar()
-            lyricsRenderer!!.drawFileContent(fontsizePx, lineheightPx)
+            lyricsRenderer?.drawScrollBar()
+            lyricsRenderer?.drawFileContent(fontsizePx, lineheightPx)
         }
 
         drawQuickMenuOverlay()
+    }
+
+    private fun drawBackground() {
+        val backgroundColor = when (lyricsThemeService.colorScheme!!) {
+            ColorScheme.DARK -> 0x000000
+            ColorScheme.BRIGHT -> 0xf0f0f0
+        }
+
+        setColor(backgroundColor)
+        clearScreen()
     }
 
     private fun drawQuickMenuOverlay() {
@@ -215,7 +224,7 @@ class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListe
 
     fun setCRDModel(lyricsModel: LyricsModel?) {
         this.lyricsModel = lyricsModel
-        this.lyricsRenderer = LyricsRenderer(this, lyricsModel, lyricsThemeService.fontTypeface!!)
+        this.lyricsRenderer = LyricsRenderer(this, lyricsModel, lyricsThemeService.fontTypeface!!, lyricsThemeService.colorScheme!!)
         repaint()
     }
 
