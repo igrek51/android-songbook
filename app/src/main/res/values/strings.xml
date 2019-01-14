@@ -145,8 +145,9 @@
     <string name="edit_song_has_been_saved">Song has been saved in \"My songs\".</string>
     <string name="edit_song_has_been_removed">Song has been removed.</string>
     <string name="settings_chords_notation">Chords notation</string>
-    <string name="notation_german">German / European (a b B H C d)</string>
-    <string name="notation_english">English / American (Am Bbm Bb B C Dm)</string>
+    <string name="notation_german">German / European (#): a b B H C C# d f#</string>
+    <string name="notation_german_is">German / European (-is): a b B H C Cis d fis</string>
+    <string name="notation_english">English / American: Am Bbm Bb B C C# Dm F#m</string>
     <string name="fill_in_all_fields">Please fill in all required fields.</string>
     <string name="connection_error">Connection error</string>
     <string name="updating_db_in_progress">Updating songs…</string>
