@@ -26,7 +26,7 @@ class SongDetailsService {
     @Inject
     lateinit var contactLayoutController: dagger.Lazy<ContactLayoutController>
 
-    private val modificationDateFormat = SimpleDateFormat("yyyy-MM-dd")
+    private val modificationDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)

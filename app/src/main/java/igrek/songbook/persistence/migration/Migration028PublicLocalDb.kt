@@ -15,7 +15,7 @@ class Migration028PublicLocalDb(val activity: Activity) : IMigration {
 
     private var oldCustomSongsDb: SQLiteDatabase? = null
     private val logger = LoggerFactory.logger
-    private val iso8601Format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    private val iso8601Format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
 
     override fun migrate(migrator: DatabaseMigrator) {
         // get old custom songs

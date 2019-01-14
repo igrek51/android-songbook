@@ -102,13 +102,11 @@
     <string name="song_search_edit_hint">Tytuł piosenki lub artysta</string>
     <string name="unlock_key_invalid">Hasło jest niepoprawne.</string>
     <string name="unlock_new_songs_unlocked">Odblokowano nowe piosenki: %d</string>
-    <string name="settings_font_size">Rozmiar czcionki: %s dp</string>
     <string name="settings_scroll_initial_pause">Opóźnienie autoprzewijania: %s s</string>
     <string name="settings_autoscroll_speed">Szybkość autoprzewijania: %s linii / s</string>
     <string name="settings_font_size_value">%s dp</string>
     <string name="settings_scroll_initial_pause_value">%s s</string>
     <string name="settings_autoscroll_speed_value">%s linii / s</string>
-    <string name="settings_fullscreen">Pełny ekran</string>
     <string name="song_details_title">Szczegóły piosenki</string>
     <string name="song_details">
         Tytuł: %s
@@ -128,7 +126,6 @@
     <string name="contact_message_sent_successfully">Twoja wiadomość została wysłana. Dzięki :)</string>
     <string name="contact_error_sending">Wystąpił błąd podczas wysyłania.</string>
     <string name="none">Brak</string>
-    <string name="feature_not_implemented">Ta funkcja zostanie niedługo dodana.</string>
     <string name="scroll_at_the_beginning_already">Powrót na początek.</string>
     <string name="file_manager_not_found">Brak systemowej przeglądarki plików.</string>
     <string name="select_file_to_import">Wybierz plik do zaimportowania.</string>
@@ -147,7 +144,7 @@
     <string name="edit_song_remove">Usuń piosenkę</string>
     <string name="edit_song_has_been_saved">Zapisano piosenkę w \"Moje piosenki\".</string>
     <string name="edit_song_has_been_removed">Usunięto piosenkę.</string>
-    <string name="settings_chords_notation">Notacja akordów:</string>
+    <string name="settings_chords_notation">Notacja akordów</string>
     <string name="notation_german">Niemiecka / Europejska (a b B H C d)</string>
     <string name="notation_english">Angielska / Amerykańska (Am Bbm Bb B C Dm)</string>
     <string name="fill_in_all_fields">Wypełnij wszystkie wymagane pola.</string>
@@ -162,7 +159,7 @@
     <string name="edit_song_publish">Opublikuj piosenkę</string>
     <string name="action_amend_song">Popraw</string>
     <string name="action_comment_song">Skomentuj</string>
-    <string name="settings_language">Język aplikacji (wymagany restart):</string>
+    <string name="settings_language">Język aplikacji (wymagany restart)</string>
     <string name="language_default">Domyślny systemowy</string>
     <string name="language_unknown">Nieznany</string>
     <string name="contact_subject_song_amend">Poprawka do piosenki</string>

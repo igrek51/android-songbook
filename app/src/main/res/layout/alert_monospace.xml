@@ -1,30 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
     android:layout_gravity="center"
-    android:gravity="center">
+    android:fillViewport="true"
+    android:measureAllChildren="true"
+    android:scrollHorizontally="true"
+    android:scrollbars="horizontal">
 
-    <ScrollView
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/contentTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:layout_gravity="center"
-        android:fillViewport="true"
-        android:measureAllChildren="true"
         android:scrollHorizontally="true"
-        android:scrollbars="horizontal">
+        android:scrollbars="horizontal"
+        android:singleLine="false"
+        android:typeface="monospace"/>
 
-        <TextView
-            android:id="@+id/contentTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:scrollHorizontally="true"
-            android:scrollbars="horizontal"
-            android:singleLine="false"
-            android:typeface="monospace"/>
-
-    </ScrollView>
-</RelativeLayout>
+</ScrollView>

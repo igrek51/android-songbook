@@ -41,12 +41,12 @@ class SecretUnlockerService {
     private val cowCondition: Predicate<String> = Predicate { input -> input!!.matches(Regex("^m[ou]+$")) }
 
     private val EA5T3R_M00: String = """
- _____________________
-/ Congratulations!    \
-|                     |
-| You have discovered |
-\ an Easter Egg :)    /
- ---------------------
+ ____________________
+/ Congratulations!   \
+|                    |
+| You have found     |
+\ an Easter Egg :)   /
+ --------------------
    \   ^__^
     \  (oo)\_______
        (__)\       )\/\

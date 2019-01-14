@@ -7,6 +7,7 @@ import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import java.text.ParseException
 import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 abstract class AbstractSqliteDao {
@@ -14,7 +15,7 @@ abstract class AbstractSqliteDao {
     lateinit var localDbService: LocalDbService
 
     protected val logger: Logger = LoggerFactory.logger
-    protected val iso8601Format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+    protected val iso8601Format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
 
     protected abstract fun getDatabase(): SQLiteDatabase
 
