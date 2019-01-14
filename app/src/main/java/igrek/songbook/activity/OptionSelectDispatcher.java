@@ -1,14 +1,13 @@
 package igrek.songbook.activity;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.util.SparseArray;
 
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.errorcheck.SafeExecutor;
 
 public class OptionSelectDispatcher {
 	
-	private Map<Integer, Runnable> optionActions = new HashMap<>();
+	private SparseArray<Runnable> optionActions = new SparseArray<>();
 	
 	public OptionSelectDispatcher() {
 		DaggerIoc.getFactoryComponent().inject(this);
@@ -19,7 +18,7 @@ public class OptionSelectDispatcher {
 	}
 	
 	public boolean optionsSelect(int id) {
-		if (optionActions.containsKey(id)) {
+		if (optionActions.get(id) != null) {
 			Runnable action = optionActions.get(id);
 			new SafeExecutor().execute(action);
 			return true;

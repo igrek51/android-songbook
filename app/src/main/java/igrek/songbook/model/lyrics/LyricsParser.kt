@@ -107,8 +107,8 @@ class LyricsParser(fontFamily: Typeface) {
         }
     }
 
-    private fun findLastWordSplitter(chars: List<LyricsChar>, toIndex: Int): Int {
-        var toIndex = toIndex
+    private fun findLastWordSplitter(chars: List<LyricsChar>, _toIndex: Int): Int {
+        var toIndex = _toIndex
         while (--toIndex > 1) {
             // is word splitter
             if (wordSplitters.contains(chars[toIndex].c))

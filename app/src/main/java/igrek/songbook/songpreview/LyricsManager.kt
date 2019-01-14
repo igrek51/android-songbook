@@ -45,7 +45,7 @@ class LyricsManager {
                 .replace("\u00A0", " ") // NO-BREAK SPACE (0xC2 0xA0)
     }
 
-    fun load(fileContent: String, screenW: Int?, screenH: Int?, paint: Paint?) {
+    fun load(fileContent: String, screenW: Int?, paint: Paint?) {
         reset()
         originalFileContent = normalizeContent(fileContent)
 
@@ -60,7 +60,7 @@ class LyricsManager {
         parseAndTranspose(originalFileContent)
     }
 
-    fun onPreviewSizeChange(screenW: Int, screenH: Int, paint: Paint) {
+    fun onPreviewSizeChange(screenW: Int, paint: Paint) {
         this.screenW = screenW
         this.paint = paint
         reparse()

@@ -229,7 +229,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                                       onSave: (value: Boolean) -> Unit) {
         val preference = findPreference(key) as SwitchPreference
         preference.isChecked = onLoad()
-        preference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { pref, newValue ->
+        preference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             onSave(newValue as Boolean)
             true
         }

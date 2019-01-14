@@ -87,7 +87,7 @@ class SongPreviewLayoutController : MainLayout {
         autoscrollService.scrollStateSubject
                 .debounce(100, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { autoscrollState -> highlightPanelButtons() }
+                .subscribe { _ -> highlightPanelButtons() }
     }
 
     override fun showLayout(layout: View) {
@@ -104,7 +104,7 @@ class SongPreviewLayoutController : MainLayout {
         }
         // navigation menu button
         val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)
-        navMenuButton.setOnClickListener { v -> navigationMenuController.navDrawerShow() }
+        navMenuButton.setOnClickListener { navigationMenuController.navDrawerShow() }
 
         appBarLayout = layout.findViewById(R.id.appBarLayout)
 
@@ -194,7 +194,7 @@ class SongPreviewLayoutController : MainLayout {
         // load file and parse it
         val fileContent = currentSong!!.content!!
         // initialize - first file loading
-        lyricsManager.load(fileContent, w, h, paint)
+        lyricsManager.load(fileContent, w, paint)
 
         songPreview!!.setFontSizes(lyricsThemeService.fontsize)
         songPreview!!.setCRDModel(lyricsManager.crdModel)
@@ -293,7 +293,7 @@ class SongPreviewLayoutController : MainLayout {
     }
 
     fun onPreviewSizeChange(w: Int, h: Int) {
-        lyricsManager.onPreviewSizeChange(w, h, songPreview!!.paint)
+        lyricsManager.onPreviewSizeChange(w, songPreview!!.paint)
         onLyricsModelUpdated()
     }
 
