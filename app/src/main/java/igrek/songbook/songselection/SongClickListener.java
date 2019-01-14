@@ -1,8 +1,9 @@
 package igrek.songbook.songselection;
 
-@FunctionalInterface
-public interface OnSongClickListener {
+public interface SongClickListener {
 	
 	void onSongItemClick(SongTreeItem item);
+	
+	void onSongItemLongClick(SongTreeItem item);
 	
 }

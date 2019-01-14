@@ -16,10 +16,11 @@ import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.model.songsdb.SongsDb
 import igrek.songbook.persistence.SongsRepository
 import igrek.songbook.songpreview.SongPreviewLayoutController
+import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.songtree.SongTreeSorter
 import javax.inject.Inject
 
-abstract class SongSelectionLayoutController : OnSongClickListener {
+abstract class SongSelectionLayoutController : SongClickListener {
 
     @Inject
     lateinit var activityController: Lazy<ActivityController>
@@ -35,6 +36,8 @@ abstract class SongSelectionLayoutController : OnSongClickListener {
     lateinit var uiResourceService: UiResourceService
     @Inject
     lateinit var songPreviewLayoutController: Lazy<SongPreviewLayoutController>
+    @Inject
+    lateinit var songContextMenuBuilder: SongContextMenuBuilder
 
     protected val logger: Logger = LoggerFactory.logger
     protected var actionBar: ActionBar? = null
@@ -69,5 +72,19 @@ abstract class SongSelectionLayoutController : OnSongClickListener {
     fun openSongPreview(item: SongTreeItem) {
         songPreviewLayoutController.get().setCurrentSong(item.song)
         layoutController.showSongPreview()
+    }
+
+    override fun onSongItemClick(item: SongTreeItem) {
+        if (item.isSong) {
+            openSongPreview(item)
+        }
+    }
+
+    override fun onSongItemLongClick(item: SongTreeItem) {
+        if (item.isSong) {
+            songContextMenuBuilder.showSongActions(item.song)
+        } else {
+            onSongItemClick(item)
+        }
     }
 }

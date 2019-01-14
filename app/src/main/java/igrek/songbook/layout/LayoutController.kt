@@ -85,6 +85,7 @@ class LayoutController {
 
     fun showCustomSongs() {
         showMainLayout(customSongsLayoutController.get())
+        lastSongSelectionLayout = customSongsLayoutController.get()
     }
 
     fun showFavourites() {

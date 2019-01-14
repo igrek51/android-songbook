@@ -47,6 +47,7 @@ import igrek.songbook.songpreview.theme.LyricsThemeService;
 import igrek.songbook.songpreview.transpose.ChordsTransposerManager;
 import igrek.songbook.songselection.SongListItemAdapter;
 import igrek.songbook.songselection.SongListView;
+import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder;
 import igrek.songbook.songselection.favourite.FavouriteSongsRepository;
 import igrek.songbook.songselection.favourite.FavouritesLayoutController;
 import igrek.songbook.songselection.random.RandomSongOpener;
@@ -168,6 +169,8 @@ public interface FactoryComponent {
 	void inject(LyricsThemeService there);
 	
 	void inject(CustomSongsLayoutController there);
+	
+	void inject(SongContextMenuBuilder there);
 	
 	
 	void inject(SongListItemAdapter there);

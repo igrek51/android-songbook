@@ -77,9 +77,7 @@ class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
     override fun onSongItemClick(item: SongTreeItem) {
         // store Scroll Position
         storedScroll = itemsListView?.currentScrollPosition
-        if (item.isSong) {
-            openSongPreview(item)
-        }
+        super.onSongItemClick(item)
     }
 
     override fun onLayoutExit() {}

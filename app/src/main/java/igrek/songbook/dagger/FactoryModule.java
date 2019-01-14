@@ -48,6 +48,7 @@ import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll;
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose;
 import igrek.songbook.songpreview.theme.LyricsThemeService;
 import igrek.songbook.songpreview.transpose.ChordsTransposerManager;
+import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder;
 import igrek.songbook.songselection.favourite.FavouriteSongsRepository;
 import igrek.songbook.songselection.favourite.FavouritesLayoutController;
 import igrek.songbook.songselection.random.RandomSongOpener;
@@ -403,6 +404,12 @@ public class FactoryModule {
 	@Singleton
 	protected CustomSongsLayoutController provideCustomSongsLayoutController() {
 		return new CustomSongsLayoutController();
+	}
+	
+	@Provides
+	@Singleton
+	protected SongContextMenuBuilder provideSongContextMenuBuilder() {
+		return new SongContextMenuBuilder();
 	}
 	
 	/*
