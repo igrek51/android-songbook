@@ -36,7 +36,7 @@ class SongsRepository {
     @Inject
     lateinit var databaseMigrator: DatabaseMigrator
 
-    private val logger = LoggerFactory.getLogger()
+    private val logger = LoggerFactory.logger
 
     var dbChangeSubject: PublishSubject<SongsDb> = PublishSubject.create()
 

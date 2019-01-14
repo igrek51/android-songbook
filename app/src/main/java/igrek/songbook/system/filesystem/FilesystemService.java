@@ -25,7 +25,7 @@ import igrek.songbook.info.logger.LoggerFactory;
  */
 public class FilesystemService {
 	
-	private Logger logger = LoggerFactory.getLogger();
+	private Logger logger = LoggerFactory.INSTANCE.getLogger();
 	
 	@Inject
 	Activity activity;

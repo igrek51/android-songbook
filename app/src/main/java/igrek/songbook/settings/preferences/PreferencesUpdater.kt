@@ -84,10 +84,10 @@ class PreferencesUpdater {
             autoscrollService.get().autoSpeedAdjustment = value
         }
 
-    var autoscrollSpeedDpadKeys: Boolean
-        get() = autoscrollService.get().dpadKeysSpeedControl
+    var autoscrollSpeedVolumeKeys: Boolean
+        get() = autoscrollService.get().volumeKeysSpeedControl
         set(value) {
-            autoscrollService.get().dpadKeysSpeedControl = value
+            autoscrollService.get().volumeKeysSpeedControl = value
         }
 
     var randomFavouriteSongsOnly: Boolean
@@ -108,7 +108,7 @@ class PreferencesUpdater {
         preferencesService.setValue(PreferencesDefinition.autoscrollInitialPause, autoscrollInitialPause)
         preferencesService.setValue(PreferencesDefinition.autoscrollSpeed, autoscrollSpeed)
         preferencesService.setValue(PreferencesDefinition.autoscrollSpeedAutoAdjustment, autoscrollSpeedAutoAdjustment)
-        preferencesService.setValue(PreferencesDefinition.autoscrollSpeedDpadKeys, autoscrollSpeedDpadKeys)
+        preferencesService.setValue(PreferencesDefinition.autoscrollSpeedVolumeKeys, autoscrollSpeedVolumeKeys)
 
         preferencesService.setValue(PreferencesDefinition.appLanguage, appLanguage?.langCode)
         preferencesService.setValue(PreferencesDefinition.chordsNotationId, chordsNotation?.id)

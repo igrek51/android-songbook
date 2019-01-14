@@ -23,7 +23,7 @@ class AppLanguageService {
 
     var appLanguage: AppLanguage? = null
     var excludedLanguages: List<SongLanguage> = listOf()
-    private val logger = LoggerFactory.getLogger()
+    private val logger = LoggerFactory.logger
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)

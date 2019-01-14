@@ -16,7 +16,7 @@ import igrek.songbook.info.logger.LoggerFactory;
 
 public class PermissionService {
 	
-	private Logger logger = LoggerFactory.getLogger();
+	private Logger logger = LoggerFactory.INSTANCE.getLogger();
 	
 	@Inject
 	Activity activity;

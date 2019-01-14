@@ -17,7 +17,7 @@ public class UIErrorHandler {
 	@Inject
 	UiResourceService uiResourceService;
 	
-	private Logger logger = LoggerFactory.getLogger();
+	private Logger logger = LoggerFactory.INSTANCE.getLogger();
 	
 	private UIErrorHandler() {
 	}

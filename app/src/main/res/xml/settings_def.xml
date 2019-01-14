@@ -43,7 +43,7 @@
             android:title="Scroll speed auto adjustment"
             android:summary="Automatic correction of scroll speed when you manually scroll the song"/>
         <SwitchPreference
-            android:key="autoscrollSpeedDpadKeys"
+            android:key="autoscrollSpeedVolumeKeys"
             android:title="Volume buttons changing scroll speed"
             android:summary="Use Up / Down volume buttons to increase or decrease scroll speed respectively"/>
     </PreferenceCategory>

@@ -24,7 +24,7 @@ public class LocalDbService {
 	@Inject
 	PermissionService permissionService;
 	
-	private Logger logger = LoggerFactory.getLogger();
+	private Logger logger = LoggerFactory.INSTANCE.getLogger();
 	
 	private SQLiteDatabase songsDbHelper;
 	private SQLiteDatabase localSongsDbHelper;

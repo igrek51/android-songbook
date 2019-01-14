@@ -25,7 +25,7 @@ enum class PreferencesDefinition constructor(val type: PropertyType, val default
 
     autoscrollSpeedAutoAdjustment(true),
 
-    autoscrollSpeedDpadKeys(true),
+    autoscrollSpeedVolumeKeys(true),
 
     randomFavouriteSongsOnly(false),
 

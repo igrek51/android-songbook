@@ -21,7 +21,7 @@ class SongsUpdater {
     @Inject
     lateinit var songsRepository: Lazy<SongsRepository>
 
-    private val logger = LoggerFactory.getLogger()
+    private val logger = LoggerFactory.logger
 
     private val songsdbUrl = "http://51.38.128.10:8008/api/v2/songs"
     private val songsDbVersionUrl = "http://51.38.128.10:8008/api/v2/songs_version"

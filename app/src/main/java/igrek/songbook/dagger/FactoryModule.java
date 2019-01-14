@@ -92,7 +92,7 @@ public class FactoryModule {
 	
 	@Provides
 	protected Logger provideLogger() {
-		return LoggerFactory.getLogger();
+		return LoggerFactory.INSTANCE.getLogger();
 	}
 	
 	/* Services */

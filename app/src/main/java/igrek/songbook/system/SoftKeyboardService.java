@@ -17,7 +17,7 @@ public class SoftKeyboardService {
 	AppCompatActivity activity;
 	
 	private InputMethodManager imm;
-	private Logger logger = LoggerFactory.getLogger();
+	private Logger logger = LoggerFactory.INSTANCE.getLogger();
 	
 	public SoftKeyboardService() {
 		DaggerIoc.getFactoryComponent().inject(this);

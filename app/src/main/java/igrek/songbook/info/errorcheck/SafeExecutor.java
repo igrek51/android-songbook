@@ -17,7 +17,7 @@ public class SafeExecutor {
 	@Inject
 	UiResourceService uiResourceService;
 	
-	private Logger logger = LoggerFactory.getLogger();
+	private Logger logger = LoggerFactory.INSTANCE.getLogger();
 	
 	public void execute(Runnable action) {
 		try {

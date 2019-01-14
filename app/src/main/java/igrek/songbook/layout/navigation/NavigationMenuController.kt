@@ -27,7 +27,7 @@ class NavigationMenuController {
     private var drawerLayout: DrawerLayout? = null
     private var navigationView: NavigationView? = null
     private val actionsMap = HashMap<Int, Runnable>()
-    private val logger = LoggerFactory.getLogger()
+    private val logger = LoggerFactory.logger
 
     @Inject
     lateinit var activity: Activity

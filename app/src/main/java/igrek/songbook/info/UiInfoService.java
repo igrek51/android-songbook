@@ -15,8 +15,6 @@ import javax.inject.Inject;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.errorcheck.SafeClickListener;
-import igrek.songbook.info.logger.Logger;
-import igrek.songbook.info.logger.LoggerFactory;
 
 public class UiInfoService {
 	
@@ -27,8 +25,6 @@ public class UiInfoService {
 	UiResourceService uiResourceService;
 	
 	private HashMap<View, Snackbar> infobars = new HashMap<>();
-	
-	private Logger logger = LoggerFactory.getLogger();
 	
 	public UiInfoService() {
 		DaggerIoc.getFactoryComponent().inject(this);

@@ -23,7 +23,7 @@ class AppInitializer {
     @Inject
     lateinit var appLanguageService: AppLanguageService
 
-    private val logger = LoggerFactory.getLogger()
+    private val logger = LoggerFactory.logger
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)

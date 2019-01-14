@@ -46,7 +46,7 @@ public class ChordsTransposer {
 		}
 	};
 	
-	private Logger logger = LoggerFactory.getLogger();
+	private Logger logger = LoggerFactory.INSTANCE.getLogger();
 	/**
 	 * map: chord name (prefix) -> chord number
 	 */

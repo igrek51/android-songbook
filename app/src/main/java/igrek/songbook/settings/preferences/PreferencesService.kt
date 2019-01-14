@@ -13,7 +13,7 @@ class PreferencesService {
     @Inject
     lateinit var activity: Activity
 
-    private val logger = LoggerFactory.getLogger()
+    private val logger = LoggerFactory.logger
     private val propertyValues = HashMap<String, Any?>()
     private val sharedPreferences: SharedPreferences
 

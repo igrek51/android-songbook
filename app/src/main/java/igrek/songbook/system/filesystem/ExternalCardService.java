@@ -24,7 +24,7 @@ public class ExternalCardService {
 	
 	@Inject
 	Activity activity;
-	private Logger logger = LoggerFactory.getLogger();
+	private Logger logger = LoggerFactory.INSTANCE.getLogger();
 	private String externalSDPath;
 	
 	public ExternalCardService() {

@@ -8,10 +8,10 @@ import igrek.songbook.info.logger.LoggerFactory
 
 class MainApplication : Application() {
 
-    private val logger = LoggerFactory.getLogger()
+    private val logger = LoggerFactory.logger
     private val currentActivityListener = CurrentActivityListener()
 
-    val currentActivity: Activity
+    private val currentActivity: Activity
         get() = currentActivityListener.currentActivity
 
     override fun onCreate() {

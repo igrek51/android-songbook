@@ -29,7 +29,7 @@ class SendFeedbackService {
     @Inject
     lateinit var songsRepository: SongsRepository
 
-    private val logger = LoggerFactory.getLogger()
+    private val logger = LoggerFactory.logger
 
     companion object {
         private const val APPLICATION_ID = 1

@@ -23,4 +23,14 @@ public class LoggerMock extends Logger {
 		System.err.println(msg);
 	}
 	
+	@Override
+	protected void printDebug(String msg) {
+		System.out.println(msg);
+	}
+	
+	@Override
+	protected void printWarn(String msg) {
+		System.out.println(msg);
+	}
+	
 }

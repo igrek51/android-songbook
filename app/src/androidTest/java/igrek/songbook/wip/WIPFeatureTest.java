@@ -28,7 +28,7 @@ import igrek.songbook.settings.preferences.PreferencesService;
 @RunWith(AndroidJUnit4.class)
 public class WIPFeatureTest {
 	
-	private Logger logger = LoggerFactory.getLogger();
+	private Logger logger = LoggerFactory.INSTANCE.getLogger();
 	
 	@Rule
 	public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(MainActivity.class);

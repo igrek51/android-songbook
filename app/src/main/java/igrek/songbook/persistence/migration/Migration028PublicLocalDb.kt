@@ -14,7 +14,7 @@ import java.util.*
 class Migration028PublicLocalDb(val activity: Activity) : IMigration {
 
     private var oldCustomSongsDb: SQLiteDatabase? = null
-    private val logger = LoggerFactory.getLogger()
+    private val logger = LoggerFactory.logger
     private val iso8601Format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
     override fun migrate(migrator: DatabaseMigrator) {

@@ -13,7 +13,7 @@ public class CharsetDetector {
 	private final byte[] utf8PLPrefixBytes = {(byte) 0xC3, (byte) 0xC4, (byte) 0xC5};
 	private final String CHARSET_UTF8 = "UTF-8";
 	private final String CHARSET_CP1250 = "Cp1250";
-	private Logger logger = LoggerFactory.getLogger();
+	private Logger logger = LoggerFactory.INSTANCE.getLogger();
 	
 	public CharsetDetector() {
 	}

@@ -13,7 +13,7 @@ abstract class AbstractSqliteDao {
     @Inject
     lateinit var localDbService: LocalDbService
 
-    protected val logger: Logger = LoggerFactory.getLogger()
+    protected val logger: Logger = LoggerFactory.logger
     protected val iso8601Format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
     protected abstract fun getDatabase(): SQLiteDatabase

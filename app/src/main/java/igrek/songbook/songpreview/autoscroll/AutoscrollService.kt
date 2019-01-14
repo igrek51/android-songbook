@@ -30,9 +30,9 @@ class AutoscrollService {
     var initialPause: Long = 0 // [ms]
     var autoscrollSpeed: Float = 0.toFloat() // [em / s]
     var autoSpeedAdjustment: Boolean = true
-    var dpadKeysSpeedControl: Boolean = true
+    var volumeKeysSpeedControl: Boolean = true
 
-    private val logger = LoggerFactory.getLogger()
+    private val logger = LoggerFactory.logger
     private var state: AutoscrollState? = null
     private var startTime: Long = 0 // [ms]
     private var scrolledBuffer = 0f
@@ -51,11 +51,13 @@ class AutoscrollService {
 
     companion object {
         const val MIN_SPEED = 0.001f // [line / s]
+        const val MAX_SPEED = 1.000f // [line / s]
         const val START_NO_WAITING_MIN_SCROLL = 0.9f // [line]
-        const val ADJUSTMENT_SPEED_SCALE = 0.0008f // [line / s  /  scrolled lines]
+        const val ADJUSTMENT_SPEED_SCALE = 0.001f // [line / s  /  scrolled lines]
         const val ADJUSTMENT_MAX_SPEED_CHANGE = 0.03f // [line / s  /  scrolled lines]
         const val ADD_INITIAL_PAUSE_SCALE = 180.0f // [ms  /  scrolled lines]
         const val AUTOSCROLL_INTERVAL_TIME = 60f // [ms]
+        const val VOLUME_BTNS_SPEED_STEP = 0.020f // [line / s]
     }
 
     val isRunning: Boolean
@@ -88,7 +90,7 @@ class AutoscrollService {
         initialPause = preferencesService.getValue(PreferencesDefinition.autoscrollInitialPause, Long::class.java)!!
         autoscrollSpeed = preferencesService.getValue(PreferencesDefinition.autoscrollSpeed, Float::class.java)!!
         autoSpeedAdjustment = preferencesService.getValue(PreferencesDefinition.autoscrollSpeedAutoAdjustment, Boolean::class.java)!!
-        dpadKeysSpeedControl = preferencesService.getValue(PreferencesDefinition.autoscrollSpeedDpadKeys, Boolean::class.java)!!
+        volumeKeysSpeedControl = preferencesService.getValue(PreferencesDefinition.autoscrollSpeedVolumeKeys, Boolean::class.java)!!
     }
 
     fun reset() {
@@ -168,9 +170,8 @@ class AutoscrollService {
         } else if (state == AutoscrollState.SCROLLING) {
             if (dScroll > 0) {
                 // speed up scrolling
-                if (autoSpeedAdjustment) {
-                    autoscrollSpeed += cutOffMax(dScroll * ADJUSTMENT_SPEED_SCALE, ADJUSTMENT_MAX_SPEED_CHANGE)
-                }
+                val delta = +cutOffMax(dScroll * ADJUSTMENT_SPEED_SCALE, ADJUSTMENT_MAX_SPEED_CHANGE)
+                autoAdjustScrollSpeed(delta)
 
             } else if (dScroll < 0) {
                 if (scroll <= 0) { // scrolling up to the beginning
@@ -182,20 +183,17 @@ class AutoscrollService {
                     return
                 } else {
                     // slow down scrolling
-                    if (autoSpeedAdjustment) {
-                        val dScrollAbs = -dScroll
-                        autoscrollSpeed -= cutOffMax(dScrollAbs * ADJUSTMENT_SPEED_SCALE, ADJUSTMENT_MAX_SPEED_CHANGE)
-                    }
+                    val delta = -cutOffMax(-dScroll * ADJUSTMENT_SPEED_SCALE, ADJUSTMENT_MAX_SPEED_CHANGE)
+                    autoAdjustScrollSpeed(delta)
                 }
             }
+        }
+    }
 
-            if (autoSpeedAdjustment) {
-                if (autoscrollSpeed < MIN_SPEED)
-                    autoscrollSpeed = MIN_SPEED
-
-                scrollSpeedAdjustmentSubject.onNext(autoscrollSpeed)
-                logger.info("autoscroll speed adjustment: $autoscrollSpeed line / s")
-            }
+    private fun autoAdjustScrollSpeed(delta: Float) {
+        if (autoSpeedAdjustment) {
+            addAutoscrollSpeed(delta)
+            logger.info("autoscroll speed adjusted: $autoscrollSpeed line / s")
         }
     }
 
@@ -223,8 +221,6 @@ class AutoscrollService {
             } else {
                 uiInfoService.showInfo(uiResourceService.resString(R.string.end_of_song_autoscroll_stopped))
             }
-        } else {
-            onAutoscrollStopUIEvent()
         }
     }
 
@@ -249,5 +245,35 @@ class AutoscrollService {
         } else {
             onAutoscrollStartUIEvent()
         }
+    }
+
+    private fun addAutoscrollSpeed(delta: Float) {
+        autoscrollSpeed += delta
+        if (autoscrollSpeed < MIN_SPEED) autoscrollSpeed = MIN_SPEED
+        if (autoscrollSpeed > MAX_SPEED) autoscrollSpeed = MAX_SPEED
+        scrollSpeedAdjustmentSubject.onNext(autoscrollSpeed)
+    }
+
+    fun onVolumeUp(): Boolean {
+        if (!volumeKeysSpeedControl)
+            return false
+        when (state) {
+            AutoscrollState.OFF -> onAutoscrollStartUIEvent()
+            AutoscrollState.WAITING -> skipInitialPause()
+            AutoscrollState.SCROLLING -> addAutoscrollSpeed(+VOLUME_BTNS_SPEED_STEP)
+        }
+        return true
+    }
+
+    fun onVolumeDown(): Boolean {
+        if (!volumeKeysSpeedControl)
+            return false
+        when (state) {
+            AutoscrollState.OFF -> {
+            }
+            AutoscrollState.WAITING -> onAutoscrollStopUIEvent()
+            AutoscrollState.SCROLLING -> addAutoscrollSpeed(-VOLUME_BTNS_SPEED_STEP)
+        }
+        return true
     }
 }

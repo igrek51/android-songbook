@@ -12,7 +12,7 @@ class DatabaseMigrator {
     @Inject
     lateinit var activity: Activity
 
-    private val logger = LoggerFactory.getLogger()
+    private val logger = LoggerFactory.logger
     var songsRepository: SongsRepository? = null
 
     private val latestCompatibleDbVersion = 28 // db could not to be latest, but migration not necessary

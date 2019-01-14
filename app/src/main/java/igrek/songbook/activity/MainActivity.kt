@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var songImportFileChooser: SongImportFileChooser
 
-    private val logger: Logger = LoggerFactory.getLogger()
+    private val logger: Logger = LoggerFactory.logger
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,12 +70,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (systemKeyDispatcher.onKeyBack())
-                return true
-        } else if (keyCode == KeyEvent.KEYCODE_MENU) {
-            if (systemKeyDispatcher.onKeyMenu())
-                return true
+        when (keyCode) {
+            KeyEvent.KEYCODE_BACK -> {
+                if (systemKeyDispatcher.onKeyBack())
+                    return true
+            }
+            KeyEvent.KEYCODE_MENU -> {
+                if (systemKeyDispatcher.onKeyMenu())
+                    return true
+            }
+            KeyEvent.KEYCODE_VOLUME_UP -> {
+                if (systemKeyDispatcher.onVolumeUp())
+                    return true
+            }
+            KeyEvent.KEYCODE_VOLUME_DOWN -> {
+                if (systemKeyDispatcher.onVolumeDown())
+                    return true
+            }
         }
         return super.onKeyDown(keyCode, event)
     }

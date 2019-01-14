@@ -24,7 +24,7 @@ public class ActivityController {
 	@Inject
 	PreferencesUpdater preferencesUpdater;
 	
-	private Logger logger = LoggerFactory.getLogger();
+	private Logger logger = LoggerFactory.INSTANCE.getLogger();
 	
 	public ActivityController() {
 		DaggerIoc.getFactoryComponent().inject(this);

@@ -36,7 +36,7 @@ abstract class SongSelectionLayoutController : OnSongClickListener {
     @Inject
     lateinit var songPreviewLayoutController: Lazy<SongPreviewLayoutController>
 
-    protected val logger: Logger = LoggerFactory.getLogger()
+    protected val logger: Logger = LoggerFactory.logger
     protected var actionBar: ActionBar? = null
     protected var itemsListView: SongListView? = null
 

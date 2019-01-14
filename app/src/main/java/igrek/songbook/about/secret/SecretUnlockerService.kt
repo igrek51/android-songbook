@@ -36,7 +36,7 @@ class SecretUnlockerService {
     @Inject
     lateinit var preferencesService: PreferencesService
 
-    private val logger = LoggerFactory.getLogger()
+    private val logger = LoggerFactory.logger
 
     private val cowCondition: Predicate<String> = Predicate { input -> input!!.matches(Regex("^m[ou]+$")) }
 

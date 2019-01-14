@@ -18,6 +18,7 @@ import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesUpdater
+import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.theme.ColorScheme
 import igrek.songbook.songpreview.theme.FontTypeface
 import igrek.songbook.songpreview.theme.LyricsThemeService
@@ -124,7 +125,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
         )
 
-        setupSeekBarPreference("autoscrollSpeed", min = 0, max = 1.0,
+        setupSeekBarPreference("autoscrollSpeed", min = AutoscrollService.MIN_SPEED, max = AutoscrollService.MAX_SPEED,
                 onLoad = { preferencesUpdater.autoscrollSpeed },
                 onSave = { value: Float ->
                     preferencesUpdater.autoscrollSpeed = value
@@ -151,10 +152,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
         )
 
-        setupSwitchPreference("autoscrollSpeedDpadKeys",
-                onLoad = { preferencesUpdater.autoscrollSpeedDpadKeys },
+        setupSwitchPreference("autoscrollSpeedVolumeKeys",
+                onLoad = { preferencesUpdater.autoscrollSpeedVolumeKeys },
                 onSave = { value: Boolean ->
-                    preferencesUpdater.autoscrollSpeedDpadKeys = value
+                    preferencesUpdater.autoscrollSpeedVolumeKeys = value
                 }
         )
 

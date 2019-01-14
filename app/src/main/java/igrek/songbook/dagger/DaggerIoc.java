@@ -9,7 +9,7 @@ public class DaggerIoc {
 	
 	private static FactoryComponent appComponent;
 	
-	private static Logger logger = LoggerFactory.getLogger();
+	private static Logger logger = LoggerFactory.INSTANCE.getLogger();
 	
 	private DaggerIoc() {
 	}

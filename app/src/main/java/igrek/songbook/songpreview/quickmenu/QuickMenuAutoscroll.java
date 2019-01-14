@@ -80,7 +80,7 @@ public class QuickMenuAutoscroll {
 		TextView speedLabel = quickMenuView.findViewById(R.id.speedLabel);
 		SeekBar speedSeekbar = quickMenuView.findViewById(R.id.speedSeekbar);
 		float autoscrollSpeed = autoscrollService.getAutoscrollSpeed();
-		autoscrollSpeedSlider = new SliderController(speedSeekbar, speedLabel, autoscrollSpeed, 0, 1.0f) {
+		autoscrollSpeedSlider = new SliderController(speedSeekbar, speedLabel, autoscrollSpeed, AutoscrollService.MIN_SPEED, AutoscrollService.MAX_SPEED) {
 			@Override
 			public String generateLabelText(float value) {
 				return uiResourceService.resString(R.string.settings_autoscroll_speed, roundDecimal(value, "0.000"));

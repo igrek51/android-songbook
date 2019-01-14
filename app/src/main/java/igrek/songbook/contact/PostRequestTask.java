@@ -29,7 +29,7 @@ public class PostRequestTask extends AsyncTask<String, String, String> {
 	private ResponseConsumer<Throwable> errorConsumer;
 	private String url;
 	private Map<String, String> postParams;
-	private Logger logger = LoggerFactory.getLogger();
+	private Logger logger = LoggerFactory.INSTANCE.getLogger();
 	
 	public PostRequestTask(String url, Map<String, String> postParams, ResponseConsumer<String> responseConsumer, ResponseConsumer<Throwable> errorConsumer) {
 		this.url = url;

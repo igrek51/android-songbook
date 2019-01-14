@@ -15,7 +15,7 @@ public class PackageInfoService {
 	@Inject
 	AppCompatActivity activity;
 	
-	private Logger logger = LoggerFactory.getLogger();
+	private Logger logger = LoggerFactory.INSTANCE.getLogger();
 	private String versionName;
 	private int versionCode;
 	
