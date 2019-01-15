@@ -8,7 +8,6 @@ import android.widget.EditText
 import android.widget.ImageButton
 import dagger.Lazy
 import igrek.songbook.R
-import igrek.songbook.contact.ContactLayoutController
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.SafeClickListener
@@ -36,8 +35,6 @@ class CustomSongEditLayoutController : MainLayout {
     lateinit var softKeyboardService: SoftKeyboardService
     @Inject
     lateinit var songImportFileChooser: Lazy<SongImportFileChooser>
-    @Inject
-    lateinit var contactLayoutController: ContactLayoutController
 
     private var currentSong: Song? = null
     private var songTitle: String? = null
@@ -82,13 +79,6 @@ class CustomSongEditLayoutController : MainLayout {
             }
         })
 
-        val publishSongButton = layout.findViewById<Button>(R.id.publishSongButton)
-        publishSongButton.setOnClickListener(object : SafeClickListener() {
-            override fun onClick() {
-                publishSong()
-            }
-        })
-
         val importFromFileButotn = layout.findViewById<Button>(R.id.importFromFileButotn)
         importFromFileButotn.setOnClickListener(object : SafeClickListener() {
             override fun onClick() {
@@ -108,14 +98,6 @@ class CustomSongEditLayoutController : MainLayout {
         customCategoryNameEdit!!.setText(customCategoryName)
     }
 
-    private fun publishSong() {
-        songTitle = songTitleEdit!!.text.toString()
-        songContent = songContentEdit!!.text.toString()
-        customCategoryName = customCategoryNameEdit!!.text.toString()
-
-        layoutController.showContact()
-        contactLayoutController.prepareCustomSongPublishing(songTitle!!, customCategoryName!!, songContent!!)
-    }
 
     private fun onAddChordClick() {
         var edited = songContentEdit!!.text.toString()

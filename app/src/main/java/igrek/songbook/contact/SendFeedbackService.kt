@@ -105,4 +105,9 @@ class SendFeedbackService {
         contactLayoutController.get().prepareSongComment(song)
     }
 
+    fun publishSong(song: Song) {
+        layoutController.get().showContact()
+        contactLayoutController.get().prepareCustomSongPublishing(song.title, song.customCategoryName, song.content)
+    }
+
 }

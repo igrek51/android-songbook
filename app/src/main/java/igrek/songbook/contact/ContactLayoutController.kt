@@ -115,9 +115,9 @@ class ContactLayoutController : MainLayout {
         setSubject(subjectPrefix + ": " + song.displayName())
     }
 
-    fun prepareCustomSongPublishing(songTitle: String, customCategoryName: String, songContent: String) {
+    fun prepareCustomSongPublishing(songTitle: String, customCategoryName: String?, songContent: String?) {
         val subjectPrefix = uiResourceService.resString(R.string.contact_subject_publishing_song)
-        val fullTitle: String = if (customCategoryName.isEmpty()) {
+        val fullTitle: String = if (customCategoryName.isNullOrEmpty()) {
             songTitle
         } else {
             "$songTitle - $customCategoryName"

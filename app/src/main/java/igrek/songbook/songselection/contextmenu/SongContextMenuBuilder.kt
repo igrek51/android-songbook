@@ -9,7 +9,6 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.persistence.songsdb.Song
-import igrek.songbook.persistence.songsdb.SongCategoryType
 import igrek.songbook.songselection.favourite.FavouriteSongsRepository
 import igrek.songbook.system.cache.SimpleCache
 import javax.inject.Inject
@@ -39,13 +38,13 @@ class SongContextMenuBuilder {
         val actions = mutableListOf(
                 // EDIT
                 SongContextAction(R.string.action_song_edit, { song ->
-                    song.category.type == SongCategoryType.CUSTOM
+                    song.custom
                 }, { song ->
                     customSongService.showEditSongScreen(song)
                 }),
                 // REMOVE
                 SongContextAction(R.string.action_song_remove, { song ->
-                    song.category.type == SongCategoryType.CUSTOM
+                    song.custom
                 }, { song ->
                     customSongService.removeSong(song)
                 }),
@@ -63,21 +62,27 @@ class SongContextMenuBuilder {
                 }),
                 // COPY
                 SongContextAction(R.string.action_song_copy, { song ->
-                    true
+                    !song.custom
                 }, { song ->
                     customSongService.copySongAsCustom(song)
                 }),
                 // AMEND
                 SongContextAction(R.string.action_song_amend, { song ->
-                    song.category.type != SongCategoryType.CUSTOM
+                    !song.custom
                 }, { song ->
                     sendFeedbackService.amendSong(song)
                 }),
                 // ADD COMMENT
                 SongContextAction(R.string.action_song_add_comment, { song ->
-                    song.category.type != SongCategoryType.CUSTOM
+                    !song.custom
                 }, { song ->
                     sendFeedbackService.commentSong(song)
+                }),
+                // PUBLISH
+                SongContextAction(R.string.action_song_publish, { song ->
+                    song.custom
+                }, { song ->
+                    sendFeedbackService.publishSong(song)
                 })
         )
 

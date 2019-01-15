@@ -189,4 +189,5 @@
     <string name="song_action_more">More actions</string>
     <string name="song_copied_as_custom">Song has been copied to custom songs.</string>
     <string name="song_action_choose">Choose an action</string>
+    <string name="action_song_publish">Publish song</string>
 </resources>

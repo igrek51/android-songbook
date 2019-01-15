@@ -63,7 +63,8 @@ class CustomSongService {
         val versionNumber: Long = sourceSong.versionNumber + 1
         val now = Date().time
         val category = songsRepository.getCustomCategoryByTypeId(SongCategoryType.CUSTOM.id)!!
-        val newSong = Song(0, sourceSong.title, category, sourceSong.content, versionNumber, now, now, true, null, sourceSong.comment, sourceSong.preferredKey, false, null, null, SongStatus.PROPOSED, sourceSong.category.displayName, sourceSong.language, sourceSong.metre, null, sourceSong.scrollSpeed, sourceSong.initialDelay)
+        val customCategoryName = sourceSong.customCategoryName ?: sourceSong.category.displayName
+        val newSong = Song(0, sourceSong.title, category, sourceSong.content, versionNumber, now, now, true, null, sourceSong.comment, sourceSong.preferredKey, false, null, null, SongStatus.PROPOSED, customCategoryName, sourceSong.language, sourceSong.metre, null, sourceSong.scrollSpeed, sourceSong.initialDelay)
         songsRepository.addCustomSong(newSong)
         uiInfoService.showInfo(R.string.song_copied_as_custom)
         return newSong
