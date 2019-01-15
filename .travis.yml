@@ -2,24 +2,54 @@ language: android
 jdk: oraclejdk8
 sudo: false
 
+env:
+  global:
+  - ANDROID_API=27
+  - EMULATOR_API=24
+  - ANDROID_BUILD_TOOLS=27.1.1
+
 android:
   components:
     - tools
+    - android-$EMULATOR_API
     - platform-tools
-    - build-tools-27.1.1
-    - android-27
-    - extra-google-m2repository
+    - build-tools-$ANDROID_BUILD_TOOLS
+    - android-$ANDROID_API
+    - extra-android-support
     - extra-android-m2repository
-    - sys-img-armeabi-v7a-android-21
+    - extra-google-m2repository
+    - sys-img-armeabi-v7a-android-$EMULATOR_API
 
 before_script:
   # Create and start emulator
-  - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
-  - emulator -avd test -no-skin -no-audio -no-window &
+  - echo "y" | android update sdk -a --no-ui --filter android-$EMULATOR_API
+  - echo "y" | android update sdk -a --no-ui --filter sys-img-armeabi-v7a-android-$EMULATOR_API
+  - android list targets | grep -E '^id:' | awk -F '"' '{$1=""; print $2}' # list all targets
+  - echo no | android create avd --force -n test -t android-$EMULATOR_API --abi armeabi-v7a
+  - emulator -avd test -no-skin -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
+  - chmod +x gradlew
+  - ./gradlew --version
 
 script:
   - "./gradlew clean assembleDebug --stacktrace"
   - "./gradlew test --stacktrace"
   - "./gradlew connectedAndroidTest --stacktrace"
+
+before_cache:
+  # Do not cache a few Gradle files/directories (see https://docs.travis-ci.com/user/languages/java/#Caching)
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  apt: true
+  directories:
+    # Android SDK
+    - $HOME/android-sdk-dl
+    - $HOME/android-sdk
+    # Gradle dependencies
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    # Android build cache (see http://tools.android.com/tech-docs/build-cache)
+    - $HOME/.android/build-cache
