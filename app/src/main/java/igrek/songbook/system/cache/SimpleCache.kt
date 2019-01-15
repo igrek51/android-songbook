@@ -10,7 +10,7 @@ class SimpleCache<T>(private val supplier: () -> T) {
         return cachedValue!!
     }
 
-    fun reset() {
+    fun invalidate() {
         cachedValue = null
     }
 }

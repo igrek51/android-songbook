@@ -91,7 +91,7 @@ class SongContextMenuBuilder {
         val actionNames = songActions.map { action -> action.displayName }.toTypedArray()
 
         val builder = AlertDialog.Builder(activity)
-        builder.setTitle("Choose action")
+        builder.setTitle(uiResourceService.resString(R.string.song_action_choose))
         builder.setItems(actionNames) { _, item ->
             SafeExecutor().execute {
                 songActions[item].executor(song)

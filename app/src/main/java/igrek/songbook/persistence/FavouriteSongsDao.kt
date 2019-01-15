@@ -38,11 +38,11 @@ class FavouriteSongsDao : AbstractSqliteDao() {
         if (isSongFavourite(song))
             return
 
-        val db = getDatabase()
         val values = ContentValues()
         values.put("song_id", song.id)
         values.put("is_custom", booleanToNum(song.custom))
-        db.insert("favourite_songs", null, values)
+
+        safeInsert("favourite_songs", values)
     }
 
     fun unsetFavourite(song: Song) {

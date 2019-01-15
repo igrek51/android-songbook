@@ -51,7 +51,7 @@ class FavouriteSongsRepository {
     }
 
     fun resetCache() {
-        favouritesCache.reset()
+        favouritesCache.invalidate()
     }
 
 }

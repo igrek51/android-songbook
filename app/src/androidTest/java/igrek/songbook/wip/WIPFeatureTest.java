@@ -5,6 +5,7 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +19,7 @@ import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.dagger.FactoryModule;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
+import igrek.songbook.persistence.SongsRepository;
 import igrek.songbook.settings.preferences.PreferencesService;
 
 /**
@@ -37,6 +39,8 @@ public class WIPFeatureTest {
 	Activity activity;
 	@Inject
 	PreferencesService preferencesService;
+	@Inject
+	SongsRepository songsRepository;
 	
 	@Before
 	public void setUpDagger() {
@@ -50,9 +54,16 @@ public class WIPFeatureTest {
 	}
 	
 	@Test
-	//@Ignore
-	public void testWipFeature() {
+	@Ignore
+	public void factoryReset() {
+		preferencesService.clear();
+		songsRepository.factoryReset();
+	}
 	
+	
+	@Test
+	//	@Ignore
+	public void testWipFeature() {
 	
 	}
 	

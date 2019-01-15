@@ -87,7 +87,6 @@ class CustomSongsDao : AbstractSqliteDao() {
         // auto increment id
         song.id = getNextSongId()
         // insert new song
-        val db = getDatabase()
         val values = ContentValues()
         values.put("id", song.id)
         values.put("title", song.title)
@@ -111,7 +110,7 @@ class CustomSongsDao : AbstractSqliteDao() {
         values.put("initial_delay", song.initialDelay)
         values.put("metre", song.metre)
 
-        db.insert("songs_song", null, values)
+        safeInsert("songs_song", values)
     }
 
     fun updateCustomSong(song: Song) {

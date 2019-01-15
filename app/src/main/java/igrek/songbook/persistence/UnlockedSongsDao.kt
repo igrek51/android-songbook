@@ -34,11 +34,9 @@ class UnlockedSongsDao : AbstractSqliteDao() {
     fun unlockKey(key: String) {
         if (isSongUnlocked(key))
             return
-        // if song is not locked
-        val db = getDatabase()
         val values = ContentValues()
         values.put("lock_password", key)
-        db.insert("unlocked_keys", null, values)
+        safeInsert("unlocked_keys", values)
     }
 
     private fun isSongUnlocked(key: String): Boolean {

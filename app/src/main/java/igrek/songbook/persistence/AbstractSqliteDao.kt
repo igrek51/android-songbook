@@ -1,6 +1,8 @@
 package igrek.songbook.persistence
 
+import android.content.ContentValues
 import android.database.Cursor
+import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import igrek.songbook.info.logger.Logger
@@ -98,6 +100,17 @@ abstract class AbstractSqliteDao {
             logger.error(e)
         }
         return defaultValue
+    }
+
+    protected fun safeInsert(table: String, values: ContentValues) {
+        try {
+            val db = getDatabase()
+            val result = db.insertWithOnConflict(table, null, values, SQLiteDatabase.CONFLICT_NONE)
+            if (result == -1L)
+                throw SQLException("result -1")
+        } catch (e: SQLException) {
+            logger.error("SQL insertion error: $e.message")
+        }
     }
 
 }
