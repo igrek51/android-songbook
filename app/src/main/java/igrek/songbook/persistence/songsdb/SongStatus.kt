@@ -1,4 +1,4 @@
-package igrek.songbook.model.songsdb
+package igrek.songbook.persistence.songsdb
 
 enum class SongStatus(val id: Long) {
 

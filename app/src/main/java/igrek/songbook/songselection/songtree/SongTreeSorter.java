@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import igrek.songbook.model.songsdb.SongCategoryType;
+import igrek.songbook.persistence.songsdb.SongCategoryType;
 import igrek.songbook.songselection.SongTreeItem;
 
 public class SongTreeSorter {

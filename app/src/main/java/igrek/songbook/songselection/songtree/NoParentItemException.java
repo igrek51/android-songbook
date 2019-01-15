@@ -1,4 +1,4 @@
-package igrek.songbook.model.exception;
+package igrek.songbook.songselection.songtree;
 
 public class NoParentItemException extends Exception {
 	

@@ -145,7 +145,7 @@
     <string name="edit_song_has_been_saved">Song has been saved in \"My songs\".</string>
     <string name="edit_song_has_been_removed">Song has been removed.</string>
     <string name="settings_chords_notation">Chords notation</string>
-    <string name="notation_german">German / European (#): a b B H C C# d f#</string>
+    <string name="notation_german">German / European: a b B H C C# d f#</string>
     <string name="notation_german_is">German / European (-is): a b B H C Cis d fis</string>
     <string name="notation_english">English / American: Am Bbm Bb B C C# Dm F#m</string>
     <string name="fill_in_all_fields">Please fill in all required fields.</string>
@@ -185,4 +185,7 @@
     <string name="action_song_set_favourite">Set as favourite</string>
     <string name="action_song_unset_favourite">Unfavourite</string>
     <string name="action_song_export">Export</string>
+    <string name="action_song_add_comment">Add comment</string>
+    <string name="song_action_more">More actions</string>
+    <string name="song_copied_as_custom">Song has been copied to custom songs.</string>
 </resources>

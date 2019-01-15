@@ -8,7 +8,9 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.SongsRepository
+import igrek.songbook.persistence.songsdb.Song
 import igrek.songbook.system.PackageInfoService
 import okhttp3.*
 import java.io.IOException
@@ -28,6 +30,10 @@ class SendFeedbackService {
     lateinit var packageInfoService: PackageInfoService
     @Inject
     lateinit var songsRepository: SongsRepository
+    @Inject
+    lateinit var layoutController: dagger.Lazy<LayoutController>
+    @Inject
+    lateinit var contactLayoutController: dagger.Lazy<ContactLayoutController>
 
     private val logger = LoggerFactory.logger
 
@@ -87,6 +93,16 @@ class SendFeedbackService {
     private fun onErrorReceived(errorMessage: String?) {
         logger.error("Feedback sending error: $errorMessage")
         Handler(Looper.getMainLooper()).post { uiInfoService.showInfoIndefinite(R.string.contact_error_sending) }
+    }
+
+    fun amendSong(song: Song) {
+        layoutController.get().showContact()
+        contactLayoutController.get().prepareSongAmend(song)
+    }
+
+    fun commentSong(song: Song) {
+        layoutController.get().showContact()
+        contactLayoutController.get().prepareSongComment(song)
     }
 
 }

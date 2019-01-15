@@ -4,7 +4,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.model.songsdb.Song
+import igrek.songbook.persistence.songsdb.Song
 import igrek.songbook.songselection.favourite.FavouriteSongId
 
 

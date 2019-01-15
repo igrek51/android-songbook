@@ -1,10 +1,8 @@
-package igrek.songbook.songpreview
+package igrek.songbook.songpreview.lyrics
 
 import android.graphics.Paint
 import dagger.Lazy
 import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.model.lyrics.LyricsModel
-import igrek.songbook.model.lyrics.LyricsParser
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.theme.LyricsThemeService
 import igrek.songbook.songpreview.transpose.ChordsTransposerManager

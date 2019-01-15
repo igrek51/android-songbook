@@ -5,10 +5,10 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
-import igrek.songbook.model.songsdb.Song
-import igrek.songbook.model.songsdb.SongCategory
-import igrek.songbook.model.songsdb.SongsDb
 import igrek.songbook.persistence.migration.DatabaseMigrator
+import igrek.songbook.persistence.songsdb.Song
+import igrek.songbook.persistence.songsdb.SongCategory
+import igrek.songbook.persistence.songsdb.SongsDb
 import igrek.songbook.songselection.favourite.FavouriteSongsRepository
 import io.reactivex.subjects.PublishSubject
 import java.util.*

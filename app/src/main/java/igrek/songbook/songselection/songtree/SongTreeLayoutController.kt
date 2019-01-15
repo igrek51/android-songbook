@@ -7,9 +7,8 @@ import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
-import igrek.songbook.model.exception.NoParentItemException
-import igrek.songbook.model.songsdb.SongCategory
-import igrek.songbook.model.songsdb.SongsDb
+import igrek.songbook.persistence.songsdb.SongCategory
+import igrek.songbook.persistence.songsdb.SongsDb
 import igrek.songbook.songselection.SongSelectionLayoutController
 import igrek.songbook.songselection.SongTreeItem
 import javax.inject.Inject

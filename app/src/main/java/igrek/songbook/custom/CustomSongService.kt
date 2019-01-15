@@ -1,13 +1,14 @@
 package igrek.songbook.custom
 
 import dagger.Lazy
+import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.model.songsdb.Song
-import igrek.songbook.model.songsdb.SongCategoryType
-import igrek.songbook.model.songsdb.SongStatus
 import igrek.songbook.persistence.SongsRepository
+import igrek.songbook.persistence.songsdb.Song
+import igrek.songbook.persistence.songsdb.SongCategoryType
+import igrek.songbook.persistence.songsdb.SongStatus
 import java.util.*
 import javax.inject.Inject
 
@@ -49,10 +50,22 @@ class CustomSongService {
         currentSong.title = songTitle
         currentSong.content = songContent
         currentSong.customCategoryName = customCategoryName
+        currentSong.updateTime = Date().time
         songsRepository.updateCustomSong(currentSong)
     }
 
     fun removeSong(currentSong: Song) {
         songsRepository.removeCustomSong(currentSong)
+        uiInfoService.showInfo(R.string.edit_song_has_been_removed)
+    }
+
+    fun copySongAsCustom(sourceSong: Song): Song {
+        val versionNumber: Long = sourceSong.versionNumber + 1
+        val now = Date().time
+        val category = songsRepository.getCustomCategoryByTypeId(SongCategoryType.CUSTOM.id)!!
+        val newSong = Song(0, sourceSong.title, category, sourceSong.content, versionNumber, now, now, true, null, sourceSong.comment, sourceSong.preferredKey, false, null, null, SongStatus.PROPOSED, sourceSong.category.displayName, sourceSong.language, sourceSong.metre, null, sourceSong.scrollSpeed, sourceSong.initialDelay)
+        songsRepository.addCustomSong(newSong)
+        uiInfoService.showInfo(R.string.song_copied_as_custom)
+        return newSong
     }
 }

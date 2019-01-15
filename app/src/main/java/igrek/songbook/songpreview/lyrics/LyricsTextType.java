@@ -1,4 +1,4 @@
-package igrek.songbook.model.lyrics;
+package igrek.songbook.songpreview.lyrics;
 
 public enum LyricsTextType {
 	

@@ -3,12 +3,13 @@ package igrek.songbook.songselection.contextmenu
 import android.app.Activity
 import android.support.v7.app.AlertDialog
 import igrek.songbook.R
+import igrek.songbook.contact.SendFeedbackService
+import igrek.songbook.custom.CustomSongService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
-import igrek.songbook.info.logger.Logger
-import igrek.songbook.model.songsdb.Song
-import igrek.songbook.model.songsdb.SongCategoryType
+import igrek.songbook.persistence.songsdb.Song
+import igrek.songbook.persistence.songsdb.SongCategoryType
 import igrek.songbook.songselection.favourite.FavouriteSongsRepository
 import igrek.songbook.system.cache.SimpleCache
 import javax.inject.Inject
@@ -22,6 +23,10 @@ class SongContextMenuBuilder {
     lateinit var uiResourceService: UiResourceService
     @Inject
     lateinit var favouriteSongsRepository: FavouriteSongsRepository
+    @Inject
+    lateinit var customSongService: CustomSongService
+    @Inject
+    lateinit var sendFeedbackService: SendFeedbackService
 
     private var allActions: SimpleCache<List<SongContextAction>> =
             SimpleCache { createAllActions() }
@@ -36,43 +41,43 @@ class SongContextMenuBuilder {
                 SongContextAction(R.string.action_song_edit, { song ->
                     song.category.type == SongCategoryType.CUSTOM
                 }, { song ->
-                    Logger.debug("edit")
+                    customSongService.showEditSongScreen(song)
                 }),
                 // REMOVE
                 SongContextAction(R.string.action_song_remove, { song ->
                     song.category.type == SongCategoryType.CUSTOM
                 }, { song ->
-                    Logger.debug("remove")
+                    customSongService.removeSong(song)
                 }),
                 // SET_FAVORITE
                 SongContextAction(R.string.action_song_set_favourite, { song ->
                     !favouriteSongsRepository.isSongFavourite(song)
                 }, { song ->
-                    Logger.debug("set favourite")
+                    favouriteSongsRepository.setSongFavourite(song)
                 }),
                 // UNSET_FAVORITE
                 SongContextAction(R.string.action_song_unset_favourite, { song ->
                     favouriteSongsRepository.isSongFavourite(song)
                 }, { song ->
-                    Logger.debug("unset favourite")
+                    favouriteSongsRepository.unsetSongFavourite(song)
                 }),
                 // COPY
                 SongContextAction(R.string.action_song_copy, { song ->
                     true
                 }, { song ->
-                    Logger.debug("copy")
+                    customSongService.copySongAsCustom(song)
                 }),
                 // AMEND
                 SongContextAction(R.string.action_song_amend, { song ->
                     song.category.type != SongCategoryType.CUSTOM
                 }, { song ->
-                    Logger.debug("amend")
+                    sendFeedbackService.amendSong(song)
                 }),
-                // EXPORT
-                SongContextAction(R.string.action_song_export, { song ->
-                    song.category.type == SongCategoryType.CUSTOM
+                // ADD COMMENT
+                SongContextAction(R.string.action_song_add_comment, { song ->
+                    song.category.type != SongCategoryType.CUSTOM
                 }, { song ->
-                    Logger.debug("export")
+                    sendFeedbackService.commentSong(song)
                 })
         )
 

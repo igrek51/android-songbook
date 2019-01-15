@@ -9,8 +9,8 @@ import igrek.songbook.info.UiInfoService;
 import igrek.songbook.info.UiResourceService;
 import igrek.songbook.settings.chordsnotation.ChordsNotation;
 import igrek.songbook.settings.chordsnotation.ChordsNotationService;
-import igrek.songbook.songpreview.LyricsManager;
 import igrek.songbook.songpreview.SongPreviewLayoutController;
+import igrek.songbook.songpreview.lyrics.LyricsManager;
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose;
 
 public class ChordsTransposerManager {

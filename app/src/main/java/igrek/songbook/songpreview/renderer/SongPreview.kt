@@ -5,9 +5,9 @@ import android.view.MotionEvent
 import android.view.View
 import dagger.Lazy
 import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.model.lyrics.LyricsModel
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
+import igrek.songbook.songpreview.lyrics.LyricsModel
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.canvas.BaseCanvasView

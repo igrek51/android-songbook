@@ -3,12 +3,12 @@ package igrek.songbook.songpreview
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import igrek.songbook.R
-import igrek.songbook.contact.ContactLayoutController
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.model.songsdb.Song
+import igrek.songbook.persistence.songsdb.Song
+import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -24,7 +24,7 @@ class SongDetailsService {
     @Inject
     lateinit var layoutController: dagger.Lazy<LayoutController>
     @Inject
-    lateinit var contactLayoutController: dagger.Lazy<ContactLayoutController>
+    lateinit var songContextMenuBuilder: dagger.Lazy<SongContextMenuBuilder>
 
     private val modificationDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
 
@@ -51,13 +51,10 @@ class SongDetailsService {
 
         val dialogTitle = uiResourceService.resString(R.string.song_details_title)
 
-        val amendActionName = uiResourceService.resString(R.string.action_amend_song)
-        val amendAction = Runnable { amendSong(song) }
+        val moreActionName = uiResourceService.resString(R.string.song_action_more)
+        val moreAction = Runnable { showMoreActions(song) }
 
-        val commentActionName = uiResourceService.resString(R.string.action_comment_song)
-        val commentAction = Runnable { commentSong(song) }
-
-        showDialogWithActions(dialogTitle, message, amendActionName, amendAction, commentActionName, commentAction)
+        showDialogWithActions(dialogTitle, message, moreActionName, moreAction, null, null)
     }
 
     private fun getLastModificationDate(song: Song): String {
@@ -67,26 +64,23 @@ class SongDetailsService {
         return modificationDateFormat.format(cal.time)
     }
 
-    private fun showDialogWithActions(title: String, message: String, neutralActionName: String, neutralAction: Runnable, negativeActionName: String, negativeAction: Runnable) {
+    private fun showDialogWithActions(title: String, message: String, neutralActionName: String?, neutralAction: Runnable?, negativeActionName: String?, negativeAction: Runnable?) {
         val alertBuilder = AlertDialog.Builder(activity)
                 .setMessage(message)
                 .setTitle(title)
-                .setNeutralButton(neutralActionName) { _, _ -> neutralAction.run() }
-                .setNegativeButton(negativeActionName) { _, _ -> negativeAction.run() }
                 .setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { _, _ -> }
                 .setCancelable(true)
+        if (neutralAction != null)
+            alertBuilder.setNeutralButton(neutralActionName) { _, _ -> neutralAction.run() }
+        if (negativeAction != null)
+            alertBuilder.setNegativeButton(negativeActionName) { _, _ -> negativeAction.run() }
+
         val alertDialog = alertBuilder.create()
         alertDialog.show()
     }
 
-    private fun amendSong(song: Song) {
-        layoutController.get().showContact()
-        contactLayoutController.get().prepareSongAmend(song)
-    }
-
-    private fun commentSong(song: Song) {
-        layoutController.get().showContact()
-        contactLayoutController.get().prepareSongComment(song)
+    private fun showMoreActions(song: Song) {
+        songContextMenuBuilder.get().showSongActions(song)
     }
 
 }

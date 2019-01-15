@@ -3,7 +3,7 @@ package igrek.songbook.service.songtree;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import igrek.songbook.model.songsdb.SongCategoryType;
+import igrek.songbook.persistence.songsdb.SongCategoryType;
 import igrek.songbook.songselection.SongTreeItem;
 import igrek.songbook.songselection.songtree.SongTreeFilter;
 

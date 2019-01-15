@@ -1,9 +1,9 @@
 package igrek.songbook.songpreview.renderer
 
 import android.graphics.Typeface
-import igrek.songbook.model.lyrics.LyricsLine
-import igrek.songbook.model.lyrics.LyricsModel
-import igrek.songbook.model.lyrics.LyricsTextType
+import igrek.songbook.songpreview.lyrics.LyricsLine
+import igrek.songbook.songpreview.lyrics.LyricsModel
+import igrek.songbook.songpreview.lyrics.LyricsTextType
 import igrek.songbook.songpreview.renderer.canvas.Align
 import igrek.songbook.songpreview.theme.ColorScheme
 import igrek.songbook.songpreview.theme.FontTypeface

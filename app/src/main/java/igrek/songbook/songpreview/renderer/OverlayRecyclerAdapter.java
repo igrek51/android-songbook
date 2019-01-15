@@ -1,11 +1,9 @@
-package igrek.songbook.songpreview;
+package igrek.songbook.songpreview.renderer;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-
-import igrek.songbook.songpreview.renderer.SongPreview;
 
 public class OverlayRecyclerAdapter extends RecyclerView.Adapter<OverlayRecyclerAdapter.OverlayViewHolder> {
 	

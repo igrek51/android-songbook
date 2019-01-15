@@ -16,7 +16,7 @@ import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.navigation.NavigationMenuController
-import igrek.songbook.model.songsdb.Song
+import igrek.songbook.persistence.songsdb.Song
 import igrek.songbook.system.SoftKeyboardService
 import javax.inject.Inject
 
@@ -199,11 +199,11 @@ class CustomSongEditLayoutController : MainLayout {
     private fun removeSong() {
         if (currentSong == null) {
             // just cancel
+            uiInfoService.showInfo(R.string.edit_song_has_been_removed)
         } else {
             // remove song from database
             customSongService.get().removeSong(currentSong!!)
         }
-        uiInfoService.showInfo(R.string.edit_song_has_been_removed)
         layoutController.showCustomSongs()
     }
 

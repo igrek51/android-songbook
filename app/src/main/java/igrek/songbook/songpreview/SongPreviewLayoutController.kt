@@ -23,10 +23,12 @@ import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.navigation.NavigationMenuController
-import igrek.songbook.model.songsdb.Song
+import igrek.songbook.persistence.songsdb.Song
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
+import igrek.songbook.songpreview.lyrics.LyricsManager
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
+import igrek.songbook.songpreview.renderer.OverlayRecyclerAdapter
 import igrek.songbook.songpreview.renderer.SongPreview
 import igrek.songbook.songpreview.theme.LyricsThemeService
 import igrek.songbook.songselection.favourite.FavouriteSongsRepository
@@ -309,10 +311,8 @@ class SongPreviewLayoutController : MainLayout {
     private fun toggleSongFavourite() {
         if (!favouriteSongsRepository.isSongFavourite(currentSong!!)) {
             favouriteSongsRepository.setSongFavourite(currentSong!!)
-            uiInfoService.showInfo(R.string.favourite_song_has_been_set)
         } else {
             favouriteSongsRepository.unsetSongFavourite(currentSong!!)
-            uiInfoService.showInfo(R.string.favourite_song_has_been_unset)
         }
         updateFavouriteButton()
     }

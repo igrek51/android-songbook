@@ -1,7 +1,7 @@
 package igrek.songbook.songselection;
 
-import igrek.songbook.model.songsdb.Song;
-import igrek.songbook.model.songsdb.SongCategory;
+import igrek.songbook.persistence.songsdb.Song;
+import igrek.songbook.persistence.songsdb.SongCategory;
 
 public class SongSearchItem extends SongTreeItem {
 	

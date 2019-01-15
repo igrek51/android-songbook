@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import igrek.songbook.model.songsdb.Song;
-import igrek.songbook.model.songsdb.SongCategory;
-import igrek.songbook.model.songsdb.SongCategoryType;
-import igrek.songbook.model.songsdb.SongStatus;
+import igrek.songbook.persistence.songsdb.Song;
+import igrek.songbook.persistence.songsdb.SongCategory;
+import igrek.songbook.persistence.songsdb.SongCategoryType;
+import igrek.songbook.persistence.songsdb.SongStatus;
 import igrek.songbook.songselection.SongTreeItem;
 import igrek.songbook.songselection.songtree.SongTreeSorter;
 
