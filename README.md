@@ -1,4 +1,5 @@
 # Guitar Songbook (android-songbook)
+[![Build Status](https://travis-ci.org/igrek51/android-songbook.svg?branch=master)](https://travis-ci.org/igrek51/android-songbook)
 
 Guitar Songbook is a songs lyrics viewer for Android. 
 It has a transposition tool and automatic scrolling feature - excellent for guitarists.

@@ -129,6 +129,7 @@ class SongsRepository {
 
     fun removeCustomSong(song: Song) {
         customSongsDao.removeCustomSong(song)
+        // TODO remove any other places as well (favourites list)
         initializeSongsDb()
     }
 
