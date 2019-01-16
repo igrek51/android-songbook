@@ -128,7 +128,7 @@
     <string name="none">Brak</string>
     <string name="scroll_at_the_beginning_already">Powrót na początek.</string>
     <string name="file_manager_not_found">Brak systemowej przeglądarki plików.</string>
-    <string name="select_file_to_import">Wybierz plik do zaimportowania.</string>
+    <string name="select_file_to_import">Wybierz plik z kodowaniem UTF-8 do zaimportowania.</string>
     <string name="selected_file_is_too_big">Wybrany plik jest za duży.</string>
     <string name="editing_custom_song">Moja piosenka</string>
     <string name="edit_song_title_label">Tytuł piosenki:</string>
