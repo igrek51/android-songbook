@@ -37,7 +37,7 @@ before_script:
 script:
   - "./gradlew clean assembleDebug --stacktrace"
   - "./gradlew test --stacktrace"
-  - "./gradlew connectedAndroidTest --stacktrace"
+  - "./gradlew assembleDebugAndroidTest --stacktrace"
 
 before_cache:
   # Do not cache a few Gradle files/directories (see https://docs.travis-ci.com/user/languages/java/#Caching)
