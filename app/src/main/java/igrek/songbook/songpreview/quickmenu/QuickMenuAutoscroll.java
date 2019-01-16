@@ -83,7 +83,7 @@ public class QuickMenuAutoscroll {
 		autoscrollSpeedSlider = new SliderController(speedSeekbar, speedLabel, autoscrollSpeed, AutoscrollService.MIN_SPEED, AutoscrollService.MAX_SPEED) {
 			@Override
 			public String generateLabelText(float value) {
-				return uiResourceService.resString(R.string.settings_autoscroll_speed, roundDecimal(value, "0.000"));
+				return uiResourceService.resString(R.string.autoscroll_panel_speed, roundDecimal(value, "0.000"));
 			}
 		};
 		ImageButton speedMinusButton = quickMenuView.findViewById(R.id.speedMinusButton);

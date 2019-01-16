@@ -2,63 +2,63 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:title="General">
+    <PreferenceCategory android:title="@string/settings_general_section">
         <ListPreference
             android:key="applicationLanguage"
-            android:title="Application Language (Restart Needed)"
+            android:title="@string/settings_language"
             android:summary="%s"/>
 
         <ListPreference
             android:key="chordsNotation"
-            android:title="Chords notation"
+            android:title="@string/settings_chords_notation"
             android:summary="%s"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Song preview appearance">
+    <PreferenceCategory android:title="@string/settings_song_preview">
         <ListPreference
             android:key="colorScheme"
-            android:title="Color Scheme"
+            android:title="@string/settings_color_scheme"
             android:summary="%s"/>
         <SeekBarPreference
             android:key="fontSize"
-            android:title="Font size"
+            android:title="@string/settings_fontsize"
             app:showSeekBarValue="false"/>
         <ListPreference
             android:key="fontTypeface"
-            android:title="Font typeface"
+            android:title="@string/settings_typeface"
             android:summary="%s"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Autoscroll">
+    <PreferenceCategory android:title="@string/settings_autoscroll_section">
         <SeekBarPreference
             android:key="autoscrollInitialPause"
-            android:title="Autoscroll initial pause"
+            android:title="@string/settings_autoscroll_initial_delay"
             app:showSeekBarValue="false"/>
         <SeekBarPreference
             android:key="autoscrollSpeed"
-            android:title="Autoscroll speed"
+            android:title="@string/settings_autoscroll_speed"
             app:showSeekBarValue="false"/>
         <SwitchPreference
             android:key="autoscrollSpeedAutoAdjustment"
-            android:title="Scroll speed auto adjustment"
-            android:summary="Automatic correction of scroll speed when you manually scroll the song"/>
+            android:title="@string/settings_autoscroll_speed_adjustment"
+            android:summary="@string/settings_autoscroll_speed_adjustment_hint"/>
         <SwitchPreference
             android:key="autoscrollSpeedVolumeKeys"
-            android:title="Volume buttons changing scroll speed"
-            android:summary="Use Up / Down volume buttons to increase or decrease scroll speed respectively"/>
+            android:title="@string/settings_autoscroll_volume_keys"
+            android:summary="@string/settings_autoscroll_volume_keys_hint"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Random song">
+    <PreferenceCategory android:title="@string/settings_random_song_section">
         <SwitchPreference
             android:key="randomFavouriteSongsOnly"
-            android:title="Random favourite songs only"
-            android:summary="Shuffle songs from favourite songs only"/>
+            android:title="@string/settings_random_favourite"
+            android:summary="@string/settings_random_favourite_hint"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Songs list">
+    <PreferenceCategory android:title="@string/settings_songs_list_section">
         <MultiSelectListPreference
             android:key="excludedLanguagesFilter"
-            android:title="Hide specific languages on songs list"
+            android:title="@string/settings_exclude_languages"
             android:summary="%s"/>
     </PreferenceCategory>
 

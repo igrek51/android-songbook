@@ -103,7 +103,7 @@
     <string name="unlock_key_invalid">Key is not valid.</string>
     <string name="unlock_new_songs_unlocked">New songs have been unlocked: %d</string>
     <string name="settings_scroll_initial_pause">Autoscroll initial delay: %s s</string>
-    <string name="settings_autoscroll_speed">Autoscroll speed: %s line / s</string>
+    <string name="autoscroll_panel_speed">Autoscroll speed: %s line / s</string>
     <string name="settings_font_size_value">%s dp</string>
     <string name="settings_scroll_initial_pause_value">%s s</string>
     <string name="settings_autoscroll_speed_value">%s line / s</string>
@@ -157,10 +157,7 @@
     <string name="edit_song_category_name_label">Artist / category:</string>
     <string name="edit_song_category_name_hint">Artist or category name</string>
     <string name="contact_subject_hint">Subject</string>
-    <string name="edit_song_publish">Publish song</string>
-    <string name="action_amend_song">Amend</string>
-    <string name="action_comment_song">Comment</string>
-    <string name="settings_language">Language (restart needed)</string>
+    <string name="settings_language">Application language (restart needed)</string>
     <string name="language_english" translatable="false">English</string>
     <string name="language_polish" translatable="false">Polski</string>
     <string name="language_default">System default</string>
@@ -179,15 +176,31 @@
     <string name="typeface_monospace">Monospace</string>
     <string name="no_songs_to_shuffle">No songs to shuffle</string>
     <string name="action_song_copy">Create custom copy</string>
-    <string name="action_song_amend">Amend</string>
+    <string name="action_song_amend">Suggest correction</string>
     <string name="action_song_edit">Edit</string>
     <string name="action_song_remove">Remove</string>
     <string name="action_song_set_favourite">Set as favourite</string>
     <string name="action_song_unset_favourite">Unfavourite</string>
-    <string name="action_song_export">Export</string>
     <string name="action_song_add_comment">Add comment</string>
     <string name="song_action_more">More actions</string>
     <string name="song_copied_as_custom">Song has been copied to custom songs.</string>
     <string name="song_action_choose">Choose an action</string>
-    <string name="action_song_publish">Publish song</string>
+    <string name="action_song_publish">Share to public</string>
+    <string name="settings_song_preview">Song preview appearance</string>
+    <string name="settings_color_scheme">Color Scheme</string>
+    <string name="settings_fontsize">Font size</string>
+    <string name="settings_typeface">Font typeface</string>
+    <string name="settings_autoscroll_speed_adjustment">Scroll speed auto adjustment</string>
+    <string name="settings_autoscroll_speed_adjustment_hint">Automatic scroll speed correction as a result of manual scrolling the song when autoscroll is on</string>
+    <string name="settings_autoscroll_volume_keys">Volume buttons changing scroll speed</string>
+    <string name="settings_autoscroll_volume_keys_hint">Use Up / Down volume buttons to increase or decrease scroll speed respectively</string>
+    <string name="settings_random_song_section">Random song</string>
+    <string name="settings_autoscroll_section">Autoscroll</string>
+    <string name="settings_random_favourite">Random favourite songs</string>
+    <string name="settings_random_favourite_hint">Shuffle songs from favourite songs only</string>
+    <string name="settings_songs_list_section">Songs list</string>
+    <string name="settings_exclude_languages">Hide songs with specific languages</string>
+    <string name="settings_autoscroll_initial_delay">Autoscroll initial delay</string>
+    <string name="settings_autoscroll_speed">Autoscroll speed</string>
+    <string name="settings_general_section">General</string>
 </resources>
