@@ -15,7 +15,7 @@ class DatabaseMigrator {
     private val logger = LoggerFactory.logger
     var songsRepository: SongsRepository? = null
 
-    private val latestCompatibleDbVersion = 28 // db could not to be latest, but migration not necessary
+    private val latestCompatibleDbVersion = 37 // db could not to be latest, but migration not necessary
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
@@ -39,6 +39,9 @@ class DatabaseMigrator {
             // migration #028 needed
             if (songsDbVersion < 28) {
                 makeMigratePublicLocalDb()
+            }
+            if (songsDbVersion < 37) {
+                makeMigrate37()
             }
 
             verifyLocalDb(songsRepository)
@@ -67,5 +70,10 @@ class DatabaseMigrator {
     private fun makeMigratePublicLocalDb() {
         logger.info("Applying migration #028: public + local dbs")
         Migration028PublicLocalDb(activity).migrate(this)
+    }
+
+    private fun makeMigrate37() {
+        logger.info("Applying migration #037: metre, autoscroll columns")
+        Migration037PublicLocalDb(activity).migrate(this)
     }
 }

@@ -17,6 +17,7 @@ import igrek.songbook.activity.AppInitializer;
 import igrek.songbook.activity.OptionSelectDispatcher;
 import igrek.songbook.contact.ContactLayoutController;
 import igrek.songbook.contact.SendFeedbackService;
+import igrek.songbook.custom.ChordsEditorLayoutController;
 import igrek.songbook.custom.CustomSongEditLayoutController;
 import igrek.songbook.custom.CustomSongService;
 import igrek.songbook.custom.CustomSongsLayoutController;
@@ -410,6 +411,12 @@ public class FactoryModule {
 	@Singleton
 	protected SongContextMenuBuilder provideSongContextMenuBuilder() {
 		return new SongContextMenuBuilder();
+	}
+	
+	@Provides
+	@Singleton
+	protected ChordsEditorLayoutController provideChordsEditorLayoutController() {
+		return new ChordsEditorLayoutController();
 	}
 	
 	/*

@@ -12,6 +12,7 @@ import igrek.songbook.activity.MainActivity;
 import igrek.songbook.activity.OptionSelectDispatcher;
 import igrek.songbook.contact.ContactLayoutController;
 import igrek.songbook.contact.SendFeedbackService;
+import igrek.songbook.custom.ChordsEditorLayoutController;
 import igrek.songbook.custom.CustomSongEditLayoutController;
 import igrek.songbook.custom.CustomSongService;
 import igrek.songbook.custom.CustomSongsLayoutController;
@@ -171,6 +172,8 @@ public interface FactoryComponent {
 	void inject(CustomSongsLayoutController there);
 	
 	void inject(SongContextMenuBuilder there);
+	
+	void inject(ChordsEditorLayoutController there);
 	
 	
 	void inject(SongListItemAdapter there);
