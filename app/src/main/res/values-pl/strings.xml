@@ -51,7 +51,8 @@
         \nMożesz także zaproponować poprawkę w akordach lub tekście piosenek, jeśli odnajdziesz jakieś błędy.
     </string>
     <string name="ui_about_content">
-        Guitar Songbook v%s (%s)
+        Guitar Songbook
+        \nWersja aplikacji: %s (%s)
         \nWersja bazy piosenek: v%s
         \n
         \nAUTOR:
@@ -73,6 +74,7 @@
         \nRoboelectric
         \nRxAndroid
         \nRxJava
+        \nSQLite
     </string>
     <string name="action_info_ok">OK</string>
     <string name="action_secret">Sekret</string>
