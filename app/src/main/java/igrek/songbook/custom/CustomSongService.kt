@@ -29,12 +29,12 @@ class CustomSongService {
 
     fun showAddSongScreen() {
         customSongEditLayoutController.get().setCurrentSong(null)
-        layoutController.showEditSong()
+        layoutController.showCustomSong()
     }
 
     fun showEditSongScreen(song: Song) {
         customSongEditLayoutController.get().setCurrentSong(song)
-        layoutController.showEditSong()
+        layoutController.showCustomSong()
     }
 
     fun addCustomSong(title: String, customCategoryName: String?, content: String?): Song {

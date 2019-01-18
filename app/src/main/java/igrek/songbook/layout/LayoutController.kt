@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.contact.ContactLayoutController
+import igrek.songbook.custom.ChordsEditorLayoutController
 import igrek.songbook.custom.CustomSongEditLayoutController
 import igrek.songbook.custom.CustomSongsLayoutController
 import igrek.songbook.dagger.DaggerIoc
@@ -33,6 +34,8 @@ class LayoutController {
     lateinit var settingsLayoutController: Lazy<SettingsLayoutController>
     @Inject
     lateinit var customSongEditLayoutController: Lazy<CustomSongEditLayoutController>
+    @Inject
+    lateinit var chordsEditorLayoutController: Lazy<ChordsEditorLayoutController>
     @Inject
     lateinit var customSongsLayoutController: Lazy<CustomSongsLayoutController>
     @Inject
@@ -79,8 +82,12 @@ class LayoutController {
         showMainLayout(settingsLayoutController.get())
     }
 
-    fun showEditSong() {
+    fun showCustomSong() {
         showMainLayout(customSongEditLayoutController.get())
+    }
+
+    fun showSongChordEditor() {
+        showMainLayout(chordsEditorLayoutController.get())
     }
 
     fun showCustomSongs() {

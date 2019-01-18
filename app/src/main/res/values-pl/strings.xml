@@ -135,7 +135,7 @@
     <string name="editing_custom_song">Moja piosenka</string>
     <string name="edit_song_title_label">Tytuł piosenki:</string>
     <string name="edit_song_title_hint">Tytuł…</string>
-    <string name="edit_song_content_label">Tekst piosenki z akordami:</string>
+    <string name="edit_song_content_label">Umieść tu tekst piosenki z akordami w nawiasach kwadratowych. Rekomendowane jest mieszanie akordów z tekstem w tej samej linii, aby uzyskać kompaktowy układ i zaoszczędzić miejsce na ekranie. Akordy mogą być umieszczone na końcu linii lub nawet w środku wyrazów, aby wskazać sylabę, w której występuje akord. Taki układ jest czytelny dzięki wyróżniającym się, podświetlanym akordom, które łatwo rozróżnić. Jednak nic nie stoi na przeszkodzie, aby umieścić akordy gdziekolwiek. </string>
     <string name="import_song_content_hint">
         Tekst piosenki z [akordami w nawiasach]
         \nPrzykładowy tekst [a F C G]
@@ -205,4 +205,5 @@
     <string name="settings_general_section">Ogólne</string>
     <string name="db_update_failed_incompatible">Baza danych nie jest kompatybilna z Twoją wersją aplikacji. Proszę, zaktualizuj aplikację.</string>
     <string name="action_rate_app">Oceń</string>
+    <string name="edit_song_open_in_editor">Otwórz w edytorze</string>
 </resources>

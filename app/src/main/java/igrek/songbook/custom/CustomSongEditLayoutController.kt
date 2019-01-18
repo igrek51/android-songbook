@@ -35,6 +35,8 @@ class CustomSongEditLayoutController : MainLayout {
     lateinit var softKeyboardService: SoftKeyboardService
     @Inject
     lateinit var songImportFileChooser: Lazy<SongImportFileChooser>
+    @Inject
+    lateinit var chordsEditorLayoutController: Lazy<ChordsEditorLayoutController>
 
     private var currentSong: Song? = null
     private var songTitle: String? = null
@@ -86,10 +88,10 @@ class CustomSongEditLayoutController : MainLayout {
             }
         })
 
-        val addChordButton = layout.findViewById<Button>(R.id.addChordButton)
-        addChordButton.setOnClickListener(object : SafeClickListener() {
+        val openInChordsEditorButton = layout.findViewById<Button>(R.id.openInChordsEditorButton)
+        openInChordsEditorButton.setOnClickListener(object : SafeClickListener() {
             override fun onClick() {
-                onAddChordClick()
+                openInChordsEditor()
             }
         })
 
@@ -98,41 +100,11 @@ class CustomSongEditLayoutController : MainLayout {
         customCategoryNameEdit!!.setText(customCategoryName)
     }
 
+    private fun openInChordsEditor() {
+        // TODO save anything before
+        layoutController.showSongChordEditor()
 
-    private fun onAddChordClick() {
-        var edited = songContentEdit!!.text.toString()
-        var selStart = songContentEdit!!.selectionStart
-        var selEnd = songContentEdit!!.selectionEnd
-
-        val before = edited.substring(0, selStart)
-        val after = edited.substring(selEnd)
-
-        // if there's nonempty selection
-        if (selStart < selEnd) {
-
-            val selected = edited.substring(selStart, selEnd)
-            edited = "$before[$selected]$after"
-            selStart++
-            selEnd++
-
-        } else { // just single cursor
-
-            // if it's the end of line AND there is no space before
-            if ((after.isEmpty() || after.startsWith("\n")) && !before.isEmpty() && !before.endsWith(" ")) {
-                // insert missing space
-                edited = "$before []$after"
-                selStart += 2
-            } else {
-                edited = "$before[]$after"
-                selStart += 1
-            }
-            selEnd = selStart
-
-        }
-
-        songContentEdit!!.setText(edited)
-        songContentEdit!!.setSelection(selStart, selEnd)
-        songContentEdit!!.requestFocus()
+        chordsEditorLayoutController.get().setContent(songContentEdit?.text.toString())
     }
 
     private fun importContentFromFile() {
@@ -150,6 +122,10 @@ class CustomSongEditLayoutController : MainLayout {
             songContent = currentSong!!.content
             customCategoryName = currentSong!!.customCategoryName
         }
+    }
+
+    fun setSongContent(content: String) {
+        songContentEdit!!.setText(content)
     }
 
     private fun saveSong() {
@@ -190,7 +166,7 @@ class CustomSongEditLayoutController : MainLayout {
     }
 
     override fun getLayoutState(): LayoutState {
-        return LayoutState.EDIT_SONG
+        return LayoutState.CUSTOM_SONG_EDIT
     }
 
     override fun getLayoutResourceId(): Int {
