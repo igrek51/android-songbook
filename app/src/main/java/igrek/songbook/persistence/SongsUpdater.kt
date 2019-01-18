@@ -20,6 +20,8 @@ class SongsUpdater {
     lateinit var uiInfoService: UiInfoService
     @Inject
     lateinit var songsRepository: Lazy<SongsRepository>
+    @Inject
+    lateinit var localDbService: Lazy<LocalDbService>
 
     private val logger = LoggerFactory.logger
 
@@ -104,8 +106,13 @@ class SongsUpdater {
             input.close()
 
             Handler(Looper.getMainLooper()).post {
-                songsRepository.get().initializeSongsDb()
-                uiInfoService.showInfo(R.string.ui_db_is_uptodate)
+                try {
+                    songsRepository.get().initializeSongsDb()
+                    uiInfoService.showInfo(R.string.ui_db_is_uptodate)
+                } catch (t: Throwable) {
+                    uiInfoService.showInfo(R.string.db_update_failed_incompatible)
+                    localDbService.get().factoryResetSongsDb()
+                }
             }
 
         } catch (e: Exception) {

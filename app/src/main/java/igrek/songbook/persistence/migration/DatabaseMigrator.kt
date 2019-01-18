@@ -3,6 +3,7 @@ package igrek.songbook.persistence.migration
 import android.app.Activity
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.SongsRepository
 import javax.inject.Inject
 
@@ -16,35 +17,37 @@ class DatabaseMigrator {
     var songsRepository: SongsRepository? = null
 
     private val latestCompatibleDbVersion = 37 // db could not to be latest, but migration not necessary
+    private val latestSongsDbFromResources = 37
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
     }
 
-    fun checkDbVersion(songsRepository: SongsRepository) {
+    fun verifyLocalDbVersion(songsRepository: SongsRepository, localDbService: LocalDbService) {
         this.songsRepository = songsRepository
         try {
-            // check songs database version
-            val songsDbVersion = songsRepository.songsDao.readDbVersionNumber()
-            if (isLatest(songsDbVersion)) {
-                verifyLocalDb(songsRepository)
+            // check database version
+            val localVersion = songsRepository.customSongsDao.readDbVersionNumber()
+            if (localVersion != null && localVersion >= latestCompatibleDbVersion) {
+                // everything is fine
                 return
             }
             // migration needed
-            logger.info("Db version incompatible - local: $songsDbVersion, latest compatibility: $latestCompatibleDbVersion")
+            logger.info("Db version incompatible - local: $localVersion, latest compatibility: $latestCompatibleDbVersion")
             // very old db - factory reset
-            if (songsDbVersion == null || songsDbVersion < 18) {
+            if (localVersion == null || localVersion < 18) {
                 throw RuntimeException("db version very old - factory reset needed")
             }
             // migration #028 needed
-            if (songsDbVersion < 28) {
-                makeMigratePublicLocalDb()
+            if (localVersion < 28) {
+                migrate28PublicLocalDb()
             }
-            if (songsDbVersion < 37) {
-                makeMigrate37()
+            if (localVersion < 37) {
+                migrate37()
             }
 
-            verifyLocalDb(songsRepository)
+            val newVersion = getLocalDbVersion(songsRepository)
+            logger.info("Local database migrated to $newVersion")
 
         } catch (t: Throwable) {
             logger.error(t)
@@ -53,26 +56,34 @@ class DatabaseMigrator {
         }
     }
 
-    private fun verifyLocalDb(songsRepository: SongsRepository): Long? {
+    fun verifySongsDbVersion(songsRepository: SongsRepository, localDbService: LocalDbService) {
+        try {
+            val songsVersion = songsRepository.customSongsDao.readDbVersionNumber()
+            if (songsVersion == null || songsVersion < latestSongsDbFromResources) {
+                throw RuntimeException("songs db on local disk has obsolete version: $songsVersion")
+            }
+        } catch (t: Throwable) {
+            logger.warn("making factory reset for songs database: ${t.message}")
+            localDbService.factoryResetSongsDb()
+        }
+    }
+
+    private fun getLocalDbVersion(songsRepository: SongsRepository): Long {
         // custom songs is part of local database
         return songsRepository.customSongsDao.readDbVersionNumber()
                 ?: throw RuntimeException("local db version error")
-    }
-
-    private fun isLatest(songsDbVersion: Long?): Boolean {
-        return songsDbVersion != null && songsDbVersion >= latestCompatibleDbVersion
     }
 
     fun makeFactoryReset() {
         songsRepository!!.factoryReset()
     }
 
-    private fun makeMigratePublicLocalDb() {
+    private fun migrate28PublicLocalDb() {
         logger.info("Applying migration #028: public + local dbs")
         Migration028PublicLocalDb(activity).migrate(this)
     }
 
-    private fun makeMigrate37() {
+    private fun migrate37() {
         logger.info("Applying migration #037: metre, autoscroll columns")
         Migration037PublicLocalDb(activity).migrate(this)
     }

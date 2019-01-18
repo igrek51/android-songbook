@@ -50,7 +50,13 @@ class SongsRepository {
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
-        databaseMigrator.checkDbVersion(this)
+        try {
+            databaseMigrator.verifyLocalDbVersion(this, localDbService)
+            databaseMigrator.verifySongsDbVersion(this, localDbService)
+            initializeSongsDb()
+        } catch (t: Throwable) {
+            factoryReset()
+        }
     }
 
     fun factoryReset() {
@@ -64,6 +70,8 @@ class SongsRepository {
     }
 
     fun initializeSongsDb() {
+        logger.debug("initializing db")
+
         val versionNumber = songsDao.readDbVersionNumber()
                 ?: throw RuntimeException("invalid songs database format")
 

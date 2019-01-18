@@ -86,6 +86,11 @@ abstract class AbstractSqliteDao {
         return queryOneValue(mapper, null, "SELECT value FROM songs_info WHERE name = 'version_number'")
     }
 
+    fun readDbSchemaVersion(): Long? {
+        val mapper: (Cursor) -> Long = { cursor -> cursor.getLong(cursor.getColumnIndexOrThrow("value")) }
+        return queryOneValue(mapper, null, "SELECT value FROM songs_info WHERE name = 'schema_version'")
+    }
+
     protected fun <T> queryOneValue(mapper: (Cursor) -> T, defaultValue: T, sql: String, vararg args: Any): T {
         try {
             val cursor = sqlQueryArray(sql, args)

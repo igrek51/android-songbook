@@ -205,4 +205,5 @@
     <string name="settings_autoscroll_initial_delay">Autoscroll initial delay</string>
     <string name="settings_autoscroll_speed">Autoscroll speed</string>
     <string name="settings_general_section">General</string>
+    <string name="db_update_failed_incompatible">Database is not compatible with your application version. Please udpate an application.</string>
 </resources>

@@ -67,11 +67,26 @@ public class LocalDbService {
 	}
 	
 	public void factoryResetDbs() {
-		closeDatabases();
 		// remove db files
-		removeDb(getSongsDbFile());
-		removeDb(getLocalSongsDbFile());
+		factoryResetSongsDb();
+		factoryResetLocalDb();
 		// need to reopen dbs again (in external dependencies)
+	}
+	
+	public void factoryResetSongsDb() {
+		if (songsDbHelper != null) {
+			songsDbHelper.close();
+			songsDbHelper = null;
+		}
+		removeDb(getSongsDbFile());
+	}
+	
+	public void factoryResetLocalDb() {
+		if (localSongsDbHelper != null) {
+			localSongsDbHelper.close();
+			localSongsDbHelper = null;
+		}
+		removeDb(getLocalSongsDbFile());
 	}
 	
 	private void removeDb(File songsDbFile) {
