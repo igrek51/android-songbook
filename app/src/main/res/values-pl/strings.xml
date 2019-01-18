@@ -204,4 +204,5 @@
     <string name="settings_autoscroll_speed">Szybkość autoprzewijania</string>
     <string name="settings_general_section">Ogólne</string>
     <string name="db_update_failed_incompatible">Baza danych nie jest kompatybilna z Twoją wersją aplikacji. Proszę, zaktualizuj aplikację.</string>
+    <string name="action_rate_app">Oceń</string>
 </resources>
