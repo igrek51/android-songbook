@@ -96,24 +96,25 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
         )
 
-        setupMultiListPreference("excludedLanguagesFilter",
-                appLanguageService.languageFilterEntries(),
-                onLoad = {
-                    preferencesUpdater.excludedLanguages
-                            .map { language -> language.langCode }
-                            .toMutableSet()
-                },
-                onSave = { ids: Set<String> ->
-                    val langsStr = ids.joinToString(separator = ";")
-                    preferencesUpdater.excludedLanguages = appLanguageService.string2Languages(langsStr)
-                },
-                stringConverter = { ids: Set<String>, entriesMap: LinkedHashMap<String, String> ->
-                    if (ids.isEmpty())
-                        uiResourceService.resString(R.string.none)
-                    else
-                        ids.map { id -> entriesMap[id]!! }.sorted().joinToString(separator = ", ")
-                }
-        )
+        // FIXME add hiding languages filter
+//        val preference = setupMultiListPreference("excludedLanguagesFilter",
+//                appLanguageService.languageFilterEntries(),
+//                onLoad = {
+//                    preferencesUpdater.excludedLanguages
+//                            .map { language -> language.langCode }
+//                            .toMutableSet()
+//                },
+//                onSave = { ids: Set<String> ->
+//                    val langsStr = ids.joinToString(separator = ";")
+//                    preferencesUpdater.excludedLanguages = appLanguageService.string2Languages(langsStr)
+//                },
+//                stringConverter = { ids: Set<String>, entriesMap: LinkedHashMap<String, String> ->
+//                    if (ids.isEmpty())
+//                        uiResourceService.resString(R.string.none)
+//                    else
+//                        ids.map { id -> entriesMap[id]!! }.sorted().joinToString(separator = ", ")
+//                }
+//        )
 
         setupSeekBarPreference("autoscrollInitialPause", min = 0, max = 90000,
                 onLoad = { preferencesUpdater.autoscrollInitialPause.toFloat() },
@@ -187,7 +188,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                                          entriesMap: LinkedHashMap<String, String>,
                                          onLoad: () -> Set<String>?,
                                          onSave: (ids: Set<String>) -> Unit,
-                                         stringConverter: (ids: Set<String>, entriesMap: LinkedHashMap<String, String>) -> String) {
+                                         stringConverter: (ids: Set<String>, entriesMap: LinkedHashMap<String, String>) -> String): MultiSelectListPreference {
         val preference = findPreference(key) as MultiSelectListPreference
         preference.entryValues = entriesMap.keys.toTypedArray()
         preference.entries = entriesMap.values.toTypedArray()
@@ -199,6 +200,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
         preference.summary = stringConverter(preference.values, entriesMap)
+        return preference
     }
 
     private fun setupSeekBarPreference(key: String,
