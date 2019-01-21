@@ -64,9 +64,6 @@ class CustomSongEditLayoutController : MainLayout {
         val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)
         navMenuButton.setOnClickListener { navigationMenuController.navDrawerShow() }
 
-        songTitleEdit = layout.findViewById(R.id.songTitleEdit)
-        customCategoryNameEdit = layout.findViewById(R.id.customCategoryNameEdit)
-        songContentEdit = layout.findViewById(R.id.songContentEdit)
         val saveSongButton = layout.findViewById<Button>(R.id.saveSongButton)
         saveSongButton.setOnClickListener(object : SafeClickListener() {
             override fun onClick() {
@@ -95,15 +92,28 @@ class CustomSongEditLayoutController : MainLayout {
             }
         })
 
-        songTitleEdit!!.setText(songTitle)
+        val tooltipEditChordsLyricsInfo = layout.findViewById<ImageButton>(R.id.tooltipEditChordsLyricsInfo)
+        tooltipEditChordsLyricsInfo.setOnClickListener {
+            uiInfoService.showTooltip(R.string.tooltip_edit_chords_lyrics)
+        }
+
+        songContentEdit = layout.findViewById(R.id.songContentEdit)
         songContentEdit!!.setText(songContent)
+        songContentEdit!!.isEnabled = false
+        songContentEdit!!.setOnClickListener { openInChordsEditor() }
+
+        songTitleEdit = layout.findViewById(R.id.songTitleEdit)
+        songTitleEdit!!.setText(songTitle)
+
+        customCategoryNameEdit = layout.findViewById(R.id.customCategoryNameEdit)
         customCategoryNameEdit!!.setText(customCategoryName)
     }
 
     private fun openInChordsEditor() {
-        // TODO save anything before
+        songTitle = songTitleEdit!!.text.toString()
+        songContent = songContentEdit!!.text.toString()
+        customCategoryName = customCategoryNameEdit!!.text.toString()
         layoutController.showSongChordEditor()
-
         chordsEditorLayoutController.get().setContent(songContentEdit?.text.toString())
     }
 
@@ -170,7 +180,7 @@ class CustomSongEditLayoutController : MainLayout {
     }
 
     override fun getLayoutResourceId(): Int {
-        return R.layout.edit_song
+        return R.layout.custom_song
     }
 
     override fun onBackClicked() {

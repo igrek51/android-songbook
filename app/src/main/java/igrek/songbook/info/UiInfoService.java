@@ -133,6 +133,12 @@ public class UiInfoService {
 		alertBuilder.create().show();
 	}
 	
+	public void showTooltip(int infoRes) {
+		String message = uiResourceService.resString(infoRes);
+		String title = uiResourceService.resString(R.string.tooltip);
+		showDialog(title, message);
+	}
+	
 	public void clearSnackBars() {
 		infobars.clear();
 	}

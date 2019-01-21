@@ -135,7 +135,8 @@
     <string name="editing_custom_song">Custom song</string>
     <string name="edit_song_title_label">Song Title:</string>
     <string name="edit_song_title_hint">Title…</string>
-    <string name="edit_song_content_label">Put here the lyrics with chords in square brackets. My recommended way is to mix chords with the lyrics in the same line in order to make it more compact and save the screen space. Chords could be placed at the end of the line or even inside the words to indicate the syllable with an chord accent. It fits pretty well since the Chords are highlighted and it\'s easy to distinguish them. However, nothing prevents you from putting the chords anywhere.</string>
+    <string name="edit_song_content_label">Lyrics with chords in square brackets:</string>
+    <string name="tooltip_edit_chords_lyrics">Put here the lyrics with chords in square brackets. My recommended way is to mix chords with the lyrics in the same line in order to make it more compact and save the screen space. Chords could be placed at the end of the line or even inside the words to indicate the syllable with an chord accent. It fits pretty well since the Chords are highlighted and it\'s easy to distinguish them. However, nothing prevents you from putting the chords anywhere.</string>
     <string name="import_song_content_hint">
         Song lyrics with [chords in brackets]
         \nExample text [a F C G]
@@ -208,4 +209,8 @@
     <string name="db_update_failed_incompatible">Database is not compatible with your application version. Please udpate an application.</string>
     <string name="action_rate_app">Rate App</string>
     <string name="edit_song_open_in_editor">Open in Chords Editor</string>
+    <string name="tooltip">Hint</string>
+    <string name="edit_song_copy_chord">[Copy]</string>
+    <string name="edit_song_paste_chord">[Paste]</string>
+    <string name="edit_song_detect_chords">Detect chords</string>
 </resources>
