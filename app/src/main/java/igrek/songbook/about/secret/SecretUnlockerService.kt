@@ -1,5 +1,6 @@
 package igrek.songbook.about.secret
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Handler
 import android.support.v7.app.AlertDialog
@@ -39,35 +40,23 @@ class SecretUnlockerService {
     private val logger = LoggerFactory.logger
 
     private val cowCondition: Predicate<String> = Predicate { input -> input!!.matches(Regex("^m[ou]+$")) }
-
-    private val EA5T3R_M00: String = """
- ____________________
-/ Congratulations!   \
-|                    |
-| You have found     |
-\ an Easter Egg :)   /
- --------------------
-   \   ^__^
-    \  (oo)\_______
-       (__)\       )\/\
-           ||----w |
-           ||     ||
-"""
+    private val dupaCondition: Predicate<String> = Predicate { input -> input!!.contains("dupa") }
 
     private val rules: List<UnlockerRule> = listOf(
-            UnlockerRule("dupa", "okon") { showCowSuperPowers() },
-            UnlockerRule("arthas") { toast("\"Nie trzeba mi się kłaniać.\"") },
-            UnlockerRule("lich", "lisz") { toast("\"Trup tu tupta...\"") },
+            UnlockerRule(dupaCondition) { showCowSuperPowers() },
             UnlockerRule(cowCondition) { showCowSuperPowers() },
+            UnlockerRule("okon") { showCowSuperPowers() },
+            UnlockerRule("lich", "lisz") { toast("\"Trup tu tupta...\"") },
 
             UnlockerRule("engineer", "inzynier") { unlockSongs("engineer") },
             UnlockerRule("bff") { unlockSongs("bff") },
             UnlockerRule("zjajem", "z jajem") { unlockSongs("zjajem") },
             UnlockerRule("religijne") { unlockSongs("religijne") },
-
+            // debug commands
             UnlockerRule("reset") { reset() }
     )
 
+    @SuppressLint("InflateParams")
     private fun showCowSuperPowers() {
         val alertBuilder = AlertDialog.Builder(activity)
         alertBuilder.setTitle("Moooo!")
@@ -159,5 +148,21 @@ class SecretUnlockerService {
         val message = uiResourceService.resString(R.string.unlock_new_songs_unlocked, count)
         uiInfoService.showToast(message)
         songsRepository.initializeSongsDb()
+    }
+
+    companion object {
+        private const val EA5T3R_M00: String = """
+     ____________________
+    / Congratulations!   \
+    |                    |
+    | You have found     |
+    \ an Easter Egg :)   /
+     --------------------
+       \   ^__^
+        \  (oo)\_______
+           (__)\       )\/\
+               ||----w |
+               ||     ||
+    """
     }
 }

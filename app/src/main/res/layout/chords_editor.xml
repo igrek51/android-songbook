@@ -65,7 +65,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
                 android:layout_marginStart="20dp"
-                android:text="@string/editing_custom_song"
+                android:text="@string/custom_song_editor"
                 android:textSize="18sp"/>
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
@@ -114,6 +114,13 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
                     android:text="@string/edit_song_detect_chords"/>
+
+                <Button
+                    android:id="@+id/reformatChordsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:text="@string/edit_song_reformat_chords"/>
 
             </LinearLayout>
 

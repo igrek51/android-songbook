@@ -99,7 +99,6 @@ class CustomSongEditLayoutController : MainLayout {
 
         songContentEdit = layout.findViewById(R.id.songContentEdit)
         songContentEdit!!.setText(songContent)
-        songContentEdit!!.isEnabled = false
         songContentEdit!!.setOnClickListener { openInChordsEditor() }
 
         songTitleEdit = layout.findViewById(R.id.songTitleEdit)

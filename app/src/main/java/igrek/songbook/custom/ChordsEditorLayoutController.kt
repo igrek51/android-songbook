@@ -70,7 +70,9 @@ class ChordsEditorLayoutController : MainLayout {
             }
         })
 
-        // TODO buttons: copying, pasting, mutliple clipbords (for chords), auto chords finding, changing notation,
+        softKeyboardService.showSoftKeyboard(contentEdit)
+
+        // TODO buttons: copying, pasting, mutliple clipbords (for chords), auto chords finding, changing notation
     }
 
     override fun getLayoutState(): LayoutState {

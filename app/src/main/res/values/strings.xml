@@ -133,6 +133,7 @@
     <string name="select_file_to_import">Select a text file with UTF-8 encoding to import.</string>
     <string name="selected_file_is_too_big">Selected file is too big.</string>
     <string name="editing_custom_song">Custom song</string>
+    <string name="custom_song_editor">Song editor</string>
     <string name="edit_song_title_label">Song Title:</string>
     <string name="edit_song_title_hint">Title…</string>
     <string name="edit_song_content_label">Lyrics with chords in square brackets:</string>
@@ -185,7 +186,7 @@
     <string name="action_song_set_favourite">Set as favourite</string>
     <string name="action_song_unset_favourite">Unfavourite</string>
     <string name="action_song_add_comment">Add comment</string>
-    <string name="song_action_more">More actions</string>
+    <string name="song_action_more">More</string>
     <string name="song_copied_as_custom">Song has been copied to custom songs.</string>
     <string name="song_action_choose">Choose an action</string>
     <string name="action_song_publish">Share to public</string>
@@ -213,4 +214,5 @@
     <string name="edit_song_copy_chord">[Copy]</string>
     <string name="edit_song_paste_chord">[Paste]</string>
     <string name="edit_song_detect_chords">Detect chords</string>
+    <string name="edit_song_reformat_chords">Reformat</string>
 </resources>
