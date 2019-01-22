@@ -215,4 +215,7 @@
     <string name="edit_song_paste_chord">[Paste]</string>
     <string name="edit_song_detect_chords">Detect chords</string>
     <string name="edit_song_reformat_chords">Reformat</string>
+    <string name="paste_chord_empty">No chords to paste</string>
+    <string name="chords_copied">Chords copied: %s</string>
+    <string name="copy_chord_empty">No chords to copy</string>
 </resources>

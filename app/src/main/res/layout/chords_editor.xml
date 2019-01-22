@@ -78,7 +78,7 @@
 
         <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="48dp">
+            android:layout_height="64dp">
 
             <LinearLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
@@ -135,7 +135,7 @@
             android:hint="@string/import_song_content_hint"
             android:inputType="text|textMultiLine"
             android:minHeight="240dp"
-            android:padding="4dp"
+            android:padding="8dp"
             android:text=""/>
 
     </LinearLayout>
