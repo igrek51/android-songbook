@@ -157,7 +157,7 @@
     <string name="updating_db_in_progress">Updating songs…</string>
     <string name="update_is_available">New songs update is available.</string>
     <string name="action_update">Update</string>
-    <string name="edit_song_add_chord">[chord]</string>
+    <string name="edit_song_add_chord">[add]</string>
     <string name="edit_song_category_name_label">Artist / category:</string>
     <string name="edit_song_category_name_hint">Artist or category name</string>
     <string name="contact_subject_hint">Subject</string>
@@ -214,8 +214,15 @@
     <string name="edit_song_copy_chord">[Copy]</string>
     <string name="edit_song_paste_chord">[Paste]</string>
     <string name="edit_song_detect_chords">Detect chords</string>
-    <string name="edit_song_reformat_chords">Reformat</string>
+    <string name="edit_song_transform_chords">Transform</string>
     <string name="paste_chord_empty">No chords to paste</string>
     <string name="chords_copied">Chords copied: %s</string>
-    <string name="copy_chord_empty">No chords to copy</string>
+    <string name="no_chords_selected">No selected chords</string>
+    <string name="edit_song_chords_notation">Chords notation</string>
+    <string name="edit_song_undo">Undo</string>
+    <string name="chords_editor_trim_whitespaces">Trim whitespaces</string>
+    <string name="chords_editor_move_chords_to_right">Chords from top to right</string>
+    <string name="chords_editor_fis_to_sharp"><![CDATA[Fis -> F#]]></string>
+    <string name="edit_song_add_chord_start">[</string>
+    <string name="edit_song_add_chord_end">]</string>
 </resources>

@@ -27,6 +27,7 @@ import igrek.songbook.info.UiResourceService;
 import igrek.songbook.info.logger.Logger;
 import igrek.songbook.info.logger.LoggerFactory;
 import igrek.songbook.layout.LayoutController;
+import igrek.songbook.layout.contextmenu.ContextMenuBuilder;
 import igrek.songbook.layout.navigation.NavigationMenuController;
 import igrek.songbook.persistence.CustomSongsDao;
 import igrek.songbook.persistence.FavouriteSongsDao;
@@ -417,6 +418,12 @@ public class FactoryModule {
 	@Singleton
 	protected ChordsEditorLayoutController provideChordsEditorLayoutController() {
 		return new ChordsEditorLayoutController();
+	}
+	
+	@Provides
+	@Singleton
+	protected ContextMenuBuilder provideContextMenuBuilder() {
+		return new ContextMenuBuilder();
 	}
 	
 	/*

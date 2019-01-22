@@ -88,11 +88,31 @@
                 android:orientation="horizontal">
 
                 <Button
+                    android:id="@+id/undoChordsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:text="@string/edit_song_undo"/>
+
+                <Button
                     android:id="@+id/addChordButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
                     android:text="@string/edit_song_add_chord"/>
+                <Button
+                    android:id="@+id/addChordStartButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:text="@string/edit_song_add_chord_start"/>
+
+                <Button
+                    android:id="@+id/addChordEndButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:text="@string/edit_song_add_chord_end"/>
 
                 <Button
                     android:id="@+id/copyChordButton"
@@ -100,13 +120,27 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
                     android:text="@string/edit_song_copy_chord"/>
-
                 <Button
                     android:id="@+id/pasteChordButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
                     android:text="@string/edit_song_paste_chord"/>
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="64dp">
+
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/detectChordsButton"
@@ -116,11 +150,18 @@
                     android:text="@string/edit_song_detect_chords"/>
 
                 <Button
-                    android:id="@+id/reformatChordsButton"
+                    android:id="@+id/transformChordsButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
-                    android:text="@string/edit_song_reformat_chords"/>
+                    android:text="@string/edit_song_transform_chords"/>
+
+                <Button
+                    android:id="@+id/chordsNotationButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:text="@string/edit_song_chords_notation"/>
 
             </LinearLayout>
 

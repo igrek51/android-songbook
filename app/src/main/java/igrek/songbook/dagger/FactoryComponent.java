@@ -22,6 +22,7 @@ import igrek.songbook.info.UiResourceService;
 import igrek.songbook.info.errorcheck.SafeExecutor;
 import igrek.songbook.info.errorcheck.UIErrorHandler;
 import igrek.songbook.layout.LayoutController;
+import igrek.songbook.layout.contextmenu.ContextMenuBuilder;
 import igrek.songbook.layout.navigation.NavigationMenuController;
 import igrek.songbook.persistence.CustomSongsDao;
 import igrek.songbook.persistence.FavouriteSongsDao;
@@ -174,6 +175,8 @@ public interface FactoryComponent {
 	void inject(SongContextMenuBuilder there);
 	
 	void inject(ChordsEditorLayoutController there);
+	
+	void inject(ContextMenuBuilder there);
 	
 	
 	void inject(SongListItemAdapter there);

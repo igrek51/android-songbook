@@ -1,5 +1,7 @@
 package igrek.songbook.custom
 
+import android.support.annotation.IdRes
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.View
@@ -15,6 +17,7 @@ import igrek.songbook.info.errorcheck.SafeClickListener
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
+import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.system.SoftKeyboardService
 import javax.inject.Inject
@@ -37,15 +40,20 @@ class ChordsEditorLayoutController : MainLayout {
     lateinit var customSongEditLayoutController: Lazy<CustomSongEditLayoutController>
     @Inject
     lateinit var softKeyboardService: SoftKeyboardService
+    @Inject
+    lateinit var contextMenuBuilder: ContextMenuBuilder
 
     private var contentEdit: EditText? = null
     private var clipboardChords: String? = null
+    private var layout: View? = null
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
     }
 
     override fun showLayout(layout: View) {
+        this.layout = layout
+
         // Toolbar
         val toolbar1 = layout.findViewById<Toolbar>(R.id.toolbar1)
         activity.setSupportActionBar(toolbar1)
@@ -67,30 +75,108 @@ class ChordsEditorLayoutController : MainLayout {
             }
         })
 
-        val addChordButton = layout.findViewById<Button>(R.id.addChordButton)
-        addChordButton.setOnClickListener(object : SafeClickListener() {
-            override fun onClick() {
-                onAddChordClick()
-            }
-        })
-
-        val copyChordButton = layout.findViewById<Button>(R.id.copyChordButton)
-        copyChordButton.setOnClickListener(object : SafeClickListener() {
-            override fun onClick() {
-                onCopyChordClick()
-            }
-        })
-
-        val pasteChordButton = layout.findViewById<Button>(R.id.pasteChordButton)
-        pasteChordButton.setOnClickListener(object : SafeClickListener() {
-            override fun onClick() {
-                onPasteChordClick()
-            }
-        })
+        buttonOnClick(R.id.addChordButton) { onAddChordClick() }
+        buttonOnClick(R.id.addChordStartButton) { onAddSequenceClick("[") }
+        buttonOnClick(R.id.addChordEndButton) { onAddSequenceClick("]") }
+        buttonOnClick(R.id.copyChordButton) { onCopyChordClick() }
+        buttonOnClick(R.id.pasteChordButton) { onPasteChordClick() }
+        buttonOnClick(R.id.detectChordsButton) { detectChords() }
+        buttonOnClick(R.id.undoChordsButton) { undoChange() }
+        buttonOnClick(R.id.transformChordsButton) { showTransformMenu() }
+        buttonOnClick(R.id.chordsNotationButton) { chooseChordsNotation() }
 
         softKeyboardService.showSoftKeyboard(contentEdit)
+        contentEdit!!.requestFocus()
+    }
 
-        // TODO buttons: mutliple clipbords (for chords), auto chords finding, changing notation
+    private fun buttonOnClick(@IdRes buttonId: Int, onclickAction: () -> Unit) {
+        val chordsNotationButton = layout?.findViewById<Button>(buttonId)
+        chordsNotationButton?.setOnClickListener(object : SafeClickListener() {
+            override fun onClick() {
+                onclickAction()
+            }
+        })
+    }
+
+    private fun showTransformMenu() {
+        val actions = listOf(
+                ContextMenuBuilder.Action(R.string.chords_editor_trim_whitespaces) { trimWhitespaces() },
+                ContextMenuBuilder.Action(R.string.chords_editor_move_chords_to_right) { moveChordsAboveToRight() },
+                ContextMenuBuilder.Action(R.string.chords_editor_fis_to_sharp) { chordsFisTofSharp() }
+        )
+        contextMenuBuilder.showContextMenu(R.string.edit_song_transform_chords, actions)
+    }
+
+    private fun chordsFisTofSharp() {
+        transformChords { chord ->
+            chord.replace(Regex("""(\w)is"""), "$1#")
+        }
+    }
+
+    private fun moveChordsAboveToRight() {
+        trimWhitespaces()
+        transformLyrics { chords ->
+            var c = "\n" + chords + "\n"
+            c = c.replace(Regex("""\n\[(.*)]\n(.*)\n"""), "$2 [$1]")
+            c.drop(1).dropLast(1)
+        }
+    }
+
+    private fun trimWhitespaces() {
+        transformLines { line ->
+            line.trim()
+                    .replace("\r", "")
+                    .replace("\t", " ")
+                    .replace("\u00A0", " ")
+                    .replace(Regex("""\[ +"""), "[")
+                    .replace(Regex(""" +]"""), "]")
+                    .replace(Regex(""" +"""), " ") // double+ spaces
+        }
+        transformLyrics { chords ->
+            chords.replace(Regex("\n\n+"), "\n\n") // max 1 empty line
+                    .replace(Regex("^\n+"), "")
+                    .replace(Regex("\n+$"), "")
+        }
+    }
+
+    private fun transformLyrics(transformer: (String) -> String) {
+        val text = contentEdit!!.text.toString()
+        contentEdit!!.setText(transformer.invoke(text))
+    }
+
+    private fun transformLines(transformer: (String) -> String) {
+        val text = contentEdit!!.text.toString()
+                .lines().joinToString(separator = "\n") { line ->
+                    transformer.invoke(line)
+                }
+        contentEdit!!.setText(text)
+    }
+
+    private fun transformChords(transformer: (String) -> String) {
+        val text = contentEdit!!.text.toString()
+                .replace(Regex("""\[(.*)]""")) { matchResult ->
+                    transformer.invoke(matchResult.value)
+                }
+        contentEdit!!.setText(text)
+    }
+
+    private fun detectChords() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    private fun undoChange() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    private fun chooseChordsNotation() {
+        val builder = AlertDialog.Builder(activity)
+        builder.setTitle(R.string.settings_chords_notation)
+                .setItems(arrayOf("dupa", "dupaD2"),
+                        { dialog, which ->
+                            TODO("not implemented")
+                        })
+                .setCancelable(true)
+        builder.create().show()
     }
 
     private fun onPasteChordClick() {
@@ -102,8 +188,8 @@ class ChordsEditorLayoutController : MainLayout {
         var edited = contentEdit!!.text.toString()
         val selStart = contentEdit!!.selectionStart
         var selEnd = contentEdit!!.selectionEnd
-        val before = edited.substring(0, selStart)
-        val after = edited.substring(selEnd)
+        val before = edited.take(selStart)
+        val after = edited.drop(selEnd)
 
         edited = "$before[$clipboardChords]$after"
         selEnd += 2 + clipboardChords!!.length
@@ -118,7 +204,7 @@ class ChordsEditorLayoutController : MainLayout {
         val selStart = contentEdit!!.selectionStart
         val selEnd = contentEdit!!.selectionEnd
 
-        var selection = edited.substring(selStart, selEnd)
+        var selection = edited.substring(selStart, selEnd).trim()
         if (selection.startsWith("["))
             selection = selection.drop(1)
         if (selection.endsWith("]"))
@@ -126,10 +212,57 @@ class ChordsEditorLayoutController : MainLayout {
         clipboardChords = selection.trim()
 
         if (clipboardChords.isNullOrEmpty()) {
-            uiInfoService.showToast(R.string.copy_chord_empty)
+            uiInfoService.showToast(R.string.no_chords_selected)
         } else {
             uiInfoService.showToast(uiResourceService.resString(R.string.chords_copied, clipboardChords))
         }
+    }
+
+    private fun onAddSequenceClick(s: String) {
+        var edited = contentEdit!!.text.toString()
+        var selStart = contentEdit!!.selectionStart
+        var selEnd = contentEdit!!.selectionEnd
+        val before = edited.take(selStart)
+        val after = edited.drop(selEnd)
+
+        edited = "$before$s$after"
+        selStart += s.length
+        selEnd = selStart
+
+        contentEdit!!.setText(edited)
+        contentEdit!!.setSelection(selStart, selEnd)
+        contentEdit!!.requestFocus()
+    }
+
+    private fun onAddChordClick() {
+        var edited = contentEdit!!.text.toString()
+        var selStart = contentEdit!!.selectionStart
+        var selEnd = contentEdit!!.selectionEnd
+        val before = edited.take(selStart)
+        val after = edited.drop(selEnd)
+
+        // if there's nonempty selection
+        if (selStart < selEnd) {
+            val selected = edited.substring(selStart, selEnd)
+            edited = "$before[$selected]$after"
+            selStart++
+            selEnd++
+        } else { // just single cursor
+            // if it's the end of line AND there is no space before
+            if ((after.isEmpty() || after.startsWith("\n")) && !before.isEmpty() && !before.endsWith(" ") && !before.endsWith("\n")) {
+                // insert missing space
+                edited = "$before []$after"
+                selStart += 2
+            } else {
+                edited = "$before[]$after"
+                selStart += 1
+            }
+            selEnd = selStart
+        }
+
+        contentEdit!!.setText(edited)
+        contentEdit!!.setSelection(selStart, selEnd)
+        contentEdit!!.requestFocus()
     }
 
     override fun getLayoutState(): LayoutState {
@@ -150,43 +283,11 @@ class ChordsEditorLayoutController : MainLayout {
         customSongEditLayoutController.get().setSongContent(content)
     }
 
-    override fun onLayoutExit() {
-        softKeyboardService.hideSoftKeyboard()
-    }
-
-    private fun onAddChordClick() {
-        var edited = contentEdit!!.text.toString()
-        var selStart = contentEdit!!.selectionStart
-        var selEnd = contentEdit!!.selectionEnd
-
-        val before = edited.substring(0, selStart)
-        val after = edited.substring(selEnd)
-
-        // if there's nonempty selection
-        if (selStart < selEnd) {
-            val selected = edited.substring(selStart, selEnd)
-            edited = "$before[$selected]$after"
-            selStart++
-            selEnd++
-        } else { // just single cursor
-            // if it's the end of line AND there is no space before
-            if ((after.isEmpty() || after.startsWith("\n")) && !before.isEmpty() && !before.endsWith(" ")) {
-                // insert missing space
-                edited = "$before []$after"
-                selStart += 2
-            } else {
-                edited = "$before[]$after"
-                selStart += 1
-            }
-            selEnd = selStart
-        }
-
-        contentEdit!!.setText(edited)
-        contentEdit!!.setSelection(selStart, selEnd)
-        contentEdit!!.requestFocus()
-    }
-
     fun setContent(content: String) {
         contentEdit?.setText(content)
+    }
+
+    override fun onLayoutExit() {
+        softKeyboardService.hideSoftKeyboard()
     }
 }
