@@ -85,8 +85,7 @@ class ChordsEditorLayoutController : MainLayout {
         }
 
         buttonOnClick(R.id.addChordButton) { onAddChordClick() }
-        buttonOnClick(R.id.addChordStartButton) { onAddSequenceClick("[") }
-        buttonOnClick(R.id.addChordEndButton) { onAddSequenceClick("]") }
+        buttonOnClick(R.id.addChordSplitterButton) { addChordSplitter() }
         buttonOnClick(R.id.copyChordButton) { onCopyChordClick() }
         buttonOnClick(R.id.pasteChordButton) { onPasteChordClick() }
         buttonOnClick(R.id.detectChordsButton) { detectChords() }
@@ -142,6 +141,7 @@ class ChordsEditorLayoutController : MainLayout {
                     .replace(Regex("""]+"""), "]")
                     .replace(Regex("""\[ +"""), "[")
                     .replace(Regex(""" +]"""), "]")
+                    .replace(Regex("""] ?\["""), " ") // join adjacent chords
                     .replace(Regex(""" +"""), " ") // double+ spaces
         }
         transformLyrics { lyrics ->
@@ -226,11 +226,26 @@ class ChordsEditorLayoutController : MainLayout {
         val after = edited.drop(selEnd)
 
         edited = "$before[$clipboardChords]$after"
-        selEnd += 2 + clipboardChords!!.length
+        selEnd = selStart + 2 + clipboardChords!!.length
 
         contentEdit!!.setText(edited)
         contentEdit!!.setSelection(selStart, selEnd)
         contentEdit!!.requestFocus()
+    }
+
+    private fun addChordSplitter() {
+        val edited = contentEdit!!.text.toString()
+        val selStart = contentEdit!!.selectionStart
+        val before = edited.take(selStart)
+        // count previous opening and closing brackets
+        val opening = before.count { c -> c == '[' }
+        val closing = before.count { c -> c == ']' }
+
+        if (opening > closing) {
+            onAddSequenceClick("]")
+        } else {
+            onAddSequenceClick("[")
+        }
     }
 
     private fun onAddSequenceClick(s: String) {

@@ -28,10 +28,7 @@ class ChordsDetector(val notation: ChordsNotation?) {
         private val chordSuffixes = setOf(
                 "1", "2", "3", "4", "5", "6", "7", "8", "9",
                 "add", "dim", "sus", "maj", "min",
-                "+", "#"
-        )
-
-        private val chordDelimiters = setOf(" ", "-", "(", ")", "/", ",", "\n")
+                "+", "#", "-", "(", ")", "/")
     }
 
 
@@ -51,6 +48,7 @@ class ChordsDetector(val notation: ChordsNotation?) {
     }
 
     private fun isChordsWord(word: String): Boolean {
+        // FIXME skip sequences that are already chords
         for (prefix: String in chordPrefixes) {
             if (word.startsWith(prefix)) {
                 if (word == prefix)

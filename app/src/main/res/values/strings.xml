@@ -223,6 +223,5 @@
     <string name="chords_editor_trim_whitespaces">Trim and reformat</string>
     <string name="chords_editor_move_chords_to_right">Chords from top to right</string>
     <string name="chords_editor_fis_to_sharp"><![CDATA[Fis -> F#]]></string>
-    <string name="edit_song_add_chord_start">[</string>
-    <string name="edit_song_add_chord_end">]</string>
+    <string name="edit_song_add_chord_splitter">[ / ]</string>
 </resources>

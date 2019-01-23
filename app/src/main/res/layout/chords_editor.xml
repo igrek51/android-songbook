@@ -118,17 +118,11 @@
                     android:layout_gravity="start|center_vertical"
                     android:text="@string/edit_song_add_chord"/>
                 <Button
-                    android:id="@+id/addChordStartButton"
+                    android:id="@+id/addChordSplitterButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
-                    android:text="@string/edit_song_add_chord_start"/>
-                <Button
-                    android:id="@+id/addChordEndButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start|center_vertical"
-                    android:text="@string/edit_song_add_chord_end"/>
+                    android:text="@string/edit_song_add_chord_splitter"/>
                 <Button
                     android:id="@+id/copyChordButton"
                     android:layout_width="wrap_content"
