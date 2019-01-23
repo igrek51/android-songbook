@@ -92,6 +92,8 @@ class ChordsEditorLayoutController : MainLayout {
         buttonOnClick(R.id.undoChordsButton) { undoChange() }
         buttonOnClick(R.id.transformChordsButton) { showTransformMenu() }
         buttonOnClick(R.id.chordsNotationButton) { chooseChordsNotation() }
+        buttonOnClick(R.id.moveLeftButton) { moveCursor(-1) }
+        buttonOnClick(R.id.moveRightButton) { moveCursor(+1) }
 
         contentEdit = layout.findViewById(R.id.songContentEdit)
         softKeyboardService.showSoftKeyboard(contentEdit)
@@ -126,7 +128,7 @@ class ChordsEditorLayoutController : MainLayout {
         trimWhitespaces()
         transformLyrics { lyrics ->
             var c = "\n" + lyrics + "\n"
-            c = c.replace(Regex("""\n\[(.*)]\n(.*)\n"""), "\n$2 [$1]\n")
+            c = c.replace(Regex("""\n\[(.+)]\n(.+)\n"""), "\n$2 [$1]\n")
             c.drop(1).dropLast(1)
         }
     }
@@ -295,6 +297,20 @@ class ChordsEditorLayoutController : MainLayout {
         contentEdit!!.requestFocus()
     }
 
+    private fun moveCursor(delta: Int) {
+        val edited = contentEdit!!.text.toString()
+        var selStart = contentEdit!!.selectionStart
+
+        selStart += delta
+        if (selStart < 0)
+            selStart = 0
+        if (selStart > edited.length)
+            selStart = edited.length
+
+        contentEdit!!.setSelection(selStart, selStart)
+        contentEdit!!.requestFocus()
+    }
+
     override fun getLayoutState(): LayoutState {
         return LayoutState.CUSTOM_SONG_EDIT
     }
@@ -308,6 +324,7 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     private fun returnNewContent() {
+        // TODO convert chords to selected chords notation
         val content = contentEdit?.text.toString()
         layoutController.showCustomSong()
         customSongEditLayoutController.get().setSongContent(content)
