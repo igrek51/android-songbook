@@ -1,7 +1,6 @@
 package igrek.songbook.custom
 
 import android.support.annotation.IdRes
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.View
@@ -19,6 +18,8 @@ import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
+import igrek.songbook.settings.chordsnotation.ChordsNotation
+import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.system.SoftKeyboardService
 import javax.inject.Inject
 
@@ -42,10 +43,13 @@ class ChordsEditorLayoutController : MainLayout {
     lateinit var softKeyboardService: SoftKeyboardService
     @Inject
     lateinit var contextMenuBuilder: ContextMenuBuilder
+    @Inject
+    lateinit var chordsNotationService: ChordsNotationService
 
     private var contentEdit: EditText? = null
     private var clipboardChords: String? = null
     private var layout: View? = null
+    private var chordsNotation: ChordsNotation? = null
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
@@ -66,7 +70,7 @@ class ChordsEditorLayoutController : MainLayout {
         val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)
         navMenuButton.setOnClickListener { navigationMenuController.navDrawerShow() }
 
-        contentEdit = layout.findViewById(R.id.songContentEdit)
+        chordsNotation = chordsNotationService.chordsNotation
 
         val goBackButton = layout.findViewById<ImageButton>(R.id.goBackButton)
         goBackButton.setOnClickListener(object : SafeClickListener() {
@@ -74,6 +78,11 @@ class ChordsEditorLayoutController : MainLayout {
                 returnNewContent()
             }
         })
+
+        val tooltipEditChordsLyricsInfo = layout.findViewById<ImageButton>(R.id.tooltipEditChordsLyricsInfo)
+        tooltipEditChordsLyricsInfo.setOnClickListener {
+            uiInfoService.showTooltip(R.string.tooltip_edit_chords_lyrics)
+        }
 
         buttonOnClick(R.id.addChordButton) { onAddChordClick() }
         buttonOnClick(R.id.addChordStartButton) { onAddSequenceClick("[") }
@@ -85,6 +94,7 @@ class ChordsEditorLayoutController : MainLayout {
         buttonOnClick(R.id.transformChordsButton) { showTransformMenu() }
         buttonOnClick(R.id.chordsNotationButton) { chooseChordsNotation() }
 
+        contentEdit = layout.findViewById(R.id.songContentEdit)
         softKeyboardService.showSoftKeyboard(contentEdit)
         contentEdit!!.requestFocus()
     }
@@ -115,9 +125,9 @@ class ChordsEditorLayoutController : MainLayout {
 
     private fun moveChordsAboveToRight() {
         trimWhitespaces()
-        transformLyrics { chords ->
-            var c = "\n" + chords + "\n"
-            c = c.replace(Regex("""\n\[(.*)]\n(.*)\n"""), "$2 [$1]")
+        transformLyrics { lyrics ->
+            var c = "\n" + lyrics + "\n"
+            c = c.replace(Regex("""\n\[(.*)]\n(.*)\n"""), "\n$2 [$1]\n")
             c.drop(1).dropLast(1)
         }
     }
@@ -128,12 +138,14 @@ class ChordsEditorLayoutController : MainLayout {
                     .replace("\r", "")
                     .replace("\t", " ")
                     .replace("\u00A0", " ")
+                    .replace(Regex("""\[+"""), "[")
+                    .replace(Regex("""]+"""), "]")
                     .replace(Regex("""\[ +"""), "[")
                     .replace(Regex(""" +]"""), "]")
                     .replace(Regex(""" +"""), " ") // double+ spaces
         }
-        transformLyrics { chords ->
-            chords.replace(Regex("\n\n+"), "\n\n") // max 1 empty line
+        transformLyrics { lyrics ->
+            lyrics.replace(Regex("\n\n+"), "\n\n") // max 1 empty line
                     .replace(Regex("^\n+"), "")
                     .replace(Regex("\n+$"), "")
         }
@@ -161,7 +173,10 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     private fun detectChords() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val detector = ChordsDetector(chordsNotation)
+        transformLyrics { lyrics ->
+            detector.checkChords(lyrics)
+        }
     }
 
     private fun undoChange() {
@@ -169,14 +184,33 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     private fun chooseChordsNotation() {
-        val builder = AlertDialog.Builder(activity)
-        builder.setTitle(R.string.settings_chords_notation)
-                .setItems(arrayOf("dupa", "dupaD2"),
-                        { dialog, which ->
-                            TODO("not implemented")
-                        })
-                .setCancelable(true)
-        builder.create().show()
+        val actions = ChordsNotation.values().map { notation ->
+            ContextMenuBuilder.Action(notation.displayNameResId) { selectChordsNotation(notation) }
+        }
+        contextMenuBuilder.showContextMenu(R.string.settings_chords_notation, actions)
+    }
+
+    private fun selectChordsNotation(notation: ChordsNotation) {
+        chordsNotation = notation
+    }
+
+    private fun onCopyChordClick() {
+        val edited = contentEdit!!.text.toString()
+        val selStart = contentEdit!!.selectionStart
+        val selEnd = contentEdit!!.selectionEnd
+
+        var selection = edited.substring(selStart, selEnd).trim()
+        if (selection.startsWith("["))
+            selection = selection.drop(1)
+        if (selection.endsWith("]"))
+            selection = selection.dropLast(1)
+        clipboardChords = selection.trim()
+
+        if (clipboardChords.isNullOrEmpty()) {
+            uiInfoService.showToast(R.string.no_chords_selected)
+        } else {
+            uiInfoService.showToast(uiResourceService.resString(R.string.chords_copied, clipboardChords))
+        }
     }
 
     private fun onPasteChordClick() {
@@ -197,25 +231,6 @@ class ChordsEditorLayoutController : MainLayout {
         contentEdit!!.setText(edited)
         contentEdit!!.setSelection(selStart, selEnd)
         contentEdit!!.requestFocus()
-    }
-
-    private fun onCopyChordClick() {
-        val edited = contentEdit!!.text.toString()
-        val selStart = contentEdit!!.selectionStart
-        val selEnd = contentEdit!!.selectionEnd
-
-        var selection = edited.substring(selStart, selEnd).trim()
-        if (selection.startsWith("["))
-            selection = selection.drop(1)
-        if (selection.endsWith("]"))
-            selection = selection.dropLast(1)
-        clipboardChords = selection.trim()
-
-        if (clipboardChords.isNullOrEmpty()) {
-            uiInfoService.showToast(R.string.no_chords_selected)
-        } else {
-            uiInfoService.showToast(uiResourceService.resString(R.string.chords_copied, clipboardChords))
-        }
     }
 
     private fun onAddSequenceClick(s: String) {

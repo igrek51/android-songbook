@@ -22,15 +22,14 @@ class ContextMenuBuilder {
         val actionNames = actions.map { action -> actionName(action) }.toTypedArray()
 
         val builder = AlertDialog.Builder(activity)
-        builder.setTitle(uiResourceService.resString(titleResId))
-        builder.setItems(actionNames) { _, item ->
-            SafeExecutor().execute {
-                actions[item].executor()
-            }
-        }
-
-        val alert = builder.create()
-        alert.show()
+                .setTitle(uiResourceService.resString(titleResId))
+                .setItems(actionNames) { _, item ->
+                    SafeExecutor().execute {
+                        actions[item].executor()
+                    }
+                }
+                .setCancelable(true)
+        builder.create().show()
     }
 
     private fun actionName(action: Action): String {

@@ -220,7 +220,7 @@
     <string name="no_chords_selected">No selected chords</string>
     <string name="edit_song_chords_notation">Chords notation</string>
     <string name="edit_song_undo">Undo</string>
-    <string name="chords_editor_trim_whitespaces">Trim whitespaces</string>
+    <string name="chords_editor_trim_whitespaces">Trim and reformat</string>
     <string name="chords_editor_move_chords_to_right">Chords from top to right</string>
     <string name="chords_editor_fis_to_sharp"><![CDATA[Fis -> F#]]></string>
     <string name="edit_song_add_chord_start">[</string>

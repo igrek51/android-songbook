@@ -67,6 +67,25 @@
                 android:layout_marginStart="20dp"
                 android:text="@string/custom_song_editor"
                 android:textSize="18sp"/>
+
+            <ImageButton
+                android:id="@+id/tooltipEditChordsLyricsInfo"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="end|center_vertical"
+                android:layout_centerVertical="true"
+                android:adjustViewBounds="true"
+                android:background="?android:selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="4dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/help"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"/>
+
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
@@ -78,13 +97,12 @@
 
         <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="64dp">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="bottom"
                 android:orientation="horizontal">
 
                 <Button
@@ -93,7 +111,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
                     android:text="@string/edit_song_undo"/>
-
                 <Button
                     android:id="@+id/addChordButton"
                     android:layout_width="wrap_content"
@@ -106,14 +123,12 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
                     android:text="@string/edit_song_add_chord_start"/>
-
                 <Button
                     android:id="@+id/addChordEndButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
                     android:text="@string/edit_song_add_chord_end"/>
-
                 <Button
                     android:id="@+id/copyChordButton"
                     android:layout_width="wrap_content"
@@ -133,21 +148,13 @@
 
         <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="64dp">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="bottom"
                 android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/detectChordsButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start|center_vertical"
-                    android:text="@string/edit_song_detect_chords"/>
 
                 <Button
                     android:id="@+id/transformChordsButton"
@@ -155,7 +162,12 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
                     android:text="@string/edit_song_transform_chords"/>
-
+                <Button
+                    android:id="@+id/detectChordsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:text="@string/edit_song_detect_chords"/>
                 <Button
                     android:id="@+id/chordsNotationButton"
                     android:layout_width="wrap_content"
