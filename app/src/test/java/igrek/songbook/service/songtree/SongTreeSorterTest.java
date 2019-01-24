@@ -62,7 +62,7 @@ public class SongTreeSorterTest {
 	
 	private SongTreeItem songItem(String title, SongCategoryType categoryType, String categoryName, boolean custom) {
 		SongCategory category = new SongCategory(categoryType.getId(), categoryType, categoryName, false, categoryName, new ArrayList<>());
-		Song song = new Song(1, title, category, null, 1, 0, 0, custom, title, null, null, false, null, null, SongStatus.PUBLISHED, null, null, null, null, null, null);
+		Song song = new Song(1, title, category, null, 1, 0, 0, custom, title, null, null, false, null, null, SongStatus.PUBLISHED, null, null, null, null, null, null, null, null);
 		return SongTreeItem.song(song);
 	}
 	

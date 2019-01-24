@@ -8,6 +8,7 @@ import igrek.songbook.persistence.songsdb.Song
 import igrek.songbook.persistence.songsdb.SongCategory
 import igrek.songbook.persistence.songsdb.SongCategoryType
 import igrek.songbook.persistence.songsdb.SongStatus
+import igrek.songbook.settings.chordsnotation.ChordsNotation
 import java.util.*
 
 
@@ -57,11 +58,14 @@ class CustomSongsDao : AbstractSqliteDao() {
                 val scrollSpeed = getOptionalDouble(cursor, "scroll_speed")
                 val initialDelay = getOptionalDouble(cursor, "initial_delay")
                 val metre = getOptionalString(cursor, "metre")
+                val chordsNotationId = getOptionalLong(cursor, "chords_notation")
+                val tags = getOptionalString(cursor, "tags")
 
                 val songStatus = SongStatus.parseById(stateId)
                 val category = categories.first { category -> category.id == categoryId }
+                val chordsNotation = if (chordsNotationId == null) null else ChordsNotation.parseById(chordsNotationId)
 
-                val song = Song(id, title, category, fileContent, versionNumber, createTime, updateTime, custom, filename, comment, preferredKey, locked, lockPassword, author, songStatus, customCategoryName, language, metre, rank, scrollSpeed, initialDelay)
+                val song = Song(id, title, category, fileContent, versionNumber, createTime, updateTime, custom, filename, comment, preferredKey, locked, lockPassword, author, songStatus, customCategoryName, language, metre, rank, scrollSpeed, initialDelay, chordsNotation, tags)
                 songs.add(song)
             }
 
@@ -109,6 +113,8 @@ class CustomSongsDao : AbstractSqliteDao() {
         values.put("scroll_speed", song.scrollSpeed)
         values.put("initial_delay", song.initialDelay)
         values.put("metre", song.metre)
+        values.put("tags", song.tags)
+        values.put("chords_notation", song.chordsNotation?.id)
 
         safeInsert("songs_song", values)
     }

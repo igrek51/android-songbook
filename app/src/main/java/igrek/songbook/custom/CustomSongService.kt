@@ -41,7 +41,7 @@ class CustomSongService {
         val versionNumber: Long = 1
         val now = Date().time
         val category = songsRepository.getCustomCategoryByTypeId(SongCategoryType.CUSTOM.id)
-        val newSong = Song(0, title, category!!, content, versionNumber, now, now, true, title, null, null, false, null, null, SongStatus.PROPOSED, customCategoryName, null, null, null, null, null)
+        val newSong = Song(0, title, category!!, content, versionNumber, now, now, true, title, null, null, false, null, null, SongStatus.PROPOSED, customCategoryName, null, null, null, null, null, null, null)
         songsRepository.addCustomSong(newSong)
         return newSong
     }

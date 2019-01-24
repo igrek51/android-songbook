@@ -7,6 +7,7 @@ import igrek.songbook.persistence.songsdb.Song
 import igrek.songbook.persistence.songsdb.SongCategory
 import igrek.songbook.persistence.songsdb.SongCategoryType
 import igrek.songbook.persistence.songsdb.SongStatus
+import igrek.songbook.settings.chordsnotation.ChordsNotation
 
 
 class SongsDao : AbstractSqliteDao() {
@@ -42,6 +43,12 @@ class Song(models.Model):
         ('en', 'en'),
     )
 
+    CHORDS_NOTATION_CHOICES = (
+        (1, 'GERMAN'),
+        (2, 'GERMAN_IS'),
+        (3, 'ENGLISH'),
+    )
+
     title = models.CharField(max_length=512)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     file_content = models.TextField(blank=True, null=True)
@@ -62,11 +69,12 @@ class Song(models.Model):
     state = models.IntegerField(default=1, choices=STATE_ID_CHOICE)
     rank = models.DecimalField(max_digits=6, decimal_places=3, blank=True, null=True)
     filename = models.CharField(blank=True, null=True, max_length=512)
+    chords_notation = models.IntegerField(blank=True, null=True, default=1, choices=CHORDS_NOTATION_CHOICES)
+    tags = models.CharField(blank=True, null=True, max_length=512)
 
 class Info(models.Model):
     name = models.CharField(max_length=512)
     value = models.CharField(blank=True, null=True, max_length=512)
-
      */
 
     override fun getDatabase(): SQLiteDatabase {
@@ -125,11 +133,14 @@ class Info(models.Model):
                 val scrollSpeed = getOptionalDouble(cursor, "scroll_speed")
                 val initialDelay = getOptionalDouble(cursor, "initial_delay")
                 val metre = getOptionalString(cursor, "metre")
+                val chordsNotationId = getOptionalLong(cursor, "chords_notation")
+                val tags = getOptionalString(cursor, "tags")
 
                 val songStatus = SongStatus.parseById(stateId)
                 val category = categories.first { category -> category.id == categoryId }
+                val chordsNotation = if (chordsNotationId == null) null else ChordsNotation.parseById(chordsNotationId)
 
-                val song = Song(id, title, category, fileContent, versionNumber, createTime, updateTime, custom, filename, comment, preferredKey, locked, lockPassword, author, songStatus, customCategoryName, language, metre, rank, scrollSpeed, initialDelay)
+                val song = Song(id, title, category, fileContent, versionNumber, createTime, updateTime, custom, filename, comment, preferredKey, locked, lockPassword, author, songStatus, customCategoryName, language, metre, rank, scrollSpeed, initialDelay, chordsNotation, tags)
                 songs.add(song)
             }
 

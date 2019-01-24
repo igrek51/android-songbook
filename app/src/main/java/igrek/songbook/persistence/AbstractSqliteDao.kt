@@ -65,6 +65,18 @@ abstract class AbstractSqliteDao {
         return cursor.getString(columneIndex)
     }
 
+    protected fun getOptionalLong(cursor: Cursor, columnName: String): Long? {
+        val columneIndex = cursor.getColumnIndex(columnName)
+        if (columneIndex == -1) {
+            return null
+        }
+
+        if (cursor.isNull(columneIndex))
+            return null
+
+        return cursor.getLong(columneIndex)
+    }
+
     protected fun booleanToNum(b: Boolean): Long {
         return if (b) 1 else 0
     }

@@ -1,6 +1,7 @@
 package igrek.songbook.persistence.songsdb
 
 import com.google.common.base.Objects
+import igrek.songbook.settings.chordsnotation.ChordsNotation
 
 open class Song(
         var id: Long,
@@ -23,7 +24,9 @@ open class Song(
         var metre: String? = null,
         var rank: Double? = null,
         var scrollSpeed: Double? = null,
-        var initialDelay: Double? = null
+        var initialDelay: Double? = null,
+        var chordsNotation: ChordsNotation? = null,
+        var tags: String? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (other !is Song)
