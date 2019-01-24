@@ -3,6 +3,8 @@ package igrek.songbook.custom
 import android.support.annotation.IdRes
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -13,6 +15,7 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeClickListener
+import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
@@ -50,6 +53,7 @@ class ChordsEditorLayoutController : MainLayout {
     private var clipboardChords: String? = null
     private var layout: View? = null
     private var chordsNotation: ChordsNotation? = null
+    private var history: MutableList<String> = mutableListOf()
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
@@ -94,10 +98,24 @@ class ChordsEditorLayoutController : MainLayout {
         buttonOnClick(R.id.chordsNotationButton) { chooseChordsNotation() }
         buttonOnClick(R.id.moveLeftButton) { moveCursor(-1) }
         buttonOnClick(R.id.moveRightButton) { moveCursor(+1) }
+        buttonOnClick(R.id.validateChordsButton) { validateChords() }
 
         contentEdit = layout.findViewById(R.id.songContentEdit)
+        // TODO save to undo history on change
+        contentEdit?.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                LoggerFactory.logger.debug("afterTextChanged: " + s)
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                LoggerFactory.logger.debug("onTextChanged: " + s)
+            }
+        })
         softKeyboardService.showSoftKeyboard(contentEdit)
-        contentEdit!!.requestFocus()
+        contentEdit?.requestFocus()
     }
 
     private fun buttonOnClick(@IdRes buttonId: Int, onclickAction: () -> Unit) {
@@ -111,11 +129,55 @@ class ChordsEditorLayoutController : MainLayout {
 
     private fun showTransformMenu() {
         val actions = listOf(
-                ContextMenuBuilder.Action(R.string.chords_editor_trim_whitespaces) { trimWhitespaces() },
-                ContextMenuBuilder.Action(R.string.chords_editor_move_chords_to_right) { moveChordsAboveToRight() },
-                ContextMenuBuilder.Action(R.string.chords_editor_fis_to_sharp) { chordsFisTofSharp() }
+                ContextMenuBuilder.Action(R.string.chords_editor_trim_whitespaces) {
+                    saveContentHistory()
+                    trimWhitespaces()
+                },
+                ContextMenuBuilder.Action(R.string.chords_editor_move_chords_to_right) {
+                    saveContentHistory()
+                    moveChordsAboveToRight()
+                },
+                ContextMenuBuilder.Action(R.string.chords_editor_fis_to_sharp) {
+                    saveContentHistory()
+                    chordsFisTofSharp()
+                }
         )
         contextMenuBuilder.showContextMenu(R.string.edit_song_transform_chords, actions)
+    }
+
+    private fun validateChords() {
+        val text = contentEdit!!.text.toString()
+        try {
+            validateChordsBrackets(text)
+            validateChordsNotation(text)
+            uiInfoService.showInfo(R.string.chords_are_valid)
+        } catch (e: ChordsValidationError) {
+            val placeholder = uiResourceService.resString(R.string.chords_invalid)
+            val errorMessage = uiResourceService.resString(e.messageResId)
+            uiInfoService.showInfo(placeholder.format(errorMessage))
+        }
+    }
+
+    private fun validateChordsBrackets(text: String) {
+        var inBracket = false
+        for (char in text) {
+            when (char) {
+                '[' -> {
+                    if (inBracket)
+                        throw ChordsValidationError(R.string.chords_invalid_missing_closing_bracket)
+                    inBracket = true
+                }
+                ']' -> {
+                    if (!inBracket)
+                        throw ChordsValidationError(R.string.chords_invalid_missing_opening_bracket)
+                    inBracket = false
+                }
+            }
+        }
+    }
+
+    private fun validateChordsNotation(text: String) {
+        // TODO validate chords notation
     }
 
     private fun chordsFisTofSharp() {
@@ -144,6 +206,7 @@ class ChordsEditorLayoutController : MainLayout {
                     .replace(Regex("""\[ +"""), "[")
                     .replace(Regex(""" +]"""), "]")
                     .replace(Regex("""] ?\["""), " ") // join adjacent chords
+                    .replace(Regex("""\[]"""), "")
                     .replace(Regex(""" +"""), " ") // double+ spaces
         }
         transformLyrics { lyrics ->
@@ -168,13 +231,14 @@ class ChordsEditorLayoutController : MainLayout {
 
     private fun transformChords(transformer: (String) -> String) {
         val text = contentEdit!!.text.toString()
-                .replace(Regex("""\[(.*)]""")) { matchResult ->
+                .replace(Regex("""\[(.*?)]""")) { matchResult ->
                     transformer.invoke(matchResult.value)
                 }
         contentEdit!!.setText(text)
     }
 
     private fun detectChords() {
+        saveContentHistory()
         val detector = ChordsDetector(chordsNotation)
         transformLyrics { lyrics ->
             detector.checkChords(lyrics)
@@ -182,7 +246,13 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     private fun undoChange() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (history.isEmpty()) {
+            uiInfoService.showToast(R.string.no_undo_changes)
+            return
+        }
+        contentEdit!!.setText(history.last())
+        contentEdit!!.requestFocus()
+        history.dropLast(1)
     }
 
     private fun chooseChordsNotation() {
@@ -197,6 +267,7 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     private fun onCopyChordClick() {
+        saveContentHistory()
         val edited = contentEdit!!.text.toString()
         val selStart = contentEdit!!.selectionStart
         val selEnd = contentEdit!!.selectionEnd
@@ -216,6 +287,7 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     private fun onPasteChordClick() {
+        saveContentHistory()
         if (clipboardChords.isNullOrEmpty()) {
             uiInfoService.showToast(R.string.paste_chord_empty)
             return
@@ -236,6 +308,7 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     private fun addChordSplitter() {
+        saveContentHistory()
         val edited = contentEdit!!.text.toString()
         val selStart = contentEdit!!.selectionStart
         val before = edited.take(selStart)
@@ -267,6 +340,7 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     private fun onAddChordClick() {
+        saveContentHistory()
         var edited = contentEdit!!.text.toString()
         var selStart = contentEdit!!.selectionStart
         var selEnd = contentEdit!!.selectionEnd
@@ -311,6 +385,11 @@ class ChordsEditorLayoutController : MainLayout {
         contentEdit!!.requestFocus()
     }
 
+    private fun saveContentHistory() {
+        val text = contentEdit!!.text.toString()
+        history.add(text)
+    }
+
     override fun getLayoutState(): LayoutState {
         return LayoutState.CUSTOM_SONG_EDIT
     }
@@ -332,6 +411,7 @@ class ChordsEditorLayoutController : MainLayout {
 
     fun setContent(content: String) {
         contentEdit?.setText(content)
+        history = mutableListOf(content)
     }
 
     override fun onLayoutExit() {

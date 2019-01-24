@@ -53,7 +53,9 @@ class SecretUnlockerService {
             UnlockerRule("zjajem", "z jajem") { unlockSongs("zjajem") },
             UnlockerRule("religijne") { unlockSongs("religijne") },
             // debug commands
-            UnlockerRule("reset") { reset() }
+            UnlockerRule("reset") { reset() },
+            UnlockerRule("reset config") { preferencesService.clear() },
+            UnlockerRule("reset db") { songsRepository.factoryReset() }
     )
 
     @SuppressLint("InflateParams")

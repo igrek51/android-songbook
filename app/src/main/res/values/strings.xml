@@ -226,4 +226,10 @@
     <string name="edit_song_add_chord_splitter">[ / ]</string>
     <string name="left_arrow">\u276E</string>
     <string name="right_arrow">\u276F</string>
+    <string name="no_undo_changes">No changes to undo</string>
+    <string name="edit_song_validate_chords">Validate</string>
+    <string name="chords_are_valid">Chords are valid</string>
+    <string name="chords_invalid">Chords invalid: %s</string>
+    <string name="chords_invalid_missing_closing_bracket">Missing closing bracket \"]\"</string>
+    <string name="chords_invalid_missing_opening_bracket">Missing opening bracket \"[\"</string>
 </resources>
