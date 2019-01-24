@@ -34,21 +34,41 @@ class ChordsDetector(val notation: ChordsNotation?) {
 
     fun checkChords(lyrics: String): String {
         return lyrics.lines().joinToString(separator = "\n") { line ->
-            checkChordsLine(line)
+            // inverted chords match - find expressions which are not chords
+            val line2 = "]$line["
+            line.replace(Regex("""\](.*?)\[""")) { matchResult ->
+                checkChordsSentence(matchResult.value)
+            }
+            line2.drop(1).dropLast(1)
         }
     }
 
-    private fun checkChordsLine(line: String): String {
-        return line.split(" ").joinToString(separator = " ") { word ->
-            if (isChordsWord(word))
-                "[$word]"
-            else
-                word
+    private fun checkChordsSentence(sentence: String): String {
+        // seek chords from right to left
+        val words = sentence.split(" ")
+        var chordsFound = 0
+        for (i in words.size - 1 downTo 0) {
+            val word = words[i]
+            if (!isWordAChord(word))
+                break
+            chordsFound++
         }
+
+        if (chordsFound == 0) { // no chords
+            return sentence
+        }
+        if (chordsFound == words.size) { // all chords
+            return "[$sentence]"
+        }
+
+        val chords = words.takeLast(chordsFound)
+        val words2 = words.dropLast(chordsFound)
+
+        return words2.joinToString(separator = " ") +
+                " [" + chords.joinToString(separator = " ") + "]"
     }
 
-    private fun isChordsWord(word: String): Boolean {
-        // FIXME skip sequences that are already chords
+    private fun isWordAChord(word: String): Boolean {
         for (prefix: String in chordPrefixes) {
             if (word.startsWith(prefix)) {
                 if (word == prefix)
