@@ -35,9 +35,9 @@ class ChordsDetector(val notation: ChordsNotation?) {
     fun checkChords(lyrics: String): String {
         return lyrics.lines().joinToString(separator = "\n") { line ->
             // inverted chords match - find expressions which are not chords
-            val line2 = "]$line["
-            line.replace(Regex("""\](.*?)\[""")) { matchResult ->
-                checkChordsSentence(matchResult.value)
+            var line2 = "]$line["
+            line2 = line2.replace(Regex("""](.*?)\[""")) { matchResult ->
+                "]" + checkChordsSentence(matchResult.groupValues[1]) + "["
             }
             line2.drop(1).dropLast(1)
         }

@@ -15,7 +15,6 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeClickListener
-import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
@@ -25,6 +24,7 @@ import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.system.SoftKeyboardService
 import javax.inject.Inject
+
 
 class ChordsEditorLayoutController : MainLayout {
 
@@ -101,17 +101,14 @@ class ChordsEditorLayoutController : MainLayout {
         buttonOnClick(R.id.validateChordsButton) { validateChords() }
 
         contentEdit = layout.findViewById(R.id.songContentEdit)
-        // TODO save to undo history on change
         contentEdit?.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                LoggerFactory.logger.debug("afterTextChanged: " + s)
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                LoggerFactory.logger.debug("onTextChanged: " + s)
+                if (start == 0 && count == s?.length) {
+                    return // skip in order not to save undo / transforming operations again
+                }
+                saveContentHistory()
             }
         })
         softKeyboardService.showSoftKeyboard(contentEdit)
@@ -129,9 +126,9 @@ class ChordsEditorLayoutController : MainLayout {
 
     private fun showTransformMenu() {
         val actions = listOf(
-                ContextMenuBuilder.Action(R.string.chords_editor_trim_whitespaces) {
+                ContextMenuBuilder.Action(R.string.chords_editor_reformat_trim) {
                     saveContentHistory()
-                    trimWhitespaces()
+                    reformatAndTrim()
                 },
                 ContextMenuBuilder.Action(R.string.chords_editor_move_chords_to_right) {
                     saveContentHistory()
@@ -187,7 +184,7 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     private fun moveChordsAboveToRight() {
-        trimWhitespaces()
+        reformatAndTrim()
         transformLyrics { lyrics ->
             var c = "\n" + lyrics + "\n"
             c = c.replace(Regex("""\n\[(.+)]\n(.+)\n"""), "\n$2 [$1]\n")
@@ -195,7 +192,7 @@ class ChordsEditorLayoutController : MainLayout {
         }
     }
 
-    private fun trimWhitespaces() {
+    private fun reformatAndTrim() {
         transformLines { line ->
             line.trim()
                     .replace("\r", "")
@@ -232,27 +229,18 @@ class ChordsEditorLayoutController : MainLayout {
     private fun transformChords(transformer: (String) -> String) {
         val text = contentEdit!!.text.toString()
                 .replace(Regex("""\[(.*?)]""")) { matchResult ->
-                    transformer.invoke(matchResult.value)
+                    "[" + transformer.invoke(matchResult.groupValues[1]) + "]"
                 }
         contentEdit!!.setText(text)
     }
 
     private fun detectChords() {
         saveContentHistory()
+        reformatAndTrim()
         val detector = ChordsDetector(chordsNotation)
         transformLyrics { lyrics ->
             detector.checkChords(lyrics)
         }
-    }
-
-    private fun undoChange() {
-        if (history.isEmpty()) {
-            uiInfoService.showToast(R.string.no_undo_changes)
-            return
-        }
-        contentEdit!!.setText(history.last())
-        contentEdit!!.requestFocus()
-        history.dropLast(1)
     }
 
     private fun chooseChordsNotation() {
@@ -385,9 +373,26 @@ class ChordsEditorLayoutController : MainLayout {
         contentEdit!!.requestFocus()
     }
 
+    private fun undoChange() {
+        if (history.isEmpty()) {
+            uiInfoService.showToast(R.string.no_undo_changes)
+            return
+        }
+        var selStart = contentEdit!!.selectionStart
+        val last = history.last()
+        contentEdit!!.setText(last)
+        if (selStart > last.length)
+            selStart = last.length
+        contentEdit!!.setSelection(selStart)
+        contentEdit!!.requestFocus()
+        history.dropLast(1)
+    }
+
     private fun saveContentHistory() {
         val text = contentEdit!!.text.toString()
-        history.add(text)
+        // only if it's different than previous one
+        if (history.lastOrNull() != text)
+            history.add(text)
     }
 
     override fun getLayoutState(): LayoutState {
