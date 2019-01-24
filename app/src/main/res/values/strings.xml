@@ -224,4 +224,6 @@
     <string name="chords_editor_move_chords_to_right">Chords from top to right</string>
     <string name="chords_editor_fis_to_sharp"><![CDATA[Fis -> F#]]></string>
     <string name="edit_song_add_chord_splitter">[ / ]</string>
+    <string name="left_arrow">\u276E</string>
+    <string name="right_arrow">\u276F</string>
 </resources>
