@@ -53,7 +53,7 @@ class ChordsEditorLayoutController : MainLayout {
     private var clipboardChords: String? = null
     private var layout: View? = null
     private var chordsNotation: ChordsNotation? = null
-    private var history: MutableList<String> = mutableListOf()
+    private var history = LyricsHistory()
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
@@ -108,11 +108,10 @@ class ChordsEditorLayoutController : MainLayout {
                 if (start == 0 && count == s?.length) {
                     return // skip in order not to save undo / transforming operations again
                 }
-                saveContentHistory()
+                history.save(contentEdit!!)
             }
         })
         softKeyboardService.showSoftKeyboard(contentEdit)
-        contentEdit?.requestFocus()
     }
 
     private fun buttonOnClick(@IdRes buttonId: Int, onclickAction: () -> Unit) {
@@ -127,15 +126,15 @@ class ChordsEditorLayoutController : MainLayout {
     private fun showTransformMenu() {
         val actions = listOf(
                 ContextMenuBuilder.Action(R.string.chords_editor_reformat_trim) {
-                    saveContentHistory()
+                    history.save(contentEdit!!)
                     reformatAndTrim()
                 },
                 ContextMenuBuilder.Action(R.string.chords_editor_move_chords_to_right) {
-                    saveContentHistory()
+                    history.save(contentEdit!!)
                     moveChordsAboveToRight()
                 },
                 ContextMenuBuilder.Action(R.string.chords_editor_fis_to_sharp) {
-                    saveContentHistory()
+                    history.save(contentEdit!!)
                     chordsFisTofSharp()
                 }
         )
@@ -235,7 +234,7 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     private fun detectChords() {
-        saveContentHistory()
+        history.save(contentEdit!!)
         reformatAndTrim()
         val detector = ChordsDetector(chordsNotation)
         transformLyrics { lyrics ->
@@ -255,7 +254,7 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     private fun onCopyChordClick() {
-        saveContentHistory()
+        history.save(contentEdit!!)
         val edited = contentEdit!!.text.toString()
         val selStart = contentEdit!!.selectionStart
         val selEnd = contentEdit!!.selectionEnd
@@ -275,7 +274,7 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     private fun onPasteChordClick() {
-        saveContentHistory()
+        history.save(contentEdit!!)
         if (clipboardChords.isNullOrEmpty()) {
             uiInfoService.showToast(R.string.paste_chord_empty)
             return
@@ -290,13 +289,11 @@ class ChordsEditorLayoutController : MainLayout {
         edited = "$before[$clipboardChords]$after"
         selEnd = selStart + 2 + clipboardChords!!.length
 
-        contentEdit!!.setText(edited)
-        contentEdit!!.setSelection(selStart, selEnd)
-        contentEdit!!.requestFocus()
+        setContentWithSelection(edited, selStart, selEnd)
     }
 
     private fun addChordSplitter() {
-        saveContentHistory()
+        history.save(contentEdit!!)
         val edited = contentEdit!!.text.toString()
         val selStart = contentEdit!!.selectionStart
         val before = edited.take(selStart)
@@ -322,13 +319,12 @@ class ChordsEditorLayoutController : MainLayout {
         selStart += s.length
         selEnd = selStart
 
-        contentEdit!!.setText(edited)
-        contentEdit!!.setSelection(selStart, selEnd)
-        contentEdit!!.requestFocus()
+        setContentWithSelection(edited, selStart, selEnd)
     }
 
     private fun onAddChordClick() {
-        saveContentHistory()
+        history.save(contentEdit!!)
+
         var edited = contentEdit!!.text.toString()
         var selStart = contentEdit!!.selectionStart
         var selEnd = contentEdit!!.selectionEnd
@@ -354,9 +350,13 @@ class ChordsEditorLayoutController : MainLayout {
             selEnd = selStart
         }
 
-        contentEdit!!.setText(edited)
-        contentEdit!!.setSelection(selStart, selEnd)
-        contentEdit!!.requestFocus()
+        setContentWithSelection(edited, selStart, selEnd)
+    }
+
+    private fun setContentWithSelection(edited: String, selStart: Int, selEnd: Int) {
+        contentEdit?.setText(edited)
+        contentEdit?.setSelection(selStart, selEnd)
+        contentEdit?.requestFocus()
     }
 
     private fun moveCursor(delta: Int) {
@@ -378,21 +378,7 @@ class ChordsEditorLayoutController : MainLayout {
             uiInfoService.showToast(R.string.no_undo_changes)
             return
         }
-        var selStart = contentEdit!!.selectionStart
-        val last = history.last()
-        contentEdit!!.setText(last)
-        if (selStart > last.length)
-            selStart = last.length
-        contentEdit!!.setSelection(selStart)
-        contentEdit!!.requestFocus()
-        history.dropLast(1)
-    }
-
-    private fun saveContentHistory() {
-        val text = contentEdit!!.text.toString()
-        // only if it's different than previous one
-        if (history.lastOrNull() != text)
-            history.add(text)
+        history.revertLast(contentEdit!!)
     }
 
     override fun getLayoutState(): LayoutState {
@@ -415,8 +401,8 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     fun setContent(content: String) {
-        contentEdit?.setText(content)
-        history = mutableListOf(content)
+        setContentWithSelection(content, contentEdit!!.text.length, contentEdit!!.text.length)
+        history.reset(contentEdit!!)
     }
 
     override fun onLayoutExit() {
