@@ -2,7 +2,7 @@ package igrek.songbook.custom
 
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
-class ChordsDetector(val notation: ChordsNotation?) {
+class ChordsDetector(notation: ChordsNotation?) {
 
     companion object {
 
@@ -14,23 +14,42 @@ class ChordsDetector(val notation: ChordsNotation?) {
             }
         }
 
-        private val chordPrefixes = sortedSetOf(lengthComparator,
-                "c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "b", "h",
-                "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "B", "H",
-
-                "cis", "dis", "fis", "gis",
-                "Cis", "Dis", "Fis", "Gis",
-
-                "Cm", "C#m", "Dm", "D#m", "Em", "Fm", "F#m", "Gm", "G#m", "Am", "Bbm", "Bm",
-                "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "Bb", "B"
-        )
-
         private val chordSuffixes = setOf(
-                "1", "2", "3", "4", "5", "6", "7", "8", "9",
-                "add", "dim", "sus", "maj", "min",
-                "+", "#", "-", "(", ")", "/")
+                "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
+                "add", "dim", "sus", "maj", "min", "aug",
+                "Major", "6add9", "m7", "m9", "m11", "m13", "m6", "madd9", "mmaj7", "mmaj9",
+                "+", "#", "-", "(", ")", "/", "\n")
     }
 
+    private var chordPrefixes = sortedSetOf(lengthComparator)
+
+    init {
+        if (notation == null) {
+            ChordsNotation.values().forEach { notation ->
+                addChordPrefixes(notation)
+            }
+        } else {
+            addChordPrefixes(notation)
+        }
+    }
+
+    private fun addChordPrefixes(notation: ChordsNotation) {
+        val prefixes = when (notation) {
+            ChordsNotation.GERMAN -> setOf(
+                    "c", "c#", "d", "d#", "e", "f", "f#", "g", "g#", "a", "b", "h",
+                    "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "B", "H"
+            )
+            ChordsNotation.GERMAN_IS -> setOf(
+                    "c", "cis", "d", "dis", "e", "f", "fis", "g", "gis", "a", "b", "h",
+                    "C", "Cis", "D", "Dis", "E", "F", "Fis", "G", "Gis", "A", "B", "H"
+            )
+            ChordsNotation.ENGLISH -> setOf(
+                    "Cm", "C#m", "Dm", "D#m", "Em", "Fm", "F#m", "Gm", "G#m", "Am", "Bbm", "Bm",
+                    "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "Bb", "B"
+            )
+        }
+        chordPrefixes.addAll(prefixes)
+    }
 
     fun checkChords(lyrics: String): String {
         return lyrics.lines().joinToString(separator = "\n") { line ->
@@ -68,7 +87,7 @@ class ChordsDetector(val notation: ChordsNotation?) {
                 " [" + chords.joinToString(separator = " ") + "]"
     }
 
-    private fun isWordAChord(word: String): Boolean {
+    fun isWordAChord(word: String): Boolean {
         for (prefix: String in chordPrefixes) {
             if (word.startsWith(prefix)) {
                 if (word == prefix)

@@ -146,11 +146,13 @@ class ChordsEditorLayoutController : MainLayout {
         try {
             validateChordsBrackets(text)
             validateChordsNotation(text)
-            uiInfoService.showInfo(R.string.chords_are_valid)
+            uiInfoService.showToast(R.string.chords_are_valid)
         } catch (e: ChordsValidationError) {
             val placeholder = uiResourceService.resString(R.string.chords_invalid)
-            val errorMessage = uiResourceService.resString(e.messageResId)
-            uiInfoService.showInfo(placeholder.format(errorMessage))
+            var errorMessage = e.errorMessage
+            if (errorMessage.isNullOrEmpty())
+                errorMessage = uiResourceService.resString(e.messageResId!!)
+            uiInfoService.showToast(placeholder.format(errorMessage))
         }
     }
 
@@ -170,10 +172,23 @@ class ChordsEditorLayoutController : MainLayout {
                 }
             }
         }
+        if (inBracket)
+            throw ChordsValidationError(R.string.chords_invalid_missing_closing_bracket)
     }
 
     private fun validateChordsNotation(text: String) {
-        // TODO validate chords notation
+        val detector = ChordsDetector(chordsNotation)
+        text.replace(Regex("""\[(.*?)]""")) { matchResult ->
+            val chords = matchResult.groupValues[1].split(" ", "\n")
+            chords.forEach { chord ->
+                if (chord.isNotEmpty() && !detector.isWordAChord(chord)) {
+                    val placeholder = uiResourceService.resString(R.string.chords_unknown_chord)
+                    val errorMessage = placeholder.format(chord)
+                    throw ChordsValidationError(errorMessage)
+                }
+            }
+            ""
+        }
     }
 
     private fun chordsFisTofSharp() {
@@ -194,7 +209,8 @@ class ChordsEditorLayoutController : MainLayout {
     private fun reformatAndTrim() {
         transformLines { line ->
             line.trim()
-                    .replace("\r", "")
+                    .replace("\r\n", "\n")
+                    .replace("\r", "\n")
                     .replace("\t", " ")
                     .replace("\u00A0", " ")
                     .replace(Regex("""\[+"""), "[")
@@ -394,13 +410,14 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     private fun returnNewContent() {
-        // TODO convert chords to selected chords notation
+        // TODO convert chords to german chords notation
         val content = contentEdit?.text.toString()
         layoutController.showCustomSong()
         customSongEditLayoutController.get().setSongContent(content)
     }
 
     fun setContent(content: String) {
+        // TODO convert chords to chords notation
         setContentWithSelection(content, contentEdit!!.text.length, contentEdit!!.text.length)
         history.reset(contentEdit!!)
     }
