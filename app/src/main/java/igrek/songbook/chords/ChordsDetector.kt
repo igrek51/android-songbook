@@ -5,6 +5,7 @@ import igrek.songbook.settings.chordsnotation.ChordsNotation
 class ChordsDetector(notation: ChordsNotation?) {
 
     companion object {
+        val chordsDelimiters = arrayOf(" ", "-", "(", ")", "/", ",", "\n")
 
         /**
          * supported chords formats:

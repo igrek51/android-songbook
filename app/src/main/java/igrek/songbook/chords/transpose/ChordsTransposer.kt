@@ -1,6 +1,7 @@
 package igrek.songbook.chords.transpose
 
 import igrek.songbook.chords.ChordNameProvider
+import igrek.songbook.chords.ChordsDetector
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.system.cache.SimpleCache
@@ -9,8 +10,6 @@ import java.util.*
 class ChordsTransposer(private val chordsNotation: ChordsNotation) {
 
     companion object {
-
-        val chordsDelimiters = arrayOf(" ", "-", "(", ")", "/", ",", "\n")
 
         const val MAX_LENGTH_ANALYZE = 2
 
@@ -94,7 +93,7 @@ class ChordsTransposer(private val chordsNotation: ChordsNotation) {
      */
     private fun transposeChords(input: String, t: Int): String {
         val out = StringBuilder()
-        val chords = splitWithDelimiters(input, chordsDelimiters)
+        val chords = splitWithDelimiters(input, ChordsDetector.chordsDelimiters)
         for (chord in chords) {
             val transposedChord = transposeChord(chord.str, t)
             out.append(transposedChord)
@@ -110,7 +109,7 @@ class ChordsTransposer(private val chordsNotation: ChordsNotation) {
      * @return chord transposed by semitones
      */
     private fun transposeChord(chord: String, t: Int): String {
-
+        // TODO repeated code: move to chords detector
         if (chord.trim { it <= ' ' }.isEmpty())
             return chord
 
