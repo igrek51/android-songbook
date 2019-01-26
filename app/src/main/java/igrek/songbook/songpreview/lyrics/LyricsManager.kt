@@ -4,8 +4,8 @@ import android.graphics.Paint
 import dagger.Lazy
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
-import igrek.songbook.songpreview.theme.LyricsThemeService
-import igrek.songbook.songpreview.transpose.ChordsTransposerManager
+import igrek.songbook.settings.theme.LyricsThemeService
+import igrek.songbook.chords.transpose.ChordsTransposerManager
 import igrek.songbook.system.WindowManagerService
 import javax.inject.Inject
 

@@ -11,8 +11,8 @@ import igrek.songbook.songpreview.lyrics.LyricsModel
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.canvas.BaseCanvasView
-import igrek.songbook.songpreview.theme.ColorScheme
-import igrek.songbook.songpreview.theme.LyricsThemeService
+import igrek.songbook.settings.theme.ColorScheme
+import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.system.WindowManagerService
 import igrek.songbook.system.cache.SimpleCache
 import javax.inject.Inject

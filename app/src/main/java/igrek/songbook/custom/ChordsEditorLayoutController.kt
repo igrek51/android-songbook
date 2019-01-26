@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import dagger.Lazy
 import igrek.songbook.R
+import igrek.songbook.chords.ChordsDetector
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -53,7 +54,7 @@ class ChordsEditorLayoutController : MainLayout {
     private var clipboardChords: String? = null
     private var layout: View? = null
     private var chordsNotation: ChordsNotation? = null
-    private var history = LyricsHistory()
+    private var history = LyricsEditorHistory()
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)

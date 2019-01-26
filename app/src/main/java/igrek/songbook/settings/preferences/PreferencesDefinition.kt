@@ -2,8 +2,8 @@ package igrek.songbook.settings.preferences
 
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.language.AppLanguage
-import igrek.songbook.songpreview.theme.ColorScheme
-import igrek.songbook.songpreview.theme.FontTypeface
+import igrek.songbook.settings.theme.ColorScheme
+import igrek.songbook.settings.theme.FontTypeface
 
 enum class PreferencesDefinition constructor(val type: PropertyType, val defaultValue: Any?) {
 

@@ -5,8 +5,8 @@ import igrek.songbook.songpreview.lyrics.LyricsLine
 import igrek.songbook.songpreview.lyrics.LyricsModel
 import igrek.songbook.songpreview.lyrics.LyricsTextType
 import igrek.songbook.songpreview.renderer.canvas.Align
-import igrek.songbook.songpreview.theme.ColorScheme
-import igrek.songbook.songpreview.theme.FontTypeface
+import igrek.songbook.settings.theme.ColorScheme
+import igrek.songbook.settings.theme.FontTypeface
 
 class LyricsRenderer internal constructor(private val canvas: SongPreview,
                                           private val lyricsModel: LyricsModel?,

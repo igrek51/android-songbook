@@ -8,9 +8,9 @@ import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.language.SongLanguage
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
-import igrek.songbook.songpreview.theme.ColorScheme
-import igrek.songbook.songpreview.theme.FontTypeface
-import igrek.songbook.songpreview.theme.LyricsThemeService
+import igrek.songbook.settings.theme.ColorScheme
+import igrek.songbook.settings.theme.FontTypeface
+import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songselection.random.RandomSongOpener
 import javax.inject.Inject
 

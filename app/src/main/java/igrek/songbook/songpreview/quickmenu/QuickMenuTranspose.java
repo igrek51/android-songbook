@@ -10,7 +10,7 @@ import dagger.Lazy;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.UiResourceService;
-import igrek.songbook.songpreview.transpose.ChordsTransposerManager;
+import igrek.songbook.chords.transpose.ChordsTransposerManager;
 
 public class QuickMenuTranspose {
 	

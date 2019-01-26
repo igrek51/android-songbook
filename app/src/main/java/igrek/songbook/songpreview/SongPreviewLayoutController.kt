@@ -30,7 +30,7 @@ import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.OverlayRecyclerAdapter
 import igrek.songbook.songpreview.renderer.SongPreview
-import igrek.songbook.songpreview.theme.LyricsThemeService
+import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songselection.favourite.FavouriteSongsRepository
 import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.WindowManagerService
