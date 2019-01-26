@@ -2,10 +2,10 @@ package igrek.songbook.songpreview.lyrics
 
 import android.graphics.Paint
 import dagger.Lazy
-import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.songpreview.autoscroll.AutoscrollService
-import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.chords.transpose.ChordsTransposerManager
+import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.settings.theme.LyricsThemeService
+import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.system.WindowManagerService
 import javax.inject.Inject
 
@@ -55,7 +55,7 @@ class LyricsManager {
         val typeface = lyricsThemeService.fontTypeface!!.typeface
         lyricsParser = LyricsParser(typeface)
 
-        parseAndTranspose(originalFileContent)
+        parseAndTranspose(originalFileContent!!)
     }
 
     fun onPreviewSizeChange(screenW: Int, paint: Paint) {
@@ -65,10 +65,10 @@ class LyricsManager {
     }
 
     fun reparse() {
-        parseAndTranspose(originalFileContent)
+        parseAndTranspose(originalFileContent!!)
     }
 
-    private fun parseAndTranspose(originalFileContent: String?) {
+    private fun parseAndTranspose(originalFileContent: String) {
         val transposedContent = chordsTransposerManager.get()
                 .transposeContent(originalFileContent)
         val realFontsize = windowManagerService.dp2px(lyricsThemeService.fontsize)
