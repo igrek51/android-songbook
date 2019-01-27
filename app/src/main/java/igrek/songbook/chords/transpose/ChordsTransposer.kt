@@ -11,7 +11,7 @@ class ChordsTransposer(private val chordsNotation: ChordsNotation) {
 
     companion object {
 
-        const val MAX_LENGTH_ANALYZE = 2
+        const val MAX_LENGTH_ANALYZE = 3
 
         private val lengthComparator = { lhs: String, rhs: String ->
             if (rhs.length != lhs.length) {

@@ -1,11 +1,9 @@
 package igrek.songbook.chords.transpose
 
 import igrek.songbook.chords.ChordsConverter
-import org.junit.Test
-
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-
 import org.assertj.core.api.Java6Assertions.assertThat
+import org.junit.Test
 
 class ChordsConverterTest {
 
@@ -28,7 +26,7 @@ class ChordsConverterTest {
     fun test_unknownChords() {
         val converter = ChordsConverter(ChordsNotation.GERMAN, ChordsNotation.ENGLISH)
         val input = "[unknown a dupa h Dsus2]"
-        assertThat(converter.convertLyrics(input)).isEqualTo("[unknown Am dupa Hm Dsus2]")
+        assertThat(converter.convertLyrics(input)).isEqualTo("[unknown Am Dmupa Bm Dsus2]")
     }
 
     @Test
@@ -39,6 +37,21 @@ class ChordsConverterTest {
         val english = "lyrics [Am Bbm Bb Asus4 Dm7 F#m G#m7 C-G7-Am Am/G]\n[Bm B B7]"
         assertThat(german2english.convertLyrics(german)).isEqualTo(english)
         assertThat(english2german.convertLyrics(english)).isEqualTo(german)
+    }
+
+    @Test
+    fun test_convertChordSharpMoll() {
+        val english2german = ChordsConverter(ChordsNotation.ENGLISH, ChordsNotation.GERMAN)
+        assertThat(english2german.convertChord("Gm")).isEqualTo("g")
+        assertThat(english2german.convertChord("G#")).isEqualTo("G#")
+        assertThat(english2german.convertChord("G#m")).isEqualTo("g#")
+        assertThat(english2german.convertChord("G#m7")).isEqualTo("g#7")
+    }
+
+    @Test
+    fun test_convertLongChordName() {
+        val english2german = ChordsConverter(ChordsNotation.ENGLISH, ChordsNotation.GERMAN)
+        assertThat(english2german.convertLyrics("[G#m7sus4add9+]")).isEqualTo("[g#7sus4add9+]")
     }
 
     @Test

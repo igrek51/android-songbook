@@ -9,7 +9,7 @@ import java.util.*
 class ChordsConverter(fromNotation: ChordsNotation, toNotation: ChordsNotation) {
 
     companion object {
-        const val MAX_LENGTH_ANALYZE = 2
+        const val MAX_LENGTH_ANALYZE = 3
 
         private val longestFirstComparator = Comparator<String> { lhs: String, rhs: String ->
             if (rhs.length != lhs.length) {
@@ -60,7 +60,7 @@ class ChordsConverter(fromNotation: ChordsNotation, toNotation: ChordsNotation) 
         var chordNumber: Int? = fromChordsNumbers.get()[chord]
         var suffix = "" // characters appended to a chords, e.g. Cmaj7 (maj7)
         if (chordNumber == null) { // basic chord not recognized (without suffixes)
-            // attempt to recognize complex chord (with prefixes): C#maj7, akord + [letters] + [number]
+            // attempt to recognize complex chord (with prefixes): C#maj7, chord + [letters] + [number]
             // recognition shorter and shorter substrings
             for (l in Math.min(MAX_LENGTH_ANALYZE, chord.length - 1) downTo 1) {
                 val chordCut = chord.substring(0, l)
