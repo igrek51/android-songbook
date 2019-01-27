@@ -39,14 +39,14 @@ public class ExternalCardService {
 		return externalSDPath;
 	}
 	
-	protected String findExternalSDPath() {
+	private String findExternalSDPath() {
 		return new FirstRuleChecker<String>().addRule(this::isSamsung, () -> checkDirExists("/storage/extSdCard"))
-				.addRule(() -> getExternalMount())
+				.addRule(this::getExternalMount)
 				.addRule(() -> checkDirExists("/storage/extSdCard"))
 				.addRule(() -> checkDirExists("/storage/external_sd"))
 				.addRule(() -> checkDirExists("/storage/ext_sd"))
 				.addRule(() -> checkDirExists("/storage/external"))
-				.addRule(() -> getExternalStorageDirectory())
+				.addRule(this::getExternalStorageDirectory)
 				.find();
 	}
 	

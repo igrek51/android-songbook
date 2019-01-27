@@ -5,11 +5,10 @@ import android.os.Handler
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
-import igrek.songbook.R
+import dagger.Lazy
 import igrek.songbook.about.AboutLayoutController
 import igrek.songbook.about.HelpLayoutController
 import igrek.songbook.activity.ActivityController
-import igrek.songbook.custom.CustomSongService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -24,33 +23,31 @@ import javax.inject.Inject
 
 class NavigationMenuController {
 
+    @Inject
+    lateinit var activity: Activity
+    @Inject
+    lateinit var uiInfoService: Lazy<UiInfoService>
+    @Inject
+    lateinit var uiResourceService: Lazy<UiResourceService>
+    @Inject
+    lateinit var activityController: Lazy<ActivityController>
+    @Inject
+    lateinit var helpLayoutController: Lazy<HelpLayoutController>
+    @Inject
+    lateinit var aboutLayoutController: Lazy<AboutLayoutController>
+    @Inject
+    lateinit var layoutController: Lazy<LayoutController>
+    @Inject
+    lateinit var songsRepository: Lazy<SongsRepository>
+    @Inject
+    lateinit var softKeyboardService: Lazy<SoftKeyboardService>
+    @Inject
+    lateinit var randomSongOpener: Lazy<RandomSongOpener>
+
     private var drawerLayout: DrawerLayout? = null
     private var navigationView: NavigationView? = null
     private val actionsMap = HashMap<Int, Runnable>()
     private val logger = LoggerFactory.logger
-
-    @Inject
-    lateinit var activity: Activity
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var activityController: dagger.Lazy<ActivityController>
-    @Inject
-    lateinit var helpLayoutController: dagger.Lazy<HelpLayoutController>
-    @Inject
-    lateinit var aboutLayoutController: dagger.Lazy<AboutLayoutController>
-    @Inject
-    lateinit var layoutController: dagger.Lazy<LayoutController>
-    @Inject
-    lateinit var songsRepository: SongsRepository
-    @Inject
-    lateinit var softKeyboardService: SoftKeyboardService
-    @Inject
-    lateinit var customSongService: CustomSongService
-    @Inject
-    lateinit var randomSongOpener: RandomSongOpener
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
@@ -61,9 +58,9 @@ class NavigationMenuController {
         actionsMap[R.id.nav_songs_list] = Runnable { layoutController.get().showSongTree() }
         actionsMap[R.id.nav_search] = Runnable { layoutController.get().showSongSearch() }
         actionsMap[R.id.nav_favourites] = Runnable { layoutController.get().showFavourites() }
-        actionsMap[R.id.nav_update_db] = Runnable { songsRepository.updateSongsDb() }
+        actionsMap[R.id.nav_update_db] = Runnable { songsRepository.get().updateSongsDb() }
         actionsMap[R.id.nav_custom_songs] = Runnable { layoutController.get().showCustomSongs() }
-        actionsMap[R.id.nav_random_song] = Runnable { randomSongOpener.openRandomSong() }
+        actionsMap[R.id.nav_random_song] = Runnable { randomSongOpener.get().openRandomSong() }
         actionsMap[R.id.nav_settings] = Runnable { layoutController.get().showSettings() }
         actionsMap[R.id.nav_help] = Runnable { helpLayoutController.get().showUIHelp() }
         actionsMap[R.id.nav_about] = Runnable { aboutLayoutController.get().showAbout() }
@@ -102,7 +99,7 @@ class NavigationMenuController {
 
     fun navDrawerShow() {
         drawerLayout!!.openDrawer(GravityCompat.START)
-        softKeyboardService.hideSoftKeyboard()
+        softKeyboardService.get().hideSoftKeyboard()
     }
 
     fun navDrawerHide() {
