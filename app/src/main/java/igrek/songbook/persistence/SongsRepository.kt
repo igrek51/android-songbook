@@ -1,6 +1,7 @@
 package igrek.songbook.persistence
 
 import com.google.common.collect.ArrayListMultimap
+import dagger.Lazy
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -18,23 +19,23 @@ import kotlin.collections.HashMap
 class SongsRepository {
 
     @Inject
-    lateinit var songsDao: SongsDao
+    lateinit var songsDao: Lazy<SongsDao>
     @Inject
-    lateinit var customSongsDao: CustomSongsDao
+    lateinit var customSongsDao: Lazy<CustomSongsDao>
     @Inject
-    lateinit var unlockedSongsDao: UnlockedSongsDao
+    lateinit var unlockedSongsDao: Lazy<UnlockedSongsDao>
     @Inject
-    lateinit var favouriteSongsRepository: dagger.Lazy<FavouriteSongsRepository>
+    lateinit var favouriteSongsRepository: Lazy<FavouriteSongsRepository>
     @Inject
-    lateinit var localDbService: LocalDbService
+    lateinit var localDbService: Lazy<LocalDbService>
     @Inject
-    lateinit var uiResourceService: UiResourceService
+    lateinit var uiResourceService: Lazy<UiResourceService>
     @Inject
-    lateinit var uiInfoService: UiInfoService
+    lateinit var uiInfoService: Lazy<UiInfoService>
     @Inject
-    lateinit var songsUpdater: SongsUpdater
+    lateinit var songsUpdater: Lazy<SongsUpdater>
     @Inject
-    lateinit var databaseMigrator: DatabaseMigrator
+    lateinit var databaseMigrator: Lazy<DatabaseMigrator>
 
     private val logger = LoggerFactory.logger
 
@@ -51,8 +52,8 @@ class SongsRepository {
     init {
         DaggerIoc.getFactoryComponent().inject(this)
         try {
-            databaseMigrator.verifyLocalDbVersion(this, localDbService)
-            databaseMigrator.verifySongsDbVersion(this, localDbService)
+            databaseMigrator.get().verifyLocalDbVersion(this, localDbService.get())
+            databaseMigrator.get().verifySongsDbVersion(this, localDbService.get())
             initializeSongsDb()
         } catch (t: Throwable) {
             factoryReset()
@@ -61,22 +62,20 @@ class SongsRepository {
 
     fun factoryReset() {
         logger.warn("Databases factory reset...")
-        localDbService.factoryResetDbs()
+        localDbService.get().factoryResetDbs()
         initializeSongsDb()
     }
 
     fun updateSongsDb() {
-        songsUpdater.updateSongsDb(localDbService.songsDbFile)
+        songsUpdater.get().updateSongsDb(localDbService.get().songsDbFile)
     }
 
     fun initializeSongsDb() {
-        logger.debug("initializing db")
-
-        val versionNumber = songsDao.readDbVersionNumber()
+        val versionNumber = songsDao.get().readDbVersionNumber()
                 ?: throw RuntimeException("invalid songs database format")
 
-        val categories = songsDao.readAllCategories()
-        val songs = songsDao.readAllSongs(categories)
+        val categories = songsDao.get().readAllCategories()
+        val songs = songsDao.get().readAllSongs(categories)
 
         // group by categories
         val categorySongs = ArrayListMultimap.create<SongCategory, Song>()
@@ -87,7 +86,7 @@ class SongsRepository {
         }
 
         // unlock songs
-        val unlockedKeys: List<String> = unlockedSongsDao.readUnlockedKeys()
+        val unlockedKeys: List<String> = unlockedSongsDao.get().readUnlockedKeys()
         for (unlockedKey in unlockedKeys) {
             for (song in songs) {
                 if (song.lockPassword == unlockedKey)
@@ -96,7 +95,7 @@ class SongsRepository {
         }
 
         // add custom songs
-        val customSongs = customSongsDao.readAllSongs(categories)
+        val customSongs = customSongsDao.get().readAllSongs(categories)
         if (customSongs.isNotEmpty()) {
             songs.addAll(customSongs)
             // add custom category
@@ -113,7 +112,7 @@ class SongsRepository {
             if (category.name != null) {
                 category.displayName = category.name
             } else {
-                val displayName = uiResourceService.resString(category.type
+                val displayName = uiResourceService.get().resString(category.type
                         .localeStringId!!)
                 category.displayName = displayName
             }
@@ -127,31 +126,31 @@ class SongsRepository {
     }
 
     fun unlockKey(key: String) {
-        unlockedSongsDao.unlockKey(key)
+        unlockedSongsDao.get().unlockKey(key)
     }
 
     fun addCustomSong(song: Song) {
-        customSongsDao.addCustomSong(song)
+        customSongsDao.get().addCustomSong(song)
         initializeSongsDb()
     }
 
     fun removeCustomSong(song: Song) {
-        customSongsDao.removeCustomSong(song)
+        customSongsDao.get().removeCustomSong(song)
         // TODO remove any other places as well (favourites list)
         initializeSongsDb()
     }
 
     fun updateCustomSong(song: Song) {
-        customSongsDao.updateCustomSong(song)
+        customSongsDao.get().updateCustomSong(song)
         initializeSongsDb()
     }
 
     fun getSongsDbVersion(): Long? {
-        return songsDao.readDbVersionNumber()
+        return songsDao.get().readDbVersionNumber()
     }
 
     fun getCustomCategoryByTypeId(categoryTypeId: Long): SongCategory? {
-        return customSongsDao.getCategoryByTypeId(categoryTypeId)
+        return customSongsDao.get().getCategoryByTypeId(categoryTypeId)
     }
 
 }

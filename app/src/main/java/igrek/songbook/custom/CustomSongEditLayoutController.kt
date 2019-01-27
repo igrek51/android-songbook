@@ -16,6 +16,7 @@ import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.songsdb.Song
+import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.system.SoftKeyboardService
 import javax.inject.Inject
 
@@ -37,6 +38,8 @@ class CustomSongEditLayoutController : MainLayout {
     lateinit var songImportFileChooser: Lazy<SongImportFileChooser>
     @Inject
     lateinit var chordsEditorLayoutController: Lazy<ChordsEditorLayoutController>
+    @Inject
+    lateinit var chordsNotationService: ChordsNotationService
 
     private var currentSong: Song? = null
     private var songTitle: String? = null
@@ -65,31 +68,23 @@ class CustomSongEditLayoutController : MainLayout {
         navMenuButton.setOnClickListener { navigationMenuController.navDrawerShow() }
 
         val saveSongButton = layout.findViewById<Button>(R.id.saveSongButton)
-        saveSongButton.setOnClickListener(object : SafeClickListener() {
-            override fun onClick() {
-                saveSong()
-            }
+        saveSongButton.setOnClickListener(SafeClickListener {
+            saveSong()
         })
 
         val removeSongButton = layout.findViewById<Button>(R.id.removeSongButton)
-        removeSongButton.setOnClickListener(object : SafeClickListener() {
-            override fun onClick() {
-                removeSong()
-            }
+        removeSongButton.setOnClickListener(SafeClickListener {
+            removeSong()
         })
 
         val importFromFileButotn = layout.findViewById<Button>(R.id.importFromFileButotn)
-        importFromFileButotn.setOnClickListener(object : SafeClickListener() {
-            override fun onClick() {
-                importContentFromFile()
-            }
+        importFromFileButotn.setOnClickListener(SafeClickListener {
+            importContentFromFile()
         })
 
         val openInChordsEditorButton = layout.findViewById<Button>(R.id.openInChordsEditorButton)
-        openInChordsEditorButton.setOnClickListener(object : SafeClickListener() {
-            override fun onClick() {
-                openInChordsEditor()
-            }
+        openInChordsEditorButton.setOnClickListener(SafeClickListener {
+            openInChordsEditor()
         })
 
         val tooltipEditChordsLyricsInfo = layout.findViewById<ImageButton>(R.id.tooltipEditChordsLyricsInfo)
@@ -113,7 +108,8 @@ class CustomSongEditLayoutController : MainLayout {
         songContent = songContentEdit!!.text.toString()
         customCategoryName = customCategoryNameEdit!!.text.toString()
         layoutController.showSongChordEditor()
-        chordsEditorLayoutController.get().setContent(songContentEdit?.text.toString())
+        val chordsNotation = chordsNotationService.chordsNotation
+        chordsEditorLayoutController.get().setContent(songContentEdit?.text.toString(), chordsNotation)
     }
 
     private fun importContentFromFile() {

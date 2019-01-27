@@ -62,10 +62,8 @@ class ContactLayoutController : MainLayout {
         contactAuthorEdit = layout.findViewById(R.id.contactAuthorEdit)
 
         val contactSendButton = layout.findViewById<Button>(R.id.contactSendButton)
-        contactSendButton.setOnClickListener(object : SafeClickListener() {
-            override fun onClick() {
-                sendContactMessage()
-            }
+        contactSendButton.setOnClickListener(SafeClickListener {
+            sendContactMessage()
         })
     }
 

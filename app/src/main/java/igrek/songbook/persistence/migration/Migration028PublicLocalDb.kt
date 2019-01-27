@@ -27,7 +27,7 @@ class Migration028PublicLocalDb(val activity: Activity) : IMigration {
         migrator.makeFactoryReset()
 
         // insert old tuples to new local db
-        val newLocalDb = migrator.songsRepository!!.localDbService.openLocalSongsDb()
+        val newLocalDb = migrator.songsRepository!!.localDbService.get().openLocalSongsDb()
         for (tuple in tuples) {
             addNewCustomSong(tuple, newLocalDb)
         }

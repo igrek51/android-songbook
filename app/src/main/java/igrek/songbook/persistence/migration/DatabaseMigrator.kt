@@ -23,11 +23,15 @@ class DatabaseMigrator {
         DaggerIoc.getFactoryComponent().inject(this)
     }
 
+    private fun customDbVersion(): Long? {
+        return songsRepository!!.customSongsDao.get().readDbVersionNumber()
+    }
+
     fun verifyLocalDbVersion(songsRepository: SongsRepository, localDbService: LocalDbService) {
         this.songsRepository = songsRepository
         try {
             // check database version
-            val localVersion = songsRepository.customSongsDao.readDbVersionNumber()
+            val localVersion = customDbVersion()
             if (localVersion != null && localVersion >= latestCompatibleDbVersion) {
                 // everything is fine
                 return
@@ -46,7 +50,7 @@ class DatabaseMigrator {
                 migrate37()
             }
 
-            val newVersion = getLocalDbVersion(songsRepository)
+            val newVersion = getLocalDbVersion()
             logger.info("Local database migrated to $newVersion")
 
         } catch (t: Throwable) {
@@ -58,7 +62,7 @@ class DatabaseMigrator {
 
     fun verifySongsDbVersion(songsRepository: SongsRepository, localDbService: LocalDbService) {
         try {
-            val songsVersion = songsRepository.customSongsDao.readDbVersionNumber()
+            val songsVersion = customDbVersion()
             if (songsVersion == null || songsVersion < latestSongsDbFromResources) {
                 throw RuntimeException("songs db on local disk has obsolete version: $songsVersion")
             }
@@ -68,10 +72,9 @@ class DatabaseMigrator {
         }
     }
 
-    private fun getLocalDbVersion(songsRepository: SongsRepository): Long {
+    private fun getLocalDbVersion(): Long {
         // custom songs is part of local database
-        return songsRepository.customSongsDao.readDbVersionNumber()
-                ?: throw RuntimeException("local db version error")
+        return customDbVersion() ?: throw RuntimeException("local db version error")
     }
 
     fun makeFactoryReset() {

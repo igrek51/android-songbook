@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import dagger.Lazy
 import igrek.songbook.R
+import igrek.songbook.chords.ChordsConverter
 import igrek.songbook.chords.ChordsDetector
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
@@ -22,7 +23,6 @@ import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.system.SoftKeyboardService
 import javax.inject.Inject
 
@@ -47,8 +47,6 @@ class ChordsEditorLayoutController : MainLayout {
     lateinit var softKeyboardService: SoftKeyboardService
     @Inject
     lateinit var contextMenuBuilder: ContextMenuBuilder
-    @Inject
-    lateinit var chordsNotationService: ChordsNotationService
 
     private var contentEdit: EditText? = null
     private var clipboardChords: String? = null
@@ -75,13 +73,9 @@ class ChordsEditorLayoutController : MainLayout {
         val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)
         navMenuButton.setOnClickListener { navigationMenuController.navDrawerShow() }
 
-        chordsNotation = chordsNotationService.chordsNotation
-
         val goBackButton = layout.findViewById<ImageButton>(R.id.goBackButton)
-        goBackButton.setOnClickListener(object : SafeClickListener() {
-            override fun onClick() {
-                returnNewContent()
-            }
+        goBackButton.setOnClickListener(SafeClickListener {
+            returnNewContent()
         })
 
         val tooltipEditChordsLyricsInfo = layout.findViewById<ImageButton>(R.id.tooltipEditChordsLyricsInfo)
@@ -117,10 +111,8 @@ class ChordsEditorLayoutController : MainLayout {
 
     private fun buttonOnClick(@IdRes buttonId: Int, onclickAction: () -> Unit) {
         val chordsNotationButton = layout?.findViewById<Button>(buttonId)
-        chordsNotationButton?.setOnClickListener(object : SafeClickListener() {
-            override fun onClick() {
-                onclickAction()
-            }
+        chordsNotationButton?.setOnClickListener(SafeClickListener {
+            onclickAction()
         })
     }
 
@@ -410,17 +402,25 @@ class ChordsEditorLayoutController : MainLayout {
         returnNewContent()
     }
 
-    private fun returnNewContent() {
-        // TODO convert chords to german chords notation
-        val content = contentEdit?.text.toString()
-        layoutController.showCustomSong()
-        customSongEditLayoutController.get().setSongContent(content)
+    fun setContent(content: String, chordsNotation: ChordsNotation?) {
+        this.chordsNotation = chordsNotation
+        var content2 = content
+        if (chordsNotation != null) {
+            val converter = ChordsConverter(ChordsNotation.default, chordsNotation)
+            content2 = converter.convertLyrics(content)
+        }
+        setContentWithSelection(content2, contentEdit!!.text.length, contentEdit!!.text.length)
+        history.reset(contentEdit!!)
     }
 
-    fun setContent(content: String) {
-        // TODO convert chords to chords notation
-        setContentWithSelection(content, contentEdit!!.text.length, contentEdit!!.text.length)
-        history.reset(contentEdit!!)
+    private fun returnNewContent() {
+        var content = contentEdit?.text.toString()
+        if (chordsNotation != null) {
+            val converter = ChordsConverter(chordsNotation!!, ChordsNotation.default)
+            content = converter.convertLyrics(content)
+        }
+        layoutController.showCustomSong()
+        customSongEditLayoutController.get().setSongContent(content)
     }
 
     override fun onLayoutExit() {

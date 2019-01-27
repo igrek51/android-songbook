@@ -5,6 +5,7 @@ import android.database.Cursor
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
+import dagger.Lazy
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import java.text.ParseException
@@ -14,7 +15,7 @@ import javax.inject.Inject
 
 abstract class AbstractSqliteDao {
     @Inject
-    lateinit var localDbService: LocalDbService
+    lateinit var localDbService: Lazy<LocalDbService>
 
     protected val logger: Logger = LoggerFactory.logger
     protected val iso8601Format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)

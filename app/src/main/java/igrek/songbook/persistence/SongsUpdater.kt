@@ -15,9 +15,9 @@ import javax.inject.Inject
 class SongsUpdater {
 
     @Inject
-    lateinit var okHttpClient: OkHttpClient
+    lateinit var okHttpClient: Lazy<OkHttpClient>
     @Inject
-    lateinit var uiInfoService: UiInfoService
+    lateinit var uiInfoService: Lazy<UiInfoService>
     @Inject
     lateinit var songsRepository: Lazy<SongsRepository>
     @Inject
@@ -34,13 +34,13 @@ class SongsUpdater {
 
     fun updateSongsDb(songsDbFile: File) {
 
-        uiInfoService.showInfoIndefinite(R.string.updating_db_in_progress)
+        uiInfoService.get().showInfoIndefinite(R.string.updating_db_in_progress)
 
         val request: Request = Request.Builder()
                 .url(songsdbUrl)
                 .build()
 
-        okHttpClient.newCall(request).enqueue(object : Callback {
+        okHttpClient.get().newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 onErrorReceived(e.message)
             }
@@ -63,7 +63,7 @@ class SongsUpdater {
                     .url(songsDbVersionUrl)
                     .build()
 
-            okHttpClient.newCall(request).enqueue(object : Callback {
+            okHttpClient.get().newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     logger.error(e.message)
                 }
@@ -108,9 +108,9 @@ class SongsUpdater {
             Handler(Looper.getMainLooper()).post {
                 try {
                     songsRepository.get().initializeSongsDb()
-                    uiInfoService.showInfo(R.string.ui_db_is_uptodate)
+                    uiInfoService.get().showInfo(R.string.ui_db_is_uptodate)
                 } catch (t: Throwable) {
-                    uiInfoService.showInfo(R.string.db_update_failed_incompatible)
+                    uiInfoService.get().showInfo(R.string.db_update_failed_incompatible)
                     localDbService.get().factoryResetSongsDb()
                 }
             }
@@ -139,14 +139,14 @@ class SongsUpdater {
     private fun onErrorReceived(errorMessage: String?) {
         logger.error("Connection error: $errorMessage")
         Handler(Looper.getMainLooper()).post {
-            uiInfoService.showInfoIndefinite(R.string.connection_error)
+            uiInfoService.get().showInfoIndefinite(R.string.connection_error)
         }
     }
 
     private fun showUpdateIsAvailable() {
         Handler(Looper.getMainLooper()).post {
-            uiInfoService.showInfoWithAction(R.string.update_is_available, R.string.action_update) {
-                uiInfoService.clearSnackBars()
+            uiInfoService.get().showInfoWithAction(R.string.update_is_available, R.string.action_update) {
+                uiInfoService.get().clearSnackBars()
                 songsRepository.get().updateSongsDb()
             }
         }

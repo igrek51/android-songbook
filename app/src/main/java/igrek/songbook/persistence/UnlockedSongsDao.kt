@@ -13,7 +13,7 @@ class UnlockedSongsDao : AbstractSqliteDao() {
     }
 
     override fun getDatabase(): SQLiteDatabase {
-        return localDbService.openLocalSongsDb()
+        return localDbService.get().openLocalSongsDb()
     }
 
     fun readUnlockedKeys(): List<String> {

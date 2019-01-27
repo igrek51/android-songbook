@@ -15,7 +15,7 @@ class FavouriteSongsDao : AbstractSqliteDao() {
     }
 
     override fun getDatabase(): SQLiteDatabase {
-        return localDbService.openLocalSongsDb()
+        return localDbService.get().openLocalSongsDb()
     }
 
     private fun readFavouriteSongs(): List<FavouriteSongId> {

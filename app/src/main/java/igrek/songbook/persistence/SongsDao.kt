@@ -78,7 +78,7 @@ class Info(models.Model):
      */
 
     override fun getDatabase(): SQLiteDatabase {
-        return localDbService.openSongsDb()
+        return localDbService.get().openSongsDb()
     }
 
     fun readAllCategories(): List<SongCategory> {

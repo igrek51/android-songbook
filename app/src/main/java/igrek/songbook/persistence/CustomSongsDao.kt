@@ -19,7 +19,7 @@ class CustomSongsDao : AbstractSqliteDao() {
     }
 
     override fun getDatabase(): SQLiteDatabase {
-        return localDbService.openLocalSongsDb()
+        return localDbService.get().openLocalSongsDb()
     }
 
     private fun mapSongCategory(cursor: Cursor): SongCategory {

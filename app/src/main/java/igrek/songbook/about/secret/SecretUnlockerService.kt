@@ -15,6 +15,7 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.SongsRepository
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.system.SoftKeyboardService
@@ -36,6 +37,8 @@ class SecretUnlockerService {
     lateinit var softKeyboardService: SoftKeyboardService
     @Inject
     lateinit var preferencesService: PreferencesService
+    @Inject
+    lateinit var localDbService: LocalDbService
 
     private val logger = LoggerFactory.logger
 
@@ -55,7 +58,9 @@ class SecretUnlockerService {
             // debug commands
             UnlockerRule("reset") { reset() },
             UnlockerRule("reset config") { preferencesService.clear() },
-            UnlockerRule("reset db") { songsRepository.factoryReset() }
+            UnlockerRule("reset db") { songsRepository.factoryReset() },
+            UnlockerRule("reset db songs") { localDbService.factoryResetSongsDb() },
+            UnlockerRule("reset db local") { localDbService.factoryResetLocalDb() }
     )
 
     @SuppressLint("InflateParams")

@@ -3,6 +3,7 @@ package igrek.songbook.songselection.songtree
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
+import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.layout.LayoutState
@@ -16,7 +17,7 @@ import javax.inject.Inject
 open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
 
     @Inject
-    lateinit var scrollPosBuffer: ScrollPosBuffer
+    lateinit var scrollPosBuffer: Lazy<ScrollPosBuffer>
 
     private var currentCategory: SongCategory? = null
     private var toolbarTitle: TextView? = null
@@ -118,12 +119,12 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
     }
 
     private fun storeScrollPosition() {
-        scrollPosBuffer.storeScrollPosition(currentCategory, itemsListView?.currentScrollPosition)
+        scrollPosBuffer.get().storeScrollPosition(currentCategory, itemsListView?.currentScrollPosition)
     }
 
     private fun restoreScrollPosition(category: SongCategory?) {
-        if (scrollPosBuffer.hasScrollPositionStored(category)) {
-            itemsListView?.restoreScrollPosition(scrollPosBuffer.restoreScrollPosition(category))
+        if (scrollPosBuffer.get().hasScrollPositionStored(category)) {
+            itemsListView?.restoreScrollPosition(scrollPosBuffer.get().restoreScrollPosition(category))
         }
     }
 
