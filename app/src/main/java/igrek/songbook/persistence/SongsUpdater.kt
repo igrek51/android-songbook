@@ -25,8 +25,11 @@ class SongsUpdater {
 
     private val logger = LoggerFactory.logger
 
-    private val songsdbUrl = "http://51.38.128.10:8008/api/v2/songs"
-    private val songsDbVersionUrl = "http://51.38.128.10:8008/api/v2/songs_version"
+    companion object {
+        private const val apiUrl = "http://51.38.128.10:8008/api/v3/"
+        private const val songsdbUrl = apiUrl + "songs"
+        private const val songsDbVersionUrl = apiUrl + "songs_version"
+    }
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
@@ -84,15 +87,11 @@ class SongsUpdater {
     private fun onSongDatabaseReceived(response: Response, songsDbFile: File) {
         try {
             val inputStream: InputStream = response.body()!!.byteStream()
-
             val input = BufferedInputStream(inputStream)
             val output = FileOutputStream(songsDbFile)
-
             val data = ByteArray(1024)
-
             var total: Long = 0
             var count: Int
-
             while (true) {
                 count = input.read(data)
                 if (count == -1)
@@ -100,11 +99,9 @@ class SongsUpdater {
                 total += count
                 output.write(data, 0, count)
             }
-
             output.flush()
             output.close()
             input.close()
-
             Handler(Looper.getMainLooper()).post {
                 try {
                     songsRepository.get().initializeSongsDb()
@@ -114,7 +111,6 @@ class SongsUpdater {
                     localDbService.get().factoryResetSongsDb()
                 }
             }
-
         } catch (e: Exception) {
             onErrorReceived(e.message)
         }
@@ -130,7 +126,6 @@ class SongsUpdater {
             if (localVersion != null && remoteVersion != null && localVersion < remoteVersion) {
                 showUpdateIsAvailable()
             }
-
         } catch (e: Exception) {
             logger.error(e)
         }
