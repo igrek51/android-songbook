@@ -101,7 +101,7 @@ public class QuickMenuAutoscroll {
 	private void addInitialPause(float diff) {
 		float autoscrollInitialPause = autoscrollPauseSlider.getValue();
 		autoscrollInitialPause += diff;
-		autoscrollInitialPause = cutOff(autoscrollInitialPause, 0, 90000);
+		autoscrollInitialPause = cutOff(autoscrollInitialPause, 90000);
 		autoscrollPauseSlider.setValue(autoscrollInitialPause);
 		autoscrollService.setInitialPause((int) autoscrollInitialPause);
 	}
@@ -109,14 +109,14 @@ public class QuickMenuAutoscroll {
 	private void addAutoscrollSpeed(float diff) {
 		float autoscrollSpeed = autoscrollSpeedSlider.getValue();
 		autoscrollSpeed += diff;
-		autoscrollSpeed = cutOff(autoscrollSpeed, 0, 1.0f);
+		autoscrollSpeed = cutOff(autoscrollSpeed, 1.0f);
 		autoscrollSpeedSlider.setValue(autoscrollSpeed);
 		autoscrollService.setAutoscrollSpeed(autoscrollSpeed);
 	}
 	
-	private float cutOff(float value, float min, float max) {
-		if (value < min)
-			value = min;
+	private float cutOff(float value, float max) {
+		if (value < 0)
+			value = 0;
 		if (value > max)
 			value = max;
 		return value;

@@ -133,9 +133,11 @@
     <string name="select_file_to_import">Wybierz plik z kodowaniem UTF-8 do zaimportowania.</string>
     <string name="selected_file_is_too_big">Wybrany plik jest za duży.</string>
     <string name="editing_custom_song">Moja piosenka</string>
+    <string name="custom_song_editor">Edytor piosenki</string>
     <string name="edit_song_title_label">Tytuł piosenki:</string>
     <string name="edit_song_title_hint">Tytuł…</string>
-    <string name="edit_song_content_label">Umieść tu tekst piosenki z akordami w nawiasach kwadratowych. Rekomendowane jest mieszanie akordów z tekstem w tej samej linii, aby uzyskać kompaktowy układ i zaoszczędzić miejsce na ekranie. Akordy mogą być umieszczone na końcu linii lub nawet w środku wyrazów, aby wskazać sylabę, w której występuje akord. Taki układ jest czytelny dzięki wyróżniającym się, podświetlanym akordom, które łatwo rozróżnić. Jednak nic nie stoi na przeszkodzie, aby umieścić akordy gdziekolwiek. </string>
+    <string name="edit_song_content_label">Tekst piosenki z akordami w nawiasach kwadratowych</string>
+    <string name="tooltip_edit_chords_lyrics">Umieść tu tekst piosenki z akordami w nawiasach kwadratowych. Rekomendowane jest mieszanie akordów z tekstem w tej samej linii, aby uzyskać kompaktowy układ i zaoszczędzić miejsce na ekranie. Akordy mogą być umieszczone na końcu linii lub nawet w środku wyrazów, aby wskazać sylabę, w której występuje akord. Taki układ jest czytelny dzięki wyróżniającym się, podświetlanym akordom, które łatwo rozróżnić. Jednak nic nie stoi na przeszkodzie, aby umieścić akordy gdziekolwiek.</string>
     <string name="import_song_content_hint">
         Tekst piosenki z [akordami w nawiasach]
         \nPrzykładowy tekst [a F C G]
@@ -206,4 +208,25 @@
     <string name="db_update_failed_incompatible">Baza danych nie jest kompatybilna z Twoją wersją aplikacji. Proszę, zaktualizuj aplikację.</string>
     <string name="action_rate_app">Oceń</string>
     <string name="edit_song_open_in_editor">Otwórz w edytorze</string>
+    <string name="tooltip">Wskazówka</string>
+    <string name="edit_song_copy_chord">[Kopiuj]</string>
+    <string name="edit_song_paste_chord">[Wklej]</string>
+    <string name="edit_song_detect_chords">Wykryj akordy</string>
+    <string name="edit_song_transform_chords">Transformuj</string>
+    <string name="paste_chord_empty">Brak akordów do wklejenia</string>
+    <string name="chords_copied">Akordy skopiowane: %s</string>
+    <string name="no_chords_selected">Brak zaznaczonych akordów</string>
+    <string name="edit_song_chords_notation">Notacja akordów</string>
+    <string name="edit_song_undo">Cofnij</string>
+    <string name="chords_editor_reformat_trim">Uporządkuj</string>
+    <string name="chords_editor_move_chords_to_right">Akordy z góry do prawej</string>
+    <string name="chords_editor_fis_to_sharp"><![CDATA[Fis -> F#]]></string>
+    <string name="edit_song_add_chord_splitter">[ / ]</string>
+    <string name="no_undo_changes">Brak zmian do cofnięcia</string>
+    <string name="edit_song_validate_chords">Sprawdź</string>
+    <string name="chords_are_valid">Akordy są poprawne</string>
+    <string name="chords_invalid">Akordy są niepoprawne: %s</string>
+    <string name="chords_invalid_missing_closing_bracket">Brakujący nawias domykający \"]\"</string>
+    <string name="chords_invalid_missing_opening_bracket">Brakujący nawias otwierający \"[\"</string>
+    <string name="chords_unknown_chord">Nieznany akord: %s</string>
 </resources>

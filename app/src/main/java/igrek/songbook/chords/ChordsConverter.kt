@@ -36,7 +36,7 @@ class ChordsConverter(fromNotation: ChordsNotation, toNotation: ChordsNotation) 
 
     fun convertLyrics(lyrics: String): String {
         return lyrics.lines().joinToString(separator = "\n") { line ->
-            line.replace(Regex("""\[(.*?)\]""")) { matchResult ->
+            line.replace(Regex("""\[(.*?)]""")) { matchResult ->
                 "[" + convertChords(matchResult.groupValues[1]) + "]"
             }
         }

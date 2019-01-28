@@ -24,13 +24,13 @@ import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.songsdb.Song
+import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.lyrics.LyricsManager
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.OverlayRecyclerAdapter
 import igrek.songbook.songpreview.renderer.SongPreview
-import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songselection.favourite.FavouriteSongsRepository
 import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.WindowManagerService
@@ -89,7 +89,7 @@ class SongPreviewLayoutController : MainLayout {
         autoscrollService.scrollStateSubject
                 .debounce(100, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { _ -> highlightPanelButtons() }
+                .subscribe { highlightPanelButtons() }
     }
 
     override fun showLayout(layout: View) {

@@ -61,8 +61,7 @@ public class SliderController {
 	
 	public float getValue() {
 		int progress = seekBar.getProgress();
-		float value = min + (max - min) * progress / seekBar.getMax();
-		return value;
+		return min + (max - min) * progress / seekBar.getMax();
 	}
 	
 	public PublishSubject<Float> getValueSubject() {

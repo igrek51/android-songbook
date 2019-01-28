@@ -6,6 +6,7 @@ import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import dagger.Lazy
+import igrek.songbook.R
 import igrek.songbook.about.AboutLayoutController
 import igrek.songbook.about.HelpLayoutController
 import igrek.songbook.activity.ActivityController
@@ -20,7 +21,6 @@ import igrek.songbook.songselection.random.RandomSongOpener
 import igrek.songbook.system.SoftKeyboardService
 import java.util.*
 import javax.inject.Inject
-import igrek.songbook.R
 
 class NavigationMenuController {
 
@@ -47,7 +47,7 @@ class NavigationMenuController {
 
     private var drawerLayout: DrawerLayout? = null
     private var navigationView: NavigationView? = null
-    private val actionsMap = HashMap<Int, Runnable>()
+    private val actionsMap = HashMap<Int, () -> Unit>()
     private val logger = LoggerFactory.logger
 
     init {
@@ -56,17 +56,17 @@ class NavigationMenuController {
     }
 
     private fun initOptionActionsMap() {
-        actionsMap[R.id.nav_songs_list] = Runnable { layoutController.get().showSongTree() }
-        actionsMap[R.id.nav_search] = Runnable { layoutController.get().showSongSearch() }
-        actionsMap[R.id.nav_favourites] = Runnable { layoutController.get().showFavourites() }
-        actionsMap[R.id.nav_update_db] = Runnable { songsRepository.get().updateSongsDb() }
-        actionsMap[R.id.nav_custom_songs] = Runnable { layoutController.get().showCustomSongs() }
-        actionsMap[R.id.nav_random_song] = Runnable { randomSongOpener.get().openRandomSong() }
-        actionsMap[R.id.nav_settings] = Runnable { layoutController.get().showSettings() }
-        actionsMap[R.id.nav_help] = Runnable { helpLayoutController.get().showUIHelp() }
-        actionsMap[R.id.nav_about] = Runnable { aboutLayoutController.get().showAbout() }
-        actionsMap[R.id.nav_exit] = Runnable { activityController.get().quit() }
-        actionsMap[R.id.nav_contact] = Runnable { layoutController.get().showContact() }
+        actionsMap[R.id.nav_songs_list] = { layoutController.get().showSongTree() }
+        actionsMap[R.id.nav_search] = { layoutController.get().showSongSearch() }
+        actionsMap[R.id.nav_favourites] = { layoutController.get().showFavourites() }
+        actionsMap[R.id.nav_update_db] = { songsRepository.get().updateSongsDb() }
+        actionsMap[R.id.nav_custom_songs] = { layoutController.get().showCustomSongs() }
+        actionsMap[R.id.nav_random_song] = { randomSongOpener.get().openRandomSong() }
+        actionsMap[R.id.nav_settings] = { layoutController.get().showSettings() }
+        actionsMap[R.id.nav_help] = { helpLayoutController.get().showUIHelp() }
+        actionsMap[R.id.nav_about] = { aboutLayoutController.get().showAbout() }
+        actionsMap[R.id.nav_exit] = { activityController.get().quit() }
+        actionsMap[R.id.nav_contact] = { layoutController.get().showContact() }
     }
 
     fun init() {
@@ -82,7 +82,7 @@ class NavigationMenuController {
                 val action = actionsMap[id]
                 // postpone action - smoother navigation hide
                 Handler().post {
-                    SafeExecutor().execute(action)
+                    SafeExecutor().execute(action!!)
                 }
             } else {
                 logger.warn("unknown navigation item has been selected.")

@@ -102,7 +102,7 @@ class Migration037PublicLocalDb(val activity: Activity) : IMigration {
                 val initialDelay = null
                 val metre = null
 
-                val tuple = mutableListOf<Any?>(id, title, categoryId, fileContent, versionNumber, createTime, updateTime, custom, filename, comment, preferredKey, locked, lockPassword, author, stateId, customCategoryName, language, rank, scrollSpeed, initialDelay, metre)
+                val tuple = mutableListOf(id, title, categoryId, fileContent, versionNumber, createTime, updateTime, custom, filename, comment, preferredKey, locked, lockPassword, author, stateId, customCategoryName, language, rank, scrollSpeed, initialDelay, metre)
                 tuples.add(tuple)
             }
 

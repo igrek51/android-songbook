@@ -1,16 +1,15 @@
 package igrek.songbook.songselection;
 
 import igrek.songbook.persistence.songsdb.Song;
-import igrek.songbook.persistence.songsdb.SongCategory;
 
 public class SongSearchItem extends SongTreeItem {
 	
-	protected SongSearchItem(Song song, SongCategory category) {
-		super(song, category);
+	private SongSearchItem(Song song) {
+		super(song, null);
 	}
 	
 	public static SongSearchItem song(Song song) {
-		return new SongSearchItem(song, null);
+		return new SongSearchItem(song);
 	}
 	
 }

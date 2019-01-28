@@ -153,6 +153,7 @@
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:padding="8dp"
+                android:inputType="none"
                 android:text=""/>
 
             <Button

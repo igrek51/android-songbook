@@ -16,7 +16,7 @@ public abstract class BaseCanvasView extends View {
 	
 	protected Paint paint;
 	protected Canvas canvas = null;
-	private Boolean initialized = false;
+	private volatile Boolean initialized = false;
 	
 	public BaseCanvasView(Context context) {
 		super(context);
@@ -53,14 +53,9 @@ public abstract class BaseCanvasView extends View {
 		return paint;
 	}
 	
-	/**
-	 * repaint screen method to override
-	 */
-	public void onRepaint() {
-	}
+	public abstract void onRepaint();
 	
-	public void init() {
-	}
+	public abstract void init();
 	
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
