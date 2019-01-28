@@ -179,7 +179,7 @@
     <string name="typeface_serif">Serif</string>
     <string name="typeface_monospace">Monospace</string>
     <string name="no_songs_to_shuffle">No songs to shuffle</string>
-    <string name="action_song_copy">Create custom copy</string>
+    <string name="action_song_copy">Make editable copy</string>
     <string name="action_song_amend">Suggest correction</string>
     <string name="action_song_edit">Edit</string>
     <string name="action_song_remove">Remove</string>

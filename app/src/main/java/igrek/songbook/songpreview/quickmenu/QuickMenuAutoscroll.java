@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import igrek.songbook.R;
 import igrek.songbook.dagger.DaggerIoc;
 import igrek.songbook.info.UiResourceService;
-import igrek.songbook.layout.view.SliderController;
+import igrek.songbook.layout.slider.SliderController;
 import igrek.songbook.songpreview.autoscroll.AutoscrollService;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;

@@ -72,19 +72,19 @@
                 android:id="@+id/tooltipEditChordsLyricsInfo"
                 android:layout_width="30dp"
                 android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_gravity="end|center_vertical"
                 android:layout_centerVertical="true"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:adjustViewBounds="true"
                 android:background="?android:selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
                 android:padding="4dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/help"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"/>
+                android:src="@drawable/help"/>
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
@@ -100,47 +100,67 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
+                style="?android:attr/buttonBarStyle"
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                style="?android:attr/buttonBarStyle">
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/undoChordsButton"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
-                    android:text="@string/edit_song_undo"
-                    style="?android:attr/buttonBarButtonStyle"/>
+                    android:text="@string/edit_song_undo"/>
+
                 <Button
                     android:id="@+id/addChordSplitterButton"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
-                    android:text="@string/edit_song_add_chord_splitter"
-                    style="?android:attr/buttonBarButtonStyle"/>
+                    android:text="@string/edit_song_add_chord_splitter"/>
+
                 <Button
                     android:id="@+id/addChordButton"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
-                    android:text="@string/edit_song_add_chord"
-                    style="?android:attr/buttonBarButtonStyle"/>
+                    android:text="@string/edit_song_add_chord"/>
+
                 <Button
                     android:id="@+id/moveLeftButton"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
-                    android:text="@string/left_arrow"
-                    style="?android:attr/buttonBarButtonStyle"/>
+                    android:text="@string/left_arrow"/>
+
                 <Button
                     android:id="@+id/moveRightButton"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
-                    android:text="@string/right_arrow"
-                    style="?android:attr/buttonBarButtonStyle"/>
+                    android:text="@string/right_arrow"/>
+
+                <Button
+                    android:id="@+id/copyChordButton"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:text="@string/edit_song_copy_chord"/>
+
+                <Button
+                    android:id="@+id/pasteChordButton"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:text="@string/edit_song_paste_chord"/>
 
             </LinearLayout>
 
@@ -151,60 +171,45 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
+                style="?android:attr/buttonBarStyle"
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                style="?android:attr/buttonBarStyle">
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/transformChordsButton"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
-                    android:text="@string/edit_song_transform_chords"
-                    style="?android:attr/buttonBarButtonStyle"/>
+                    android:text="@string/edit_song_transform_chords"/>
+
                 <Button
                     android:id="@+id/validateChordsButton"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
-                    android:text="@string/edit_song_validate_chords"
-                    style="?android:attr/buttonBarButtonStyle"/>
+                    android:text="@string/edit_song_validate_chords"/>
 
                 <Button
                     android:id="@+id/detectChordsButton"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
-                    android:text="@string/edit_song_detect_chords"
-                    style="?android:attr/buttonBarButtonStyle"/>
+                    android:text="@string/edit_song_detect_chords"/>
 
-                <Button
-                    android:id="@+id/copyChordButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start|center_vertical"
-                    android:text="@string/edit_song_copy_chord"
-                    style="?android:attr/buttonBarButtonStyle"/>
-
-                <Button
-                    android:id="@+id/pasteChordButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start|center_vertical"
-                    android:text="@string/edit_song_paste_chord"
-                    style="?android:attr/buttonBarButtonStyle"/>
                 <Button
                     android:id="@+id/chordsNotationButton"
+                    style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
-                    android:text="@string/edit_song_chords_notation"
-                    style="?android:attr/buttonBarButtonStyle"/>
+                    android:text="@string/edit_song_chords_notation"/>
 
             </LinearLayout>
-
         </HorizontalScrollView>
 
         <EditText

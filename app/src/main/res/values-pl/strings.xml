@@ -177,7 +177,7 @@
     <string name="typeface_serif">Szeryfowa (Serif)</string>
     <string name="typeface_monospace">Maszynowa (Monospace)</string>
     <string name="no_songs_to_shuffle">Brak piosenek do wylosowania</string>
-    <string name="action_song_copy">Skopiuj do moich piosenek</string>
+    <string name="action_song_copy">Utwórz kopię do edycji</string>
     <string name="action_song_amend">Zaproponuj poprawkę</string>
     <string name="action_song_edit">Edytuj</string>
     <string name="action_song_remove">Usuń</string>

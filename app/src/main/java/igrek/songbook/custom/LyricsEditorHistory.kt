@@ -38,6 +38,13 @@ class LyricsEditorHistory {
             selEnd = text.length
         edittext.setSelection(selStart, selEnd)
         edittext.requestFocus()
-        history.dropLast(1)
+        history.removeAt(history.lastIndex)
+    }
+
+    fun peekLastSelection(): Pair<Int, Int>? {
+        if (history.isNullOrEmpty())
+            return null
+        val last = history.last()
+        return Pair(last.startSelection, last.endSelection)
     }
 }

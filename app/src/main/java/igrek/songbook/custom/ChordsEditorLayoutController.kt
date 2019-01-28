@@ -40,8 +40,6 @@ class ChordsEditorLayoutController : MainLayout {
     @Inject
     lateinit var navigationMenuController: NavigationMenuController
     @Inject
-    lateinit var customSongService: Lazy<CustomSongService>
-    @Inject
     lateinit var customSongEditLayoutController: Lazy<CustomSongEditLayoutController>
     @Inject
     lateinit var softKeyboardService: SoftKeyboardService
@@ -87,7 +85,7 @@ class ChordsEditorLayoutController : MainLayout {
         buttonOnClick(R.id.addChordSplitterButton) { addChordSplitter() }
         buttonOnClick(R.id.copyChordButton) { onCopyChordClick() }
         buttonOnClick(R.id.pasteChordButton) { onPasteChordClick() }
-        buttonOnClick(R.id.detectChordsButton) { detectChords() }
+        buttonOnClick(R.id.detectChordsButton) { wrapHistoryContext { detectChords() } }
         buttonOnClick(R.id.undoChordsButton) { undoChange() }
         buttonOnClick(R.id.transformChordsButton) { showTransformMenu() }
         buttonOnClick(R.id.chordsNotationButton) { chooseChordsNotation() }
@@ -98,12 +96,13 @@ class ChordsEditorLayoutController : MainLayout {
         contentEdit = layout.findViewById(R.id.songContentEdit)
         contentEdit?.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 if (start == 0 && count == s?.length) {
                     return // skip in order not to save undo / transforming operations again
                 }
                 history.save(contentEdit!!)
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
         })
         softKeyboardService.showSoftKeyboard(contentEdit)
@@ -119,19 +118,22 @@ class ChordsEditorLayoutController : MainLayout {
     private fun showTransformMenu() {
         val actions = listOf(
                 ContextMenuBuilder.Action(R.string.chords_editor_reformat_trim) {
-                    history.save(contentEdit!!)
-                    reformatAndTrim()
+                    wrapHistoryContext { reformatAndTrim() }
                 },
                 ContextMenuBuilder.Action(R.string.chords_editor_move_chords_to_right) {
-                    history.save(contentEdit!!)
-                    moveChordsAboveToRight()
+                    wrapHistoryContext { moveChordsAboveToRight() }
                 },
                 ContextMenuBuilder.Action(R.string.chords_editor_fis_to_sharp) {
-                    history.save(contentEdit!!)
-                    chordsFisTofSharp()
+                    wrapHistoryContext { chordsFisTofSharp() }
                 }
         )
         contextMenuBuilder.showContextMenu(R.string.edit_song_transform_chords, actions)
+    }
+
+    private fun wrapHistoryContext(action: () -> Unit) {
+        history.save(contentEdit!!)
+        action.invoke()
+        restoreSelectionFromHistory()
     }
 
     private fun validateChords() {
@@ -243,7 +245,6 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     private fun detectChords() {
-        history.save(contentEdit!!)
         reformatAndTrim()
         val detector = ChordsDetector(chordsNotation)
         transformLyrics { lyrics ->
@@ -263,7 +264,6 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     private fun onCopyChordClick() {
-        history.save(contentEdit!!)
         val edited = contentEdit!!.text.toString()
         val selStart = contentEdit!!.selectionStart
         val selEnd = contentEdit!!.selectionEnd
@@ -368,6 +368,21 @@ class ChordsEditorLayoutController : MainLayout {
         contentEdit?.requestFocus()
     }
 
+    private fun restoreSelectionFromHistory() {
+        val lastSelection = history.peekLastSelection()
+        if (lastSelection != null) {
+            var selStart = lastSelection.first
+            var selEnd = lastSelection.second
+            val maxLength = contentEdit!!.text.length
+            if (selStart > maxLength)
+                selStart = maxLength
+            if (selEnd > maxLength)
+                selEnd = maxLength
+            contentEdit?.setSelection(selStart, selEnd)
+            contentEdit?.requestFocus()
+        }
+    }
+
     private fun moveCursor(delta: Int) {
         val edited = contentEdit!!.text.toString()
         var selStart = contentEdit!!.selectionStart
@@ -409,8 +424,10 @@ class ChordsEditorLayoutController : MainLayout {
             val converter = ChordsConverter(ChordsNotation.default, chordsNotation)
             content2 = converter.convertLyrics(content)
         }
-        setContentWithSelection(content2, contentEdit!!.text.length, contentEdit!!.text.length)
+        val length = content2.length
+        setContentWithSelection(content2, length, length)
         history.reset(contentEdit!!)
+        softKeyboardService.showSoftKeyboard(contentEdit)
     }
 
     private fun returnNewContent() {
