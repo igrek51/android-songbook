@@ -1,4 +1,4 @@
-package igrek.songbook.persistence
+package igrek.songbook.persistence.dao
 
 import android.content.ContentValues
 import android.database.Cursor
@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteException
 import dagger.Lazy
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.persistence.LocalDbService
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*

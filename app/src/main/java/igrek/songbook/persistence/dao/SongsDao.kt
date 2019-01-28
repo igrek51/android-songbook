@@ -1,4 +1,4 @@
-package igrek.songbook.persistence
+package igrek.songbook.persistence.dao
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase

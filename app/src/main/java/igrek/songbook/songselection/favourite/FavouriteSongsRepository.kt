@@ -3,8 +3,8 @@ package igrek.songbook.songselection.favourite
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
-import igrek.songbook.persistence.FavouriteSongsDao
 import igrek.songbook.persistence.SongsRepository
+import igrek.songbook.persistence.dao.FavouriteSongsDao
 import igrek.songbook.persistence.songsdb.Song
 import igrek.songbook.system.cache.SimpleCache
 import java.util.*

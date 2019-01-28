@@ -6,6 +6,9 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.persistence.dao.CustomSongsDao
+import igrek.songbook.persistence.dao.SongsDao
+import igrek.songbook.persistence.dao.UnlockedSongsDao
 import igrek.songbook.persistence.migration.DatabaseMigrator
 import igrek.songbook.persistence.songsdb.Song
 import igrek.songbook.persistence.songsdb.SongCategory

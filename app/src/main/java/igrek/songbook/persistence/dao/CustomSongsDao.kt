@@ -1,4 +1,4 @@
-package igrek.songbook.persistence
+package igrek.songbook.persistence.dao
 
 import android.content.ContentValues
 import android.database.Cursor
