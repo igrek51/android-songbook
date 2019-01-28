@@ -214,7 +214,7 @@ class AutoscrollService {
     }
 
     private fun onAutoscrollStartUIEvent() {
-        if (!isRunning) {
+        if (!isRunning && canvas != null) {
             if (canvas!!.canScrollDown()) {
                 start()
                 uiInfoService.showInfoWithAction(R.string.autoscroll_started, R.string.action_stop_autoscroll) { this.stop() }
@@ -255,7 +255,7 @@ class AutoscrollService {
     }
 
     fun onVolumeUp(): Boolean {
-        if (!volumeKeysSpeedControl)
+        if (!volumeKeysSpeedControl || canvas == null)
             return false
         when (state) {
             AutoscrollState.OFF -> onAutoscrollStartUIEvent()
@@ -266,7 +266,7 @@ class AutoscrollService {
     }
 
     fun onVolumeDown(): Boolean {
-        if (!volumeKeysSpeedControl)
+        if (!volumeKeysSpeedControl || canvas == null)
             return false
         when (state) {
             AutoscrollState.OFF -> {

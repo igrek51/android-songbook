@@ -8,6 +8,7 @@ import igrek.songbook.custom.CustomSongService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.layout.confirm.ConfirmDialogBuilder
 import igrek.songbook.persistence.songsdb.Song
 import igrek.songbook.songselection.favourite.FavouriteSongsRepository
 import igrek.songbook.system.cache.SimpleCache
@@ -46,7 +47,9 @@ class SongContextMenuBuilder {
                 SongContextAction(R.string.action_song_remove, { song ->
                     song.custom
                 }, { song ->
-                    customSongService.removeSong(song)
+                    ConfirmDialogBuilder().confirmAction(R.string.confirm_remove_song) {
+                        customSongService.removeSong(song)
+                    }
                 }),
                 // SET_FAVORITE
                 SongContextAction(R.string.action_song_set_favourite, { song ->

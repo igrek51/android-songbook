@@ -164,18 +164,18 @@
                 android:text="@string/edit_song_open_in_editor"/>
 
             <Button
-                android:id="@+id/importFromFileButotn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="@string/import_content_from_file"/>
-
-            <Button
                 android:id="@+id/saveSongButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:text="@string/edit_song_save"/>
+
+            <Button
+                android:id="@+id/importFromFileButotn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/import_content_from_file"/>
 
             <Button
                 android:id="@+id/removeSongButton"

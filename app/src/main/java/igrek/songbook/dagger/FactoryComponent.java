@@ -23,6 +23,7 @@ import igrek.songbook.info.UiResourceService;
 import igrek.songbook.info.errorcheck.SafeExecutor;
 import igrek.songbook.info.errorcheck.UIErrorHandler;
 import igrek.songbook.layout.LayoutController;
+import igrek.songbook.layout.confirm.ConfirmDialogBuilder;
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder;
 import igrek.songbook.layout.navigation.NavigationMenuController;
 import igrek.songbook.persistence.LocalDbService;
@@ -192,5 +193,7 @@ public interface FactoryComponent {
 	void inject(QuickMenuTranspose there);
 	
 	void inject(SongPreview there);
+	
+	void inject(ConfirmDialogBuilder there);
 	
 }

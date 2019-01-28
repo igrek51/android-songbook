@@ -73,7 +73,7 @@ class ChordsEditorLayoutController : MainLayout {
 
         val goBackButton = layout.findViewById<ImageButton>(R.id.goBackButton)
         goBackButton.setOnClickListener(SafeClickListener {
-            returnNewContent()
+            onBackClicked()
         })
 
         val tooltipEditChordsLyricsInfo = layout.findViewById<ImageButton>(R.id.tooltipEditChordsLyricsInfo)

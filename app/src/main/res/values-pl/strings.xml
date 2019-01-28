@@ -229,4 +229,7 @@
     <string name="chords_invalid_missing_closing_bracket">Brakujący nawias domykający \"]\"</string>
     <string name="chords_invalid_missing_opening_bracket">Brakujący nawias otwierający \"[\"</string>
     <string name="chords_unknown_chord">Nieznany akord: %s</string>
+    <string name="action_confirmation_title">Jesteś pewien?</string>
+    <string name="confirm_remove_song">Czy na pewno chcesz usunąć piosenkę?</string>
+    <string name="confirm_discard_custom_song_changes">Czy chcesz porzucić niezapisane zmiany w piosence?</string>
 </resources>

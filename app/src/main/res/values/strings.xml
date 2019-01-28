@@ -233,4 +233,7 @@
     <string name="chords_invalid_missing_closing_bracket">Missing closing bracket \"]\"</string>
     <string name="chords_invalid_missing_opening_bracket">Missing opening bracket \"[\"</string>
     <string name="chords_unknown_chord">Unknown chord: %s</string>
+    <string name="action_confirmation_title">Are you sure?</string>
+    <string name="confirm_remove_song">Do you really want to remove this song?</string>
+    <string name="confirm_discard_custom_song_changes">Do you want to discard unsaved changes?</string>
 </resources>

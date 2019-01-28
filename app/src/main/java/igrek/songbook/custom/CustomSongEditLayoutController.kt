@@ -14,6 +14,7 @@ import igrek.songbook.info.errorcheck.SafeClickListener
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
+import igrek.songbook.layout.confirm.ConfirmDialogBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.songsdb.Song
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
@@ -138,7 +139,7 @@ class CustomSongEditLayoutController : MainLayout {
         songContent = songContentEdit!!.text.toString()
         customCategoryName = customCategoryNameEdit!!.text.toString()
 
-        if (songTitle!!.isEmpty() || songContent!!.isEmpty()) {
+        if (songTitle!!.isEmpty()) {
             uiInfoService.showInfo(R.string.fill_in_all_fields)
             return
         }
@@ -160,14 +161,16 @@ class CustomSongEditLayoutController : MainLayout {
     }
 
     private fun removeSong() {
-        if (currentSong == null) {
-            // just cancel
-            uiInfoService.showInfo(R.string.edit_song_has_been_removed)
-        } else {
-            // remove song from database
-            customSongService.get().removeSong(currentSong!!)
+        ConfirmDialogBuilder().confirmAction(R.string.confirm_remove_song) {
+            if (currentSong == null) {
+                // just cancel
+                uiInfoService.showInfo(R.string.edit_song_has_been_removed)
+            } else {
+                // remove song from database
+                customSongService.get().removeSong(currentSong!!)
+            }
+            layoutController.showCustomSongs()
         }
-        layoutController.showCustomSongs()
     }
 
     override fun getLayoutState(): LayoutState {
@@ -179,7 +182,29 @@ class CustomSongEditLayoutController : MainLayout {
     }
 
     override fun onBackClicked() {
-        layoutController.showCustomSongs()
+        if (hasUnsavedChanges()) {
+            ConfirmDialogBuilder().confirmAction(R.string.confirm_discard_custom_song_changes) {
+                layoutController.showCustomSongs()
+            }
+        } else {
+            layoutController.showCustomSongs()
+        }
+    }
+
+    private fun hasUnsavedChanges(): Boolean {
+        songTitle = songTitleEdit!!.text.toString()
+        customCategoryName = customCategoryNameEdit!!.text.toString()
+        songContent = songContentEdit!!.text.toString()
+        if (currentSong == null) { // add
+            if (songTitle!!.isNotEmpty()) return true
+            if (customCategoryName!!.isNotEmpty()) return true
+            if (songContent!!.isNotEmpty()) return true
+        } else { // update
+            if (currentSong?.title != songTitle) return true
+            if (currentSong?.customCategoryName != customCategoryName) return true
+            if (currentSong?.content != songContent) return true
+        }
+        return false
     }
 
     override fun onLayoutExit() {

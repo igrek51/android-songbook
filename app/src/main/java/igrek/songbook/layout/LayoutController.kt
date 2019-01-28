@@ -122,12 +122,6 @@ class LayoutController {
         mainLayout.showLayout(layoutView)
     }
 
-    fun showPreviousLayout() {
-        if (previouslyShownLayout != null) {
-            showMainLayout(previouslyShownLayout!!)
-        }
-    }
-
     fun showLastSongSelectionLayout() {
         if (lastSongSelectionLayout != null) {
             showMainLayout(lastSongSelectionLayout!!)
