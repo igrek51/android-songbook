@@ -20,6 +20,7 @@ import igrek.songbook.songselection.random.RandomSongOpener
 import igrek.songbook.system.SoftKeyboardService
 import java.util.*
 import javax.inject.Inject
+import igrek.songbook.R
 
 class NavigationMenuController {
 
