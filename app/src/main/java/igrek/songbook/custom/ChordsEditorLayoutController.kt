@@ -12,7 +12,7 @@ import android.widget.ImageButton
 import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.chords.ChordsConverter
-import igrek.songbook.chords.ChordsDetector
+import igrek.songbook.chords.detector.ChordsDetector
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -247,7 +247,7 @@ class ChordsEditorLayoutController : MainLayout {
         reformatAndTrim()
         val detector = ChordsDetector(chordsNotation)
         transformLyrics { lyrics ->
-            detector.checkChords(lyrics)
+            detector.findChords(lyrics)
         }
     }
 

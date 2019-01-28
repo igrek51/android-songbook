@@ -32,7 +32,9 @@ class ChordNameProvider {
         }
     }
 
-    fun allChords(notation: ChordsNotation): List<String> {
+    fun allChords(notation: ChordsNotation?): List<String> {
+        if (notation == null)
+            return allChords()
         return minorChords(notation)
                 .plus(majorChords(notation))
     }
