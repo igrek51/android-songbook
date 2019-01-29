@@ -20,17 +20,23 @@ The guitar songs database is included and is easily extensible.
 * Always-on display
 * Songs database included
 * Songs browser with search engine
+* Adding custom songs
+* Advanced chords editor
+* Chords auto detection
 * Scroll speed auto-adjustment
 * Font size scaling
-* Custom songs adding
 * Importing songs from files
 * Songs updater
 * English (American) / German (European) chords notation support
 * Fullscreen mode
-* Screen rotation support
 * Adding songs to favourites
-* Displaying random song
 * Social contributing to songs database
+* Screen rotation support
+* Displaying random song
+* Song context menu actions
+* Scroll speed adjustment by volume buttons
+* Color scheme selection
+* Configurable font typeface
 * Setting default chords notation depending on system language
 
 ## Example Screenshots
