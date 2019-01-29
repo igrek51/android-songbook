@@ -283,6 +283,7 @@ class SongPreviewLayoutController : MainLayout {
                 songPreview!!.repaint()
             }
             quickMenuAutoscroll.get().isVisible -> quickMenuAutoscroll.get().isVisible = false
+            fullscreen -> setFullscreen(false)
             else -> layoutController.get().showLastSongSelectionLayout()
         }
     }

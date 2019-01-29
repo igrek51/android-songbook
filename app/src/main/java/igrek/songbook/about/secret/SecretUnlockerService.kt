@@ -55,6 +55,7 @@ class SecretUnlockerService {
             UnlockerRule("bff") { unlockSongs("bff") },
             UnlockerRule("zjajem", "z jajem") { unlockSongs("zjajem") },
             UnlockerRule("religijne") { unlockSongs("religijne") },
+            UnlockerRule("afcg") { unlockSongs("afcg") },
             // debug commands
             UnlockerRule("reset") { reset() },
             UnlockerRule("reset config") { preferencesService.clear() },

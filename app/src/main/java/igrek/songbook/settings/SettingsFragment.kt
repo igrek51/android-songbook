@@ -18,10 +18,10 @@ import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesUpdater
-import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.FontTypeface
 import igrek.songbook.settings.theme.LyricsThemeService
+import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import javax.inject.Inject
@@ -46,7 +46,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     @Inject
     lateinit var preferencesUpdater: PreferencesUpdater
 
-    private var decimalFormat4: DecimalFormat
+    private var decimalFormat3: DecimalFormat
     private var decimalFormat1: DecimalFormat
 
     companion object {
@@ -55,8 +55,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
-        decimalFormat4 = DecimalFormat("#.####")
-        decimalFormat4.roundingMode = RoundingMode.HALF_UP
+        decimalFormat3 = DecimalFormat("#.###")
+        decimalFormat3.roundingMode = RoundingMode.HALF_UP
         decimalFormat1 = DecimalFormat("#.#")
         decimalFormat1.roundingMode = RoundingMode.HALF_UP
     }
@@ -132,7 +132,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     preferencesUpdater.autoscrollSpeed = value
                 },
                 stringConverter = { value: Float ->
-                    uiResourceService.resString(R.string.settings_autoscroll_speed_value, decimal4(value))
+                    uiResourceService.resString(R.string.settings_autoscroll_speed_value, decimal3(value))
                 }
         )
 
@@ -249,8 +249,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         return (progress * resolution).roundToInt()
     }
 
-    private fun decimal4(value: Float): String {
-        return decimalFormat4.format(value.toDouble())
+    private fun decimal3(value: Float): String {
+        return decimalFormat3.format(value.toDouble())
     }
 
     private fun decimal1(value: Float): String {

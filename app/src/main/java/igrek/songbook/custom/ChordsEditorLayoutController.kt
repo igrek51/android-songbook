@@ -254,13 +254,9 @@ class ChordsEditorLayoutController : MainLayout {
 
     private fun chooseChordsNotation() {
         val actions = ChordsNotation.values().map { notation ->
-            ContextMenuBuilder.Action(notation.displayNameResId) { selectChordsNotation(notation) }
+            ContextMenuBuilder.Action(notation.displayNameResId) { chordsNotation = notation }
         }
         contextMenuBuilder.showContextMenu(R.string.settings_chords_notation, actions)
-    }
-
-    private fun selectChordsNotation(notation: ChordsNotation) {
-        chordsNotation = notation
     }
 
     private fun onCopyChordClick() {

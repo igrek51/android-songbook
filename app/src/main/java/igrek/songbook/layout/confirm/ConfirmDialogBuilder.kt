@@ -19,9 +19,8 @@ class ConfirmDialogBuilder {
         DaggerIoc.getFactoryComponent().inject(this)
     }
 
-    fun confirmAction(messageResId: Int, action: () -> Unit) {
+    fun confirmAction(message: String, action: () -> Unit) {
         val alertBuilder = AlertDialog.Builder(activity)
-        val message = uiResourceService.resString(messageResId)
         alertBuilder.setMessage(message)
         alertBuilder.setTitle(uiResourceService.resString(R.string.action_confirmation_title))
         alertBuilder.setNegativeButton(uiResourceService.resString(R.string.action_cancel)) { _, _ -> }
@@ -32,6 +31,11 @@ class ConfirmDialogBuilder {
         }
         alertBuilder.setCancelable(true)
         alertBuilder.create().show()
+    }
+
+    fun confirmAction(messageResId: Int, action: () -> Unit) {
+        val message = uiResourceService.resString(messageResId)
+        confirmAction(message, action)
     }
 
 }

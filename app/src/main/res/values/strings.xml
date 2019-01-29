@@ -81,7 +81,7 @@
     <string name="action_check_secret">Check</string>
     <string name="action_cancel">Cancel</string>
     <string name="ui_db_is_uptodate">Songs database is up-to-date.</string>
-    <string name="contact_label">You can contact me if you have noticed some bugs or you have any ideas how to improve this application. You can also suggest improvements to the chords or propose adding a new song. I would be very grateful for your comments and contributing. Please add your email if you wish to get a reply to your message.</string>
+    <string name="contact_label">You can contact me if you have noticed some bugs or you have any ideas how to improve this application. You can also suggest improvements to the chords or propose adding a new song. I would be very grateful for your comments and contributing. Please include your email if you wish to get a reply to your message.</string>
     <string name="contact_message_hint">Your message…</string>
     <string name="contact_send">Send</string>
     <string name="contact_author_hint">Your name or email (optional)</string>
@@ -137,7 +137,7 @@
     <string name="edit_song_title_label">Song Title:</string>
     <string name="edit_song_title_hint">Title…</string>
     <string name="edit_song_content_label">Lyrics with chords in square brackets:</string>
-    <string name="tooltip_edit_chords_lyrics">Put here the lyrics with chords in square brackets. My recommended way is to mix chords with the lyrics in the same line in order to make it more compact and save the screen space. Chords could be placed at the end of the line or even inside the words to indicate the syllable with an chord accent. It fits pretty well since the Chords are highlighted and it\'s easy to distinguish them. However, nothing prevents you from putting the chords anywhere.</string>
+    <string name="tooltip_edit_chords_lyrics">Put here the lyrics with chords in square brackets. Recommended way is to mix chords with the lyrics in the same line in order to make it more compact and save the screen space. Chords could be placed at the end of the line or even inside the words to indicate the syllable with an chord accent.</string>
     <string name="import_song_content_hint">
         Song lyrics with [chords in brackets]
         \nExample text [a F C G]
