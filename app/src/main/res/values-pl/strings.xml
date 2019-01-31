@@ -38,13 +38,12 @@
         \nPodwójne kliknięcie na ekran włącza autoprzewijanie. Ponowne kliknięcie je wyłącza.
         \n
         \nWŁASNE PIOSENKI:
-        \nMożesz dodawać własne piosenki, wybierając opcję z menu głównego.
-        \nWpisz słowa piosenki w postaci zwykłego tesktu razem z akordami w nawiasach kwadratowych, używając notacji w formacie:
-        \n\"tekst [a B h C C# f f# F#7 Cmaj7 D-Dsus2-Dsus4]\"
-        \nMożesz dodawać akordy gdziekolwiek: \"w środ[d]ku sy[C]lab lub na końcu linii [d C]\".
+        \nMożesz wyświetlić własne piosenki, wybierając opcję \"Moje piosenki\" z menu głównego. Aby dodać nową, kliknij ikonę "plusa".
+        \nWpisz słowa piosenki w postaci zwykłego tesktu razem z akordami w nawiasach kwadratowych.
+        \nEdytor piosenek posiada wiele przydatnych narzędzi ułatwiających edycję.
         \nUżyj przycisku \"[akord]\", aby szybko dodać akord w nawiasach kwadratowych.
         \nPo zapisaniu piosenki, znajdziesz ją w kategorii \"Moje piosenki\".
-        \nMożesz edytować dodaną piosenkę (klikając ikonę edycji przy piosence), usunąć ją lub zaimportować zawartość z wybranego pliku.
+        \nMożesz edytować dodaną piosenkę później lub wykonać dodatkowe akcje, klikając odpowiednią ikonę obok piosenki na liście.
         \n
         \nWKŁAD SPOŁECZNOŚCI:
         \nAplikacja pozwala na publikowanie dodanych przez Ciebie piosenek i współdzielenie ich z pozostałymi użytkownikami.
@@ -137,10 +136,14 @@
     <string name="edit_song_title_label">Tytuł piosenki:</string>
     <string name="edit_song_title_hint">Tytuł…</string>
     <string name="edit_song_content_label">Tekst piosenki z akordami w nawiasach kwadratowych</string>
-    <string name="tooltip_edit_chords_lyrics">Umieść tu tekst piosenki z akordami w nawiasach kwadratowych. Rekomendowane jest umieszczanie akordów z tekstem w tej samej linii, aby uzyskać zwięzły układ i zaoszczędzić miejsce na ekranie. Akordy mogą być umieszczone na końcu linii lub nawet w środku wyrazów, aby wskazać sylabę, w której występuje akord.</string>
+    <string name="tooltip_edit_chords_lyrics">Umieść tu tekst piosenki z akordami w nawiasach kwadratowych. Rekomendowane jest umieszczanie akordów z tekstem w tej samej linii, aby uzyskać zwięzły układ i zaoszczędzić miejsce na ekranie. Akordy mogą być umieszczone na końcu linii lub w środku wyrazów, jeśli chcesz wskazać sylabę, w której występuje akord.
+        \n\nEdytor posiada wiele przydatnych narzędzi: cofanie zmian, wstawianie pasującego nawiasu (otwierającego lub zamykającego), wstawianie pary nawiasów, przesuwanie kursora o jeden znak, kopiowanie akordów, wklejanie akordów, porządkowania do standardowego formatu, automatyczne wykrywanie akordów, przesuwanie akordów z linii wyżej na koniec linii, sprawdzanie poprawności akordów.
+        \n\nPrzed edycją piosenki upewnij się, że wybrałeś odpowiednią notację akordów dla piosenki tak, aby narzędzia do automatycznej detekcji akordów i sprawdzania poprawności mogły działać poprawnie.
+        \n\nPrzed zapisaniem piosenki sprawdź jej poprawność i przekształć do standardowego formatu, szczególnie jeśli zamierzasz udostępnić ją publicznie. Chociaż piosenka przechowywana jest wewnątrz aplikacji w notacji Niemieckiej / Europejskiej, to przed otwarciem jest ona automatycznie konwertowana do notacji wybranej w ustawieniach. Dzięki temu łatwo można skonwertować piosenkę do dowolnej notacji.
+    </string>
     <string name="import_song_content_hint">
         Tekst piosenki z [akordami w nawiasach]
-        \nPrzykładowy tekst [a F C G]
+        \nPrzykładowy tekst [C G# A7 F#maj7]
         \n…
     </string>
     <string name="import_content_from_file">Importuj z pliku</string>
@@ -221,7 +224,7 @@
     <string name="no_chords_selected">Brak zaznaczonych akordów</string>
     <string name="edit_song_chords_notation">Notacja akordów</string>
     <string name="edit_song_undo">Cofnij</string>
-    <string name="chords_editor_reformat_trim">Uporządkuj</string>
+    <string name="chords_editor_reformat_trim">Uporządkuj format</string>
     <string name="chords_editor_move_chords_to_right">Akordy z góry do prawej</string>
     <string name="chords_editor_fis_to_sharp"><![CDATA[Fis -> F#]]></string>
     <string name="edit_song_add_chord_splitter">[ / ]</string>
