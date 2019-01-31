@@ -200,7 +200,7 @@ class ChordsEditorLayoutController : MainLayout {
         reformatAndTrim()
         transformLyrics { lyrics ->
             var c = "\n" + lyrics + "\n"
-            c = c.replace(Regex("""\n\[(.+)]\n(.+)\n"""), "\n$2 [$1]\n")
+            c = c.replace(Regex("""\n\[(.+)]\n(\w.+)\n"""), "\n$2 [$1]\n")
             c.drop(1).dropLast(1)
         }
     }

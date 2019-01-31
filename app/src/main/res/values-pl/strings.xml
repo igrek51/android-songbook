@@ -77,7 +77,7 @@
     </string>
     <string name="action_info_ok">OK</string>
     <string name="action_secret">Sekret</string>
-    <string name="action_check_secret">Sprawdź</string>
+    <string name="action_check_secret">Weryfikuj</string>
     <string name="action_cancel">Anuluj</string>
     <string name="ui_db_is_uptodate">Baza piosenek jest aktualna.</string>
     <string name="contact_label">Możesz przesłać wiadomość do autora, jeśli zauważyłeś jakieś błędy lub jeśli masz pomysły na usprawnienie tej aplikacji. Możesz wysłać również poprawkę do akordów piosenki lub zaproponować dodanie nowej. Będę wdzięczny za Twój komentarz oraz wkład w rozwój aplikacji. Jeśli chcesz otrzymać odpowiedź na swoją wiadomość, podaj także swój email.</string>
@@ -135,11 +135,11 @@
     <string name="custom_song_editor">Edytor piosenki</string>
     <string name="edit_song_title_label">Tytuł piosenki:</string>
     <string name="edit_song_title_hint">Tytuł…</string>
-    <string name="edit_song_content_label">Tekst piosenki z akordami w nawiasach kwadratowych</string>
+    <string name="edit_song_content_label">Tekst piosenki z akordami w nawiasach kwadratowych:</string>
     <string name="tooltip_edit_chords_lyrics">Umieść tu tekst piosenki z akordami w nawiasach kwadratowych. Rekomendowane jest umieszczanie akordów z tekstem w tej samej linii, aby uzyskać zwięzły układ i zaoszczędzić miejsce na ekranie. Akordy mogą być umieszczone na końcu linii lub w środku wyrazów, jeśli chcesz wskazać sylabę, w której występuje akord.
-        \n\nEdytor posiada wiele przydatnych narzędzi: cofanie zmian, wstawianie pasującego nawiasu (otwierającego lub zamykającego), wstawianie pary nawiasów, przesuwanie kursora o jeden znak, kopiowanie akordów, wklejanie akordów, porządkowania do standardowego formatu, automatyczne wykrywanie akordów, przesuwanie akordów z linii wyżej na koniec linii, sprawdzanie poprawności akordów.
-        \n\nPrzed edycją piosenki upewnij się, że wybrałeś odpowiednią notację akordów dla piosenki tak, aby narzędzia do automatycznej detekcji akordów i sprawdzania poprawności mogły działać poprawnie.
-        \n\nPrzed zapisaniem piosenki sprawdź jej poprawność i przekształć do standardowego formatu, szczególnie jeśli zamierzasz udostępnić ją publicznie. Chociaż piosenka przechowywana jest wewnątrz aplikacji w notacji Niemieckiej / Europejskiej, to przed otwarciem jest ona automatycznie konwertowana do notacji wybranej w ustawieniach. Dzięki temu łatwo można skonwertować piosenkę do dowolnej notacji.
+        \n\nEdytor posiada wiele przydatnych narzędzi: cofanie zmian, wstawianie pasującego nawiasu (otwierającego lub zamykającego), wstawianie pary nawiasów, przesuwanie kursora o jeden znak, kopiowanie akordów, wklejanie akordów, porządkowanie do standardowego formatu, automatyczne wykrywanie akordów, przesuwanie akordów z linii wyżej na koniec linii, sprawdzanie poprawności akordów.
+        \n\nEdytując piosenkę, upewnij się, że wybrałeś odpowiednią notację akordów tak, aby narzędzia do automatycznej detekcji akordów i sprawdzania poprawności mogły działać poprawnie.
+        \n\nPrzed zapisaniem piosenki sprawdź jej poprawność i skonwertuj do standardowego formatu, szczególnie jeśli zamierzasz udostępnić ją publicznie. Mimo, że piosenki zapisywane są wewnątrz aplikacji w notacji Niemieckiej / Europejskiej, to przed otwarciem jest ona automatycznie konwertowana do notacji wybranej w ustawieniach. Dzięki temu łatwo można skonwertować piosenkę do dowolnej notacji.
     </string>
     <string name="import_song_content_hint">
         Tekst piosenki z [akordami w nawiasach]

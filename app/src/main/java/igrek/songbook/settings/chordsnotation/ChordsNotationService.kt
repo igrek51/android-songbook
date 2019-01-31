@@ -3,6 +3,7 @@ package igrek.songbook.settings.chordsnotation
 import android.app.Activity
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesDefinition
 import igrek.songbook.settings.preferences.PreferencesService
@@ -53,6 +54,7 @@ class ChordsNotationService {
             } else {
                 ChordsNotation.ENGLISH
             }
+            logger.info("Default chords notation set: ${chordsNotation.toString()}")
         }
     }
 
