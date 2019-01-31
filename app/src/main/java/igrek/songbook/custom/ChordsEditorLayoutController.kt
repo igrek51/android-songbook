@@ -51,6 +51,7 @@ class ChordsEditorLayoutController : MainLayout {
     private var layout: View? = null
     private var chordsNotation: ChordsNotation? = null
     private var history = LyricsEditorHistory()
+    private var chordsNotationButton: Button? = null
 
     init {
         DaggerIoc.getFactoryComponent().inject(this)
@@ -93,6 +94,8 @@ class ChordsEditorLayoutController : MainLayout {
         buttonOnClick(R.id.moveRightButton) { moveCursor(+1) }
         buttonOnClick(R.id.validateChordsButton) { validateChords() }
 
+        chordsNotationButton = layout.findViewById(R.id.chordsNotationButton)
+
         contentEdit = layout.findViewById(R.id.songContentEdit)
         contentEdit?.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
@@ -102,6 +105,7 @@ class ChordsEditorLayoutController : MainLayout {
                 }
                 history.save(contentEdit!!)
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
         })
@@ -250,11 +254,20 @@ class ChordsEditorLayoutController : MainLayout {
         transformLyrics { lyrics ->
             detector.findChords(lyrics)
         }
+        val detectedChordsNum = detector.detectedChords
+        if (detectedChordsNum == 0) {
+            uiInfoService.showToast(R.string.no_new_chords_detected)
+        } else {
+            uiInfoService.showToast(uiResourceService.resString(R.string.new_chords_detected, detectedChordsNum.toString()))
+        }
     }
 
     private fun chooseChordsNotation() {
         val actions = ChordsNotation.values().map { notation ->
-            ContextMenuBuilder.Action(notation.displayNameResId) { chordsNotation = notation }
+            ContextMenuBuilder.Action(notation.displayNameResId) {
+                chordsNotation = notation
+                invalidateChordsNotationButton()
+            }
         }
         contextMenuBuilder.showContextMenu(R.string.settings_chords_notation, actions)
     }
@@ -295,6 +308,16 @@ class ChordsEditorLayoutController : MainLayout {
         selEnd = selStart + 2 + clipboardChords!!.length
 
         setContentWithSelection(edited, selStart, selEnd)
+    }
+
+    private fun invalidateChordsNotationButton() {
+        chordsNotationButton?.apply {
+            chordsNotation?.apply {
+                val shortName = uiResourceService.resString(shortNameResId)
+                val display = uiResourceService.resString(R.string.edit_chords_notation_button, shortName)
+                text = display
+            }
+        }
     }
 
     private fun addChordSplitter() {
@@ -415,6 +438,7 @@ class ChordsEditorLayoutController : MainLayout {
 
     fun setContent(content: String, chordsNotation: ChordsNotation?) {
         this.chordsNotation = chordsNotation
+        invalidateChordsNotationButton()
         var content2 = content
         if (chordsNotation != null) {
             val converter = ChordsConverter(ChordsNotation.default, chordsNotation)

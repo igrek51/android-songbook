@@ -149,9 +149,12 @@
     <string name="edit_song_has_been_saved">Song has been saved in \"My songs\".</string>
     <string name="edit_song_has_been_removed">Song has been removed.</string>
     <string name="settings_chords_notation">Chords notation</string>
-    <string name="notation_german">German / European: a b B H C C# d f#</string>
+    <string name="notation_german">German / European (#): a b B H C C# d f#</string>
     <string name="notation_german_is">German / European (-is): a b B H C Cis d fis</string>
     <string name="notation_english">English / American: Am Bbm Bb B C C# Dm F#m</string>
+    <string name="notation_short_german">German (#)</string>
+    <string name="notation_short_german_is">German (-is)</string>
+    <string name="notation_short_english">English</string>
     <string name="fill_in_all_fields">Please fill in all required fields.</string>
     <string name="connection_error">Connection error</string>
     <string name="updating_db_in_progress">Updating songs…</string>
@@ -209,7 +212,7 @@
     <string name="settings_general_section">General</string>
     <string name="db_update_failed_incompatible">Database is not compatible with your application version. Please udpate an application.</string>
     <string name="action_rate_app">Rate App</string>
-    <string name="edit_song_open_in_editor">Open in Chords Editor</string>
+    <string name="edit_song_open_in_editor">Open in Song Editor</string>
     <string name="tooltip">Hint</string>
     <string name="edit_song_copy_chord">[Copy]</string>
     <string name="edit_song_paste_chord">[Paste]</string>
@@ -236,4 +239,7 @@
     <string name="action_confirmation_title">Are you sure?</string>
     <string name="confirm_remove_song">Do you really want to remove this song?</string>
     <string name="confirm_discard_custom_song_changes">Do you want to discard unsaved changes?</string>
+    <string name="edit_chords_notation_button">Notation: %s</string>
+    <string name="no_new_chords_detected">No new chords detected</string>
+    <string name="new_chords_detected">New chords have been detected: %s</string>
 </resources>

@@ -31,6 +31,7 @@ class ChordsDetector(notation: ChordsNotation? = null) {
     }
 
     private val chordNameProvider = ChordNameProvider()
+    var detectedChords = 0
 
     private val chordPrefixes: SimpleCache<Set<String>> = SimpleCache {
         val prefixes = sortedSetOf(longestFirstComparator)
@@ -72,6 +73,7 @@ class ChordsDetector(notation: ChordsNotation? = null) {
                 break
             chordsFound++
         }
+        detectedChords += chordsFound
 
         if (chordsFound == 0) { // no chords
             return sentence

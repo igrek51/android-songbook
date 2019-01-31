@@ -149,9 +149,12 @@
     <string name="edit_song_has_been_saved">Zapisano piosenkę w \"Moje piosenki\".</string>
     <string name="edit_song_has_been_removed">Usunięto piosenkę.</string>
     <string name="settings_chords_notation">Notacja akordów</string>
-    <string name="notation_german">Niemiecka / Europejska: a b B H C C# d f#</string>
+    <string name="notation_german">Niemiecka / Europejska (#): a b B H C C# d f#</string>
     <string name="notation_german_is">Niemiecka / Europejska (-is): a b B H C Cis d fis</string>
     <string name="notation_english">Angielska / Amerykańska: Am Bbm Bb B C C# Dm F#m</string>
+    <string name="notation_short_german">Niemiecka (#)</string>
+    <string name="notation_short_german_is">Niemiecka (-is)</string>
+    <string name="notation_short_english">Angielska</string>
     <string name="fill_in_all_fields">Wypełnij wszystkie wymagane pola.</string>
     <string name="connection_error">Błąd połączenia</string>
     <string name="updating_db_in_progress">Aktualizuję piosenki…</string>
@@ -232,4 +235,7 @@
     <string name="action_confirmation_title">Jesteś pewien?</string>
     <string name="confirm_remove_song">Czy na pewno chcesz usunąć piosenkę?</string>
     <string name="confirm_discard_custom_song_changes">Czy chcesz porzucić niezapisane zmiany w piosence?</string>
+    <string name="edit_chords_notation_button">Notacja: %s</string>
+    <string name="no_new_chords_detected">Nie znaleziono nowych akordów</string>
+    <string name="new_chords_detected">Znaleziono nowe akordy: %s</string>
 </resources>

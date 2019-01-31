@@ -2,22 +2,22 @@ package igrek.songbook.settings.chordsnotation
 
 import igrek.songbook.R
 
-enum class ChordsNotation(val id: Long, val displayNameResId: Int) {
+enum class ChordsNotation(val id: Long, val displayNameResId: Int, val shortNameResId: Int) {
 
-    GERMAN(1, R.string.notation_german),
+    GERMAN(1, R.string.notation_german, R.string.notation_short_german),
 
-    GERMAN_IS(2, R.string.notation_german_is),
+    GERMAN_IS(2, R.string.notation_german_is, R.string.notation_short_german_is),
 
-    ENGLISH(3, R.string.notation_english),
+    ENGLISH(3, R.string.notation_english, R.string.notation_short_english),
 
     ;
 
     companion object {
+        val default: ChordsNotation
+            get() = GERMAN
+
         fun parseById(id: Long): ChordsNotation? {
             return ChordsNotation.values().firstOrNull { v -> v.id == id }
         }
-
-        val default: ChordsNotation
-            get() = GERMAN
     }
 }
