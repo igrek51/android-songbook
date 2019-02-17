@@ -234,11 +234,16 @@
     <string name="chords_invalid">Akordy są niepoprawne: %s</string>
     <string name="chords_invalid_missing_closing_bracket">Brakujący nawias domykający \"]\"</string>
     <string name="chords_invalid_missing_opening_bracket">Brakujący nawias otwierający \"[\"</string>
-    <string name="chords_unknown_chord">Nieznany akord: %s</string>
+    <string name="chords_unknown_chord">Nieznany akord dla wybranej notacji: %s</string>
     <string name="action_confirmation_title">Jesteś pewien?</string>
     <string name="confirm_remove_song">Czy na pewno chcesz usunąć piosenkę?</string>
     <string name="confirm_discard_custom_song_changes">Czy chcesz porzucić niezapisane zmiany w piosence?</string>
     <string name="edit_chords_notation_button">Notacja: %s</string>
     <string name="no_new_chords_detected">Nie znaleziono nowych akordów</string>
     <string name="new_chords_detected">Znaleziono nowe akordy: %s</string>
+    <string name="editor_other_chords_detected">Znaleziono akordy, ale z innej notacji: %s</string>
+    <string name="editor_onexit_validation_failed">Znaleziono błędy w akordach:
+        \n%s.
+        \nUpewnij się, że wybrałeś odpowiednią notację akordów oraz zweryfikuj poprawność składni.
+        Czy chcesz zignorować te błędy?</string>
 </resources>

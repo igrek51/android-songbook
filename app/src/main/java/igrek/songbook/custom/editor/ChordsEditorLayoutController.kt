@@ -21,6 +21,7 @@ import igrek.songbook.info.errorcheck.SafeClickListener
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
+import igrek.songbook.layout.confirm.ConfirmDialogBuilder
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.settings.chordsnotation.ChordsNotation
@@ -142,17 +143,26 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     private fun validateChords() {
+        val errorMessage = quietValidate()
+        if (errorMessage == null) {
+            uiInfoService.showToast(R.string.chords_are_valid)
+        } else {
+            val placeholder = uiResourceService.resString(R.string.chords_invalid)
+            uiInfoService.showToast(placeholder.format(errorMessage))
+        }
+    }
+
+    private fun quietValidate(): String? {
         val text = contentEdit!!.text.toString()
-        try {
+        return try {
             validateChordsBrackets(text)
             validateChordsNotation(text)
-            uiInfoService.showToast(R.string.chords_are_valid)
+            null
         } catch (e: ChordsValidationError) {
-            val placeholder = uiResourceService.resString(R.string.chords_invalid)
             var errorMessage = e.errorMessage
             if (errorMessage.isNullOrEmpty())
                 errorMessage = uiResourceService.resString(e.messageResId!!)
-            uiInfoService.showToast(placeholder.format(errorMessage))
+            errorMessage
         }
     }
 
@@ -255,9 +265,19 @@ class ChordsEditorLayoutController : MainLayout {
         transformLyrics { lyrics ->
             detector.findChords(lyrics)
         }
-        val detectedChordsNum = detector.detectedChords
+        val detectedChordsNum = detector.detectedChords.size
         if (detectedChordsNum == 0) {
-            uiInfoService.showToast(R.string.no_new_chords_detected)
+            // find chords from other notations as well
+            val text = contentEdit!!.text.toString()
+            val allNotationsDetector = ChordsDetector()
+            allNotationsDetector.findChords(text)
+            val otherChordsDetected = allNotationsDetector.detectedChords
+            if (otherChordsDetected.isNotEmpty()) {
+                val message = uiResourceService.resString(R.string.editor_other_chords_detected, otherChordsDetected.joinToString())
+                uiInfoService.showToast(message)
+            } else {
+                uiInfoService.showToast(R.string.no_new_chords_detected)
+            }
         } else {
             uiInfoService.showToast(uiResourceService.resString(R.string.new_chords_detected, detectedChordsNum.toString()))
         }
@@ -434,6 +454,14 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     override fun onBackClicked() {
+        val err = quietValidate()
+        if (err != null) {
+            val message = uiResourceService.resString(R.string.editor_onexit_validation_failed, err)
+            ConfirmDialogBuilder().confirmAction(message) {
+                returnNewContent()
+            }
+            return
+        }
         returnNewContent()
     }
 

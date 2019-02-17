@@ -235,7 +235,7 @@
     <string name="chords_invalid">Chords invalid: %s</string>
     <string name="chords_invalid_missing_closing_bracket">Missing closing bracket \"]\"</string>
     <string name="chords_invalid_missing_opening_bracket">Missing opening bracket \"[\"</string>
-    <string name="chords_unknown_chord">Unknown chord: %s</string>
+    <string name="chords_unknown_chord">Unknown chord for chosen notation: %s</string>
     <string name="action_confirmation_title">Are you sure?</string>
     <string name="confirm_remove_song">Do you really want to remove this song?</string>
     <string name="confirm_discard_custom_song_changes">Do you want to discard unsaved changes?</string>
@@ -247,4 +247,9 @@
     <string name="transpose_zero" translatable="false">0</string>
     <string name="transpose_plus_1" translatable="false">+1</string>
     <string name="transpose_plus_5" translatable="false">+5</string>
+    <string name="editor_other_chords_detected">There was chords found but from other notation: %s</string>
+    <string name="editor_onexit_validation_failed">There are errors in chords:
+        \n%s.
+        \nMake sure you have chosen right chords notation and verify the chords syntax.
+        Do you want to ignore these errors?</string>
 </resources>
