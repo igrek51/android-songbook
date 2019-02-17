@@ -1,4 +1,4 @@
-package igrek.songbook.custom
+package igrek.songbook.custom.editor
 
 import android.widget.EditText
 

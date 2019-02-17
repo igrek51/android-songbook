@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.contact.ContactLayoutController
-import igrek.songbook.custom.ChordsEditorLayoutController
+import igrek.songbook.custom.editor.ChordsEditorLayoutController
 import igrek.songbook.custom.CustomSongEditLayoutController
 import igrek.songbook.custom.CustomSongsLayoutController
 import igrek.songbook.dagger.DaggerIoc

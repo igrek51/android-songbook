@@ -13,7 +13,7 @@ import igrek.songbook.activity.OptionSelectDispatcher;
 import igrek.songbook.chords.transpose.ChordsTransposerManager;
 import igrek.songbook.contact.ContactLayoutController;
 import igrek.songbook.contact.SendFeedbackService;
-import igrek.songbook.custom.ChordsEditorLayoutController;
+import igrek.songbook.custom.editor.ChordsEditorLayoutController;
 import igrek.songbook.custom.CustomSongEditLayoutController;
 import igrek.songbook.custom.CustomSongService;
 import igrek.songbook.custom.CustomSongsLayoutController;

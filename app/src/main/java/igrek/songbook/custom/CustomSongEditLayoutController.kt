@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import dagger.Lazy
 import igrek.songbook.R
+import igrek.songbook.custom.editor.ChordsEditorLayoutController
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.SafeClickListener

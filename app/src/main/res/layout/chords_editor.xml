@@ -222,7 +222,8 @@
             android:inputType="text|textMultiLine"
             android:minHeight="240dp"
             android:padding="8dp"
-            android:text=""/>
+            android:text=""
+            />
 
     </LinearLayout>
 

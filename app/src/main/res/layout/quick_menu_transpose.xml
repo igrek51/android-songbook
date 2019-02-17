@@ -56,7 +56,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="0dp"
                     android:layout_weight="1"
-                    android:text="-5"
+                    android:text="@string/transpose_minus_5"
                     />
                 <Button
                     android:id="@+id/transposeM1Button"
@@ -64,7 +64,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="0dp"
                     android:layout_weight="1"
-                    android:text="-1"
+                    android:text="@string/transpose_minus_1"
                     />
                 <Button
                     android:id="@+id/transpose0Button"
@@ -72,7 +72,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="0dp"
                     android:layout_weight="1"
-                    android:text="0"
+                    android:text="@string/transpose_zero"
                     />
                 <Button
                     android:id="@+id/transposeP1Button"
@@ -80,7 +80,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="0dp"
                     android:layout_weight="1"
-                    android:text="+1"
+                    android:text="@string/transpose_plus_1"
                     />
                 <Button
                     android:id="@+id/transposeP5Button"
@@ -88,7 +88,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="0dp"
                     android:layout_weight="1"
-                    android:text="+5"
+                    android:text="@string/transpose_plus_5"
                     />
 
             </LinearLayout>

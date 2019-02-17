@@ -1,4 +1,4 @@
-package igrek.songbook.custom
+package igrek.songbook.custom.editor
 
 import android.support.annotation.IdRes
 import android.support.v7.app.AppCompatActivity
@@ -13,6 +13,7 @@ import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.chords.ChordsConverter
 import igrek.songbook.chords.detector.ChordsDetector
+import igrek.songbook.custom.CustomSongEditLayoutController
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService

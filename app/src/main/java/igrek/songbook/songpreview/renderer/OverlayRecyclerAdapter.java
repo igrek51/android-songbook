@@ -8,7 +8,6 @@ import android.view.WindowManager;
 public class OverlayRecyclerAdapter extends RecyclerView.Adapter<OverlayRecyclerAdapter.OverlayViewHolder> {
 	
 	private SongPreview songPreview;
-	private View overlayView;
 	
 	public OverlayRecyclerAdapter(SongPreview songPreview) {
 		this.songPreview = songPreview;
@@ -20,7 +19,7 @@ public class OverlayRecyclerAdapter extends RecyclerView.Adapter<OverlayRecycler
 		// The only workaround seems to be make the almost indefinite views and put the scroll somewhere in the middle
 		int height = Integer.MAX_VALUE / getItemCount();
 		
-		overlayView = new View(parent.getContext());
+		View overlayView = new View(parent.getContext());
 		overlayView.setLayoutParams(new ViewGroup.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT, height));
 		overlayView.setMinimumHeight(height);
 		overlayView.setOnClickListener((v) -> songPreview.onClick());
