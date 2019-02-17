@@ -30,69 +30,67 @@ import kotlin.math.roundToInt
 class SettingsFragment : PreferenceFragmentCompat() {
 
     @Inject
-    lateinit var layoutController: LayoutController
+    lateinit var layoutController: dagger.Lazy<LayoutController>
     @Inject
-    lateinit var uiInfoService: UiInfoService
+    lateinit var uiInfoService: dagger.Lazy<UiInfoService>
     @Inject
-    lateinit var uiResourceService: UiResourceService
+    lateinit var uiResourceService: dagger.Lazy<UiResourceService>
     @Inject
-    lateinit var activity: AppCompatActivity
+    lateinit var activity: dagger.Lazy<AppCompatActivity>
     @Inject
-    lateinit var lyricsThemeService: LyricsThemeService
+    lateinit var lyricsThemeService: dagger.Lazy<LyricsThemeService>
     @Inject
-    lateinit var appLanguageService: AppLanguageService
+    lateinit var appLanguageService: dagger.Lazy<AppLanguageService>
     @Inject
-    lateinit var chordsNotationService: ChordsNotationService
+    lateinit var chordsNotationService: dagger.Lazy<ChordsNotationService>
     @Inject
-    lateinit var preferencesUpdater: PreferencesUpdater
+    lateinit var preferencesUpdater: dagger.Lazy<PreferencesUpdater>
 
-    private var decimalFormat3: DecimalFormat
-    private var decimalFormat1: DecimalFormat
+    private var decimalFormat1: DecimalFormat = DecimalFormat("#.#")
+    private var decimalFormat3: DecimalFormat = DecimalFormat("#.###")
 
     companion object {
         const val SEEKBAR_RESOLUTION = 10000
     }
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
-        decimalFormat3 = DecimalFormat("#.###")
-        decimalFormat3.roundingMode = RoundingMode.HALF_UP
-        decimalFormat1 = DecimalFormat("#.#")
         decimalFormat1.roundingMode = RoundingMode.HALF_UP
+        decimalFormat3.roundingMode = RoundingMode.HALF_UP
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        DaggerIoc.getFactoryComponent().inject(this)
         setPreferencesFromResource(R.xml.settings_def, rootKey)
 
         setupListPreference("applicationLanguage",
-                appLanguageService.languageEntries(),
-                onLoad = { preferencesUpdater.appLanguage?.langCode },
+                appLanguageService.get().languageEntries(),
+                onLoad = { preferencesUpdater.get().appLanguage?.langCode },
                 onSave = { id: String ->
-                    preferencesUpdater.appLanguage = AppLanguage.parseByLangCode(id)
+                    preferencesUpdater.get().appLanguage = AppLanguage.parseByLangCode(id)
                 }
         )
 
         setupListPreference("chordsNotation",
-                chordsNotationService.chordsNotationEntries(),
-                onLoad = { preferencesUpdater.chordsNotation?.id.toString() },
+                chordsNotationService.get().chordsNotationEntries(),
+                onLoad = { preferencesUpdater.get().chordsNotation?.id.toString() },
                 onSave = { id: String ->
-                    preferencesUpdater.chordsNotation = ChordsNotation.parseById(id.toLong())
+                    preferencesUpdater.get().chordsNotation = ChordsNotation.parseById(id.toLong())
                 }
         )
 
         setupListPreference("fontTypeface",
-                lyricsThemeService.fontTypefaceEntries(),
-                onLoad = { preferencesUpdater.fontTypeface?.id.toString() },
+                lyricsThemeService.get().fontTypefaceEntries(),
+                onLoad = { preferencesUpdater.get().fontTypeface?.id.toString() },
                 onSave = { id: String ->
-                    preferencesUpdater.fontTypeface = FontTypeface.parseById(id)
+                    preferencesUpdater.get().fontTypeface = FontTypeface.parseById(id)
                 }
         )
 
         setupListPreference("colorScheme",
-                lyricsThemeService.colorSchemeEntries(),
-                onLoad = { preferencesUpdater.colorScheme?.id.toString() },
+                lyricsThemeService.get().colorSchemeEntries(),
+                onLoad = { preferencesUpdater.get().colorScheme?.id.toString() },
                 onSave = { id: String ->
-                    preferencesUpdater.colorScheme = ColorScheme.parseById(id.toLong())
+                    preferencesUpdater.get().colorScheme = ColorScheme.parseById(id.toLong())
                 }
         )
 
@@ -117,53 +115,53 @@ class SettingsFragment : PreferenceFragmentCompat() {
 //        )
 
         setupSeekBarPreference("autoscrollInitialPause", min = 0, max = 90000,
-                onLoad = { preferencesUpdater.autoscrollInitialPause.toFloat() },
+                onLoad = { preferencesUpdater.get().autoscrollInitialPause.toFloat() },
                 onSave = { value: Float ->
-                    preferencesUpdater.autoscrollInitialPause = value.toLong()
+                    preferencesUpdater.get().autoscrollInitialPause = value.toLong()
                 },
                 stringConverter = { value: Float ->
-                    uiResourceService.resString(R.string.settings_scroll_initial_pause_value, msToS(value).toString())
+                    uiResourceService.get().resString(R.string.settings_scroll_initial_pause_value, msToS(value).toString())
                 }
         )
 
         setupSeekBarPreference("autoscrollSpeed", min = AutoscrollService.MIN_SPEED, max = AutoscrollService.MAX_SPEED,
-                onLoad = { preferencesUpdater.autoscrollSpeed },
+                onLoad = { preferencesUpdater.get().autoscrollSpeed },
                 onSave = { value: Float ->
-                    preferencesUpdater.autoscrollSpeed = value
+                    preferencesUpdater.get().autoscrollSpeed = value
                 },
                 stringConverter = { value: Float ->
-                    uiResourceService.resString(R.string.settings_autoscroll_speed_value, decimal3(value))
+                    uiResourceService.get().resString(R.string.settings_autoscroll_speed_value, decimal3(value))
                 }
         )
 
         setupSeekBarPreference("fontSize", min = 5, max = 100,
-                onLoad = { preferencesUpdater.fontsize },
+                onLoad = { preferencesUpdater.get().fontsize },
                 onSave = { value: Float ->
-                    preferencesUpdater.fontsize = value
+                    preferencesUpdater.get().fontsize = value
                 },
                 stringConverter = { value: Float ->
-                    uiResourceService.resString(R.string.settings_font_size_value, decimal1(value))
+                    uiResourceService.get().resString(R.string.settings_font_size_value, decimal1(value))
                 }
         )
 
         setupSwitchPreference("autoscrollSpeedAutoAdjustment",
-                onLoad = { preferencesUpdater.autoscrollSpeedAutoAdjustment },
+                onLoad = { preferencesUpdater.get().autoscrollSpeedAutoAdjustment },
                 onSave = { value: Boolean ->
-                    preferencesUpdater.autoscrollSpeedAutoAdjustment = value
+                    preferencesUpdater.get().autoscrollSpeedAutoAdjustment = value
                 }
         )
 
         setupSwitchPreference("autoscrollSpeedVolumeKeys",
-                onLoad = { preferencesUpdater.autoscrollSpeedVolumeKeys },
+                onLoad = { preferencesUpdater.get().autoscrollSpeedVolumeKeys },
                 onSave = { value: Boolean ->
-                    preferencesUpdater.autoscrollSpeedVolumeKeys = value
+                    preferencesUpdater.get().autoscrollSpeedVolumeKeys = value
                 }
         )
 
         setupSwitchPreference("randomFavouriteSongsOnly",
-                onLoad = { preferencesUpdater.randomFavouriteSongsOnly },
+                onLoad = { preferencesUpdater.get().randomFavouriteSongsOnly },
                 onSave = { value: Boolean ->
-                    preferencesUpdater.randomFavouriteSongsOnly = value
+                    preferencesUpdater.get().randomFavouriteSongsOnly = value
                 }
         )
 

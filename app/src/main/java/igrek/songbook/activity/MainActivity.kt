@@ -35,10 +35,10 @@ class MainActivity : AppCompatActivity() {
     private val logger: Logger = LoggerFactory.logger
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         try {
             // Dagger Container init
             DaggerIoc.init(this)
+            super.onCreate(savedInstanceState)
             DaggerIoc.getFactoryComponent().inject(this)
             appInitializer.get().init()
         } catch (t: Throwable) {
