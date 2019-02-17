@@ -1,4 +1,4 @@
-package igrek.songbook.songselection.songsearch
+package igrek.songbook.songselection.search
 
 import android.os.Handler
 import android.text.Editable
@@ -14,11 +14,9 @@ import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.persistence.songsdb.SongsDb
 import igrek.songbook.songselection.ListScrollPosition
-import igrek.songbook.songselection.SongSearchItem
 import igrek.songbook.songselection.SongSelectionLayoutController
-import igrek.songbook.songselection.SongTreeItem
-import igrek.songbook.songselection.songtree.SongTreeFilter
-import igrek.songbook.songselection.songtree.SongTreeLayoutController
+import igrek.songbook.songselection.tree.SongTreeItem
+import igrek.songbook.songselection.tree.SongTreeLayoutController
 import igrek.songbook.system.SoftKeyboardService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject

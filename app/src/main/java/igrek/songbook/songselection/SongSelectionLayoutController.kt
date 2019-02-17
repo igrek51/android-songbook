@@ -17,7 +17,8 @@ import igrek.songbook.persistence.SongsRepository
 import igrek.songbook.persistence.songsdb.SongsDb
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
-import igrek.songbook.songselection.songtree.SongTreeSorter
+import igrek.songbook.songselection.tree.SongTreeItem
+import igrek.songbook.songselection.tree.SongTreeSorter
 import javax.inject.Inject
 
 abstract class SongSelectionLayoutController : SongClickListener {

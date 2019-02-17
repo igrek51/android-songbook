@@ -1,4 +1,4 @@
-package igrek.songbook.songselection;
+package igrek.songbook.songselection.tree;
 
 import igrek.songbook.persistence.songsdb.Song;
 import igrek.songbook.persistence.songsdb.SongCategory;

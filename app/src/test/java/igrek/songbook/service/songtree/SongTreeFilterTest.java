@@ -4,8 +4,8 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import igrek.songbook.persistence.songsdb.SongCategoryType;
-import igrek.songbook.songselection.SongTreeItem;
-import igrek.songbook.songselection.songtree.SongTreeFilter;
+import igrek.songbook.songselection.search.SongTreeFilter;
+import igrek.songbook.songselection.tree.SongTreeItem;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -38,6 +38,19 @@ public class SongTreeFilterTest {
 		assertThat(new SongTreeFilter("zolc").songMatchesNameFilter(songItem)).isTrue();
 		assertThat(new SongTreeFilter("azszecol aazszec lodz zolc").songMatchesNameFilter(songItem))
 				.isTrue();
+		
+	}
+	
+	@Test
+	public void test_filteringWithQuotes() {
+		
+		SongTreeItem songItem = mock(SongTreeItem.class, Mockito.RETURNS_DEEP_STUBS);
+		
+		when(songItem.getSong().getCategory().getType()).thenReturn(SongCategoryType.ARTIST);
+		when(songItem.getSong().getCategory().getName()).thenReturn("Budka suflera");
+		when(songItem.getSong().getTitle()).thenReturn("he's dupa");
+		
+		assertThat(new SongTreeFilter("d'upa hes").songMatchesNameFilter(songItem)).isTrue();
 		
 	}
 }

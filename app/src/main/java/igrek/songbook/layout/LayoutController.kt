@@ -14,8 +14,8 @@ import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.favourite.FavouritesLayoutController
-import igrek.songbook.songselection.songsearch.SongSearchLayoutController
-import igrek.songbook.songselection.songtree.SongTreeLayoutController
+import igrek.songbook.songselection.search.SongSearchLayoutController
+import igrek.songbook.songselection.tree.SongTreeLayoutController
 import javax.inject.Inject
 
 class LayoutController {

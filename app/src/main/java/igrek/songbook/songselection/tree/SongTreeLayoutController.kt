@@ -1,4 +1,4 @@
-package igrek.songbook.songselection.songtree
+package igrek.songbook.songselection.tree
 
 import android.view.View
 import android.widget.ImageButton
@@ -11,7 +11,6 @@ import igrek.songbook.layout.MainLayout
 import igrek.songbook.persistence.songsdb.SongCategory
 import igrek.songbook.persistence.songsdb.SongsDb
 import igrek.songbook.songselection.SongSelectionLayoutController
-import igrek.songbook.songselection.SongTreeItem
 import javax.inject.Inject
 
 open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {

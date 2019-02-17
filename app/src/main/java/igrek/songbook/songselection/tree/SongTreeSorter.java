@@ -1,4 +1,4 @@
-package igrek.songbook.songselection.songtree;
+package igrek.songbook.songselection.tree;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Locale;
 
 import igrek.songbook.persistence.songsdb.SongCategoryType;
-import igrek.songbook.songselection.SongTreeItem;
 
 public class SongTreeSorter {
 	

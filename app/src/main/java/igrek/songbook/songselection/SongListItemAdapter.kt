@@ -10,6 +10,8 @@ import android.widget.TextView
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
+import igrek.songbook.songselection.search.SongSearchItem
+import igrek.songbook.songselection.tree.SongTreeItem
 import java.util.*
 import javax.inject.Inject
 

@@ -9,9 +9,9 @@ import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.persistence.songsdb.SongsDb
 import igrek.songbook.songselection.ListScrollPosition
-import igrek.songbook.songselection.SongSearchItem
 import igrek.songbook.songselection.SongSelectionLayoutController
-import igrek.songbook.songselection.SongTreeItem
+import igrek.songbook.songselection.search.SongSearchItem
+import igrek.songbook.songselection.tree.SongTreeItem
 import javax.inject.Inject
 
 class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {

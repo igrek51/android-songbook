@@ -10,16 +10,14 @@ import igrek.songbook.persistence.songsdb.Song;
 import igrek.songbook.persistence.songsdb.SongCategory;
 import igrek.songbook.persistence.songsdb.SongCategoryType;
 import igrek.songbook.persistence.songsdb.SongStatus;
-import igrek.songbook.songselection.SongTreeItem;
-import igrek.songbook.songselection.songtree.SongTreeSorter;
+import igrek.songbook.songselection.tree.SongTreeItem;
+import igrek.songbook.songselection.tree.SongTreeSorter;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 public class SongTreeSorterTest {
 	
 	private SongTreeSorter sorter = new SongTreeSorter();
-	private List<SongTreeItem> in;
-	private List<SongTreeItem> out;
 	
 	@Test
 	public void test_songTreeItemSorter() {

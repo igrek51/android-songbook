@@ -1,4 +1,4 @@
-package igrek.songbook.songselection.songtree;
+package igrek.songbook.songselection.tree;
 
 import java.util.HashMap;
 
