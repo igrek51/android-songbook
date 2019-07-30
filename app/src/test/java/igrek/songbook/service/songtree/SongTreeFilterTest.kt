@@ -39,7 +39,6 @@ class SongTreeFilterTest {
         assertThat(SongTreeFilter("zolc").songMatchesNameFilter(songItem)).isTrue()
         assertThat(SongTreeFilter("azszecol aazszec lodz zolc").songMatchesNameFilter(songItem))
                 .isTrue()
-
     }
 
     @Test
@@ -52,6 +51,5 @@ class SongTreeFilterTest {
         `when`(songItem.song!!.title).thenReturn("he's dupa")
 
         assertThat(SongTreeFilter("d'upa hes").songMatchesNameFilter(songItem)).isTrue()
-
     }
 }
