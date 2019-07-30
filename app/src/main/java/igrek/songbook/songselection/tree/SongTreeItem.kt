@@ -3,7 +3,7 @@ package igrek.songbook.songselection.tree
 import igrek.songbook.persistence.songsdb.Song
 import igrek.songbook.persistence.songsdb.SongCategory
 
-open class SongTreeItem protected constructor(val song: Song?, val category: SongCategory?) {
+open class SongTreeItem protected constructor(open val song: Song?, val category: SongCategory?) {
 
     val simpleName: String?
         get() = if (isCategory) {

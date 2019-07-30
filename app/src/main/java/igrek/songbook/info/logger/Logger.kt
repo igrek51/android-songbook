@@ -16,7 +16,7 @@ open class Logger internal constructor() {
         printExceptionStackTrace(ex)
     }
 
-    fun fatal(activity: Activity?, ex: Throwable) {
+    open fun fatal(activity: Activity?, ex: Throwable) {
         var exTitle = ex.javaClass.name
         if (!ex.message.isNullOrEmpty()) {
             exTitle = """$exTitle - ${ex.message}"""

@@ -83,7 +83,7 @@ class SongListItemAdapter internal constructor(context: Context, _dataSource: Li
         itemSongTitleLabel.text = item.song!!.title
 
         val itemSongEditButton = itemView.findViewById<ImageButton>(R.id.itemSongMoreButton)
-        itemSongEditButton.setOnClickListener { songContextMenuBuilder.showSongActions(item.song) }
+        itemSongEditButton.setOnClickListener { songContextMenuBuilder.showSongActions(item.song!!) }
         return itemView
     }
 
@@ -94,7 +94,7 @@ class SongListItemAdapter internal constructor(context: Context, _dataSource: Li
         itemSongTitleLabel.text = item.song!!.displayName()
 
         val itemSongEditButton = itemView.findViewById<ImageButton>(R.id.itemSongMoreButton)
-        itemSongEditButton.setOnClickListener { songContextMenuBuilder.showSongActions(item.song) }
+        itemSongEditButton.setOnClickListener { songContextMenuBuilder.showSongActions(item.song!!) }
         return itemView
     }
 }

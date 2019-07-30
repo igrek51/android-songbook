@@ -1,7 +1,8 @@
 package igrek.songbook.chords
 
+import assertk.assertThat
+import assertk.assertions.isEqualTo
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.Test
 
 class ChordsConverterTest {
