@@ -24,7 +24,7 @@ class UiInfoService {
     private val infobars = HashMap<View?, Snackbar>()
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     /**

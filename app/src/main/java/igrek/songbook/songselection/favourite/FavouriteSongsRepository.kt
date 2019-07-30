@@ -27,7 +27,7 @@ class FavouriteSongsRepository {
             }
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     fun isSongFavourite(song: Song): Boolean {

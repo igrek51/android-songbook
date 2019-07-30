@@ -13,7 +13,7 @@ import igrek.songbook.settings.chordsnotation.ChordsNotation
 class SongsDao : AbstractSqliteDao() {
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     /*

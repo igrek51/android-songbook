@@ -27,7 +27,7 @@ class AppLanguageService {
     private val logger = LoggerFactory.logger
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
         loadPreferences()
     }
 

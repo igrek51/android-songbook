@@ -67,7 +67,7 @@ class AutoscrollService {
         get() = songPreviewController.get().songPreview
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
         loadPreferences()
         reset()
 

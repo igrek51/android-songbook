@@ -16,24 +16,26 @@ open class Logger internal constructor() {
         printExceptionStackTrace(ex)
     }
 
-    open fun fatal(activity: Activity?, e: String?) {
-        log(e, LogLevel.FATAL, "[FATAL] ")
+    fun fatal(activity: Activity?, ex: Throwable) {
+        var exTitle = ex.javaClass.name
+        if (!ex.message.isNullOrEmpty()) {
+            exTitle = """$exTitle - ${ex.message}"""
+        }
+        printExceptionStackTrace(ex)
+        log(exTitle, LogLevel.FATAL, "[FATAL] ")
         if (activity == null) {
             error("FATAL ERROR: No activity")
             return
         }
         val dlgAlert = AlertDialog.Builder(activity)
-        dlgAlert.setMessage(e)
+        dlgAlert.setMessage(exTitle)
         dlgAlert.setTitle("Critical error :(")
-        dlgAlert.setPositiveButton("Close app") { _, _ -> activity.finish() }
+        dlgAlert.setPositiveButton("Close app") { _, _ ->
+            activity.finish()
+            throw RuntimeException(ex) // rethrow error to be reported
+        }
         dlgAlert.setCancelable(false)
         dlgAlert.create().show()
-    }
-
-    fun fatal(activity: Activity, ex: Throwable) {
-        val e = ex.javaClass.name + " - " + ex.message
-        printExceptionStackTrace(ex)
-        fatal(activity, e)
     }
 
     fun warn(message: String?) {

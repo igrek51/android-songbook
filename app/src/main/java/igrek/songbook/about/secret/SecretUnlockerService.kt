@@ -85,7 +85,7 @@ class SecretUnlockerService {
     }
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     fun showUnlockAlert() {

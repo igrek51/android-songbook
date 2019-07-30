@@ -28,7 +28,7 @@ class SongListItemAdapter internal constructor(context: Context, _dataSource: Li
         if (dataSource == null)
             dataSource = ArrayList()
         this.dataSource = dataSource
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
         inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     }
 
@@ -60,7 +60,7 @@ class SongListItemAdapter internal constructor(context: Context, _dataSource: Li
         return if (item.isCategory) {
             createTreeCategoryView(item, parent)
         } else {
-            if (item.song.custom) {
+            if (item.song!!.custom) {
                 createTitleArtistSongView(item, parent)
             } else {
                 createTreeSongView(item, parent)
@@ -80,7 +80,7 @@ class SongListItemAdapter internal constructor(context: Context, _dataSource: Li
         val itemView = inflater.inflate(R.layout.song_tree_song, parent, false)
         val itemSongTitleLabel = itemView.findViewById<TextView>(R.id.itemSongTitleLabel)
         // set item title
-        itemSongTitleLabel.text = item.song.title
+        itemSongTitleLabel.text = item.song!!.title
 
         val itemSongEditButton = itemView.findViewById<ImageButton>(R.id.itemSongMoreButton)
         itemSongEditButton.setOnClickListener { songContextMenuBuilder.showSongActions(item.song) }
@@ -91,7 +91,7 @@ class SongListItemAdapter internal constructor(context: Context, _dataSource: Li
         val itemView = inflater.inflate(R.layout.song_tree_song, parent, false)
         val itemSongTitleLabel = itemView.findViewById<TextView>(R.id.itemSongTitleLabel)
 
-        itemSongTitleLabel.text = item.song.displayName()
+        itemSongTitleLabel.text = item.song!!.displayName()
 
         val itemSongEditButton = itemView.findViewById<ImageButton>(R.id.itemSongMoreButton)
         itemSongEditButton.setOnClickListener { songContextMenuBuilder.showSongActions(item.song) }

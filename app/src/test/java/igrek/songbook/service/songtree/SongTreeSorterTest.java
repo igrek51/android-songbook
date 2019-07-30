@@ -61,7 +61,7 @@ public class SongTreeSorterTest {
 	private SongTreeItem songItem(String title, SongCategoryType categoryType, String categoryName, boolean custom) {
 		SongCategory category = new SongCategory(categoryType.getId(), categoryType, categoryName, false, categoryName, new ArrayList<>());
 		Song song = new Song(1, title, category, null, 1, 0, 0, custom, title, null, null, false, null, null, SongStatus.PUBLISHED, null, null, null, null, null, null, null, null);
-		return SongTreeItem.song(song);
+		return SongTreeItem.Companion.song(song);
 	}
 	
 	private SongTreeItem categoryItem(String artist) {
@@ -70,7 +70,7 @@ public class SongTreeSorterTest {
 	
 	private SongTreeItem categoryItem(SongCategoryType categoryType, String categoryName) {
 		SongCategory category = new SongCategory(categoryType.getId(), categoryType, categoryName, false, categoryName, new ArrayList<>());
-		return SongTreeItem.category(category);
+		return SongTreeItem.Companion.category(category);
 	}
 	
 	private void assertSortedOrdering(List<SongTreeItem> in, List<SongTreeItem> outExpected) {

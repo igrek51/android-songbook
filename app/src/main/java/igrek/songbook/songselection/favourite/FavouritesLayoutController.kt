@@ -23,7 +23,7 @@ class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
     private var emptyListLabel: TextView? = null
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     override fun showLayout(layout: View) {
@@ -35,7 +35,7 @@ class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
         updateSongItemsList()
 
         songsRepository.dbChangeSubject.subscribe {
-            if (layoutController.isState(layoutState))
+            if (layoutController.isState(getLayoutState()))
                 updateSongItemsList()
         }
     }

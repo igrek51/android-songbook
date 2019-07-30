@@ -5,17 +5,19 @@ import android.view.MotionEvent
 import android.view.View
 import dagger.Lazy
 import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.settings.theme.ColorScheme
+import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.lyrics.LyricsModel
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.canvas.BaseCanvasView
-import igrek.songbook.settings.theme.ColorScheme
-import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.system.WindowManagerService
 import igrek.songbook.system.cache.SimpleCache
 import javax.inject.Inject
+import kotlin.math.abs
+import kotlin.math.hypot
 
 class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListener {
 
@@ -77,9 +79,9 @@ class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListe
             if (lyricsModel == null)
                 return 0f
             val lines = lyricsModel!!.lines
-            if (lines == null || lines.isEmpty())
+            if (lines.isEmpty())
                 return 0f
-            val lastLine = lines[lines.size - 1] ?: return 0f
+            val lastLine = lines.last()
             val lineheight = lineheightPx
             return lastLine.y * lineheight + lineheight
         }
@@ -88,7 +90,7 @@ class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListe
         get() = scrollWidthCache.get()
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     override fun reset() {
@@ -155,7 +157,7 @@ class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListe
         if (event.pointerCount >= 2) {
             // pinch to font scaling
             if (pointersDst0 != null) {
-                val pointersDst1 = Math.hypot((event.getX(1) - event.getX(0)).toDouble(), (event.getY(1) - event
+                val pointersDst1 = hypot((event.getX(1) - event.getX(0)).toDouble(), (event.getY(1) - event
                         .getY(0)).toDouble()).toFloat()
                 val scale = (pointersDst1 / pointersDst0!! - 1) * FONTSIZE_SCALE_FACTOR + 1
                 val fontsize1 = fontsize0!! * scale
@@ -166,7 +168,7 @@ class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListe
     }
 
     private fun onTouchPointerDown(event: MotionEvent) {
-        pointersDst0 = Math.hypot((event.getX(1) - event.getX(0)).toDouble(), (event.getY(1) - event.getY(0)).toDouble()).toFloat()
+        pointersDst0 = hypot((event.getX(1) - event.getX(0)).toDouble(), (event.getY(1) - event.getY(0)).toDouble()).toFloat()
         fontsize0 = fontsizeTmp
         startScroll = scroll
     }
@@ -273,7 +275,7 @@ class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListe
         // lines scrolled
         val linePartScrolled = dy.toFloat() / lineheightPx
         // monitor scroll changes\
-        if (Math.abs(linePartScrolled) > 0.01f) {
+        if (abs(linePartScrolled) > 0.01f) {
             autoscroll.get().canvasScrollSubject.onNext(linePartScrolled)
         }
     }

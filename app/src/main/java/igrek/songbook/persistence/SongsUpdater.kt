@@ -32,7 +32,7 @@ class SongsUpdater {
     }
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     fun updateSongsDb(songsDbFile: File) {

@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             // Dagger Container init
             DaggerIoc.init(this)
             super.onCreate(savedInstanceState)
-            DaggerIoc.getFactoryComponent().inject(this)
+            DaggerIoc.factoryComponent.inject(this)
             appInitializer.get().init()
         } catch (t: Throwable) {
             logger.fatal(this, t)

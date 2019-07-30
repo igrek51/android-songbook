@@ -53,10 +53,10 @@ class SongsRepository {
         }
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
         try {
-            databaseMigrator.get().verifyLocalDbVersion(this, localDbService.get())
-            databaseMigrator.get().verifySongsDbVersion(this, localDbService.get())
+            databaseMigrator.get().verifyLocalDbVersion(this)
+            databaseMigrator.get().verifySongsDbVersion(localDbService.get())
             initializeSongsDb()
         } catch (t: Throwable) {
             factoryReset()

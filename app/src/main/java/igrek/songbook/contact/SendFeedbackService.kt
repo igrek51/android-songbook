@@ -43,7 +43,7 @@ class SendFeedbackService {
     }
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     fun sendFeedback(message: String, author: String, subject: String) {

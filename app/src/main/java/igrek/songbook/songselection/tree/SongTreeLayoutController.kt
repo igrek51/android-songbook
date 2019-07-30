@@ -18,13 +18,13 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
     @Inject
     lateinit var scrollPosBuffer: Lazy<ScrollPosBuffer>
 
-    private var currentCategory: SongCategory? = null
+    var currentCategory: SongCategory? = null
     private var toolbarTitle: TextView? = null
     private var goBackButton: ImageButton? = null
     private var searchSongButton: ImageButton? = null
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     override fun showLayout(layout: View) {
@@ -42,7 +42,7 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
         updateSongItemsList()
 
         songsRepository.dbChangeSubject.subscribe {
-            if (layoutController.isState(layoutState))
+            if (layoutController.isState(getLayoutState()))
                 updateSongItemsList()
         }
     }
@@ -131,17 +131,13 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
         storeScrollPosition()
         if (item.isCategory) {
             // go to category
-            setCurrentCategory(item.category)
+            currentCategory = item.category
             updateSongItemsList()
             // scroll to beginning
             itemsListView?.scrollToBeginning()
         } else {
             openSongPreview(item)
         }
-    }
-
-    fun setCurrentCategory(category: SongCategory) {
-        currentCategory = category
     }
 
     override fun onLayoutExit() {}

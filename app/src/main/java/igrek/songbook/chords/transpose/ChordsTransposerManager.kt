@@ -36,7 +36,7 @@ class ChordsTransposerManager {
         get() = (if (transposedBy > 0) "+" else "") + transposedBy + " " + getSemitonesDisplayName(transposedBy)
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     fun reset() {

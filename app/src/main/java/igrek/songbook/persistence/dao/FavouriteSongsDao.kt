@@ -11,7 +11,7 @@ import igrek.songbook.songselection.favourite.FavouriteSongId
 class FavouriteSongsDao : AbstractSqliteDao() {
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     override fun getDatabase(): SQLiteDatabase {

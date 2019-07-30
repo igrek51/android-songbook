@@ -24,7 +24,7 @@ class CustomSongService {
     lateinit var customSongEditLayoutController: Lazy<CustomSongEditLayoutController>
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     fun showAddSongScreen() {

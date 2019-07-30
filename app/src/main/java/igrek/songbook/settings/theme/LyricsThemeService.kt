@@ -27,7 +27,7 @@ class LyricsThemeService {
     var colorScheme: ColorScheme? = null
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
         loadPreferences()
     }
 

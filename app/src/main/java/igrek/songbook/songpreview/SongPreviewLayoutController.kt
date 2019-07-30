@@ -69,7 +69,7 @@ class SongPreviewLayoutController : MainLayout {
 
     var songPreview: SongPreview? = null
         private set
-    private var currentSong: Song? = null
+    var currentSong: Song? = null
     private var overlayAdapter: OverlayRecyclerAdapter? = null
     private var overlayRecyclerView: RecyclerView? = null
     private var songTitleLabel: TextView? = null
@@ -84,7 +84,7 @@ class SongPreviewLayoutController : MainLayout {
         get() = quickMenuTranspose.get().isVisible || quickMenuAutoscroll.get().isVisible
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
 
         autoscrollService.get().scrollStateSubject
                 .debounce(100, TimeUnit.MILLISECONDS)
@@ -137,7 +137,7 @@ class SongPreviewLayoutController : MainLayout {
         overlayRecyclerView = activity.findViewById(R.id.overlayRecyclerView)
         overlayRecyclerView!!.setHasFixedSize(true) // improve performance
         overlayRecyclerView!!.layoutManager = LinearLayoutManager(activity)
-        overlayAdapter = OverlayRecyclerAdapter(songPreview)
+        overlayAdapter = OverlayRecyclerAdapter(songPreview!!)
         overlayRecyclerView!!.adapter = overlayAdapter
         overlayRecyclerView!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {}
@@ -192,7 +192,7 @@ class SongPreviewLayoutController : MainLayout {
         return R.layout.song_preview
     }
 
-    fun onGraphicsInitializedEvent(w: Int, h: Int, paint: Paint) {
+    fun onGraphicsInitializedEvent(w: Int, h: Int, paint: Paint?) {
         // load file and parse it
         val fileContent = currentSong!!.content!!
         // initialize - first file loading
@@ -233,10 +233,6 @@ class SongPreviewLayoutController : MainLayout {
         // parse without reading a whole file again
         lyricsManager.get().reparse()
         onLyricsModelUpdated()
-    }
-
-    fun setCurrentSong(currentSong: Song) {
-        this.currentSong = currentSong
     }
 
     private fun toggleTransposePanel() {

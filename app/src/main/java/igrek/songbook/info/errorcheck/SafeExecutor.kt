@@ -21,7 +21,7 @@ class SafeExecutor {
             action.invoke()
         } catch (t: Throwable) {
             LoggerFactory.logger.error(t)
-            DaggerIoc.getFactoryComponent().inject(this)
+            DaggerIoc.factoryComponent.inject(this)
             uiInfoService.get().showInfo(uiResourceService.get().resString(R.string.error_occurred, t.message))
         }
     }

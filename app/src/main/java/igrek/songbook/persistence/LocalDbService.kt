@@ -49,7 +49,7 @@ class LocalDbService {
         get() = File(songDbDir, "local.sqlite")
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     fun openSongsDb(): SQLiteDatabase {

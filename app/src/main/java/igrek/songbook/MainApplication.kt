@@ -12,7 +12,7 @@ class MainApplication : Application() {
     private val currentActivityListener = CurrentActivityListener()
 
     private val currentActivity: Activity
-        get() = currentActivityListener.currentActivity
+        get() = currentActivityListener.currentActivity!!
 
     override fun onCreate() {
         super.onCreate()
@@ -23,7 +23,7 @@ class MainApplication : Application() {
         val defaultUEH = Thread.getDefaultUncaughtExceptionHandler()
         Thread.setDefaultUncaughtExceptionHandler { thread, th ->
             logger.fatal(currentActivity, th)
-            //pass further to OS
+            // pass further to OS
             defaultUEH.uncaughtException(thread, th)
         }
     }

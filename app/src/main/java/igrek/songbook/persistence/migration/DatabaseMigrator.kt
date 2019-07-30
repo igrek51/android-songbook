@@ -20,14 +20,14 @@ class DatabaseMigrator {
     private val latestSongsDbFromResources = 37
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     private fun customDbVersion(): Long? {
         return songsRepository!!.customSongsDao.get().readDbVersionNumber()
     }
 
-    fun verifyLocalDbVersion(songsRepository: SongsRepository, localDbService: LocalDbService) {
+    fun verifyLocalDbVersion(songsRepository: SongsRepository) {
         this.songsRepository = songsRepository
         try {
             // check database version
@@ -60,7 +60,7 @@ class DatabaseMigrator {
         }
     }
 
-    fun verifySongsDbVersion(songsRepository: SongsRepository, localDbService: LocalDbService) {
+    fun verifySongsDbVersion(localDbService: LocalDbService) {
         try {
             val songsVersion = customDbVersion()
             if (songsVersion == null || songsVersion < latestSongsDbFromResources) {

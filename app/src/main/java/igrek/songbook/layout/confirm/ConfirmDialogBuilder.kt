@@ -16,7 +16,7 @@ class ConfirmDialogBuilder {
     lateinit var uiResourceService: UiResourceService
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     fun confirmAction(message: String, action: () -> Unit) {

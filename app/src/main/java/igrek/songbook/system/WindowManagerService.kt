@@ -18,7 +18,7 @@ class WindowManagerService {
         }
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     fun keepScreenOn(set: Boolean) {

@@ -29,7 +29,7 @@ class SongDetailsService {
     private val modificationDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     fun showSongDetails(song: Song) {

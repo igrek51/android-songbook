@@ -10,7 +10,7 @@ class OptionSelectDispatcher {
     private val optionActions = SparseArray<() -> Unit>()
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     fun optionsSelect(id: Int): Boolean {

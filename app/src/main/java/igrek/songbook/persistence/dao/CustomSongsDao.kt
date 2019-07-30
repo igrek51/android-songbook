@@ -15,7 +15,7 @@ import java.util.*
 class CustomSongsDao : AbstractSqliteDao() {
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     override fun getDatabase(): SQLiteDatabase {

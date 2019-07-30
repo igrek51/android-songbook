@@ -7,10 +7,10 @@ import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.language.SongLanguage
-import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.FontTypeface
 import igrek.songbook.settings.theme.LyricsThemeService
+import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songselection.random.RandomSongOpener
 import javax.inject.Inject
 
@@ -97,7 +97,7 @@ class PreferencesUpdater {
         }
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     fun updateAndSave() {

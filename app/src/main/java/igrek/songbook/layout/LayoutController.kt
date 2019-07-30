@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.contact.ContactLayoutController
-import igrek.songbook.custom.editor.ChordsEditorLayoutController
 import igrek.songbook.custom.CustomSongEditLayoutController
 import igrek.songbook.custom.CustomSongsLayoutController
+import igrek.songbook.custom.editor.ChordsEditorLayoutController
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.settings.SettingsLayoutController
@@ -51,7 +51,7 @@ class LayoutController {
     private var state = LayoutState.SONGS_TREE
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     fun init() {
@@ -109,8 +109,8 @@ class LayoutController {
         previouslyShownLayout = currentlyShownLayout
         currentlyShownLayout = mainLayout
 
-        val layoutResource = mainLayout.layoutResourceId
-        state = mainLayout.layoutState
+        val layoutResource = mainLayout.getLayoutResourceId()
+        state = mainLayout.getLayoutState()
 
         // replace main content with brand new inflated layout
         mainContentLayout!!.removeAllViews()

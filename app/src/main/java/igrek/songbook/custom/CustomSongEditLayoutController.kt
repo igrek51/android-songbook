@@ -53,7 +53,7 @@ class CustomSongEditLayoutController : MainLayout {
     private var customCategoryNameEdit: EditText? = null
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     override fun showLayout(layout: View) {

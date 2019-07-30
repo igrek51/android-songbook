@@ -32,7 +32,7 @@ class SongContextMenuBuilder {
             SimpleCache { createAllActions() }
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     private fun createAllActions(): List<SongContextAction> {

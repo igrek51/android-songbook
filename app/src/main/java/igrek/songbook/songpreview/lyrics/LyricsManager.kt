@@ -28,7 +28,7 @@ class LyricsManager {
     private var originalFileContent: String? = null
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     private fun reset() {
@@ -58,7 +58,7 @@ class LyricsManager {
         parseAndTranspose(originalFileContent!!)
     }
 
-    fun onPreviewSizeChange(screenW: Int, paint: Paint) {
+    fun onPreviewSizeChange(screenW: Int, paint: Paint?) {
         this.screenW = screenW
         this.paint = paint
         reparse()

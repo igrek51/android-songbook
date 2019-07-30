@@ -18,7 +18,7 @@ class PackageInfoService {
         private set
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
 
         try {
             val pInfo = activity.packageManager

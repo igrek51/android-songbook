@@ -1,0 +1,427 @@
+package igrek.songbook.dagger
+
+
+import android.app.Activity
+import android.content.Context
+import android.support.v7.app.AppCompatActivity
+import dagger.Module
+import dagger.Provides
+import igrek.songbook.about.AboutLayoutController
+import igrek.songbook.about.HelpLayoutController
+import igrek.songbook.about.secret.SecretUnlockerService
+import igrek.songbook.activity.ActivityController
+import igrek.songbook.activity.AppInitializer
+import igrek.songbook.activity.OptionSelectDispatcher
+import igrek.songbook.chords.transpose.ChordsTransposerManager
+import igrek.songbook.contact.ContactLayoutController
+import igrek.songbook.contact.SendFeedbackService
+import igrek.songbook.custom.CustomSongEditLayoutController
+import igrek.songbook.custom.CustomSongService
+import igrek.songbook.custom.CustomSongsLayoutController
+import igrek.songbook.custom.SongImportFileChooser
+import igrek.songbook.custom.editor.ChordsEditorLayoutController
+import igrek.songbook.info.UiInfoService
+import igrek.songbook.info.UiResourceService
+import igrek.songbook.info.logger.Logger
+import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.layout.LayoutController
+import igrek.songbook.layout.contextmenu.ContextMenuBuilder
+import igrek.songbook.layout.navigation.NavigationMenuController
+import igrek.songbook.persistence.LocalDbService
+import igrek.songbook.persistence.SongsRepository
+import igrek.songbook.persistence.SongsUpdater
+import igrek.songbook.persistence.dao.CustomSongsDao
+import igrek.songbook.persistence.dao.FavouriteSongsDao
+import igrek.songbook.persistence.dao.SongsDao
+import igrek.songbook.persistence.dao.UnlockedSongsDao
+import igrek.songbook.persistence.migration.DatabaseMigrator
+import igrek.songbook.settings.SettingsLayoutController
+import igrek.songbook.settings.chordsnotation.ChordsNotationService
+import igrek.songbook.settings.language.AppLanguageService
+import igrek.songbook.settings.preferences.PreferencesService
+import igrek.songbook.settings.preferences.PreferencesUpdater
+import igrek.songbook.settings.theme.LyricsThemeService
+import igrek.songbook.songpreview.SongDetailsService
+import igrek.songbook.songpreview.SongPreviewLayoutController
+import igrek.songbook.songpreview.autoscroll.AutoscrollService
+import igrek.songbook.songpreview.lyrics.LyricsManager
+import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
+import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
+import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
+import igrek.songbook.songselection.favourite.FavouriteSongsRepository
+import igrek.songbook.songselection.favourite.FavouritesLayoutController
+import igrek.songbook.songselection.random.RandomSongOpener
+import igrek.songbook.songselection.search.SongSearchLayoutController
+import igrek.songbook.songselection.tree.ScrollPosBuffer
+import igrek.songbook.songselection.tree.SongTreeLayoutController
+import igrek.songbook.system.*
+import igrek.songbook.system.filesystem.ExternalCardService
+import igrek.songbook.system.filesystem.FilesystemService
+import okhttp3.OkHttpClient
+import javax.inject.Singleton
+
+/**
+ * Module with providers. These classes can be injected
+ */
+@Module
+open class FactoryModule(private val activity: AppCompatActivity) {
+
+    @Provides
+    fun provideContext(): Context {
+        return activity.applicationContext
+    }
+
+    @Provides
+    fun provideActivity(): Activity {
+        return activity
+    }
+
+    @Provides
+    fun provideAppCompatActivity(): AppCompatActivity {
+        return activity
+    }
+
+    @Provides
+    open fun provideLogger(): Logger {
+        return LoggerFactory.logger
+    }
+
+    /* Services */
+
+    @Provides
+    @Singleton
+    fun provideFilesystemService(): FilesystemService {
+        return FilesystemService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideActivityController(): ActivityController {
+        return ActivityController()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAppInitializer(): AppInitializer {
+        return AppInitializer()
+    }
+
+    @Provides
+    @Singleton
+    fun provideOptionSelectDispatcher(): OptionSelectDispatcher {
+        return OptionSelectDispatcher()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSystemKeyDispatcher(): SystemKeyDispatcher {
+        return SystemKeyDispatcher()
+    }
+
+    @Provides
+    @Singleton
+    fun provideExternalCardService(): ExternalCardService {
+        return ExternalCardService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideScreenService(): WindowManagerService {
+        return WindowManagerService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUIResourceService(): UiResourceService {
+        return UiResourceService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserInfoService(): UiInfoService {
+        return UiInfoService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAutoscrollService(): AutoscrollService {
+        return AutoscrollService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideChordsManager(): LyricsManager {
+        return LyricsManager()
+    }
+
+    @Provides
+    @Singleton
+    fun providePreferencesService(): PreferencesService {
+        return PreferencesService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideChordsTransposerManager(): ChordsTransposerManager {
+        return ChordsTransposerManager()
+    }
+
+    @Provides
+    @Singleton
+    fun provideScrollPosBuffer(): ScrollPosBuffer {
+        return ScrollPosBuffer()
+    }
+
+    @Provides
+    @Singleton
+    fun provideLayoutController(): LayoutController {
+        return LayoutController()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSoftKeyboardService(): SoftKeyboardService {
+        return SoftKeyboardService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSongSelectionController(): SongTreeLayoutController {
+        return SongTreeLayoutController()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSongPreviewController(): SongPreviewLayoutController {
+        return SongPreviewLayoutController()
+    }
+
+    @Provides
+    @Singleton
+    fun provideQuickMenu(): QuickMenuTranspose {
+        return QuickMenuTranspose()
+    }
+
+    @Provides
+    @Singleton
+    fun provideQuickMenuAutoscroll(): QuickMenuAutoscroll {
+        return QuickMenuAutoscroll()
+    }
+
+    @Provides
+    @Singleton
+    fun provideNavigationMenuController(): NavigationMenuController {
+        return NavigationMenuController()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSongSearchController(): SongSearchLayoutController {
+        return SongSearchLayoutController()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAboutLayoutController(): AboutLayoutController {
+        return AboutLayoutController()
+    }
+
+    @Provides
+    @Singleton
+    fun provideContactLayoutController(): ContactLayoutController {
+        return ContactLayoutController()
+    }
+
+    @Provides
+    @Singleton
+    fun provideHelpLayoutController(): HelpLayoutController {
+        return HelpLayoutController()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSongsDbService(): LocalDbService {
+        return LocalDbService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSongsRepository(): SongsRepository {
+        return SongsRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun providePermissionService(): PermissionService {
+        return PermissionService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSecretUnlockerService(): SecretUnlockerService {
+        return SecretUnlockerService()
+    }
+
+    @Provides
+    @Singleton
+    fun providePackageInfoService(): PackageInfoService {
+        return PackageInfoService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSettingsLayoutController(): SettingsLayoutController {
+        return SettingsLayoutController()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSongDetailsService(): SongDetailsService {
+        return SongDetailsService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSendFeedbackService(): SendFeedbackService {
+        return SendFeedbackService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSongImportFileChooser(): SongImportFileChooser {
+        return SongImportFileChooser()
+    }
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(): OkHttpClient {
+        return OkHttpClient()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSongsDao(): SongsDao {
+        return SongsDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCustomSongsDao(): CustomSongsDao {
+        return CustomSongsDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUnlockedSongsDao(): UnlockedSongsDao {
+        return UnlockedSongsDao()
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideSongImportService(): CustomSongService {
+        return CustomSongService()
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideEditImportSongLayoutController(): CustomSongEditLayoutController {
+        return CustomSongEditLayoutController()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSongsUpdater(): SongsUpdater {
+        return SongsUpdater()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRandomSongSelector(): RandomSongOpener {
+        return RandomSongOpener()
+    }
+
+    @Provides
+    @Singleton
+    fun provideDatabaseMigrator(): DatabaseMigrator {
+        return DatabaseMigrator()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFavouriteSongsDao(): FavouriteSongsDao {
+        return FavouriteSongsDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAppLanguageService(): AppLanguageService {
+        return AppLanguageService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFavouriteSongService(): FavouriteSongsRepository {
+        return FavouriteSongsRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFavouritesLayoutController(): FavouritesLayoutController {
+        return FavouritesLayoutController()
+    }
+
+    @Provides
+    @Singleton
+    fun provideChordsNotationService(): ChordsNotationService {
+        return ChordsNotationService()
+    }
+
+    @Provides
+    @Singleton
+    fun providePreferencesUpdater(): PreferencesUpdater {
+        return PreferencesUpdater()
+    }
+
+    @Provides
+    @Singleton
+    fun provideLyricsThemeService(): LyricsThemeService {
+        return LyricsThemeService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCustomSongsLayoutController(): CustomSongsLayoutController {
+        return CustomSongsLayoutController()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSongContextMenuBuilder(): SongContextMenuBuilder {
+        return SongContextMenuBuilder()
+    }
+
+    @Provides
+    @Singleton
+    fun provideChordsEditorLayoutController(): ChordsEditorLayoutController {
+        return ChordsEditorLayoutController()
+    }
+
+    @Provides
+    @Singleton
+    fun provideContextMenuBuilder(): ContextMenuBuilder {
+        return ContextMenuBuilder()
+    }
+
+    /*
+	 * Empty service pattern:
+	@Provides
+	@Singleton
+	protected  provide() {
+		return new ();
+	}
+	
+	 */
+
+}

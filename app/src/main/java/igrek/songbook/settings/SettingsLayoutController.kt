@@ -22,7 +22,7 @@ class SettingsLayoutController : MainLayout {
     lateinit var navigationMenuController: NavigationMenuController
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     override fun showLayout(layout: View) {

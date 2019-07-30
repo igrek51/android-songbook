@@ -30,7 +30,7 @@ class ChordsNotationService {
     )
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
         loadPreferences()
         setDefaultChordsNotation()
     }

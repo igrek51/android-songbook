@@ -31,7 +31,7 @@ class SongListView : ListView, AdapterView.OnItemClickListener, AdapterView.OnIt
         this.onClickListener = onClickListener
         onItemClickListener = this
         onItemLongClickListener = this
-        choiceMode = ListView.CHOICE_MODE_SINGLE
+        choiceMode = CHOICE_MODE_SINGLE
         adapter = SongListItemAdapter(context, null)
         setAdapter(adapter)
     }
@@ -39,13 +39,13 @@ class SongListView : ListView, AdapterView.OnItemClickListener, AdapterView.OnIt
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         val item = adapter!!.getItem(position)
         if (onClickListener != null)
-            onClickListener!!.onSongItemClick(item)
+            onClickListener!!.onSongItemClick(item!!)
     }
 
     override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
         val item = adapter!!.getItem(position)
         if (onClickListener != null)
-            onClickListener!!.onSongItemLongClick(item)
+            onClickListener!!.onSongItemLongClick(item!!)
         return true
     }
 

@@ -56,7 +56,7 @@ class ChordsEditorLayoutController : MainLayout {
     private var chordsNotationButton: Button? = null
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     override fun showLayout(layout: View) {

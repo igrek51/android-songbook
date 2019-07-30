@@ -51,7 +51,7 @@ class LyricsParser(fontFamily: Typeface) {
     private fun str2chars(line: String): List<LyricsChar> {
         val chars = ArrayList<LyricsChar>()
         for (i in 0 until line.length) {
-            val c = Character.toString(line[i])
+            val c = line[i].toString()
 
             val charWidth: Float
             val type: LyricsTextType
@@ -99,8 +99,7 @@ class LyricsParser(fontFamily: Typeface) {
             l--
         }
         // do not wrap in the middle of the word, try to step back until word splitter found
-        val lastWordSplitter = findLastWordSplitter(chars, l)
-        return when (lastWordSplitter) {
+        return when (val lastWordSplitter = findLastWordSplitter(chars, l)) {
             -1 -> l// it's one long word only - no way to split
             l - 1 -> l// last char is already a word splitter
             else -> lastWordSplitter + 1 // split after last word splitter
@@ -153,7 +152,7 @@ class LyricsParser(fontFamily: Typeface) {
                 // complete the previous fragment
                 if (buffer.isNotEmpty()) {
 
-                    if (lastType!!.isDisplayable) {
+                    if (lastType.isDisplayable) {
                         val fragment = LyricsFragment(startX / fontsize, buffer.toString(), lastType)
                         line.addFragment(fragment)
                     }

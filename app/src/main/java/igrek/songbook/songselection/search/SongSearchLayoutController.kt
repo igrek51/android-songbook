@@ -37,7 +37,7 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
     lateinit var songTreeLayoutController: dagger.Lazy<SongTreeLayoutController>
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     override fun showLayout(layout: View) {
@@ -81,7 +81,7 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
         updateSongItemsList()
 
         songsRepository.dbChangeSubject.subscribe {
-            if (layoutController.isState(layoutState))
+            if (layoutController.isState(getLayoutState()))
                 updateSongItemsList()
         }
     }
@@ -164,7 +164,7 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
             openSongPreview(item)
         } else {
             // move to selected category
-            songTreeLayoutController.get().setCurrentCategory(item.category)
+            songTreeLayoutController.get().currentCategory = item.category
             layoutController.showSongTree()
         }
     }

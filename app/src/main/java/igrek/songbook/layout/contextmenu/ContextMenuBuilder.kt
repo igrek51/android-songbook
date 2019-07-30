@@ -15,7 +15,7 @@ class ContextMenuBuilder {
     lateinit var uiResourceService: UiResourceService
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     fun showContextMenu(titleResId: Int, actions: List<Action>) {

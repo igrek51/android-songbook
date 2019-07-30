@@ -20,7 +20,7 @@ class PreferencesService {
     private val SHARED_PREFERENCES_NAME = "SongBook-UserPreferences"
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
         sharedPreferences = activity.applicationContext
                 .getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
         loadAll()

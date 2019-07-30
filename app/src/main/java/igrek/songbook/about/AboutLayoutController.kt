@@ -27,13 +27,13 @@ class AboutLayoutController {
     lateinit var songsRepository: SongsRepository
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     fun showAbout() {
         val appVersionName = packageInfoService.versionName
-        val appVersionCode = Integer.toString(packageInfoService.versionCode)
-        val dbVersionNumber = java.lang.Long.toString(songsRepository.songsDb!!.versionNumber)
+        val appVersionCode = packageInfoService.versionCode.toString()
+        val dbVersionNumber = songsRepository.songsDb!!.versionNumber.toString()
         val title = uiResourceService.resString(R.string.nav_about)
         val message = uiResourceService.resString(R.string.ui_about_content, appVersionName, appVersionCode, dbVersionNumber)
 

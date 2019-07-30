@@ -41,7 +41,7 @@ class ContactLayoutController : MainLayout {
     private var contactAuthorEdit: EditText? = null
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     override fun showLayout(layout: View) {

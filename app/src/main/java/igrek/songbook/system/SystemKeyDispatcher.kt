@@ -15,7 +15,7 @@ class SystemKeyDispatcher {
     lateinit var autoscrollService: Lazy<AutoscrollService>
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
     }
 
     fun onKeyBack(): Boolean {

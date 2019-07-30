@@ -71,7 +71,7 @@ abstract class SongSelectionLayoutController : SongClickListener {
     }
 
     fun openSongPreview(item: SongTreeItem) {
-        songPreviewLayoutController.get().setCurrentSong(item.song)
+        songPreviewLayoutController.get().currentSong = item.song
         layoutController.showSongPreview()
     }
 
@@ -83,7 +83,7 @@ abstract class SongSelectionLayoutController : SongClickListener {
 
     override fun onSongItemLongClick(item: SongTreeItem) {
         if (item.isSong) {
-            songContextMenuBuilder.showSongActions(item.song)
+            songContextMenuBuilder.showSongActions(item.song!!)
         } else {
             onSongItemClick(item)
         }

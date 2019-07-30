@@ -31,7 +31,7 @@ class RandomSongOpener {
     var fromFavouriteSongsOnly: Boolean = false
 
     init {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
         loadPreferences()
     }
 
@@ -65,7 +65,7 @@ class RandomSongOpener {
     }
 
     private fun openSongPreview(song: Song) {
-        songPreviewLayoutController.get().setCurrentSong(song)
+        songPreviewLayoutController.get().currentSong = song
         layoutController.showSongPreview()
     }
 }

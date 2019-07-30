@@ -59,7 +59,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        DaggerIoc.getFactoryComponent().inject(this)
+        DaggerIoc.factoryComponent.inject(this)
         setPreferencesFromResource(R.xml.settings_def, rootKey)
 
         setupListPreference("applicationLanguage",
