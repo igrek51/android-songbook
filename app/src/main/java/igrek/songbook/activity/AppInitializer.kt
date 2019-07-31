@@ -5,6 +5,7 @@ import igrek.songbook.BuildConfig
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
+import igrek.songbook.persistence.SongsRepository
 import igrek.songbook.persistence.SongsUpdater
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.system.WindowManagerService
@@ -22,6 +23,8 @@ class AppInitializer {
     lateinit var songsUpdater: SongsUpdater
     @Inject
     lateinit var appLanguageService: AppLanguageService
+    @Inject
+    lateinit var songsRepository: SongsRepository
 
     private val logger = LoggerFactory.logger
 
@@ -36,6 +39,7 @@ class AppInitializer {
 
         appLanguageService.setLocale()
         windowManagerService.hideTaskbar()
+        songsRepository.init()
         layoutController.init()
         layoutController.showSongTree()
         songsUpdater.checkUpdateIsAvailable()

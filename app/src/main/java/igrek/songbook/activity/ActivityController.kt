@@ -41,7 +41,7 @@ class ActivityController {
         } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             return "portrait"
         }
-        return Integer.toString(orientation)
+        return orientation.toString()
     }
 
     fun quit() {

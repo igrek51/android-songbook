@@ -8,12 +8,9 @@ import igrek.songbook.dagger.base.DaggerTestComponent
 import igrek.songbook.dagger.base.TestModule
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.Robolectric
-import org.robolectric.RobolectricTestRunner
+import org.mockito.Mockito
 import javax.inject.Inject
 
-@RunWith(RobolectricTestRunner::class)
 class DaggerInjectionTest {
 
     @Inject
@@ -21,7 +18,7 @@ class DaggerInjectionTest {
 
     @Before
     fun setUp() {
-        val activity = Robolectric.setupActivity(MainActivity::class.java)
+        val activity = Mockito.mock(MainActivity::class.java)
 
         val component = DaggerTestComponent.builder()
                 .factoryModule(TestModule(activity))

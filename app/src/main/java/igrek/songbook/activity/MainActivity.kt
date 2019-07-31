@@ -17,7 +17,7 @@ import igrek.songbook.system.SystemKeyDispatcher
 import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity() {
+open class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var appInitializer: Lazy<AppInitializer>

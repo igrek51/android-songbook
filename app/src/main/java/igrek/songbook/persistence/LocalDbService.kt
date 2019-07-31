@@ -22,17 +22,20 @@ class LocalDbService {
 
     private val logger = LoggerFactory.logger
     private var songsDbHelper: SQLiteDatabase? = null
-    private var localSongsDbHelper: SQLiteDatabase? = null
+
+    private val currentSongsDbFilename = "songs.2.sqlite"
 
     private val songDbDir: File
         @SuppressLint("SdCardPath")
         get() {
-            // /data/data/PACKAGE/files
-            // INTERNAL_STORAGE/Android/data/PACKAGE/files/data
-            var dir: File?
-            dir = activity.filesDir
+            /*
+            1. /data/data/PACKAGE/files
+            2. INTERNAL_STORAGE/Android/data/PACKAGE/files/data
+            */
+            var dir: File? = activity.filesDir
             if (dir != null && dir.isDirectory)
                 return dir
+
             if (permissionService.get().isStoragePermissionGranted) {
                 dir = activity.getExternalFilesDir("data")
                 if (dir != null && dir.isDirectory)
@@ -43,10 +46,7 @@ class LocalDbService {
         }
 
     val songsDbFile: File
-        get() = File(songDbDir, "songs.sqlite")
-
-    private val localSongsDbFile: File
-        get() = File(songDbDir, "local.sqlite")
+        get() = File(songDbDir, currentSongsDbFilename)
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -63,32 +63,14 @@ class LocalDbService {
         return songsDbHelper!!
     }
 
-    fun openLocalSongsDb(): SQLiteDatabase {
-        if (localSongsDbHelper == null) {
-            val dbFile = localSongsDbFile
-            // if file does not exist - copy initial db from resources
-            if (!dbFile.exists())
-                copyFileFromResources(R.raw.local, dbFile)
-            localSongsDbHelper = openDatabase(dbFile)
-        }
-        return localSongsDbHelper!!
-    }
-
     fun closeDatabases() {
-        if (songsDbHelper != null) {
-            songsDbHelper!!.close()
-            songsDbHelper = null
-        }
-        if (localSongsDbHelper != null) {
-            localSongsDbHelper!!.close()
-            localSongsDbHelper = null
-        }
+        songsDbHelper?.close()
+        songsDbHelper = null
     }
 
-    fun factoryResetDbs() {
+    fun factoryReset() {
         // remove db files
         factoryResetSongsDb()
-        factoryResetLocalDb()
         // need to reopen dbs again (in external dependencies)
     }
 
@@ -98,14 +80,6 @@ class LocalDbService {
             songsDbHelper = null
         }
         removeDb(songsDbFile)
-    }
-
-    fun factoryResetLocalDb() {
-        if (localSongsDbHelper != null) {
-            localSongsDbHelper!!.close()
-            localSongsDbHelper = null
-        }
-        removeDb(localSongsDbFile)
     }
 
     private fun removeDb(songsDbFile: File) {

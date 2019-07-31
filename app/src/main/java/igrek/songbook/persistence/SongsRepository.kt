@@ -54,7 +54,18 @@ class SongsRepository {
 
     init {
         DaggerIoc.factoryComponent.inject(this)
+    }
+
+    fun init() {
         try {
+            localDbService.get().openSongsDb()
+
+            loadSongs()
+
+            loadUserData()
+
+
+
             databaseMigrator.get().verifyLocalDbVersion(this)
             databaseMigrator.get().verifySongsDbVersion(localDbService.get())
             initializeSongsDb()
@@ -65,13 +76,22 @@ class SongsRepository {
 
     fun factoryReset() {
         logger.warn("Databases factory reset...")
-        localDbService.get().factoryResetDbs()
-        initializeSongsDb()
+        localDbService.get().factoryReset()
+        buildSongsDb()
     }
 
     fun updateSongsDb() {
         songsUpdater.get().updateSongsDb(localDbService.get().songsDbFile)
     }
+
+    private fun loadSongs() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    private fun loadUserData() {
+        // TODO latest data first, then migrate olders
+    }
+
 
     fun initializeSongsDb() {
         val versionNumber = songsDao.get().readDbVersionNumber()
