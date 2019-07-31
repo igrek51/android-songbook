@@ -11,7 +11,7 @@ Next feature is the autoscrolling mode. It automatically scrolls the lyrics with
 
 The guitar songs database is included and is easily extensible.
 
-## Main features
+## Features
 
 * Lyrics viewer
 * Chords highlighting
