@@ -48,7 +48,7 @@ class SongsRepository {
         private set
         get() {
             if (field == null)
-                initializeSongsDb()
+                init()
             return field
         }
 
@@ -63,12 +63,6 @@ class SongsRepository {
             loadSongs()
 
             loadUserData()
-
-
-
-            databaseMigrator.get().verifyLocalDbVersion(this)
-            databaseMigrator.get().verifySongsDbVersion(localDbService.get())
-            initializeSongsDb()
         } catch (t: Throwable) {
             factoryReset()
         }
@@ -80,12 +74,8 @@ class SongsRepository {
         buildSongsDb()
     }
 
-    fun updateSongsDb() {
+    private fun updateSongsDb() {
         songsUpdater.get().updateSongsDb(localDbService.get().songsDbFile)
-    }
-
-    private fun loadSongs() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun loadUserData() {
@@ -93,7 +83,7 @@ class SongsRepository {
     }
 
 
-    fun initializeSongsDb() {
+    private fun loadSongs() {
         val versionNumber = songsDao.get().readDbVersionNumber()
                 ?: throw RuntimeException("invalid songs database format")
 

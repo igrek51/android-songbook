@@ -6,7 +6,7 @@ import igrek.songbook.settings.chordsnotation.ChordsNotation
 open class Song(
         var id: Long,
         open var title: String,
-        open var category: SongCategory,
+        open var categories: List<SongCategory>,
         var content: String? = null,
         var versionNumber: Long = 1,
         var createTime: Long = 0,

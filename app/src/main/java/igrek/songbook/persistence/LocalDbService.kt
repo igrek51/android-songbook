@@ -23,7 +23,8 @@ class LocalDbService {
     private val logger = LoggerFactory.logger
     private var songsDbHelper: SQLiteDatabase? = null
 
-    private val currentSongsDbFilename = "songs.2.sqlite"
+    private val currentSchemaVersion = 2
+    private val currentSongsDbFilename = "songs.$currentSchemaVersion.sqlite"
 
     private val songDbDir: File
         @SuppressLint("SdCardPath")
