@@ -78,7 +78,7 @@ class Info(models.Model):
         return readEntities("SELECT * FROM songs_category", categoryMapper)
     }
 
-    fun readAllSongs(): MutableList<Song> {
+    fun readAllSongs(): List<Song> {
         return readEntities("SELECT * FROM songs_song", songMapper)
     }
 

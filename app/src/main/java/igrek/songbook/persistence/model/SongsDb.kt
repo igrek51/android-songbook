@@ -5,8 +5,8 @@ import igrek.songbook.system.cache.SimpleCache
 
 data class SongsDb(
         val versionNumber: Long,
-        var categories: List<Category>,
-        var songs: List<Song>
+        val categories: List<Category>,
+        val songs: List<Song>
 ) {
     val songFinder = FinderById(songs) { e -> e.id }
     val categoryFinder = FinderById(categories) { e -> e.id }

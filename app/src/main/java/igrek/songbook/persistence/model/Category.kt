@@ -5,12 +5,17 @@ import igrek.songbook.system.cache.SimpleCache
 
 open class Category(
         val id: Long,
-        open val type: CategoryType,
-        open val name: String? = null,
+        val type: CategoryType,
+        val name: String? = null,
         var custom: Boolean = false,
-        open var displayName: String? = null,
         var songs: MutableList<Song> = mutableListOf()
 ) {
+    var displayName: String? = null
+        get() {
+            if (field == null)
+                return name
+            return field
+        }
 
     override fun equals(other: Any?): Boolean {
         if (other !is Category)

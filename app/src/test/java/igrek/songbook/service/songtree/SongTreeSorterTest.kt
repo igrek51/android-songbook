@@ -9,7 +9,6 @@ import igrek.songbook.persistence.model.SongStatus
 import igrek.songbook.songselection.tree.SongTreeItem
 import igrek.songbook.songselection.tree.SongTreeSorter
 import org.junit.Test
-import java.util.*
 
 class SongTreeSorterTest {
 
@@ -45,8 +44,8 @@ class SongTreeSorterTest {
     }
 
     private fun songItem(title: String, categoryType: CategoryType = CategoryType.OTHERS, categoryName: String = "others", custom: Boolean = false): SongTreeItem {
-        val category = Category(categoryType.id, categoryType, categoryName, false, categoryName, ArrayList())
-        val song = Song(1, title, category, null, 1, 0, 0, custom, title, null, null, false, null, null, SongStatus.PUBLISHED, null, null, null, null, null, null, null, null)
+        val category = Category(categoryType.id, categoryType, categoryName, false)
+        val song = Song(1, title, mutableListOf(category), null, 1, 0, 0, custom, null, null, false, null, null, SongStatus.PUBLISHED)
         return SongTreeItem.song(song)
     }
 
@@ -55,7 +54,7 @@ class SongTreeSorterTest {
     }
 
     private fun categoryItem(categoryType: CategoryType, categoryName: String): SongTreeItem {
-        val category = Category(categoryType.id, categoryType, categoryName, false, categoryName, ArrayList())
+        val category = Category(categoryType.id, categoryType, categoryName, false)
         return SongTreeItem.category(category)
     }
 

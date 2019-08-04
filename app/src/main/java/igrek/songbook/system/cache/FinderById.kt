@@ -3,7 +3,7 @@ package igrek.songbook.system.cache
 class FinderById<T>(entitiesList: List<T>,
                     private val entityToId: (T) -> Long) {
 
-    private val idMapping = HashMap<Long, T>()
+    private val idMapping = hashMapOf<Long, T>()
 
     init {
         entitiesList.forEach { entity ->

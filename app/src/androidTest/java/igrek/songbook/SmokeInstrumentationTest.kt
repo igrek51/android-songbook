@@ -12,10 +12,10 @@ import org.junit.runner.RunWith
  * @see [Testing documentation](http://d.android.com/tools/testing)
  */
 @RunWith(AndroidJUnit4::class)
-class InstrumentationTest {
+class SmokeInstrumentationTest {
 
     @Test
-    fun test_navigationMenuShows() {
+    fun test_package_name() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
 
