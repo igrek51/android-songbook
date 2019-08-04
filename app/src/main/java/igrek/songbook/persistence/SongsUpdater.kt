@@ -104,7 +104,7 @@ class SongsUpdater {
             input.close()
             Handler(Looper.getMainLooper()).post {
                 try {
-                    songsRepository.get().initializeSongsDb()
+                    songsRepository.get().reloadSongsDb()
                     uiInfoService.get().showInfo(R.string.ui_db_is_uptodate)
                 } catch (t: Throwable) {
                     uiInfoService.get().showInfo(R.string.db_update_failed_incompatible)
@@ -142,7 +142,7 @@ class SongsUpdater {
         Handler(Looper.getMainLooper()).post {
             uiInfoService.get().showInfoWithAction(R.string.update_is_available, R.string.action_update) {
                 uiInfoService.get().clearSnackBars()
-                songsRepository.get().updateSongsDb()
+                updateSongsDb(localDbService.get().songsDbFile)
             }
         }
     }

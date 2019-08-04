@@ -27,10 +27,7 @@ import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.SongsRepository
 import igrek.songbook.persistence.SongsUpdater
-import igrek.songbook.persistence.dao.CustomSongsDao
-import igrek.songbook.persistence.dao.FavouriteSongsDao
 import igrek.songbook.persistence.dao.SongsDao
-import igrek.songbook.persistence.dao.UnlockedSongsDao
 import igrek.songbook.persistence.migration.DatabaseMigrator
 import igrek.songbook.settings.SettingsFragment
 import igrek.songbook.settings.SettingsLayoutController
@@ -134,11 +131,7 @@ interface FactoryComponent {
 
     fun inject(there: SongImportFileChooser)
 
-    fun inject(there: UnlockedSongsDao)
-
     fun inject(there: SongsDao)
-
-    fun inject(there: CustomSongsDao)
 
     fun inject(there: CustomSongService)
 
@@ -149,8 +142,6 @@ interface FactoryComponent {
     fun inject(there: RandomSongOpener)
 
     fun inject(there: DatabaseMigrator)
-
-    fun inject(there: FavouriteSongsDao)
 
     fun inject(there: AppLanguageService)
 

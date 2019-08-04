@@ -1,9 +1,9 @@
 package igrek.songbook.songselection.tree
 
-import igrek.songbook.persistence.songsdb.Song
-import igrek.songbook.persistence.songsdb.SongCategory
+import igrek.songbook.persistence.model.Category
+import igrek.songbook.persistence.model.Song
 
-open class SongTreeItem protected constructor(open val song: Song?, val category: SongCategory?) {
+open class SongTreeItem protected constructor(open val song: Song?, val category: Category?) {
 
     val simpleName: String?
         get() = if (isCategory) {
@@ -22,7 +22,7 @@ open class SongTreeItem protected constructor(open val song: Song?, val category
         return if (isCategory) {
             "[" + category?.displayName + "]"
         } else {
-            "" + song?.category?.displayName + " - " + song?.title
+            "" + song?.categories?.joinToString(", ") { c -> c.displayName!! } + " - " + song?.title
         }
     }
 
@@ -32,7 +32,7 @@ open class SongTreeItem protected constructor(open val song: Song?, val category
             return SongTreeItem(song, null)
         }
 
-        fun category(category: SongCategory): SongTreeItem {
+        fun category(category: Category): SongTreeItem {
             return SongTreeItem(null, category)
         }
     }

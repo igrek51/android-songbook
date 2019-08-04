@@ -8,8 +8,8 @@ import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
-import igrek.songbook.persistence.songsdb.SongCategory
-import igrek.songbook.persistence.songsdb.SongsDb
+import igrek.songbook.persistence.model.Category
+import igrek.songbook.persistence.model.SongsDb
 import igrek.songbook.songselection.SongSelectionLayoutController
 import javax.inject.Inject
 
@@ -18,7 +18,7 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
     @Inject
     lateinit var scrollPosBuffer: Lazy<ScrollPosBuffer>
 
-    var currentCategory: SongCategory? = null
+    var currentCategory: Category? = null
     private var toolbarTitle: TextView? = null
     private var goBackButton: ImageButton? = null
     private var searchSongButton: ImageButton? = null
@@ -67,7 +67,7 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
         // reload current category
         if (isCategorySelected()) {
             val songsDb = songsRepository.songsDb!!
-            currentCategory = songsDb.getAllUnlockedCategories().firstOrNull { category -> category.id == currentCategory?.id }
+            currentCategory = songsDb.categories.firstOrNull { category -> category.id == currentCategory?.id }
         }
         super.updateSongItemsList()
         if (isCategorySelected()) {
@@ -89,7 +89,7 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
                     .toMutableList()
         } else {
             // all categories list
-            songsDb.getPublicUnlockedCategories()
+            songsDb.categories
                     .asSequence()
                     .map { category -> SongTreeItem.category(category) }
                     .toMutableList()
@@ -121,7 +121,7 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
         scrollPosBuffer.get().storeScrollPosition(currentCategory, itemsListView?.currentScrollPosition)
     }
 
-    private fun restoreScrollPosition(category: SongCategory?) {
+    private fun restoreScrollPosition(category: Category?) {
         if (scrollPosBuffer.get().hasScrollPositionStored(category)) {
             itemsListView?.restoreScrollPosition(scrollPosBuffer.get().restoreScrollPosition(category))
         }

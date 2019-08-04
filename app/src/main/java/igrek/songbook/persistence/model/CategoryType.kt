@@ -1,8 +1,8 @@
-package igrek.songbook.persistence.songsdb
+package igrek.songbook.persistence.model
 
 import igrek.songbook.R
 
-enum class SongCategoryType(val id: Long, val localeStringId: Int?) {
+enum class CategoryType(val id: Long, val localeStringId: Int?) {
 
     CUSTOM(1, R.string.song_category_custom),
 
@@ -11,7 +11,7 @@ enum class SongCategoryType(val id: Long, val localeStringId: Int?) {
     ARTIST(3, null);
 
     companion object {
-        fun parseById(id: Long): SongCategoryType {
+        fun parseById(id: Long): CategoryType {
             return values().first { v -> v.id == id }
         }
     }

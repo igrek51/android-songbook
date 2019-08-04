@@ -17,7 +17,7 @@ import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.confirm.ConfirmDialogBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
-import igrek.songbook.persistence.songsdb.Song
+import igrek.songbook.persistence.model.Song
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.system.SoftKeyboardService
 import javax.inject.Inject
@@ -136,42 +136,42 @@ class CustomSongEditLayoutController : MainLayout {
     }
 
     private fun saveSong() {
-        songTitle = songTitleEdit!!.text.toString()
-        songContent = songContentEdit!!.text.toString()
-        customCategoryName = customCategoryNameEdit!!.text.toString()
-
-        if (songTitle!!.isEmpty()) {
-            uiInfoService.showInfo(R.string.fill_in_all_fields)
-            return
-        }
-
-        if (customCategoryName!!.isEmpty())
-            customCategoryName = null
-
-        if (currentSong == null) {
-            // add
-            currentSong = customSongService.get()
-                    .addCustomSong(songTitle!!, customCategoryName, songContent)
-        } else {
-            // update
-            customSongService.get()
-                    .updateSong(currentSong!!, songTitle!!, customCategoryName, songContent)
-        }
-        uiInfoService.showInfo(R.string.edit_song_has_been_saved)
-        layoutController.showCustomSongs()
+//        songTitle = songTitleEdit!!.text.toString()
+//        songContent = songContentEdit!!.text.toString()
+//        customCategoryName = customCategoryNameEdit!!.text.toString()
+//
+//        if (songTitle!!.isEmpty()) {
+//            uiInfoService.showInfo(R.string.fill_in_all_fields)
+//            return
+//        }
+//
+//        if (customCategoryName!!.isEmpty())
+//            customCategoryName = null
+//
+//        if (currentSong == null) {
+//            // add
+//            currentSong = customSongService.get()
+//                    .addCustomSong(songTitle!!, customCategoryName, songContent)
+//        } else {
+//            // update
+//            customSongService.get()
+//                    .updateSong(currentSong!!, songTitle!!, customCategoryName, songContent)
+//        }
+//        uiInfoService.showInfo(R.string.edit_song_has_been_saved)
+//        layoutController.showCustomSongs()
     }
 
     private fun removeSong() {
-        ConfirmDialogBuilder().confirmAction(R.string.confirm_remove_song) {
-            if (currentSong == null) {
-                // just cancel
-                uiInfoService.showInfo(R.string.edit_song_has_been_removed)
-            } else {
-                // remove song from database
-                customSongService.get().removeSong(currentSong!!)
-            }
-            layoutController.showCustomSongs()
-        }
+//        ConfirmDialogBuilder().confirmAction(R.string.confirm_remove_song) {
+//            if (currentSong == null) {
+//                // just cancel
+//                uiInfoService.showInfo(R.string.edit_song_has_been_removed)
+//            } else {
+//                // remove song from database
+//                customSongService.get().removeSong(currentSong!!)
+//            }
+//            layoutController.showCustomSongs()
+//        }
     }
 
     override fun getLayoutState(): LayoutState {

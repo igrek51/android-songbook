@@ -1,6 +1,6 @@
 package igrek.songbook.songselection.search
 
-import igrek.songbook.persistence.songsdb.Song
+import igrek.songbook.persistence.model.Song
 import igrek.songbook.songselection.tree.SongTreeItem
 
 class SongSearchItem private constructor(song: Song) : SongTreeItem(song, null) {

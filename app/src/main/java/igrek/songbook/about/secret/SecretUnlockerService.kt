@@ -60,8 +60,7 @@ class SecretUnlockerService {
             UnlockerRule("reset") { reset() },
             UnlockerRule("reset config") { preferencesService.clear() },
             UnlockerRule("reset db") { songsRepository.factoryReset() },
-            UnlockerRule("reset db songs") { localDbService.factoryResetSongsDb() },
-            UnlockerRule("reset db local") { localDbService.factoryResetLocalDb() }
+            UnlockerRule("reset db songs") { localDbService.factoryReset() }
     )
 
     @SuppressLint("InflateParams")
@@ -146,16 +145,16 @@ class SecretUnlockerService {
     }
 
     private fun unlockSongs(key: String) {
-        val toUnlock = songsRepository.songsDb!!.allSongs
+        val toUnlock = songsRepository.songsDb!!.songs
                 .filter { s -> s.locked && s.lockPassword == key }
         val count = toUnlock.count()
         toUnlock.forEach { s ->
             s.locked = false
         }
-        songsRepository.unlockKey(key)
+//        songsRepository.unlockKey(key)
         val message = uiResourceService.resString(R.string.unlock_new_songs_unlocked, count)
         uiInfoService.showToast(message)
-        songsRepository.initializeSongsDb()
+//        songsRepository.initializeSongsDb()
     }
 
     companion object {

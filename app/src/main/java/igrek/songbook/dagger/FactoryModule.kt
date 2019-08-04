@@ -30,10 +30,6 @@ import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.SongsRepository
 import igrek.songbook.persistence.SongsUpdater
-import igrek.songbook.persistence.dao.CustomSongsDao
-import igrek.songbook.persistence.dao.FavouriteSongsDao
-import igrek.songbook.persistence.dao.SongsDao
-import igrek.songbook.persistence.dao.UnlockedSongsDao
 import igrek.songbook.persistence.migration.DatabaseMigrator
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
@@ -300,29 +296,9 @@ open class FactoryModule(private val activity: AppCompatActivity) {
 
     @Provides
     @Singleton
-    fun provideSongsDao(): SongsDao {
-        return SongsDao()
-    }
-
-    @Provides
-    @Singleton
-    fun provideCustomSongsDao(): CustomSongsDao {
-        return CustomSongsDao()
-    }
-
-    @Provides
-    @Singleton
-    fun provideUnlockedSongsDao(): UnlockedSongsDao {
-        return UnlockedSongsDao()
-    }
-
-
-    @Provides
-    @Singleton
     fun provideSongImportService(): CustomSongService {
         return CustomSongService()
     }
-
 
     @Provides
     @Singleton
@@ -346,12 +322,6 @@ open class FactoryModule(private val activity: AppCompatActivity) {
     @Singleton
     fun provideDatabaseMigrator(): DatabaseMigrator {
         return DatabaseMigrator()
-    }
-
-    @Provides
-    @Singleton
-    fun provideFavouriteSongsDao(): FavouriteSongsDao {
-        return FavouriteSongsDao()
     }
 
     @Provides

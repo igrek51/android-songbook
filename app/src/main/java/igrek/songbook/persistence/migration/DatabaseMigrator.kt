@@ -23,10 +23,6 @@ class DatabaseMigrator {
         DaggerIoc.factoryComponent.inject(this)
     }
 
-    private fun customDbVersion(): Long? {
-        return songsRepository!!.customSongsDao.get().readDbVersionNumber()
-    }
-
     fun verifyLocalDbVersion(songsRepository: SongsRepository) {
         this.songsRepository = songsRepository
         try {
@@ -42,10 +38,7 @@ class DatabaseMigrator {
             if (localVersion == null || localVersion < 18) {
                 throw RuntimeException("db version very old - factory reset needed")
             }
-            // migration #028 needed
-            if (localVersion < 28) {
-                migrate28PublicLocalDb()
-            }
+
             if (localVersion < 37) {
                 migrate37()
             }
@@ -58,6 +51,10 @@ class DatabaseMigrator {
             // any exception causes factory reset
             songsRepository.factoryReset()
         }
+    }
+
+    private fun customDbVersion(): Long {
+        TODO("not implemented")
     }
 
     fun verifySongsDbVersion(localDbService: LocalDbService) {
@@ -79,11 +76,6 @@ class DatabaseMigrator {
 
     fun makeFactoryReset() {
         songsRepository!!.factoryReset()
-    }
-
-    private fun migrate28PublicLocalDb() {
-        logger.info("Applying migration #028: public + local dbs")
-        Migration028PublicLocalDb(activity).migrate(this)
     }
 
     private fun migrate37() {

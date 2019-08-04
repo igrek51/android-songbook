@@ -12,7 +12,7 @@ import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
-import igrek.songbook.persistence.songsdb.SongsDb
+import igrek.songbook.persistence.model.SongsDb
 import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.SongSelectionLayoutController
 import igrek.songbook.songselection.tree.SongTreeItem
@@ -113,19 +113,19 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
 
     override fun getSongItems(songsDb: SongsDb): MutableList<SongTreeItem> {
         if (!isFilterSet()) { // no filter
-            return songsDb.getAllUnlockedSongs()
+            return songsDb.songs
                     .asSequence()
                     .map { song -> SongSearchItem.song(song) }
                     .toMutableList()
         } else {
             val songNameFilter = SongTreeFilter(itemNameFilter)
             // filter songs
-            val songsSequence = songsDb.getAllUnlockedSongs()
+            val songsSequence = songsDb.songs
                     .asSequence()
                     .map { song -> SongSearchItem.song(song) }
                     .filter { item -> songNameFilter.songMatchesNameFilter(item) }
             // filter categories
-            val categoriesSequence = songsDb.getAllUnlockedCategories()
+            val categoriesSequence = songsDb.categories
                     .asSequence()
                     .map { category -> SongTreeItem.category(category) }
                     .filter { item -> songNameFilter.categoryMatchesNameFilter(item) }

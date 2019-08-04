@@ -4,7 +4,7 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
 import assertk.assertions.isTrue
-import igrek.songbook.persistence.songsdb.SongCategoryType
+import igrek.songbook.persistence.model.CategoryType
 import igrek.songbook.songselection.search.SongTreeFilter
 import igrek.songbook.songselection.tree.SongTreeItem
 import org.junit.Test
@@ -19,7 +19,7 @@ class SongTreeFilterTest {
 
         val songItem = mock(SongTreeItem::class.java, Mockito.RETURNS_DEEP_STUBS)
 
-        `when`(songItem.song!!.category.type).thenReturn(SongCategoryType.ARTIST)
+        `when`(songItem.song!!.category.type).thenReturn(CategoryType.ARTIST)
         `when`(songItem.song!!.category.name).thenReturn("Budka suflera")
         `when`(songItem.song!!.title).thenReturn("Jolka jolka ążśźęćół ĄĄŻŚŹĘĆ Żółć Łódź")
         // test mockito
@@ -46,7 +46,7 @@ class SongTreeFilterTest {
 
         val songItem = mock(SongTreeItem::class.java, Mockito.RETURNS_DEEP_STUBS)
 
-        `when`(songItem.song!!.category.type).thenReturn(SongCategoryType.ARTIST)
+        `when`(songItem.song!!.category.type).thenReturn(CategoryType.ARTIST)
         `when`(songItem.song!!.category.name).thenReturn("Budka suflera")
         `when`(songItem.song!!.title).thenReturn("he's dupa")
 

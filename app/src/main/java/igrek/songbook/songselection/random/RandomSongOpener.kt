@@ -5,7 +5,7 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.SongsRepository
-import igrek.songbook.persistence.songsdb.Song
+import igrek.songbook.persistence.model.Song
 import igrek.songbook.settings.preferences.PreferencesDefinition
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.songpreview.SongPreviewLayoutController
@@ -60,7 +60,7 @@ class RandomSongOpener {
         return if (fromFavouriteSongsOnly) {
             favouriteSongsRepository.getFavouriteSongs().toList()
         } else {
-            songsRepository.songsDb!!.getAllUnlockedSongs()
+            songsRepository.songsDb!!.songs
         }
     }
 

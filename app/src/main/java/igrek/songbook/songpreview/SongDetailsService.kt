@@ -7,7 +7,7 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.persistence.songsdb.Song
+import igrek.songbook.persistence.model.Song
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import java.text.SimpleDateFormat
 import java.util.*
@@ -33,28 +33,28 @@ class SongDetailsService {
     }
 
     fun showSongDetails(song: Song) {
-        val comment = song.comment
-        val preferredKey = song.preferredKey
-        val metre = song.metre
-        val songTitle = song.title
-        val category = song.category.displayName
-        val songVersion = song.versionNumber.toString()
-        val modificationDate = getLastModificationDate(song)
-
-        var message = uiResourceService.resString(R.string.song_details, songTitle, category, songVersion, modificationDate)
-        if (preferredKey != null)
-            message += "\n" + uiResourceService.resString(R.string.song_details_preferred_key, preferredKey)
-        if (metre != null)
-            message += "\n" + uiResourceService.resString(R.string.song_details_metre, metre)
-        if (comment != null)
-            message += "\n" + uiResourceService.resString(R.string.song_details_comment, comment)
-
-        val dialogTitle = uiResourceService.resString(R.string.song_details_title)
-
-        val moreActionName = uiResourceService.resString(R.string.song_action_more)
-        val moreAction = Runnable { showMoreActions(song) }
-
-        showDialogWithActions(dialogTitle, message, moreActionName, moreAction, null, null)
+//        val comment = song.comment
+//        val preferredKey = song.preferredKey
+//        val metre = song.metre
+//        val songTitle = song.title
+//        val category = song.category.displayName
+//        val songVersion = song.versionNumber.toString()
+//        val modificationDate = getLastModificationDate(song)
+//
+//        var message = uiResourceService.resString(R.string.song_details, songTitle, category, songVersion, modificationDate)
+//        if (preferredKey != null)
+//            message += "\n" + uiResourceService.resString(R.string.song_details_preferred_key, preferredKey)
+//        if (metre != null)
+//            message += "\n" + uiResourceService.resString(R.string.song_details_metre, metre)
+//        if (comment != null)
+//            message += "\n" + uiResourceService.resString(R.string.song_details_comment, comment)
+//
+//        val dialogTitle = uiResourceService.resString(R.string.song_details_title)
+//
+//        val moreActionName = uiResourceService.resString(R.string.song_action_more)
+//        val moreAction = Runnable { showMoreActions(song) }
+//
+//        showDialogWithActions(dialogTitle, message, moreActionName, moreAction, null, null)
     }
 
     private fun getLastModificationDate(song: Song): String {

@@ -16,8 +16,10 @@ enum class ChordsNotation(val id: Long, val displayNameResId: Int, val shortName
         val default: ChordsNotation
             get() = GERMAN
 
-        fun parseById(id: Long): ChordsNotation? {
-            return ChordsNotation.values().firstOrNull { v -> v.id == id }
+        fun parseById(id: Long?): ChordsNotation? {
+            if (id == null)
+                return null
+            return values().firstOrNull { v -> v.id == id }
         }
     }
 }

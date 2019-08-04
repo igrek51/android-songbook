@@ -32,18 +32,17 @@ class Migration037PublicLocalDb(val activity: Activity) : IMigration {
         migrator.makeFactoryReset()
 
         // insert old tuples to new local db
-        val newLocalDb = migrator.songsRepository!!.localDbService.get().openLocalSongsDb()
-
+        // TODO
         for (tuple in tuples) {
-            addNewCustomSong(newLocalDb, tuple)
+            addNewCustomSong(null, tuple)
         }
 
         for (favouritesTuple in favouritesTuples) {
-            setAsFavourite(newLocalDb, favouritesTuple)
+            setAsFavourite(null, favouritesTuple)
         }
 
         // reinitialize db
-        migrator.songsRepository!!.initializeSongsDb()
+        migrator.songsRepository!!.reloadSongsDb()
     }
 
     private fun getLocalSongsDbFile(): File {
@@ -113,7 +112,7 @@ class Migration037PublicLocalDb(val activity: Activity) : IMigration {
         return tuples
     }
 
-    private fun addNewCustomSong(db: SQLiteDatabase, tuple: List<Any?>) {
+    private fun addNewCustomSong(db: SQLiteDatabase?, tuple: List<Any?>) {
         // insert new song
         val values = ContentValues()
         values.put("id", tuple[0] as Long)
@@ -138,7 +137,7 @@ class Migration037PublicLocalDb(val activity: Activity) : IMigration {
         values.put("initial_delay", null as Double?)
         values.put("metre", null as String?)
 
-        safeInsert(db, "songs_song", values)
+        safeInsert(db!!, "songs_song", values)
     }
 
     protected fun getBooleanColumn(cursor: Cursor, name: String): Boolean {
@@ -196,11 +195,11 @@ class Migration037PublicLocalDb(val activity: Activity) : IMigration {
         return tuples
     }
 
-    fun setAsFavourite(db: SQLiteDatabase, tuple: List<Any?>) {
+    fun setAsFavourite(db: SQLiteDatabase?, tuple: List<Any?>) {
         val values = ContentValues()
         values.put("song_id", tuple[0] as Long)
         values.put("is_custom", tuple[1] as Boolean)
 
-        safeInsert(db, "favourite_songs", values)
+        safeInsert(db!!, "favourite_songs", values)
     }
 }

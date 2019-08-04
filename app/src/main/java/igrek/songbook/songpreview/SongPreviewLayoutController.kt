@@ -23,7 +23,7 @@ import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.navigation.NavigationMenuController
-import igrek.songbook.persistence.songsdb.Song
+import igrek.songbook.persistence.model.Song
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.lyrics.LyricsManager

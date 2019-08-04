@@ -10,7 +10,7 @@ import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.SongsRepository
-import igrek.songbook.persistence.songsdb.Song
+import igrek.songbook.persistence.model.Song
 import igrek.songbook.system.PackageInfoService
 import okhttp3.*
 import java.io.IOException

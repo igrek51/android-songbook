@@ -8,8 +8,7 @@ import igrek.songbook.custom.CustomSongService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
-import igrek.songbook.layout.confirm.ConfirmDialogBuilder
-import igrek.songbook.persistence.songsdb.Song
+import igrek.songbook.persistence.model.Song
 import igrek.songbook.songselection.favourite.FavouriteSongsRepository
 import igrek.songbook.system.cache.SimpleCache
 import javax.inject.Inject
@@ -44,13 +43,13 @@ class SongContextMenuBuilder {
                     customSongService.showEditSongScreen(song)
                 }),
                 // REMOVE
-                SongContextAction(R.string.action_song_remove, { song ->
-                    song.custom
-                }, { song ->
-                    ConfirmDialogBuilder().confirmAction(R.string.confirm_remove_song) {
-                        customSongService.removeSong(song)
-                    }
-                }),
+//                SongContextAction(R.string.action_song_remove, { song ->
+//                    song.custom
+//                }, { song ->
+//                    ConfirmDialogBuilder().confirmAction(R.string.confirm_remove_song) {
+//                        customSongService.removeSong(song)
+//                    }
+//                }),
                 // SET_FAVORITE
                 SongContextAction(R.string.action_song_set_favourite, { song ->
                     !favouriteSongsRepository.isSongFavourite(song)
@@ -64,11 +63,11 @@ class SongContextMenuBuilder {
                     favouriteSongsRepository.unsetSongFavourite(song)
                 }),
                 // COPY
-                SongContextAction(R.string.action_song_copy, { song ->
-                    !song.custom
-                }, { song ->
-                    customSongService.copySongAsCustom(song)
-                }),
+//                SongContextAction(R.string.action_song_copy, { song ->
+//                    !song.custom
+//                }, { song ->
+//                    customSongService.copySongAsCustom(song)
+//                }),
                 // AMEND
                 SongContextAction(R.string.action_song_amend, { song ->
                     !song.custom
