@@ -25,12 +25,17 @@ class UserDataService {
         DaggerIoc.factoryComponent.inject(this)
     }
 
-    private var unlockedSongs: UnlockedSongsDb? = null
-    private var favouriteSongs: FavouriteSongsDb? = null
-    private var customSongs: CustomSongsDb? = null
+    var unlockedSongs: UnlockedSongsDb? = null
+        private set
+    var favouriteSongs: FavouriteSongsDb? = null
+        private set
+    var customSongs: CustomSongsDb? = null
+        private set
 
     fun read() {
         val path = localDbService.get().songDbDir.absolutePath
+
+        // TODO latest data first, then migrate olders
 
         unlockedSongsDbService = UnlockedSongsDbService(path)
         favouriteSongsDbService = FavouriteSongsDbService(path)

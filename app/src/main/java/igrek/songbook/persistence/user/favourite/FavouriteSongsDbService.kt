@@ -1,7 +1,6 @@
 package igrek.songbook.persistence.user.favourite
 
 import igrek.songbook.persistence.user.AbstractUserDataService
-import igrek.songbook.persistence.user.custom.CustomSongsDb
 
 class FavouriteSongsDbService(path: String) : AbstractUserDataService<FavouriteSongsDb>(
         path,
@@ -12,7 +11,7 @@ class FavouriteSongsDbService(path: String) : AbstractUserDataService<FavouriteS
 ) {
 
     override fun empty(): FavouriteSongsDb {
-        return FavouriteSongsDb(emptyList())
+        return FavouriteSongsDb(mutableListOf())
     }
 
 }

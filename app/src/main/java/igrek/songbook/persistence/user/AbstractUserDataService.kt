@@ -1,18 +1,12 @@
 package igrek.songbook.persistence.user
 
 import igrek.songbook.info.logger.LoggerFactory
-import igrek.songbook.info.logger.LoggerFactory.logger
-import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
-import kotlinx.serialization.json.JsonNull.content
-import kotlinx.serialization.json.JsonParsingException
-import kotlinx.serialization.json.JsonUnknownKeyException
 import java.io.File
 import java.io.FileNotFoundException
-import java.io.FileWriter
 
 abstract class AbstractUserDataService<T>(
         private val path: String,

@@ -1,5 +1,6 @@
 package igrek.songbook.persistence.user.unlocked
-import kotlinx.serialization.*
+
+import kotlinx.serialization.Serializable
 
 @Serializable
-data class UnlockedSongsDb(val keys: List<String>)
+data class UnlockedSongsDb(val keys: MutableList<String>)

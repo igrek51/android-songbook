@@ -63,13 +63,21 @@ class SongsRepository {
     }
 
     fun factoryReset() {
-        logger.warn("Databases factory reset...")
+        logger.warn("Songs database factory reset...")
         localDbService.get().factoryReset()
         reloadSongsDb()
     }
 
     fun getSongsDbVersion(): Long? {
         return songsDao().readDbVersionNumber()
+    }
+
+    fun unlockKey(key: String) {
+        val keys = userDataService.get().unlockedSongs!!.keys
+        if (key !in keys)
+            keys.add(key)
+        userDataService.get().save()
+        reloadSongsDb()
     }
 
 }

@@ -49,8 +49,6 @@ class ActivityController {
 
     fun quit() {
         localDbService.closeDatabases()
-        userDataService.save()
-        preferencesUpdater.updateAndSave()
         windowManagerService.keepScreenOn(false)
         activity.finish()
     }
@@ -58,6 +56,7 @@ class ActivityController {
     fun onStart() {}
 
     fun onStop() {
+        userDataService.save()
         preferencesUpdater.updateAndSave()
     }
 

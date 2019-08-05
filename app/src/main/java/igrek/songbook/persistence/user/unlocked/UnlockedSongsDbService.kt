@@ -11,7 +11,7 @@ class UnlockedSongsDbService(path: String) : AbstractUserDataService<UnlockedSon
 ) {
 
     override fun empty(): UnlockedSongsDb {
-        return UnlockedSongsDb(emptyList())
+        return UnlockedSongsDb(mutableListOf())
     }
 
 }

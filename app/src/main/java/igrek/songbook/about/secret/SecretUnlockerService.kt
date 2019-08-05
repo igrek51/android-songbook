@@ -151,10 +151,9 @@ class SecretUnlockerService {
         toUnlock.forEach { s ->
             s.locked = false
         }
-//        songsRepository.unlockKey(key)
+        songsRepository.unlockKey(key)
         val message = uiResourceService.resString(R.string.unlock_new_songs_unlocked, count)
         uiInfoService.showToast(message)
-//        songsRepository.initializeSongsDb()
     }
 
     companion object {

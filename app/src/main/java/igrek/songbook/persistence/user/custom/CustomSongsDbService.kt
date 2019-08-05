@@ -11,7 +11,7 @@ class CustomSongsDbService(path: String) : AbstractUserDataService<CustomSongsDb
 ) {
 
     override fun empty(): CustomSongsDb {
-        return CustomSongsDb(emptyList())
+        return CustomSongsDb(mutableListOf())
     }
 
 }

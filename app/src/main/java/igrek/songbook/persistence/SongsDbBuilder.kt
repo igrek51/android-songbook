@@ -15,7 +15,7 @@ class SongsDbBuilder(private val songsDao: SongsDao, private val userDataService
         var categories = songsDao.readAllCategories()
         var songs = songsDao.readAllSongs()
 
-        loadUserData()
+        loadUserData(songs)
 
         songs = removeLockedSongs(songs)
         assignSongsToCategories(songs, categories)
@@ -24,12 +24,21 @@ class SongsDbBuilder(private val songsDao: SongsDao, private val userDataService
         return SongsDb(versionNumber, categories, songs)
     }
 
-    private fun loadUserData() {
-        // TODO latest data first, then migrate olders
+    private fun loadUserData(songs: List<Song>) {
+        // TODO
         //        loadCustomSongs(songsDb)
         //        loadFavourites(songsDb)
-        //        unlockSongs(songsDb)
+        unlockSongs(songs)
         //        loadPlaylists(songsDb)
+    }
+
+    private fun unlockSongs(songs: List<Song>) {
+        val keys = userDataService.unlockedSongs!!.keys
+        songs.forEach { song ->
+            if (song.locked && keys.contains(song.lockPassword)) {
+                song.locked = false
+            }
+        }
     }
 
     private fun removeLockedSongs(songs: List<Song>): MutableList<Song> {
