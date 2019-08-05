@@ -1,4 +1,4 @@
-package igrek.songbook.persistence.migration
+package igrek.songbook.persistence.migrator
 
 interface IMigration {
     fun migrate(migrator: DatabaseMigrator)

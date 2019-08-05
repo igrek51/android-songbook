@@ -30,7 +30,8 @@ import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.SongsRepository
 import igrek.songbook.persistence.SongsUpdater
-import igrek.songbook.persistence.migration.DatabaseMigrator
+import igrek.songbook.persistence.migrator.DatabaseMigrator
+import igrek.songbook.persistence.user.UserDataService
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.language.AppLanguageService
@@ -384,14 +385,20 @@ open class FactoryModule(private val activity: AppCompatActivity) {
         return ContextMenuBuilder()
     }
 
+    @Provides
+    @Singleton
+    fun provideUserDbService(): UserDataService{
+        return UserDataService()
+    }
+
     /*
 	 * Empty service pattern:
 	@Provides
-	@Singleton
-	protected  provide() {
-		return new ();
-	}
-	
+    @Singleton
+    fun provide(): {
+        return ()
+    }
+
 	 */
 
 }

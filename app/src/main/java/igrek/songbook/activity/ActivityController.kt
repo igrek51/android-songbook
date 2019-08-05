@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.persistence.LocalDbService
+import igrek.songbook.persistence.user.UserDataService
 import igrek.songbook.settings.preferences.PreferencesUpdater
 import igrek.songbook.system.WindowManagerService
 import javax.inject.Inject
@@ -18,6 +19,8 @@ class ActivityController {
     lateinit var activity: Activity
     @Inject
     lateinit var localDbService: LocalDbService
+    @Inject
+    lateinit var userDataService: UserDataService
     @Inject
     lateinit var preferencesUpdater: PreferencesUpdater
 
@@ -46,6 +49,7 @@ class ActivityController {
 
     fun quit() {
         localDbService.closeDatabases()
+        userDataService.save()
         preferencesUpdater.updateAndSave()
         windowManagerService.keepScreenOn(false)
         activity.finish()

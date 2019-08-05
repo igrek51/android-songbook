@@ -4,9 +4,10 @@ import igrek.songbook.persistence.dao.SongsDao
 import igrek.songbook.persistence.model.Category
 import igrek.songbook.persistence.model.Song
 import igrek.songbook.persistence.model.SongsDb
+import igrek.songbook.persistence.user.UserDataService
 import igrek.songbook.system.cache.FinderById
 
-class SongsDbBuilder(private val songsDao: SongsDao) {
+class SongsDbBuilder(private val songsDao: SongsDao, private val userDataService: UserDataService) {
 
     fun build(): SongsDb {
         val versionNumber = songsDao.readDbVersionNumber()

@@ -28,7 +28,8 @@ import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.SongsRepository
 import igrek.songbook.persistence.SongsUpdater
 import igrek.songbook.persistence.dao.SongsDao
-import igrek.songbook.persistence.migration.DatabaseMigrator
+import igrek.songbook.persistence.migrator.DatabaseMigrator
+import igrek.songbook.persistence.user.UserDataService
 import igrek.songbook.settings.SettingsFragment
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
@@ -164,6 +165,8 @@ interface FactoryComponent {
     fun inject(there: ChordsEditorLayoutController)
 
     fun inject(there: ContextMenuBuilder)
+
+    fun inject(there: UserDataService)
 
 
     fun inject(there: SongListItemAdapter)

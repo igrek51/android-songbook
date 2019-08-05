@@ -6,8 +6,9 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.persistence.dao.SongsDao
-import igrek.songbook.persistence.migration.DatabaseMigrator
+import igrek.songbook.persistence.migrator.DatabaseMigrator
 import igrek.songbook.persistence.model.SongsDb
+import igrek.songbook.persistence.user.UserDataService
 import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
 
@@ -15,6 +16,8 @@ class SongsRepository {
 
     @Inject
     lateinit var localDbService: Lazy<LocalDbService>
+    @Inject
+    lateinit var userDataService: Lazy<UserDataService>
     @Inject
     lateinit var uiResourceService: Lazy<UiResourceService>
     @Inject
@@ -44,7 +47,8 @@ class SongsRepository {
     }
 
     fun reloadSongsDb() {
-        val newSongsDb = SongsDbBuilder(songsDao()).build()
+        userDataService.get().read()
+        val newSongsDb = SongsDbBuilder(songsDao(), userDataService.get()).build()
         refillCategoryDisplayNames(newSongsDb)
 
         songsDb = newSongsDb

@@ -1,4 +1,4 @@
-package igrek.songbook.persistence.migration
+package igrek.songbook.persistence.migrator
 
 import android.app.Activity
 import igrek.songbook.dagger.DaggerIoc

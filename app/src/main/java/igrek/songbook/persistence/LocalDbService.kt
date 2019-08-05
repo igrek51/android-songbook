@@ -26,7 +26,7 @@ class LocalDbService {
     private val currentSchemaVersion = 2
     private val currentSongsDbFilename = "songs.$currentSchemaVersion.sqlite"
 
-    private val songDbDir: File
+    val songDbDir: File
         @SuppressLint("SdCardPath")
         get() {
             /*
