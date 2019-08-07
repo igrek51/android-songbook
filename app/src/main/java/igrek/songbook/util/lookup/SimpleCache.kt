@@ -1,4 +1,4 @@
-package igrek.songbook.system.cache
+package igrek.songbook.util.lookup
 
 class SimpleCache<T>(private val supplier: () -> T) {
 

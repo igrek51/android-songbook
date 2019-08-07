@@ -1,7 +1,7 @@
 package igrek.songbook.persistence.general.model
 
 import com.google.common.base.Objects
-import igrek.songbook.system.cache.SimpleCache
+import igrek.songbook.util.lookup.SimpleCache
 
 open class Category(
         val id: Long,

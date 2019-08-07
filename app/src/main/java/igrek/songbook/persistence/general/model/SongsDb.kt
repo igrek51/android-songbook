@@ -1,8 +1,8 @@
 package igrek.songbook.persistence.general.model
 
-import igrek.songbook.system.cache.FinderById
-import igrek.songbook.system.cache.FinderByTuple
-import igrek.songbook.system.cache.SimpleCache
+import igrek.songbook.util.lookup.FinderById
+import igrek.songbook.util.lookup.FinderByTuple
+import igrek.songbook.util.lookup.SimpleCache
 
 data class SongsDb(
         val versionNumber: Long,

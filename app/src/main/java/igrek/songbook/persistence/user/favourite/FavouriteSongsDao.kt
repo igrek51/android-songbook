@@ -7,7 +7,7 @@ import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
 import igrek.songbook.persistence.user.migrate.Migration037Favourites
-import igrek.songbook.system.cache.SimpleCache
+import igrek.songbook.util.lookup.SimpleCache
 import javax.inject.Inject
 
 class FavouriteSongsDao(path: String) : AbstractJsonDao<FavouriteSongsDb>(
@@ -28,7 +28,8 @@ class FavouriteSongsDao(path: String) : AbstractJsonDao<FavouriteSongsDb>(
     private var favouritesCache: SimpleCache<HashSet<Song>> =
             SimpleCache {
                 val favouriteSongs = songsRepository.songsDb!!.songs.filter { song ->
-                    FavouriteSong(song.id, song.custom) in favouriteSongs.favourites }
+                    FavouriteSong(song.id, song.custom) in favouriteSongs.favourites
+                }
                 HashSet(favouriteSongs)
             }
 

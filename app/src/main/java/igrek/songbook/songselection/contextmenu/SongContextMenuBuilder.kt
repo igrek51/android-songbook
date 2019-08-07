@@ -11,7 +11,7 @@ import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.layout.confirm.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.songselection.favourite.FavouriteSongsService
-import igrek.songbook.system.cache.SimpleCache
+import igrek.songbook.util.lookup.SimpleCache
 import javax.inject.Inject
 
 

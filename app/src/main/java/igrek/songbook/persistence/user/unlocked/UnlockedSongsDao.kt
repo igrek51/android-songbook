@@ -4,7 +4,6 @@ import android.app.Activity
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
-import igrek.songbook.persistence.user.migrate.Migration037Unlocks
 import javax.inject.Inject
 
 class UnlockedSongsDao(path: String) : AbstractJsonDao<UnlockedSongsDb>(

@@ -1,4 +1,4 @@
-package igrek.songbook.system.cache
+package igrek.songbook.util.lookup
 
 open class FinderByTuple<K, V>(entitiesList: List<V>,
                        private val entityToId: (V) -> K) {

@@ -3,7 +3,7 @@ package igrek.songbook.chords
 import igrek.songbook.chords.detector.ChordsDetector
 import igrek.songbook.chords.splitter.ChordsSplitter
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import igrek.songbook.system.cache.SimpleCache
+import igrek.songbook.util.lookup.SimpleCache
 
 class ChordsConverter(fromNotation: ChordsNotation, toNotation: ChordsNotation) {
 

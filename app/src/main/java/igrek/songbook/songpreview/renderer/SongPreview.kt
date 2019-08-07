@@ -14,7 +14,7 @@ import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.canvas.BaseCanvasView
 import igrek.songbook.system.WindowManagerService
-import igrek.songbook.system.cache.SimpleCache
+import igrek.songbook.util.lookup.SimpleCache
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.hypot

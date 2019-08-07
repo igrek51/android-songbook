@@ -31,6 +31,7 @@ import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.OverlayRecyclerAdapter
 import igrek.songbook.songpreview.renderer.SongPreview
+import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.favourite.FavouriteSongsService
 import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.WindowManagerService
@@ -66,6 +67,8 @@ class SongPreviewLayoutController : MainLayout {
     lateinit var uiInfoService: Lazy<UiInfoService>
     @Inject
     lateinit var favouriteSongsService: Lazy<FavouriteSongsService>
+    @Inject
+    lateinit var songContextMenuBuilder: Lazy<SongContextMenuBuilder>
 
     var songPreview: SongPreview? = null
         private set
@@ -179,9 +182,16 @@ class SongPreviewLayoutController : MainLayout {
         val fullscreenButton = layout.findViewById<ImageButton>(R.id.fullscreenButton)
         fullscreenButton.setOnClickListener { setFullscreen(true) }
 
+        val moreActionsButton = layout.findViewById<ImageButton>(R.id.moreActionsButton)
+        moreActionsButton.setOnClickListener { showMoreActions() }
+
         disableFullscreenButton = layout.findViewById(R.id.disableFullscreenButton)
         disableFullscreenButton!!.setOnClickListener { setFullscreen(false) }
         setFullscreen(false)
+    }
+
+    private fun showMoreActions() {
+        songContextMenuBuilder.get().showSongActions(currentSong!!)
     }
 
     override fun getLayoutState(): LayoutState {

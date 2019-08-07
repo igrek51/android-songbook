@@ -9,7 +9,6 @@ import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.general.SongsUpdater
 import igrek.songbook.persistence.general.dao.GeneralSongsDao
 import igrek.songbook.persistence.general.model.SongsDb
-import igrek.songbook.persistence.user.migrate.DatabaseMigrator
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.persistence.user.custom.CustomSongsDao
 import igrek.songbook.persistence.user.favourite.FavouriteSongsDao
@@ -29,8 +28,6 @@ class SongsRepository {
     lateinit var uiInfoService: Lazy<UiInfoService>
     @Inject
     lateinit var songsUpdater: Lazy<SongsUpdater>
-    @Inject
-    lateinit var databaseMigrator: Lazy<DatabaseMigrator>
 
     private val logger = LoggerFactory.logger
 

@@ -4,7 +4,7 @@ import igrek.songbook.persistence.general.dao.GeneralSongsDao
 import igrek.songbook.persistence.general.model.*
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.persistence.user.custom.CustomSongMapper
-import igrek.songbook.system.cache.FinderById
+import igrek.songbook.util.lookup.FinderById
 
 class SongsDbBuilder(
         private val versionNumber: Long,

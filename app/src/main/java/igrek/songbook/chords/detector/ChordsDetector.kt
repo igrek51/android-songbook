@@ -3,7 +3,7 @@ package igrek.songbook.chords.detector
 import igrek.songbook.chords.ChordNameProvider
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import igrek.songbook.system.cache.SimpleCache
+import igrek.songbook.util.lookup.SimpleCache
 import java.util.*
 
 class ChordsDetector(notation: ChordsNotation? = null) {

@@ -1,4 +1,4 @@
-package igrek.songbook.system.cache
+package igrek.songbook.util.lookup
 
 class FinderById<T>(
         entitiesList: List<T>,

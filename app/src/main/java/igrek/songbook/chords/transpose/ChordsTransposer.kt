@@ -4,7 +4,7 @@ import igrek.songbook.chords.ChordNameProvider
 import igrek.songbook.chords.detector.ChordsDetector
 import igrek.songbook.chords.splitter.ChordsSplitter
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import igrek.songbook.system.cache.SimpleCache
+import igrek.songbook.util.lookup.SimpleCache
 
 class ChordsTransposer(private val chordsNotation: ChordsNotation) {
 

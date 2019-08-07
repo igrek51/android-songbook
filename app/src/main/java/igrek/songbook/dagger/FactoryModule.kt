@@ -30,7 +30,6 @@ import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.general.SongsUpdater
-import igrek.songbook.persistence.user.migrate.DatabaseMigrator
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
@@ -317,12 +316,6 @@ open class FactoryModule(private val activity: AppCompatActivity) {
     @Singleton
     fun provideRandomSongSelector(): RandomSongOpener {
         return RandomSongOpener()
-    }
-
-    @Provides
-    @Singleton
-    fun provideDatabaseMigrator(): DatabaseMigrator {
-        return DatabaseMigrator()
     }
 
     @Provides
