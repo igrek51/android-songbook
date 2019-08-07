@@ -31,6 +31,7 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.persistence.user.custom.CustomSongsDao
 import igrek.songbook.persistence.user.favourite.FavouriteSongsDao
+import igrek.songbook.persistence.user.playlist.PlaylistDao
 import igrek.songbook.persistence.user.unlocked.UnlockedSongsDao
 import igrek.songbook.settings.SettingsFragment
 import igrek.songbook.settings.SettingsLayoutController
@@ -189,5 +190,7 @@ interface FactoryComponent {
     fun inject(there: FavouriteSongsDao)
 
     fun inject(there: UnlockedSongsDao)
+
+    fun inject(there: PlaylistDao)
 
 }
