@@ -118,9 +118,9 @@ class FilesystemService {
     }
 
     fun trimEndSlash(str: String): String {
-        var str = str
-        while (str.endsWith("/"))
-            str = str.substring(0, str.length - 1)
-        return str
+        var str1 = str
+        while (str1.endsWith("/"))
+            str1 = str1.substring(0, str1.length - 1)
+        return str1
     }
 }

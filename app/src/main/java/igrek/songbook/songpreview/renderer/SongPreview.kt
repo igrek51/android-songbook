@@ -103,7 +103,7 @@ class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListe
     }
 
     override fun init() {
-        songPreviewController.get().onGraphicsInitializedEvent(w, h, paint)
+        songPreviewController.get().onGraphicsInitializedEvent(w, paint)
     }
 
     override fun onRepaint() {
@@ -220,7 +220,7 @@ class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListe
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         if (isInitialized) {
-            songPreviewController.get().onPreviewSizeChange(w, h)
+            songPreviewController.get().onPreviewSizeChange(w)
         }
     }
 

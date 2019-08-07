@@ -202,7 +202,7 @@ class SongPreviewLayoutController : MainLayout {
         return R.layout.song_preview
     }
 
-    fun onGraphicsInitializedEvent(w: Int, h: Int, paint: Paint?) {
+    fun onGraphicsInitializedEvent(w: Int, paint: Paint?) {
         // load file and parse it
         val fileContent = currentSong!!.content!!
         // initialize - first file loading
@@ -301,7 +301,7 @@ class SongPreviewLayoutController : MainLayout {
             setFullscreen(false)
     }
 
-    fun onPreviewSizeChange(w: Int, h: Int) {
+    fun onPreviewSizeChange(w: Int) {
         lyricsManager.get().onPreviewSizeChange(w, songPreview!!.paint)
         onLyricsModelUpdated()
     }

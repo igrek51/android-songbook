@@ -80,11 +80,11 @@ class PreferencesService {
         }
 
         when (propertyDefinition.type) {
-            PropertyType.STRING -> editor.putString(propertyName, castIfNotNull(propertyValue, String::class.java))
-            PropertyType.BOOLEAN -> editor.putBoolean(propertyName, castIfNotNull(propertyValue, Boolean::class.java)!!)
-            PropertyType.INTEGER -> editor.putInt(propertyName, castIfNotNull(propertyValue, Int::class.java)!!)
-            PropertyType.LONG -> editor.putLong(propertyName, castIfNotNull(propertyValue, Long::class.java)!!)
-            PropertyType.FLOAT -> editor.putFloat(propertyName, castIfNotNull(propertyValue, Float::class.java)!!)
+            PropertyType.STRING -> editor.putString(propertyName, castIfNotNull(propertyValue))
+            PropertyType.BOOLEAN -> editor.putBoolean(propertyName, castIfNotNull(propertyValue)!!)
+            PropertyType.INTEGER -> editor.putInt(propertyName, castIfNotNull(propertyValue)!!)
+            PropertyType.LONG -> editor.putLong(propertyName, castIfNotNull(propertyValue)!!)
+            PropertyType.FLOAT -> editor.putFloat(propertyName, castIfNotNull(propertyValue)!!)
         }
     }
 
@@ -95,11 +95,12 @@ class PreferencesService {
 
         val propertyValue = propertyValues[propertyName]
 
-        return castIfNotNull(propertyValue, clazz)
+        return castIfNotNull(propertyValue)
     }
 
-    private fun <T> castIfNotNull(o: Any?, clazz: Class<T>): T? {
-        return if (o == null) null else o as T?
+    private fun <T> castIfNotNull(o: Any?): T? {
+        @Suppress("unchecked_cast")
+        return o as? T
     }
 
     fun setValue(propertyDefinition: PreferencesDefinition, value: Any?) {

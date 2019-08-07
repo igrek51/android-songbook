@@ -67,7 +67,7 @@ class LyricsRenderer internal constructor(private val canvas: SongPreview,
             if (lastFragment.type == LyricsTextType.LINEWRAPPER) {
                 canvas.setFontTypeface(normalTypeface)
                 canvas.setColor(linewrapperColor)
-                canvas.drawText(lastFragment.text, w, y + 0.9f * lineheight, Align.RIGHT)
+                canvas.drawText(lastFragment.text, w, y + 0.9f * lineheight, Align.TOP_RIGHT)
             }
         }
 
@@ -76,11 +76,11 @@ class LyricsRenderer internal constructor(private val canvas: SongPreview,
             if (fragment.type == LyricsTextType.REGULAR_TEXT) {
                 canvas.setFontTypeface(normalTypeface)
                 canvas.setColor(textColor)
-                canvas.drawText(fragment.text, fragment.x * fontsize, y + lineheight, Align.LEFT)
+                canvas.drawText(fragment.text, fragment.x * fontsize, y + lineheight, Align.TOP_LEFT)
             } else if (fragment.type == LyricsTextType.CHORDS) {
                 canvas.setFontTypeface(boldTypeface)
                 canvas.setColor(chordColor)
-                canvas.drawText(fragment.text, fragment.x * fontsize, y + lineheight, Align.LEFT)
+                canvas.drawText(fragment.text, fragment.x * fontsize, y + lineheight, Align.TOP_LEFT)
             }
 
         }

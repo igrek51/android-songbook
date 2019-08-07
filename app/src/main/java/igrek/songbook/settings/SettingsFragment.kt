@@ -192,9 +192,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preference.entries = entriesMap.values.toTypedArray()
         preference.values = onLoad()
         preference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { pref, newValue ->
-            val newSet = newValue as Set<String>
-            onSave(newSet)
-            pref.summary = stringConverter(newSet, entriesMap)
+            if (newValue != null && newValue is Set<*>) {
+                @Suppress("unchecked_cast")
+                val newSet = newValue as Set<String>
+                onSave(newSet)
+                pref.summary = stringConverter(newSet, entriesMap)
+            }
             true
         }
         preference.summary = stringConverter(preference.values, entriesMap)

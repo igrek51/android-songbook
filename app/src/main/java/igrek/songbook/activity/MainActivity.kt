@@ -98,7 +98,7 @@ open class MainActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        permissionService.get().onRequestPermissionsResult(requestCode, permissions, grantResults)
+        permissionService.get().onRequestPermissionsResult(permissions, grantResults)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

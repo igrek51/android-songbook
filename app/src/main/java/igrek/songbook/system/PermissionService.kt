@@ -46,7 +46,7 @@ class PermissionService {
         logger.warn("permission $permission has been denied")
     }
 
-    fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    fun onRequestPermissionsResult(permissions: Array<String>, grantResults: IntArray) {
         if (grantResults.isNotEmpty()) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 onPermissionGranted(permissions[0])

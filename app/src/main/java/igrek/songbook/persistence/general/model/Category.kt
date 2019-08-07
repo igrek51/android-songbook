@@ -28,9 +28,8 @@ open class Category(
         return Objects.hashCode(id)
     }
 
-
     private var unlockedSongsCache: SimpleCache<List<Song>> =
-            SimpleCache { songs!!.filter { s -> !s.locked } }
+            SimpleCache { songs.filter { s -> !s.locked } }
 
     fun getUnlockedSongs(): List<Song> {
         return unlockedSongsCache.get()
