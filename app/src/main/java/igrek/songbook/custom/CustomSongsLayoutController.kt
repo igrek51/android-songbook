@@ -9,11 +9,12 @@ import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
-import igrek.songbook.persistence.model.SongsDb
+import igrek.songbook.persistence.general.model.SongsDb
 import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.SongSelectionLayoutController
 import igrek.songbook.songselection.search.SongSearchItem
 import igrek.songbook.songselection.tree.SongTreeItem
+import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 class CustomSongsLayoutController : SongSelectionLayoutController(), MainLayout {
@@ -23,6 +24,7 @@ class CustomSongsLayoutController : SongSelectionLayoutController(), MainLayout 
 
     private var storedScroll: ListScrollPosition? = null
     private var emptyListLabel: TextView? = null
+    private var subscription: Disposable? = null
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -39,7 +41,8 @@ class CustomSongsLayoutController : SongSelectionLayoutController(), MainLayout 
         itemsListView!!.init(activity, this)
         updateSongItemsList()
 
-        songsRepository.dbChangeSubject.subscribe {
+        subscription?.dispose()
+        subscription = songsRepository.dbChangeSubject.subscribe {
             if (layoutController.isState(getLayoutState()))
                 updateSongItemsList()
         }

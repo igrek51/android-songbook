@@ -2,10 +2,10 @@ package igrek.songbook.service.songtree
 
 import assertk.assertThat
 import assertk.assertions.isEqualTo
-import igrek.songbook.persistence.model.Category
-import igrek.songbook.persistence.model.CategoryType
-import igrek.songbook.persistence.model.Song
-import igrek.songbook.persistence.model.SongStatus
+import igrek.songbook.persistence.general.model.Category
+import igrek.songbook.persistence.general.model.CategoryType
+import igrek.songbook.persistence.general.model.Song
+import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.songselection.tree.SongTreeItem
 import igrek.songbook.songselection.tree.SongTreeSorter
 import org.junit.Test

@@ -1,4 +1,4 @@
-package igrek.songbook.persistence
+package igrek.songbook.persistence.general
 
 import android.os.Handler
 import android.os.Looper
@@ -7,6 +7,8 @@ import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.persistence.LocalDbService
+import igrek.songbook.persistence.repository.SongsRepository
 import okhttp3.*
 import java.io.*
 import javax.inject.Inject
@@ -35,7 +37,8 @@ class SongsUpdater {
         DaggerIoc.factoryComponent.inject(this)
     }
 
-    fun updateSongsDb(songsDbFile: File) {
+    fun updateSongsDb() {
+        val songsDbFile: File = localDbService.get().songsDbFile
 
         uiInfoService.get().showInfoIndefinite(R.string.updating_db_in_progress)
 
@@ -61,7 +64,6 @@ class SongsUpdater {
 
     fun checkUpdateIsAvailable() {
         Handler(Looper.getMainLooper()).post {
-
             val request: Request = Request.Builder()
                     .url(songsDbVersionUrl)
                     .build()
@@ -80,7 +82,6 @@ class SongsUpdater {
                     }
                 }
             })
-
         }
     }
 
@@ -88,27 +89,34 @@ class SongsUpdater {
         try {
             val inputStream: InputStream = response.body()!!.byteStream()
             val input = BufferedInputStream(inputStream)
-            val output = FileOutputStream(songsDbFile)
-            val data = ByteArray(1024)
-            var total: Long = 0
-            var count: Int
-            while (true) {
-                count = input.read(data)
-                if (count == -1)
-                    break
-                total += count
-                output.write(data, 0, count)
+            try {
+                songsRepository.get().close()
+                val output = FileOutputStream(songsDbFile)
+                val data = ByteArray(1024)
+                var total: Long = 0
+                var count: Int
+                while (true) {
+                    count = input.read(data)
+                    if (count == -1)
+                        break
+                    total += count
+                    output.write(data, 0, count)
+                }
+                output.flush()
+                output.close()
+                input.close()
+            }catch (e: Exception) {
+                songsRepository.get().reloadSongsDb()
+                throw e
             }
-            output.flush()
-            output.close()
-            input.close()
             Handler(Looper.getMainLooper()).post {
                 try {
                     songsRepository.get().reloadSongsDb()
                     uiInfoService.get().showInfo(R.string.ui_db_is_uptodate)
                 } catch (t: Throwable) {
                     uiInfoService.get().showInfo(R.string.db_update_failed_incompatible)
-                    localDbService.get().factoryResetSongsDb()
+                    songsRepository.get().resetGeneralData()
+                    songsRepository.get().reloadSongsDb()
                 }
             }
         } catch (e: Exception) {
@@ -119,7 +127,7 @@ class SongsUpdater {
     private fun onSongDatabaseVersionReceived(response: Response) {
         try {
             val remoteVersion = response.body()?.string()?.toLong()
-            val localVersion = songsRepository.get().getSongsDbVersion()
+            val localVersion = songsRepository.get().songsDbVersion()
 
             logger.debug("Update availability check: local: $localVersion, remote: $remoteVersion")
 
@@ -140,9 +148,9 @@ class SongsUpdater {
 
     private fun showUpdateIsAvailable() {
         Handler(Looper.getMainLooper()).post {
-            uiInfoService.get().showInfoWithAction(R.string.update_is_available, R.string.action_update) {
+            uiInfoService.get().showInfoWithActionIndefinite(R.string.update_is_available, R.string.action_update) {
                 uiInfoService.get().clearSnackBars()
-                updateSongsDb(localDbService.get().songsDbFile)
+                updateSongsDb()
             }
         }
     }

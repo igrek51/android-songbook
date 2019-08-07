@@ -16,7 +16,7 @@ import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.persistence.SongsRepository
+import igrek.songbook.persistence.general.SongsUpdater
 import igrek.songbook.songselection.random.RandomSongOpener
 import igrek.songbook.system.SoftKeyboardService
 import java.util.*
@@ -39,7 +39,7 @@ class NavigationMenuController {
     @Inject
     lateinit var layoutController: Lazy<LayoutController>
     @Inject
-    lateinit var songsRepository: Lazy<SongsRepository>
+    lateinit var songsUpdater: Lazy<SongsUpdater>
     @Inject
     lateinit var softKeyboardService: Lazy<SoftKeyboardService>
     @Inject
@@ -59,7 +59,7 @@ class NavigationMenuController {
         actionsMap[R.id.nav_songs_list] = { layoutController.get().showSongTree() }
         actionsMap[R.id.nav_search] = { layoutController.get().showSongSearch() }
         actionsMap[R.id.nav_favourites] = { layoutController.get().showFavourites() }
-//        actionsMap[R.id.nav_update_db] = { songsRepository.get().updateSongsDb() }
+        actionsMap[R.id.nav_update_db] = { songsUpdater.get().updateSongsDb() }
         actionsMap[R.id.nav_custom_songs] = { layoutController.get().showCustomSongs() }
         actionsMap[R.id.nav_random_song] = { randomSongOpener.get().openRandomSong() }
         actionsMap[R.id.nav_settings] = { layoutController.get().showSettings() }

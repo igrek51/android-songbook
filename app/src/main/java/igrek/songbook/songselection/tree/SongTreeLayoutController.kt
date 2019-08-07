@@ -8,8 +8,8 @@ import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
-import igrek.songbook.persistence.model.Category
-import igrek.songbook.persistence.model.SongsDb
+import igrek.songbook.persistence.general.model.Category
+import igrek.songbook.persistence.general.model.SongsDb
 import igrek.songbook.songselection.SongSelectionLayoutController
 import javax.inject.Inject
 

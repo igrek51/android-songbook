@@ -91,20 +91,26 @@ class UiInfoService {
         showInfoIndefinite(info)
     }
 
-    fun showInfoWithAction(info: String, actionName: String, actionCallback: (() -> Unit)) {
+    private fun showInfoWithAction(info: String, actionName: String, actionCallback: (() -> Unit), snackbarLength: Int) {
         val color = ContextCompat.getColor(activity, R.color.colorAccent)
-        showActionInfo(info, null, actionName, actionCallback, color, Snackbar.LENGTH_LONG)
+        showActionInfo(info, null, actionName, actionCallback, color, snackbarLength)
     }
 
     fun showInfoWithAction(info: String, actionNameRes: Int, actionCallback: (() -> Unit)) {
         val actionName = uiResourceService.get().resString(actionNameRes)
-        showInfoWithAction(info, actionName, actionCallback)
+        showInfoWithAction(info, actionName, actionCallback, Snackbar.LENGTH_LONG)
     }
 
     fun showInfoWithAction(infoRes: Int, actionNameRes: Int, actionCallback: (() -> Unit)) {
         val info = uiResourceService.get().resString(infoRes)
         val actionName = uiResourceService.get().resString(actionNameRes)
-        showInfoWithAction(info, actionName, actionCallback)
+        showInfoWithAction(info, actionName, actionCallback, Snackbar.LENGTH_LONG)
+    }
+
+    fun showInfoWithActionIndefinite(infoRes: Int, actionNameRes: Int, actionCallback: (() -> Unit)) {
+        val info = uiResourceService.get().resString(infoRes)
+        val actionName = uiResourceService.get().resString(actionNameRes)
+        showInfoWithAction(info, actionName, actionCallback, Snackbar.LENGTH_INDEFINITE)
     }
 
     fun showToast(message: String) {

@@ -5,8 +5,8 @@ import igrek.songbook.BuildConfig
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.persistence.SongsRepository
-import igrek.songbook.persistence.SongsUpdater
+import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.persistence.general.SongsUpdater
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.system.WindowManagerService
 import javax.inject.Inject

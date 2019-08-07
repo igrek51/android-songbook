@@ -28,10 +28,10 @@ import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.LocalDbService
-import igrek.songbook.persistence.SongsRepository
-import igrek.songbook.persistence.SongsUpdater
-import igrek.songbook.persistence.migrator.DatabaseMigrator
-import igrek.songbook.persistence.user.UserDataService
+import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.persistence.general.SongsUpdater
+import igrek.songbook.persistence.user.migrate.DatabaseMigrator
+import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.language.AppLanguageService
@@ -45,7 +45,7 @@ import igrek.songbook.songpreview.lyrics.LyricsManager
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
-import igrek.songbook.songselection.favourite.FavouriteSongsRepository
+import igrek.songbook.songselection.favourite.FavouriteSongsService
 import igrek.songbook.songselection.favourite.FavouritesLayoutController
 import igrek.songbook.songselection.random.RandomSongOpener
 import igrek.songbook.songselection.search.SongSearchLayoutController
@@ -333,8 +333,8 @@ open class FactoryModule(private val activity: AppCompatActivity) {
 
     @Provides
     @Singleton
-    fun provideFavouriteSongService(): FavouriteSongsRepository {
-        return FavouriteSongsRepository()
+    fun provideFavouriteSongService(): FavouriteSongsService {
+        return FavouriteSongsService()
     }
 
     @Provides
@@ -387,8 +387,8 @@ open class FactoryModule(private val activity: AppCompatActivity) {
 
     @Provides
     @Singleton
-    fun provideUserDbService(): UserDataService{
-        return UserDataService()
+    fun provideUserDbService(): UserDataDao{
+        return UserDataDao()
     }
 
     /*

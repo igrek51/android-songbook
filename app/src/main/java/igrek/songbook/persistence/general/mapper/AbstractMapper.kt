@@ -1,4 +1,4 @@
-package igrek.songbook.persistence.dao.mapper
+package igrek.songbook.persistence.general.mapper
 
 import android.database.Cursor
 import igrek.songbook.info.logger.Logger

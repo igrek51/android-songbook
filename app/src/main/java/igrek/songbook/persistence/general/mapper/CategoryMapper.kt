@@ -1,8 +1,8 @@
-package igrek.songbook.persistence.dao.mapper
+package igrek.songbook.persistence.general.mapper
 
 import android.database.Cursor
-import igrek.songbook.persistence.model.Category
-import igrek.songbook.persistence.model.CategoryType
+import igrek.songbook.persistence.general.model.Category
+import igrek.songbook.persistence.general.model.CategoryType
 
 class CategoryMapper : AbstractMapper<Category>() {
 

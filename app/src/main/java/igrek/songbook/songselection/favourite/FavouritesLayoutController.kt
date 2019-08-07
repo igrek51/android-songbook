@@ -7,20 +7,23 @@ import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
-import igrek.songbook.persistence.model.SongsDb
+import igrek.songbook.persistence.general.model.SongsDb
 import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.SongSelectionLayoutController
 import igrek.songbook.songselection.search.SongSearchItem
 import igrek.songbook.songselection.tree.SongTreeItem
+import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
 
     @Inject
-    lateinit var favouriteSongsRepository: FavouriteSongsRepository
+    lateinit var favouriteSongsService: FavouriteSongsService
 
     private var storedScroll: ListScrollPosition? = null
     private var emptyListLabel: TextView? = null
+
+    private var subscription: Disposable? = null
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -34,7 +37,8 @@ class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
         itemsListView!!.init(activity, this)
         updateSongItemsList()
 
-        songsRepository.dbChangeSubject.subscribe {
+        subscription?.dispose()
+        subscription = songsRepository.dbChangeSubject.subscribe {
             if (layoutController.isState(getLayoutState()))
                 updateSongItemsList()
         }
@@ -64,7 +68,7 @@ class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
 
     override fun getSongItems(songsDb: SongsDb): MutableList<SongTreeItem> {
         // filter songs
-        val songsSequence = favouriteSongsRepository.getFavouriteSongs()
+        val songsSequence = favouriteSongsService.getFavouriteSongs()
                 .asSequence()
                 .map { song -> SongSearchItem.song(song) }
         return songsSequence.toMutableList()

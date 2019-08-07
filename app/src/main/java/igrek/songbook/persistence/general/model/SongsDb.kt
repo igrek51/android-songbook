@@ -1,6 +1,7 @@
-package igrek.songbook.persistence.model
+package igrek.songbook.persistence.general.model
 
 import igrek.songbook.system.cache.FinderById
+import igrek.songbook.system.cache.FinderByTuple
 import igrek.songbook.system.cache.SimpleCache
 
 data class SongsDb(
@@ -8,7 +9,7 @@ data class SongsDb(
         val categories: List<Category>,
         val songs: List<Song>
 ) {
-    val songFinder = FinderById(songs) { e -> e.id }
+    val songFinder = FinderByTuple(songs) { song -> song.songIdentifier() }
     val categoryFinder = FinderById(categories) { e -> e.id }
 
     private var customSongsCache: SimpleCache<List<Song>> =

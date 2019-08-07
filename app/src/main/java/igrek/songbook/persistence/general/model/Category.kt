@@ -1,4 +1,4 @@
-package igrek.songbook.persistence.model
+package igrek.songbook.persistence.general.model
 
 import com.google.common.base.Objects
 import igrek.songbook.system.cache.SimpleCache

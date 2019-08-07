@@ -4,4 +4,4 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class CustomSongsDb(val songs: MutableList<CustomSong>)
+data class CustomSongsDb(var songs: MutableList<CustomSong>)

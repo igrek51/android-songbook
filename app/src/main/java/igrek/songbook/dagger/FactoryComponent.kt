@@ -25,11 +25,13 @@ import igrek.songbook.layout.confirm.ConfirmDialogBuilder
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.LocalDbService
-import igrek.songbook.persistence.SongsRepository
-import igrek.songbook.persistence.SongsUpdater
-import igrek.songbook.persistence.dao.SongsDao
-import igrek.songbook.persistence.migrator.DatabaseMigrator
-import igrek.songbook.persistence.user.UserDataService
+import igrek.songbook.persistence.general.SongsUpdater
+import igrek.songbook.persistence.general.dao.GeneralSongsDao
+import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.persistence.user.UserDataDao
+import igrek.songbook.persistence.user.custom.CustomSongsDao
+import igrek.songbook.persistence.user.favourite.FavouriteSongsDao
+import igrek.songbook.persistence.user.unlocked.UnlockedSongsDao
 import igrek.songbook.settings.SettingsFragment
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
@@ -47,7 +49,7 @@ import igrek.songbook.songpreview.renderer.SongPreview
 import igrek.songbook.songselection.SongListItemAdapter
 import igrek.songbook.songselection.SongListView
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
-import igrek.songbook.songselection.favourite.FavouriteSongsRepository
+import igrek.songbook.songselection.favourite.FavouriteSongsService
 import igrek.songbook.songselection.favourite.FavouritesLayoutController
 import igrek.songbook.songselection.random.RandomSongOpener
 import igrek.songbook.songselection.search.SongSearchLayoutController
@@ -132,7 +134,7 @@ interface FactoryComponent {
 
     fun inject(there: SongImportFileChooser)
 
-    fun inject(there: SongsDao)
+    fun inject(there: GeneralSongsDao)
 
     fun inject(there: CustomSongService)
 
@@ -142,11 +144,9 @@ interface FactoryComponent {
 
     fun inject(there: RandomSongOpener)
 
-    fun inject(there: DatabaseMigrator)
-
     fun inject(there: AppLanguageService)
 
-    fun inject(there: FavouriteSongsRepository)
+    fun inject(there: FavouriteSongsService)
 
     fun inject(there: FavouritesLayoutController)
 
@@ -166,8 +166,7 @@ interface FactoryComponent {
 
     fun inject(there: ContextMenuBuilder)
 
-    fun inject(there: UserDataService)
-
+    fun inject(there: UserDataDao)
 
     fun inject(there: SongListItemAdapter)
 
@@ -184,5 +183,11 @@ interface FactoryComponent {
     fun inject(there: SongPreview)
 
     fun inject(there: ConfirmDialogBuilder)
+
+    fun inject(there: CustomSongsDao)
+
+    fun inject(there: FavouriteSongsDao)
+
+    fun inject(there: UnlockedSongsDao)
 
 }

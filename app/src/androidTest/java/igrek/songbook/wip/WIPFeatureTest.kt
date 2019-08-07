@@ -8,7 +8,7 @@ import igrek.songbook.dagger.DaggerAndroidTestComponent
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.dagger.FactoryModule
 import igrek.songbook.info.logger.LoggerFactory
-import igrek.songbook.persistence.SongsRepository
+import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.preferences.PreferencesService
 import org.junit.Before
 import org.junit.Ignore

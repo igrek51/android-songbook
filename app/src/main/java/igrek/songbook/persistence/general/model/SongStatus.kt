@@ -1,10 +1,14 @@
-package igrek.songbook.persistence.model
+package igrek.songbook.persistence.general.model
 
 enum class SongStatus(val id: Long) {
 
     PUBLISHED(1),
 
-    PROPOSED(2);
+    PROPOSED(2),
+
+    CUSTOM(3),
+
+    ACCEPTED(3);
 
     companion object {
         fun parseById(id: Long): SongStatus {

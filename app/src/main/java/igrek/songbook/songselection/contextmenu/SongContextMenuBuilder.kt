@@ -8,8 +8,9 @@ import igrek.songbook.custom.CustomSongService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
-import igrek.songbook.persistence.model.Song
-import igrek.songbook.songselection.favourite.FavouriteSongsRepository
+import igrek.songbook.layout.confirm.ConfirmDialogBuilder
+import igrek.songbook.persistence.general.model.Song
+import igrek.songbook.songselection.favourite.FavouriteSongsService
 import igrek.songbook.system.cache.SimpleCache
 import javax.inject.Inject
 
@@ -21,7 +22,7 @@ class SongContextMenuBuilder {
     @Inject
     lateinit var uiResourceService: UiResourceService
     @Inject
-    lateinit var favouriteSongsRepository: FavouriteSongsRepository
+    lateinit var favouriteSongsService: FavouriteSongsService
     @Inject
     lateinit var customSongService: CustomSongService
     @Inject
@@ -43,31 +44,31 @@ class SongContextMenuBuilder {
                     customSongService.showEditSongScreen(song)
                 }),
                 // REMOVE
-//                SongContextAction(R.string.action_song_remove, { song ->
-//                    song.custom
-//                }, { song ->
-//                    ConfirmDialogBuilder().confirmAction(R.string.confirm_remove_song) {
-//                        customSongService.removeSong(song)
-//                    }
-//                }),
+                SongContextAction(R.string.action_song_remove, { song ->
+                    song.custom
+                }, { song ->
+                    ConfirmDialogBuilder().confirmAction(R.string.confirm_remove_song) {
+                        customSongService.removeSong(song)
+                    }
+                }),
                 // SET_FAVORITE
                 SongContextAction(R.string.action_song_set_favourite, { song ->
-                    !favouriteSongsRepository.isSongFavourite(song)
+                    !favouriteSongsService.isSongFavourite(song)
                 }, { song ->
-                    favouriteSongsRepository.setSongFavourite(song)
+                    favouriteSongsService.setSongFavourite(song)
                 }),
                 // UNSET_FAVORITE
                 SongContextAction(R.string.action_song_unset_favourite, { song ->
-                    favouriteSongsRepository.isSongFavourite(song)
+                    favouriteSongsService.isSongFavourite(song)
                 }, { song ->
-                    favouriteSongsRepository.unsetSongFavourite(song)
+                    favouriteSongsService.unsetSongFavourite(song)
                 }),
                 // COPY
-//                SongContextAction(R.string.action_song_copy, { song ->
-//                    !song.custom
-//                }, { song ->
-//                    customSongService.copySongAsCustom(song)
-//                }),
+                SongContextAction(R.string.action_song_copy, { song ->
+                    !song.custom
+                }, { song ->
+                    customSongService.copySongAsCustom(song)
+                }),
                 // AMEND
                 SongContextAction(R.string.action_song_amend, { song ->
                     !song.custom

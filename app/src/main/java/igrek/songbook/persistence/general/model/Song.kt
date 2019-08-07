@@ -1,4 +1,4 @@
-package igrek.songbook.persistence.model
+package igrek.songbook.persistence.general.model
 
 import com.google.common.base.Objects
 import igrek.songbook.settings.chordsnotation.ChordsNotation
@@ -45,7 +45,7 @@ open class Song(
         return categories.any { c -> c.type == CategoryType.ARTIST }
     }
 
-    private fun displayCategories(): String {
+    fun displayCategories(): String {
         return categories.joinToString(", ") { c -> c.displayName!! }
     }
 
@@ -55,5 +55,9 @@ open class Song(
             custom and !customCategoryName.isNullOrEmpty() -> "$title - $customCategoryName"
             else -> title
         }
+    }
+
+    fun songIdentifier(): SongIdentifier {
+        return SongIdentifier(id, custom)
     }
 }

@@ -4,8 +4,8 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
 import assertk.assertions.isTrue
-import igrek.songbook.persistence.model.Category
-import igrek.songbook.persistence.model.CategoryType
+import igrek.songbook.persistence.general.model.Category
+import igrek.songbook.persistence.general.model.CategoryType
 import igrek.songbook.songselection.search.SongTreeFilter
 import igrek.songbook.songselection.tree.SongTreeItem
 import org.junit.Test

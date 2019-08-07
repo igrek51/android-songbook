@@ -16,7 +16,7 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.persistence.LocalDbService
-import igrek.songbook.persistence.SongsRepository
+import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.locale.StringSimplifier
@@ -60,7 +60,14 @@ class SecretUnlockerService {
             UnlockerRule("reset") { reset() },
             UnlockerRule("reset config") { preferencesService.clear() },
             UnlockerRule("reset db") { songsRepository.factoryReset() },
-            UnlockerRule("reset db songs") { localDbService.factoryReset() }
+            UnlockerRule("reset db general") {
+                songsRepository.resetGeneralData()
+                songsRepository.reloadSongsDb()
+            },
+            UnlockerRule("reset db user") {
+                songsRepository.resetUserData()
+                songsRepository.reloadSongsDb()
+            }
     )
 
     @SuppressLint("InflateParams")
@@ -151,7 +158,7 @@ class SecretUnlockerService {
         toUnlock.forEach { s ->
             s.locked = false
         }
-        songsRepository.unlockKey(key)
+        songsRepository.unlockedSongsDao.unlockKey(key)
         val message = uiResourceService.resString(R.string.unlock_new_songs_unlocked, count)
         uiInfoService.showToast(message)
     }

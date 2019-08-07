@@ -9,7 +9,7 @@ import igrek.songbook.R
 import igrek.songbook.about.secret.SecretUnlockerService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
-import igrek.songbook.persistence.SongsRepository
+import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.system.PackageInfoService
 import javax.inject.Inject
 

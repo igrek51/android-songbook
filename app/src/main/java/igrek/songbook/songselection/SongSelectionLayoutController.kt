@@ -13,8 +13,8 @@ import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.navigation.NavigationMenuController
-import igrek.songbook.persistence.SongsRepository
-import igrek.songbook.persistence.model.SongsDb
+import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.persistence.general.model.SongsDb
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.tree.SongTreeItem

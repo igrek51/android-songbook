@@ -21,7 +21,6 @@ class LocalDbService {
     lateinit var permissionService: Lazy<PermissionService>
 
     private val logger = LoggerFactory.logger
-    private var songsDbHelper: SQLiteDatabase? = null
 
     private val currentSchemaVersion = 2
     private val currentSongsDbFilename = "songs.$currentSchemaVersion.sqlite"
@@ -53,33 +52,14 @@ class LocalDbService {
         DaggerIoc.factoryComponent.inject(this)
     }
 
-    fun openSongsDb(): SQLiteDatabase {
-        if (songsDbHelper == null) {
-            val dbFile = songsDbFile
-            // if file does not exist - copy initial db from resources
-            if (!dbFile.exists())
-                copyFileFromResources(R.raw.songs, dbFile)
-            songsDbHelper = openDatabase(dbFile)
-        }
-        return songsDbHelper!!
-    }
-
-    fun closeDatabases() {
-        songsDbHelper?.close()
-        songsDbHelper = null
+    fun ensureLocalDbExists() {
+        val dbFile = songsDbFile
+        // if file does not exist - copy initial db from resources
+        if (!dbFile.exists())
+            copyFileFromResources(R.raw.songs, dbFile)
     }
 
     fun factoryReset() {
-        // remove db files
-        factoryResetSongsDb()
-        // need to reopen dbs again (in external dependencies)
-    }
-
-    fun factoryResetSongsDb() {
-        if (songsDbHelper != null) {
-            songsDbHelper!!.close()
-            songsDbHelper = null
-        }
         removeDb(songsDbFile)
     }
 
@@ -88,12 +68,6 @@ class LocalDbService {
             if (!songsDbFile.delete() || songsDbFile.exists())
                 logger.error("failed to delete database file: " + songsDbFile.absolutePath)
         }
-    }
-
-    private fun openDatabase(songsDbFile: File): SQLiteDatabase {
-        if (!songsDbFile.exists())
-            logger.warn("Database file does not exist: " + songsDbFile.absolutePath)
-        return SQLiteDatabase.openDatabase(songsDbFile.absolutePath, null, SQLiteDatabase.OPEN_READWRITE)
     }
 
     private fun copyFileFromResources(resourceId: Int, targetPath: File) {

@@ -92,12 +92,12 @@ dependencies {
     compileOnly 'javax.annotation:jsr250-api:1.0'
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.11.1"
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.11.1'
     // Guava
     implementation 'com.google.guava:guava:26.0-android'
     // RX
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.0'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
     // OkHttp
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     // Unit tests

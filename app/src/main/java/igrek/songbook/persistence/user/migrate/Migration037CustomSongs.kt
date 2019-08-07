@@ -1,48 +1,47 @@
-package igrek.songbook.persistence.migrator
+package igrek.songbook.persistence.user.migrate
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.ContentValues
 import android.database.Cursor
-import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.persistence.user.custom.CustomSong
+import igrek.songbook.persistence.user.custom.CustomSongsDb
 import java.io.File
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class Migration037PublicLocalDb(val activity: Activity) : IMigration {
+class Migration037CustomSongs(private val activity: Activity) {
 
     private val logger = LoggerFactory.logger
     private val iso8601Format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
 
-    override fun migrate(migrator: DatabaseMigrator) {
+    fun load(): CustomSongsDb? {
         // open old database
         val oldLocalDb = openLocalSongsDb() ?: throw RuntimeException("no old custom songs file")
 
         // get old custom songs
         val tuples = readAllCustomSongs(oldLocalDb)
-        // get old favourites
-        val favouritesTuples = readFavouriteSongs(oldLocalDb)
 
         oldLocalDb.close()
 
-        // clear
-        migrator.makeFactoryReset()
+        val customSongs = tuples.map { tuple ->
+            CustomSong(
+                    id = tuple[0] as Long,
+                    title = tuple[1] as String,
+                    categoryName = tuple[15] as String?,
+                    content = tuple[3] as String? ?: "",
+                    versionNumber = tuple[4] as Long,
+                    createTime = tuple[5] as Long,
+                    updateTime = tuple[6] as Long,
+                    comment = tuple[9] as String?,
+                    preferredKey = tuple[10] as String?,
+                    author = tuple[13] as String?
+            )
+        }.toMutableList()
 
-        // insert old tuples to new local db
-        // TODO
-        for (tuple in tuples) {
-            addNewCustomSong(null, tuple)
-        }
-
-        for (favouritesTuple in favouritesTuples) {
-            setAsFavourite(null, favouritesTuple)
-        }
-
-        // reinitialize db
-        migrator.songsRepository!!.reloadSongsDb()
+        return CustomSongsDb(customSongs)
     }
 
     private fun getLocalSongsDbFile(): File {
@@ -59,7 +58,7 @@ class Migration037PublicLocalDb(val activity: Activity) : IMigration {
         return File("/data/data/" + activity.packageName + "/files")
     }
 
-    fun openLocalSongsDb(): SQLiteDatabase? {
+    private fun openLocalSongsDb(): SQLiteDatabase? {
         val dbFile = getLocalSongsDbFile()
         // if file does not exist - copy initial db from resources
         if (!dbFile.exists())
@@ -112,40 +111,12 @@ class Migration037PublicLocalDb(val activity: Activity) : IMigration {
         return tuples
     }
 
-    private fun addNewCustomSong(db: SQLiteDatabase?, tuple: List<Any?>) {
-        // insert new song
-        val values = ContentValues()
-        values.put("id", tuple[0] as Long)
-        values.put("title", tuple[1] as String)
-        values.put("category_id", tuple[2] as Long)
-        values.put("file_content", tuple[3] as String?)
-        values.put("version_number", tuple[4] as Long)
-        values.put("create_time", iso8601Format.format(Date(tuple[5] as Long)))
-        values.put("update_time", iso8601Format.format(Date(tuple[6] as Long)))
-        values.put("is_custom", tuple[7] as Boolean)
-        values.put("filename", tuple[8] as String?)
-        values.put("comment", tuple[9] as String?)
-        values.put("preferred_key", tuple[10] as String?)
-        values.put("is_locked", tuple[11] as Boolean)
-        values.put("lock_password", tuple[12] as String?)
-        values.put("author", tuple[13] as String?)
-        values.put("state", tuple[14] as Long)
-        values.put("custom_category_name", tuple[15] as String?)
-        values.put("language", null as String?)
-        values.put("rank", null as Double?)
-        values.put("scroll_speed", null as Double?)
-        values.put("initial_delay", null as Double?)
-        values.put("metre", null as String?)
-
-        safeInsert(db!!, "songs_song", values)
-    }
-
-    protected fun getBooleanColumn(cursor: Cursor, name: String): Boolean {
+    private fun getBooleanColumn(cursor: Cursor, name: String): Boolean {
         val intValue = cursor.getInt(cursor.getColumnIndexOrThrow(name))
         return intValue != 0
     }
 
-    protected fun getTimestampColumn(cursor: Cursor, name: String): Long {
+    private fun getTimestampColumn(cursor: Cursor, name: String): Long {
         // get datetime, convert to long timestamp
         val stringValue = cursor.getString(cursor.getColumnIndexOrThrow(name))
         return try {
@@ -157,49 +128,7 @@ class Migration037PublicLocalDb(val activity: Activity) : IMigration {
         }
     }
 
-    private fun removeDb(songsDbFile: File) {
-        if (songsDbFile.exists()) {
-            if (!songsDbFile.delete() || songsDbFile.exists())
-                logger.error("failed to delete database file: " + songsDbFile.absolutePath)
-        }
-    }
-
-    protected fun safeInsert(db: SQLiteDatabase, table: String, values: ContentValues) {
-        try {
-            val result = db.insertWithOnConflict(table, null, values, SQLiteDatabase.CONFLICT_NONE)
-            if (result == -1L)
-                throw SQLException("result -1")
-        } catch (e: SQLException) {
-            logger.error("SQL insertion error: $e.message")
-        }
-    }
-
-    protected fun sqlQuery(db: SQLiteDatabase, sql: String, selectionArgs: Array<String> = arrayOf()): Cursor {
+    private fun sqlQuery(db: SQLiteDatabase, sql: String, selectionArgs: Array<String> = arrayOf()): Cursor {
         return db.rawQuery(sql, selectionArgs)
-    }
-
-    private fun readFavouriteSongs(db: SQLiteDatabase): MutableList<List<Any?>> {
-        val tuples: MutableList<List<Any?>> = mutableListOf()
-        try {
-            val cursor = sqlQuery(db, "SELECT * FROM favourite_songs")
-            while (cursor.moveToNext()) {
-                val songId = cursor.getLong(cursor.getColumnIndexOrThrow("song_id"))
-                val custom = getBooleanColumn(cursor, "is_custom")
-                val tuple = mutableListOf<Any?>(songId, custom)
-                tuples.add(tuple)
-            }
-            cursor.close()
-        } catch (e: IllegalArgumentException) {
-            logger.error(e)
-        }
-        return tuples
-    }
-
-    fun setAsFavourite(db: SQLiteDatabase?, tuple: List<Any?>) {
-        val values = ContentValues()
-        values.put("song_id", tuple[0] as Long)
-        values.put("is_custom", tuple[1] as Boolean)
-
-        safeInsert(db!!, "favourite_songs", values)
     }
 }

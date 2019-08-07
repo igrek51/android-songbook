@@ -1,7 +1,7 @@
 package igrek.songbook.songselection.tree
 
-import igrek.songbook.persistence.model.Category
-import igrek.songbook.persistence.model.Song
+import igrek.songbook.persistence.general.model.Category
+import igrek.songbook.persistence.general.model.Song
 
 open class SongTreeItem protected constructor(open val song: Song?, val category: Category?) {
 

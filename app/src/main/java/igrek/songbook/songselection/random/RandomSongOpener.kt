@@ -4,12 +4,12 @@ import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.persistence.SongsRepository
-import igrek.songbook.persistence.model.Song
+import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.settings.preferences.PreferencesDefinition
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.songpreview.SongPreviewLayoutController
-import igrek.songbook.songselection.favourite.FavouriteSongsRepository
+import igrek.songbook.songselection.favourite.FavouriteSongsService
 import java.util.*
 import javax.inject.Inject
 
@@ -24,7 +24,7 @@ class RandomSongOpener {
     @Inject
     lateinit var preferencesService: PreferencesService
     @Inject
-    lateinit var favouriteSongsRepository: FavouriteSongsRepository
+    lateinit var favouriteSongsService: FavouriteSongsService
     @Inject
     lateinit var uiInfoService: UiInfoService
 
@@ -58,7 +58,7 @@ class RandomSongOpener {
 
     private fun songsToShuffle(): List<Song> {
         return if (fromFavouriteSongsOnly) {
-            favouriteSongsRepository.getFavouriteSongs().toList()
+            favouriteSongsService.getFavouriteSongs().toList()
         } else {
             songsRepository.songsDb!!.songs
         }
