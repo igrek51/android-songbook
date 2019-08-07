@@ -5,6 +5,7 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.user.custom.CustomSongsDao
 import igrek.songbook.persistence.user.favourite.FavouriteSongsDao
+import igrek.songbook.persistence.user.playlist.PlaylistDao
 import igrek.songbook.persistence.user.unlocked.UnlockedSongsDao
 import javax.inject.Inject
 
@@ -17,6 +18,7 @@ class UserDataDao {
     var unlockedSongsDao: UnlockedSongsDao? = null
     var favouriteSongsDao: FavouriteSongsDao? = null
     var customSongsDao: CustomSongsDao? = null
+    var playlistDao: PlaylistDao? = null
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -25,10 +27,10 @@ class UserDataDao {
     fun read() {
         val path = localDbService.get().songDbDir.absolutePath
 
-        // TODO read latest data first, then migrate olders
         unlockedSongsDao = UnlockedSongsDao(path)
         favouriteSongsDao = FavouriteSongsDao(path)
         customSongsDao = CustomSongsDao(path)
+        playlistDao = PlaylistDao(path)
     }
 
     fun save() {

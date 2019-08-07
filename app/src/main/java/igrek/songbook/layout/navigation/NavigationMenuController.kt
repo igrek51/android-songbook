@@ -59,6 +59,7 @@ class NavigationMenuController {
         actionsMap[R.id.nav_songs_list] = { layoutController.get().showSongTree() }
         actionsMap[R.id.nav_search] = { layoutController.get().showSongSearch() }
         actionsMap[R.id.nav_favourites] = { layoutController.get().showFavourites() }
+        actionsMap[R.id.nav_playlists] = { layoutController.get().showPlaylists() }
         actionsMap[R.id.nav_update_db] = { songsUpdater.get().updateSongsDb() }
         actionsMap[R.id.nav_custom_songs] = { layoutController.get().showCustomSongs() }
         actionsMap[R.id.nav_random_song] = { randomSongOpener.get().openRandomSong() }

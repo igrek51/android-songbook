@@ -15,7 +15,10 @@ import igrek.songbook.songselection.tree.SongTreeItem
 import java.util.*
 import javax.inject.Inject
 
-class SongListItemAdapter internal constructor(context: Context, _dataSource: List<SongTreeItem>?) : ArrayAdapter<SongTreeItem>(context, 0, ArrayList()) {
+class SongListItemAdapter internal constructor(
+        context: Context,
+        _dataSource: List<SongTreeItem>?
+) : ArrayAdapter<SongTreeItem>(context, 0, ArrayList()) {
 
     private var dataSource: List<SongTreeItem>? = null
     private val inflater: LayoutInflater

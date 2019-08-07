@@ -251,4 +251,5 @@
         \n%s.
         \nMake sure you have chosen right chords notation and verify the chords syntax.
         Do you want to ignore these errors?</string>
+    <string name="nav_playlists">Playlists</string>
 </resources>

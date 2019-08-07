@@ -4,13 +4,14 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PlaylistDb(
-        val playlists: MutableList<Playlist>
+        var playlists: MutableList<Playlist> = mutableListOf()
 )
 
 @Serializable
 data class Playlist(
-        val name: String,
-        val songs: MutableList<PlaylistSong>
+        var id: Long = 0,
+        var name: String,
+        var songs: MutableList<PlaylistSong> = mutableListOf()
 )
 
 @Serializable

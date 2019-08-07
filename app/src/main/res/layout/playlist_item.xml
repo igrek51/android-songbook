@@ -21,7 +21,7 @@
         android:scaleType="fitCenter"/>
 
     <TextView
-        android:id="@+id/itemSongTitleLabel"
+        android:id="@+id/itemTitleLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -31,16 +31,15 @@
         android:layout_marginBottom="7dp"
         android:layout_marginTop="7dp"
         android:layout_toEndOf="@+id/songImage"
-        android:layout_toLeftOf="@+id/itemSongMoreButton"
+        android:layout_toLeftOf="@+id/itemMoreButton"
         android:layout_toRightOf="@+id/songImage"
-        android:layout_toStartOf="@+id/itemSongMoreButton"
+        android:layout_toStartOf="@+id/itemMoreButton"
         android:gravity="start|center_vertical"
         android:text=""
         android:textSize="16sp"/>
 
-
     <ImageButton
-        android:id="@+id/itemSongMoreButton"
+        android:id="@+id/itemMoreButton"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignParentEnd="true"

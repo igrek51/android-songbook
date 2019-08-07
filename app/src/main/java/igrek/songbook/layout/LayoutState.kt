@@ -16,6 +16,8 @@ enum class LayoutState {
 
     CUSTOM_SONG_EDIT,
 
-    CUSTOM_SONGS
+    CUSTOM_SONGS,
+
+    PLAYLISTS,
 
 }

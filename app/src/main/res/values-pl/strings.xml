@@ -245,4 +245,5 @@
         \n%s.
         \nUpewnij się, że wybrałeś odpowiednią notację akordów oraz zweryfikuj poprawność składni.
         Czy chcesz zignorować te błędy?</string>
+    <string name="nav_playlists">Playlisty</string>
 </resources>

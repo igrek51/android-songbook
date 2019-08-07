@@ -29,4 +29,22 @@ class PlaylistDao(path: String) : AbstractJsonDao<PlaylistDb>(
         return PlaylistDb(mutableListOf())
     }
 
+    fun savePlaylist(newPlaylist: Playlist) {
+        val olds = playlistDb.playlists
+                .filter { playlist -> playlist.id != newPlaylist.id }.toMutableList()
+        if (newPlaylist.id == 0L)
+            newPlaylist.id = nextId(olds)
+        olds.add(newPlaylist)
+        playlistDb.playlists = olds
+    }
+
+    fun removePlaylist(playlist: Playlist) {
+        val olds = playlistDb.playlists
+                .filter { p -> p.id != playlist.id }.toMutableList()
+        playlistDb.playlists = olds
+    }
+
+    private fun nextId(playlists: List<Playlist>): Long {
+        return (playlists.map { p -> p.id }.max() ?: 0) + 1
+    }
 }

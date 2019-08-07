@@ -11,6 +11,7 @@ import igrek.songbook.custom.CustomSongsLayoutController
 import igrek.songbook.custom.editor.ChordsEditorLayoutController
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.layout.navigation.NavigationMenuController
+import igrek.songbook.playlist.PlaylistLayoutController
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.favourite.FavouritesLayoutController
@@ -40,6 +41,8 @@ class LayoutController {
     lateinit var customSongsLayoutController: Lazy<CustomSongsLayoutController>
     @Inject
     lateinit var favouritesLayoutController: Lazy<FavouritesLayoutController>
+    @Inject
+    lateinit var playlistLayoutController: Lazy<PlaylistLayoutController>
     @Inject
     lateinit var activity: Activity
 
@@ -98,6 +101,11 @@ class LayoutController {
     fun showFavourites() {
         showMainLayout(favouritesLayoutController.get())
         lastSongSelectionLayout = favouritesLayoutController.get()
+    }
+
+    fun showPlaylists() {
+        showMainLayout(playlistLayoutController.get())
+        lastSongSelectionLayout = playlistLayoutController.get()
     }
 
 

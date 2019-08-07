@@ -31,6 +31,7 @@ import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.general.SongsUpdater
 import igrek.songbook.persistence.user.UserDataDao
+import igrek.songbook.playlist.PlaylistLayoutController
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.language.AppLanguageService
@@ -382,6 +383,12 @@ open class FactoryModule(private val activity: AppCompatActivity) {
     @Singleton
     fun provideUserDbService(): UserDataDao{
         return UserDataDao()
+    }
+
+    @Provides
+    @Singleton
+    fun providePlaylistLayoutController(): PlaylistLayoutController {
+        return PlaylistLayoutController()
     }
 
     /*
