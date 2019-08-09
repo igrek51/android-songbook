@@ -34,16 +34,16 @@ abstract class AbstractJsonDao<T>(
     private fun readDb(): T {
         for (attemptSchema in schemaVersion downTo 1) {
             if (attemptSchema < schemaVersion)
-                logger.info("trying to read older db version $attemptSchema for $dbName...")
+                logger.debug("'$dbName' db: trying to read older version $attemptSchema...")
 
             try {
                 return readFromFile(dbName, attemptSchema)
             } catch (e: FileNotFoundException) {
-                logger.warn("database file not found for $dbName db")
+                logger.warn("'$dbName' db: database v$attemptSchema not found", e)
             } catch (e: SerializationException) {
-                logger.error("JSON deserialization error for $dbName db", e)
+                logger.error("'$dbName' db: JSON deserialization error", e)
             } catch (e: Throwable) {
-                logger.error("error reading $dbName db", e)
+                logger.error("'$dbName' db: error reading '$dbName db'", e)
             }
         }
 
@@ -52,10 +52,10 @@ abstract class AbstractJsonDao<T>(
             if (oldDb != null)
                 return oldDb
         } catch (e: Throwable) {
-            logger.error("failed to migrate older db $dbName", e)
+            logger.error("'$dbName' db: failed to migrate older", e)
         }
 
-        logger.debug("loading empty db $dbName")
+        logger.debug("'$dbName' db: loading empty db")
         return empty()
     }
 
@@ -63,11 +63,11 @@ abstract class AbstractJsonDao<T>(
         val filename = buildFilename(dbName, schemaVersion)
         val file = File(path, filename)
         if (!file.exists())
-            throw FileNotFoundException()
+            throw FileNotFoundException("file not found: ${file.absoluteFile}")
 
         val content = file.readText(Charsets.UTF_8)
         val parsed = json.parse(serializer, content)
-        logger.debug("db $dbName has been loaded from ${file.absoluteFile}")
+        logger.debug("'$dbName' db has been loaded from ${file.absoluteFile}")
         return parsed
     }
 

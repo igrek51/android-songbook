@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class PlaylistDao(path: String) : AbstractJsonDao<PlaylistDb>(
         path,
-        dbName = "unlocked",
+        dbName = "playlist",
         schemaVersion = 2,
         clazz = PlaylistDb::class.java,
         serializer = PlaylistDb.serializer()

@@ -47,6 +47,11 @@ open class Logger internal constructor() {
         log(message, LogLevel.WARN, "[warn]  ")
     }
 
+    fun warn(message: String?, t: Throwable) {
+        val msg = "$message: ${t.message}"
+        log(msg, LogLevel.WARN, "[warn] ")
+    }
+
     fun info(message: String?) {
         log(message, LogLevel.INFO, "[info]  ")
     }

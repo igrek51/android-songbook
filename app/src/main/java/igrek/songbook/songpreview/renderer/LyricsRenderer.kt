@@ -1,12 +1,12 @@
 package igrek.songbook.songpreview.renderer
 
 import android.graphics.Typeface
+import igrek.songbook.settings.theme.ColorScheme
+import igrek.songbook.settings.theme.FontTypeface
 import igrek.songbook.songpreview.lyrics.LyricsLine
 import igrek.songbook.songpreview.lyrics.LyricsModel
 import igrek.songbook.songpreview.lyrics.LyricsTextType
 import igrek.songbook.songpreview.renderer.canvas.Align
-import igrek.songbook.settings.theme.ColorScheme
-import igrek.songbook.settings.theme.FontTypeface
 
 class LyricsRenderer internal constructor(private val canvas: SongPreview,
                                           private val lyricsModel: LyricsModel?,
@@ -67,7 +67,7 @@ class LyricsRenderer internal constructor(private val canvas: SongPreview,
             if (lastFragment.type == LyricsTextType.LINEWRAPPER) {
                 canvas.setFontTypeface(normalTypeface)
                 canvas.setColor(linewrapperColor)
-                canvas.drawText(lastFragment.text, w, y + 0.9f * lineheight, Align.TOP_RIGHT)
+                canvas.drawText(lastFragment.text, w, y + 0.9f * lineheight, Align.RIGHT)
             }
         }
 
@@ -76,11 +76,11 @@ class LyricsRenderer internal constructor(private val canvas: SongPreview,
             if (fragment.type == LyricsTextType.REGULAR_TEXT) {
                 canvas.setFontTypeface(normalTypeface)
                 canvas.setColor(textColor)
-                canvas.drawText(fragment.text, fragment.x * fontsize, y + lineheight, Align.TOP_LEFT)
+                canvas.drawText(fragment.text, fragment.x * fontsize, y + lineheight, Align.LEFT)
             } else if (fragment.type == LyricsTextType.CHORDS) {
                 canvas.setFontTypeface(boldTypeface)
                 canvas.setColor(chordColor)
-                canvas.drawText(fragment.text, fragment.x * fontsize, y + lineheight, Align.TOP_LEFT)
+                canvas.drawText(fragment.text, fragment.x * fontsize, y + lineheight, Align.LEFT)
             }
 
         }

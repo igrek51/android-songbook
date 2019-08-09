@@ -52,12 +52,13 @@ class ActivityController {
     fun onStart() {}
 
     fun onStop() {
-        songsRepository.close()
+        logger.debug("stopping activity...")
+        songsRepository.save()
         preferencesUpdater.updateAndSave()
     }
 
     fun onDestroy() {
-        logger.info("Activity has been destroyed.")
+        logger.info("activity has been destroyed")
     }
 
     fun minimize() {

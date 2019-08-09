@@ -54,6 +54,11 @@ class SongsRepository {
     }
 
     @Synchronized
+    fun save() {
+        userDataDao.get().save()
+    }
+
+    @Synchronized
     fun close() {
         generalSongsDao?.close()
         userDataDao.get().save()
@@ -111,7 +116,7 @@ class SongsRepository {
 
     fun resetGeneralData() {
         logger.warn("resetting general data...")
-        close()
+        generalSongsDao?.close()
         localDbService.get().factoryReset()
     }
 
