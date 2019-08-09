@@ -12,14 +12,19 @@ open class Logger internal constructor() {
     }
 
     fun error(ex: Throwable) {
-        log(ex.message, LogLevel.ERROR, "[EXCEPTION - " + ex.javaClass.name + "] ")
+        log("[${ex.javaClass.name}] ${ex.message}", LogLevel.ERROR, "[ERROR] ")
         printExceptionStackTrace(ex)
+    }
+
+    fun error(message: String?, t: Throwable) {
+        val msg = "$message: ${t.message}"
+        log(msg, LogLevel.ERROR, "[ERROR] ")
     }
 
     open fun fatal(activity: Activity?, ex: Throwable) {
         var exTitle = ex.javaClass.name
         if (!ex.message.isNullOrEmpty()) {
-            exTitle = """$exTitle - ${ex.message}"""
+            exTitle = "$exTitle - ${ex.message}"
         }
         printExceptionStackTrace(ex)
         log(exTitle, LogLevel.FATAL, "[FATAL] ")

@@ -39,11 +39,11 @@ abstract class AbstractJsonDao<T>(
             try {
                 return readFromFile(dbName, attemptSchema)
             } catch (e: FileNotFoundException) {
-                logger.error("database file not found for db $dbName")
+                logger.warn("database file not found for $dbName db")
             } catch (e: SerializationException) {
-                logger.error("JSON reading error for db $dbName: ${e.message}")
+                logger.error("JSON deserialization error for $dbName db", e)
             } catch (e: Throwable) {
-                logger.error("error reading db $dbName: ${e.message}")
+                logger.error("error reading $dbName db", e)
             }
         }
 
@@ -52,10 +52,10 @@ abstract class AbstractJsonDao<T>(
             if (oldDb != null)
                 return oldDb
         } catch (e: Throwable) {
-            logger.error("failed to migrate older db $dbName: ${e.message}")
+            logger.error("failed to migrate older db $dbName", e)
         }
 
-        logger.info("db $dbName not found, loading empty")
+        logger.debug("loading empty db $dbName")
         return empty()
     }
 
@@ -66,7 +66,9 @@ abstract class AbstractJsonDao<T>(
             throw FileNotFoundException()
 
         val content = file.readText(Charsets.UTF_8)
-        return json.parse(serializer, content)
+        val parsed = json.parse(serializer, content)
+        logger.debug("db $dbName has been loaded from ${file.absoluteFile}")
+        return parsed
     }
 
     private fun read() {
@@ -88,7 +90,7 @@ abstract class AbstractJsonDao<T>(
         val filename = buildFilename(dbName, schemaVersion)
         val file = File(path, filename)
         file.writeText(content, Charsets.UTF_8)
-        logger.debug("db $dbName saved to file ${file.absolutePath}")
+        logger.debug("$dbName db saved to file ${file.absolutePath}")
     }
 
     private fun buildFilename(name: String, schemaVersion: Int): String {

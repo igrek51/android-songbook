@@ -10,7 +10,6 @@ import igrek.songbook.persistence.general.model.Category
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongCategoryRelationship
 import java.io.File
-import java.lang.RuntimeException
 
 
 class GeneralSongsDao(private val dbFile: File) : AbstractSqliteDao() {
@@ -64,7 +63,7 @@ class GeneralSongsDao(private val dbFile: File) : AbstractSqliteDao() {
 
     fun verifyDbVersion(dbVersion: Long) {
         if (dbVersion < supportedDbVersion)
-            throw RuntimeException("local db version is not supported anymore")
+            throw RuntimeException("local db version $dbVersion is not supported anymore")
     }
 
 }
