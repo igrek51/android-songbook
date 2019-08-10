@@ -247,4 +247,10 @@
         Czy chcesz zignorować te błędy?</string>
     <string name="nav_playlists">Playlisty</string>
     <string name="empty_playlists">Brak playlist.</string>
+    <string name="action_add_to_playlist">Dodaj do playlisty</string>
+    <string name="no_playlists_to_add">Nie znaleziono żadnej playlisty</string>
+    <string name="choose_playlist">Wybierz playlistę</string>
+    <string name="song_added_to_playlist">Piosenka została dodana do playlisty</string>
+    <string name="song_already_on_playlist">Piosenka jest już na tej playliście</string>
+    <string name="action_remove_from_playlist">Remove from playlist</string>
 </resources>

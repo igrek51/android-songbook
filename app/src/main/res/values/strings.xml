@@ -257,4 +257,8 @@
     <string name="no_playlists_to_add">No playlists found</string>
     <string name="choose_playlist">Choose a playlist</string>
     <string name="song_added_to_playlist">Song has been added to playlist</string>
+    <string name="song_already_on_playlist">Song is already on this playlist</string>
+    <string name="action_remove_from_playlist">Remove from playlist</string>
+    <string name="song_is_not_on_playlist">Song is not on a playlist</string>
+    <string name="song_removed_from_playlist">Song has been removed from playlist</string>
 </resources>

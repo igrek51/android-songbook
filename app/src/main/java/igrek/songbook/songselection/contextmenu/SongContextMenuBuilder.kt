@@ -97,7 +97,13 @@ class SongContextMenuBuilder {
                 SongContextAction(R.string.action_add_to_playlist,
                         availableCondition = { true },
                         executor = { song ->
-                            playlistService.showAddSongToPlaylist(song)
+                            playlistService.showAddSongToPlaylistDialog(song)
+                        }),
+                // Remove from playlist
+                SongContextAction(R.string.action_remove_from_playlist,
+                        availableCondition = { song -> playlistService.isSongOnAnyPlaylist(song) },
+                        executor = { song ->
+                            playlistService.removeFromPlaylist(song)
                         })
         )
 
