@@ -51,11 +51,12 @@ class ActivityController {
 
     fun onStart() {
         logger.debug("starting activity...")
+        songsRepository.requestSave(false)
     }
 
     fun onStop() {
-        logger.trace("stopping activity...")
-        songsRepository.save()
+        logger.debug("stopping activity...")
+        songsRepository.requestSave(true)
         preferencesUpdater.updateAndSave()
     }
 

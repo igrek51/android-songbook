@@ -15,6 +15,7 @@ import igrek.songbook.persistence.user.favourite.FavouriteSongsDao
 import igrek.songbook.persistence.user.playlist.PlaylistDao
 import igrek.songbook.persistence.user.unlocked.UnlockedSongsDao
 import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class SongsRepository {
@@ -33,6 +34,7 @@ class SongsRepository {
     private val logger = LoggerFactory.logger
 
     var dbChangeSubject: PublishSubject<SongsDb> = PublishSubject.create()
+    private var saveRequestSubject: PublishSubject<Boolean> = PublishSubject.create()
 
     var songsDb: SongsDb? = null
     private var generalSongsDao: GeneralSongsDao? = null
@@ -43,6 +45,13 @@ class SongsRepository {
 
     init {
         DaggerIoc.factoryComponent.inject(this)
+
+        saveRequestSubject
+                .debounce(1000, TimeUnit.MILLISECONDS)
+                .subscribe { toSave ->
+                    if (toSave)
+                        save()
+                }.isDisposed
     }
 
     fun init() {
@@ -54,12 +63,17 @@ class SongsRepository {
     }
 
     @Synchronized
-    fun save() {
+    private fun save() {
         userDataDao.get().save()
+    }
+
+    fun requestSave(toSave: Boolean) {
+        saveRequestSubject.onNext(toSave)
     }
 
     @Synchronized
     fun close() {
+        logger.trace("closing repo...")
         generalSongsDao?.close()
         userDataDao.get().save()
     }

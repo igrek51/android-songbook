@@ -2,6 +2,7 @@ package igrek.songbook.persistence.user
 
 import dagger.Lazy
 import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.user.custom.CustomSongsDao
 import igrek.songbook.persistence.user.favourite.FavouriteSongsDao
@@ -20,6 +21,8 @@ class UserDataDao {
     var customSongsDao: CustomSongsDao? = null
     var playlistDao: PlaylistDao? = null
 
+    private val logger = LoggerFactory.logger
+
     init {
         DaggerIoc.factoryComponent.inject(this)
     }
@@ -34,6 +37,7 @@ class UserDataDao {
     }
 
     fun save() {
+        logger.info("saving user data...")
         unlockedSongsDao?.save()
         favouriteSongsDao?.save()
         customSongsDao?.save()

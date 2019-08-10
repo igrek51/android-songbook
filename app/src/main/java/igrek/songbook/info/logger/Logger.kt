@@ -127,7 +127,8 @@ open class Logger internal constructor() {
             val stackTrace = stackTraces[i]
             val fileName = stackTrace.fileName
             val lineNumber = stackTrace.lineNumber
-            Log.d(tagWithKey(), "[trace] $i - ($fileName:$lineNumber)")
+            val index = i - 1
+            Log.d(tagWithKey(), "[trace] $index - ($fileName:$lineNumber)")
         }
     }
 
