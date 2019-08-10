@@ -5,9 +5,9 @@ import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.general.model.CategoryType
 import igrek.songbook.persistence.general.model.Song
+import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.custom.CustomSong
 import igrek.songbook.persistence.user.custom.CustomSongMapper
 import java.util.*
@@ -52,8 +52,10 @@ class CustomSongService {
         songsRepository.customSongsDao.saveCustomSong(customSong)
 
         val customCategory = songsRepository.songsDb?.categoryFinder?.find(CategoryType.CUSTOM.id)!!
-        val customSongMapper = CustomSongMapper(customCategory)
-        return customSongMapper.customSongToSong(customSong)
+        val customSongMapper = CustomSongMapper()
+        val song = customSongMapper.customSongToSong(customSong)
+        song.categories = mutableListOf(customCategory)
+        return song
     }
 
     fun updateSong(song: Song, songTitle: String, customCategoryName: String?, songContent: String?) {
@@ -62,16 +64,14 @@ class CustomSongService {
         song.customCategoryName = customCategoryName
         song.updateTime = Date().time
 
-        val customCategory = songsRepository.songsDb?.categoryFinder?.find(CategoryType.CUSTOM.id)!!
-        val customSongMapper = CustomSongMapper(customCategory)
+        val customSongMapper = CustomSongMapper()
         val customSong = customSongMapper.songToCustomSong(song)
 
         songsRepository.customSongsDao.saveCustomSong(customSong)
     }
 
     fun removeSong(song: Song) {
-        val customCategory = songsRepository.songsDb?.categoryFinder?.find(CategoryType.CUSTOM.id)!!
-        val customSongMapper = CustomSongMapper(customCategory)
+        val customSongMapper = CustomSongMapper()
         val customSong = customSongMapper.songToCustomSong(song)
 
         songsRepository.customSongsDao.removeCustomSong(customSong)
@@ -80,8 +80,7 @@ class CustomSongService {
 
     fun copySongAsCustom(sourceSong: Song): CustomSong {
         val now: Long = Date().time
-        val customCategory = songsRepository.songsDb?.categoryFinder?.find(CategoryType.CUSTOM.id)!!
-        val customSongMapper = CustomSongMapper(customCategory)
+        val customSongMapper = CustomSongMapper()
 
         val versionNumber: Long = sourceSong.versionNumber + 1
         val customCategoryName = sourceSong.customCategoryName ?: sourceSong.displayCategories()

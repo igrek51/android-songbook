@@ -1,17 +1,16 @@
 package igrek.songbook.persistence.user.custom
 
-import igrek.songbook.persistence.general.model.Category
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongStatus
 
 
-internal class CustomSongMapper(private val customCategory: Category) {
+internal class CustomSongMapper {
 
     fun customSongToSong(customSong: CustomSong): Song {
         return Song(
                 id = customSong.id,
                 title = customSong.title,
-                categories = mutableListOf(customCategory),
+                categories = mutableListOf(),
                 content = customSong.content,
                 versionNumber = customSong.versionNumber,
                 createTime = customSong.createTime,

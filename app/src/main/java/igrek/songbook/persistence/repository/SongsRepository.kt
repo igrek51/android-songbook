@@ -119,8 +119,11 @@ class SongsRepository {
 
     private fun refillCategoryDisplayNames(songsDb: SongsDb) {
         songsDb.categories.forEach { category ->
-            category.displayName = category.name
-                    ?: uiResourceService.get().resString(category.type.localeStringId!!)
+            category.displayName = when {
+                category.type.localeStringId != null ->
+                    uiResourceService.get().resString(category.type.localeStringId)
+                else -> category.name
+            }
         }
     }
 
