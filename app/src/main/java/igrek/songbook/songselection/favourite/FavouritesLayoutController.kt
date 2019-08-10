@@ -23,7 +23,7 @@ class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
     private var storedScroll: ListScrollPosition? = null
     private var emptyListLabel: TextView? = null
 
-    private var subscription: Disposable? = null
+    private val subscriptions = mutableListOf<Disposable>()
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -37,11 +37,18 @@ class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
         itemsListView!!.init(activity, this)
         updateSongItemsList()
 
-        subscription?.dispose()
-        subscription = songsRepository.dbChangeSubject.subscribe {
-            if (layoutController.isState(getLayoutState()))
-                updateSongItemsList()
-        }
+        subscriptions.forEach { s -> s.dispose() }
+        subscriptions.clear()
+        subscriptions.add(
+                songsRepository.dbChangeSubject.subscribe {
+                    if (layoutController.isState(getLayoutState()))
+                        updateSongItemsList()
+                })
+        subscriptions.add(
+                favouriteSongsService.updateFavouriteSongSubject.subscribe {
+                    if (layoutController.isState(getLayoutState()))
+                        updateSongItemsList()
+                })
     }
 
     override fun getLayoutState(): LayoutState {

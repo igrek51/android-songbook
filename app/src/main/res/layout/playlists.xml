@@ -48,7 +48,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
                 android:layout_marginStart="20dp"
-                android:text="@string/nav_custom_song"
+                android:text="@string/nav_playlists"
                 android:textSize="18sp"/>
 
             <ImageButton
@@ -94,7 +94,7 @@
             android:layout_gravity="center"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:text="@string/empty_custom_songs"
+            android:text="@string/empty_playlists"
             android:visibility="gone"
             />
     </RelativeLayout>

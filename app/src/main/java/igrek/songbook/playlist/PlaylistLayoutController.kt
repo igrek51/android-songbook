@@ -95,7 +95,6 @@ class PlaylistLayoutController : InflatedLayout(
                     .map { p -> PlaylistListItem(playlist = p) }
                     .toMutableList()
 
-
         } else {
             playlist!!.songs
                     .map { s ->

@@ -61,6 +61,7 @@ class ActivityController {
     }
 
     fun onDestroy() {
+        songsRepository.saveNow()
         logger.info("activity has been destroyed")
     }
 

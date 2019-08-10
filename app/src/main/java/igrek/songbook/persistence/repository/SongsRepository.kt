@@ -71,9 +71,13 @@ class SongsRepository {
         saveRequestSubject.onNext(toSave)
     }
 
+    fun saveNow() {
+        requestSave(false)
+        save()
+    }
+
     @Synchronized
     fun close() {
-        logger.trace("closing repo...")
         generalSongsDao?.close()
         userDataDao.get().save()
     }

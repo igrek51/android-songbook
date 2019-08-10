@@ -36,7 +36,6 @@ import igrek.songbook.songselection.favourite.FavouriteSongsService
 import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.WindowManagerService
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -84,19 +83,18 @@ class SongPreviewLayoutController : MainLayout {
     private var autoscrollButton: ImageButton? = null
     private var setFavouriteButton: ImageButton? = null
 
-    private var subscription: Disposable? = null
-
     val isQuickMenuVisible: Boolean
         get() = quickMenuTranspose.get().isVisible || quickMenuAutoscroll.get().isVisible
 
     init {
         DaggerIoc.factoryComponent.inject(this)
-
-        subscription?.dispose()
-        subscription = autoscrollService.get().scrollStateSubject
+        autoscrollService.get().scrollStateSubject
                 .debounce(100, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { highlightPanelButtons() }
+                .subscribe { highlightPanelButtons() }.isDisposed
+        favouriteSongsService.get().updateFavouriteSongSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { updateFavouriteButton() }.isDisposed
     }
 
     override fun showLayout(layout: View) {
@@ -325,7 +323,6 @@ class SongPreviewLayoutController : MainLayout {
         } else {
             favouriteSongsService.get().unsetSongFavourite(currentSong!!)
         }
-        updateFavouriteButton()
     }
 
     private fun updateFavouriteButton() {

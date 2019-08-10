@@ -129,7 +129,7 @@ class SongsUpdater {
             val remoteVersion = response.body()?.string()?.toLong()
             val localVersion = songsRepository.get().songsDbVersion()
 
-            logger.debug("Update availability check: local: $localVersion, remote: $remoteVersion")
+            logger.debug("DB Update availability check: local: $localVersion, remote: $remoteVersion")
 
             if (localVersion != null && remoteVersion != null && localVersion < remoteVersion) {
                 showUpdateIsAvailable()
