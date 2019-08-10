@@ -175,7 +175,7 @@
     <string name="favourite_song_has_been_set">Piosenka została dodana do ulubionych.</string>
     <string name="favourite_song_has_been_unset">Piosenka została usunięta z ulubionych.</string>
     <string name="empty_favourite_songs">Brak ulubionych piosenek.\nKliknij na ikonę gwiazdki na podglądzie piosenki, aby dodać ją do ulubionych.</string>
-    <string name="empty_custom_songs">Brak własnych piosenek.</string>
+    <string name="empty_custom_songs">Brak własnych piosenek</string>
     <string name="color_scheme_dark">Ciemny</string>
     <string name="color_scheme_bright">Jasny</string>
     <string name="typeface_sans_serif">Bezszeryfowa (Sans Serif)</string>
@@ -246,7 +246,7 @@
         \nUpewnij się, że wybrałeś odpowiednią notację akordów oraz zweryfikuj poprawność składni.
         Czy chcesz zignorować te błędy?</string>
     <string name="nav_playlists">Playlisty</string>
-    <string name="empty_playlists">Brak playlist.</string>
+    <string name="empty_playlists">Brak playlist</string>
     <string name="action_add_to_playlist">Dodaj do playlisty</string>
     <string name="no_playlists_to_add">Nie znaleziono żadnej playlisty</string>
     <string name="choose_playlist">Wybierz playlistę</string>
@@ -259,4 +259,5 @@
     <string name="confirm_remove_playlist">Czy na pewno chcesz usunąć playlistę?</string>
     <string name="rename_playlist">Zmień nazwę</string>
     <string name="playlist_removed">Usunięto playlistę</string>
+    <string name="empty_playlist_songs">Brak piosenek na playliście</string>
 </resources>

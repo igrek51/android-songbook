@@ -174,7 +174,7 @@
     <string name="favourite_song_has_been_set">Song has been added to favourites.</string>
     <string name="favourite_song_has_been_unset">Song has been removed from favourites.</string>
     <string name="empty_favourite_songs">No favourite songs.\nClick a star icon on a song preview to add it to favourites.</string>
-    <string name="empty_custom_songs">No custom songs.</string>
+    <string name="empty_custom_songs">No custom songs</string>
     <string name="color_scheme_dark">Dark</string>
     <string name="color_scheme_bright">Bright</string>
     <string name="typeface_sans_serif">Sans Serif</string>
@@ -252,7 +252,7 @@
         \nMake sure you have chosen right chords notation and verify the chords syntax.
         Do you want to ignore these errors?</string>
     <string name="nav_playlists">Playlists</string>
-    <string name="empty_playlists">No playlists.</string>
+    <string name="empty_playlists">No playlists</string>
     <string name="action_add_to_playlist">Add to playlist</string>
     <string name="no_playlists_to_add">No playlists found</string>
     <string name="choose_playlist">Choose a playlist</string>
@@ -265,4 +265,5 @@
     <string name="confirm_remove_playlist">Do you really want to remove this playlist?</string>
     <string name="rename_playlist">Rename playlist</string>
     <string name="playlist_removed">Playlist has been removed</string>
+    <string name="empty_playlist_songs">No songs on this playlist</string>
 </resources>

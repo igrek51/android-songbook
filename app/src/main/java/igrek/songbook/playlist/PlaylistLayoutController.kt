@@ -56,10 +56,14 @@ class PlaylistLayoutController : InflatedLayout(
     lateinit var uiInfoService: UiInfoService
 
     private var itemsListView: PlaylistListView? = null
+    private var addPlaylistButton: ImageButton? = null
+    private var emptyListLabel: TextView? = null
+    private var playlistTitleLabel: TextView? = null
+    private var goBackButton: ImageButton? = null
+
     private var playlist: Playlist? = null
 
     private var storedScroll: ListScrollPosition? = null
-    private var emptyListLabel: TextView? = null
     private var subscriptions = mutableListOf<Disposable>()
 
     init {
@@ -80,10 +84,14 @@ class PlaylistLayoutController : InflatedLayout(
 
         itemsListView = layout.findViewById(R.id.playlistListView)
 
-        val addPlaylistButton: ImageButton = layout.findViewById(R.id.addPlaylistButton)
-        addPlaylistButton.setOnClickListener { addPlaylist() }
+        addPlaylistButton = layout.findViewById(R.id.addPlaylistButton)
+        addPlaylistButton?.setOnClickListener { addPlaylist() }
 
+        playlistTitleLabel = layout.findViewById(R.id.playlistTitleLabel)
         emptyListLabel = layout.findViewById(R.id.emptyListLabel)
+
+        goBackButton = layout.findViewById(R.id.goBackButton)
+        goBackButton?.setOnClickListener { goUp() }
 
         itemsListView!!.init(activity, this)
         updateItemsList()
@@ -131,9 +139,29 @@ class PlaylistLayoutController : InflatedLayout(
             Handler().post { itemsListView?.restoreScrollPosition(storedScroll) }
         }
 
+        val playlistsTitle = uiResourceService.resString(R.string.nav_playlists)
+        playlistTitleLabel?.text = when (playlist) {
+            null -> playlistsTitle
+            else -> "$playlistsTitle: ${playlist?.name}"
+        }
+
+        emptyListLabel?.text = when (playlist) {
+            null -> uiResourceService.resString(R.string.empty_playlists)
+            else -> uiResourceService.resString(R.string.empty_playlist_songs)
+        }
         emptyListLabel?.visibility = when {
             itemsListView!!.count == 0 -> View.VISIBLE
             else -> View.GONE
+        }
+
+        addPlaylistButton?.visibility = when (playlist) {
+            null -> View.VISIBLE
+            else -> View.GONE
+        }
+
+        goBackButton?.visibility = when (playlist) {
+            null -> View.GONE
+            else -> View.VISIBLE
         }
     }
 
