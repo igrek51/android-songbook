@@ -6,4 +6,6 @@ interface ListItemClickListener<T> {
 
     fun onItemLongClick(item: T)
 
+    fun onMoreActions(item: T)
+
 }

@@ -13,6 +13,7 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.LayoutState
+import igrek.songbook.layout.dialog.InputDialogBuilder
 import igrek.songbook.layout.list.ListItemClickListener
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongIdentifier
@@ -86,7 +87,11 @@ class PlaylistLayoutController : InflatedLayout(
     }
 
     private fun addPlaylist() {
-        // TODO
+        InputDialogBuilder().input("New playlist name", null) { name ->
+            val playlist = Playlist(0, name)
+            songsRepository.playlistDao.savePlaylist(playlist)
+            updateItemsList()
+        }
     }
 
     private fun updateItemsList() {
@@ -94,13 +99,15 @@ class PlaylistLayoutController : InflatedLayout(
             songsRepository.playlistDao.playlistDb.playlists
                     .map { p -> PlaylistListItem(playlist = p) }
                     .toMutableList()
-
         } else {
             playlist!!.songs
-                    .map { s ->
+                    .mapNotNull { s ->
                         val id = SongIdentifier(s.songId, s.custom)
                         val song = songsRepository.songsDb?.songFinder?.find(id)
-                        PlaylistListItem(song = song)
+                        when {
+                            song != null -> PlaylistListItem(song = song)
+                            else -> null
+                        }
                     }
                     .toMutableList()
         }
@@ -153,6 +160,14 @@ class PlaylistLayoutController : InflatedLayout(
             songContextMenuBuilder.showSongActions(item.song)
         } else {
             onItemClick(item)
+        }
+    }
+
+    override fun onMoreActions(item: PlaylistListItem) {
+        if (item.song != null) {
+
+        } else if (item.playlist != null) {
+
         }
     }
 }

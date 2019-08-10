@@ -33,7 +33,7 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.
         onItemClickListener = this
         onItemLongClickListener = this
         choiceMode = CHOICE_MODE_SINGLE
-        adapter = PlaylistListItemAdapter(context, null)
+        adapter = PlaylistListItemAdapter(context, null, onClickListener)
         setAdapter(adapter)
     }
 

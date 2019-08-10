@@ -253,4 +253,8 @@
         Do you want to ignore these errors?</string>
     <string name="nav_playlists">Playlists</string>
     <string name="empty_playlists">No playlists.</string>
+    <string name="action_add_to_playlist">Add to playlist</string>
+    <string name="no_playlists_to_add">No playlists found</string>
+    <string name="choose_playlist">Choose a playlist</string>
+    <string name="song_added_to_playlist">Song has been added to playlist</string>
 </resources>

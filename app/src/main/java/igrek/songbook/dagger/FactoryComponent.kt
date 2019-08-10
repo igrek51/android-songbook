@@ -22,8 +22,9 @@ import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.info.errorcheck.UIErrorHandler
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.layout.confirm.ConfirmDialogBuilder
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
+import igrek.songbook.layout.dialog.ConfirmDialogBuilder
+import igrek.songbook.layout.dialog.InputDialogBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.general.SongsUpdater
@@ -35,6 +36,7 @@ import igrek.songbook.persistence.user.favourite.FavouriteSongsDao
 import igrek.songbook.persistence.user.playlist.PlaylistDao
 import igrek.songbook.persistence.user.unlocked.UnlockedSongsDao
 import igrek.songbook.playlist.PlaylistLayoutController
+import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.settings.SettingsFragment
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
@@ -198,5 +200,9 @@ interface FactoryComponent {
     fun inject(there: PlaylistLayoutController)
 
     fun inject(there: InflatedLayout)
+
+    fun inject(there: InputDialogBuilder)
+
+    fun inject(there: PlaylistService)
 
 }

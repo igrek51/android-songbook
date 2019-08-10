@@ -86,7 +86,6 @@ abstract class AbstractJsonDao<T>(
         val filename = buildFilename(dbName, schemaVersion)
         val file = File(path, filename)
         file.writeText(content, Charsets.UTF_8)
-        logger.debug("$dbName db saved to file ${file.absolutePath}")
     }
 
     private fun buildFilename(name: String, schemaVersion: Int): String {

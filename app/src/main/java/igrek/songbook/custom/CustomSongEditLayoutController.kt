@@ -15,7 +15,7 @@ import igrek.songbook.info.errorcheck.SafeClickListener
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
-import igrek.songbook.layout.confirm.ConfirmDialogBuilder
+import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.settings.chordsnotation.ChordsNotationService

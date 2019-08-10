@@ -28,10 +28,11 @@ import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.LocalDbService
-import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.general.SongsUpdater
+import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.playlist.PlaylistLayoutController
+import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.language.AppLanguageService
@@ -389,6 +390,12 @@ open class FactoryModule(private val activity: AppCompatActivity) {
     @Singleton
     fun providePlaylistLayoutController(): PlaylistLayoutController {
         return PlaylistLayoutController()
+    }
+
+    @Provides
+    @Singleton
+    fun providePlaylistService(): PlaylistService {
+        return PlaylistService()
     }
 
     /*

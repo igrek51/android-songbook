@@ -1,4 +1,4 @@
-package igrek.songbook.layout.confirm
+package igrek.songbook.layout.dialog
 
 import android.app.Activity
 import android.support.v7.app.AlertDialog

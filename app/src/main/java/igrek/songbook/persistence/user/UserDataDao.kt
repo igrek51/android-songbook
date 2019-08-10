@@ -37,11 +37,11 @@ class UserDataDao {
     }
 
     fun save() {
-        logger.info("saving user data...")
         unlockedSongsDao?.save()
         favouriteSongsDao?.save()
         customSongsDao?.save()
         playlistDao?.save()
+        logger.info("user data have been saved")
     }
 
 }

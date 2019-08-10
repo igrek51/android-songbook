@@ -8,13 +8,15 @@ import android.widget.ArrayAdapter
 import android.widget.ImageButton
 import android.widget.TextView
 import igrek.songbook.R
+import igrek.songbook.layout.list.ListItemClickListener
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.user.playlist.Playlist
 import java.util.*
 
 class PlaylistListItemAdapter internal constructor(
         context: Context,
-        _dataSource: List<PlaylistListItem>?
+        _dataSource: List<PlaylistListItem>?,
+        val onClickListener: ListItemClickListener<PlaylistListItem>
 ) : ArrayAdapter<PlaylistListItem>(context, 0, ArrayList()) {
 
     private var dataSource: List<PlaylistListItem>? = null
@@ -51,31 +53,29 @@ class PlaylistListItemAdapter internal constructor(
         val item = dataSource!![position]
 
         return when {
-            item.playlist != null -> createPlaylistView(item.playlist, parent)
-            item.song != null -> createSongView(item.song, parent)
+            item.playlist != null -> createPlaylistView(item, item.playlist, parent)
+            item.song != null -> createSongView(item, item.song, parent)
             else -> return View(context)
         }
     }
 
-    private fun createPlaylistView(playlist: Playlist, parent: ViewGroup): View {
-        val itemView = inflater.inflate(R.layout.playlist_item, parent, false)
+    private fun createPlaylistView(item: PlaylistListItem, playlist: Playlist, parent: ViewGroup): View {
+        val itemView = inflater.inflate(R.layout.playlist_group_item, parent, false)
         val itemTitleLabel = itemView.findViewById<TextView>(R.id.itemTitleLabel)
-
         itemTitleLabel.text = playlist.name
 
         val itemMoreButton = itemView.findViewById<ImageButton>(R.id.itemMoreButton)
-        itemMoreButton.setOnClickListener { }
+        itemMoreButton.setOnClickListener { onClickListener.onMoreActions(item) }
         return itemView
     }
 
-    private fun createSongView(song: Song, parent: ViewGroup): View {
-        val itemView = inflater.inflate(R.layout.playlist_item, parent, false)
+    private fun createSongView(item: PlaylistListItem, song: Song, parent: ViewGroup): View {
+        val itemView = inflater.inflate(R.layout.playlist_song_item, parent, false)
         val itemTitleLabel = itemView.findViewById<TextView>(R.id.itemTitleLabel)
-
         itemTitleLabel.text = song.displayName()
 
         val itemMoreButton = itemView.findViewById<ImageButton>(R.id.itemMoreButton)
-        itemMoreButton.setOnClickListener { }
+        itemMoreButton.setOnClickListener { onClickListener.onMoreActions(item) }
         return itemView
     }
 }
