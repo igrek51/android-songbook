@@ -250,7 +250,13 @@
     <string name="action_add_to_playlist">Dodaj do playlisty</string>
     <string name="no_playlists_to_add">Nie znaleziono żadnej playlisty</string>
     <string name="choose_playlist">Wybierz playlistę</string>
-    <string name="song_added_to_playlist">Piosenka została dodana do playlisty</string>
+    <string name="song_added_to_playlist">Dodano piosenkę do playlisty</string>
     <string name="song_already_on_playlist">Piosenka jest już na tej playliście</string>
-    <string name="action_remove_from_playlist">Remove from playlist</string>
+    <string name="action_remove_from_playlist">Usuń z playlisty</string>
+    <string name="song_is_not_on_playlist">Piosenka nie należy do playlisty</string>
+    <string name="song_removed_from_playlist">Usunięto piosenkę z playlisty</string>
+    <string name="remove_playlist">Usuń playlistę</string>
+    <string name="confirm_remove_playlist">Czy na pewno chcesz usunąć playlistę?</string>
+    <string name="rename_playlist">Zmień nazwę</string>
+    <string name="playlist_removed">Usunięto playlistę</string>
 </resources>

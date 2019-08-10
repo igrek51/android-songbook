@@ -36,7 +36,8 @@
         android:layout_toStartOf="@+id/itemMoreButton"
         android:gravity="start|center_vertical"
         android:text=""
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textStyle="bold"/>
 
     <ImageButton
         android:id="@+id/itemMoreButton"

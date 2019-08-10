@@ -10,9 +10,12 @@ import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.custom.CustomSongService
 import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.LayoutState
+import igrek.songbook.layout.contextmenu.ContextMenuBuilder
+import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.layout.dialog.InputDialogBuilder
 import igrek.songbook.layout.list.ListItemClickListener
 import igrek.songbook.persistence.general.model.Song
@@ -45,6 +48,12 @@ class PlaylistLayoutController : InflatedLayout(
     lateinit var songPreviewLayoutController: Lazy<SongPreviewLayoutController>
     @Inject
     lateinit var songContextMenuBuilder: SongContextMenuBuilder
+    @Inject
+    lateinit var playlistService: PlaylistService
+    @Inject
+    lateinit var contextMenuBuilder: ContextMenuBuilder
+    @Inject
+    lateinit var uiInfoService: UiInfoService
 
     private var itemsListView: PlaylistListView? = null
     private var playlist: Playlist? = null
@@ -156,18 +165,39 @@ class PlaylistLayoutController : InflatedLayout(
     }
 
     override fun onItemLongClick(item: PlaylistListItem) {
-        if (item.song != null) {
-            songContextMenuBuilder.showSongActions(item.song)
-        } else {
-            onItemClick(item)
-        }
+        onMoreActions(item)
     }
 
     override fun onMoreActions(item: PlaylistListItem) {
         if (item.song != null) {
-
+            songContextMenuBuilder.showSongActions(item.song)
         } else if (item.playlist != null) {
+            showPlaylistActions(item.playlist)
+        }
+    }
 
+    private fun showPlaylistActions(playlist: Playlist) {
+        val actions = mutableListOf(
+                ContextMenuBuilder.Action(R.string.rename_playlist) {
+                    renamePlaylist(playlist)
+                },
+                ContextMenuBuilder.Action(R.string.remove_playlist) {
+                    ConfirmDialogBuilder().confirmAction(R.string.confirm_remove_playlist) {
+                        songsRepository.playlistDao.removePlaylist(playlist)
+                        uiInfoService.showInfo(R.string.playlist_removed)
+                        updateItemsList()
+                    }
+                }
+        )
+
+        contextMenuBuilder.showContextMenu(R.string.choose_playlist, actions)
+    }
+
+    private fun renamePlaylist(playlist: Playlist) {
+        InputDialogBuilder().input("Edit playlist name", playlist.name) { name ->
+            playlist.name = name
+            songsRepository.playlistDao.savePlaylist(playlist)
+            updateItemsList()
         }
     }
 }
