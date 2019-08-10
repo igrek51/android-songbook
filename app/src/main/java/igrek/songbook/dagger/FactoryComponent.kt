@@ -56,6 +56,7 @@ import igrek.songbook.songselection.SongListView
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.favourite.FavouriteSongsService
 import igrek.songbook.songselection.favourite.FavouritesLayoutController
+import igrek.songbook.songselection.latest.LatestSongsLayoutController
 import igrek.songbook.songselection.random.RandomSongOpener
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.tree.ScrollPosBuffer
@@ -204,5 +205,7 @@ interface FactoryComponent {
     fun inject(there: InputDialogBuilder)
 
     fun inject(there: PlaylistService)
+
+    fun inject(there: LatestSongsLayoutController)
 
 }

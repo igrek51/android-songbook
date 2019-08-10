@@ -20,4 +20,6 @@ enum class LayoutState {
 
     PLAYLISTS,
 
+    LATEST,
+
 }

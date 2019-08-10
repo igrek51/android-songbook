@@ -15,6 +15,7 @@ import igrek.songbook.playlist.PlaylistLayoutController
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.favourite.FavouritesLayoutController
+import igrek.songbook.songselection.latest.LatestSongsLayoutController
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.tree.SongTreeLayoutController
 import javax.inject.Inject
@@ -43,6 +44,8 @@ class LayoutController {
     lateinit var favouritesLayoutController: Lazy<FavouritesLayoutController>
     @Inject
     lateinit var playlistLayoutController: Lazy<PlaylistLayoutController>
+    @Inject
+    lateinit var latestSongsLayoutController: Lazy<LatestSongsLayoutController>
     @Inject
     lateinit var activity: Activity
 
@@ -108,6 +111,11 @@ class LayoutController {
         lastSongSelectionLayout = playlistLayoutController.get()
     }
 
+    fun showLatest() {
+        showMainLayout(latestSongsLayoutController.get())
+        lastSongSelectionLayout = latestSongsLayoutController.get()
+    }
+
 
     private fun showMainLayout(mainLayout: MainLayout) {
         // leave previous (current) layout
@@ -147,4 +155,5 @@ class LayoutController {
         }
         currentlyShownLayout!!.onBackClicked()
     }
+
 }

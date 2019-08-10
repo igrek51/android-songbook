@@ -266,4 +266,6 @@
     <string name="rename_playlist">Rename playlist</string>
     <string name="playlist_removed">Playlist has been removed</string>
     <string name="empty_playlist_songs">No songs on this playlist</string>
+    <string name="nav_latest">Latest</string>
+    <string name="nav_history">History</string>
 </resources>

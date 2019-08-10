@@ -48,6 +48,7 @@ import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.favourite.FavouriteSongsService
 import igrek.songbook.songselection.favourite.FavouritesLayoutController
+import igrek.songbook.songselection.latest.LatestSongsLayoutController
 import igrek.songbook.songselection.random.RandomSongOpener
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.tree.ScrollPosBuffer
@@ -396,6 +397,12 @@ open class FactoryModule(private val activity: AppCompatActivity) {
     @Singleton
     fun providePlaylistService(): PlaylistService {
         return PlaylistService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideLatestSongsLayoutController(): LatestSongsLayoutController {
+        return LatestSongsLayoutController()
     }
 
     /*

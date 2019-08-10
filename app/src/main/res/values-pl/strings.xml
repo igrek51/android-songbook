@@ -260,4 +260,6 @@
     <string name="rename_playlist">Zmień nazwę</string>
     <string name="playlist_removed">Usunięto playlistę</string>
     <string name="empty_playlist_songs">Brak piosenek na playliście</string>
+    <string name="nav_latest">Najnowsze</string>
+    <string name="nav_history">Historia</string>
 </resources>

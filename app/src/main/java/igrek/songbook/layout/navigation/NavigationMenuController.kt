@@ -68,6 +68,8 @@ class NavigationMenuController {
         actionsMap[R.id.nav_about] = { aboutLayoutController.get().showAbout() }
         actionsMap[R.id.nav_exit] = { activityController.get().quit() }
         actionsMap[R.id.nav_contact] = { layoutController.get().showContact() }
+        actionsMap[R.id.nav_history] = { }
+        actionsMap[R.id.nav_latest] = { layoutController.get().showLatest() }
     }
 
     fun init() {

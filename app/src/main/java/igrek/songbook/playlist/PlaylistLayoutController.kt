@@ -1,7 +1,6 @@
 package igrek.songbook.playlist
 
 import android.os.Handler
-import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
@@ -71,16 +70,7 @@ class PlaylistLayoutController : InflatedLayout(
     }
 
     override fun showLayout(layout: View) {
-        val toolbar1 = layout.findViewById<Toolbar>(R.id.toolbar1)
-        activity.setSupportActionBar(toolbar1)
-        val actionBar = activity.supportActionBar
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(false)
-            actionBar.setDisplayShowHomeEnabled(false)
-        }
-
-        val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)
-        navMenuButton.setOnClickListener { navigationMenuController.navDrawerShow() }
+        super.showLayout(layout)
 
         itemsListView = layout.findViewById(R.id.playlistListView)
 
@@ -177,7 +167,7 @@ class PlaylistLayoutController : InflatedLayout(
             playlist = null
             updateItemsList()
         } catch (e: NoParentItemException) {
-            activityController.get().quit()
+            layoutController.showSongTree()
         }
     }
 
