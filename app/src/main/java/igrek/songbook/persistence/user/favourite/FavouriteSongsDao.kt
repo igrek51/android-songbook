@@ -2,6 +2,7 @@ package igrek.songbook.persistence.user.favourite
 
 import android.app.Activity
 import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.info.logger.WrapContextError
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.repository.SongsRepository
@@ -14,7 +15,7 @@ import javax.inject.Inject
 class FavouriteSongsDao(path: String) : AbstractJsonDao<FavouriteSongsDb>(
         path,
         dbName = "favourites",
-        schemaVersion = 2,
+        schemaVersion = 1,
         clazz = FavouriteSongsDb::class.java,
         serializer = FavouriteSongsDb.serializer()
 ) {
@@ -42,6 +43,8 @@ class FavouriteSongsDao(path: String) : AbstractJsonDao<FavouriteSongsDb>(
         subscription = songsRepository.dbChangeSubject.subscribe {
             favouritesCache.invalidate()
         }
+
+        read()
     }
 
     override fun empty(): FavouriteSongsDb {
@@ -49,7 +52,11 @@ class FavouriteSongsDao(path: String) : AbstractJsonDao<FavouriteSongsDb>(
     }
 
     override fun migrateOlder(): FavouriteSongsDb? {
-        return Migration037Favourites(activity).load()
+        try {
+            return Migration037Favourites(activity).load()
+        } catch (t: Exception) {
+            throw WrapContextError("Migration037Favourites error", t)
+        }
     }
 
     fun isSongFavourite(songIdentifier: SongIdentifier): Boolean {

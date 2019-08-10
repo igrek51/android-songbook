@@ -49,10 +49,12 @@ class ActivityController {
         activity.finish()
     }
 
-    fun onStart() {}
+    fun onStart() {
+        logger.debug("starting activity...")
+    }
 
     fun onStop() {
-        logger.debug("stopping activity...")
+        logger.trace("stopping activity...")
         songsRepository.save()
         preferencesUpdater.updateAndSave()
     }

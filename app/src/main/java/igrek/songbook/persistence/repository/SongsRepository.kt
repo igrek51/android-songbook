@@ -48,7 +48,7 @@ class SongsRepository {
     fun init() {
         try {
             reloadSongsDb()
-        } catch (t: Throwable) {
+        } catch (t: Exception) {
             factoryReset()
         }
     }
@@ -68,7 +68,7 @@ class SongsRepository {
     fun reloadSongsDb() {
         val versionNumber = try {
             loadGeneralData()
-        } catch (t: Throwable) {
+        } catch (t: Exception) {
             logger.error("failed to load general data", t)
             resetGeneralData()
             loadGeneralData()
@@ -76,7 +76,7 @@ class SongsRepository {
 
         try {
             userDataDao.get().read()
-        } catch (t: Throwable) {
+        } catch (t: Exception) {
             logger.error("failed to load user data", t)
             resetUserData()
             userDataDao.get().read()

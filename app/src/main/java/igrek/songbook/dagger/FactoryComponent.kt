@@ -20,6 +20,7 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.info.errorcheck.UIErrorHandler
+import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.confirm.ConfirmDialogBuilder
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
@@ -195,5 +196,7 @@ interface FactoryComponent {
     fun inject(there: PlaylistDao)
 
     fun inject(there: PlaylistLayoutController)
+
+    fun inject(there: InflatedLayout)
 
 }

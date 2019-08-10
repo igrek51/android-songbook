@@ -67,14 +67,7 @@ open class Logger internal constructor() {
 
     fun trace(message: String?) {
         log(message, LogLevel.TRACE, "[trace] ")
-    }
-
-    fun trace() {
-        log("Quick Trace: " + System.currentTimeMillis(), LogLevel.DEBUG, "[trace] ")
-    }
-
-    fun dupa() {
-        log("dupa", LogLevel.DEBUG, "[debug] ")
+        printCurrentStackTrace(Thread.currentThread().stackTrace)
     }
 
     protected fun log(message: String?, level: LogLevel, logPrefix: String) {
@@ -126,6 +119,16 @@ open class Logger internal constructor() {
     private fun printExceptionStackTrace(ex: Throwable) {
         if (LoggerFactory.SHOW_EXCEPTIONS_TRACE)
             printError(Log.getStackTraceString(ex))
+    }
+
+    private fun printCurrentStackTrace(stackTraces: Array<StackTraceElement>) {
+        // skip first stack traces: dalvik.system.VMStack, java.lang.Thread
+        for (i in 2 until stackTraces.size) {
+            val stackTrace = stackTraces[i]
+            val fileName = stackTrace.fileName
+            val lineNumber = stackTrace.lineNumber
+            Log.d(tagWithKey(), "[trace] $i - ($fileName:$lineNumber)")
+        }
     }
 
     protected open fun printDebug(msg: String) {

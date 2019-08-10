@@ -2,6 +2,7 @@ package igrek.songbook.persistence.user.custom
 
 import android.app.Activity
 import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.info.logger.WrapContextError
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
 import igrek.songbook.persistence.user.migrate.Migration037CustomSongs
@@ -10,7 +11,7 @@ import javax.inject.Inject
 class CustomSongsDao(path: String) : AbstractJsonDao<CustomSongsDb>(
         path,
         dbName = "customsongs",
-        schemaVersion = 2,
+        schemaVersion = 1,
         clazz = CustomSongsDb::class.java,
         serializer = CustomSongsDb.serializer()
 ) {
@@ -24,6 +25,7 @@ class CustomSongsDao(path: String) : AbstractJsonDao<CustomSongsDb>(
 
     init {
         DaggerIoc.factoryComponent.inject(this)
+        read()
     }
 
     override fun empty(): CustomSongsDb {
@@ -31,7 +33,11 @@ class CustomSongsDao(path: String) : AbstractJsonDao<CustomSongsDb>(
     }
 
     override fun migrateOlder(): CustomSongsDb? {
-        return Migration037CustomSongs(activity).load()
+        try {
+            return Migration037CustomSongs(activity).load()
+        } catch (t: Exception) {
+            throw WrapContextError("Migration037CustomSongs error", t)
+        }
     }
 
     fun saveCustomSong(newSong: CustomSong) {

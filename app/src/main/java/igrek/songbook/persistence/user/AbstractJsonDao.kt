@@ -27,10 +27,6 @@ abstract class AbstractJsonDao<T>(
         return null
     }
 
-    init {
-        read()
-    }
-
     private fun readDb(): T {
         for (attemptSchema in schemaVersion downTo 1) {
             if (attemptSchema < schemaVersion)
@@ -39,10 +35,10 @@ abstract class AbstractJsonDao<T>(
             try {
                 return readFromFile(dbName, attemptSchema)
             } catch (e: FileNotFoundException) {
-                logger.warn("'$dbName' db: database v$attemptSchema not found", e)
+                // logger.debug("'$dbName' db: database v$attemptSchema not found")
             } catch (e: SerializationException) {
                 logger.error("'$dbName' db: JSON deserialization error", e)
-            } catch (e: Throwable) {
+            } catch (e: Exception) {
                 logger.error("'$dbName' db: error reading '$dbName db'", e)
             }
         }
@@ -51,11 +47,11 @@ abstract class AbstractJsonDao<T>(
             val oldDb = migrateOlder()
             if (oldDb != null)
                 return oldDb
-        } catch (e: Throwable) {
-            logger.error("'$dbName' db: failed to migrate older", e)
+        } catch (e: Exception) {
+            logger.error("'$dbName' db: failed to migrate older db", e)
         }
 
-        logger.debug("'$dbName' db: loading empty db")
+        logger.debug("'$dbName' db: loading empty db...")
         return empty()
     }
 
@@ -71,7 +67,7 @@ abstract class AbstractJsonDao<T>(
         return parsed
     }
 
-    private fun read() {
+    fun read() {
         db = readDb()
     }
 

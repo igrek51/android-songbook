@@ -8,6 +8,7 @@ import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.persistence.user.custom.CustomSong
 import igrek.songbook.persistence.user.custom.CustomSongsDb
 import java.io.File
+import java.io.FileNotFoundException
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -18,8 +19,12 @@ class Migration037CustomSongs(private val activity: Activity) {
     private val iso8601Format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)
 
     fun load(): CustomSongsDb? {
+        val dbFile = getLocalSongsDbFile()
+        if (!dbFile.exists())
+            return null
+
         // open old database
-        val oldLocalDb = openLocalSongsDb() ?: throw RuntimeException("no old custom songs file")
+        val oldLocalDb = openLocalSongsDb()
 
         // get old custom songs
         val tuples = readAllCustomSongs(oldLocalDb)
@@ -58,18 +63,15 @@ class Migration037CustomSongs(private val activity: Activity) {
         return File("/data/data/" + activity.packageName + "/files")
     }
 
-    private fun openLocalSongsDb(): SQLiteDatabase? {
+    private fun openLocalSongsDb(): SQLiteDatabase {
         val dbFile = getLocalSongsDbFile()
-        // if file does not exist - copy initial db from resources
-        if (!dbFile.exists())
-            return null
         return openDatabase(dbFile)
     }
 
-    private fun openDatabase(songsDbFile: File): SQLiteDatabase? {
-        if (!songsDbFile.exists())
-            return null
-        return SQLiteDatabase.openDatabase(songsDbFile.absolutePath, null, SQLiteDatabase.OPEN_READWRITE)
+    private fun openDatabase(dbFile: File): SQLiteDatabase {
+        if (!dbFile.exists())
+            throw FileNotFoundException("no old db file $dbFile")
+        return SQLiteDatabase.openDatabase(dbFile.absolutePath, null, SQLiteDatabase.OPEN_READWRITE)
     }
 
     private fun readAllCustomSongs(db: SQLiteDatabase): MutableList<List<Any?>> {

@@ -9,7 +9,7 @@ import javax.inject.Inject
 class PlaylistDao(path: String) : AbstractJsonDao<PlaylistDb>(
         path,
         dbName = "playlist",
-        schemaVersion = 2,
+        schemaVersion = 1,
         clazz = PlaylistDb::class.java,
         serializer = PlaylistDb.serializer()
 ) {
@@ -23,6 +23,7 @@ class PlaylistDao(path: String) : AbstractJsonDao<PlaylistDb>(
 
     init {
         DaggerIoc.factoryComponent.inject(this)
+        read()
     }
 
     override fun empty(): PlaylistDb {

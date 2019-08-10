@@ -1,7 +1,6 @@
 package igrek.songbook.playlist
 
 import android.os.Handler
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.ImageButton
@@ -12,13 +11,9 @@ import igrek.songbook.activity.ActivityController
 import igrek.songbook.custom.CustomSongService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
-import igrek.songbook.info.logger.Logger
-import igrek.songbook.info.logger.LoggerFactory
-import igrek.songbook.layout.LayoutController
+import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.LayoutState
-import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.list.ListItemClickListener
-import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.repository.SongsRepository
@@ -32,18 +27,15 @@ import igrek.songbook.songselection.tree.NoParentItemException
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
-class PlaylistLayoutController : MainLayout, ListItemClickListener<PlaylistListItem> {
+class PlaylistLayoutController : InflatedLayout(
+        _layoutResourceId = R.layout.playlists,
+        _layoutState = LayoutState.PLAYLISTS
+), ListItemClickListener<PlaylistListItem> {
 
     @Inject
     lateinit var customSongService: Lazy<CustomSongService>
     @Inject
     lateinit var activityController: Lazy<ActivityController>
-    @Inject
-    lateinit var layoutController: LayoutController
-    @Inject
-    lateinit var activity: AppCompatActivity
-    @Inject
-    lateinit var navigationMenuController: NavigationMenuController
     @Inject
     lateinit var songsRepository: SongsRepository
     @Inject
@@ -53,7 +45,6 @@ class PlaylistLayoutController : MainLayout, ListItemClickListener<PlaylistListI
     @Inject
     lateinit var songContextMenuBuilder: SongContextMenuBuilder
 
-    private val logger: Logger = LoggerFactory.logger
     private var itemsListView: PlaylistListView? = null
     private var playlist: Playlist? = null
 
@@ -98,15 +89,7 @@ class PlaylistLayoutController : MainLayout, ListItemClickListener<PlaylistListI
         // TODO
     }
 
-    override fun getLayoutState(): LayoutState {
-        return LayoutState.PLAYLISTS
-    }
-
-    override fun getLayoutResourceId(): Int {
-        return R.layout.playlists
-    }
-
-    fun updateItemsList() {
+    private fun updateItemsList() {
         val items = if (playlist == null) {
             songsRepository.playlistDao.playlistDb.playlists
                     .map { p -> PlaylistListItem(playlist = p) }
@@ -138,8 +121,6 @@ class PlaylistLayoutController : MainLayout, ListItemClickListener<PlaylistListI
     override fun onBackClicked() {
         goUp()
     }
-
-    override fun onLayoutExit() {}
 
     private fun goUp() {
         try {

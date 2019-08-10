@@ -9,7 +9,7 @@ import javax.inject.Inject
 class UnlockedSongsDao(path: String) : AbstractJsonDao<UnlockedSongsDb>(
         path,
         dbName = "unlocked",
-        schemaVersion = 2,
+        schemaVersion = 1,
         clazz = UnlockedSongsDb::class.java,
         serializer = UnlockedSongsDb.serializer()
 ) {
@@ -23,6 +23,7 @@ class UnlockedSongsDao(path: String) : AbstractJsonDao<UnlockedSongsDb>(
 
     init {
         DaggerIoc.factoryComponent.inject(this)
+        read()
     }
 
     override fun empty(): UnlockedSongsDb {

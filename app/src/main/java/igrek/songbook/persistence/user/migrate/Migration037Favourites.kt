@@ -14,6 +14,10 @@ class Migration037Favourites(private val activity: Activity) {
     private val logger = LoggerFactory.logger
 
     fun load(): FavouriteSongsDb? {
+        val dbFile = getLocalSongsDbFile()
+        if (!dbFile.exists())
+            return null
+
         // open old database
         val oldLocalDb = openLocalSongsDb() ?: throw RuntimeException("no old custom songs file")
 

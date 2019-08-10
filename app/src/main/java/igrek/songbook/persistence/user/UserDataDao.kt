@@ -37,6 +37,7 @@ class UserDataDao {
         unlockedSongsDao?.save()
         favouriteSongsDao?.save()
         customSongsDao?.save()
+        playlistDao?.save()
     }
 
 }
