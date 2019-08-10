@@ -62,4 +62,8 @@ open class InflatedLayout(
     }
 
     override fun onLayoutExit() {}
+
+    protected fun isLayoutVisible(): Boolean {
+        return layoutController.isState(_layoutState)
+    }
 }

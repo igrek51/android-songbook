@@ -59,13 +59,17 @@ class SongContextMenuBuilder {
                         }),
                 // SET_FAVORITE
                 SongContextAction(R.string.action_song_set_favourite,
-                        availableCondition = { song -> !favouriteSongsService.isSongFavourite(song) },
+                        availableCondition = { song ->
+                            !favouriteSongsService.isSongFavourite(song)
+                        },
                         executor = { song ->
                             favouriteSongsService.setSongFavourite(song)
                         }),
                 // UNSET_FAVORITE
                 SongContextAction(R.string.action_song_unset_favourite,
-                        availableCondition = { song -> favouriteSongsService.isSongFavourite(song) },
+                        availableCondition = { song ->
+                            favouriteSongsService.isSongFavourite(song)
+                        },
                         executor = { song ->
                             favouriteSongsService.unsetSongFavourite(song)
                         }),
@@ -101,7 +105,9 @@ class SongContextMenuBuilder {
                         }),
                 // Remove from playlist
                 SongContextAction(R.string.action_remove_from_playlist,
-                        availableCondition = { song -> playlistService.isSongOnAnyPlaylist(song) },
+                        availableCondition = { song ->
+                            songsRepository.playlistDao.isSongOnAnyPlaylist(song)
+                        },
                         executor = { song ->
                             playlistService.removeFromPlaylist(song)
                         })

@@ -60,7 +60,7 @@ class PlaylistLayoutController : InflatedLayout(
 
     private var storedScroll: ListScrollPosition? = null
     private var emptyListLabel: TextView? = null
-    private var subscription: Disposable? = null
+    private var subscriptions = mutableListOf<Disposable>()
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -88,18 +88,22 @@ class PlaylistLayoutController : InflatedLayout(
         itemsListView!!.init(activity, this)
         updateItemsList()
 
-        subscription?.dispose()
-        subscription = songsRepository.dbChangeSubject.subscribe {
-            if (layoutController.isState(getLayoutState()))
+        subscriptions.forEach { s -> s.dispose() }
+        subscriptions.clear()
+        subscriptions.add(songsRepository.dbChangeSubject.subscribe {
+            if (isLayoutVisible())
                 updateItemsList()
-        }
+        })
+        subscriptions.add(songsRepository.playlistDao.playlistDbSubject.subscribe {
+            if (isLayoutVisible())
+                updateItemsList()
+        })
     }
 
     private fun addPlaylist() {
         InputDialogBuilder().input("New playlist name", null) { name ->
             val playlist = Playlist(0, name)
             songsRepository.playlistDao.savePlaylist(playlist)
-            updateItemsList()
         }
     }
 
@@ -185,7 +189,6 @@ class PlaylistLayoutController : InflatedLayout(
                     ConfirmDialogBuilder().confirmAction(R.string.confirm_remove_playlist) {
                         songsRepository.playlistDao.removePlaylist(playlist)
                         uiInfoService.showInfo(R.string.playlist_removed)
-                        updateItemsList()
                     }
                 }
         )
@@ -197,7 +200,6 @@ class PlaylistLayoutController : InflatedLayout(
         InputDialogBuilder().input("Edit playlist name", playlist.name) { name ->
             playlist.name = name
             songsRepository.playlistDao.savePlaylist(playlist)
-            updateItemsList()
         }
     }
 }

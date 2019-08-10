@@ -7,7 +7,6 @@ import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.playlist.Playlist
-import igrek.songbook.persistence.user.playlist.PlaylistSong
 import javax.inject.Inject
 
 class PlaylistService {
@@ -44,28 +43,19 @@ class PlaylistService {
     }
 
     private fun addSongToPlaylist(playlist: Playlist, song: Song) {
-        val playlistSong = PlaylistSong(song.id, song.custom)
-        if (playlistSong in playlist.songs) {
+        if (songsRepository.playlistDao.isSongOnPlaylist(song, playlist)) {
             uiInfoService.showInfo(R.string.song_already_on_playlist)
             return
         }
-        playlist.songs.add(playlistSong)
+        songsRepository.playlistDao.addSongToPlaylist(song, playlist)
         uiInfoService.showInfo(R.string.song_added_to_playlist)
-    }
-
-    private fun isSongOnPlaylist(song: Song, playlist: Playlist): Boolean {
-        val playlistSong = PlaylistSong(song.id, song.custom)
-        return playlistSong in playlist.songs
-    }
-
-    fun isSongOnAnyPlaylist(song: Song): Boolean {
-        return songsRepository.playlistDao.playlistDb.playlists
-                .any { playlist -> isSongOnPlaylist(song, playlist) }
     }
 
     fun removeFromPlaylist(song: Song) {
         val playlistsWithSong = songsRepository.playlistDao.playlistDb.playlists
-                .filter { playlist -> isSongOnPlaylist(song, playlist) }
+                .filter { playlist ->
+                    songsRepository.playlistDao.isSongOnPlaylist(song, playlist)
+                }
 
         when (playlistsWithSong.size) {
             0 -> {
@@ -92,8 +82,7 @@ class PlaylistService {
     }
 
     private fun removeFromPlaylist(song: Song, playlist: Playlist) {
-        val playlistSong = PlaylistSong(song.id, song.custom)
-        playlist.songs.remove(playlistSong)
+        songsRepository.playlistDao.removeSongFromPlaylist(song, playlist)
         uiInfoService.showInfo(R.string.song_removed_from_playlist)
     }
 

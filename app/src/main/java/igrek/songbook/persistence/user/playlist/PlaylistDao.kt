@@ -2,8 +2,10 @@ package igrek.songbook.persistence.user.playlist
 
 import android.app.Activity
 import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
+import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
 
 class PlaylistDao(path: String) : AbstractJsonDao<PlaylistDb>(
@@ -15,6 +17,7 @@ class PlaylistDao(path: String) : AbstractJsonDao<PlaylistDb>(
 ) {
 
     val playlistDb: PlaylistDb get() = db!!
+    val playlistDbSubject = PublishSubject.create<PlaylistDb>()
 
     @Inject
     lateinit var songsRepository: SongsRepository
@@ -37,15 +40,39 @@ class PlaylistDao(path: String) : AbstractJsonDao<PlaylistDb>(
             newPlaylist.id = nextId(olds)
         olds.add(newPlaylist)
         playlistDb.playlists = olds
+        playlistDbSubject.onNext(playlistDb)
     }
 
     fun removePlaylist(playlist: Playlist) {
         val olds = playlistDb.playlists
                 .filter { p -> p.id != playlist.id }.toMutableList()
         playlistDb.playlists = olds
+        playlistDbSubject.onNext(playlistDb)
     }
 
     private fun nextId(playlists: List<Playlist>): Long {
         return (playlists.map { p -> p.id }.max() ?: 0) + 1
+    }
+
+    fun isSongOnPlaylist(song: Song, playlist: Playlist): Boolean {
+        val playlistSong = PlaylistSong(song.id, song.custom)
+        return playlistSong in playlist.songs
+    }
+
+    fun isSongOnAnyPlaylist(song: Song): Boolean {
+        return songsRepository.playlistDao.playlistDb.playlists
+                .any { playlist -> isSongOnPlaylist(song, playlist) }
+    }
+
+    fun addSongToPlaylist(song: Song, playlist: Playlist) {
+        val playlistSong = PlaylistSong(song.id, song.custom)
+        playlist.songs.add(playlistSong)
+        playlistDbSubject.onNext(playlistDb)
+    }
+
+    fun removeSongFromPlaylist(song: Song, playlist: Playlist) {
+        val playlistSong = PlaylistSong(song.id, song.custom)
+        playlist.songs.remove(playlistSong)
+        playlistDbSubject.onNext(playlistDb)
     }
 }
