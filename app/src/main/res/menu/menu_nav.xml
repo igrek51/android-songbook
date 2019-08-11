@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group
+        android:id="@+id/nav_group1"
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_songs_list"
@@ -32,6 +33,7 @@
             android:title="@string/nav_history"/>
     </group>
     <group
+        android:id="@+id/nav_group2"
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_update_db"
@@ -43,6 +45,7 @@
             android:title="@string/nav_random_song"/>
     </group>
     <group
+        android:id="@+id/nav_group3"
         android:checkableBehavior="single">
         <item
             android:id="@+id/nav_settings"

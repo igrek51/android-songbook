@@ -6,6 +6,7 @@ import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.user.custom.CustomSongsDao
 import igrek.songbook.persistence.user.favourite.FavouriteSongsDao
+import igrek.songbook.persistence.user.playlist.OpenHistoryDao
 import igrek.songbook.persistence.user.playlist.PlaylistDao
 import igrek.songbook.persistence.user.unlocked.UnlockedSongsDao
 import javax.inject.Inject
@@ -20,6 +21,7 @@ class UserDataDao {
     var favouriteSongsDao: FavouriteSongsDao? = null
     var customSongsDao: CustomSongsDao? = null
     var playlistDao: PlaylistDao? = null
+    var openHistoryDao: OpenHistoryDao? = null
 
     private val logger = LoggerFactory.logger
 
@@ -34,6 +36,7 @@ class UserDataDao {
         favouriteSongsDao = FavouriteSongsDao(path)
         customSongsDao = CustomSongsDao(path)
         playlistDao = PlaylistDao(path)
+        openHistoryDao = OpenHistoryDao(path)
     }
 
     fun save() {
@@ -41,7 +44,16 @@ class UserDataDao {
         favouriteSongsDao?.save()
         customSongsDao?.save()
         playlistDao?.save()
+        openHistoryDao?.save()
         logger.info("user data have been saved")
+    }
+
+    fun factoryReset() {
+        customSongsDao?.factoryReset()
+        favouriteSongsDao?.factoryReset()
+        unlockedSongsDao?.factoryReset()
+        playlistDao?.factoryReset()
+        openHistoryDao?.factoryReset()
     }
 
 }

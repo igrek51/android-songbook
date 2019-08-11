@@ -22,4 +22,6 @@ enum class LayoutState {
 
     LATEST,
 
+    HISTORY,
+
 }

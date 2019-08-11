@@ -1,4 +1,4 @@
-package igrek.songbook.songselection.latest
+package igrek.songbook.songselection.history
 
 import android.os.Handler
 import android.view.View
@@ -10,6 +10,7 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.LayoutState
+import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController
@@ -22,9 +23,9 @@ import igrek.songbook.songselection.tree.SongTreeItem
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
-class LatestSongsLayoutController : InflatedLayout(
-        _layoutResourceId = R.layout.latest_songs,
-        _layoutState = LayoutState.LATEST
+class OpenHistoryLayoutController : InflatedLayout(
+        _layoutResourceId = R.layout.open_history,
+        _layoutState = LayoutState.HISTORY
 ), SongClickListener {
 
     @Inject
@@ -48,8 +49,6 @@ class LatestSongsLayoutController : InflatedLayout(
 
     private var subscriptions = mutableListOf<Disposable>()
 
-    private val latestSongsCount = 100
-
     init {
         DaggerIoc.factoryComponent.inject(this)
     }
@@ -67,14 +66,19 @@ class LatestSongsLayoutController : InflatedLayout(
             if (isLayoutVisible())
                 updateItemsList()
         })
+        subscriptions.add(songsRepository.openHistoryDao.historyDbSubject.subscribe {
+            if (isLayoutVisible())
+                updateItemsList()
+        })
     }
 
     private fun updateItemsList() {
-        val latestSongs = songsRepository.songsDb!!.songs
-                .sortedBy { song -> -song.updateTime }
-                .take(latestSongsCount)
-                .map { song -> SongSearchItem.song(song) }
-        itemsListView!!.setItems(latestSongs)
+        val opened = songsRepository.openHistoryDao.historyDb.songs.mapNotNull { openedSong ->
+            val songIdentifier = SongIdentifier(openedSong.songId, openedSong.custom)
+            val song = songsRepository.songsDb?.songFinder?.find(songIdentifier)
+            if (song != null) SongSearchItem.song(song) else null
+        }
+        itemsListView!!.setItems(opened)
 
         if (storedScroll != null) {
             Handler().post { itemsListView?.restoreScrollPosition(storedScroll) }

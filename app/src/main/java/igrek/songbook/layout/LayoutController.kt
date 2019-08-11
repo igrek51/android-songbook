@@ -15,6 +15,7 @@ import igrek.songbook.playlist.PlaylistLayoutController
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.favourite.FavouritesLayoutController
+import igrek.songbook.songselection.history.OpenHistoryLayoutController
 import igrek.songbook.songselection.latest.LatestSongsLayoutController
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.tree.SongTreeLayoutController
@@ -46,6 +47,8 @@ class LayoutController {
     lateinit var playlistLayoutController: Lazy<PlaylistLayoutController>
     @Inject
     lateinit var latestSongsLayoutController: Lazy<LatestSongsLayoutController>
+    @Inject
+    lateinit var openHistoryLayoutController: Lazy<OpenHistoryLayoutController>
     @Inject
     lateinit var activity: Activity
 
@@ -111,9 +114,14 @@ class LayoutController {
         lastSongSelectionLayout = playlistLayoutController.get()
     }
 
-    fun showLatest() {
+    fun showLatestSongs() {
         showMainLayout(latestSongsLayoutController.get())
         lastSongSelectionLayout = latestSongsLayoutController.get()
+    }
+
+    fun showOpenHistory() {
+        showMainLayout(openHistoryLayoutController.get())
+        lastSongSelectionLayout = openHistoryLayoutController.get()
     }
 
 

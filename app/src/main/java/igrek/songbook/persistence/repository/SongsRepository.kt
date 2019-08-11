@@ -12,6 +12,7 @@ import igrek.songbook.persistence.general.model.SongsDb
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.persistence.user.custom.CustomSongsDao
 import igrek.songbook.persistence.user.favourite.FavouriteSongsDao
+import igrek.songbook.persistence.user.playlist.OpenHistoryDao
 import igrek.songbook.persistence.user.playlist.PlaylistDao
 import igrek.songbook.persistence.user.unlocked.UnlockedSongsDao
 import io.reactivex.subjects.PublishSubject
@@ -42,6 +43,7 @@ class SongsRepository {
     val favouriteSongsDao: FavouriteSongsDao get() = userDataDao.get().favouriteSongsDao!!
     val customSongsDao: CustomSongsDao get() = userDataDao.get().customSongsDao!!
     val playlistDao: PlaylistDao get() = userDataDao.get().playlistDao!!
+    val openHistoryDao: OpenHistoryDao get() = userDataDao.get().openHistoryDao!!
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -143,9 +145,7 @@ class SongsRepository {
 
     fun resetUserData() {
         logger.warn("resetting user data...")
-        userDataDao.get().customSongsDao?.factoryReset()
-        userDataDao.get().favouriteSongsDao?.factoryReset()
-        userDataDao.get().unlockedSongsDao?.factoryReset()
+        userDataDao.get().factoryReset()
     }
 
     @Synchronized

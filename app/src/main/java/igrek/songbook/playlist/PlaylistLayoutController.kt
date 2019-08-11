@@ -17,12 +17,12 @@ import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.layout.dialog.InputDialogBuilder
 import igrek.songbook.layout.list.ListItemClickListener
-import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.playlist.Playlist
 import igrek.songbook.playlist.list.PlaylistListItem
 import igrek.songbook.playlist.list.PlaylistListView
+import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
@@ -53,6 +53,8 @@ class PlaylistLayoutController : InflatedLayout(
     lateinit var contextMenuBuilder: ContextMenuBuilder
     @Inject
     lateinit var uiInfoService: UiInfoService
+    @Inject
+    lateinit var songOpener: SongOpener
 
     private var itemsListView: PlaylistListView? = null
     private var addPlaylistButton: ImageButton? = null
@@ -171,15 +173,10 @@ class PlaylistLayoutController : InflatedLayout(
         }
     }
 
-    private fun openSongPreview(song: Song) {
-        songPreviewLayoutController.get().currentSong = song
-        layoutController.showSongPreview()
-    }
-
     override fun onItemClick(item: PlaylistListItem) {
         storedScroll = itemsListView?.currentScrollPosition
         if (item.song != null) {
-            openSongPreview(item.song)
+            songOpener.openSongPreview(item.song)
         } else if (item.playlist != null) {
             playlist = item.playlist
             updateItemsList()

@@ -13,8 +13,9 @@ import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.navigation.NavigationMenuController
-import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.general.model.SongsDb
+import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.tree.SongTreeItem
@@ -39,6 +40,8 @@ abstract class SongSelectionLayoutController : SongClickListener {
     lateinit var songPreviewLayoutController: Lazy<SongPreviewLayoutController>
     @Inject
     lateinit var songContextMenuBuilder: SongContextMenuBuilder
+    @Inject
+    lateinit var songOpener: SongOpener
 
     protected val logger: Logger = LoggerFactory.logger
     protected var actionBar: ActionBar? = null
@@ -71,8 +74,7 @@ abstract class SongSelectionLayoutController : SongClickListener {
     }
 
     fun openSongPreview(item: SongTreeItem) {
-        songPreviewLayoutController.get().currentSong = item.song
-        layoutController.showSongPreview()
+        songOpener.openSongPreview(item.song!!)
     }
 
     override fun onSongItemClick(item: SongTreeItem) {

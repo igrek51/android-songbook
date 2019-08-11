@@ -40,6 +40,7 @@ import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.PreferencesUpdater
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.SongDetailsService
+import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.lyrics.LyricsManager
@@ -48,6 +49,7 @@ import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.favourite.FavouriteSongsService
 import igrek.songbook.songselection.favourite.FavouritesLayoutController
+import igrek.songbook.songselection.history.OpenHistoryLayoutController
 import igrek.songbook.songselection.latest.LatestSongsLayoutController
 import igrek.songbook.songselection.random.RandomSongOpener
 import igrek.songbook.songselection.search.SongSearchLayoutController
@@ -403,6 +405,18 @@ open class FactoryModule(private val activity: AppCompatActivity) {
     @Singleton
     fun provideLatestSongsLayoutController(): LatestSongsLayoutController {
         return LatestSongsLayoutController()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSongOpener(): SongOpener {
+        return SongOpener()
+    }
+
+    @Provides
+    @Singleton
+    fun provideOpenHistoryLayoutController(): OpenHistoryLayoutController {
+        return OpenHistoryLayoutController()
     }
 
     /*

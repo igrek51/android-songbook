@@ -4,10 +4,11 @@ import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.general.model.Song
+import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.preferences.PreferencesDefinition
 import igrek.songbook.settings.preferences.PreferencesService
+import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.favourite.FavouriteSongsService
 import java.util.*
@@ -27,6 +28,8 @@ class RandomSongOpener {
     lateinit var favouriteSongsService: FavouriteSongsService
     @Inject
     lateinit var uiInfoService: UiInfoService
+    @Inject
+    lateinit var songOpener: SongOpener
 
     var fromFavouriteSongsOnly: Boolean = false
 
@@ -46,7 +49,7 @@ class RandomSongOpener {
             return
         }
 
-        openSongPreview(randomSong)
+        songOpener.openSongPreview(randomSong)
     }
 
     private fun getRandomSong(): Song? {
@@ -62,10 +65,5 @@ class RandomSongOpener {
         } else {
             songsRepository.songsDb!!.songs
         }
-    }
-
-    private fun openSongPreview(song: Song) {
-        songPreviewLayoutController.get().currentSong = song
-        layoutController.showSongPreview()
     }
 }
