@@ -82,4 +82,11 @@ class FavouriteSongsDao(path: String) : AbstractJsonDao<FavouriteSongsDb>(
         favouritesCache.get().remove(song)
     }
 
+    fun removeUsage(songId: Long, custom: Boolean) {
+        val favSong = FavouriteSong(songId, custom)
+        if (favSong in favouriteSongs.favourites)
+            favouriteSongs.favourites.remove(favSong)
+        favouritesCache.invalidate()
+    }
+
 }

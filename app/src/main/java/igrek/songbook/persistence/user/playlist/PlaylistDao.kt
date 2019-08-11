@@ -75,4 +75,15 @@ class PlaylistDao(path: String) : AbstractJsonDao<PlaylistDb>(
         playlist.songs.remove(playlistSong)
         playlistDbSubject.onNext(playlistDb)
     }
+
+    fun removeUsage(songId: Long, custom: Boolean) {
+        val playlistSong = PlaylistSong(songId, custom)
+        var removed = 0
+        playlistDb.playlists.forEach { playlist ->
+            if (playlist.songs.remove(playlistSong))
+                removed++
+        }
+        if (removed > 0)
+            playlistDbSubject.onNext(playlistDb)
+    }
 }

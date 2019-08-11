@@ -59,6 +59,10 @@ class CustomSongsDao(path: String) : AbstractJsonDao<CustomSongsDb>(
         val olds = customSongs.songs
                 .filter { song -> song.id != newSong.id }.toMutableList()
         customSongs.songs = olds
+        // clean up other usages
+        songsRepository.favouriteSongsDao.removeUsage(newSong.id, true)
+        songsRepository.playlistDao.removeUsage(newSong.id, true)
+
         songsRepository.reloadUserData()
     }
 
