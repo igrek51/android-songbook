@@ -32,6 +32,7 @@ import igrek.songbook.persistence.general.dao.GeneralSongsDao
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.persistence.user.custom.CustomSongsDao
+import igrek.songbook.persistence.user.exclusion.ExclusionDao
 import igrek.songbook.persistence.user.favourite.FavouriteSongsDao
 import igrek.songbook.persistence.user.playlist.OpenHistoryDao
 import igrek.songbook.persistence.user.playlist.PlaylistDao
@@ -146,5 +147,6 @@ interface FactoryComponent {
     fun inject(there: OpenHistoryDao)
     fun inject(there: SongOpener)
     fun inject(there: OpenHistoryLayoutController)
+    fun inject(there: ExclusionDao)
 
 }

@@ -13,6 +13,7 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.LayoutController
+import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.language.AppLanguage
@@ -45,6 +46,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
     lateinit var chordsNotationService: dagger.Lazy<ChordsNotationService>
     @Inject
     lateinit var preferencesUpdater: dagger.Lazy<PreferencesUpdater>
+    @Inject
+    lateinit var songsRepository: dagger.Lazy<SongsRepository>
 
     private var decimalFormat1: DecimalFormat = DecimalFormat("#.#")
     private var decimalFormat3: DecimalFormat = DecimalFormat("#.###")
@@ -94,25 +97,40 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
         )
 
-        // FIXME add hiding languages filter
-//        val preference = setupMultiListPreference("excludedLanguagesFilter",
-//                appLanguageService.languageFilterEntries(),
-//                onLoad = {
-//                    preferencesUpdater.excludedLanguages
-//                            .map { language -> language.langCode }
-//                            .toMutableSet()
-//                },
-//                onSave = { ids: Set<String> ->
-//                    val langsStr = ids.joinToString(separator = ";")
-//                    preferencesUpdater.excludedLanguages = appLanguageService.string2Languages(langsStr)
-//                },
-//                stringConverter = { ids: Set<String>, entriesMap: LinkedHashMap<String, String> ->
-//                    if (ids.isEmpty())
-//                        uiResourceService.resString(R.string.none)
-//                    else
-//                        ids.map { id -> entriesMap[id]!! }.sorted().joinToString(separator = ", ")
-//                }
-//        )
+        setupMultiListPreference("excludeFilterLanguages",
+                appLanguageService.get().languageFilterEntries(),
+                onLoad = {
+                    songsRepository.get().exclusionDao.exclusionDb.languages.toMutableSet()
+                },
+                onSave = { ids: Set<String> ->
+                    songsRepository.get().exclusionDao.setExcludedLanguages(ids.toMutableList())
+                },
+                stringConverter = { ids: Set<String>, entriesMap: LinkedHashMap<String, String> ->
+                    if (ids.isEmpty())
+                        uiResourceService.get().resString(R.string.none)
+                    else
+                        ids.map { id -> entriesMap[id]!! }.sorted().joinToString(separator = ", ")
+                }
+        )
+
+        setupMultiListPreference("excludeFilterArtists",
+                songsRepository.get().exclusionDao.artistsFilterEntries(),
+                onLoad = {
+                    songsRepository.get().exclusionDao.exclusionDb.artistIds
+                            .map { id -> id.toString() }
+                            .toMutableSet()
+                },
+                onSave = { ids: Set<String> ->
+                    val longIds = ids.map { id -> id.toLong() }.toMutableList()
+                    songsRepository.get().exclusionDao.setExcludedArtists(longIds)
+                },
+                stringConverter = { ids: Set<String>, entriesMap: LinkedHashMap<String, String> ->
+                    if (ids.isEmpty())
+                        uiResourceService.get().resString(R.string.none)
+                    else
+                        ids.map { id -> entriesMap[id]!! }.sorted().joinToString(separator = ", ")
+                }
+        )
 
         setupSeekBarPreference("autoscrollInitialPause", min = 0, max = 90000,
                 onLoad = { preferencesUpdater.get().autoscrollInitialPause.toFloat() },

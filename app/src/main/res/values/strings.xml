@@ -268,4 +268,6 @@
     <string name="empty_playlist_songs">No songs on this playlist</string>
     <string name="nav_latest">Latest</string>
     <string name="nav_history">History</string>
+    <string name="settings_exclude_filter">Exclusion filter</string>
+    <string name="settings_exclude_artists">Hide songs of selected artists</string>
 </resources>

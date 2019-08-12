@@ -10,7 +10,7 @@ enum class SongLanguage(val langCode: String) {
 
     companion object {
         fun parseByLangCode(langCode: String): SongLanguage? {
-            return SongLanguage.values().firstOrNull { v -> v.langCode == langCode }
+            return values().firstOrNull { v -> v.langCode == langCode }
         }
     }
 }

@@ -55,11 +55,15 @@
             android:summary="@string/settings_random_favourite_hint"/>
     </PreferenceCategory>
 
-    <!--<PreferenceCategory android:title="@string/settings_songs_list_section">-->
-    <!--<MultiSelectListPreference-->
-    <!--android:key="excludedLanguagesFilter"-->
-    <!--android:title="@string/settings_exclude_languages"-->
-    <!--android:summary="%s"/>-->
-    <!--</PreferenceCategory>-->
+    <PreferenceCategory android:title="@string/settings_exclude_filter">
+        <MultiSelectListPreference
+        android:key="excludeFilterLanguages"
+        android:title="@string/settings_exclude_languages"
+        android:summary="%s"/>
+        <MultiSelectListPreference
+        android:key="excludeFilterArtists"
+        android:title="@string/settings_exclude_artists"
+        android:summary="%s"/>
+    </PreferenceCategory>
 
 </PreferenceScreen>

@@ -9,6 +9,7 @@ import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.settings.preferences.PreferencesDefinition
 import igrek.songbook.settings.preferences.PreferencesService
+import igrek.songbook.settings.theme.ColorScheme
 import java.util.*
 import javax.inject.Inject
 

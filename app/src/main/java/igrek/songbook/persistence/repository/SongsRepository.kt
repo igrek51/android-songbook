@@ -11,6 +11,7 @@ import igrek.songbook.persistence.general.dao.GeneralSongsDao
 import igrek.songbook.persistence.general.model.SongsDb
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.persistence.user.custom.CustomSongsDao
+import igrek.songbook.persistence.user.exclusion.ExclusionDao
 import igrek.songbook.persistence.user.favourite.FavouriteSongsDao
 import igrek.songbook.persistence.user.playlist.OpenHistoryDao
 import igrek.songbook.persistence.user.playlist.PlaylistDao
@@ -44,6 +45,7 @@ class SongsRepository {
     val customSongsDao: CustomSongsDao get() = userDataDao.get().customSongsDao!!
     val playlistDao: PlaylistDao get() = userDataDao.get().playlistDao!!
     val openHistoryDao: OpenHistoryDao get() = userDataDao.get().openHistoryDao!!
+    val exclusionDao: ExclusionDao get() = userDataDao.get().exclusionDao!!
 
     init {
         DaggerIoc.factoryComponent.inject(this)
