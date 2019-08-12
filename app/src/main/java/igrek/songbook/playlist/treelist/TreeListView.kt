@@ -1,4 +1,4 @@
-package igrek.songbook.playlist.list
+package igrek.songbook.playlist.treelist
 
 import android.content.Context
 import android.graphics.Canvas
@@ -9,92 +9,60 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.AdapterView
 import android.widget.ListView
-import igrek.songbook.info.logger.LoggerFactory.logger
-import igrek.songbook.layout.list.ListItemClickListener
-import igrek.songbook.songselection.ListScrollPosition
+import igrek.songbook.playlist.list.TreeListReorder
+import igrek.songbook.playlist.list.TreeListScrollHandler
 
-class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+import igrek.todotree.commands.ItemEditorCommand
+import igrek.todotree.commands.TreeCommand
+import igrek.todotree.domain.treeitem.AbstractTreeItem
+import igrek.todotree.logger.Logger
+import igrek.todotree.logger.LoggerFactory
+import igrek.todotree.ui.contextmenu.ItemActionsMenu
+import igrek.todotree.ui.errorcheck.UIErrorHandler
 
-    private var adapter: PlaylistListItemAdapter? = null
+class TreeListView : ListView, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+
+    private val logger = LoggerFactory.getLogger()
+    private var adapter: TreeItemAdapter? = null
     var scrollHandler: TreeListScrollHandler? = null
         private set
     val reorder = TreeListReorder(this)
-    private var onClickListener: ListItemClickListener<PlaylistListItem>? = null
+    val gestureHandler = TreeListGestureHandler(this)
+
     /** view index -> view height  */
     private val itemHeights = SparseArray<Int>()
 
-    val currentScrollPosition: ListScrollPosition
-        get() {
-            var yOffset = 0
-            if (childCount > 0) {
-                yOffset = -getChildAt(0).top
-            }
-            return ListScrollPosition(firstVisiblePosition, yOffset)
-        }
-
-    var items: List<PlaylistListItem>?
-        get() = adapter!!.dataSource
+    var items: List<AbstractTreeItem>?
+        get() = adapter!!.items
         private set(items) {
-            adapter!!.dataSource = items
-            adapter!!.notifyDataSetChanged()
+            adapter!!.setDataSource(items)
             invalidate()
             calculateViewHeights()
         }
 
-    constructor(context: Context) : super(context)
+    val currentScrollPosition: Int?
+        get() = scrollHandler!!.currentScrollPosition
 
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle)
+    constructor(context: Context) : super(context) {}
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {}
 
-    fun init(context: Context, onClickListener: ListItemClickListener<PlaylistListItem>) {
-        this.onClickListener = onClickListener
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {}
+
+    fun init(context: Context) {
+        adapter = TreeItemAdapter(context, null, this)
+        scrollHandler = TreeListScrollHandler(this, context)
+
         onItemClickListener = this
         onItemLongClickListener = this
-        choiceMode = CHOICE_MODE_SINGLE
-
-        scrollHandler = TreeListScrollHandler(this, context)
         setOnScrollListener(scrollHandler)
-
-        adapter = PlaylistListItemAdapter(context, null, onClickListener, this)
+        choiceMode = ListView.CHOICE_MODE_SINGLE
         setAdapter(adapter)
     }
 
-    override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-        val item = adapter!!.getItem(position)
-        if (onClickListener != null)
-            onClickListener!!.onItemClick(item!!)
+    override fun getAdapter(): TreeItemAdapter? {
+        return adapter
     }
-
-    override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
-        val item = adapter!!.getItem(position)
-        if (onClickListener != null)
-            onClickListener!!.onItemLongClick(item!!)
-        return true
-    }
-
-    /**
-     * @param position of element to scroll
-     */
-    private fun scrollTo(position: Int) {
-        setSelection(position)
-        invalidate()
-    }
-
-    fun scrollToBeginning() {
-        scrollTo(0)
-    }
-
-    fun restoreScrollPosition(scrollPosition: ListScrollPosition?) {
-        if (scrollPosition != null) {
-            // scroll to first position
-            setSelection(scrollPosition.firstVisiblePosition)
-            // and move a little by y offset
-            smoothScrollBy(scrollPosition.yOffsetPx, 50)
-            invalidate()
-        }
-    }
-
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
         if (ev.source == 777) { // from moveButton
@@ -106,19 +74,28 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action and MotionEvent.ACTION_MASK) {
+            MotionEvent.ACTION_DOWN -> gestureHandler.gestureStart(event.x, event.y)
             MotionEvent.ACTION_MOVE -> if (reorder.isDragging) {
                 reorder.setLastTouchY(event.y)
                 reorder.handleItemDragging()
                 return false
             }
             MotionEvent.ACTION_UP -> {
+                if (gestureHandler.handleItemGesture(event.x, event.y, scrollHandler!!.scrollOffset))
+                    return super.onTouchEvent(event)
                 reorder.itemDraggingStopped()
+                gestureHandler.reset()
             }
             MotionEvent.ACTION_CANCEL -> {
                 reorder.itemDraggingStopped()
+                gestureHandler.reset()
             }
         }
         return super.onTouchEvent(event)
+    }
+
+    fun onItemTouchDown(position: Int, event: MotionEvent, v: View) {
+        gestureHandler.gestureStartPos(position)
     }
 
     override fun invalidate() {
@@ -133,8 +110,9 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.
         reorder.dispatchDraw(canvas)
     }
 
-    fun setItemsAndSelected(items: List<PlaylistListItem>) {
-        this.items = items
+    fun setItemsAndSelected(items: List<AbstractTreeItem>, selectedPositions: Set<Int>) {
+        adapter!!.setSelections(selectedPositions)
+        items = items
     }
 
     private fun calculateViewHeights() {
@@ -144,15 +122,15 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.
             override fun onGlobalLayout() {
 
                 itemHeights.clear()
-                this@PlaylistListView.viewTreeObserver.removeGlobalOnLayoutListener(this)
+                this@TreeListView.viewTreeObserver.removeGlobalOnLayoutListener(this)
                 // now view width should be available at last
-                val viewWidth = this@PlaylistListView.width
+                val viewWidth = this@TreeListView.width
                 if (viewWidth == 0)
                     logger.warn("List view width == 0")
 
                 val measureSpecW = View.MeasureSpec.makeMeasureSpec(viewWidth, View.MeasureSpec.EXACTLY)
                 for (i in 0 until adapter!!.count) {
-                    val itemView = adapter!!.getView(i, null, this@PlaylistListView)
+                    val itemView = adapter!!.getView(i, null, this@TreeListView)
                     itemView.measure(measureSpecW, View.MeasureSpec.UNSPECIFIED)
                     itemHeights.put(i, itemView.measuredHeight)
                 }
@@ -177,6 +155,31 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.
 
     fun getItemView(position: Int): View? {
         return adapter!!.getStoredView(position)
+    }
+
+    override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+        try {
+            if (position == adapter!!.items!!.size) {
+                //nowy element
+                ItemEditorCommand().addItemClicked()
+            } else {
+                //istniejący element
+                val item = adapter!!.getItem(position)
+                TreeCommand().itemClicked(position, item)
+            }
+        } catch (t: Throwable) {
+            UIErrorHandler.showError(t)
+        }
+
+    }
+
+    override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
+        if (!reorder.isDragging) {
+            reorder.itemDraggingStopped()
+            gestureHandler.reset()
+            ItemActionsMenu(position).show()
+        }
+        return true
     }
 
     public override fun computeVerticalScrollOffset(): Int {

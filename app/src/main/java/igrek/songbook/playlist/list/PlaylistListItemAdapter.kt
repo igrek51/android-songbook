@@ -1,7 +1,9 @@
 package igrek.songbook.playlist.list
 
 import android.content.Context
+import android.util.SparseArray
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -16,10 +18,12 @@ import java.util.*
 class PlaylistListItemAdapter internal constructor(
         context: Context,
         _dataSource: List<PlaylistListItem>?,
-        val onClickListener: ListItemClickListener<PlaylistListItem>
+        val onClickListener: ListItemClickListener<PlaylistListItem>,
+        private val listView: PlaylistListView
 ) : ArrayAdapter<PlaylistListItem>(context, 0, ArrayList()) {
 
-    private var dataSource: List<PlaylistListItem>? = null
+    var dataSource: List<PlaylistListItem>? = null
+    private val storedViews = SparseArray<View>()
     private val inflater: LayoutInflater
 
     init {
@@ -28,11 +32,6 @@ class PlaylistListItemAdapter internal constructor(
             dataSource = ArrayList()
         this.dataSource = dataSource
         inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    }
-
-    fun setDataSource(dataSource: List<PlaylistListItem>) {
-        this.dataSource = dataSource
-        notifyDataSetChanged()
     }
 
     override fun getItem(position: Int): PlaylistListItem? {
@@ -50,13 +49,20 @@ class PlaylistListItemAdapter internal constructor(
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        if (storedViews.get(position) != null)
+            return storedViews.get(position)
+
         val item = dataSource!![position]
 
-        return when {
+        val itemView = when {
             item.playlist != null -> createPlaylistView(item, item.playlist, parent)
-            item.song != null -> createSongView(item, item.song, parent)
+            item.song != null -> createSongView(item, item.song, parent, position)
             else -> return View(context)
         }
+
+        storedViews.put(position, itemView)
+
+        return itemView
     }
 
     private fun createPlaylistView(item: PlaylistListItem, playlist: Playlist, parent: ViewGroup): View {
@@ -69,13 +75,46 @@ class PlaylistListItemAdapter internal constructor(
         return itemView
     }
 
-    private fun createSongView(item: PlaylistListItem, song: Song, parent: ViewGroup): View {
+    private fun createSongView(item: PlaylistListItem, song: Song, parent: ViewGroup, position: Int): View {
         val itemView = inflater.inflate(R.layout.playlist_song_item, parent, false)
         val itemTitleLabel = itemView.findViewById<TextView>(R.id.itemTitleLabel)
         itemTitleLabel.text = song.displayName()
 
         val itemMoreButton = itemView.findViewById<ImageButton>(R.id.itemMoreButton)
         itemMoreButton.setOnClickListener { onClickListener.onMoreActions(item) }
+
+        val moveButton = itemView.findViewById<ImageButton>(R.id.itemMoveButton)
+        moveButton.setFocusableInTouchMode(false)
+        moveButton.setFocusable(false)
+        moveButton.setClickable(false)
+        moveButton.setOnTouchListener({ v, event ->
+            event.setSource(777) // from moveButton
+            when (event.getAction()) {
+                MotionEvent.ACTION_DOWN -> {
+                    listView.reorder
+                            .onItemMoveButtonPressed(position, item, itemView, event.getX(), event
+                                    .getY() + moveButton.getTop())
+                    return@moveButton.setOnTouchListener false
+                }
+                MotionEvent.ACTION_MOVE -> return@moveButton.setOnTouchListener false
+                MotionEvent.ACTION_UP -> {
+                    listView.reorder
+                            .onItemMoveButtonReleased(position, item, itemView, event.getX(), event
+                                    .getY() + moveButton.getTop())
+                    return@moveButton.setOnTouchListener true
+                }
+            }
+            false
+        })
+
         return itemView
+    }
+
+    fun getStoredView(position: Int): View? {
+        return if (position >= dataSource!!.size) null else storedViews.get(position)
+    }
+
+    override fun hasStableIds(): Boolean {
+        return true
     }
 }
