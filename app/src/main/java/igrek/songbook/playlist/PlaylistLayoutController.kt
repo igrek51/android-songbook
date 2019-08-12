@@ -4,10 +4,7 @@ import android.os.Handler
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import dagger.Lazy
 import igrek.songbook.R
-import igrek.songbook.activity.ActivityController
-import igrek.songbook.custom.CustomSongService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -23,12 +20,13 @@ import igrek.songbook.persistence.user.playlist.Playlist
 import igrek.songbook.playlist.list.PlaylistListItem
 import igrek.songbook.playlist.list.PlaylistListView
 import igrek.songbook.songpreview.SongOpener
-import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.tree.NoParentItemException
+import igrek.songbook.util.ListMover
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
+
 
 class PlaylistLayoutController : InflatedLayout(
         _layoutResourceId = R.layout.playlists,
@@ -36,15 +34,9 @@ class PlaylistLayoutController : InflatedLayout(
 ), ListItemClickListener<PlaylistListItem> {
 
     @Inject
-    lateinit var customSongService: Lazy<CustomSongService>
-    @Inject
-    lateinit var activityController: Lazy<ActivityController>
-    @Inject
     lateinit var songsRepository: SongsRepository
     @Inject
     lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var songPreviewLayoutController: Lazy<SongPreviewLayoutController>
     @Inject
     lateinit var songContextMenuBuilder: SongContextMenuBuilder
     @Inject
@@ -85,7 +77,7 @@ class PlaylistLayoutController : InflatedLayout(
         goBackButton = layout.findViewById(R.id.goBackButton)
         goBackButton?.setOnClickListener { goUp() }
 
-        itemsListView!!.init(activity, this)
+        itemsListView!!.init(activity, this, ::itemMoved)
         updateItemsList()
 
         subscriptions.forEach { s -> s.dispose() }
@@ -125,7 +117,7 @@ class PlaylistLayoutController : InflatedLayout(
                     .toMutableList()
         }
 
-        itemsListView!!.setItems(items)
+        itemsListView!!.items = items
 
         if (storedScroll != null) {
             Handler().post { itemsListView?.restoreScrollPosition(storedScroll) }
@@ -216,5 +208,22 @@ class PlaylistLayoutController : InflatedLayout(
             playlist.name = name
             songsRepository.playlistDao.savePlaylist(playlist)
         }
+    }
+
+    @Synchronized
+    fun itemMoved(position: Int, step: Int): List<PlaylistListItem>? {
+        ListMover(playlist!!.songs).move(position, step)
+        val items = playlist!!.songs
+                .mapNotNull { s ->
+                    val id = SongIdentifier(s.songId, s.custom)
+                    val song = songsRepository.songsDb?.songFinder?.find(id)
+                    when {
+                        song != null -> PlaylistListItem(song = song)
+                        else -> null
+                    }
+                }
+                .toMutableList()
+        itemsListView!!.items = items
+        return items
     }
 }

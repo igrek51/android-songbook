@@ -1,9 +1,10 @@
 package igrek.songbook.playlist.list
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
-import android.util.SparseArray
+import android.util.SparseIntArray
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewTreeObserver
@@ -15,13 +16,14 @@ import igrek.songbook.songselection.ListScrollPosition
 
 class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
-    private var adapter: PlaylistListItemAdapter? = null
+    var adapter: PlaylistListItemAdapter? = null
     var scrollHandler: TreeListScrollHandler? = null
         private set
     val reorder = TreeListReorder(this)
     private var onClickListener: ListItemClickListener<PlaylistListItem>? = null
     /** view index -> view height  */
-    private val itemHeights = SparseArray<Int>()
+    private val itemHeights = SparseIntArray()
+    private lateinit var onMove: (Int, Int) -> List<PlaylistListItem>?
 
     val currentScrollPosition: ListScrollPosition
         get() {
@@ -34,7 +36,7 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.
 
     var items: List<PlaylistListItem>?
         get() = adapter!!.dataSource
-        private set(items) {
+        set(items) {
             adapter!!.dataSource = items
             adapter!!.notifyDataSetChanged()
             invalidate()
@@ -47,8 +49,9 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
-    fun init(context: Context, onClickListener: ListItemClickListener<PlaylistListItem>) {
+    fun init(context: Context, onClickListener: ListItemClickListener<PlaylistListItem>, onMove: (Int, Int) -> List<PlaylistListItem>?) {
         this.onClickListener = onClickListener
+        this.onMove = onMove
         onItemClickListener = this
         onItemLongClickListener = this
         choiceMode = CHOICE_MODE_SINGLE
@@ -73,18 +76,6 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.
         return true
     }
 
-    /**
-     * @param position of element to scroll
-     */
-    private fun scrollTo(position: Int) {
-        setSelection(position)
-        invalidate()
-    }
-
-    fun scrollToBeginning() {
-        scrollTo(0)
-    }
-
     fun restoreScrollPosition(scrollPosition: ListScrollPosition?) {
         if (scrollPosition != null) {
             // scroll to first position
@@ -104,6 +95,7 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.
         return super.onInterceptTouchEvent(ev)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action and MotionEvent.ACTION_MASK) {
             MotionEvent.ACTION_MOVE -> if (reorder.isDragging) {
@@ -123,7 +115,7 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.
 
     override fun invalidate() {
         super.invalidate()
-        if (reorder != null && reorder.isDragging) {
+        if (reorder.isDragging) {
             reorder.setDraggedItemView()
         }
     }
@@ -133,27 +125,22 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.
         reorder.dispatchDraw(canvas)
     }
 
-    fun setItemsAndSelected(items: List<PlaylistListItem>) {
-        this.items = items
-    }
-
     private fun calculateViewHeights() {
-        // WARNING: for a moment - there's invalidated item heights map
+        // FIXME: for a moment - there's invalidated item heights map
         val observer = this.viewTreeObserver
         observer.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
 
                 itemHeights.clear()
-                this@PlaylistListView.viewTreeObserver.removeGlobalOnLayoutListener(this)
-                // now view width should be available at last
+                this@PlaylistListView.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 val viewWidth = this@PlaylistListView.width
                 if (viewWidth == 0)
                     logger.warn("List view width == 0")
 
-                val measureSpecW = View.MeasureSpec.makeMeasureSpec(viewWidth, View.MeasureSpec.EXACTLY)
+                val measureSpecW = MeasureSpec.makeMeasureSpec(viewWidth, MeasureSpec.EXACTLY)
                 for (i in 0 until adapter!!.count) {
                     val itemView = adapter!!.getView(i, null, this@PlaylistListView)
-                    itemView.measure(measureSpecW, View.MeasureSpec.UNSPECIFIED)
+                    itemView.measure(measureSpecW, MeasureSpec.UNSPECIFIED)
                     itemHeights.put(i, itemView.measuredHeight)
                 }
 
@@ -162,17 +149,14 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.
     }
 
     fun getItemHeight(position: Int): Int {
-        val h = itemHeights.get(position)
-        if (h == null) {
-            logger.warn("Item View ($position) = null")
-            return 0
-        }
-
-        return h
+        return itemHeights.get(position)
     }
 
     fun putItemHeight(position: Int?, height: Int?) {
-        itemHeights.put(position!!, height)
+        if (height != null)
+            itemHeights.put(position!!, height)
+        else
+            itemHeights.delete(position!!)
     }
 
     fun getItemView(position: Int): View? {
@@ -191,15 +175,7 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.
         return super.computeVerticalScrollRange()
     }
 
-    fun scrollToBottom() {
-        scrollHandler!!.scrollToBottom()
-    }
-
-    fun scrollToPosition(y: Int) {
-        scrollHandler!!.scrollToPosition(y)
-    }
-
-    fun scrollToItem(itemIndex: Int) {
-        scrollHandler!!.scrollToItem(itemIndex)
+    fun itemMoved(draggedItemPos: Int, step: Int): List<PlaylistListItem>? {
+        return onMove.invoke(draggedItemPos, step)
     }
 }

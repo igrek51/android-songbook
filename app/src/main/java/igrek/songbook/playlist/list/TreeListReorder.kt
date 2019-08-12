@@ -19,18 +19,12 @@ class TreeListReorder(private val listView: PlaylistListView) {
 
     private val logger = LoggerFactory.logger
 
-    /** początkowa pozycja kursora przy rozpoczęciu przeciągania (ulega zmianie przy zamianie elementów)  */
     private var startTouchY: Float = 0.toFloat()
-    /** aktualna pozycja kursora względem ekranu i listview (bez scrollowania)  */
     private var lastTouchY: Float = 0.toFloat()
-    /** położenie scrolla przy rozpoczęciu przeciągania  */
     private var scrollStart: Int? = 0
 
-    /** pozycja aktualnie przeciąganego elementu  */
     private var draggedItemPos: Int? = null
-    /** widok aktualnie przeciąganego elementu  */
     private var draggedItemView: View? = null
-    /** oryginalna górna pozycja niewidocznego elementu na liście, którego bitmapa jest przeciągana  */
     private var draggedItemViewTop: Int? = null
 
     private var hoverBitmap: BitmapDrawable? = null
@@ -38,10 +32,10 @@ class TreeListReorder(private val listView: PlaylistListView) {
     var hoverBitmapBounds: Rect? = null
         private set
 
-    private val ITEMS_REPLACE_COVER = 0.65f
+    private val itemsReplaceCover = 0.65f
 
-    private val HOVER_BORDER_THICKNESS = 5
-    private val HOVER_BORDER_COLOR = -0x334f4f50
+    private val hoverBorderThickness = 5
+    private val hoverBorderColor = -0x334f4f50
 
     val isDragging: Boolean
         get() = draggedItemPos != null
@@ -75,8 +69,8 @@ class TreeListReorder(private val listView: PlaylistListView) {
 
         val paint = Paint()
         paint.style = Paint.Style.STROKE
-        paint.strokeWidth = HOVER_BORDER_THICKNESS.toFloat()
-        paint.color = HOVER_BORDER_COLOR
+        paint.strokeWidth = hoverBorderThickness.toFloat()
+        paint.color = hoverBorderColor
 
         can.drawBitmap(bitmap, 0f, 0f, null)
         can.drawRect(rect, paint)
@@ -96,7 +90,7 @@ class TreeListReorder(private val listView: PlaylistListView) {
         draggedItemPos = position
         draggedItemView = itemView
         draggedItemViewTop = itemView.top
-        scrollStart = listView.scrollHandler.scrollOffset
+        scrollStart = listView.scrollHandler?.scrollOffset
 
         hoverBitmap = getAndAddHoverView(draggedItemView!!)
         draggedItemView!!.visibility = INVISIBLE
@@ -110,8 +104,7 @@ class TreeListReorder(private val listView: PlaylistListView) {
 
     fun handleItemDragging() {
 
-        val dyTotal = lastTouchY - startTouchY + (listView.scrollHandler
-                .scrollOffset!! - scrollStart!!)
+        val dyTotal = lastTouchY - startTouchY + ((listView.scrollHandler?.scrollOffset ?: 0) - (scrollStart ?: 0))
 
         if (draggedItemViewTop == null) {
             logger.error("draggedItemViewTop = null")
@@ -125,28 +118,28 @@ class TreeListReorder(private val listView: PlaylistListView) {
         var step = 0
         var deltaH = 0
 
-        if (dyTotal > 0) { //przesuwanie w dół
+        if (dyTotal > 0) { // move up
             while (true) {
-                if (draggedItemPos!! + step + 1 >= listView.items.size)
+                if (draggedItemPos!! + step + 1 >= listView.items?.size ?: 0)
                     break
                 val downHeight = listView.getItemHeight(draggedItemPos!! + step + 1)
                 if (downHeight == 0)
                     break
-                if (dyTotal - deltaH > downHeight * ITEMS_REPLACE_COVER) {
+                if (dyTotal - deltaH > downHeight * itemsReplaceCover) {
                     step++
                     deltaH += downHeight
                 } else {
                     break
                 }
             }
-        } else if (dyTotal < 0) { //przesuwanie w górę
+        } else if (dyTotal < 0) { // move down
             while (true) {
                 if (draggedItemPos!! + step - 1 < 0)
                     break
                 val upHeight = listView.getItemHeight(draggedItemPos!! + step - 1)
                 if (upHeight == 0)
                     break
-                if (-dyTotal + deltaH > upHeight * ITEMS_REPLACE_COVER) {
+                if (-dyTotal + deltaH > upHeight * itemsReplaceCover) {
                     step--
                     deltaH -= upHeight
                 } else {
@@ -158,28 +151,26 @@ class TreeListReorder(private val listView: PlaylistListView) {
         if (step != 0) {
             val targetPosition = draggedItemPos!! + step
 
-            val items = TreeCommand().itemMoved(draggedItemPos, step)
+            listView.itemMoved(draggedItemPos!!, step)
 
             if (step > 0) {
                 val draggedItemHeight = listView.getItemHeight(draggedItemPos!!)
-                for (i in draggedItemPos until targetPosition) {
+                for (i in draggedItemPos!! until targetPosition) {
                     val nextHeight = listView.getItemHeight(i + 1)
                     listView.putItemHeight(i, nextHeight)
                 }
                 listView.putItemHeight(targetPosition, draggedItemHeight)
             } else if (step < 0) {
                 val draggedItemHeight = listView.getItemHeight(draggedItemPos!!)
-                for (i in draggedItemPos downTo targetPosition + 1) {
+                for (i in draggedItemPos!! downTo targetPosition + 1) {
                     val nextHeight = listView.getItemHeight(i - 1)
                     listView.putItemHeight(i, nextHeight)
                 }
                 listView.putItemHeight(targetPosition, draggedItemHeight)
             }
 
-            listView.adapter.setDataSource(items)
-
             startTouchY += deltaH.toFloat()
-            draggedItemViewTop += deltaH
+            draggedItemViewTop = draggedItemViewTop!! + deltaH
 
             draggedItemPos = targetPosition
             if (draggedItemView != null) {
@@ -191,21 +182,18 @@ class TreeListReorder(private val listView: PlaylistListView) {
             }
         }
 
-        listView.scrollHandler.handleScrolling()
+        listView.scrollHandler?.handleScrolling()
 
         listView.invalidate()
     }
 
     fun itemDraggingStopped() {
         if (draggedItemPos != null && draggedItemViewTop != null) {
-            //wyłączenie automatycznego ustawiania pozycji hover bitmapy
             draggedItemPos = null
 
-            //animacja powrotu do aktualnego połozenia elementu
-            // kopia referencji na czas trwania animacji
             hoverBitmapAnimation = hoverBitmap
-            val scrollOffset = listView.scrollHandler.scrollOffset
-            hoverBitmapBounds!!.offsetTo(0, draggedItemViewTop!! - (scrollOffset!! - scrollStart!!))
+            val scrollOffset = listView.scrollHandler?.scrollOffset ?: 0
+            hoverBitmapBounds!!.offsetTo(0, draggedItemViewTop!! - (scrollOffset - scrollStart!!))
             val hoverBitmapBoundsCopy = Rect(hoverBitmapBounds)
             val draggedItemViewCopy = draggedItemView
 
@@ -214,7 +202,7 @@ class TreeListReorder(private val listView: PlaylistListView) {
             draggedItemViewTop = null
 
             val hoverViewAnimator = ObjectAnimator.ofObject(hoverBitmapAnimation, "bounds", rectBoundsEvaluator, hoverBitmapBoundsCopy)
-            hoverViewAnimator.addUpdateListener { valueAnimator -> listView.invalidate() }
+            hoverViewAnimator.addUpdateListener { listView.invalidate() }
             hoverViewAnimator.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator) {
                     listView.isEnabled = false
@@ -237,13 +225,13 @@ class TreeListReorder(private val listView: PlaylistListView) {
         }
     }
 
-    fun onItemMoveButtonPressed(position: Int, item: PlaylistListItem, itemView: View, touchX: Float, touchY: Float) {
+    fun onItemMoveButtonPressed(position: Int, itemView: View, touchY: Float) {
         startTouchY = itemView.top + touchY
         lastTouchY = startTouchY
         itemDraggingStarted(position, itemView)
     }
 
-    fun onItemMoveButtonReleased(position: Int, item: PlaylistListItem, itemView: View, touchX: Float, touchY: Float) {
+    fun onItemMoveButtonReleased() {
         itemDraggingStopped()
     }
 
@@ -251,10 +239,10 @@ class TreeListReorder(private val listView: PlaylistListView) {
         val draggedItemViewOld = draggedItemView
         draggedItemView = listView.getItemView(draggedItemPos!!)
         if (draggedItemView != null) {
-            draggedItemView!!.visibility = View.INVISIBLE
+            draggedItemView!!.visibility = INVISIBLE
         }
         if (draggedItemViewOld !== draggedItemView && draggedItemViewOld != null) {
-            draggedItemViewOld.visibility = View.VISIBLE
+            draggedItemViewOld.visibility = VISIBLE
         }
     }
 
@@ -275,7 +263,7 @@ class TreeListReorder(private val listView: PlaylistListView) {
                 return Rect(interpolate(startValue.left, endValue.left, fraction), interpolate(startValue.top, endValue.top, fraction), interpolate(startValue.right, endValue.right, fraction), interpolate(startValue.bottom, endValue.bottom, fraction))
             }
 
-            internal fun interpolate(start: Int, end: Int, fraction: Float): Int {
+            fun interpolate(start: Int, end: Int, fraction: Float): Int {
                 return (start + fraction * (end - start)).toInt()
             }
         }

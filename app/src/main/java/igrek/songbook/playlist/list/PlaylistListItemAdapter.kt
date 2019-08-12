@@ -1,5 +1,6 @@
 package igrek.songbook.playlist.list
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.SparseArray
 import android.view.LayoutInflater
@@ -18,7 +19,7 @@ import java.util.*
 class PlaylistListItemAdapter internal constructor(
         context: Context,
         _dataSource: List<PlaylistListItem>?,
-        val onClickListener: ListItemClickListener<PlaylistListItem>,
+        private val onClickListener: ListItemClickListener<PlaylistListItem>,
         private val listView: PlaylistListView
 ) : ArrayAdapter<PlaylistListItem>(context, 0, ArrayList()) {
 
@@ -75,6 +76,7 @@ class PlaylistListItemAdapter internal constructor(
         return itemView
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun createSongView(item: PlaylistListItem, song: Song, parent: ViewGroup, position: Int): View {
         val itemView = inflater.inflate(R.layout.playlist_song_item, parent, false)
         val itemTitleLabel = itemView.findViewById<TextView>(R.id.itemTitleLabel)
@@ -84,28 +86,27 @@ class PlaylistListItemAdapter internal constructor(
         itemMoreButton.setOnClickListener { onClickListener.onMoreActions(item) }
 
         val moveButton = itemView.findViewById<ImageButton>(R.id.itemMoveButton)
-        moveButton.setFocusableInTouchMode(false)
-        moveButton.setFocusable(false)
-        moveButton.setClickable(false)
-        moveButton.setOnTouchListener({ v, event ->
-            event.setSource(777) // from moveButton
-            when (event.getAction()) {
+        moveButton.isFocusableInTouchMode = false
+        moveButton.isFocusable = false
+        moveButton.isClickable = false
+        moveButton.setOnTouchListener { _, event ->
+            event.source = 777 // from moveButton
+            when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     listView.reorder
-                            .onItemMoveButtonPressed(position, item, itemView, event.getX(), event
-                                    .getY() + moveButton.getTop())
-                    return@moveButton.setOnTouchListener false
+                            .onItemMoveButtonPressed(position, itemView, event.y + moveButton.top)
+                    return@setOnTouchListener false
                 }
-                MotionEvent.ACTION_MOVE -> return@moveButton.setOnTouchListener false
+                MotionEvent.ACTION_MOVE ->
+                    return@setOnTouchListener false
                 MotionEvent.ACTION_UP -> {
                     listView.reorder
-                            .onItemMoveButtonReleased(position, item, itemView, event.getX(), event
-                                    .getY() + moveButton.getTop())
-                    return@moveButton.setOnTouchListener true
+                            .onItemMoveButtonReleased()
+                    return@setOnTouchListener true
                 }
             }
-            false
-        })
+            return@setOnTouchListener false
+        }
 
         return itemView
     }
