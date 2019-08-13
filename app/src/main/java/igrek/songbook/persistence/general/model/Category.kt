@@ -4,7 +4,7 @@ import com.google.common.base.Objects
 import igrek.songbook.util.lookup.SimpleCache
 
 open class Category(
-        val id: Long,
+        val id: Long = 0,
         val type: CategoryType,
         val name: String? = null,
         var custom: Boolean = false,

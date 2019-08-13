@@ -67,16 +67,16 @@ class CustomSongsLayoutController : SongSelectionLayoutController(), MainLayout 
             Handler().post { itemsListView?.restoreScrollPosition(storedScroll) }
         }
 
-        if (itemsListView!!.count == 0) {
-            emptyListLabel!!.visibility = View.VISIBLE
+        emptyListLabel!!.visibility = if (itemsListView!!.count == 0) {
+            View.VISIBLE
         } else {
-            emptyListLabel!!.visibility = View.GONE
+            View.GONE
         }
     }
 
     override fun getSongItems(songsDb: SongsDb): MutableList<SongTreeItem> {
         // filter songs
-        val songsSequence = songsDb.getCustomSongs()
+        val songsSequence = songsDb.customSongs.get()
                 .asSequence()
                 .map { song -> SongSearchItem.song(song) }
         return songsSequence.toMutableList()

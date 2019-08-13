@@ -67,7 +67,7 @@ abstract class AbstractJsonDao<T>(
         return parsed
     }
 
-    fun read() {
+    open fun read() {
         db = readDb()
     }
 

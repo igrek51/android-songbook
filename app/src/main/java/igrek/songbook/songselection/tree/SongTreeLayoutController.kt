@@ -88,8 +88,8 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
                     .map { song -> SongTreeItem.song(song) }
                     .toMutableList()
         } else {
-            // all categories list
-            songsDb.categories
+            // all categories apart from custom
+            songsDb.generalCategories.get()
                     .asSequence()
                     .map { category -> SongTreeItem.category(category) }
                     .toMutableList()

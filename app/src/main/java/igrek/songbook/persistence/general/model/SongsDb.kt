@@ -12,12 +12,14 @@ data class SongsDb(
     val songFinder = FinderByTuple(songs) { song -> song.songIdentifier() }
     val categoryFinder = FinderById(categories) { e -> e.id }
 
-    private var customSongsCache: SimpleCache<List<Song>> =
+    var customSongs: SimpleCache<List<Song>> =
             SimpleCache {
                 songs.filter { s -> s.custom }
             }
 
-    fun getCustomSongs(): List<Song> {
-        return customSongsCache.get()
-    }
+    var generalCategories: SimpleCache<List<Category>> =
+            SimpleCache {
+                categories.filter { c -> c.type != CategoryType.CUSTOM }
+            }
+
 }
