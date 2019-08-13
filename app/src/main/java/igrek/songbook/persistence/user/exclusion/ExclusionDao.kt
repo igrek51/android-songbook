@@ -2,6 +2,7 @@ package igrek.songbook.persistence.user.exclusion
 
 import android.app.Activity
 import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.persistence.general.model.Category
 import igrek.songbook.persistence.general.model.CategoryType
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
@@ -19,6 +20,8 @@ class ExclusionDao(path: String) : AbstractJsonDao<ExclusionDb>(
 
     val exclusionDb: ExclusionDb get() = db!!
     val exclusionDbSubject = PublishSubject.create<ExclusionDb>()
+
+    var allArtistsFilterEntries = LinkedHashMap<String, String>()
 
     @Inject
     lateinit var songsRepository: SongsRepository
@@ -46,14 +49,14 @@ class ExclusionDao(path: String) : AbstractJsonDao<ExclusionDb>(
         songsRepository.reloadUserData()
     }
 
-    fun artistsFilterEntries(): LinkedHashMap<String, String> {
-        val map = LinkedHashMap<String, String>()
-        songsRepository.songsDb?.categories?.forEach { category ->
-            if (category.type == CategoryType.ARTIST) {
-                map[category.id.toString()] = category.displayName ?: ""
+    fun setAllArtists(categories: List<Category>) {
+        val map = sortedMapOf<String, String>()
+        categories.forEach { category ->
+            if (category.type == CategoryType.ARTIST && category.displayName != null) {
+                map[category.id.toString()] = category.displayName
             }
         }
-        return map
+        allArtistsFilterEntries = LinkedHashMap(map)
     }
 
 

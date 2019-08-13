@@ -37,8 +37,11 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.
     var items: List<PlaylistListItem>?
         get() = adapter!!.dataSource
         set(items) {
-            adapter!!.dataSource = items
-            adapter!!.notifyDataSetChanged()
+            adapter?.run {
+                dataSource = items
+                invalidate()
+                notifyDataSetChanged()
+            }
             invalidate()
             calculateViewHeights()
         }

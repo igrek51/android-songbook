@@ -24,10 +24,25 @@ class SongsDbBuilder(
         unlockSongs()
 
         removeLockedSongs()
+        excludeSongs()
         assignSongsToCategories()
         pruneEmptyCategories()
 
         return SongsDb(versionNumber, categories, songs)
+    }
+
+    private fun excludeSongs() {
+        userDataDao.exclusionDao!!.setAllArtists(categories)
+
+        val excludedArtistIds = userDataDao.exclusionDao!!.exclusionDb.artistIds
+        categories = categories
+                .filter { category -> category.id !in excludedArtistIds }
+                .toMutableList()
+
+        val excludedLanguages = userDataDao.exclusionDao!!.exclusionDb.languages
+        songs = songs
+                .filter { song -> !(song.language?.let { it in excludedLanguages } ?: false) }
+                .toMutableList()
     }
 
     private fun applyCustomSongs() {
@@ -58,7 +73,9 @@ class SongsDbBuilder(
     }
 
     private fun pruneEmptyCategories() {
-        categories = categories.filter { category -> category.songs.isNotEmpty() }.toMutableList()
+        categories = categories
+                .filter { category -> category.songs.isNotEmpty() }
+                .toMutableList()
     }
 
     private fun assignSongsToCategories() {

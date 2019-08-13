@@ -104,7 +104,7 @@ class AppLanguageService {
         return languages.joinToString(separator = ";") { language -> language.langCode }
     }
 
-    fun string2Languages(languagesStr: String): List<SongLanguage> {
+    private fun string2Languages(languagesStr: String): List<SongLanguage> {
         if (languagesStr.isEmpty())
             return mutableListOf()
         val languages = mutableListOf<SongLanguage>()

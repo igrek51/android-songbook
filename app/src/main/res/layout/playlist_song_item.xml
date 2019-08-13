@@ -7,16 +7,6 @@
     android:layout_gravity="center_horizontal"
     android:descendantFocusability="blocksDescendants">
 
-    <ImageButton
-        android:id="@+id/itemMoveButton"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
-        android:layout_centerVertical="true"
-        android:layout_gravity="start|center_vertical"
-        android:background="@drawable/note"
-        android:scaleType="fitCenter"
-        />
-
     <ImageView
         android:id="@+id/songImage"
         android:layout_width="22dp"
@@ -30,6 +20,20 @@
         android:focusable="false"
         android:scaleType="fitCenter"/>
 
+    <ImageButton
+        android:id="@+id/itemMoveButton"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:layout_centerVertical="true"
+        android:layout_gravity="start|center_vertical"
+        android:layout_toRightOf="@+id/songImage"
+        android:layout_toEndOf="@+id/songImage"
+        android:layout_toLeftOf="@+id/itemTitleLabel"
+        android:layout_toStartOf="@+id/itemTitleLabel"
+        android:background="@drawable/reorder"
+        android:scaleType="fitCenter"
+        />
+
     <TextView
         android:id="@+id/itemTitleLabel"
         android:layout_width="wrap_content"
@@ -40,9 +44,9 @@
         android:layout_marginStart="4dp"
         android:layout_marginBottom="7dp"
         android:layout_marginTop="7dp"
-        android:layout_toEndOf="@+id/songImage"
+        android:layout_toRightOf="@+id/itemMoveButton"
+        android:layout_toEndOf="@+id/itemMoveButton"
         android:layout_toLeftOf="@+id/itemMoreButton"
-        android:layout_toRightOf="@+id/songImage"
         android:layout_toStartOf="@+id/itemMoreButton"
         android:gravity="start|center_vertical"
         android:text=""

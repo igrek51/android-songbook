@@ -118,4 +118,8 @@ class PlaylistListItemAdapter internal constructor(
     override fun hasStableIds(): Boolean {
         return true
     }
+
+    fun invalidate() {
+        storedViews.clear()
+    }
 }

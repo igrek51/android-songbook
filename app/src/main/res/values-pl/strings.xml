@@ -206,7 +206,7 @@
     <string name="settings_random_favourite">Losowa ulubiona piosenka</string>
     <string name="settings_random_favourite_hint">Losowanie piosenek tylko z listy ulubionych</string>
     <string name="settings_songs_list_section">Lista piosenek</string>
-    <string name="settings_exclude_languages">Ukrywaj piosenki w wybranych językach</string>
+    <string name="settings_exclude_languages">Ukryj piosenki w wybranych językach</string>
     <string name="settings_autoscroll_initial_delay">Opóźnienie autoprzewijania</string>
     <string name="settings_autoscroll_speed">Szybkość autoprzewijania</string>
     <string name="settings_general_section">Ogólne</string>
@@ -262,4 +262,8 @@
     <string name="empty_playlist_songs">Brak piosenek na playliście</string>
     <string name="nav_latest">Najnowsze</string>
     <string name="nav_history">Historia</string>
+    <string name="settings_exclude_filter">Ukrywanie piosenek</string>
+    <string name="settings_exclude_artists">Ukryj wybrane kategorie</string>
+    <string name="settings_toggle_all_languages">Zaznacz / Odznacz wszystkie języki</string>
+    <string name="settings_toggle_all_artists">Zaznacz / Odznacz wszystkie kategorie</string>
 </resources>

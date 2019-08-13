@@ -60,10 +60,19 @@
         android:key="excludeFilterLanguages"
         android:title="@string/settings_exclude_languages"
         android:summary="%s"/>
+        <Preference
+            android:title="@string/settings_toggle_all_languages"
+            android:key="settingsToggleAllLanguages"
+            android:summary=""/>
+
         <MultiSelectListPreference
         android:key="excludeFilterArtists"
         android:title="@string/settings_exclude_artists"
         android:summary="%s"/>
+        <Preference
+            android:title="@string/settings_toggle_all_artists"
+            android:key="settingsToggleAllArtists"
+            android:summary=""/>
     </PreferenceCategory>
 
 </PreferenceScreen>

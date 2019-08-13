@@ -8,7 +8,6 @@ import android.support.v7.preference.ListPreference
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.support.v7.preference.SeekBarPreference
-import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -26,7 +25,11 @@ import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import javax.inject.Inject
+import kotlin.collections.HashSet
+import kotlin.collections.LinkedHashMap
 import kotlin.math.roundToInt
+import igrek.songbook.R
+
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -97,41 +100,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
         )
 
-        setupMultiListPreference("excludeFilterLanguages",
-                appLanguageService.get().languageFilterEntries(),
-                onLoad = {
-                    songsRepository.get().exclusionDao.exclusionDb.languages.toMutableSet()
-                },
-                onSave = { ids: Set<String> ->
-                    songsRepository.get().exclusionDao.setExcludedLanguages(ids.toMutableList())
-                },
-                stringConverter = { ids: Set<String>, entriesMap: LinkedHashMap<String, String> ->
-                    if (ids.isEmpty())
-                        uiResourceService.get().resString(R.string.none)
-                    else
-                        ids.map { id -> entriesMap[id]!! }.sorted().joinToString(separator = ", ")
-                }
-        )
-
-        setupMultiListPreference("excludeFilterArtists",
-                songsRepository.get().exclusionDao.artistsFilterEntries(),
-                onLoad = {
-                    songsRepository.get().exclusionDao.exclusionDb.artistIds
-                            .map { id -> id.toString() }
-                            .toMutableSet()
-                },
-                onSave = { ids: Set<String> ->
-                    val longIds = ids.map { id -> id.toLong() }.toMutableList()
-                    songsRepository.get().exclusionDao.setExcludedArtists(longIds)
-                },
-                stringConverter = { ids: Set<String>, entriesMap: LinkedHashMap<String, String> ->
-                    if (ids.isEmpty())
-                        uiResourceService.get().resString(R.string.none)
-                    else
-                        ids.map { id -> entriesMap[id]!! }.sorted().joinToString(separator = ", ")
-                }
-        )
-
         setupSeekBarPreference("autoscrollInitialPause", min = 0, max = 90000,
                 onLoad = { preferencesUpdater.get().autoscrollInitialPause.toFloat() },
                 onSave = { value: Float ->
@@ -183,7 +151,57 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
         )
 
-        // not saving preferences here as they will be saved on activity stop
+        val excludeLanguagesPreference = setupMultiListPreference("excludeFilterLanguages",
+                appLanguageService.get().languageFilterEntries(),
+                onLoad = {
+                    songsRepository.get().exclusionDao.exclusionDb.languages.toMutableSet()
+                },
+                onSave = { ids: Set<String> ->
+                    songsRepository.get().exclusionDao.setExcludedLanguages(ids.toMutableList())
+                },
+                stringConverter = { ids: Set<String>, entriesMap: LinkedHashMap<String, String> ->
+                    if (ids.isEmpty())
+                        uiResourceService.get().resString(R.string.none)
+                    else
+                        ids.map { id -> entriesMap[id]!! }.sorted().joinToString(separator = ", ")
+                }
+        )
+
+        val excludeArtistsPreference = setupMultiListPreference("excludeFilterArtists",
+                songsRepository.get().exclusionDao.allArtistsFilterEntries,
+                onLoad = {
+                    songsRepository.get().exclusionDao.exclusionDb.artistIds
+                            .map { id -> id.toString() }
+                            .toMutableSet()
+                },
+                onSave = { ids: Set<String> ->
+                    val longIds = ids.map { id -> id.toLong() }.toMutableList()
+                    songsRepository.get().exclusionDao.setExcludedArtists(longIds)
+                },
+                stringConverter = { ids: Set<String>, entriesMap: LinkedHashMap<String, String> ->
+                    if (ids.isEmpty())
+                        uiResourceService.get().resString(R.string.none)
+                    else
+                        ids.map { id -> entriesMap[id]!! }.sorted().joinToString(separator = ", ")
+                }
+        )
+
+        setupClickPreference("settingsToggleAllLanguages") {
+            toggleAllMultiPreference(excludeLanguagesPreference)
+        }
+
+        setupClickPreference("settingsToggleAllArtists") {
+            toggleAllMultiPreference(excludeArtistsPreference)
+        }
+    }
+
+    private fun toggleAllMultiPreference(excludeLanguagesPreference: MultiSelectListPreference) {
+        if (multiPreferenceAllSelected(excludeLanguagesPreference)) {
+            excludeLanguagesPreference.values = emptySet()
+        } else {
+            excludeLanguagesPreference.values = excludeLanguagesPreference.entryValues
+                    .map { s -> s.toString() }.toSet()
+        }
     }
 
     private fun setupListPreference(key: String,
@@ -200,11 +218,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preference.value = onLoad()
     }
 
-    private fun setupMultiListPreference(key: String,
-                                         entriesMap: LinkedHashMap<String, String>,
-                                         onLoad: () -> Set<String>?,
-                                         onSave: (ids: Set<String>) -> Unit,
-                                         stringConverter: (ids: Set<String>, entriesMap: LinkedHashMap<String, String>) -> String): MultiSelectListPreference {
+    private fun setupMultiListPreference(
+            key: String,
+            entriesMap: LinkedHashMap<String, String>,
+            onLoad: () -> Set<String>?,
+            onSave: (ids: Set<String>) -> Unit,
+            stringConverter: (ids: Set<String>, entriesMap: LinkedHashMap<String, String>) -> String
+    ): MultiSelectListPreference {
         val preference = findPreference(key) as MultiSelectListPreference
         preference.entryValues = entriesMap.keys.toTypedArray()
         preference.entries = entriesMap.values.toTypedArray()
@@ -220,6 +240,17 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
         preference.summary = stringConverter(preference.values, entriesMap)
         return preference
+    }
+
+    private fun multiPreferenceAllSelected(multiPreference: MultiSelectListPreference): Boolean {
+        if (multiPreference.entryValues.size != multiPreference.values.size)
+            return false
+        val values = multiPreference.values
+        multiPreference.entryValues.forEach { value ->
+            if (value !in values)
+                return false
+        }
+        return true
     }
 
     private fun setupSeekBarPreference(key: String,
@@ -252,6 +283,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preference.isChecked = onLoad()
         preference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
             onSave(newValue as Boolean)
+            true
+        }
+    }
+
+    private fun setupClickPreference(key: String,
+                                     onClick: () -> Unit) {
+        val button = findPreference(key)
+        button.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            onClick.invoke()
             true
         }
     }
