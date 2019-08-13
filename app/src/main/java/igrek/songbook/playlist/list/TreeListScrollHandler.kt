@@ -42,8 +42,8 @@ class TreeListScrollHandler(private val listView: PlaylistListView, context: Con
             val extent = listView.computeVerticalScrollExtent()
             val range = listView.computeVerticalScrollRange()
 
-            if (listView.reorder.isDragging && listView.reorder
-                            .hoverBitmapBounds != null) {
+            if (listView.reorder?.isDragging == true
+                    && listView.reorder.hoverBitmapBounds != null) {
                 val hoverViewTop = listView.reorder.hoverBitmapBounds!!.top
                 val hoverHeight = listView.reorder.hoverBitmapBounds!!.height()
 
@@ -69,7 +69,7 @@ class TreeListScrollHandler(private val listView: PlaylistListView, context: Con
     override fun onScrollStateChanged(view: AbsListView, scrollState: Int) {
         this.scrollState = scrollState
         if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
-            if (listView.reorder.isDragging) {
+            if (listView.reorder?.isDragging == true) {
                 val scrollingResult = handleScrolling()
                 if (!scrollingResult) {
                     listView.reorder.handleItemDragging()

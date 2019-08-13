@@ -19,7 +19,7 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.
     var adapter: PlaylistListItemAdapter? = null
     var scrollHandler: TreeListScrollHandler? = null
         private set
-    val reorder = TreeListReorder(this)
+    val reorder: TreeListReorder? = TreeListReorder(this)
     private var onClickListener: ListItemClickListener<PlaylistListItem>? = null
     /** view index -> view height  */
     private val itemHeights = SparseIntArray()
@@ -98,16 +98,16 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action and MotionEvent.ACTION_MASK) {
-            MotionEvent.ACTION_MOVE -> if (reorder.isDragging) {
+            MotionEvent.ACTION_MOVE -> if (reorder?.isDragging == true) {
                 reorder.setLastTouchY(event.y)
                 reorder.handleItemDragging()
                 return false
             }
             MotionEvent.ACTION_UP -> {
-                reorder.itemDraggingStopped()
+                reorder?.itemDraggingStopped()
             }
             MotionEvent.ACTION_CANCEL -> {
-                reorder.itemDraggingStopped()
+                reorder?.itemDraggingStopped()
             }
         }
         return super.onTouchEvent(event)
@@ -115,14 +115,14 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.
 
     override fun invalidate() {
         super.invalidate()
-        if (reorder.isDragging) {
+        if (reorder?.isDragging == true) {
             reorder.setDraggedItemView()
         }
     }
 
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
-        reorder.dispatchDraw(canvas)
+        reorder?.dispatchDraw(canvas)
     }
 
     private fun calculateViewHeights() {

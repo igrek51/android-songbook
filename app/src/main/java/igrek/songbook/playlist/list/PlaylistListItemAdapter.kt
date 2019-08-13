@@ -94,14 +94,14 @@ class PlaylistListItemAdapter internal constructor(
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     listView.reorder
-                            .onItemMoveButtonPressed(position, itemView, event.y + moveButton.top)
+                            ?.onItemMoveButtonPressed(position, itemView, event.y + moveButton.top)
                     return@setOnTouchListener false
                 }
                 MotionEvent.ACTION_MOVE ->
                     return@setOnTouchListener false
                 MotionEvent.ACTION_UP -> {
                     listView.reorder
-                            .onItemMoveButtonReleased()
+                            ?.onItemMoveButtonReleased()
                     return@setOnTouchListener true
                 }
             }
