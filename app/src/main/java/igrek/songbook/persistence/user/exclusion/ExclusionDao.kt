@@ -50,13 +50,14 @@ class ExclusionDao(path: String) : AbstractJsonDao<ExclusionDb>(
     }
 
     fun setAllArtists(categories: List<Category>) {
-        val map = sortedMapOf<String, String>()
-        categories.forEach { category ->
-            if (category.type == CategoryType.ARTIST && category.displayName != null) {
-                map[category.id.toString()] = category.displayName
-            }
-        }
-        allArtistsFilterEntries = LinkedHashMap(map)
+        val map = LinkedHashMap<String, String>()
+        categories.asSequence()
+                .filter { it.type == CategoryType.ARTIST && it.displayName != null }
+                .sortedBy { it.displayName }
+                .forEach { category ->
+                    map[category.id.toString()] = category.displayName!!
+                }
+        allArtistsFilterEntries = map
     }
 
 

@@ -8,6 +8,7 @@ import android.support.v7.preference.ListPreference
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.support.v7.preference.SeekBarPreference
+import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -25,10 +26,7 @@ import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import javax.inject.Inject
-import kotlin.collections.HashSet
-import kotlin.collections.LinkedHashMap
 import kotlin.math.roundToInt
-import igrek.songbook.R
 
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -202,6 +200,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
             excludeLanguagesPreference.values = excludeLanguagesPreference.entryValues
                     .map { s -> s.toString() }.toSet()
         }
+        excludeLanguagesPreference.callChangeListener(excludeLanguagesPreference.values)
     }
 
     private fun setupListPreference(key: String,
