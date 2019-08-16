@@ -44,11 +44,11 @@ class PlaylistService {
 
     private fun addSongToPlaylist(playlist: Playlist, song: Song) {
         if (songsRepository.playlistDao.isSongOnPlaylist(song, playlist)) {
-            uiInfoService.showInfo(R.string.song_already_on_playlist)
+            uiInfoService.showInfo(R.string.song_already_on_playlist, song.displayName(), playlist.name)
             return
         }
         songsRepository.playlistDao.addSongToPlaylist(song, playlist)
-        uiInfoService.showInfo(R.string.song_added_to_playlist)
+        uiInfoService.showInfo(R.string.song_added_to_playlist, song.displayName(), playlist.name)
     }
 
     fun removeFromPlaylist(song: Song) {
@@ -83,7 +83,7 @@ class PlaylistService {
 
     private fun removeFromPlaylist(song: Song, playlist: Playlist) {
         songsRepository.playlistDao.removeSongFromPlaylist(song, playlist)
-        uiInfoService.showInfo(R.string.song_removed_from_playlist)
+        uiInfoService.showInfo(R.string.song_removed_from_playlist, song.displayName(), playlist.name)
     }
 
 }

@@ -76,8 +76,8 @@ class UiInfoService {
         showInfo(info, dismissName)
     }
 
-    fun showInfo(infoRes: Int) {
-        val info = uiResourceService.get().resString(infoRes)
+    fun showInfo(infoRes: Int, vararg args: String) {
+        val info = uiResourceService.get().resString(infoRes, *args)
         showInfo(info)
     }
 
