@@ -28,7 +28,7 @@ class SongsUpdater {
     private val logger = LoggerFactory.logger
 
     companion object {
-        private const val apiUrl = "http://51.38.128.10:8008/api/v3/"
+        private const val apiUrl = "http://51.38.128.10:8008/api/v4/"
         private const val songsdbUrl = apiUrl + "songs"
         private const val songsDbVersionUrl = apiUrl + "songs_version"
     }
