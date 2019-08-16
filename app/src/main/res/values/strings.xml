@@ -256,11 +256,11 @@
     <string name="action_add_to_playlist">Add to playlist</string>
     <string name="no_playlists_to_add">No playlists found. Create a new playlist first.</string>
     <string name="choose_playlist">Choose a playlist</string>
-    <string name="song_added_to_playlist">Song "%s" has been added to playlist "%s"</string>
-    <string name="song_already_on_playlist">Song "%s" is already on playlist "%s"</string>
+    <string name="song_added_to_playlist">Song \"%s\" has been added to playlist \"%s\"</string>
+    <string name="song_already_on_playlist">Song \"%s\" is already on playlist \"%s\"</string>
     <string name="action_remove_from_playlist">Remove from playlist</string>
     <string name="song_is_not_on_playlist">Song is not on a playlist</string>
-    <string name="song_removed_from_playlist">Song "%s" has been removed from playlist "%s"</string>
+    <string name="song_removed_from_playlist">Song \"%s\" has been removed from playlist \"%s\"</string>
     <string name="remove_playlist">Remove playlist</string>
     <string name="confirm_remove_playlist">Do you really want to remove this playlist?</string>
     <string name="rename_playlist">Rename playlist</string>

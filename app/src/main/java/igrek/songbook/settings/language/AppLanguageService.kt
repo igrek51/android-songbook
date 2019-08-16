@@ -3,13 +3,11 @@ package igrek.songbook.settings.language
 import android.app.Activity
 import android.os.Build
 import dagger.Lazy
-import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.settings.preferences.PreferencesDefinition
 import igrek.songbook.settings.preferences.PreferencesService
-import igrek.songbook.settings.theme.ColorScheme
 import java.util.*
 import javax.inject.Inject
 
@@ -89,7 +87,6 @@ class AppLanguageService {
         val map = LinkedHashMap<String, String>()
         for (item in SongLanguage.values()) {
             if (item == SongLanguage.UNKNOWN) {
-                map[item.langCode] = uiResourceService.get().resString(R.string.language_unknown)
                 continue
             }
 
