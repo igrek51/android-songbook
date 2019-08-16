@@ -51,7 +51,7 @@ class SongsRepository {
         DaggerIoc.factoryComponent.inject(this)
 
         saveRequestSubject
-                .debounce(1000, TimeUnit.MILLISECONDS)
+                .debounce(1500, TimeUnit.MILLISECONDS)
                 .subscribe { toSave ->
                     if (toSave)
                         save()
