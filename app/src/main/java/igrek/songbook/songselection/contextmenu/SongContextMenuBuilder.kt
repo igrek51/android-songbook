@@ -85,12 +85,6 @@ class SongContextMenuBuilder {
                         executor = { song ->
                             sendFeedbackService.amendSong(song)
                         }),
-                // ADD COMMENT
-                SongContextAction(R.string.action_song_add_comment,
-                        availableCondition = { song -> !song.custom },
-                        executor = { song ->
-                            sendFeedbackService.commentSong(song)
-                        }),
                 // PUBLISH
                 SongContextAction(R.string.action_song_publish,
                         availableCondition = { song -> song.custom },

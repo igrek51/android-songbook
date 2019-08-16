@@ -108,11 +108,6 @@ class ContactLayoutController : MainLayout {
         setMessage(song.content)
     }
 
-    fun prepareSongComment(song: Song) {
-        val subjectPrefix = uiResourceService.resString(R.string.contact_subject_song_comment)
-        setSubject(subjectPrefix + ": " + song.displayName())
-    }
-
     fun prepareCustomSongPublishing(songTitle: String, customCategoryName: String?, songContent: String?) {
         val subjectPrefix = uiResourceService.resString(R.string.contact_subject_publishing_song)
         val fullTitle: String = if (customCategoryName.isNullOrEmpty()) {

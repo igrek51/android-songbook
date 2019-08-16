@@ -9,8 +9,8 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.general.model.Song
+import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.system.PackageInfoService
 import okhttp3.*
 import java.io.IOException
@@ -98,11 +98,6 @@ class SendFeedbackService {
     fun amendSong(song: Song) {
         layoutController.get().showContact()
         contactLayoutController.get().prepareSongAmend(song)
-    }
-
-    fun commentSong(song: Song) {
-        layoutController.get().showContact()
-        contactLayoutController.get().prepareSongComment(song)
     }
 
     fun publishSong(song: Song) {
