@@ -4,6 +4,7 @@ import igrek.songbook.persistence.general.dao.GeneralSongsDao
 import igrek.songbook.persistence.general.model.*
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.persistence.user.custom.CustomSongMapper
+import igrek.songbook.persistence.user.custom.CustomSongsDao
 import igrek.songbook.util.lookup.FinderById
 import igrek.songbook.util.lookup.FinderByTuple
 
@@ -19,10 +20,8 @@ class SongsDbBuilder(
         categories = generalSongsDao.readAllCategories()
         songs = generalSongsDao.readAllSongs()
 
-        // user data
         applyCustomSongs()
         unlockSongs()
-
         removeLockedSongs()
         excludeSongs()
         assignSongsToCategories()
@@ -48,14 +47,28 @@ class SongsDbBuilder(
     private fun applyCustomSongs() {
         val customSongs = userDataDao.customSongsDao!!.customSongs.songs
         val categoryFinder = FinderById(categories) { e -> e.id }
-        val customCategory = categoryFinder.find(CategoryType.CUSTOM.id)!!
+        val customGeneralCategory = categoryFinder.find(CategoryType.CUSTOM.id)!!
         val mapper = CustomSongMapper()
+
+        // bind custom categories to songs
+        userDataDao.customSongsDao!!.customCategories = customSongs.map { song ->
+            song.categoryName
+        }.toSet().filterNotNull().map { categoryName ->
+            CustomSongsDao.CustomCategory(name = categoryName)
+        }
+        val customCategoryFinder = FinderByTuple(userDataDao.customSongsDao!!.customCategories) {
+            it.name
+        }
 
         customSongs.forEach { customSong ->
             val song = mapper.customSongToSong(customSong)
             songs.add(song)
-            song.categories = mutableListOf(customCategory)
-            customCategory.songs.add(song)
+
+            song.categories = mutableListOf(customGeneralCategory)
+            customGeneralCategory.songs.add(song)
+
+            val customCategory = customCategoryFinder.find(customSong.categoryName ?: "")
+            customCategory?.songs?.add(song)
         }
     }
 
