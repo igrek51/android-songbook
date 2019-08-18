@@ -205,7 +205,7 @@
     <string name="settings_random_favourite">Random favourite songs</string>
     <string name="settings_random_favourite_hint">Shuffle songs from favourite songs only</string>
     <string name="settings_songs_list_section">Songs list</string>
-    <string name="settings_exclude_languages">Hide songs with specific languages</string>
+    <string name="settings_exclude_languages">Hide songs with particular languages</string>
     <string name="settings_autoscroll_initial_delay">Autoscroll initial delay</string>
     <string name="settings_autoscroll_speed">Autoscroll speed</string>
     <string name="settings_general_section">General</string>
@@ -269,7 +269,7 @@
     <string name="nav_latest">Latest songs</string>
     <string name="nav_history">History</string>
     <string name="settings_exclude_filter">Songs hiding</string>
-    <string name="settings_exclude_artists">Hide selected categories</string>
+    <string name="settings_exclude_artists">Hide particular categories</string>
     <string name="settings_toggle_all_languages">Toggle all languages</string>
     <string name="settings_toggle_all_artists">Toggle all categories</string>
     <string name="settings_custom_songs">Custom songs</string>
