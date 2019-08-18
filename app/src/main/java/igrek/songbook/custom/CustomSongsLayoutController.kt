@@ -88,9 +88,13 @@ class CustomSongsLayoutController : InflatedLayout(
 
         if (groupingEnabled) {
             itemsListView!!.items = if (customCategory == null) {
-                songsRepository.customSongsDao.customCategories.map {
+                val categories = songsRepository.customSongsDao.customCategories.map {
                     CustomSongListItem(customCategory = it)
                 }
+                val uncategorized = songsRepository.customSongsDao.customSongsUncategorized.map {
+                    CustomSongListItem(song = it)
+                }
+                categories + uncategorized
             } else {
                 customCategory!!.songs.map {
                     CustomSongListItem(song = it)

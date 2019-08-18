@@ -3,6 +3,7 @@ package igrek.songbook.persistence.user.custom
 import android.app.Activity
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.WrapContextError
+import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
 import igrek.songbook.persistence.user.migrate.Migration037CustomSongs
@@ -18,6 +19,7 @@ class CustomSongsDao(path: String) : AbstractJsonDao<CustomSongsDb>(
 
     val customSongs: CustomSongsDb get() = db!!
     var customCategories = listOf<CustomCategory>()
+    var customSongsUncategorized = listOf<Song>()
 
     @Inject
     lateinit var songsRepository: SongsRepository

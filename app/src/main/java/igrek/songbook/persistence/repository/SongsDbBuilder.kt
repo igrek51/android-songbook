@@ -51,14 +51,20 @@ class SongsDbBuilder(
         val mapper = CustomSongMapper()
 
         // bind custom categories to songs
-        userDataDao.customSongsDao!!.customCategories = customSongs.map { song ->
-            song.categoryName
-        }.toSet().filterNotNull().map { categoryName ->
-            CustomCategory(name = categoryName)
-        }
+        userDataDao.customSongsDao!!.customCategories = customSongs
+                .asSequence()
+                .map { song ->
+                    song.categoryName
+                }.toSet()
+                .filterNotNull()
+                .filter { it.isNotEmpty() }
+                .map { categoryName ->
+                    CustomCategory(name = categoryName)
+                }.toList()
         val customCategoryFinder = FinderByTuple(userDataDao.customSongsDao!!.customCategories) {
             it.name
         }
+        val customSongsUncategorized = mutableListOf<Song>()
 
         customSongs.forEach { customSong ->
             val song = mapper.customSongToSong(customSong)
@@ -68,8 +74,14 @@ class SongsDbBuilder(
             customGeneralCategory.songs.add(song)
 
             val customCategory = customCategoryFinder.find(customSong.categoryName ?: "")
-            customCategory?.songs?.add(song)
+            if (customCategory == null) {
+                customSongsUncategorized.add(song)
+            } else {
+                customCategory.songs.add(song)
+            }
         }
+
+        userDataDao.customSongsDao!!.customSongsUncategorized = customSongsUncategorized
     }
 
     private fun unlockSongs() {
