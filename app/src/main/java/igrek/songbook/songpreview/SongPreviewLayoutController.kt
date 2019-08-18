@@ -148,9 +148,9 @@ class SongPreviewLayoutController : MainLayout {
         overlayAdapter = OverlayRecyclerAdapter(songPreview!!)
         overlayRecyclerView!!.adapter = overlayAdapter
         overlayRecyclerView!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {}
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {}
 
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 songPreview!!.scrollByPx(dy.toFloat())
                 songPreview!!.onManuallyScrolled(dy)
             }
@@ -223,8 +223,8 @@ class SongPreviewLayoutController : MainLayout {
 
     private fun resetOverlayScroll() {
         // refresh
-        overlayRecyclerView!!.layoutManager.scrollToPosition(1)
-        overlayRecyclerView!!.scrollToPosition(1)
+        overlayRecyclerView?.layoutManager?.scrollToPosition(1)
+        overlayRecyclerView?.scrollToPosition(1)
     }
 
     fun onLyricsModelUpdated() {

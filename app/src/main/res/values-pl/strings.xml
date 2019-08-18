@@ -49,7 +49,7 @@
         \nAplikacja pozwala na publikowanie dodanych przez Ciebie piosenek i współdzielenie ich z pozostałymi użytkownikami.
         \nMożesz także zaproponować poprawkę w akordach lub tekście piosenek, jeśli odnajdziesz jakieś błędy.
     </string>
-    <string name="ui_about_content">
+    <string name="ui_about_content" formatted="false">
         Guitar Songbook
         \nWersja aplikacji: %s (%s)
         \nWersja bazy piosenek: v%s
@@ -108,7 +108,7 @@
     <string name="settings_scroll_initial_pause_value">%s s</string>
     <string name="settings_autoscroll_speed_value">%s linii / s</string>
     <string name="song_details_title">Szczegóły piosenki</string>
-    <string name="song_details">
+    <string name="song_details" formatted="false">
         Tytuł: %s
         \nKategoria: %s
         \nWersja piosenki: %s
@@ -250,11 +250,11 @@
     <string name="action_add_to_playlist">Dodaj do playlisty</string>
     <string name="no_playlists_to_add">Nie znaleziono żadnej playlisty. Najpierw utwórz playlistę.</string>
     <string name="choose_playlist">Wybierz playlistę</string>
-    <string name="song_added_to_playlist">Dodano piosenkę \"%s\" do playlisty \"%s\"</string>
-    <string name="song_already_on_playlist">Piosenka \"%s\" jest już na playliście \"%s\"</string>
+    <string name="song_added_to_playlist" formatted="false">Dodano piosenkę \"%s\" do playlisty \"%s\"</string>
+    <string name="song_already_on_playlist" formatted="false">Piosenka \"%s\" jest już na playliście \"%s\"</string>
     <string name="action_remove_from_playlist">Usuń z playlisty</string>
     <string name="song_is_not_on_playlist">Piosenka nie należy do playlisty</string>
-    <string name="song_removed_from_playlist">Usunięto piosenkę \"%s\" z playlisty \"%s\"</string>
+    <string name="song_removed_from_playlist" formatted="false">Usunięto piosenkę \"%s\" z playlisty \"%s\"</string>
     <string name="remove_playlist">Usuń playlistę</string>
     <string name="confirm_remove_playlist">Czy na pewno chcesz usunąć playlistę?</string>
     <string name="rename_playlist">Zmień nazwę</string>

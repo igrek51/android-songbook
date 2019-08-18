@@ -12,6 +12,7 @@ import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.renderer.SongPreview
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -42,6 +43,7 @@ class AutoscrollService {
     val scrollStateSubject = PublishSubject.create<AutoscrollState>()
     val scrollSpeedAdjustmentSubject = PublishSubject.create<Float>()
 
+    private val subscriptions = mutableListOf<Disposable>()
     private val timerHandler = Handler()
     private val timerRunnable: () -> Unit = {
         if (state != AutoscrollState.OFF) {
@@ -72,18 +74,21 @@ class AutoscrollService {
         reset()
 
         // aggreagate many little scrolls into greater parts (not proper RX method found)
-        canvasScrollSubject.observeOn(AndroidSchedulers.mainThread())
-                .subscribe { linePartScrolled ->
-                    scrolledBuffer += linePartScrolled!!
-                    aggregatedScrollSubject.onNext(scrolledBuffer)
-                }
-
-        aggregatedScrollSubject.throttleLast(300, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    onCanvasScrollEvent(scrolledBuffer, canvas!!.scroll)
-                    scrolledBuffer = 0f
-                }
+        subscriptions.add(
+                canvasScrollSubject.observeOn(AndroidSchedulers.mainThread())
+                        .subscribe { linePartScrolled ->
+                            scrolledBuffer += linePartScrolled!!
+                            aggregatedScrollSubject.onNext(scrolledBuffer)
+                        }
+        )
+        subscriptions.add(
+                aggregatedScrollSubject.throttleLast(300, TimeUnit.MILLISECONDS)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                            onCanvasScrollEvent(scrolledBuffer, canvas!!.scroll)
+                            scrolledBuffer = 0f
+                        }
+        )
     }
 
     private fun loadPreferences() {
@@ -202,7 +207,7 @@ class AutoscrollService {
     }
 
     private fun onAutoscrollRemainingWaitTimeEvent(ms: Long) {
-        val seconds = java.lang.Long.toString((ms + 500) / 1000)
+        val seconds = ((ms + 500) / 1000).toString()
         val info = uiResourceService.resString(R.string.autoscroll_starts_in, seconds)
         uiInfoService.showInfoWithAction(info, R.string.action_start_now_autoscroll) { this.skipInitialPause() }
     }
