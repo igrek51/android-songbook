@@ -93,7 +93,7 @@ class PlaylistLayoutController : InflatedLayout(
     }
 
     private fun addPlaylist() {
-        InputDialogBuilder().input("New playlist name", null) { name ->
+        InputDialogBuilder().input(R.string.new_playlist_name, null) { name ->
             val playlist = Playlist(0, name)
             songsRepository.playlistDao.savePlaylist(playlist)
         }

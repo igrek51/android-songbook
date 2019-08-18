@@ -41,7 +41,7 @@ The guitar songs database is included and is easily extensible.
 * Setting default chords notation depending on system language
 * Hiding particular languages or artists
 * Restoring last chords transposing
-* Displaying chords between words or at the end of line
+* Displaying chords among words or at the end of line
 * Latest songs list
 * History of recently opened songs
 

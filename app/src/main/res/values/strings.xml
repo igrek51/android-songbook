@@ -280,4 +280,5 @@
     <string name="settings_transposition">Chords transposing</string>
     <string name="settings_restore_transposition">Restore last transposing</string>
     <string name="settings_restore_transposition_hint">Remember and restore last transposing for each song</string>
+    <string name="new_playlist_name">New playlist name</string>
 </resources>

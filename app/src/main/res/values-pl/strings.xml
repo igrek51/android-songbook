@@ -274,4 +274,5 @@
     <string name="settings_transposition">Transpozycja akordów</string>
     <string name="settings_restore_transposition">Przywracanie ostatnie transpozycji</string>
     <string name="settings_restore_transposition_hint">Zapamiętuj i przywracaj ostatnią transpozycję akordów dla każdej piosenki</string>
+    <string name="new_playlist_name">Nazwa nowej playlisty</string>
 </resources>
