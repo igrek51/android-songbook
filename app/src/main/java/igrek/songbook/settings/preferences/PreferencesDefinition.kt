@@ -31,7 +31,7 @@ enum class PreferencesDefinition constructor(val type: PropertyType, val default
 
     randomFavouriteSongsOnly(false),
 
-    customSongsGroupCategories(true),
+    customSongsGroupCategories(false),
 
     restoreTransposition(true),
 

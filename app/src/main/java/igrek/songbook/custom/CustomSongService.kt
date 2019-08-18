@@ -28,7 +28,7 @@ class CustomSongService {
     @Inject
     lateinit var preferencesService: PreferencesService
 
-    var customSongsGroupCategories: Boolean = true
+    var customSongsGroupCategories: Boolean = false
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -37,7 +37,7 @@ class CustomSongService {
 
     private fun loadPreferences() {
         customSongsGroupCategories = preferencesService.getValue(PreferencesDefinition.customSongsGroupCategories, Boolean::class.java)
-                ?: true
+                ?: false
     }
 
     fun showAddSongScreen() {
