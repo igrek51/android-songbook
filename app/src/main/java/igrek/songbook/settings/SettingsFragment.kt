@@ -191,6 +191,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setupClickPreference("settingsToggleAllArtists") {
             toggleAllMultiPreference(excludeArtistsPreference)
         }
+
+        setupSwitchPreference("customSongsGroupCategories",
+                onLoad = { preferencesUpdater.get().customSongsGroupCategories },
+                onSave = { value: Boolean ->
+                    preferencesUpdater.get().customSongsGroupCategories = value
+                }
+        )
     }
 
     private fun toggleAllMultiPreference(excludeLanguagesPreference: MultiSelectListPreference) {

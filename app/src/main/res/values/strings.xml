@@ -272,4 +272,7 @@
     <string name="settings_exclude_artists">Hide selected categories</string>
     <string name="settings_toggle_all_languages">Toggle all languages</string>
     <string name="settings_toggle_all_artists">Toggle all categories</string>
+    <string name="settings_custom_songs">Custom songs</string>
+    <string name="settings_group_custom_songs">Group custom songs</string>
+    <string name="settings_group_custom_songs_hint">Group custom songs with the same category together</string>
 </resources>

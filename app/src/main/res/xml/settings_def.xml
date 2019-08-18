@@ -75,4 +75,11 @@
             android:summary=""/>
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/settings_custom_songs">
+        <SwitchPreference
+            android:key="customSongsGroupCategories"
+            android:title="@string/settings_group_custom_songs"
+            android:summary="@string/settings_group_custom_songs_hint"/>
+    </PreferenceCategory>
+
 </PreferenceScreen>

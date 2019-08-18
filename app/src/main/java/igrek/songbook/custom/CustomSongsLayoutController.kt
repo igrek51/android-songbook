@@ -6,65 +6,110 @@ import android.widget.ImageButton
 import android.widget.TextView
 import dagger.Lazy
 import igrek.songbook.R
+import igrek.songbook.custom.list.CustomSongListItem
+import igrek.songbook.custom.list.CustomSongListView
 import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.info.UiInfoService
+import igrek.songbook.info.UiResourceService
+import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.LayoutState
-import igrek.songbook.layout.MainLayout
-import igrek.songbook.persistence.general.model.SongsDb
+import igrek.songbook.layout.list.ListItemClickListener
+import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.persistence.user.custom.CustomCategory
+import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.ListScrollPosition
-import igrek.songbook.songselection.SongSelectionLayoutController
-import igrek.songbook.songselection.search.SongSearchItem
-import igrek.songbook.songselection.tree.SongTreeItem
+import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
+import igrek.songbook.songselection.tree.NoParentItemException
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
-class CustomSongsLayoutController : SongSelectionLayoutController(), MainLayout {
+class CustomSongsLayoutController : InflatedLayout(
+        _layoutResourceId = R.layout.custom_songs,
+        _layoutState = LayoutState.CUSTOM_SONGS
+), ListItemClickListener<CustomSongListItem> {
 
+    @Inject
+    lateinit var songsRepository: SongsRepository
+    @Inject
+    lateinit var uiResourceService: UiResourceService
+    @Inject
+    lateinit var songContextMenuBuilder: SongContextMenuBuilder
+    @Inject
+    lateinit var uiInfoService: UiInfoService
+    @Inject
+    lateinit var songOpener: SongOpener
     @Inject
     lateinit var customSongService: Lazy<CustomSongService>
 
+    private var itemsListView: CustomSongListView? = null
+    private var goBackButton: ImageButton? = null
     private var storedScroll: ListScrollPosition? = null
+    private var tabTitleLabel: TextView? = null
     private var emptyListLabel: TextView? = null
-    private var subscription: Disposable? = null
+
+    private var customCategory: CustomCategory? = null
+
+    private var subscriptions = mutableListOf<Disposable>()
 
     init {
         DaggerIoc.factoryComponent.inject(this)
     }
 
     override fun showLayout(layout: View) {
-        initSongSelectionLayout(layout)
+        super.showLayout(layout)
 
         val addCustomSongButton: ImageButton = layout.findViewById(R.id.addCustomSongButton)
         addCustomSongButton.setOnClickListener { addCustomSong() }
 
+        tabTitleLabel = layout.findViewById(R.id.tabTitleLabel)
         emptyListLabel = layout.findViewById(R.id.emptyListLabel)
 
-        itemsListView!!.init(activity, this)
-        updateSongItemsList()
+        goBackButton = layout.findViewById(R.id.goBackButton)
+        goBackButton?.setOnClickListener { goUp() }
 
-        subscription?.dispose()
-        subscription = songsRepository.dbChangeSubject.subscribe {
-            if (layoutController.isState(getLayoutState()))
-                updateSongItemsList()
-        }
+        itemsListView = layout.findViewById(R.id.itemsListView)
+        itemsListView!!.init(activity, this)
+        updateItemsList()
+
+        subscriptions.forEach { s -> s.dispose() }
+        subscriptions.clear()
+        subscriptions.add(songsRepository.dbChangeSubject.subscribe {
+            if (isLayoutVisible())
+                updateItemsList()
+        })
     }
 
     private fun addCustomSong() {
         customSongService.get().showAddSongScreen()
     }
 
-    override fun getLayoutState(): LayoutState {
-        return LayoutState.CUSTOM_SONGS
-    }
+    private fun updateItemsList() {
+        val groupingEnabled = customSongService.get().customSongsGroupCategories
 
-    override fun getLayoutResourceId(): Int {
-        return R.layout.custom_songs
-    }
+        if (groupingEnabled) {
+            itemsListView!!.items = if (customCategory == null) {
+                songsRepository.customSongsDao.customCategories.map {
+                    CustomSongListItem(customCategory = it)
+                }
+            } else {
+                customCategory!!.songs.map {
+                    CustomSongListItem(song = it)
+                }
+            }
+        } else {
+            itemsListView!!.items = songsRepository.songsDb?.customSongs?.get()?.map {
+                CustomSongListItem(song = it)
+            } ?: emptyList()
+        }
 
-    override fun updateSongItemsList() {
-        super.updateSongItemsList()
-        // restore Scroll Position
         if (storedScroll != null) {
             Handler().post { itemsListView?.restoreScrollPosition(storedScroll) }
+        }
+
+        val customSongsTitle = uiResourceService.resString(R.string.nav_custom_song)
+        tabTitleLabel?.text = when (customCategory) {
+            null -> customSongsTitle
+            else -> "$customSongsTitle: ${customCategory?.name}"
         }
 
         emptyListLabel!!.visibility = if (itemsListView!!.count == 0) {
@@ -72,25 +117,44 @@ class CustomSongsLayoutController : SongSelectionLayoutController(), MainLayout 
         } else {
             View.GONE
         }
-    }
 
-    override fun getSongItems(songsDb: SongsDb): MutableList<SongTreeItem> {
-        // filter songs
-        val songsSequence = songsDb.customSongs.get()
-                .asSequence()
-                .map { song -> SongSearchItem.song(song) }
-        return songsSequence.toMutableList()
+        goBackButton?.visibility = when (customCategory) {
+            null -> View.GONE
+            else -> View.VISIBLE
+        }
     }
 
     override fun onBackClicked() {
-        layoutController.showSongTree()
+        goUp()
     }
 
-    override fun onSongItemClick(item: SongTreeItem) {
-        // store Scroll Position
+    private fun goUp() {
+        try {
+            if (customCategory == null)
+                throw NoParentItemException()
+            customCategory = null
+            updateItemsList()
+        } catch (e: NoParentItemException) {
+            layoutController.showSongTree()
+        }
+    }
+
+    override fun onItemClick(item: CustomSongListItem) {
         storedScroll = itemsListView?.currentScrollPosition
-        super.onSongItemClick(item)
+        if (item.song != null) {
+            songOpener.openSongPreview(item.song)
+        } else if (item.customCategory != null) {
+            customCategory = item.customCategory
+            updateItemsList()
+        }
     }
 
-    override fun onLayoutExit() {}
+    override fun onItemLongClick(item: CustomSongListItem) {
+        onMoreActions(item)
+    }
+
+    override fun onMoreActions(item: CustomSongListItem) {
+        songContextMenuBuilder.showSongActions(item.song!!)
+    }
+
 }

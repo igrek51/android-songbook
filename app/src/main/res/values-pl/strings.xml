@@ -266,4 +266,7 @@
     <string name="settings_exclude_artists">Ukryj wybrane kategorie</string>
     <string name="settings_toggle_all_languages">Zaznacz / Odznacz wszystkie języki</string>
     <string name="settings_toggle_all_artists">Zaznacz / Odznacz wszystkie kategorie</string>
+    <string name="settings_custom_songs">Własne piosenki</string>
+    <string name="settings_group_custom_songs">Grupuj własne piosenki</string>
+    <string name="settings_group_custom_songs_hint">Grupuj razem własne piosenki należące do tej samej kategorii</string>
 </resources>

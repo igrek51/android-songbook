@@ -3,8 +3,8 @@ package igrek.songbook.persistence.repository
 import igrek.songbook.persistence.general.dao.GeneralSongsDao
 import igrek.songbook.persistence.general.model.*
 import igrek.songbook.persistence.user.UserDataDao
+import igrek.songbook.persistence.user.custom.CustomCategory
 import igrek.songbook.persistence.user.custom.CustomSongMapper
-import igrek.songbook.persistence.user.custom.CustomSongsDao
 import igrek.songbook.util.lookup.FinderById
 import igrek.songbook.util.lookup.FinderByTuple
 
@@ -54,7 +54,7 @@ class SongsDbBuilder(
         userDataDao.customSongsDao!!.customCategories = customSongs.map { song ->
             song.categoryName
         }.toSet().filterNotNull().map { categoryName ->
-            CustomSongsDao.CustomCategory(name = categoryName)
+            CustomCategory(name = categoryName)
         }
         val customCategoryFinder = FinderByTuple(userDataDao.customSongsDao!!.customCategories) {
             it.name

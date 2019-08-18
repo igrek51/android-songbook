@@ -29,6 +29,8 @@ enum class PreferencesDefinition constructor(val type: PropertyType, val default
 
     randomFavouriteSongsOnly(false),
 
+    customSongsGroupCategories(true),
+
     ;
 
     constructor(defaultValue: String) : this(PropertyType.STRING, defaultValue)
