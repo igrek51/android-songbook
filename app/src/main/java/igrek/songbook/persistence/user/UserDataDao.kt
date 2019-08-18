@@ -9,6 +9,7 @@ import igrek.songbook.persistence.user.exclusion.ExclusionDao
 import igrek.songbook.persistence.user.favourite.FavouriteSongsDao
 import igrek.songbook.persistence.user.playlist.OpenHistoryDao
 import igrek.songbook.persistence.user.playlist.PlaylistDao
+import igrek.songbook.persistence.user.transpose.TransposeDao
 import igrek.songbook.persistence.user.unlocked.UnlockedSongsDao
 import javax.inject.Inject
 
@@ -24,6 +25,7 @@ class UserDataDao {
     var playlistDao: PlaylistDao? = null
     var openHistoryDao: OpenHistoryDao? = null
     var exclusionDao: ExclusionDao? = null
+    var transposeDao: TransposeDao? = null
 
     private val logger = LoggerFactory.logger
 
@@ -40,6 +42,7 @@ class UserDataDao {
         playlistDao = PlaylistDao(path)
         openHistoryDao = OpenHistoryDao(path)
         exclusionDao = ExclusionDao(path)
+        transposeDao = TransposeDao(path)
     }
 
     fun save() {
@@ -49,6 +52,7 @@ class UserDataDao {
         playlistDao?.save()
         openHistoryDao?.save()
         exclusionDao?.save()
+        transposeDao?.save()
         logger.info("user data have been saved")
     }
 
@@ -59,6 +63,7 @@ class UserDataDao {
         playlistDao?.factoryReset()
         openHistoryDao?.factoryReset()
         exclusionDao?.factoryReset()
+        transposeDao?.factoryReset()
     }
 
 }
