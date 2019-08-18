@@ -2,6 +2,7 @@ package igrek.songbook.persistence.user.transpose
 
 import android.app.Activity
 import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
 import io.reactivex.subjects.PublishSubject
@@ -30,6 +31,42 @@ class TransposeDao(path: String) : AbstractJsonDao<TransposeDb>(
 
     override fun empty(): TransposeDb {
         return TransposeDb()
+    }
+
+    fun getSongTransposition(songIdentifier: SongIdentifier): Int {
+        val songFound = transposeDb.songs
+                .find {
+                    it.songId == songIdentifier.songId
+                            && it.custom == songIdentifier.custom
+                }
+        return songFound?.transposition ?: 0
+    }
+
+    fun setSongTransposition(songIdentifier: SongIdentifier, transposition: Int) {
+        val songFound = transposeDb.songs
+                .find {
+                    it.songId == songIdentifier.songId
+                            && it.custom == songIdentifier.custom
+                }
+        if (songFound == null) {
+            val newSong = TransposedSong(songIdentifier.songId, songIdentifier.custom, transposition)
+            transposeDb.songs.add(newSong)
+        } else {
+            songFound.transposition = transposition
+        }
+        transposeDbSubject.onNext(transposeDb)
+    }
+
+    fun removeUsage(songId: Long, custom: Boolean) {
+        val songFound = transposeDb.songs
+                .find {
+                    it.songId == songId
+                            && it.custom == custom
+                }
+        if (songFound != null) {
+            transposeDb.songs.remove(songFound)
+            transposeDbSubject.onNext(transposeDb)
+        }
     }
 
 }

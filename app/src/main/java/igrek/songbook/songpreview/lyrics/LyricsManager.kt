@@ -31,11 +31,6 @@ class LyricsManager {
         DaggerIoc.factoryComponent.inject(this)
     }
 
-    private fun reset() {
-        chordsTransposerManager.get().reset()
-        autoscrollService.get().reset()
-    }
-
     private fun normalizeContent(content: String): String {
         return content
                 .replace("\r", "")
@@ -43,8 +38,10 @@ class LyricsManager {
                 .replace("\u00A0", " ") // NO-BREAK SPACE (0xC2 0xA0)
     }
 
-    fun load(fileContent: String, screenW: Int?, paint: Paint?) {
-        reset()
+    fun load(fileContent: String, screenW: Int?, paint: Paint?, transposed: Int) {
+        chordsTransposerManager.get().run { reset(transposed) }
+        autoscrollService.get().reset()
+
         originalFileContent = normalizeContent(fileContent)
 
         if (screenW != null)

@@ -64,6 +64,7 @@ class CustomSongsDao(path: String) : AbstractJsonDao<CustomSongsDb>(
         songsRepository.favouriteSongsDao.removeUsage(newSong.id, true)
         songsRepository.playlistDao.removeUsage(newSong.id, true)
         songsRepository.openHistoryDao.removeUsage(newSong.id, true)
+        songsRepository.transposeDao.removeUsage(newSong.id, true)
 
         songsRepository.reloadUserData()
     }

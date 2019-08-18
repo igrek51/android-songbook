@@ -5,6 +5,7 @@ import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.lyrics.LyricsManager
@@ -28,6 +29,8 @@ class ChordsTransposerManager {
     lateinit var userInfo: UiInfoService
     @Inject
     lateinit var quickMenuTranspose: Lazy<QuickMenuTranspose>
+    @Inject
+    lateinit var songsRepository: SongsRepository
 
     val isTransposed: Boolean
         get() = transposedBy != 0
@@ -39,8 +42,8 @@ class ChordsTransposerManager {
         DaggerIoc.factoryComponent.inject(this)
     }
 
-    fun reset() {
-        transposedBy = 0
+    fun reset(initialTransposed: Int = 0) {
+        transposedBy = initialTransposed
         val chordsNotation = chordsNotationService.get().chordsNotation
         chordsTransposer = ChordsTransposer(chordsNotation!!)
     }
@@ -63,6 +66,10 @@ class ChordsTransposerManager {
         }
 
         quickMenuTranspose.get().onTransposedEvent()
+
+        val song = songPreviewController.get().currentSong
+        if (song != null)
+            songsRepository.transposeDao.setSongTransposition(song.songIdentifier(), transposedBy)
     }
 
     fun onTransposeResetEvent() {

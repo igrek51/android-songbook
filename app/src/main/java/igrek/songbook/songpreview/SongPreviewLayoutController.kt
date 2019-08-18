@@ -24,6 +24,7 @@ import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.general.model.Song
+import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.lyrics.LyricsManager
@@ -69,6 +70,8 @@ class SongPreviewLayoutController : MainLayout {
     lateinit var favouriteSongsService: Lazy<FavouriteSongsService>
     @Inject
     lateinit var songContextMenuBuilder: Lazy<SongContextMenuBuilder>
+    @Inject
+    lateinit var songsRepository: Lazy<SongsRepository>
 
     var songPreview: SongPreview? = null
         private set
@@ -205,14 +208,17 @@ class SongPreviewLayoutController : MainLayout {
     }
 
     fun onGraphicsInitializedEvent(w: Int, paint: Paint?) {
-        // load file and parse it
-        val fileContent = currentSong!!.content!!
-        // initialize - first file loading
-        lyricsManager.get().load(fileContent, w, paint)
+        currentSong?.let {
+            // load file and parse it
+            val fileContent = it.content ?: ""
+            val transposed = songsRepository.get().transposeDao.getSongTransposition(it.songIdentifier())
+            // initialize - first file loading
+            lyricsManager.get().load(fileContent, w, paint, transposed)
 
-        songPreview!!.setFontSizes(lyricsThemeService.get().fontsize)
-        songPreview!!.setCRDModel(lyricsManager.get().crdModel)
-        resetOverlayScroll()
+            songPreview?.setFontSizes(lyricsThemeService.get().fontsize)
+            songPreview?.setCRDModel(lyricsManager.get().crdModel)
+            resetOverlayScroll()
+        }
     }
 
     private fun resetOverlayScroll() {
