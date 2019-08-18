@@ -13,15 +13,17 @@ class LyricsParser(fontFamily: Typeface, private val chordsEndOfLine: Boolean) {
     private val normalTypeface: Typeface = Typeface.create(fontFamily, Typeface.NORMAL)
     private val boldTypeface: Typeface = Typeface.create(fontFamily, Typeface.BOLD)
 
-    private val chordsEndlineRegex = """^(.*?)(\[.+?])(.*?)$""".toRegex()
-    private val chordsOpenerEndlineRegex = """^(.*?)(\[.*?)$""".toRegex()
-    private val chordsCloserEndlineRegex = """^(.*])(.*?)$""".toRegex()
+    private var boldSpaceWidth = 0f
 
     @Synchronized
     fun parseFileContent(content: String, screenW: Float, fontsize: Float, paint: Paint): LyricsModel {
         this.paint = paint
-        setNormalFont()
         paint.textSize = fontsize
+
+        setBoldFont()
+        val fw = FloatArray(1)
+        paint.getTextWidths(" ", fw)
+        boldSpaceWidth = fw[0]
 
         val model = LyricsModel()
         setBracket(false)
@@ -38,13 +40,10 @@ class LyricsParser(fontFamily: Typeface, private val chordsEndOfLine: Boolean) {
         return model
     }
 
-    private fun parseLine(_line: String, screenW: Float, fontsize: Float): List<LyricsLine> {
-        val line = if (chordsEndOfLine) {
-            regexChordsAtTheEndOfLine(_line)
-        } else {
-            _line
-        }
-        val chars: List<LyricsChar> = str2chars(line)
+    private fun parseLine(line: String, screenW: Float, fontsize: Float): List<LyricsLine> {
+        var chars: List<LyricsChar> = str2chars(line)
+        if (chordsEndOfLine)
+            chars = moveCharChordsAtTheEndOfLine(chars)
         val lines2: List<List<LyricsChar>> = wrapLine(chars, screenW)
 
         val lines: MutableList<LyricsLine> = mutableListOf()
@@ -58,32 +57,20 @@ class LyricsParser(fontFamily: Typeface, private val chordsEndOfLine: Boolean) {
         return lines
     }
 
-    private fun regexChordsAtTheEndOfLine(line: String): String {
-        var replaced = line
-        val chords = mutableListOf<String>()
-
-        while (true) {
-            val matchResult = chordsEndlineRegex.find(replaced) ?: break
-            replaced = "${matchResult.groupValues[1]}${matchResult.groupValues[3]}"
-            chords.add(matchResult.groupValues[2])
+    private fun moveCharChordsAtTheEndOfLine(chars: List<LyricsChar>): List<LyricsChar> {
+        val nonChords = chars.filter { lyricsChar -> lyricsChar.type != LyricsTextType.CHORDS }
+        // add dividers between alone chords
+        var last: LyricsChar? = null
+        chars.forEach { c ->
+            // closing bracket
+            if (last?.type == LyricsTextType.BRACKET && c.type == LyricsTextType.CHORDS) {
+                c.width += boldSpaceWidth
+                c.c = " " + c.c
+            }
+            last = c
         }
-
-        var matchResult = chordsOpenerEndlineRegex.find(replaced)
-        if (matchResult != null) {
-            replaced = matchResult.groupValues[1]
-            chords.add(matchResult.groupValues[2])
-        }
-        matchResult = chordsCloserEndlineRegex.find(replaced)
-        if (matchResult != null) {
-            replaced = matchResult.groupValues[2]
-            chords.add(0, matchResult.groupValues[1])
-        }
-
-        return if (chords.isEmpty()) {
-            replaced
-        } else {
-            """$replaced ${chords.joinToString(separator = " ")}"""
-        }
+        val chordChars = chars.filter { lyricsChar -> lyricsChar.type == LyricsTextType.CHORDS }
+        return nonChords + chordChars
     }
 
     private fun moveChordsAtTheEndOfLine(lyricsLine: LyricsLine, screenW: Float, fontsize: Float) {
@@ -252,10 +239,10 @@ class LyricsParser(fontFamily: Typeface, private val chordsEndOfLine: Boolean) {
     }
 
     private fun setNormalFont() {
-        paint!!.typeface = normalTypeface
+        paint?.typeface = normalTypeface
     }
 
     private fun setBoldFont() {
-        paint!!.typeface = boldTypeface
+        paint?.typeface = boldTypeface
     }
 }
