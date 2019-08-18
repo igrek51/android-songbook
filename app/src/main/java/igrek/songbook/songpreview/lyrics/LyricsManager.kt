@@ -4,6 +4,8 @@ import android.graphics.Paint
 import dagger.Lazy
 import igrek.songbook.chords.transpose.ChordsTransposerManager
 import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.settings.preferences.PreferencesDefinition
+import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.system.WindowManagerService
@@ -19,6 +21,8 @@ class LyricsManager {
     lateinit var lyricsThemeService: LyricsThemeService
     @Inject
     lateinit var windowManagerService: WindowManagerService
+    @Inject
+    lateinit var preferencesService: PreferencesService
 
     private var lyricsParser: LyricsParser? = null
     var crdModel: LyricsModel? = null
@@ -27,8 +31,16 @@ class LyricsManager {
     private var paint: Paint? = null
     private var originalFileContent: String? = null
 
+    var restoreTransposition = true
+
     init {
         DaggerIoc.factoryComponent.inject(this)
+        loadPreferences()
+    }
+
+    private fun loadPreferences() {
+        restoreTransposition = preferencesService.getValue(PreferencesDefinition.restoreTransposition, Boolean::class.java)
+                ?: true
     }
 
     private fun normalizeContent(content: String): String {
@@ -38,8 +50,14 @@ class LyricsManager {
                 .replace("\u00A0", " ") // NO-BREAK SPACE (0xC2 0xA0)
     }
 
-    fun load(fileContent: String, screenW: Int?, paint: Paint?, transposed: Int) {
-        chordsTransposerManager.get().run { reset(transposed) }
+    fun load(fileContent: String, screenW: Int?, paint: Paint?, initialTransposed: Int) {
+        chordsTransposerManager.get().run {
+            val transposed = when {
+                restoreTransposition -> initialTransposed
+                else -> 0
+            }
+            reset(transposed)
+        }
         autoscrollService.get().reset()
 
         originalFileContent = normalizeContent(fileContent)

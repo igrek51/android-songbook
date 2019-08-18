@@ -12,6 +12,7 @@ import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.FontTypeface
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
+import igrek.songbook.songpreview.lyrics.LyricsManager
 import igrek.songbook.songselection.random.RandomSongOpener
 import javax.inject.Inject
 
@@ -31,6 +32,8 @@ class PreferencesUpdater {
     lateinit var randomSongOpener: Lazy<RandomSongOpener>
     @Inject
     lateinit var customSongService: Lazy<CustomSongService>
+    @Inject
+    lateinit var lyricsManager: Lazy<LyricsManager>
 
     // preferences getters / setters proxy
     var appLanguage: AppLanguage?
@@ -111,6 +114,12 @@ class PreferencesUpdater {
             customSongService.get().customSongsGroupCategories = value
         }
 
+    var restoreTransposition: Boolean
+        get() = lyricsManager.get().restoreTransposition
+        set(value) {
+            lyricsManager.get().restoreTransposition = value
+        }
+
     init {
         DaggerIoc.factoryComponent.inject(this)
     }
@@ -135,6 +144,8 @@ class PreferencesUpdater {
         preferencesService.setValue(PreferencesDefinition.randomFavouriteSongsOnly, randomFavouriteSongsOnly)
 
         preferencesService.setValue(PreferencesDefinition.customSongsGroupCategories, customSongsGroupCategories)
+
+        preferencesService.setValue(PreferencesDefinition.restoreTransposition, restoreTransposition)
 
         preferencesService.saveAll()
     }

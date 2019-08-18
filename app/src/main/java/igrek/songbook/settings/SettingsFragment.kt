@@ -205,6 +205,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     preferencesUpdater.get().customSongsGroupCategories = value
                 }
         )
+
+        setupSwitchPreference("restoreTransposition",
+                onLoad = { preferencesUpdater.get().restoreTransposition },
+                onSave = { value: Boolean ->
+                    preferencesUpdater.get().restoreTransposition = value
+                }
+        )
     }
 
     private fun toggleAllMultiPreference(excludeLanguagesPreference: MultiSelectListPreference) {

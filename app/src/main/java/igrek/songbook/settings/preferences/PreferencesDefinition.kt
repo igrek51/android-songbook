@@ -33,6 +33,8 @@ enum class PreferencesDefinition constructor(val type: PropertyType, val default
 
     customSongsGroupCategories(true),
 
+    restoreTransposition(true),
+
     ;
 
     constructor(defaultValue: String) : this(PropertyType.STRING, defaultValue)

@@ -197,8 +197,8 @@
     <string name="settings_color_scheme">Schemat kolorów</string>
     <string name="settings_fontsize">Rozmiar czcionki</string>
     <string name="settings_typeface">Krój czcionki</string>
-    <string name="settings_autoscroll_speed_adjustment">Korekta predkości przewijania</string>
-    <string name="settings_autoscroll_speed_adjustment_hint">Automatyczne zwiększenie lub zmniejszenie prędkości autoprzewijania w wyniku ręcznego przewinięcia piosenki podczas autoprzewijania</string>
+    <string name="settings_autoscroll_speed_adjustment">Dopasowanie predkości przewijania</string>
+    <string name="settings_autoscroll_speed_adjustment_hint">Ręczne przewijanie piosenki podczas aktywnego autoprzewijania spowoduje automatyczne zwiększenie lub zmniejszenie prędkości autoprzewijania</string>
     <string name="settings_autoscroll_volume_keys">Zmiana prędkości przewijania przyciskami głośności</string>
     <string name="settings_autoscroll_volume_keys_hint">Przyciski zwiększania / zmniejszania głośności powodują odpowiednio przyspieszenie lub spowolnienie autoprzewijania</string>
     <string name="settings_random_song_section">Losowa piosenka</string>
@@ -271,4 +271,7 @@
     <string name="settings_group_custom_songs_hint">Grupuj razem własne piosenki należące do tej samej kategorii</string>
     <string name="settings_chords_end_of_line">Wyświetlaj akordy na końcu linii</string>
     <string name="settings_chords_end_of_line_hint">Wyświetlaj wszystkie akordy wyrównane do prawej strony ekranu</string>
+    <string name="settings_transposition">Transpozycja akordów</string>
+    <string name="settings_restore_transposition">Przywracanie ostatnie transpozycji</string>
+    <string name="settings_restore_transposition_hint">Zapamiętuj i przywracaj ostatnią transpozycję akordów dla każdej piosenki</string>
 </resources>

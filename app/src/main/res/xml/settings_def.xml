@@ -52,6 +52,13 @@
             android:summary="@string/settings_autoscroll_volume_keys_hint"/>
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/settings_transposition">
+        <SwitchPreference
+            android:key="restoreTransposition"
+            android:title="@string/settings_restore_transposition"
+            android:summary="@string/settings_restore_transposition_hint"/>
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/settings_random_song_section">
         <SwitchPreference
             android:key="randomFavouriteSongsOnly"
