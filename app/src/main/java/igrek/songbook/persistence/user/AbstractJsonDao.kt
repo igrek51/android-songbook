@@ -45,8 +45,10 @@ abstract class AbstractJsonDao<T>(
 
         try {
             val oldDb = migrateOlder()
-            if (oldDb != null)
+            if (oldDb != null) {
+                logger.info("'$dbName' db: migration from old db has been successfully finished")
                 return oldDb
+            }
         } catch (e: Exception) {
             logger.error("'$dbName' db: failed to migrate older db", e)
         }
@@ -97,6 +99,7 @@ abstract class AbstractJsonDao<T>(
         val file = File(path, filename)
         if (!file.delete() || file.exists())
             logger.error("failed to delete json db file: " + file.absolutePath)
-        read()
+        db = empty()
+        save()
     }
 }
