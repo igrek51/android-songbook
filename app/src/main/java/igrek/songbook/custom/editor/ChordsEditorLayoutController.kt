@@ -188,16 +188,20 @@ class ChordsEditorLayoutController : MainLayout {
 
     private fun validateChordsNotation(text: String) {
         val detector = ChordsDetector(chordsNotation)
-        text.replace(Regex("""\[(.*?)]""")) { matchResult ->
-            val chords = matchResult.groupValues[1].split(" ", "\n")
-            chords.forEach { chord ->
-                if (chord.isNotEmpty() && !detector.isWordAChord(chord)) {
-                    val placeholder = uiResourceService.resString(R.string.chords_unknown_chord)
-                    val errorMessage = placeholder.format(chord)
-                    throw ChordsValidationError(errorMessage)
-                }
-            }
+        text.replace(Regex("""\[((.|\n)+?)]""")) { matchResult ->
+            validateChordsGroup(matchResult.groupValues[1], detector)
             ""
+        }
+    }
+
+    private fun validateChordsGroup(chordsGroup: String, detector: ChordsDetector) {
+        val chords = chordsGroup.split(" ", "\n")
+        chords.forEach { chord ->
+            if (chord.isNotEmpty() && !detector.isWordAChord(chord)) {
+                val placeholder = uiResourceService.resString(R.string.chords_unknown_chord)
+                val errorMessage = placeholder.format(chord)
+                throw ChordsValidationError(errorMessage)
+            }
         }
     }
 

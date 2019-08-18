@@ -71,7 +71,7 @@
         \nMockito
         \nOkHttp
         \nRxAndroid
-        \nRxJava
+        \nRxKotlin
         \nSQLite
     </string>
     <string name="action_info_ok">OK</string>
@@ -231,18 +231,18 @@
     <string name="edit_song_validate_chords">Sprawdź</string>
     <string name="chords_are_valid">Akordy są poprawne</string>
     <string name="chords_invalid">Akordy są niepoprawne: %s</string>
-    <string name="chords_invalid_missing_closing_bracket">Brakujący nawias domykający \"]\"</string>
-    <string name="chords_invalid_missing_opening_bracket">Brakujący nawias otwierający \"[\"</string>
-    <string name="chords_unknown_chord">Nieznany akord dla wybranej notacji: %s</string>
+    <string name="chords_invalid_missing_closing_bracket">Brak nawiasu domykającego \"]\"</string>
+    <string name="chords_invalid_missing_opening_bracket">Brak nawiasu otwierającego \"[\"</string>
+    <string name="chords_unknown_chord">Nieznany akord dla wybranej notacji: \"%s\"</string>
     <string name="action_confirmation_title">Jesteś pewien?</string>
     <string name="confirm_remove_song">Czy na pewno chcesz usunąć piosenkę?</string>
     <string name="confirm_discard_custom_song_changes">Czy chcesz porzucić niezapisane zmiany w piosence?</string>
     <string name="edit_chords_notation_button">Notacja: %s</string>
     <string name="no_new_chords_detected">Nie znaleziono nowych akordów</string>
     <string name="new_chords_detected">Znaleziono nowe akordy: %s</string>
-    <string name="editor_other_chords_detected">Znaleziono akordy, ale z innej notacji: %s</string>
-    <string name="editor_onexit_validation_failed">Znaleziono błędy w akordach:
-        \n%s.
+    <string name="editor_other_chords_detected">Znaleziono akordy, ale z innej notacji: \"%s\"</string>
+    <string name="editor_onexit_validation_failed">%s.
+        \n
         \nUpewnij się, że wybrałeś odpowiednią notację akordów oraz zweryfikuj poprawność składni.
         Czy chcesz zignorować te błędy?</string>
     <string name="nav_playlists">Playlisty</string>
@@ -260,7 +260,7 @@
     <string name="rename_playlist">Zmień nazwę</string>
     <string name="playlist_removed">Usunięto playlistę</string>
     <string name="empty_playlist_songs">Brak piosenek na playliście</string>
-    <string name="nav_latest">Najnowsze</string>
+    <string name="nav_latest">Najnowsze piosenki</string>
     <string name="nav_history">Historia</string>
     <string name="settings_exclude_filter">Ukrywanie piosenek</string>
     <string name="settings_exclude_artists">Ukryj wybrane kategorie</string>

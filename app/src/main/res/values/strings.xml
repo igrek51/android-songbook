@@ -69,7 +69,7 @@
         \nMockito
         \nOkHttp
         \nRxAndroid
-        \nRxJava
+        \nRxKotlin
         \nSQLite
     </string>
     <string name="action_info_ok">OK</string>
@@ -234,7 +234,7 @@
     <string name="chords_invalid">Chords invalid: %s</string>
     <string name="chords_invalid_missing_closing_bracket">Missing closing bracket \"]\"</string>
     <string name="chords_invalid_missing_opening_bracket">Missing opening bracket \"[\"</string>
-    <string name="chords_unknown_chord">Unknown chord for chosen notation: %s</string>
+    <string name="chords_unknown_chord">Unknown chord for chosen notation: \"%s\"</string>
     <string name="action_confirmation_title">Are you sure?</string>
     <string name="confirm_remove_song">Do you really want to remove this song?</string>
     <string name="confirm_discard_custom_song_changes">Do you want to discard unsaved changes?</string>
@@ -246,9 +246,9 @@
     <string name="transpose_zero" translatable="false">0</string>
     <string name="transpose_plus_1" translatable="false">+1</string>
     <string name="transpose_plus_5" translatable="false">+5</string>
-    <string name="editor_other_chords_detected">There was chords found but from other notation: %s</string>
-    <string name="editor_onexit_validation_failed">There are errors in chords:
-        \n%s.
+    <string name="editor_other_chords_detected">There was chords found but from other notation: \"%s\"</string>
+    <string name="editor_onexit_validation_failed">%s.
+        \n
         \nMake sure you have chosen right chords notation and verify the chords syntax.
         Do you want to ignore these errors?</string>
     <string name="nav_playlists">Playlists</string>
@@ -266,7 +266,7 @@
     <string name="rename_playlist">Rename playlist</string>
     <string name="playlist_removed">Playlist has been removed</string>
     <string name="empty_playlist_songs">No songs on this playlist</string>
-    <string name="nav_latest">Latest</string>
+    <string name="nav_latest">Latest songs</string>
     <string name="nav_history">History</string>
     <string name="settings_exclude_filter">Songs hiding</string>
     <string name="settings_exclude_artists">Hide selected categories</string>
