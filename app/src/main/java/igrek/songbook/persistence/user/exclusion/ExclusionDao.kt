@@ -3,6 +3,7 @@ package igrek.songbook.persistence.user.exclusion
 import android.app.Activity
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.persistence.general.model.Category
+import igrek.songbook.persistence.general.model.CategoryNameComparator
 import igrek.songbook.persistence.general.model.CategoryType
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
@@ -53,7 +54,7 @@ class ExclusionDao(path: String) : AbstractJsonDao<ExclusionDb>(
         val map = LinkedHashMap<String, String>()
         categories.asSequence()
                 .filter { it.type == CategoryType.ARTIST && it.displayName != null }
-                .sortedBy { it.displayName }
+                .sortedWith(CategoryNameComparator)
                 .forEach { category ->
                     map[category.id.toString()] = category.displayName!!
                 }
