@@ -4,7 +4,7 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import java.util.*
 
-class LyricsParser(fontFamily: Typeface) {
+class LyricsParser(fontFamily: Typeface, private val chordsEndOfLine: Boolean) {
 
     private var bracket: Boolean = false
     private var paint: Paint? = null
@@ -12,6 +12,10 @@ class LyricsParser(fontFamily: Typeface) {
 
     private val normalTypeface: Typeface = Typeface.create(fontFamily, Typeface.NORMAL)
     private val boldTypeface: Typeface = Typeface.create(fontFamily, Typeface.BOLD)
+
+    private val chordsEndlineRegex = """^(.*?)(\[.+?])(.*?)$""".toRegex()
+    private val chordsOpenerEndlineRegex = """^(.*?)(\[.*?)$""".toRegex()
+    private val chordsCloserEndlineRegex = """^(.*])(.*?)$""".toRegex()
 
     @Synchronized
     fun parseFileContent(content: String, screenW: Float, fontsize: Float, paint: Paint): LyricsModel {
@@ -34,18 +38,64 @@ class LyricsParser(fontFamily: Typeface) {
         return model
     }
 
-    private fun parseLine(line: String, screenW: Float, fontsize: Float): List<LyricsLine> {
+    private fun parseLine(_line: String, screenW: Float, fontsize: Float): List<LyricsLine> {
+        val line = if (chordsEndOfLine) {
+            regexChordsAtTheEndOfLine(_line)
+        } else {
+            _line
+        }
+        val chars: List<LyricsChar> = str2chars(line)
+        val lines2: List<List<LyricsChar>> = wrapLine(chars, screenW)
 
-        val chars = str2chars(line)
-
-        val lines2 = wrapLine(chars, screenW)
-
-        val lines = ArrayList<LyricsLine>()
+        val lines: MutableList<LyricsLine> = mutableListOf()
         for (subline in lines2) {
-            lines.add(chars2line(subline, fontsize))
+            val lyricsLine = chars2line(subline, fontsize)
+            if (chordsEndOfLine)
+                moveChordsAtTheEndOfLine(lyricsLine, screenW, fontsize)
+            lines.add(lyricsLine)
         }
 
         return lines
+    }
+
+    private fun regexChordsAtTheEndOfLine(line: String): String {
+        var replaced = line
+        val chords = mutableListOf<String>()
+
+        while (true) {
+            val matchResult = chordsEndlineRegex.find(replaced) ?: break
+            replaced = "${matchResult.groupValues[1]}${matchResult.groupValues[3]}"
+            chords.add(matchResult.groupValues[2])
+        }
+
+        var matchResult = chordsOpenerEndlineRegex.find(replaced)
+        if (matchResult != null) {
+            replaced = matchResult.groupValues[1]
+            chords.add(matchResult.groupValues[2])
+        }
+        matchResult = chordsCloserEndlineRegex.find(replaced)
+        if (matchResult != null) {
+            replaced = matchResult.groupValues[2]
+            chords.add(0, matchResult.groupValues[1])
+        }
+
+        return if (chords.isEmpty()) {
+            replaced
+        } else {
+            """$replaced ${chords.joinToString(separator = " ")}"""
+        }
+    }
+
+    private fun moveChordsAtTheEndOfLine(lyricsLine: LyricsLine, screenW: Float, fontsize: Float) {
+        // recalculate fragments positions
+        val lastFragment = lyricsLine.fragments.reversed().firstOrNull() ?: return
+
+        val moveRight = screenW / fontsize - (lastFragment.x + lastFragment.width)
+        lyricsLine.fragments.forEach { fragment ->
+            if (fragment.type == LyricsTextType.CHORDS) {
+                fragment.x += moveRight
+            }
+        }
     }
 
     private fun str2chars(line: String): List<LyricsChar> {
@@ -153,7 +203,12 @@ class LyricsParser(fontFamily: Typeface) {
                 if (buffer.isNotEmpty()) {
 
                     if (lastType.isDisplayable) {
-                        val fragment = LyricsFragment(startX / fontsize, buffer.toString(), lastType)
+                        val fragmentWidth = x - startX
+                        val fragment = LyricsFragment(
+                                startX / fontsize,
+                                buffer.toString(),
+                                lastType,
+                                fragmentWidth / fontsize)
                         line.addFragment(fragment)
                     }
 
@@ -173,7 +228,11 @@ class LyricsParser(fontFamily: Typeface) {
         // complete the last fragment
         if (buffer.isNotEmpty()) {
             if (lastType != null && lastType.isDisplayable) {
-                val fragment = LyricsFragment(startX / fontsize, buffer.toString(), lastType)
+                val fragmentWidth = x - startX
+                val fragment = LyricsFragment(startX / fontsize,
+                        buffer.toString(),
+                        lastType,
+                        fragmentWidth / fontsize)
                 line.addFragment(fragment)
             }
         }

@@ -39,7 +39,8 @@ class RandomSongOpener {
     }
 
     private fun loadPreferences() {
-        fromFavouriteSongsOnly = preferencesService.getValue(PreferencesDefinition.randomFavouriteSongsOnly, Boolean::class.java)!!
+        fromFavouriteSongsOnly = preferencesService.getValue(PreferencesDefinition.randomFavouriteSongsOnly, Boolean::class.java)
+                ?: false
     }
 
     fun openRandomSong() {

@@ -128,6 +128,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
         )
 
+        setupSwitchPreference("chordsEndOfLine",
+                onLoad = { preferencesUpdater.get().chordsEndOfLine },
+                onSave = { value: Boolean ->
+                    preferencesUpdater.get().chordsEndOfLine = value
+                }
+        )
+
         setupSwitchPreference("autoscrollSpeedAutoAdjustment",
                 onLoad = { preferencesUpdater.get().autoscrollSpeedAutoAdjustment },
                 onSave = { value: Boolean ->

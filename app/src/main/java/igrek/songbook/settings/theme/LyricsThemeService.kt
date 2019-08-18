@@ -23,8 +23,8 @@ class LyricsThemeService {
         }
 
     var fontTypeface: FontTypeface? = null
-
     var colorScheme: ColorScheme? = null
+    var chordsEndOfLine = false
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -43,6 +43,9 @@ class LyricsThemeService {
         if (colorSchemeId != null) {
             colorScheme = ColorScheme.parseById(colorSchemeId)
         }
+
+        chordsEndOfLine = preferencesService.getValue(PreferencesDefinition.chordsEndOfLine, Boolean::class.java)
+                ?: false
     }
 
     fun fontTypefaceEntries(): LinkedHashMap<String, String> {

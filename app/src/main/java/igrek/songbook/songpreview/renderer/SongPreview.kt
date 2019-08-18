@@ -226,7 +226,13 @@ class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListe
 
     fun setCRDModel(lyricsModel: LyricsModel?) {
         this.lyricsModel = lyricsModel
-        this.lyricsRenderer = LyricsRenderer(this, lyricsModel, lyricsThemeService.fontTypeface!!, lyricsThemeService.colorScheme!!)
+        this.lyricsRenderer = LyricsRenderer(
+                this,
+                lyricsModel,
+                lyricsThemeService.fontTypeface!!,
+                lyricsThemeService.colorScheme!!,
+                lyricsThemeService.chordsEndOfLine
+        )
         repaint()
     }
 

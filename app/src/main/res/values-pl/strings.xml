@@ -269,4 +269,6 @@
     <string name="settings_custom_songs">Własne piosenki</string>
     <string name="settings_group_custom_songs">Grupuj własne piosenki</string>
     <string name="settings_group_custom_songs_hint">Grupuj razem własne piosenki należące do tej samej kategorii</string>
+    <string name="settings_chords_end_of_line">Wyświetlaj akordy na końcu linii</string>
+    <string name="settings_chords_end_of_line_hint">Wyświetlaj wszystkie akordy wyrównane do prawej strony ekranu</string>
 </resources>

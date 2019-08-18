@@ -53,7 +53,8 @@ class LyricsManager {
             this.paint = paint
 
         val typeface = lyricsThemeService.fontTypeface!!.typeface
-        lyricsParser = LyricsParser(typeface)
+        val chordsEndOfLine = lyricsThemeService.chordsEndOfLine
+        lyricsParser = LyricsParser(typeface, chordsEndOfLine)
 
         parseAndTranspose(originalFileContent!!)
     }

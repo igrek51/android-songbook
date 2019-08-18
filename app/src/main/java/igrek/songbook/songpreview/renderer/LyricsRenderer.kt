@@ -11,7 +11,8 @@ import igrek.songbook.songpreview.renderer.canvas.Align
 class LyricsRenderer internal constructor(private val canvas: SongPreview,
                                           private val lyricsModel: LyricsModel?,
                                           fontTypeface: FontTypeface,
-                                          colorScheme: ColorScheme) {
+                                          colorScheme: ColorScheme,
+                                          private val chordsEndOfLine: Boolean) {
 
     private val w: Float = canvas.w.toFloat()
     private val h: Float = canvas.h.toFloat()
@@ -80,7 +81,12 @@ class LyricsRenderer internal constructor(private val canvas: SongPreview,
             } else if (fragment.type == LyricsTextType.CHORDS) {
                 canvas.setFontTypeface(boldTypeface)
                 canvas.setColor(chordColor)
-                canvas.drawText(fragment.text, fragment.x * fontsize, y + lineheight, Align.LEFT)
+                val x = if (chordsEndOfLine) {
+                    fragment.x * fontsize - canvas.scrollWidth
+                } else {
+                    fragment.x * fontsize
+                }
+                canvas.drawText(fragment.text, x, y + lineheight, Align.LEFT)
             }
 
         }

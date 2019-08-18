@@ -36,7 +36,8 @@ class CustomSongService {
     }
 
     private fun loadPreferences() {
-        customSongsGroupCategories = preferencesService.getValue(PreferencesDefinition.customSongsGroupCategories, Boolean::class.java)!!
+        customSongsGroupCategories = preferencesService.getValue(PreferencesDefinition.customSongsGroupCategories, Boolean::class.java)
+                ?: true
     }
 
     fun showAddSongScreen() {

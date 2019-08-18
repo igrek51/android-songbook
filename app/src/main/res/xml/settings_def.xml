@@ -27,6 +27,10 @@
             android:key="fontTypeface"
             android:title="@string/settings_typeface"
             android:summary="%s"/>
+        <SwitchPreference
+            android:key="chordsEndOfLine"
+            android:title="@string/settings_chords_end_of_line"
+            android:summary="@string/settings_chords_end_of_line_hint"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_autoscroll_section">

@@ -21,6 +21,8 @@ enum class PreferencesDefinition constructor(val type: PropertyType, val default
 
     colorSchemeId(ColorScheme.DARK.id),
 
+    chordsEndOfLine(false),
+
     excludedLanguages(""),
 
     autoscrollSpeedAutoAdjustment(true),

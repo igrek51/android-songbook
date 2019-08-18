@@ -1,13 +1,11 @@
 package igrek.songbook.songpreview.lyrics
 
 import com.google.common.base.Joiner
-import java.util.*
 
-class LyricsLine {
-
-    var y: Int = 0
-
-    val fragments = ArrayList<LyricsFragment>()
+data class LyricsLine(
+        var y: Int = 0,
+        var fragments: MutableList<LyricsFragment> = mutableListOf()
+) {
 
     fun addFragment(fragment: LyricsFragment) {
         fragments.add(fragment)

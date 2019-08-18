@@ -1,9 +1,13 @@
 package igrek.songbook.songpreview.lyrics
 
-class LyricsFragment(var x: Float, var text: String, var type: LyricsTextType?) {
+data class LyricsFragment(
+        var x: Float,
+        var text: String,
+        var type: LyricsTextType,
+        var width: Float
+) {
 
     override fun toString(): String {
         return text
     }
 }
-

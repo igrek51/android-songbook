@@ -275,4 +275,6 @@
     <string name="settings_custom_songs">Custom songs</string>
     <string name="settings_group_custom_songs">Group custom songs</string>
     <string name="settings_group_custom_songs_hint">Group custom songs with the same category together</string>
+    <string name="settings_chords_end_of_line">Display chords at the end of line</string>
+    <string name="settings_chords_end_of_line_hint">Align chords to the right edge of the screen</string>
 </resources>
