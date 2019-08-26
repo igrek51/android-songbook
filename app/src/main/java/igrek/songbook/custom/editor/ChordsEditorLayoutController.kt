@@ -195,7 +195,7 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     private fun validateChordsGroup(chordsGroup: String, detector: ChordsDetector) {
-        val chords = chordsGroup.split(" ", "\n")
+        val chords = chordsGroup.split(" ", "\n", "(", ")")
         chords.forEach { chord ->
             if (chord.isNotEmpty() && !detector.isWordAChord(chord)) {
                 val placeholder = uiResourceService.resString(R.string.chords_unknown_chord)

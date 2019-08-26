@@ -5,6 +5,7 @@ import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.util.lookup.SimpleCache
 import java.util.*
+import kotlin.math.min
 
 class ChordsDetector(notation: ChordsNotation? = null) {
 
@@ -17,11 +18,13 @@ class ChordsDetector(notation: ChordsNotation? = null) {
                 "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
                 "add", "dim", "sus", "maj", "min", "aug",
                 "Major", "6add9", "m7", "m9", "m11", "m13", "m6", "madd9", "mmaj7", "mmaj9",
-                "+", "#", "-", "(", ")", "/", "\n")
+                "+", "#")
+
+        private val delimiters = arrayOf(" ", "-", "(", ")", "/", ",", "\n")
 
         const val MAX_LENGTH_ANALYZE = 3
 
-        private val longestFirstComparator = Comparator<String> { lhs: String, rhs: String ->
+        private val longestFirstComparator = Comparator { lhs: String, rhs: String ->
             if (rhs.length != lhs.length) {
                 rhs.length - lhs.length
             } else {
@@ -34,7 +37,7 @@ class ChordsDetector(notation: ChordsNotation? = null) {
     var detectedChords = mutableListOf<String>()
         private set
 
-    private val chordPrefixes: SimpleCache<Set<String>> = SimpleCache {
+    private val chordBasicNames: SimpleCache<Set<String>> = SimpleCache {
         val prefixes = sortedSetOf(longestFirstComparator)
         prefixes.addAll(chordNameProvider.allChords(notation))
         prefixes
@@ -51,6 +54,10 @@ class ChordsDetector(notation: ChordsNotation? = null) {
             nameToIndex[name] = index % maxChordNumber
         }
         nameToIndex
+    }
+
+    private val exceptionChords: SimpleCache<Map<String, String>> = SimpleCache {
+        chordNameProvider.exceptionChords(notation).toSortedMap(longestFirstComparator)
     }
 
     fun findChords(lyrics: String): String {
@@ -91,12 +98,29 @@ class ChordsDetector(notation: ChordsNotation? = null) {
     }
 
     fun isWordAChord(word: String): Boolean {
-        for (prefix: String in chordPrefixes.get()) {
-            if (word.startsWith(prefix)) {
-                if (word == prefix)
+        val splitted = word.split(*delimiters)
+
+        // only delimiters
+        if (splitted.all { it.isEmpty() })
+            return false
+
+        splitted.forEach { fragment ->
+            if (fragment.isNotEmpty()) {
+                if (!isWordFragmentAChord(fragment))
+                    return false
+            }
+        }
+
+        return true
+    }
+
+    private fun isWordFragmentAChord(word: String): Boolean {
+        chordBasicNames.get().forEach { chordBase ->
+            if (word.startsWith(chordBase)) {
+                if (word == chordBase)
                     return true
                 // check suffixes
-                val remainder = word.drop(prefix.length)
+                val remainder = word.drop(chordBase.length)
                 for (suffix: String in chordSuffixes) {
                     if (remainder.startsWith(suffix))
                         return true
@@ -111,18 +135,28 @@ class ChordsDetector(notation: ChordsNotation? = null) {
      * @return pair of recognized chord number with suffix or null if not recognized any
      */
     fun recognizeChord(chord: String): Pair<Int, String>? {
+        // recognize basic chord (without suffixes)
         var chordNumber: Int? = chordNumbers.get()[chord]
         if (chordNumber != null)
             return Pair(chordNumber, "")
-        // basic chord (without suffixes) was not recognized
+
+        // recognize exceptions first
+        exceptionChords.get().forEach { (exceptionChord, chordBase) ->
+            if (chord.startsWith(exceptionChord)) {
+                chordNumber = chordNumbers.get()[chordBase]
+                val suffix = chord.drop(chordBase.length)
+                return Pair(chordNumber!!, suffix)
+            }
+        }
+
         // attempt to recognize complex chord (with prefixes): C#maj7, chord + [letters + number]
         // recognize starting from longest ones
-        for (l in Math.min(MAX_LENGTH_ANALYZE, chord.length - 1) downTo 1) {
+        for (l in min(MAX_LENGTH_ANALYZE, chord.length - 1) downTo 1) {
             val chordCut = chord.take(l)
             val suffix = chord.drop(l) // characters appended to a chords, e.g. Cmaj7 -> maj7
             chordNumber = chordNumbers.get()[chordCut]
             if (chordNumber != null)
-                return Pair(chordNumber, suffix) // a chord with suffix has been recognized
+                return Pair(chordNumber!!, suffix) // a chord with suffix has been recognized
         }
 
         logger.warn("Chords detector: chord not recognized [${chord.length}]: $chord")

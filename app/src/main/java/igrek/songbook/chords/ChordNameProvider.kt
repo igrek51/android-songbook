@@ -32,6 +32,32 @@ class ChordNameProvider {
         }
     }
 
+    fun exceptionChords(notation: ChordsNotation?): Map<String, String> {
+        return when (notation) {
+            ChordsNotation.GERMAN, ChordsNotation.GERMAN_IS -> mapOf(
+                    "Cmaj" to "C",
+                    "Dmaj" to "D",
+                    "Emaj" to "E",
+                    "Fmaj" to "F",
+                    "Gmaj" to "G",
+                    "Amaj" to "A",
+                    "Hmaj" to "H",
+                    "Bmaj" to "B"
+            )
+            ChordsNotation.ENGLISH -> mapOf(
+                    "Cmaj" to "C",
+                    "Dmaj" to "D",
+                    "Emaj" to "E",
+                    "Fmaj" to "F",
+                    "Gmaj" to "G",
+                    "Amaj" to "A",
+                    "Bbmaj" to "Bb",
+                    "Bmaj" to "B"
+            )
+            null -> exceptionChords(ChordsNotation.ENGLISH)
+        }
+    }
+
     fun allChords(notation: ChordsNotation?): List<String> {
         if (notation == null)
             return allChords()

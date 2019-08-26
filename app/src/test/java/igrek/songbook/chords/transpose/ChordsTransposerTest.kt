@@ -46,4 +46,10 @@ class ChordsTransposerTest {
         assertThat(germanFisTransposer.transposeContent(input, 0)).isEqualTo("a b c d [e f G7 Gis B H]")
         assertThat(germanFisTransposer.transposeContent(input, 1)).isEqualTo("a b c d [f fis Gis7 A H C]")
     }
+
+    @Test
+    fun test_parentheses_Ch() {
+        transposed = germanTransposer.transposeContent("[(C-h)]", 1)
+        assertThat(transposed).isEqualTo("[(C#-c)]")
+    }
 }
