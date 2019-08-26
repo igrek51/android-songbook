@@ -1,10 +1,8 @@
 package igrek.songbook.chords.splitter
 
-class ChordsSplitter {
+import igrek.songbook.chords.syntax.chordsAllDelimiters
 
-    companion object {
-        val delimiters = listOf(" ", "-", "(", ")", "/", ",", "\n")
-    }
+class ChordsSplitter {
 
     /**
      * @param input         text joined with separators
@@ -14,7 +12,7 @@ class ChordsSplitter {
         val splitted = mutableListOf<StringWithDelimiter>()
 
         // find a first delimiter
-        val firstDelimiter = input.findAnyOf(delimiters)
+        val firstDelimiter = input.findAnyOf(chordsAllDelimiters)
 
         if (firstDelimiter == null) {
             splitted.add(StringWithDelimiter(input)) // the last fragment

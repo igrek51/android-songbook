@@ -13,7 +13,7 @@ class ChordsDetectorTest {
     fun test_detect_fmaj7() {
         val detector = ChordsDetector(ChordsNotation.ENGLISH)
         assertThat(detector.recognizeChord("Fmaj7")).isEqualTo(Pair(17, "maj7"))
-        assertThat(detector.findChords("Fmaj7")).isEqualTo("[Fmaj7]")
+        assertThat(detector.detectChords("Fmaj7")).isEqualTo("[Fmaj7]")
     }
 
     @Test

@@ -2,6 +2,7 @@ package igrek.songbook.chords
 
 import igrek.songbook.chords.detector.ChordsDetector
 import igrek.songbook.chords.splitter.ChordsSplitter
+import igrek.songbook.chords.syntax.ChordNameProvider
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.util.lookup.SimpleCache
 
