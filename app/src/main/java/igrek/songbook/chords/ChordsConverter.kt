@@ -1,49 +1,63 @@
 package igrek.songbook.chords
 
+import igrek.songbook.chords.detector.Chord
 import igrek.songbook.chords.detector.ChordsDetector
-import igrek.songbook.chords.splitter.ChordsSplitter
 import igrek.songbook.chords.syntax.ChordNameProvider
+import igrek.songbook.chords.syntax.chordsGroupRegex
+import igrek.songbook.chords.syntax.chordsSplitRegex
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.util.lookup.SimpleCache
 
-class ChordsConverter(fromNotation: ChordsNotation, toNotation: ChordsNotation) {
+class ChordsConverter(
+        fromNotation: ChordsNotation,
+        toNotation: ChordsNotation
+) {
 
     private val chordNameProvider = ChordNameProvider()
-    private val chordsSplitter = ChordsSplitter()
     private val fromChordsDetector = ChordsDetector(fromNotation)
 
-    private val toChordsNames: SimpleCache<List<String>> = SimpleCache {
-        chordNameProvider.allChords(toNotation)
+    private val noteIndexToBaseName: SimpleCache<Map<Int, String>> = SimpleCache {
+        val map = hashMapOf<Int, String>()
+        chordNameProvider.baseNotesNames(toNotation).forEachIndexed { index, names ->
+            if (names.isNotEmpty())
+                map[index] = names.first()
+        }
+        map
+    }
+
+    private val noteIndexToMinorName: SimpleCache<Map<Int, String>> = SimpleCache {
+        val map = hashMapOf<Int, String>()
+        chordNameProvider.minorChords(toNotation).forEachIndexed { index, names ->
+            if (names.isNotEmpty())
+                map[index] = names.first()
+        }
+        map
     }
 
     fun convertLyrics(lyrics: String): String {
-        return lyrics.lines().joinToString(separator = "\n") { line ->
-            line.replace(Regex("""\[(.*?)]""")) { matchResult ->
-                "[" + convertChords(matchResult.groupValues[1]) + "]"
-            }
+        return lyrics.replace(chordsGroupRegex) { matchResult ->
+            val chordsGroup = matchResult.groupValues[1] + " "
+            val replaced = chordsGroup.replace(chordsSplitRegex) { matchResult2 ->
+                val singleChord = matchResult2.groupValues[1]
+                val separator = matchResult2.groupValues[2]
+                convertChord(singleChord) + separator
+            }.dropLast(1)
+            "[$replaced]"
         }
-    }
-
-    fun convertChords(chordsSection: String): String {
-        val out = StringBuilder()
-        val delimitedChords = chordsSplitter.splitWithDelimiters(chordsSection)
-        for (delimitedChord in delimitedChords) {
-            out.append(convertChord(delimitedChord.str))
-            out.append(delimitedChord.delimiter) // append the same delimiter which was splitting a chord
-        }
-        return out.toString()
     }
 
     fun convertChord(chord: String): String {
         if (chord.trim { it <= ' ' }.isEmpty())
             return chord
 
-        val recognized = fromChordsDetector.recognizeChord(chord) ?: return chord
+        val recognized: Chord = fromChordsDetector.recognizeChord(chord) ?: return chord
 
-        val chordNumber = recognized.first
-        val suffix = recognized.second
-        val convertedChord = toChordsNames.get()[chordNumber]
-        return convertedChord + suffix
+        val prefix = when(recognized.minor) {
+            false -> noteIndexToBaseName.get()[recognized.noteIndex]
+            true -> noteIndexToMinorName.get()[recognized.noteIndex]
+        }
+
+        return prefix + recognized.suffix
     }
 
 }

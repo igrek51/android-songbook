@@ -1,8 +1,6 @@
 package igrek.songbook.chords.syntax
 
-import igrek.songbook.chords.detector.ChordsDetector
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import igrek.songbook.util.lookup.SimpleCache
 
 class ChordNameProvider {
 
@@ -53,16 +51,16 @@ class ChordNameProvider {
         }
     }
 
-    fun lowercaseChords(notation: ChordsNotation): List<List<String>> {
+    fun minorChords(notation: ChordsNotation): List<List<String>> {
         return when (notation) {
             ChordsNotation.GERMAN -> listOf(
                     listOf("c"),
                     listOf("c#", "db", "des", "cis"),
                     listOf("d"),
-                    listOf("d#", "eb", "es", "cis"),
+                    listOf("d#", "eb", "es", "dis"),
                     listOf("e"),
                     listOf("f"),
-                    listOf("f#", "gb", "ges", "gis"),
+                    listOf("f#", "gb", "ges", "fis"),
                     listOf("g"),
                     listOf("g#", "ab", "as", "gis"),
                     listOf("a"),
@@ -84,18 +82,18 @@ class ChordNameProvider {
                     listOf("h")
             )
             ChordsNotation.ENGLISH -> listOf(
-                    emptyList(),
-                    emptyList(),
-                    emptyList(),
-                    emptyList(),
-                    emptyList(),
-                    emptyList(),
-                    emptyList(),
-                    emptyList(),
-                    emptyList(),
-                    emptyList(),
-                    emptyList(),
-                    emptyList()
+                    listOf("Cm"),
+                    listOf("C#m"),
+                    listOf("Dm"),
+                    listOf("D#m"),
+                    listOf("Em"),
+                    listOf("Fm"),
+                    listOf("F#m"),
+                    listOf("Gm"),
+                    listOf("G#m"),
+                    listOf("Am"),
+                    listOf("Bbm"),
+                    listOf("Bm")
             )
         }
     }

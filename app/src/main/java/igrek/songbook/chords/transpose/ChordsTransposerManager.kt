@@ -6,6 +6,7 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.lyrics.LyricsManager
@@ -45,11 +46,11 @@ class ChordsTransposerManager {
     fun reset(initialTransposed: Int = 0) {
         transposedBy = initialTransposed
         val chordsNotation = chordsNotationService.get().chordsNotation
-        chordsTransposer = ChordsTransposer(chordsNotation!!)
+        chordsTransposer = ChordsTransposer(fromNotation = ChordsNotation.default, toNotation = chordsNotation!!)
     }
 
     fun transposeContent(fileContent: String): String {
-        return chordsTransposer!!.transposeContent(fileContent, transposedBy)
+        return chordsTransposer!!.transposeLyrics(fileContent, transposedBy)
     }
 
     fun onTransposeEvent(semitones: Int) {

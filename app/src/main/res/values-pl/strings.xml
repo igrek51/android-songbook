@@ -58,7 +58,7 @@
         \nIreneusz Szulc
         \n
         \nWYKORZYSTANE TECHNOLOGIE:
-        \nAndroid SDK, AssertK, Dagger 2, Espresso, Gradle, Guava, Java 8, jUnit, Kotlin, Material Design icons, Mockito, OkHttp, RxAndroid, RxKotlin, SQLite
+        \nAndroid SDK, AssertJ, Dagger 2, Espresso, Gradle, Guava, Java 8, jUnit, Kotlin, Material Design icons, Mockito, OkHttp, RxAndroid, RxKotlin, SQLite
     </string>
     <string name="action_info_ok">OK</string>
     <string name="action_secret">Odblokuj</string>

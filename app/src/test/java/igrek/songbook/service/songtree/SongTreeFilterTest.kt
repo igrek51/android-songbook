@@ -1,9 +1,6 @@
 package igrek.songbook.service.songtree
 
-import assertk.assertThat
-import assertk.assertions.isEqualTo
-import assertk.assertions.isFalse
-import assertk.assertions.isTrue
+import org.assertj.core.api.Assertions.assertThat
 import igrek.songbook.persistence.general.model.Category
 import igrek.songbook.persistence.general.model.CategoryType
 import igrek.songbook.songselection.search.SongTreeFilter

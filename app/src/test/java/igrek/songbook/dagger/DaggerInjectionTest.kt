@@ -1,8 +1,7 @@
 package igrek.songbook.dagger
 
 import android.app.Activity
-import assertk.assertThat
-import assertk.assertions.isNotNull
+import org.assertj.core.api.Assertions.assertThat
 import igrek.songbook.activity.MainActivity
 import igrek.songbook.dagger.base.DaggerTestComponent
 import igrek.songbook.dagger.base.TestModule
