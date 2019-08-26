@@ -42,8 +42,8 @@ class SecretUnlockerService {
 
     private val logger = LoggerFactory.logger
 
-    private val cowCondition: Predicate<String> = Predicate { input -> input!!.matches(Regex("^m[ou]+$")) }
-    private val dupaCondition: Predicate<String> = Predicate { input -> input!!.contains("dupa") }
+    private val cowCondition: Predicate<String> = Predicate { it?.matches("^m[ou]+$".toRegex()) ?: false }
+    private val dupaCondition: Predicate<String> = Predicate { it?.contains("dupa") ?: false }
 
     private val rules: List<UnlockerRule> = listOf(
             UnlockerRule(dupaCondition) { showCowSuperPowers() },
@@ -52,9 +52,7 @@ class SecretUnlockerService {
             UnlockerRule("lich", "lisz") { toast("\"Trup tu tupta...\"") },
 
             UnlockerRule("engineer", "inzynier") { unlockSongs("engineer") },
-            UnlockerRule("bff") { unlockSongs("bff") },
             UnlockerRule("zjajem", "z jajem") { unlockSongs("zjajem") },
-            UnlockerRule("religijne") { unlockSongs("religijne") },
             UnlockerRule("afcg") { unlockSongs("afcg") },
             // debug commands
             UnlockerRule("reset") { reset() },

@@ -8,7 +8,9 @@ enum class CategoryType(val id: Long, val localeStringId: Int?) {
 
     OTHERS(2, R.string.song_category_others),
 
-    ARTIST(3, null);
+    ARTIST(3, null),
+
+    ;
 
     companion object {
         fun parseById(id: Long): CategoryType {

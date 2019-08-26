@@ -58,25 +58,11 @@
         \nIreneusz Szulc
         \n
         \nWYKORZYSTANE TECHNOLOGIE:
-        \nAndroid SDK
-        \nAssertK
-        \nDagger 2
-        \nEspresso
-        \nGradle
-        \nGuava
-        \nJava 8
-        \njUnit
-        \nKotlin
-        \nMaterial Design icons
-        \nMockito
-        \nOkHttp
-        \nRxAndroid
-        \nRxKotlin
-        \nSQLite
+        \nAndroid SDK, AssertK, Dagger 2, Espresso, Gradle, Guava, Java 8, jUnit, Kotlin, Material Design icons, Mockito, OkHttp, RxAndroid, RxKotlin, SQLite
     </string>
     <string name="action_info_ok">OK</string>
-    <string name="action_secret">Sekret</string>
-    <string name="action_check_secret">Weryfikuj</string>
+    <string name="action_secret">Odblokuj</string>
+    <string name="action_check_secret">OK</string>
     <string name="action_cancel">Anuluj</string>
     <string name="ui_db_is_uptodate">Baza piosenek jest aktualna.</string>
     <string name="contact_label">Możesz przesłać wiadomość do autora, jeśli zauważyłeś jakieś błędy lub jeśli masz pomysły na usprawnienie tej aplikacji. Możesz wysłać również poprawkę do akordów piosenki lub zaproponować dodanie nowej. Będę wdzięczny za Twój komentarz oraz wkład w rozwój aplikacji. Jeśli chcesz otrzymać odpowiedź na swoją wiadomość, podaj także swój email.</string>
@@ -135,10 +121,15 @@
     <string name="edit_song_title_label">Tytuł piosenki:</string>
     <string name="edit_song_title_hint">Tytuł…</string>
     <string name="edit_song_content_label">Tekst piosenki z akordami w nawiasach kwadratowych:</string>
-    <string name="tooltip_edit_chords_lyrics">Umieść tu tekst piosenki z akordami w nawiasach kwadratowych. Rekomendowane jest umieszczanie akordów z tekstem w tej samej linii, aby uzyskać zwięzły układ i zaoszczędzić miejsce na ekranie. Akordy mogą być umieszczone na końcu linii lub w środku wyrazów, jeśli chcesz wskazać sylabę, w której występuje akord.
-        \n\nEdytor posiada wiele przydatnych narzędzi: cofanie zmian, wstawianie pasującego nawiasu (otwierającego lub zamykającego), wstawianie pary nawiasów, przesuwanie kursora o jeden znak, kopiowanie akordów, wklejanie akordów, porządkowanie do standardowego formatu, automatyczne wykrywanie akordów, przesuwanie akordów z linii wyżej na koniec linii, sprawdzanie poprawności akordów.
-        \n\nEdytując piosenkę, upewnij się, że wybrałeś odpowiednią notację akordów tak, aby narzędzia do automatycznej detekcji akordów i sprawdzania poprawności mogły działać poprawnie.
-        \n\nPrzed zapisaniem piosenki sprawdź jej poprawność i skonwertuj do standardowego formatu, szczególnie jeśli zamierzasz udostępnić ją publicznie. Mimo, że piosenki zapisywane są wewnątrz aplikacji w notacji Niemieckiej / Europejskiej, to przed otwarciem jest ona automatycznie konwertowana do notacji wybranej w ustawieniach. Dzięki temu łatwo można skonwertować piosenkę do dowolnej notacji.
+    <string name="tooltip_edit_chords_lyrics">Umieść tu tekst piosenki z akordami. Postaraj się trzymać następujących reguł, aby zachować spójność ze standardem piosenek:
+        \n1. Zaznacz akordy w nawiasach kwadratowych, np. "tekst [C G]".
+        \n2. Mieszaj akordy z tekstem w tej samej linii, aby uzyskać zwięzły układ. Nie umieszczaj ich w osobnej linii ponad tekstem.
+        \n3. Jeśli fragment piosenki się powtarza (refren), skopiuj go we wszystkie miejsca wystąpień. Kiedy piosenka zachowuje ciągłość, ułatwia to jej przewijanie.
+        \n4. Upewnij się, że wybrałeś odpowiednią notację dla swoich akordów.
+        \n5. Jeśli piosenka ma trudny rytm z często zmieniającymi się akordami, umieść akordy między poszczególnymi słowami lub nawet w środku wyrazów, aby wskazać sylabę, w której akcentowany jest akord. W pozostałych przypadkach umieszczaj akordy na końcu linii.
+        \n6. Przed zapisaniem piosenki sprawdź jej poprawność i skonwertuj do standardowego formatu, szczególnie jeśli zamierzasz udostępnić ją publicznie.
+        \n
+        \nEdytor posiada wiele przydatnych narzędzi: cofanie zmian, wstawianie pasującego nawiasu (otwierającego lub zamykającego), wstawianie pary nawiasów, przesuwanie kursora o jeden znak, kopiowanie akordów, wklejanie akordów, porządkowanie do standardowego formatu, automatyczne wykrywanie akordów, przesuwanie akordów z linii wyżej na koniec linii, sprawdzanie poprawności akordów.
     </string>
     <string name="import_song_content_hint">
         Tekst piosenki z [akordami w nawiasach]
@@ -190,7 +181,7 @@
     <string name="action_song_unset_favourite">Usuń z ulubionych</string>
     <string name="action_song_add_comment">Dodaj komentarz</string>
     <string name="song_action_more">Więcej</string>
-    <string name="song_copied_as_custom">Piosenka została skopiowana do moich piosenek.</string>
+    <string name="song_copied_as_custom">Piosenka została skopiowana do "Moich piosenek".</string>
     <string name="song_action_choose">Wybierz akcję</string>
     <string name="action_song_publish">Udostępnij publicznie</string>
     <string name="settings_song_preview">Wygląd podglądu piosenki</string>
@@ -198,9 +189,9 @@
     <string name="settings_fontsize">Rozmiar czcionki</string>
     <string name="settings_typeface">Krój czcionki</string>
     <string name="settings_autoscroll_speed_adjustment">Dopasowanie predkości przewijania</string>
-    <string name="settings_autoscroll_speed_adjustment_hint">Ręczne przewijanie piosenki podczas aktywnego autoprzewijania spowoduje automatyczne zwiększenie lub zmniejszenie prędkości autoprzewijania</string>
+    <string name="settings_autoscroll_speed_adjustment_hint">Ręczne przewijanie podczas autoprzewijania spowoduje lepsze dopasowanie prędkości.</string>
     <string name="settings_autoscroll_volume_keys">Zmiana prędkości przewijania przyciskami głośności</string>
-    <string name="settings_autoscroll_volume_keys_hint">Przyciski zwiększania / zmniejszania głośności powodują odpowiednio przyspieszenie lub spowolnienie autoprzewijania</string>
+    <string name="settings_autoscroll_volume_keys_hint">Przyciski zwiększania / zmniejszania głośności przyspieszą lub spowolnią autoprzewijanie</string>
     <string name="settings_random_song_section">Losowa piosenka</string>
     <string name="settings_autoscroll_section">Autoprzewijanie</string>
     <string name="settings_random_favourite">Losowa ulubiona piosenka</string>
@@ -266,7 +257,7 @@
     <string name="settings_exclude_artists">Ukryj wybrane kategorie</string>
     <string name="settings_toggle_all_languages">Zaznacz / Odznacz wszystkie języki</string>
     <string name="settings_toggle_all_artists">Zaznacz / Odznacz wszystkie kategorie</string>
-    <string name="settings_custom_songs">Własne piosenki</string>
+    <string name="settings_custom_songs">Moje piosenki</string>
     <string name="settings_group_custom_songs">Grupuj własne piosenki</string>
     <string name="settings_group_custom_songs_hint">Grupuj razem własne piosenki należące do tej samej kategorii</string>
     <string name="settings_chords_end_of_line">Wyświetlaj akordy na końcu linii</string>

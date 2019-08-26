@@ -56,25 +56,11 @@
         \nigrek51 - Ireneusz Szulc
         \n
         \nTECHNOLOGIES USED:
-        \nAndroid SDK
-        \nAssertK
-        \nDagger 2
-        \nEspresso
-        \nGradle
-        \nGuava
-        \nJava 8
-        \njUnit
-        \nKotlin
-        \nMaterial Design icons
-        \nMockito
-        \nOkHttp
-        \nRxAndroid
-        \nRxKotlin
-        \nSQLite
+        \nAndroid SDK, AssertK, Dagger 2, Espresso, Gradle, Guava, Java 8, jUnit, Kotlin, Material Design icons, Mockito, OkHttp, RxAndroid, RxKotlin, SQLite
     </string>
     <string name="action_info_ok">OK</string>
-    <string name="action_secret">Secret</string>
-    <string name="action_check_secret">Check</string>
+    <string name="action_secret">Unlock</string>
+    <string name="action_check_secret">OK</string>
     <string name="action_cancel">Cancel</string>
     <string name="ui_db_is_uptodate">Songs database is up-to-date.</string>
     <string name="contact_label">You can contact me if you have noticed some bugs or you have any ideas how to improve this application. You can also suggest improvements to the chords or propose adding a new song. I would be very grateful for your comments and contributing. Please include your email if you wish to get a reply to your message.</string>
@@ -133,10 +119,16 @@
     <string name="edit_song_title_label">Song Title:</string>
     <string name="edit_song_title_hint">Title…</string>
     <string name="edit_song_content_label">Lyrics with chords in square brackets:</string>
-    <string name="tooltip_edit_chords_lyrics">Put here the lyrics with chords in square brackets. Recommended way is to mix chords with the lyrics in the same line in order to make them compact and save the screen space. Chords could be placed at the end of the line or inside the words when you want to indicate the syllable with a chord accent.
-        \n\nThere are many useful tools in editor: undoing change, inserting suitable bracket (either opening or closing one), inserting brackets pair, moving cursor by one character, copying chords, pasting chords, transforming to standard chords format, automatic chords detection, moving chords from above to the end of the line, validating chords.
-        \n\nWhen editing a song make sure you have chosen appropriate chords notation for a song, so the tools like automatic chords detection or chords validation could work correctly.
-        \n\nBefore saving a song make sure to reformat and validate your song, especially when you are going to publish it. The song is saved internally using German / European notation, though it\'s automatically converted to your chords notation chosen in settings when you open it. So it\'s easy to convert a song to any other notation.</string>
+    <string name="tooltip_edit_chords_lyrics">Put here the lyrics with chords. Try to keep these rules in order to be consistent with other songs:
+        \n1. Mark chords by surrounding them with square brackets, e.g. "text [C G]".
+        \n2. Mix chords with the lyrics in the same line in order to make them compact. Do not place them in the separate line above text.
+        \n3. If some part of song is repeated (refrain), copy it to all its occurrences. When lyrics are continuous, scrolling through the song works better.
+        \n4. Make sure you have chosen appropriate notation for your chords.
+        \n5. If a song has difficult rhythm with chords changing frequently, place the chords between words or even inside the words in order to indicate the syllable with a chord accent. In other cases, place chords at the end of line.
+        \n6. Reformat and validate your song before saving it, especially when you are going to publish it.
+        \n
+        \nThere are many useful tools in editor: undoing change, inserting suitable bracket (either opening or closing one), inserting brackets pair, moving cursor by one character, copying chords, pasting chords, transforming to standard chords format, automatic chords detection, moving chords from above to the end of the line, validating chords.
+    </string>
     <string name="import_song_content_hint">
         Song lyrics with [chords in brackets]
         \nExample text [C G# A7 F#maj7]
@@ -148,9 +140,9 @@
     <string name="edit_song_has_been_saved">Song has been saved in \"My songs\".</string>
     <string name="edit_song_has_been_removed">Song has been removed.</string>
     <string name="settings_chords_notation">Chords notation</string>
-    <string name="notation_german">German / European (#): a b B H C C# d f#</string>
-    <string name="notation_german_is">German / European (-is): a b B H C Cis d fis</string>
-    <string name="notation_english">English / American: Am Bbm Bb B C C# Dm F#m</string>
+    <string name="notation_german">German / European (#):\na b B H C C# d f#</string>
+    <string name="notation_german_is">German / European (-is):\na b B H C Cis d fis</string>
+    <string name="notation_english">English / American:\nAm Bbm Bb B C C# Dm F#m</string>
     <string name="notation_short_german">German (#)</string>
     <string name="notation_short_german_is">German (-is)</string>
     <string name="notation_short_english">English</string>
@@ -189,7 +181,7 @@
     <string name="action_song_unset_favourite">Unfavourite</string>
     <string name="action_song_add_comment">Add comment</string>
     <string name="song_action_more">More</string>
-    <string name="song_copied_as_custom">Song has been copied to custom songs.</string>
+    <string name="song_copied_as_custom">Song has been copied to "My songs".</string>
     <string name="song_action_choose">Choose an action</string>
     <string name="action_song_publish">Share to public</string>
     <string name="settings_song_preview">Song preview appearance</string>
@@ -197,7 +189,7 @@
     <string name="settings_fontsize">Font size</string>
     <string name="settings_typeface">Font typeface</string>
     <string name="settings_autoscroll_speed_adjustment">Scroll speed auto adjustment</string>
-    <string name="settings_autoscroll_speed_adjustment_hint">Manual scrolling when autoscroll is active will cause scroll speed to be automatically adjusted</string>
+    <string name="settings_autoscroll_speed_adjustment_hint">Manual scrolling when autoscroll is active will cause scroll speed to be adjusted</string>
     <string name="settings_autoscroll_volume_keys">Volume buttons changing scroll speed</string>
     <string name="settings_autoscroll_volume_keys_hint">Use Up / Down volume buttons to increase or decrease scroll speed respectively</string>
     <string name="settings_random_song_section">Random song</string>
@@ -272,7 +264,7 @@
     <string name="settings_exclude_artists">Hide particular categories</string>
     <string name="settings_toggle_all_languages">Toggle all languages</string>
     <string name="settings_toggle_all_artists">Toggle all categories</string>
-    <string name="settings_custom_songs">Custom songs</string>
+    <string name="settings_custom_songs">My songs</string>
     <string name="settings_group_custom_songs">Group custom songs</string>
     <string name="settings_group_custom_songs_hint">Group custom songs with the same category together</string>
     <string name="settings_chords_end_of_line">Display chords at the end of line</string>
