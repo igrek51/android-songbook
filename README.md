@@ -48,9 +48,10 @@ The guitar songs database is included and is easily extensible.
 ## Example Screenshots
 Example application screenshots are shown below:
 
-![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/songbook-05-mix.png)
-
-![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/songbook-06-mix.png)
+| ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/01-songpreview.png) | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/02-autoscroll.png) | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/03-transpose.png) |
+|---|---|---|
+| ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/04-editor.png) | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/05-playlists.png) | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/06-nav.png) |
+| ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/07-songslist.png) | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/08-settings.png) | |
 
 ## Available on Google Play
 
