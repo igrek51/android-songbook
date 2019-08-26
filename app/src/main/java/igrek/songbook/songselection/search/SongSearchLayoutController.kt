@@ -19,6 +19,7 @@ import igrek.songbook.songselection.tree.SongTreeItem
 import igrek.songbook.songselection.tree.SongTreeLayoutController
 import igrek.songbook.system.SoftKeyboardService
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -30,6 +31,7 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
     private var searchFilterSubject: PublishSubject<String> = PublishSubject.create()
     private var itemNameFilter: String? = null
     private var storedScroll: ListScrollPosition? = null
+    private var subscriptions = mutableListOf<Disposable>()
 
     @Inject
     lateinit var softKeyboardService: SoftKeyboardService
@@ -51,10 +53,6 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
                 searchFilterSubject.onNext(s.toString())
             }
         })
-        // refresh only after some inactive time
-        searchFilterSubject.debounce(500, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { setSongFilter(searchFilterEdit!!.text.toString()) }
         if (isFilterSet()) {
             searchFilterEdit!!.setText(itemNameFilter, TextView.BufferType.EDITABLE)
         }
@@ -80,10 +78,24 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
         itemsListView!!.init(activity, this)
         updateSongItemsList()
 
-        songsRepository.dbChangeSubject.subscribe {
-            if (layoutController.isState(getLayoutState()))
-                updateSongItemsList()
-        }
+        subscriptions.forEach { s -> s.dispose() }
+        subscriptions.clear()
+        subscriptions.add(
+                songsRepository.dbChangeSubject
+                        .subscribe {
+                            if (layoutController.isState(getLayoutState()))
+                                updateSongItemsList()
+                        }
+        )
+        // refresh only after some inactive time
+        subscriptions.add(
+                searchFilterSubject
+                        .debounce(400, TimeUnit.MILLISECONDS)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                            setSongFilter(searchFilterEdit!!.text.toString())
+                        }
+        )
     }
 
     override fun getLayoutState(): LayoutState {
@@ -136,7 +148,9 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
     }
 
     private fun isFilterSet(): Boolean {
-        return itemNameFilter != null && !itemNameFilter!!.isEmpty()
+        if (itemNameFilter.isNullOrEmpty())
+            return false
+        return itemNameFilter?.length ?: 0 >= 3
     }
 
     override fun onBackClicked() {
