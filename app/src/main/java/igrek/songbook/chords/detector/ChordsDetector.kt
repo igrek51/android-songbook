@@ -88,11 +88,11 @@ class ChordsDetector(notation: ChordsNotation? = null) {
     }
 
     fun isWordAChord(word: String): Boolean {
-        return isWordAChord(word, chordsDelimiters) or isWordAChord(word, chordsAllDelimiters)
+        return isWordAChord(word, chordsPrimaryDelimiters) or isWordAChord(word, chordsAllDelimiters)
     }
 
-    private fun isWordAChord(word: String, delimiters: Set<String>): Boolean {
-        val splitted = word.split(*delimiters.toTypedArray())
+    private fun isWordAChord(word: String, delimiters: Array<String>): Boolean {
+        val splitted = word.split(*delimiters)
 
         // only delimiters word
         if (splitted.all { it.isEmpty() })

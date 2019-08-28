@@ -56,7 +56,7 @@ class SendFeedbackService {
         val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM)
                 .addFormDataPart("message", message)
                 .addFormDataPart("author", author).addFormDataPart("subject", subject)
-                .addFormDataPart("application_id", Integer.toString(APPLICATION_ID))
+                .addFormDataPart("application_id", APPLICATION_ID.toString())
                 .addFormDataPart("app_version", "$appVersionName ($appVersionCode)")
                 .addFormDataPart("db_version", dbVersionNumber)
                 .build()

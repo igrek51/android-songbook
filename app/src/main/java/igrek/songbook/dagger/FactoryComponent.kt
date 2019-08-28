@@ -8,6 +8,7 @@ import igrek.songbook.activity.ActivityController
 import igrek.songbook.activity.AppInitializer
 import igrek.songbook.activity.MainActivity
 import igrek.songbook.activity.OptionSelectDispatcher
+import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.chords.transpose.ChordsTransposerManager
 import igrek.songbook.contact.ContactLayoutController
 import igrek.songbook.contact.SendFeedbackService
@@ -150,5 +151,6 @@ interface FactoryComponent {
     fun inject(there: OpenHistoryLayoutController)
     fun inject(there: ExclusionDao)
     fun inject(there: TransposeDao)
+    fun inject(there: ChordsDiagramsService)
 
 }

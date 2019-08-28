@@ -17,6 +17,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import dagger.Lazy
 import igrek.songbook.R
+import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.layout.LayoutController
@@ -72,6 +73,8 @@ class SongPreviewLayoutController : MainLayout {
     lateinit var songContextMenuBuilder: Lazy<SongContextMenuBuilder>
     @Inject
     lateinit var songsRepository: Lazy<SongsRepository>
+    @Inject
+    lateinit var chordsDiagramsService: Lazy<ChordsDiagramsService>
 
     var songPreview: SongPreview? = null
         private set
@@ -338,4 +341,10 @@ class SongPreviewLayoutController : MainLayout {
             setFavouriteButton!!.setImageResource(R.drawable.star_border)
         }
     }
+
+    fun showChordsGraphs() {
+        val crdModel = lyricsManager.get().crdModel ?: return
+        chordsDiagramsService.get().showUniqueChordsMenu(crdModel)
+    }
+
 }

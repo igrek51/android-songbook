@@ -273,4 +273,7 @@
     <string name="settings_restore_transposition">Restore last transposing</string>
     <string name="settings_restore_transposition_hint">Remember and restore last transposing for each song</string>
     <string name="new_playlist_name">New playlist name</string>
+    <string name="confirm_send_contact">Do you really want to send this message?</string>
+    <string name="no_chords_found_in_song">No chords found in the song</string>
+    <string name="show_chords_definitions">Show chords diagrams</string>
 </resources>

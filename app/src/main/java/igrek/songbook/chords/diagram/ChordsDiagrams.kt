@@ -1,6 +1,6 @@
-package igrek.songbook.chords.definition
+package igrek.songbook.chords.diagram
 
-val chordsDefinition: Map<String, List<String>> = hashMapOf(
+val chordsDiagrams: Map<String, List<String>> = hashMapOf(
 
         "C" to listOf("x,3,2,0,1,0", "8,10,10,9,8,8", "x,3,5,5,5,3", "x,x,10,12,13,12", "x,3,2,0,1,0", "x,x,5,5,5,8"),
         "Cmaj7" to listOf("8,x,9,9,8,x", "8,10,9,9,8,8", "x,3,5,4,5,3", "x,x,10,9,8,7", "0,3,2,0,0,0", "x,x,10,12,12,12", "x,x,2,4,1,3", "3,3,5,4,5,3", "x,7,5,5,5,7", "x,x,9,9,8,8"),

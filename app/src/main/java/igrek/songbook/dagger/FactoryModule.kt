@@ -12,6 +12,7 @@ import igrek.songbook.about.secret.SecretUnlockerService
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.activity.AppInitializer
 import igrek.songbook.activity.OptionSelectDispatcher
+import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.chords.transpose.ChordsTransposerManager
 import igrek.songbook.contact.ContactLayoutController
 import igrek.songbook.contact.SendFeedbackService
@@ -417,6 +418,12 @@ open class FactoryModule(private val activity: AppCompatActivity) {
     @Singleton
     fun provideOpenHistoryLayoutController(): OpenHistoryLayoutController {
         return OpenHistoryLayoutController()
+    }
+
+    @Provides
+    @Singleton
+    fun provideChordsDefinitionService(): ChordsDiagramsService {
+        return ChordsDiagramsService()
     }
 
     /*

@@ -8,9 +8,9 @@ val longestChordComparator = Comparator { lhs: String, rhs: String ->
     }
 }
 
-val chordsDelimiters = setOf(" ", "/", ",", "\n")
-val chordsOptionalDelimiters = setOf("(", ")", "-")
-val chordsAllDelimiters = chordsDelimiters + chordsOptionalDelimiters
+val chordsPrimaryDelimiters = setOf(" ", ",", "\n").toTypedArray()
+val chordsSupplementaryDelimiters = setOf("(", ")", "-", "/").toTypedArray()
+val chordsAllDelimiters = chordsPrimaryDelimiters + chordsSupplementaryDelimiters
 
 val chordsGroupRegex = Regex("""\[((.|\n)+?)]""")
 val chordsSplitRegex = Regex("""(.*?)([ /,\n()\-])""")

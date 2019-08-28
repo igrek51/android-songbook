@@ -8,10 +8,13 @@ import igrek.songbook.custom.CustomSongService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.layout.LayoutController
+import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.playlist.PlaylistService
+import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.favourite.FavouriteSongsService
 import igrek.songbook.util.lookup.SimpleCache
 import javax.inject.Inject
@@ -33,6 +36,10 @@ class SongContextMenuBuilder {
     lateinit var songsRepository: SongsRepository
     @Inject
     lateinit var playlistService: PlaylistService
+    @Inject
+    lateinit var layoutController: dagger.Lazy<LayoutController>
+    @Inject
+    lateinit var songPreviewLayoutController: dagger.Lazy<SongPreviewLayoutController>
 
     private var allActions: SimpleCache<List<SongContextAction>> =
             SimpleCache { createAllActions() }
@@ -90,6 +97,12 @@ class SongContextMenuBuilder {
                         availableCondition = { song -> song.custom },
                         executor = { song ->
                             sendFeedbackService.publishSong(song)
+                        }),
+                // show chords graphs
+                SongContextAction(R.string.show_chords_definitions,
+                        availableCondition = { layoutController.get().isState(LayoutState.SONG_PREVIEW) },
+                        executor = { _ ->
+                            songPreviewLayoutController.get().showChordsGraphs()
                         }),
                 // Add to playlist
                 SongContextAction(R.string.action_add_to_playlist,
