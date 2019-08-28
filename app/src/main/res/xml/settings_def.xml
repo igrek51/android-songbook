@@ -6,91 +6,108 @@
         <ListPreference
             android:key="applicationLanguage"
             android:title="@string/settings_language"
-            android:summary="%s"/>
+            android:summary="%s"
+            app:iconSpaceReserved="false"/>
 
         <ListPreference
             android:key="chordsNotation"
             android:title="@string/settings_chords_notation"
-            android:summary="%s"/>
+            android:summary="%s"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_song_preview">
         <ListPreference
             android:key="colorScheme"
             android:title="@string/settings_color_scheme"
-            android:summary="%s"/>
+            android:summary="%s"
+            app:iconSpaceReserved="false"/>
         <SeekBarPreference
             android:key="fontSize"
             android:title="@string/settings_fontsize"
-            app:showSeekBarValue="false"/>
+            app:showSeekBarValue="false"
+            app:iconSpaceReserved="false"/>
         <ListPreference
             android:key="fontTypeface"
             android:title="@string/settings_typeface"
-            android:summary="%s"/>
+            android:summary="%s"
+            app:iconSpaceReserved="false"/>
         <SwitchPreference
             android:key="chordsEndOfLine"
             android:title="@string/settings_chords_end_of_line"
-            android:summary="@string/settings_chords_end_of_line_hint"/>
+            android:summary="@string/settings_chords_end_of_line_hint"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_autoscroll_section">
         <SeekBarPreference
             android:key="autoscrollInitialPause"
             android:title="@string/settings_autoscroll_initial_delay"
-            app:showSeekBarValue="false"/>
+            app:showSeekBarValue="false"
+            app:iconSpaceReserved="false"/>
         <SeekBarPreference
             android:key="autoscrollSpeed"
             android:title="@string/settings_autoscroll_speed"
-            app:showSeekBarValue="false"/>
+            app:showSeekBarValue="false"
+            app:iconSpaceReserved="false"/>
         <SwitchPreference
             android:key="autoscrollSpeedAutoAdjustment"
             android:title="@string/settings_autoscroll_speed_adjustment"
-            android:summary="@string/settings_autoscroll_speed_adjustment_hint"/>
+            android:summary="@string/settings_autoscroll_speed_adjustment_hint"
+            app:iconSpaceReserved="false"/>
         <SwitchPreference
             android:key="autoscrollSpeedVolumeKeys"
             android:title="@string/settings_autoscroll_volume_keys"
-            android:summary="@string/settings_autoscroll_volume_keys_hint"/>
+            android:summary="@string/settings_autoscroll_volume_keys_hint"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_transposition">
         <SwitchPreference
             android:key="restoreTransposition"
             android:title="@string/settings_restore_transposition"
-            android:summary="@string/settings_restore_transposition_hint"/>
+            android:summary="@string/settings_restore_transposition_hint"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_random_song_section">
         <SwitchPreference
             android:key="randomFavouriteSongsOnly"
             android:title="@string/settings_random_favourite"
-            android:summary="@string/settings_random_favourite_hint"/>
+            android:summary="@string/settings_random_favourite_hint"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_exclude_filter">
         <MultiSelectListPreference
-        android:key="excludeFilterLanguages"
-        android:title="@string/settings_exclude_languages"
-        android:summary="%s"/>
+            android:key="excludeFilterLanguages"
+            android:title="@string/settings_exclude_languages"
+            android:summary="%s"
+            app:iconSpaceReserved="false"/>
         <Preference
             android:title="@string/settings_toggle_all_languages"
             android:key="settingsToggleAllLanguages"
-            android:summary=""/>
+            android:summary=""
+            app:iconSpaceReserved="false"/>
 
         <MultiSelectListPreference
-        android:key="excludeFilterArtists"
-        android:title="@string/settings_exclude_artists"
-        android:summary="%s"/>
+            android:key="excludeFilterArtists"
+            android:title="@string/settings_exclude_artists"
+            android:summary="%s"
+            app:iconSpaceReserved="false"/>
         <Preference
             android:title="@string/settings_toggle_all_artists"
             android:key="settingsToggleAllArtists"
-            android:summary=""/>
+            android:summary=""
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_custom_songs">
         <SwitchPreference
             android:key="customSongsGroupCategories"
             android:title="@string/settings_group_custom_songs"
-            android:summary="@string/settings_group_custom_songs_hint"/>
+            android:summary="@string/settings_group_custom_songs_hint"
+            app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 
 </PreferenceScreen>
