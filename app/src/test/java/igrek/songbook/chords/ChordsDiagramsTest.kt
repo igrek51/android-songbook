@@ -59,12 +59,12 @@ class ChordsDiagramsTest {
     @Test
     fun test_empty_strings() {
         assertThat(builder.buildDiagram("0,0,0,0,0,0")).isEqualTo("""
-                E  |0|-|-
-                H  |0|-|-
-                G  |0|-|-
-                D  |0|-|-
-                A  |0|-|-
-                E  |0|-|-
+                E 0|-|-|-
+                H 0|-|-|-
+                G 0|-|-|-
+                D 0|-|-|-
+                A 0|-|-|-
+                E 0|-|-|-
                 """.trimIndent())
     }
 
@@ -72,12 +72,12 @@ class ChordsDiagramsTest {
     fun test_empty_and_muted_with_high_notes() {
         // 51
         assertThat(builder.buildDiagram("x,5,7,7,0,0")).isEqualTo("""
-                E 0|-|-|-
-                H 0|-|-|-
-                G …|-|7|-
-                D …|-|7|-
-                A …|5|-|-
-                E x|-|-|-
+                E 0|-|-|-|-
+                H 0|-|-|-|-
+                G …|-|-|7|-
+                D …|-|-|7|-
+                A …|5|-|-|-
+                E x|-|-|-|-
                 """.trimIndent())
     }
 

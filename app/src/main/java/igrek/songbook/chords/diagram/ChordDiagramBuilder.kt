@@ -30,7 +30,7 @@ class ChordDiagramBuilder {
         val fingersRange = maxFinger - minFinger + 1
         val showEllipsis = minFinger >= 2
         val digitsCount = if (maxFinger >= 10) 2 else 1
-        val fretsShown = max(fingersRange, minimumFretsShown)
+        val fretsShown = max(fingersRange + 1, minimumFretsShown)
         val fretSign = if (showEllipsis) "…" else " "
         val hiddenFrets = if (showEllipsis) minFinger - 1 else 0
 
@@ -44,7 +44,7 @@ class ChordDiagramBuilder {
             )
         }
 
-        frets.forEachIndexed { index, fretValue ->
+        frets.reversed().forEachIndexed { index, fretValue ->
             val displayFret = displayFrets[index]
             when (fretValue) {
                 -1 -> displayFret.fretSign = "x"
@@ -59,28 +59,28 @@ class ChordDiagramBuilder {
         return displayFrets.joinToString(separator = "\n") { it.display() }
     }
 
-}
 
-data class DisplayFret(
-        val stringName: String,
-        var fretSign: String = " ",
-        val fretsShown: Int,
-        val digitsCount: Int = 1,
-        var fingerPosition: Int? = null,
-        var fingerValue: Int? = null
-) {
-    fun display(): String {
-        var output = "$stringName $fretSign"
-        for (i in 0 until fretsShown) {
-            output += "|"
-            if (i == fingerPosition) {
-                output += fingerValue
-                if (fingerValue!! >= 10) // 2 digit number
-                    output += "-"
-            } else {
-                output += "-".repeat(digitsCount)
+    data class DisplayFret(
+            val stringName: String,
+            var fretSign: String = " ",
+            val fretsShown: Int,
+            val digitsCount: Int = 1,
+            var fingerPosition: Int? = null,
+            var fingerValue: Int? = null
+    ) {
+        fun display(): String {
+            var output = "$stringName $fretSign"
+            for (i in 0 until fretsShown) {
+                output += "|"
+                if (i == fingerPosition) {
+                    output += fingerValue
+                    if (fingerValue!! >= 10) // 2 digit number
+                        output += "-"
+                } else {
+                    output += "-".repeat(digitsCount)
+                }
             }
+            return output
         }
-        return output
     }
 }
