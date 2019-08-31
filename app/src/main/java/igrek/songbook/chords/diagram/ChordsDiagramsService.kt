@@ -1,8 +1,9 @@
 package igrek.songbook.chords.diagram
 
 import android.app.Activity
-import android.graphics.Typeface
+import android.content.Context
 import android.support.v7.app.AlertDialog
+import android.view.LayoutInflater
 import android.widget.TextView
 import igrek.songbook.R
 import igrek.songbook.chords.ChordsConverter
@@ -66,7 +67,7 @@ class ChordsDiagramsService {
         val diagramBuilder = ChordDiagramBuilder()
         val engChord = toEnglishConverter.convertChord(chord)
         return allChordsDiagrams.get()[engChord]
-                ?.joinToString(separator = "\n\n") { diagramBuilder.buildDiagram(it) }
+                ?.joinToString(separator = "\n\n\n") { diagramBuilder.buildDiagram(it) }
                 ?: ""
     }
 
@@ -95,13 +96,13 @@ class ChordsDiagramsService {
         alertBuilder.setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { _, _ -> }
         alertBuilder.setCancelable(true)
 
-        val textView = TextView(activity)
-        textView.setText(message)
-        alertBuilder.setView(textView)
+        val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-        textView.setTypeface(Typeface.MONOSPACE)
-        textView.canScrollHorizontally(1)
-        textView.canScrollVertically(1)
+        val diagramView = inflater.inflate(R.layout.chord_diagrams, null, false)
+        val diagramContent = diagramView.findViewById<TextView>(R.id.chordDiagramContent)
+        diagramContent.text = message
+
+        alertBuilder.setView(diagramView)
 
         val alertDialog = alertBuilder.create()
         alertDialog.show()
