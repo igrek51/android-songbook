@@ -275,7 +275,7 @@
     <string name="new_playlist_name">New playlist name</string>
     <string name="confirm_send_contact">Do you really want to send this message?</string>
     <string name="no_chords_recognized_in_song">No chords recognized in the song</string>
-    <string name="show_chords_definitions">Show chords diagrams</string>
+    <string name="show_chords_definitions">Show chord diagrams</string>
     <string name="choose_a_chord">Choose a chord from a song</string>
     <string name="chord_diagrams_versions" formatted="false">Chord \"%s\" variations</string>
 </resources>

@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="vertical|horizontal"
+        android:layout_marginTop="16dp"
         >
 
         <HorizontalScrollView
@@ -19,17 +20,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
                 >
 
                 <TextView
                     android:id="@+id/chordDiagramContent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:typeface="monospace"
                     android:layout_gravity="center_horizontal"
-                    android:layout_margin="8dp"
-                    android:textSize="40sp"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     />
 
             </LinearLayout>

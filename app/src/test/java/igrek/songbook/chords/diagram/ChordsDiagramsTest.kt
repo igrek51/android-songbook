@@ -1,6 +1,5 @@
-package igrek.songbook.chords
+package igrek.songbook.chords.diagram
 
-import igrek.songbook.chords.diagram.ChordDiagramBuilder
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
@@ -83,7 +82,6 @@ class ChordsDiagramsTest {
 
     @Test
     fun test_2_digit_notes() {
-        // 51
         assertThat(builder.buildDiagram("x,10,11,12,0,0")).isEqualTo("""
                 E 0|--|--|--|
                 H 0|--|--|--|
@@ -91,6 +89,42 @@ class ChordsDiagramsTest {
                 D …|--|11|--|
                 A …|10|--|--|
                 E x|--|--|--|
+                """.trimIndent())
+    }
+
+    @Test
+    fun test_one_fret_on_3() {
+        assertThat(builder.buildDiagram("x,x,0,0,0,3")).isEqualTo("""
+                E  |-|-|3|
+                H 0|-|-|-|
+                G 0|-|-|-|
+                D 0|-|-|-|
+                A x|-|-|-|
+                E x|-|-|-|
+                """.trimIndent())
+    }
+
+    @Test
+    fun test_first_ellipsis() {
+        assertThat(builder.buildDiagram("x,x,0,0,0,4")).isEqualTo("""
+                E …|4|-|-|
+                H 0|-|-|-|
+                G 0|-|-|-|
+                D 0|-|-|-|
+                A x|-|-|-|
+                E x|-|-|-|
+                """.trimIndent())
+    }
+
+    @Test
+    fun test_long_handed_ellipsis() {
+        assertThat(builder.buildDiagram("x,x,0,10,12,15")).isEqualTo("""
+                E …|--|--|--|--|--|15|
+                H …|--|--|12|--|--|--|
+                G …|10|--|--|--|--|--|
+                D 0|--|--|--|--|--|--|
+                A x|--|--|--|--|--|--|
+                E x|--|--|--|--|--|--|
                 """.trimIndent())
     }
 
