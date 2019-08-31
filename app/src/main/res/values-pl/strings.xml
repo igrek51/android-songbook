@@ -269,4 +269,6 @@
     <string name="confirm_send_contact">Czy na pewno chcesz wysłać tę wiadomość?</string>
     <string name="no_chords_found_in_song">Nie znaleziono akordów w piosence</string>
     <string name="show_chords_definitions">Pokaż diagramy akordów</string>
+    <string name="choose_a_chord">Wybierz akord</string>
+    <string name="chord_diagrams_versions" formatted="false">Warianty akordu \"%s\"</string>
 </resources>

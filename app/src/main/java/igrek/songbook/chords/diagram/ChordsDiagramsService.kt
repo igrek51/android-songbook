@@ -1,11 +1,17 @@
 package igrek.songbook.chords.diagram
 
+import android.app.Activity
+import android.graphics.Typeface
+import android.support.v7.app.AlertDialog
+import android.widget.TextView
 import igrek.songbook.R
+import igrek.songbook.chords.ChordsConverter
 import igrek.songbook.chords.syntax.chordsPrimaryDelimiters
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
+import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.songpreview.lyrics.LyricsModel
 import igrek.songbook.songpreview.lyrics.LyricsTextType
 import javax.inject.Inject
@@ -19,6 +25,10 @@ class ChordsDiagramsService {
     lateinit var uiResourceService: UiResourceService
     @Inject
     lateinit var contextMenuBuilder: ContextMenuBuilder
+    @Inject
+    lateinit var activity: Activity
+
+    val toEnglishConverter = ChordsConverter(ChordsNotation.GERMAN, ChordsNotation.ENGLISH)
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -32,12 +42,14 @@ class ChordsDiagramsService {
                 if (fragment.type == LyricsTextType.CHORDS) {
                     // split by primary delimiters first
                     fragment.text.split(*chordsPrimaryDelimiters).forEach { chord ->
-                        if (chord in chordsDiagrams) {
+                        val engChord = toEnglishConverter.convertChord(chord)
+                        if (engChord in chordsDiagrams) {
                             uniqueChords.add(chord)
                         } else {
                             // split further if not recognized
                             chord.split(*chordsPrimaryDelimiters).forEach { subchord ->
-                                if (subchord in chordsDiagrams) {
+                                val subEngChord = toEnglishConverter.convertChord(chord)
+                                if (subEngChord in chordsDiagrams) {
                                     uniqueChords.add(subchord)
                                 }
                             }
@@ -52,7 +64,8 @@ class ChordsDiagramsService {
 
     fun chordGraphs(chord: String): String {
         val diagramBuilder = ChordDiagramBuilder()
-        return chordsDiagrams[chord]
+        val engChord = toEnglishConverter.convertChord(chord)
+        return chordsDiagrams[engChord]
                 ?.joinToString(separator = "\n\n") { diagramBuilder.buildDiagram(it) }
                 ?: ""
     }
@@ -70,12 +83,28 @@ class ChordsDiagramsService {
             }
         }.toList()
 
-        contextMenuBuilder.showContextMenu(R.string.choose_playlist, actions)
+        contextMenuBuilder.showContextMenu(R.string.choose_a_chord, actions)
     }
 
     fun showChordDefinition(chord: String) {
         val message = chordGraphs(chord)
-        uiInfoService.showDialog(chord, message)
+        val title = uiResourceService.resString(R.string.chord_diagrams_versions, chord)
+
+        val alertBuilder = AlertDialog.Builder(activity)
+        alertBuilder.setTitle(title)
+        alertBuilder.setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { _, _ -> }
+        alertBuilder.setCancelable(true)
+
+        val textView = TextView(activity)
+        textView.setText(message)
+        alertBuilder.setView(textView)
+
+        textView.setTypeface(Typeface.MONOSPACE)
+        textView.canScrollHorizontally(1)
+        textView.canScrollVertically(1)
+
+        val alertDialog = alertBuilder.create()
+        alertDialog.show()
     }
 
 }

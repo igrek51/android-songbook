@@ -649,7 +649,6 @@ val chordsDiagrams: Map<String, List<String>> = hashMapOf(
         "Am/F" to listOf("1,0,2,2,1,0"),
         "Am/F#" to listOf("2,0,2,2,1,0"),
         "Am/G" to listOf("3,0,2,2,1,0"),
-        "Am/G#" to listOf("4,0,2,2,1,0"),
+        "Am/G#" to listOf("4,0,2,2,1,0")
 
-        "" to emptyList()
 )

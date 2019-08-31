@@ -30,7 +30,7 @@ class ChordDiagramBuilder {
         val fingersRange = maxFinger - minFinger + 1
         val showEllipsis = minFinger >= 2
         val digitsCount = if (maxFinger >= 10) 2 else 1
-        val fretsShown = max(fingersRange + 1, minimumFretsShown)
+        val fretsShown = max(fingersRange, minimumFretsShown)
         val fretSign = if (showEllipsis) "…" else " "
         val hiddenFrets = if (showEllipsis) minFinger - 1 else 0
 
@@ -74,13 +74,13 @@ class ChordDiagramBuilder {
                 output += "|"
                 if (i == fingerPosition) {
                     output += fingerValue
-                    if (fingerValue!! >= 10) // 2 digit number
+                    if (fingerValue!! < 10 && digitsCount == 2) // 2 digit number
                         output += "-"
                 } else {
                     output += "-".repeat(digitsCount)
                 }
             }
-            return output
+            return "$output|"
         }
     }
 }
