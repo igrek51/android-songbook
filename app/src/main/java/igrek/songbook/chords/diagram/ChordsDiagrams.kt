@@ -1,5 +1,7 @@
 package igrek.songbook.chords.diagram
 
+import igrek.songbook.util.lookup.SimpleCache
+
 val chordsDiagrams: Map<String, List<String>> = hashMapOf(
 
         "C" to listOf("x,3,2,0,1,0", "8,10,10,9,8,8", "x,3,5,5,5,3", "x,x,10,12,13,12", "x,3,2,0,1,0", "x,x,5,5,5,8"),
@@ -652,3 +654,27 @@ val chordsDiagrams: Map<String, List<String>> = hashMapOf(
         "Am/G#" to listOf("4,0,2,2,1,0")
 
 )
+
+private val chordDiagramPrefixAliases: Map<String, List<String>> = hashMapOf(
+        "C#/Db" to listOf("C#", "Db"),
+        "D#/Eb" to listOf("D#", "Eb"),
+        "F#/Gb" to listOf("F#", "Gb"),
+        "G#/Ab" to listOf("G#", "Ab"),
+        "A#/Bb" to listOf("A#", "Bb")
+)
+
+val allChordsDiagrams: SimpleCache<Map<String, List<String>>> = SimpleCache {
+    val diagrams = HashMap(chordsDiagrams)
+    // populate aliases
+    chordDiagramPrefixAliases.forEach { (aliasPrefix, aliasedTypes) ->
+        chordsDiagrams.filterKeys { it.startsWith(aliasPrefix) }
+                .forEach { (chord, definitions) ->
+                    val chordSuffix = chord.drop(aliasPrefix.length)
+                    aliasedTypes.forEach { aliasedType ->
+                        val newChordName = aliasedType + chordSuffix
+                        diagrams[newChordName] = definitions
+                    }
+                }
+    }
+    diagrams
+}

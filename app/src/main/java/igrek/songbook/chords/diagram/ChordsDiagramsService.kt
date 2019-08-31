@@ -38,20 +38,20 @@ class ChordsDiagramsService {
         val uniqueChords = sortedSetOf<String>()
 
         crdModel.lines.forEach { line ->
-            line.fragments.forEach { fragment ->
-                if (fragment.type == LyricsTextType.CHORDS) {
-                    // split by primary delimiters first
-                    fragment.text.split(*chordsPrimaryDelimiters).forEach { chord ->
-                        val engChord = toEnglishConverter.convertChord(chord)
-                        if (engChord in chordsDiagrams) {
-                            uniqueChords.add(chord)
-                        } else {
-                            // split further if not recognized
-                            chord.split(*chordsPrimaryDelimiters).forEach { subchord ->
-                                val subEngChord = toEnglishConverter.convertChord(chord)
-                                if (subEngChord in chordsDiagrams) {
-                                    uniqueChords.add(subchord)
-                                }
+            line.fragments
+                    .filter { it.type == LyricsTextType.CHORDS }
+                    .forEach { fragment ->
+                        // split by primary delimiters first
+                        fragment.text.split(*chordsPrimaryDelimiters).forEach { chord ->
+                            val engChord = toEnglishConverter.convertChord(chord)
+                            if (engChord in allChordsDiagrams.get()) {
+                                uniqueChords.add(chord)
+                            } else {
+                                // split further if not recognized
+                                chord.split(*chordsPrimaryDelimiters).forEach { subchord ->
+                                    val subEngChord = toEnglishConverter.convertChord(subchord)
+                                    if (subEngChord in allChordsDiagrams.get()) {
+                                        uniqueChords.add(subchord)
                             }
                         }
                     }
@@ -65,7 +65,7 @@ class ChordsDiagramsService {
     fun chordGraphs(chord: String): String {
         val diagramBuilder = ChordDiagramBuilder()
         val engChord = toEnglishConverter.convertChord(chord)
-        return chordsDiagrams[engChord]
+        return allChordsDiagrams.get()[engChord]
                 ?.joinToString(separator = "\n\n") { diagramBuilder.buildDiagram(it) }
                 ?: ""
     }
@@ -73,7 +73,7 @@ class ChordsDiagramsService {
     fun showUniqueChordsMenu(crdModel: LyricsModel) {
         val uniqueChords = findUniqueChords(crdModel)
         if (uniqueChords.isEmpty()) {
-            uiInfoService.showInfo(R.string.no_chords_found_in_song)
+            uiInfoService.showInfo(R.string.no_chords_recognized_in_song)
             return
         }
 
