@@ -30,7 +30,7 @@ class DaggerInjectionTest {
 
     @Test
     fun testActivityInjection() {
-        assertThat(activity).isNotNull()
+        assertThat(activity).isNotNull
         println("injected activity: $activity")
     }
 

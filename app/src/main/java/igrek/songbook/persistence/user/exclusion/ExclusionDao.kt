@@ -20,7 +20,7 @@ class ExclusionDao(path: String) : AbstractJsonDao<ExclusionDb>(
 ) {
 
     val exclusionDb: ExclusionDb get() = db!!
-    val exclusionDbSubject = PublishSubject.create<ExclusionDb>()
+    private val exclusionDbSubject = PublishSubject.create<ExclusionDb>()
 
     var allArtistsFilterEntries = LinkedHashMap<String, String>()
 

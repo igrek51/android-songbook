@@ -10,7 +10,7 @@ enum class ColorScheme(val id: Long, val displayNameResId: Int) {
 
     companion object {
         fun parseById(id: Long): ColorScheme? {
-            return ColorScheme.values().firstOrNull { v -> v.id == id }
+            return values().firstOrNull { v -> v.id == id }
         }
     }
 }

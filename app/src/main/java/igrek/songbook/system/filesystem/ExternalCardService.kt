@@ -4,22 +4,17 @@ package igrek.songbook.system.filesystem
 import android.app.Activity
 import android.os.Build
 import android.os.Environment
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
 import java.io.File
 import java.util.*
-import javax.inject.Inject
 
 /**
  * service to find external sd card location (it's not so obvious)
  */
-class ExternalCardService {
-
-    @Inject
-    lateinit var activity: Activity
+class ExternalCardService(private val activity: Activity) {
 
     private val logger = LoggerFactory.logger
-    val externalSDPath: String?
+    private val externalSDPath: String?
 
     private val externalStorageDirectory: String
         get() {
@@ -82,11 +77,10 @@ class ExternalCardService {
         }
 
     init {
-        DaggerIoc.factoryComponent.inject(this)
         externalSDPath = findExternalSDPath()
         logger.debug("External SD Card path detected: " + externalSDPath!!)
-        //logger.debug("DEVICE = " + android.os.Build.DEVICE);
-        //logger.debug("MANUFACTURER = " + android.os.Build.MANUFACTURER);
+        logger.debug("DEVICE = " + android.os.Build.DEVICE);
+        logger.debug("MANUFACTURER = " + android.os.Build.MANUFACTURER);
     }
 
     private fun findExternalSDPath(): String? {

@@ -7,7 +7,7 @@ import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.user.custom.CustomSongsDao
 import igrek.songbook.persistence.user.exclusion.ExclusionDao
 import igrek.songbook.persistence.user.favourite.FavouriteSongsDao
-import igrek.songbook.persistence.user.playlist.OpenHistoryDao
+import igrek.songbook.persistence.user.history.OpenHistoryDao
 import igrek.songbook.persistence.user.playlist.PlaylistDao
 import igrek.songbook.persistence.user.transpose.TransposeDao
 import igrek.songbook.persistence.user.unlocked.UnlockedSongsDao

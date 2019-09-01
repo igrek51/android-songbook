@@ -12,17 +12,8 @@ internal class FirstRuleChecker<T> {
         return this
     }
 
-    fun addRule(condition: () -> Boolean, then: T): FirstRuleChecker<T> {
-        rules.add(Rule(condition, { then }))
-        return this
-    }
-
     fun addRule(then: () -> (T?)): FirstRuleChecker<T> {
         return addRule({ true }, then)
-    }
-
-    fun addRule(defaultValue: T): FirstRuleChecker<T> {
-        return addRule({ true }, { defaultValue })
     }
 
     fun find(): T? {

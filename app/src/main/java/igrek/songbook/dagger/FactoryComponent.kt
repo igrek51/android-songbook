@@ -35,7 +35,7 @@ import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.persistence.user.custom.CustomSongsDao
 import igrek.songbook.persistence.user.exclusion.ExclusionDao
 import igrek.songbook.persistence.user.favourite.FavouriteSongsDao
-import igrek.songbook.persistence.user.playlist.OpenHistoryDao
+import igrek.songbook.persistence.user.history.OpenHistoryDao
 import igrek.songbook.persistence.user.playlist.PlaylistDao
 import igrek.songbook.persistence.user.transpose.TransposeDao
 import igrek.songbook.persistence.user.unlocked.UnlockedSongsDao
@@ -68,8 +68,6 @@ import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.tree.ScrollPosBuffer
 import igrek.songbook.songselection.tree.SongTreeLayoutController
 import igrek.songbook.system.*
-import igrek.songbook.system.filesystem.ExternalCardService
-import igrek.songbook.system.filesystem.FilesystemService
 import javax.inject.Singleton
 
 /**
@@ -80,8 +78,6 @@ import javax.inject.Singleton
 interface FactoryComponent {
 
     fun inject(there: MainActivity)
-    fun inject(there: ExternalCardService)
-    fun inject(there: FilesystemService)
     fun inject(there: AppInitializer)
     fun inject(there: ActivityController)
     fun inject(there: WindowManagerService)

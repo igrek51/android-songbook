@@ -25,7 +25,7 @@ class FavouriteSongsDao(path: String) : AbstractJsonDao<FavouriteSongsDb>(
     @Inject
     lateinit var activity: Activity
 
-    val favouriteSongs: FavouriteSongsDb get() = db!!
+    private val favouriteSongs: FavouriteSongsDb get() = db!!
     private var subscription: Disposable? = null
 
     private var favouritesCache: SimpleCache<HashSet<Song>> =

@@ -2,7 +2,6 @@ package igrek.songbook.persistence
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.database.sqlite.SQLiteDatabase
 import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc

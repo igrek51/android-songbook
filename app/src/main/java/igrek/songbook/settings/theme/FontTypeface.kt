@@ -13,7 +13,7 @@ enum class FontTypeface(val id: String, val displayNameResId: Int, val typeface:
 
     companion object {
         fun parseById(id: String): FontTypeface? {
-            return FontTypeface.values().firstOrNull { v -> v.id == id }
+            return values().firstOrNull { v -> v.id == id }
         }
     }
 }

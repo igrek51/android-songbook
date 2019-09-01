@@ -16,8 +16,8 @@ class TransposeDao(path: String) : AbstractJsonDao<TransposeDb>(
         serializer = TransposeDb.serializer()
 ) {
 
-    val transposeDb: TransposeDb get() = db!!
-    val transposeDbSubject = PublishSubject.create<TransposeDb>()
+    private val transposeDb: TransposeDb get() = db!!
+    private val transposeDbSubject = PublishSubject.create<TransposeDb>()
 
     @Inject
     lateinit var songsRepository: SongsRepository

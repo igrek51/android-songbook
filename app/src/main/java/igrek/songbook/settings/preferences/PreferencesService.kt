@@ -17,12 +17,12 @@ class PreferencesService {
     private val propertyValues = HashMap<String, Any?>()
     private val sharedPreferences: SharedPreferences
 
-    private val SHARED_PREFERENCES_NAME = "SongBook-UserPreferences"
+    private val sharedPreferencesName = "SongBook-UserPreferences"
 
     init {
         DaggerIoc.factoryComponent.inject(this)
         sharedPreferences = activity.applicationContext
-                .getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+                .getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE)
         loadAll()
     }
 
@@ -109,8 +109,7 @@ class PreferencesService {
         if (value != null) {
             val validClazz = propertyDefinition.type.clazz.name
             val givenClazz = value.javaClass.name
-            if (givenClazz != validClazz)
-                throw IllegalArgumentException("invalid value type, expected: $validClazz, but given: $givenClazz")
+            require(givenClazz == validClazz) { "invalid value type, expected: $validClazz, but given: $givenClazz" }
         }
         propertyValues[propertyName] = value
     }

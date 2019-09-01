@@ -87,8 +87,8 @@ class LyricsParser(fontFamily: Typeface, private val chordsEndOfLine: Boolean) {
 
     private fun str2chars(line: String): List<LyricsChar> {
         val chars = ArrayList<LyricsChar>()
-        for (i in 0 until line.length) {
-            val c = line[i].toString()
+        for (element in line) {
+            val c = element.toString()
 
             val charWidth: Float
             val type: LyricsTextType

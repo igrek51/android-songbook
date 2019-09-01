@@ -392,7 +392,7 @@ class ChordsEditorLayoutController : MainLayout {
             selEnd++
         } else { // just single cursor
             // if it's the end of line AND there is no space before
-            if ((after.isEmpty() || after.startsWith("\n")) && !before.isEmpty() && !before.endsWith(" ") && !before.endsWith("\n")) {
+            if ((after.isEmpty() || after.startsWith("\n")) && before.isNotEmpty() && !before.endsWith(" ") && !before.endsWith("\n")) {
                 // insert missing space
                 edited = "$before []$after"
                 selStart += 2

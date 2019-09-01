@@ -1,11 +1,9 @@
-package igrek.songbook.persistence.user.playlist
+package igrek.songbook.persistence.user.history
 
 import android.app.Activity
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
-import igrek.songbook.persistence.user.history.OpenHistoryDb
-import igrek.songbook.persistence.user.history.OpenedSong
 import io.reactivex.subjects.PublishSubject
 import java.util.*
 import javax.inject.Inject

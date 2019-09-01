@@ -20,18 +20,13 @@ abstract class AbstractSqliteDao {
         return sqlQuery(sql, strings)
     }
 
-    private fun sqlQueryArray(sql: String, args: Array<out Any>): Cursor {
-        val strings: Array<String> = args.map { arg -> arg.toString() }.toTypedArray()
-        return sqlQuery(sql, strings)
-    }
-
     private fun sqlQuery(sql: String, selectionArgs: Array<String> = arrayOf()): Cursor {
         return getDatabase().rawQuery(sql, selectionArgs)
     }
 
     protected fun <T> queryOneValue(mapper: (Cursor) -> T, defaultValue: T, sql: String, vararg args: Any): T {
         try {
-            val cursor = sqlQueryArray(sql, args)
+            val cursor = sqlQuery(sql, *args)
             cursor.use { cursorIn ->
                 if (cursorIn.moveToNext()) {
                     return mapper.invoke(cursorIn)

@@ -57,8 +57,6 @@ import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.tree.ScrollPosBuffer
 import igrek.songbook.songselection.tree.SongTreeLayoutController
 import igrek.songbook.system.*
-import igrek.songbook.system.filesystem.ExternalCardService
-import igrek.songbook.system.filesystem.FilesystemService
 import okhttp3.OkHttpClient
 import javax.inject.Singleton
 
@@ -92,12 +90,6 @@ open class FactoryModule(private val activity: AppCompatActivity) {
 
     @Provides
     @Singleton
-    fun provideFilesystemService(): FilesystemService {
-        return FilesystemService()
-    }
-
-    @Provides
-    @Singleton
     fun provideActivityController(): ActivityController {
         return ActivityController()
     }
@@ -118,12 +110,6 @@ open class FactoryModule(private val activity: AppCompatActivity) {
     @Singleton
     fun provideSystemKeyDispatcher(): SystemKeyDispatcher {
         return SystemKeyDispatcher()
-    }
-
-    @Provides
-    @Singleton
-    fun provideExternalCardService(): ExternalCardService {
-        return ExternalCardService()
     }
 
     @Provides
@@ -386,7 +372,7 @@ open class FactoryModule(private val activity: AppCompatActivity) {
 
     @Provides
     @Singleton
-    fun provideUserDbService(): UserDataDao{
+    fun provideUserDbService(): UserDataDao {
         return UserDataDao()
     }
 

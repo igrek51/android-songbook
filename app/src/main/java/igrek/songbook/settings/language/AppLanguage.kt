@@ -12,7 +12,7 @@ enum class AppLanguage(val langCode: String, val displayNameResId: Int) {
 
     companion object {
         fun parseByLangCode(langCode: String): AppLanguage? {
-            return AppLanguage.values().firstOrNull { v -> v.langCode == langCode }
+            return values().firstOrNull { v -> v.langCode == langCode }
         }
     }
 }
