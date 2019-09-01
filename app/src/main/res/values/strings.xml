@@ -278,4 +278,6 @@
     <string name="show_chords_definitions">Show chord diagrams</string>
     <string name="choose_a_chord">Choose a chord from a song</string>
     <string name="chord_diagrams_versions" formatted="false">Chord \"%s\" variations</string>
+    <string name="action_close">Close</string>
+    <string name="action_back">Back</string>
 </resources>

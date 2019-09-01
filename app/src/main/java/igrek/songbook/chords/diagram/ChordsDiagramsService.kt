@@ -29,13 +29,13 @@ class ChordsDiagramsService {
     @Inject
     lateinit var activity: Activity
 
-    val toEnglishConverter = ChordsConverter(ChordsNotation.GERMAN, ChordsNotation.ENGLISH)
+    private val toEnglishConverter = ChordsConverter(ChordsNotation.GERMAN, ChordsNotation.ENGLISH)
 
     init {
         DaggerIoc.factoryComponent.inject(this)
     }
 
-    fun findUniqueChords(crdModel: LyricsModel): Set<String> {
+    private fun findUniqueChords(crdModel: LyricsModel): Set<String> {
         val uniqueChords = sortedSetOf<String>()
 
         crdModel.lines.forEach { line ->
@@ -53,17 +53,17 @@ class ChordsDiagramsService {
                                     val subEngChord = toEnglishConverter.convertChord(subchord)
                                     if (subEngChord in allChordsDiagrams.get()) {
                                         uniqueChords.add(subchord)
+                                    }
+                                }
                             }
                         }
                     }
-                }
-            }
         }
 
         return uniqueChords
     }
 
-    fun chordGraphs(chord: String): String {
+    private fun chordGraphs(chord: String): String {
         val diagramBuilder = ChordDiagramBuilder()
         val engChord = toEnglishConverter.convertChord(chord)
         return allChordsDiagrams.get()[engChord]
@@ -71,41 +71,46 @@ class ChordsDiagramsService {
                 ?: ""
     }
 
-    fun showUniqueChordsMenu(crdModel: LyricsModel) {
+    fun showLyricsChordsMenu(crdModel: LyricsModel) {
         val uniqueChords = findUniqueChords(crdModel)
         if (uniqueChords.isEmpty()) {
             uiInfoService.showInfo(R.string.no_chords_recognized_in_song)
             return
         }
 
+        showUniqueChordsMenu(uniqueChords)
+    }
+
+    private fun showUniqueChordsMenu(uniqueChords: Set<String>) {
         val actions = uniqueChords.map { chord ->
             ContextMenuBuilder.Action(chord) {
-                showChordDefinition(chord)
+                showChordDefinition(chord, uniqueChords)
             }
         }.toList()
 
         contextMenuBuilder.showContextMenu(R.string.choose_a_chord, actions)
     }
 
-    fun showChordDefinition(chord: String) {
+    private fun showChordDefinition(chord: String, uniqueChords: Set<String>) {
         val message = chordGraphs(chord)
         val title = uiResourceService.resString(R.string.chord_diagrams_versions, chord)
 
         val alertBuilder = AlertDialog.Builder(activity)
         alertBuilder.setTitle(title)
-        alertBuilder.setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { _, _ -> }
         alertBuilder.setCancelable(true)
 
-        val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        alertBuilder.setPositiveButton(uiResourceService.resString(R.string.action_close)) { _, _ -> }
+        alertBuilder.setNeutralButton(uiResourceService.resString(R.string.action_back)) { _, _ ->
+            showUniqueChordsMenu(uniqueChords)
+        }
 
+        val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val diagramView = inflater.inflate(R.layout.chord_diagrams, null, false)
         val diagramContent = diagramView.findViewById<TextView>(R.id.chordDiagramContent)
         diagramContent.text = message
-
         alertBuilder.setView(diagramView)
 
-        val alertDialog = alertBuilder.create()
-        alertDialog.show()
+        alertBuilder.create().show()
     }
 
 }

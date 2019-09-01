@@ -344,7 +344,7 @@ class SongPreviewLayoutController : MainLayout {
 
     fun showChordsGraphs() {
         val crdModel = lyricsManager.get().crdModel ?: return
-        chordsDiagramsService.get().showUniqueChordsMenu(crdModel)
+        chordsDiagramsService.get().showLyricsChordsMenu(crdModel)
     }
 
 }

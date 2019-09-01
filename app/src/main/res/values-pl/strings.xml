@@ -271,4 +271,6 @@
     <string name="show_chords_definitions">Pokaż diagramy akordów</string>
     <string name="choose_a_chord">Wybierz akord z piosenki</string>
     <string name="chord_diagrams_versions" formatted="false">Warianty akordu \"%s\"</string>
+    <string name="action_close">Zamknij</string>
+    <string name="action_back">Wróć</string>
 </resources>
