@@ -81,7 +81,21 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:scaleType="centerInside"
-                        android:src="@drawable/help"
+                        android:src="@drawable/grid"
+                        />
+
+                    <ImageButton
+                        android:id="@+id/songInfoButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:adjustViewBounds="true"
+                        android:background="?android:selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/info"
                         />
 
                     <ImageButton
@@ -124,20 +138,6 @@
                         android:focusable="true"
                         android:scaleType="centerInside"
                         android:src="@drawable/scroll1"
-                        />
-
-                    <ImageButton
-                        android:id="@+id/goBeginningButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:adjustViewBounds="true"
-                        android:background="?android:selectableItemBackground"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/restore"
                         />
 
                     <ImageButton

@@ -181,11 +181,11 @@ class SongPreviewLayoutController : MainLayout {
         setFavouriteButton!!.setOnClickListener { toggleSongFavourite() }
         updateFavouriteButton()
 
-        val goBeginningButton = layout.findViewById<ImageButton>(R.id.goBeginningButton)
-        goBeginningButton.setOnClickListener { goToBeginning() }
-
         val chordsHelpButton = layout.findViewById<ImageButton>(R.id.chordsHelpButton)
         chordsHelpButton.setOnClickListener { showChordsGraphs() }
+
+        val songInfoButton = layout.findViewById<ImageButton>(R.id.songInfoButton)
+        songInfoButton.setOnClickListener { songDetailsService.get().showSongDetails(currentSong!!) }
 
         val fullscreenButton = layout.findViewById<ImageButton>(R.id.fullscreenButton)
         fullscreenButton.setOnClickListener { setFullscreen(true) }
