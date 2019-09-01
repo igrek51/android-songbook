@@ -286,10 +286,10 @@ class SongPreviewLayoutController : MainLayout {
 
         if (fullscreen) {
             appBarLayout!!.visibility = View.GONE
-            disableFullscreenButton!!.visibility = View.VISIBLE
+            disableFullscreenButton!!.show()
         } else {
             appBarLayout!!.visibility = View.VISIBLE
-            disableFullscreenButton!!.visibility = View.GONE
+            disableFullscreenButton!!.hide()
         }
     }
 
