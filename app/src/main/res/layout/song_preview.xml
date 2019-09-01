@@ -71,7 +71,7 @@
                         android:src="@drawable/arrow_back"/>
 
                     <ImageButton
-                        android:id="@+id/songInfoButton"
+                        android:id="@+id/chordsHelpButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -81,7 +81,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:scaleType="centerInside"
-                        android:src="@drawable/info"
+                        android:src="@drawable/help"
                         />
 
                     <ImageButton

@@ -68,7 +68,13 @@ class SongContextMenuBuilder {
                                 customSongService.removeSong(song)
                             }
                         }),
-                // SET_FAVORITE
+                // PUBLISH
+                SongContextAction(R.string.action_song_publish,
+                        availableCondition = { song -> song.custom },
+                        executor = { song ->
+                            sendFeedbackService.publishSong(song)
+                        }),
+                // Add to favourites
                 SongContextAction(R.string.action_song_set_favourite,
                         availableCondition = { song ->
                             !favouriteSongsService.isSongFavourite(song)
@@ -76,43 +82,13 @@ class SongContextMenuBuilder {
                         executor = { song ->
                             favouriteSongsService.setSongFavourite(song)
                         }),
-                // UNSET_FAVORITE
+                // Remove from favourites
                 SongContextAction(R.string.action_song_unset_favourite,
                         availableCondition = { song ->
                             favouriteSongsService.isSongFavourite(song)
                         },
                         executor = { song ->
                             favouriteSongsService.unsetSongFavourite(song)
-                        }),
-                // COPY
-                SongContextAction(R.string.action_song_copy,
-                        availableCondition = { song -> !song.custom },
-                        executor = { song ->
-                            customSongService.copySongAsCustom(song)
-                        }),
-                // AMEND
-                SongContextAction(R.string.action_song_amend,
-                        availableCondition = { song -> !song.custom },
-                        executor = { song ->
-                            sendFeedbackService.amendSong(song)
-                        }),
-                // PUBLISH
-                SongContextAction(R.string.action_song_publish,
-                        availableCondition = { song -> song.custom },
-                        executor = { song ->
-                            sendFeedbackService.publishSong(song)
-                        }),
-                // show chords graphs
-                SongContextAction(R.string.show_chords_definitions,
-                        availableCondition = { layoutController.get().isState(LayoutState.SONG_PREVIEW) },
-                        executor = {
-                            songPreviewLayoutController.get().showChordsGraphs()
-                        }),
-                // show song details
-                SongContextAction(R.string.song_details,
-                        availableCondition = { true },
-                        executor = { song ->
-                            songDetailsService.showSongDetails(song)
                         }),
                 // Add to playlist
                 SongContextAction(R.string.action_add_to_playlist,
@@ -127,6 +103,30 @@ class SongContextMenuBuilder {
                         },
                         executor = { song ->
                             playlistService.removeFromPlaylist(song)
+                        }),
+                // show chords graphs
+                SongContextAction(R.string.show_chords_definitions,
+                        availableCondition = { layoutController.get().isState(LayoutState.SONG_PREVIEW) },
+                        executor = {
+                            songPreviewLayoutController.get().showChordsGraphs()
+                        }),
+                // show song details
+                SongContextAction(R.string.song_details_title,
+                        availableCondition = { true },
+                        executor = { song ->
+                            songDetailsService.showSongDetails(song)
+                        }),
+                // COPY
+                SongContextAction(R.string.action_song_copy,
+                        availableCondition = { song -> !song.custom },
+                        executor = { song ->
+                            customSongService.copySongAsCustom(song)
+                        }),
+                // AMEND
+                SongContextAction(R.string.action_song_amend,
+                        availableCondition = { song -> !song.custom },
+                        executor = { song ->
+                            sendFeedbackService.amendSong(song)
                         })
         )
 

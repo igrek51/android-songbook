@@ -184,8 +184,8 @@ class SongPreviewLayoutController : MainLayout {
         val goBeginningButton = layout.findViewById<ImageButton>(R.id.goBeginningButton)
         goBeginningButton.setOnClickListener { goToBeginning() }
 
-        val songInfoButton = layout.findViewById<ImageButton>(R.id.songInfoButton)
-        songInfoButton.setOnClickListener { songDetailsService.get().showSongDetails(currentSong!!) }
+        val chordsHelpButton = layout.findViewById<ImageButton>(R.id.chordsHelpButton)
+        chordsHelpButton.setOnClickListener { showChordsGraphs() }
 
         val fullscreenButton = layout.findViewById<ImageButton>(R.id.fullscreenButton)
         fullscreenButton.setOnClickListener { setFullscreen(true) }
