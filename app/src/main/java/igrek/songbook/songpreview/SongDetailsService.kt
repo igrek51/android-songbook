@@ -42,11 +42,11 @@ class SongDetailsService {
         val modificationDate = getLastModificationDate(song)
 
         var message = uiResourceService.resString(R.string.song_details, songTitle, category, songVersion, modificationDate)
-        if (preferredKey != null)
+        if (!preferredKey.isNullOrEmpty())
             message += "\n" + uiResourceService.resString(R.string.song_details_preferred_key, preferredKey)
-        if (metre != null)
+        if (!metre.isNullOrEmpty())
             message += "\n" + uiResourceService.resString(R.string.song_details_metre, metre)
-        if (comment != null)
+        if (!comment.isNullOrEmpty())
             message += "\n" + uiResourceService.resString(R.string.song_details_comment, comment)
 
         val dialogTitle = uiResourceService.resString(R.string.song_details_title)

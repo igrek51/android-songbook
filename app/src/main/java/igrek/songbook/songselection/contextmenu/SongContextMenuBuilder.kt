@@ -2,6 +2,7 @@ package igrek.songbook.songselection.contextmenu
 
 import android.app.Activity
 import android.support.v7.app.AlertDialog
+import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.contact.SendFeedbackService
 import igrek.songbook.custom.CustomSongService
@@ -14,6 +15,7 @@ import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.playlist.PlaylistService
+import igrek.songbook.songpreview.SongDetailsService
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.favourite.FavouriteSongsService
 import igrek.songbook.util.lookup.SimpleCache
@@ -37,9 +39,11 @@ class SongContextMenuBuilder {
     @Inject
     lateinit var playlistService: PlaylistService
     @Inject
-    lateinit var layoutController: dagger.Lazy<LayoutController>
+    lateinit var layoutController: Lazy<LayoutController>
     @Inject
-    lateinit var songPreviewLayoutController: dagger.Lazy<SongPreviewLayoutController>
+    lateinit var songPreviewLayoutController: Lazy<SongPreviewLayoutController>
+    @Inject
+    lateinit var songDetailsService: SongDetailsService
 
     private var allActions: SimpleCache<List<SongContextAction>> =
             SimpleCache { createAllActions() }
@@ -101,8 +105,14 @@ class SongContextMenuBuilder {
                 // show chords graphs
                 SongContextAction(R.string.show_chords_definitions,
                         availableCondition = { layoutController.get().isState(LayoutState.SONG_PREVIEW) },
-                        executor = { _ ->
+                        executor = {
                             songPreviewLayoutController.get().showChordsGraphs()
+                        }),
+                // show song details
+                SongContextAction(R.string.song_details,
+                        availableCondition = { true },
+                        executor = { song ->
+                            songDetailsService.showSongDetails(song)
                         }),
                 // Add to playlist
                 SongContextAction(R.string.action_add_to_playlist,

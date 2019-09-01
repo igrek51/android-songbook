@@ -177,8 +177,8 @@
     <string name="action_song_amend">Suggest correction</string>
     <string name="action_song_edit">Edit</string>
     <string name="action_song_remove">Remove</string>
-    <string name="action_song_set_favourite">Set as favourite</string>
-    <string name="action_song_unset_favourite">Unfavourite</string>
+    <string name="action_song_set_favourite">Add to favourites</string>
+    <string name="action_song_unset_favourite">Remove from favourites</string>
     <string name="action_song_add_comment">Add comment</string>
     <string name="song_action_more">More</string>
     <string name="song_copied_as_custom">Song has been copied to "My songs".</string>
