@@ -39,7 +39,7 @@ class LyricsManager {
     }
 
     private fun loadPreferences() {
-        restoreTransposition = preferencesService.getValue(PreferencesDefinition.restoreTransposition, Boolean::class.java)
+        restoreTransposition = preferencesService.getValue(PreferencesDefinition.RestoreTransposition, Boolean::class.java)
                 ?: true
     }
 

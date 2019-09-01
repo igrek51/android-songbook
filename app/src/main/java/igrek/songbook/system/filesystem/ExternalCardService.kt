@@ -11,7 +11,7 @@ import java.util.*
 /**
  * service to find external sd card location (it's not so obvious)
  */
-class ExternalCardService(private val activity: Activity) {
+class ExternalCardService {
 
     private val logger = LoggerFactory.logger
     private val externalSDPath: String?
@@ -79,8 +79,6 @@ class ExternalCardService(private val activity: Activity) {
     init {
         externalSDPath = findExternalSDPath()
         logger.debug("External SD Card path detected: " + externalSDPath!!)
-        logger.debug("DEVICE = " + android.os.Build.DEVICE);
-        logger.debug("MANUFACTURER = " + android.os.Build.MANUFACTURER);
     }
 
     private fun findExternalSDPath(): String? {

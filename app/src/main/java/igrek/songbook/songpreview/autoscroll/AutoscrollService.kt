@@ -92,10 +92,10 @@ class AutoscrollService {
     }
 
     private fun loadPreferences() {
-        initialPause = preferencesService.getValue(PreferencesDefinition.autoscrollInitialPause, Long::class.java)!!
-        autoscrollSpeed = preferencesService.getValue(PreferencesDefinition.autoscrollSpeed, Float::class.java)!!
-        autoSpeedAdjustment = preferencesService.getValue(PreferencesDefinition.autoscrollSpeedAutoAdjustment, Boolean::class.java)!!
-        volumeKeysSpeedControl = preferencesService.getValue(PreferencesDefinition.autoscrollSpeedVolumeKeys, Boolean::class.java)!!
+        initialPause = preferencesService.getValue(PreferencesDefinition.AutoscrollInitialPause, Long::class.java)!!
+        autoscrollSpeed = preferencesService.getValue(PreferencesDefinition.AutoscrollSpeed, Float::class.java)!!
+        autoSpeedAdjustment = preferencesService.getValue(PreferencesDefinition.AutoscrollSpeedAutoAdjustment, Boolean::class.java)!!
+        volumeKeysSpeedControl = preferencesService.getValue(PreferencesDefinition.AutoscrollSpeedVolumeKeys, Boolean::class.java)!!
     }
 
     fun reset() {

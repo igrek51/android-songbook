@@ -15,7 +15,7 @@ abstract class AbstractSqliteDao {
 
     protected val logger: Logger = LoggerFactory.logger
 
-    protected fun sqlQuery(sql: String, vararg args: Any): Cursor {
+    private fun sqlQuery(sql: String, vararg args: Any): Cursor {
         val strings: Array<String> = args.map { arg -> arg.toString() }.toTypedArray()
         return sqlQuery(sql, strings)
     }

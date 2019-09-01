@@ -22,7 +22,6 @@ class AppLanguageService {
     lateinit var uiResourceService: Lazy<UiResourceService>
 
     var appLanguage: AppLanguage? = null
-    var excludedLanguages: List<SongLanguage> = listOf()
     private val logger = LoggerFactory.logger
 
     init {
@@ -31,16 +30,12 @@ class AppLanguageService {
     }
 
     private fun loadPreferences() {
-        val appLanguageId = preferencesService.get().getValue(PreferencesDefinition.appLanguage, String::class.java)
+        val appLanguageId = preferencesService.get().getValue(PreferencesDefinition.AppLanguage, String::class.java)
         if (appLanguageId != null) {
             appLanguage = AppLanguage.parseByLangCode(appLanguageId)
             if (appLanguage == null)
                 appLanguage = AppLanguage.DEFAULT
         }
-
-        val excludedLanguagesStr = preferencesService.get().getValue(PreferencesDefinition.excludedLanguages, String::class.java)
-        if (excludedLanguagesStr != null)
-            excludedLanguages = string2Languages(excludedLanguagesStr)
     }
 
     /**

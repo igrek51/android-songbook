@@ -32,19 +32,19 @@ class LyricsThemeService {
     }
 
     private fun loadPreferences() {
-        fontsize = preferencesService.getValue(PreferencesDefinition.fontsize, Float::class.java)!!
+        fontsize = preferencesService.getValue(PreferencesDefinition.Fontsize, Float::class.java)!!
 
-        val fontTypefaceId = preferencesService.getValue(PreferencesDefinition.fontTypefaceId, String::class.java)
+        val fontTypefaceId = preferencesService.getValue(PreferencesDefinition.FontTypefaceId, String::class.java)
         if (fontTypefaceId != null) {
             fontTypeface = FontTypeface.parseById(fontTypefaceId)
         }
 
-        val colorSchemeId = preferencesService.getValue(PreferencesDefinition.colorSchemeId, Long::class.java)
+        val colorSchemeId = preferencesService.getValue(PreferencesDefinition.ColorSchemeId, Long::class.java)
         if (colorSchemeId != null) {
             colorScheme = ColorScheme.parseById(colorSchemeId)
         }
 
-        chordsEndOfLine = preferencesService.getValue(PreferencesDefinition.chordsEndOfLine, Boolean::class.java)
+        chordsEndOfLine = preferencesService.getValue(PreferencesDefinition.ChordsEndOfLine, Boolean::class.java)
                 ?: false
     }
 

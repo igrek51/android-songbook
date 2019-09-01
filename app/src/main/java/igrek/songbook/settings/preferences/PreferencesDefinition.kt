@@ -1,39 +1,36 @@
 package igrek.songbook.settings.preferences
 
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.FontTypeface
 
 enum class PreferencesDefinition constructor(val type: PropertyType, val defaultValue: Any?) {
 
-    fontsize(20.0f), // dp
+    Fontsize(20.0f), // dp
 
-    autoscrollInitialPause(36000L), // ms
+    AutoscrollInitialPause(36000L), // ms
 
-    autoscrollSpeed(0.15f), // em / s
+    AutoscrollSpeed(0.15f), // em / s
 
-    chordsNotationId(ChordsNotation.GERMAN.id),
+    ChordsNotationId(ChordsNotation.GERMAN.id),
 
-    appLanguage(AppLanguage.DEFAULT.langCode),
+    AppLanguage(igrek.songbook.settings.language.AppLanguage.DEFAULT.langCode),
 
-    fontTypefaceId(FontTypeface.SANS_SERIF.id),
+    FontTypefaceId(FontTypeface.SANS_SERIF.id),
 
-    colorSchemeId(ColorScheme.DARK.id),
+    ColorSchemeId(ColorScheme.DARK.id),
 
-    chordsEndOfLine(false),
+    ChordsEndOfLine(false),
 
-    excludedLanguages(""),
+    AutoscrollSpeedAutoAdjustment(true),
 
-    autoscrollSpeedAutoAdjustment(true),
+    AutoscrollSpeedVolumeKeys(true),
 
-    autoscrollSpeedVolumeKeys(true),
+    RandomFavouriteSongsOnly(false),
 
-    randomFavouriteSongsOnly(false),
+    CustomSongsGroupCategories(false),
 
-    customSongsGroupCategories(false),
-
-    restoreTransposition(true),
+    RestoreTransposition(true),
 
     ;
 
@@ -44,5 +41,9 @@ enum class PreferencesDefinition constructor(val type: PropertyType, val default
     constructor(defaultValue: Long?) : this(PropertyType.LONG, defaultValue)
 
     constructor(defaultValue: Float?) : this(PropertyType.FLOAT, defaultValue)
+
+    fun preferenceName(): String {
+        return this.name.decapitalize()
+    }
 
 }

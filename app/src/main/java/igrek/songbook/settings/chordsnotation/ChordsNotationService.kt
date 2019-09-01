@@ -36,7 +36,7 @@ class ChordsNotationService {
     }
 
     private fun loadPreferences() {
-        val chordsNotationId = preferencesService.getValue(PreferencesDefinition.chordsNotationId, Long::class.java)
+        val chordsNotationId = preferencesService.getValue(PreferencesDefinition.ChordsNotationId, Long::class.java)
         if (chordsNotationId != null) {
             chordsNotation = ChordsNotation.parseById(chordsNotationId)
         }
@@ -45,7 +45,7 @@ class ChordsNotationService {
     private fun setDefaultChordsNotation() {
         // running for the first time - set german / polish notation if lang pl
         // set default chords notation depending on locale settings
-        if (!preferencesService.exists(PreferencesDefinition.chordsNotationId.name)) {
+        if (!preferencesService.exists(PreferencesDefinition.ChordsNotationId.name)) {
             val current: Locale = appLanguageService.getCurrentLocale()
             val lang = current.language
 

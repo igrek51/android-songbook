@@ -56,11 +56,6 @@ class GeneralSongsDao(private val dbFile: File) : AbstractSqliteDao() {
         return queryOneValue(mapper, null, "SELECT value FROM songs_info WHERE name = 'version_number'")
     }
 
-    fun readDbSchemaVersion(): Long? {
-        val mapper: (Cursor) -> Long = { cursor -> cursor.getLong(cursor.getColumnIndexOrThrow("value")) }
-        return queryOneValue(mapper, null, "SELECT value FROM songs_info WHERE name = 'schema_version'")
-    }
-
     fun verifyDbVersion(dbVersion: Long) {
         if (dbVersion < supportedDbVersion)
             throw RuntimeException("local db version $dbVersion is not supported anymore")

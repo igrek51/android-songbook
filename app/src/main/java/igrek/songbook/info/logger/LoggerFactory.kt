@@ -6,8 +6,6 @@ object LoggerFactory {
 
     val SHOW_TRACE_DETAILS_LEVEL = LogLevel.FATAL
 
-    const val SHOW_EXCEPTIONS_TRACE = true
-
     const val LOG_TAG = "dupa"
 
     val logger: Logger

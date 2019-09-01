@@ -41,7 +41,7 @@ class PreferencesService {
     }
 
     private fun loadProperty(propertyDefinition: PreferencesDefinition) {
-        val propertyName = propertyDefinition.name
+        val propertyName = propertyDefinition.preferenceName()
         var value: Any?
         if (exists(propertyName)) {
             try {
@@ -66,7 +66,7 @@ class PreferencesService {
     }
 
     private fun saveProperty(propertyDefinition: PreferencesDefinition, editor: SharedPreferences.Editor) {
-        val propertyName = propertyDefinition.name
+        val propertyName = propertyDefinition.preferenceName()
         if (!propertyValues.containsKey(propertyName)) {
             logger.warn("No shared preferences property found in map")
         }
@@ -89,7 +89,7 @@ class PreferencesService {
     }
 
     fun <T> getValue(propertyDefinition: PreferencesDefinition, clazz: Class<T>): T? {
-        val propertyName = propertyDefinition.name
+        val propertyName = propertyDefinition.preferenceName()
         if (!propertyValues.containsKey(propertyName))
             return null
 
@@ -104,7 +104,7 @@ class PreferencesService {
     }
 
     fun setValue(propertyDefinition: PreferencesDefinition, value: Any?) {
-        val propertyName = propertyDefinition.name
+        val propertyName = propertyDefinition.preferenceName()
         // class type validation
         if (value != null) {
             val validClazz = propertyDefinition.type.clazz.name

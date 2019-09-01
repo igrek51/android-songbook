@@ -84,12 +84,6 @@ class PreferencesUpdater {
             autoscrollService.get().autoscrollSpeed = value
         }
 
-    var excludedLanguages: List<SongLanguage>
-        get() = appLanguageService.get().excludedLanguages
-        set(value) {
-            appLanguageService.get().excludedLanguages = value
-        }
-
     var autoscrollSpeedAutoAdjustment: Boolean
         get() = autoscrollService.get().autoSpeedAdjustment
         set(value) {
@@ -125,27 +119,24 @@ class PreferencesUpdater {
     }
 
     fun updateAndSave() {
-        preferencesService.setValue(PreferencesDefinition.fontsize, fontsize)
-        preferencesService.setValue(PreferencesDefinition.fontTypefaceId, fontTypeface?.id)
-        preferencesService.setValue(PreferencesDefinition.colorSchemeId, colorScheme?.id)
-        preferencesService.setValue(PreferencesDefinition.chordsEndOfLine, chordsEndOfLine)
+        preferencesService.setValue(PreferencesDefinition.Fontsize, fontsize)
+        preferencesService.setValue(PreferencesDefinition.FontTypefaceId, fontTypeface?.id)
+        preferencesService.setValue(PreferencesDefinition.ColorSchemeId, colorScheme?.id)
+        preferencesService.setValue(PreferencesDefinition.ChordsEndOfLine, chordsEndOfLine)
 
-        preferencesService.setValue(PreferencesDefinition.autoscrollInitialPause, autoscrollInitialPause)
-        preferencesService.setValue(PreferencesDefinition.autoscrollSpeed, autoscrollSpeed)
-        preferencesService.setValue(PreferencesDefinition.autoscrollSpeedAutoAdjustment, autoscrollSpeedAutoAdjustment)
-        preferencesService.setValue(PreferencesDefinition.autoscrollSpeedVolumeKeys, autoscrollSpeedVolumeKeys)
+        preferencesService.setValue(PreferencesDefinition.AutoscrollInitialPause, autoscrollInitialPause)
+        preferencesService.setValue(PreferencesDefinition.AutoscrollSpeed, autoscrollSpeed)
+        preferencesService.setValue(PreferencesDefinition.AutoscrollSpeedAutoAdjustment, autoscrollSpeedAutoAdjustment)
+        preferencesService.setValue(PreferencesDefinition.AutoscrollSpeedVolumeKeys, autoscrollSpeedVolumeKeys)
 
-        preferencesService.setValue(PreferencesDefinition.appLanguage, appLanguage?.langCode)
-        preferencesService.setValue(PreferencesDefinition.chordsNotationId, chordsNotation?.id)
+        preferencesService.setValue(PreferencesDefinition.AppLanguage, appLanguage?.langCode)
+        preferencesService.setValue(PreferencesDefinition.ChordsNotationId, chordsNotation?.id)
 
-        preferencesService.setValue(PreferencesDefinition.excludedLanguages,
-                appLanguageService.get().lanugages2String(excludedLanguages))
+        preferencesService.setValue(PreferencesDefinition.RandomFavouriteSongsOnly, randomFavouriteSongsOnly)
 
-        preferencesService.setValue(PreferencesDefinition.randomFavouriteSongsOnly, randomFavouriteSongsOnly)
+        preferencesService.setValue(PreferencesDefinition.CustomSongsGroupCategories, customSongsGroupCategories)
 
-        preferencesService.setValue(PreferencesDefinition.customSongsGroupCategories, customSongsGroupCategories)
-
-        preferencesService.setValue(PreferencesDefinition.restoreTransposition, restoreTransposition)
+        preferencesService.setValue(PreferencesDefinition.RestoreTransposition, restoreTransposition)
 
         preferencesService.saveAll()
     }

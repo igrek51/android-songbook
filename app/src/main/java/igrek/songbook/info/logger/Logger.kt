@@ -117,8 +117,7 @@ open class Logger internal constructor() {
     }
 
     private fun printExceptionStackTrace(ex: Throwable) {
-        if (LoggerFactory.SHOW_EXCEPTIONS_TRACE)
-            printError(Log.getStackTraceString(ex))
+        printError(Log.getStackTraceString(ex))
     }
 
     private fun printCurrentStackTrace(stackTraces: Array<StackTraceElement>) {
