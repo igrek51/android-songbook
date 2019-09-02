@@ -45,7 +45,7 @@ class ChordsNotationService {
     private fun setDefaultChordsNotation() {
         // running for the first time - set german / polish notation if lang pl
         // set default chords notation depending on locale settings
-        if (!preferencesService.exists(PreferencesDefinition.ChordsNotationId.name)) {
+        if (!preferencesService.exists(PreferencesDefinition.ChordsNotationId)) {
             val current: Locale = appLanguageService.getCurrentLocale()
             val lang = current.language
 

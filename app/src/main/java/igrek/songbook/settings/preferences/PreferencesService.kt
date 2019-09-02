@@ -43,7 +43,7 @@ class PreferencesService {
     private fun loadProperty(propertyDefinition: PreferencesDefinition) {
         val propertyName = propertyDefinition.preferenceName()
         var value: Any?
-        if (exists(propertyName)) {
+        if (exists(propertyDefinition)) {
             try {
                 value = when (propertyDefinition.type) {
                     PropertyType.STRING -> sharedPreferences.getString(propertyName, null)
@@ -109,7 +109,9 @@ class PreferencesService {
         if (value != null) {
             val validClazz = propertyDefinition.type.clazz.name
             val givenClazz = value.javaClass.name
-            require(givenClazz == validClazz) { "invalid value type, expected: $validClazz, but given: $givenClazz" }
+            require(givenClazz == validClazz) {
+                "invalid value type, expected: $validClazz, but given: $givenClazz"
+            }
         }
         propertyValues[propertyName] = value
     }
@@ -120,8 +122,8 @@ class PreferencesService {
         editor.apply()
     }
 
-    fun exists(name: String): Boolean {
-        return sharedPreferences.contains(name)
+    fun exists(propertyDefinition: PreferencesDefinition): Boolean {
+        return sharedPreferences.contains(propertyDefinition.preferenceName())
     }
 
 }
