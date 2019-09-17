@@ -1,6 +1,7 @@
 package igrek.songbook.custom
 
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
@@ -110,7 +111,9 @@ class CustomSongsLayoutController : InflatedLayout(
         }
 
         if (storedScroll != null) {
-            Handler().post { itemsListView?.restoreScrollPosition(storedScroll) }
+            Handler(Looper.getMainLooper()).post {
+                itemsListView?.restoreScrollPosition(storedScroll)
+            }
         }
 
         val customSongsTitle = uiResourceService.resString(R.string.nav_custom_song)

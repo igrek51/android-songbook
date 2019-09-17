@@ -3,6 +3,7 @@ package igrek.songbook.about.secret
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Handler
+import android.os.Looper
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.text.InputType
@@ -108,7 +109,7 @@ class SecretUnlockerService {
         dlgAlert.setCancelable(true)
         dlgAlert.create().show()
 
-        Handler().post {
+        Handler(Looper.getMainLooper()).post {
             softKeyboardService.showSoftKeyboard(input)
         }
     }

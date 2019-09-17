@@ -1,6 +1,7 @@
 package igrek.songbook.playlist
 
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
@@ -125,7 +126,9 @@ class PlaylistLayoutController : InflatedLayout(
         itemsListView!!.items = items
 
         if (storedScroll != null) {
-            Handler().post { itemsListView?.restoreScrollPosition(storedScroll) }
+            Handler(Looper.getMainLooper()).post {
+                itemsListView?.restoreScrollPosition(storedScroll)
+            }
         }
 
         val playlistsTitle = uiResourceService.resString(R.string.nav_playlists)

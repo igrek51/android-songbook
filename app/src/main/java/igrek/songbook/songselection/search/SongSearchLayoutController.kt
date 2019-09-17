@@ -1,6 +1,7 @@
 package igrek.songbook.songselection.search
 
 import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -62,7 +63,9 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
                 softKeyboardService.hideSoftKeyboard(searchFilterEdit)
         }
         searchFilterEdit!!.requestFocus()
-        Handler().post { softKeyboardService.showSoftKeyboard(searchFilterEdit) }
+        Handler(Looper.getMainLooper()).post {
+            softKeyboardService.showSoftKeyboard(searchFilterEdit)
+        }
 
         searchFilterEdit!!.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -108,7 +111,9 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
         super.updateSongItemsList()
         // restore Scroll Position
         if (storedScroll != null) {
-            Handler().post { itemsListView?.restoreScrollPosition(storedScroll) }
+            Handler(Looper.getMainLooper()).post {
+                itemsListView?.restoreScrollPosition(storedScroll)
+            }
         }
     }
 

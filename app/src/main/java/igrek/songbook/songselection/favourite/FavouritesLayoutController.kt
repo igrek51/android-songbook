@@ -1,6 +1,7 @@
 package igrek.songbook.songselection.favourite
 
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.TextView
 import igrek.songbook.R
@@ -66,7 +67,9 @@ class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
         super.updateSongItemsList()
         // restore Scroll Position
         if (storedScroll != null) {
-            Handler().post { itemsListView?.restoreScrollPosition(storedScroll) }
+            Handler(Looper.getMainLooper()).post {
+                itemsListView?.restoreScrollPosition(storedScroll)
+            }
         }
 
         if (itemsListView!!.count == 0) {

@@ -2,6 +2,7 @@ package igrek.songbook.layout.navigation
 
 import android.app.Activity
 import android.os.Handler
+import android.os.Looper
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
@@ -84,7 +85,7 @@ class NavigationMenuController {
             if (actionsMap.containsKey(id)) {
                 val action = actionsMap[id]
                 // postpone action - smoother navigation hide
-                Handler().post {
+                Handler(Looper.getMainLooper()).post {
                     SafeExecutor().execute(action!!)
                 }
             } else {

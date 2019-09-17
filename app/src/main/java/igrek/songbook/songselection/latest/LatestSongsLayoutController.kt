@@ -1,6 +1,7 @@
 package igrek.songbook.songselection.latest
 
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import dagger.Lazy
 import igrek.songbook.R
@@ -80,7 +81,9 @@ class LatestSongsLayoutController : InflatedLayout(
         itemsListView!!.setItems(latestSongs)
 
         if (storedScroll != null) {
-            Handler().post { itemsListView?.restoreScrollPosition(storedScroll) }
+            Handler(Looper.getMainLooper()).post {
+                itemsListView?.restoreScrollPosition(storedScroll)
+            }
         }
     }
 
