@@ -105,7 +105,7 @@ class SongsUpdater {
                 output.flush()
                 output.close()
                 input.close()
-            }catch (e: Exception) {
+            } catch (e: Throwable) {
                 songsRepository.get().reloadSongsDb()
                 throw e
             }
@@ -119,7 +119,7 @@ class SongsUpdater {
                     songsRepository.get().reloadSongsDb()
                 }
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             onErrorReceived(e.message)
         }
     }
@@ -134,7 +134,7 @@ class SongsUpdater {
             if (localVersion != null && remoteVersion != null && localVersion < remoteVersion) {
                 showUpdateIsAvailable()
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             logger.error(e)
         }
     }

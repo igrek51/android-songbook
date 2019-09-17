@@ -1,7 +1,6 @@
 package igrek.songbook.system.filesystem
 
 
-import android.app.Activity
 import android.os.Build
 import android.os.Environment
 import igrek.songbook.info.logger.LoggerFactory
@@ -34,9 +33,7 @@ class ExternalCardService {
             return if (externalMounts.isNotEmpty()) externalMounts.iterator().next() else null
         }
 
-    private// parse output
-    // lg workaround - brilliant
-    val externalMounts: HashSet<String>
+    private val externalMounts: HashSet<String>
         get() {
             val out = HashSet<String>()
             val reg = "(?i).*vold.*(vfat|ntfs|exfat|fat32|ext3|ext4).*rw.*"
@@ -46,12 +43,12 @@ class ExternalCardService {
                         .redirectErrorStream(true)
                         .start()
                 process.waitFor()
-                val `is` = process.inputStream
+                val inputStream = process.inputStream
                 val buffer = ByteArray(1024)
-                while (`is`.read(buffer) != -1) {
+                while (inputStream.read(buffer) != -1) {
                     s.append(String(buffer))
                 }
-                `is`.close()
+                inputStream.close()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

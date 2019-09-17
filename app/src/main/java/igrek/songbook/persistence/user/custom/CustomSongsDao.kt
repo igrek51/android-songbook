@@ -38,7 +38,7 @@ class CustomSongsDao(path: String) : AbstractJsonDao<CustomSongsDb>(
     override fun migrateOlder(): CustomSongsDb? {
         try {
             return Migration037CustomSongs(activity).load()
-        } catch (t: Exception) {
+        } catch (t: Throwable) {
             throw WrapContextError("Migration037CustomSongs error", t)
         }
     }

@@ -54,7 +54,7 @@ class FavouriteSongsDao(path: String) : AbstractJsonDao<FavouriteSongsDb>(
     override fun migrateOlder(): FavouriteSongsDb? {
         try {
             return Migration037Favourites(activity).load()
-        } catch (t: Exception) {
+        } catch (t: Throwable) {
             throw WrapContextError("Migration037Favourites error", t)
         }
     }

@@ -38,7 +38,7 @@ abstract class AbstractJsonDao<T>(
                 // logger.debug("'$dbName' db: database v$attemptSchema not found")
             } catch (e: SerializationException) {
                 logger.error("'$dbName' db: JSON deserialization error", e)
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 logger.error("'$dbName' db: error reading '$dbName db'", e)
             }
         }
@@ -49,7 +49,7 @@ abstract class AbstractJsonDao<T>(
                 logger.info("'$dbName' db: migration from old db has been successfully finished")
                 return oldDb
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             logger.error("'$dbName' db: failed to migrate older db", e)
         }
 
