@@ -12,6 +12,7 @@ import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.SongSelectionLayoutController
 import igrek.songbook.songselection.search.SongSearchItem
 import igrek.songbook.songselection.tree.SongTreeItem
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
@@ -39,13 +40,15 @@ class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
 
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
-        subscriptions.add(
-                songsRepository.dbChangeSubject.subscribe {
+        subscriptions.add(songsRepository.dbChangeSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
                     if (layoutController.isState(getLayoutState()))
                         updateSongItemsList()
                 })
-        subscriptions.add(
-                favouriteSongsService.updateFavouriteSongSubject.subscribe {
+        subscriptions.add(favouriteSongsService.updateFavouriteSongSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
                     if (layoutController.isState(getLayoutState()))
                         updateSongItemsList()
                 })

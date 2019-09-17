@@ -9,7 +9,7 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
 import igrek.songbook.persistence.user.migrate.Migration037Favourites
 import igrek.songbook.util.lookup.SimpleCache
-import io.reactivex.disposables.Disposable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
 class FavouriteSongsDao(path: String) : AbstractJsonDao<FavouriteSongsDb>(
@@ -26,7 +26,6 @@ class FavouriteSongsDao(path: String) : AbstractJsonDao<FavouriteSongsDb>(
     lateinit var activity: Activity
 
     private val favouriteSongs: FavouriteSongsDb get() = db!!
-    private var subscription: Disposable? = null
 
     private var favouritesCache: SimpleCache<HashSet<Song>> =
             SimpleCache {
@@ -39,10 +38,11 @@ class FavouriteSongsDao(path: String) : AbstractJsonDao<FavouriteSongsDb>(
     init {
         DaggerIoc.factoryComponent.inject(this)
 
-        subscription?.dispose()
-        subscription = songsRepository.dbChangeSubject.subscribe {
-            favouritesCache.invalidate()
-        }
+        songsRepository.dbChangeSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    favouritesCache.invalidate()
+                }.isDisposed
 
         read()
     }

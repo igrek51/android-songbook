@@ -53,6 +53,7 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
                 searchFilterSubject.onNext(s.toString())
             }
         })
+
         if (isFilterSet()) {
             searchFilterEdit!!.setText(itemNameFilter, TextView.BufferType.EDITABLE)
         }
@@ -80,22 +81,19 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
 
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
-        subscriptions.add(
-                songsRepository.dbChangeSubject
-                        .subscribe {
-                            if (layoutController.isState(getLayoutState()))
-                                updateSongItemsList()
-                        }
-        )
         // refresh only after some inactive time
-        subscriptions.add(
-                searchFilterSubject
-                        .debounce(400, TimeUnit.MILLISECONDS)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
-                            setSongFilter(searchFilterEdit!!.text.toString())
-                        }
-        )
+        subscriptions.add(searchFilterSubject
+                .debounce(400, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    setSongFilter(searchFilterEdit!!.text.toString())
+                })
+        subscriptions.add(songsRepository.dbChangeSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    if (layoutController.isState(getLayoutState()))
+                        updateSongItemsList()
+                })
     }
 
     override fun getLayoutState(): LayoutState {

@@ -17,6 +17,7 @@ import igrek.songbook.persistence.user.history.OpenHistoryDao
 import igrek.songbook.persistence.user.playlist.PlaylistDao
 import igrek.songbook.persistence.user.transpose.TransposeDao
 import igrek.songbook.persistence.user.unlocked.UnlockedSongsDao
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -54,6 +55,7 @@ class SongsRepository {
 
         saveRequestSubject
                 .debounce(1500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { toSave ->
                     if (toSave)
                         save()

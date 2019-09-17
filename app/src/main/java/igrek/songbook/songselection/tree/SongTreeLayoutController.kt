@@ -11,6 +11,8 @@ import igrek.songbook.layout.MainLayout
 import igrek.songbook.persistence.general.model.Category
 import igrek.songbook.persistence.general.model.SongsDb
 import igrek.songbook.songselection.SongSelectionLayoutController
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
@@ -22,6 +24,8 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
     private var toolbarTitle: TextView? = null
     private var goBackButton: ImageButton? = null
     private var searchSongButton: ImageButton? = null
+
+    private var subscriptions = mutableListOf<Disposable>()
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -41,10 +45,14 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
         itemsListView!!.init(activity, this)
         updateSongItemsList()
 
-        songsRepository.dbChangeSubject.subscribe {
-            if (layoutController.isState(getLayoutState()))
-                updateSongItemsList()
-        }
+        subscriptions.forEach { s -> s.dispose() }
+        subscriptions.clear()
+        subscriptions.add(songsRepository.dbChangeSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    if (layoutController.isState(getLayoutState()))
+                        updateSongItemsList()
+                })
     }
 
     override fun getLayoutState(): LayoutState {

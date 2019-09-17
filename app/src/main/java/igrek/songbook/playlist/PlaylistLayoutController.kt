@@ -24,6 +24,7 @@ import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.tree.NoParentItemException
 import igrek.songbook.util.ListMover
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
@@ -82,14 +83,18 @@ class PlaylistLayoutController : InflatedLayout(
 
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
-        subscriptions.add(songsRepository.dbChangeSubject.subscribe {
-            if (isLayoutVisible())
-                updateItemsList()
-        })
-        subscriptions.add(songsRepository.playlistDao.playlistDbSubject.subscribe {
-            if (isLayoutVisible())
-                updateItemsList()
-        })
+        subscriptions.add(songsRepository.dbChangeSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    if (isLayoutVisible())
+                        updateItemsList()
+                })
+        subscriptions.add(songsRepository.playlistDao.playlistDbSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    if (isLayoutVisible())
+                        updateItemsList()
+                })
     }
 
     private fun addPlaylist() {

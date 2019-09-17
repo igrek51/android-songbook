@@ -1,6 +1,5 @@
 package igrek.songbook.songpreview.quickmenu
 
-import android.annotation.SuppressLint
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
@@ -13,12 +12,12 @@ import igrek.songbook.layout.slider.SliderController
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-@SuppressLint("CheckResult")
 class QuickMenuAutoscroll {
 
     @Inject
@@ -41,6 +40,8 @@ class QuickMenuAutoscroll {
     private var autoscrollPauseSlider: SliderController? = null
     private var autoscrollSpeedSlider: SliderController? = null
 
+    private val subscriptions = mutableListOf<Disposable>()
+
     /**
      * @return is feature active - has impact on song preview (panel may be hidden)
      */
@@ -49,18 +50,20 @@ class QuickMenuAutoscroll {
 
     init {
         DaggerIoc.factoryComponent.inject(this)
+
         autoscrollService.scrollStateSubject
                 .debounce(200, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { updateView() }
-
+                .subscribe {
+                    updateView()
+                }.isDisposed
         autoscrollService.scrollSpeedAdjustmentSubject
                 .debounce(200, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { updateView() }
+                .subscribe {
+                    updateView()
+                }.isDisposed
     }
-
-    // TODO refactor: repeated code: same sliders in settings
 
     fun setQuickMenuView(quickMenuView: View) {
         this.quickMenuView = quickMenuView
@@ -102,10 +105,17 @@ class QuickMenuAutoscroll {
         speedPlusButton.setOnClickListener { addAutoscrollSpeed(0.001f) }
 
         // save parameters on change
-        Observable.merge(autoscrollPauseSlider!!.valueSubject, autoscrollSpeedSlider!!.valueSubject)
-                .debounce(200, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { saveSettings() }
+        subscriptions.forEach { s -> s.dispose() }
+        subscriptions.clear()
+        subscriptions.add(
+                Observable.merge(
+                        autoscrollPauseSlider!!.valueSubject,
+                        autoscrollSpeedSlider!!.valueSubject)
+                        .debounce(200, TimeUnit.MILLISECONDS)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe {
+                            saveSettings()
+                        })
     }
 
     private fun addInitialPause(diff: Float) {

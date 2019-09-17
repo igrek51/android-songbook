@@ -74,21 +74,20 @@ class AutoscrollService {
         reset()
 
         // aggreagate many little scrolls into greater parts (not proper RX method found)
-        subscriptions.add(
-                canvasScrollSubject.observeOn(AndroidSchedulers.mainThread())
-                        .subscribe { linePartScrolled ->
-                            scrolledBuffer += linePartScrolled!!
-                            aggregatedScrollSubject.onNext(scrolledBuffer)
-                        }
-        )
-        subscriptions.add(
-                aggregatedScrollSubject.throttleLast(300, TimeUnit.MILLISECONDS)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
-                            onCanvasScrollEvent(scrolledBuffer, canvas!!.scroll)
-                            scrolledBuffer = 0f
-                        }
-        )
+        canvasScrollSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { linePartScrolled ->
+                    scrolledBuffer += linePartScrolled!!
+                    aggregatedScrollSubject.onNext(scrolledBuffer)
+                }.isDisposed
+
+        aggregatedScrollSubject
+                .throttleLast(300, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    onCanvasScrollEvent(scrolledBuffer, canvas!!.scroll)
+                    scrolledBuffer = 0f
+                }.isDisposed
     }
 
     private fun loadPreferences() {

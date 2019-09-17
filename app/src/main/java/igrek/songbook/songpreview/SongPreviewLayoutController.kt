@@ -94,13 +94,18 @@ class SongPreviewLayoutController : MainLayout {
 
     init {
         DaggerIoc.factoryComponent.inject(this)
+
         autoscrollService.get().scrollStateSubject
                 .debounce(100, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { highlightPanelButtons() }.isDisposed
+                .subscribe {
+                    highlightPanelButtons()
+                }.isDisposed
         favouriteSongsService.get().updateFavouriteSongSubject
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { updateFavouriteButton() }.isDisposed
+                .subscribe {
+                    updateFavouriteButton()
+                }.isDisposed
     }
 
     override fun showLayout(layout: View) {

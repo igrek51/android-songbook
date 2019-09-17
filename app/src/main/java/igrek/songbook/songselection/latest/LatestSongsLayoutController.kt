@@ -19,6 +19,7 @@ import igrek.songbook.songselection.SongListView
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.search.SongSearchItem
 import igrek.songbook.songselection.tree.SongTreeItem
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
@@ -63,10 +64,12 @@ class LatestSongsLayoutController : InflatedLayout(
 
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
-        subscriptions.add(songsRepository.dbChangeSubject.subscribe {
-            if (isLayoutVisible())
-                updateItemsList()
-        })
+        subscriptions.add(songsRepository.dbChangeSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    if (isLayoutVisible())
+                        updateItemsList()
+                })
     }
 
     private fun updateItemsList() {

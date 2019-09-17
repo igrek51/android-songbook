@@ -20,6 +20,7 @@ import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.tree.NoParentItemException
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
@@ -73,10 +74,12 @@ class CustomSongsLayoutController : InflatedLayout(
 
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
-        subscriptions.add(songsRepository.dbChangeSubject.subscribe {
-            if (isLayoutVisible())
-                updateItemsList()
-        })
+        subscriptions.add(songsRepository.dbChangeSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    if (isLayoutVisible())
+                        updateItemsList()
+                })
     }
 
     private fun addCustomSong() {
