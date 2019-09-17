@@ -110,7 +110,9 @@ class ChordsDiagramsService {
 
     private fun showChordDefinition(chord: String, uniqueChords: Set<String>) {
         val message = chordGraphs(chord)
-        val title = uiResourceService.resString(R.string.chord_diagrams_versions, chord)
+        val instrument = chordsInstrumentService.instrument
+        val instrumentName = uiResourceService.resString(instrument.displayNameResId)
+        val title = uiResourceService.resString(R.string.chord_diagrams_versions, chord, instrumentName)
 
         val alertBuilder = AlertDialog.Builder(activity)
         alertBuilder.setTitle(title)

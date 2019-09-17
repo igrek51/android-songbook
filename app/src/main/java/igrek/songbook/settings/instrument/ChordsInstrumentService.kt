@@ -4,7 +4,6 @@ import android.app.Activity
 import dagger.Lazy
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
-import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.preferences.PreferencesDefinition
 import igrek.songbook.settings.preferences.PreferencesService
 import java.util.*
@@ -33,9 +32,9 @@ class ChordsInstrumentService {
 
     fun instrumentEntries(): LinkedHashMap<String, String> {
         val map = LinkedHashMap<String, String>()
-        for (item in AppLanguage.values()) {
+        for (item in ChordsInstrument.values()) {
             val displayName = uiResourceService.get().resString(item.displayNameResId)
-            map[item.langCode] = displayName
+            map[item.id.toString()] = displayName
         }
         return map
     }

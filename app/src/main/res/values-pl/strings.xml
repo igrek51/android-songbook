@@ -270,7 +270,7 @@
     <string name="no_chords_recognized_in_song">Nie rozpoznano akordów w piosence</string>
     <string name="show_chords_definitions">Diagramy akordów</string>
     <string name="choose_a_chord">Wybierz akord z piosenki</string>
-    <string name="chord_diagrams_versions" formatted="false">Warianty akordu \"%s\"</string>
+    <string name="chord_diagrams_versions" formatted="false">Warianty akordu \"%s\" (%s)</string>
     <string name="action_close">Zamknij</string>
     <string name="action_back">Wróć</string>
     <string name="instrument_guitar">Gitara</string>
