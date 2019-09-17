@@ -32,6 +32,8 @@ enum class PreferencesDefinition constructor(val type: PropertyType, val default
 
     RestoreTransposition(true),
 
+    ChordsInstrument(igrek.songbook.settings.instrument.ChordsInstrument.default.id),
+
     ;
 
     constructor(defaultValue: String) : this(PropertyType.STRING, defaultValue)

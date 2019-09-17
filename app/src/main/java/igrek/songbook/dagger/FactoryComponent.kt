@@ -44,6 +44,7 @@ import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.settings.SettingsFragment
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
+import igrek.songbook.settings.instrument.ChordsInstrumentService
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.PreferencesUpdater
@@ -148,5 +149,6 @@ interface FactoryComponent {
     fun inject(there: ExclusionDao)
     fun inject(there: TransposeDao)
     fun inject(there: ChordsDiagramsService)
+    fun inject(there: ChordsInstrumentService)
 
 }

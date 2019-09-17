@@ -10,6 +10,12 @@
             app:iconSpaceReserved="false"/>
 
         <ListPreference
+            android:key="chordsInstrument"
+            android:title="@string/settings_chords_instrument"
+            android:summary="%s"
+            app:iconSpaceReserved="false"/>
+
+        <ListPreference
             android:key="chordsNotation"
             android:title="@string/settings_chords_notation"
             android:summary="%s"

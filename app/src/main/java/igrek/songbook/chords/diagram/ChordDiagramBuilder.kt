@@ -1,16 +1,23 @@
 package igrek.songbook.chords.diagram
 
+import igrek.songbook.settings.instrument.ChordsInstrument
 import kotlin.math.max
 
 
-class ChordDiagramBuilder {
+class ChordDiagramBuilder(private val instrument: ChordsInstrument = ChordsInstrument.default) {
 
     private val minimumFretsShown = 3
-    private val stringsNames = listOf("E", "H", "G", "D", "A", "E")
+    private val stringsNames = mapOf(
+            ChordsInstrument.GUITAR to listOf("E", "H", "G", "D", "A", "E"),
+            ChordsInstrument.UKULELE to listOf("A", "E", "C", "G"),
+            ChordsInstrument.MANDOLIN to listOf("E", "A", "D", "G")
+    )
 
     fun buildDiagram(definition: String): String {
         val fretsStr = definition.split(",")
-        assert(fretsStr.size == 6)
+
+        val stringsCount = stringsNames.getValue(instrument).size
+        assert(fretsStr.size == stringsCount) { "invalid frets size" }
 
         val frets = fretsStr.map {
             if (it == "x")
@@ -34,15 +41,14 @@ class ChordDiagramBuilder {
         val fretSign = if (showEllipsis) "…" else " "
         val hiddenFrets = if (showEllipsis) minFinger - 1 else 0
 
-        val displayFrets = mutableListOf<DisplayFret>()
-        stringsNames.forEach { stringName ->
-            displayFrets.add(DisplayFret(
+        val displayFrets: List<DisplayFret> = stringsNames.getValue(instrument).map { stringName ->
+            DisplayFret(
                     stringName = stringName,
                     fretSign = fretSign,
                     fretsShown = fretsShown,
-                    digitsCount = digitsCount)
+                    digitsCount = digitsCount
             )
-        }
+        }.toMutableList()
 
         frets.reversed().forEachIndexed { index, fretValue ->
             val displayFret = displayFrets[index]

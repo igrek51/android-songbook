@@ -280,4 +280,8 @@
     <string name="chord_diagrams_versions" formatted="false">Chord \"%s\" variations</string>
     <string name="action_close">Close</string>
     <string name="action_back">Back</string>
+    <string name="instrument_guitar">Guitar</string>
+    <string name="instrument_ukulele">Ukulele</string>
+    <string name="instrument_mandolin">Mandolin</string>
+    <string name="settings_chords_instrument">Chords instrument</string>
 </resources>

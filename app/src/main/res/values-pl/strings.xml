@@ -273,4 +273,8 @@
     <string name="chord_diagrams_versions" formatted="false">Warianty akordu \"%s\"</string>
     <string name="action_close">Zamknij</string>
     <string name="action_back">Wróć</string>
+    <string name="instrument_guitar">Gitara</string>
+    <string name="instrument_ukulele">Ukulele</string>
+    <string name="instrument_mandolin">Mandolina</string>
+    <string name="settings_chords_instrument">Instrument do akordów</string>
 </resources>

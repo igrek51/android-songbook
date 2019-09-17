@@ -7,7 +7,7 @@ class DuplicatesTest {
 
     @Test
     fun test_duplicates_in_particular_chords() {
-        chordsDiagrams.forEach { (name, diagrams) ->
+        guitarChordsDiagrams.forEach { (name, diagrams) ->
             val uniqueDiagrams = mutableSetOf<String>()
             diagrams.forEach { diagram ->
                 assert(diagram !in uniqueDiagrams) { "chord $name has duplicated diagrams: $diagram" }
@@ -20,7 +20,7 @@ class DuplicatesTest {
     fun test_duplicated_diagrams_between_chords() {
         val errors = mutableListOf<String>()
         val uniqueDiagrams = mutableSetOf<String>()
-        chordsDiagrams.forEach { (name, diagrams) ->
+        guitarChordsDiagrams.forEach { (name, diagrams) ->
             diagrams.forEach { diagram ->
                 if(diagram in uniqueDiagrams) {
                     errors.add("diagram $diagram is not unique for chord $name")

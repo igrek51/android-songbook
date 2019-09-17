@@ -36,6 +36,7 @@ import igrek.songbook.playlist.PlaylistLayoutController
 import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
+import igrek.songbook.settings.instrument.ChordsInstrumentService
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.PreferencesUpdater
@@ -410,6 +411,12 @@ open class FactoryModule(private val activity: AppCompatActivity) {
     @Singleton
     fun provideChordsDefinitionService(): ChordsDiagramsService {
         return ChordsDiagramsService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideChordsInstrumentService(): ChordsInstrumentService {
+        return ChordsInstrumentService()
     }
 
     /*

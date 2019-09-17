@@ -16,6 +16,8 @@ import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
+import igrek.songbook.settings.instrument.ChordsInstrument
+import igrek.songbook.settings.instrument.ChordsInstrumentService
 import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesUpdater
@@ -46,6 +48,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
     @Inject
     lateinit var chordsNotationService: dagger.Lazy<ChordsNotationService>
     @Inject
+    lateinit var chordsInstrumentService: dagger.Lazy<ChordsInstrumentService>
+    @Inject
     lateinit var preferencesUpdater: dagger.Lazy<PreferencesUpdater>
     @Inject
     lateinit var songsRepository: dagger.Lazy<SongsRepository>
@@ -71,6 +75,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 onLoad = { preferencesUpdater.get().appLanguage?.langCode },
                 onSave = { id: String ->
                     preferencesUpdater.get().appLanguage = AppLanguage.parseByLangCode(id)
+                }
+        )
+
+        setupListPreference("chordsInstrument",
+                chordsInstrumentService.get().instrumentEntries(),
+                onLoad = { preferencesUpdater.get().chordsInstrument?.id.toString() },
+                onSave = { id: String ->
+                    preferencesUpdater.get().chordsInstrument = ChordsInstrument.parseById(id.toLong())
                 }
         )
 

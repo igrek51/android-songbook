@@ -2,7 +2,7 @@ package igrek.songbook.chords.diagram
 
 import igrek.songbook.util.lookup.SimpleCache
 
-val chordsDiagrams: Map<String, List<String>> = hashMapOf(
+val guitarChordsDiagrams: Map<String, List<String>> = hashMapOf(
 
         "C" to listOf("x,3,2,0,1,0", "8,10,10,9,8,8", "x,3,5,5,5,3", "x,x,10,12,13,12", "x,x,5,5,5,8"),
         "Cmaj7" to listOf("8,x,9,9,8,x", "8,10,9,9,8,8", "x,3,5,4,5,3", "x,x,10,9,8,7", "0,3,2,0,0,0", "x,x,10,12,12,12", "x,x,2,4,1,3", "3,3,5,4,5,3", "x,7,5,5,5,7", "x,x,9,9,8,8"),
@@ -680,7 +680,67 @@ val chordsDiagrams: Map<String, List<String>> = hashMapOf(
 
 )
 
+val ukuleleChordsDiagrams: Map<String, List<String>> = hashMapOf(
+        "C" to listOf("0,0,0,3"),
+        "Cm" to listOf("1,3,3,3"),
+        "C#" to listOf("1,1,1,4"),
+        "C#m" to listOf("1,1,0,2"),
+        "D" to listOf("2,2,2,0"),
+        "Dm" to listOf("2,2,1,0"),
+        "D#" to listOf("0,3,3,1"),
+        "D#m" to listOf("3,3,2,1"),
+        "E" to listOf("1,4,0,2"),
+        "Em" to listOf("0,4,3,2"),
+        "F" to listOf("2,0,1,0"),
+        "Fm" to listOf("1,0,1,3"),
+        "F#" to listOf("3,1,2,1"),
+        "F#m" to listOf("2,1,2,0"),
+        "G" to listOf("0,2,3,2"),
+        "Gm" to listOf("0,2,3,1"),
+        "G#" to listOf("5,3,4,3"),
+        "G#m" to listOf("4,3,4,2"),
+        "A" to listOf("2,1,0,0"),
+        "Am" to listOf("2,0,0,0"),
+        "Bb" to listOf("3,2,1,1"),
+        "Bbm" to listOf("3,1,1,1"),
+        "B" to listOf("4,3,2,2"),
+        "Bm" to listOf("4,2,2,2")
+)
+
+val mandolinChordsDiagrams: Map<String, List<String>> = hashMapOf(
+        "C" to listOf("0,2,3,0"),
+        "Cm" to listOf("0,1,3,x"),
+        "C#" to listOf("1,3,4,x"),
+        "C#m" to listOf("6,2,4,x", "6,6,7,9"),
+        "D" to listOf("1,0,0,1"),
+        "Dm" to listOf("2,0,0,1"),
+        "D#" to listOf("3,5,6,x"),
+        "D#m" to listOf("3,1,4,2", "3,1,1,2"),
+        "E" to listOf("x,2,2,0"),
+        "Em" to listOf("0,2,2,3"),
+        "F" to listOf("5,3,0,1"),
+        "Fm" to listOf("5,3,3,4"),
+        "F#" to listOf("6,4,1,2"),
+        "F#m" to listOf("2,4,4,x"),
+        "G" to listOf("0,0,2,3"),
+        "Gm" to listOf("0,0,1,3"),
+        "G#" to listOf("1,1,3,4", "1,1,3,x"),
+        "G#m" to listOf("1,1,2,4"),
+        "A" to listOf("2,2,0,0"),
+        "Am" to listOf("2,2,3,0"),
+        "Bb" to listOf("3,3,5,6", "3,3,5,x"),
+        "Bbm" to listOf("3,3,4,6", "6,8,8,x"),
+        "B" to listOf("4,4,6,7"),
+        "Bm" to listOf("4,0,2,2")
+)
+
 private val chordDiagramPrefixAliases: Map<String, List<String>> = hashMapOf(
+        "C#" to listOf("Db"),
+        "D#" to listOf("Eb"),
+        "F#" to listOf("Gb"),
+        "G#" to listOf("Ab"),
+        "A#" to listOf("Bb"),
+
         "C#/Db" to listOf("C#", "Db"),
         "D#/Eb" to listOf("D#", "Eb"),
         "F#/Gb" to listOf("F#", "Gb"),
@@ -688,11 +748,23 @@ private val chordDiagramPrefixAliases: Map<String, List<String>> = hashMapOf(
         "A#/Bb" to listOf("A#", "Bb")
 )
 
-val allChordsDiagrams: SimpleCache<Map<String, List<String>>> = SimpleCache {
-    val diagrams = HashMap(chordsDiagrams)
+val allGuitarChordsDiagrams: SimpleCache<Map<String, List<String>>> = SimpleCache {
+    populateAllChordDiagrams(guitarChordsDiagrams)
+}
+
+val allUkuleleChordsDiagrams: SimpleCache<Map<String, List<String>>> = SimpleCache {
+    populateAllChordDiagrams(ukuleleChordsDiagrams)
+}
+
+val allMandolinChordsDiagrams: SimpleCache<Map<String, List<String>>> = SimpleCache {
+    populateAllChordDiagrams(mandolinChordsDiagrams)
+}
+
+private fun populateAllChordDiagrams(baseMap: Map<String, List<String>>): Map<String, List<String>> {
+    val diagrams = HashMap(baseMap)
     // populate aliases
     chordDiagramPrefixAliases.forEach { (aliasPrefix, aliasedTypes) ->
-        chordsDiagrams.filterKeys { it.startsWith(aliasPrefix) }
+        baseMap.filterKeys { it.startsWith(aliasPrefix) }
                 .forEach { (chord, definitions) ->
                     val chordSuffix = chord.drop(aliasPrefix.length)
                     aliasedTypes.forEach { aliasedType ->
@@ -701,5 +773,5 @@ val allChordsDiagrams: SimpleCache<Map<String, List<String>>> = SimpleCache {
                     }
                 }
     }
-    diagrams
+    return diagrams
 }
