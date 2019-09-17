@@ -1,12 +1,13 @@
 package igrek.songbook.activity
 
 import android.app.Activity
+import dagger.Lazy
 import igrek.songbook.BuildConfig
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.general.SongsUpdater
+import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.system.WindowManagerService
 import javax.inject.Inject
@@ -14,17 +15,17 @@ import javax.inject.Inject
 class AppInitializer {
 
     @Inject
-    lateinit var windowManagerService: WindowManagerService
+    lateinit var windowManagerService: Lazy<WindowManagerService>
     @Inject
-    lateinit var activity: Activity
+    lateinit var activity: Lazy<Activity>
     @Inject
-    lateinit var layoutController: LayoutController
+    lateinit var layoutController: Lazy<LayoutController>
     @Inject
-    lateinit var songsUpdater: SongsUpdater
+    lateinit var songsUpdater: Lazy<SongsUpdater>
     @Inject
-    lateinit var appLanguageService: AppLanguageService
+    lateinit var appLanguageService: Lazy<AppLanguageService>
     @Inject
-    lateinit var songsRepository: SongsRepository
+    lateinit var songsRepository: Lazy<SongsRepository>
 
     private val logger = LoggerFactory.logger
 
@@ -37,19 +38,19 @@ class AppInitializer {
             debugInit()
         }
 
-        appLanguageService.setLocale()
-        windowManagerService.hideTaskbar()
-        songsRepository.init()
-        layoutController.init()
-        layoutController.showSongTree()
-        songsUpdater.checkUpdateIsAvailable()
+        appLanguageService.get().setLocale()
+        windowManagerService.get().hideTaskbar()
+        songsRepository.get().init()
+        layoutController.get().init()
+        layoutController.get().showSongTree()
+        songsUpdater.get().checkUpdateIsAvailable()
 
         logger.info("Application has been initialized.")
     }
 
     private fun debugInit() {
         // Allow showing the activity even if the device is locked
-        windowManagerService.showAppWhenLocked()
+        windowManagerService.get().showAppWhenLocked()
     }
 
 }

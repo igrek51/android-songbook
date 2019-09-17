@@ -3,6 +3,7 @@ package igrek.songbook.activity
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
+import dagger.Lazy
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.persistence.repository.SongsRepository
@@ -13,13 +14,13 @@ import javax.inject.Inject
 class ActivityController {
 
     @Inject
-    lateinit var windowManagerService: WindowManagerService
+    lateinit var windowManagerService: Lazy<WindowManagerService>
     @Inject
-    lateinit var activity: Activity
+    lateinit var activity: Lazy<Activity>
     @Inject
-    lateinit var songsRepository: SongsRepository
+    lateinit var songsRepository: Lazy<SongsRepository>
     @Inject
-    lateinit var preferencesUpdater: PreferencesUpdater
+    lateinit var preferencesUpdater: Lazy<PreferencesUpdater>
 
     private val logger = LoggerFactory.logger
 
@@ -45,23 +46,23 @@ class ActivityController {
     }
 
     fun quit() {
-        windowManagerService.keepScreenOn(false)
-        activity.finish()
+        windowManagerService.get().keepScreenOn(false)
+        activity.get().finish()
     }
 
     fun onStart() {
         logger.debug("starting activity...")
-        songsRepository.requestSave(false)
+        songsRepository.get().requestSave(false)
     }
 
     fun onStop() {
         logger.debug("stopping activity...")
-        songsRepository.requestSave(true)
-        preferencesUpdater.updateAndSave()
+        songsRepository.get().requestSave(true)
+        preferencesUpdater.get().updateAndSave()
     }
 
     fun onDestroy() {
-        songsRepository.saveNow()
+        songsRepository.get().saveNow()
         logger.info("activity has been destroyed")
     }
 
@@ -69,7 +70,7 @@ class ActivityController {
         val startMain = Intent(Intent.ACTION_MAIN)
         startMain.addCategory(Intent.CATEGORY_HOME)
         startMain.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        activity.startActivity(startMain)
+        activity.get().startActivity(startMain)
     }
 
 }

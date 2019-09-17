@@ -12,7 +12,6 @@ import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.renderer.SongPreview
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -43,7 +42,6 @@ class AutoscrollService {
     val scrollStateSubject = PublishSubject.create<AutoscrollState>()
     val scrollSpeedAdjustmentSubject = PublishSubject.create<Float>()
 
-    private val subscriptions = mutableListOf<Disposable>()
     private val timerHandler = Handler()
     private val timerRunnable: () -> Unit = {
         if (state != AutoscrollState.OFF) {
@@ -85,7 +83,8 @@ class AutoscrollService {
                 .throttleLast(300, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    onCanvasScrollEvent(scrolledBuffer, canvas!!.scroll)
+                    if (canvas != null)
+                        onCanvasScrollEvent(scrolledBuffer, canvas?.scroll ?: 0f)
                     scrolledBuffer = 0f
                 }.isDisposed
     }
@@ -102,11 +101,13 @@ class AutoscrollService {
     }
 
     fun start() {
-        val linePartScroll = canvas!!.scroll / canvas!!.lineheightPx
-        if (linePartScroll <= START_NO_WAITING_MIN_SCROLL) {
-            start(true)
-        } else {
-            start(false)
+        canvas?.run {
+            val linePartScroll = scroll / lineheightPx
+            if (linePartScroll <= START_NO_WAITING_MIN_SCROLL) {
+                start(true)
+            } else {
+                start(false)
+            }
         }
     }
 
@@ -114,7 +115,7 @@ class AutoscrollService {
         if (isRunning) {
             stop()
         }
-        if (canvas!!.canScrollDown()) {
+        if (canvas?.canScrollDown() == true) {
             state = if (withWaiting) {
                 AutoscrollState.WAITING
             } else {
@@ -147,7 +148,7 @@ class AutoscrollService {
         } else if (state == AutoscrollState.SCROLLING) {
             // em = speed * time
             val lineheightPart = autoscrollSpeed * AUTOSCROLL_INTERVAL_TIME / 1000
-            if (canvas!!.scrollByLines(lineheightPart)) {
+            if (canvas?.scrollByLines(lineheightPart) != false) {
                 // scroll once again later
                 timerHandler.postDelayed(timerRunnable, AUTOSCROLL_INTERVAL_TIME.toLong())
             } else {
