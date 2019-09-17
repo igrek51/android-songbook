@@ -8,7 +8,9 @@ val longestChordComparator = Comparator { lhs: String, rhs: String ->
     }
 }
 
+// these delimiters splits chords irrespectively (at any time)
 val chordsPrimaryDelimiters = setOf(" ", ",", "\n").toTypedArray()
+// these delimiters may split chords but may be a part of a chords as well
 val chordsSupplementaryDelimiters = setOf("(", ")", "-", "/").toTypedArray()
 val chordsAllDelimiters = chordsPrimaryDelimiters + chordsSupplementaryDelimiters
 

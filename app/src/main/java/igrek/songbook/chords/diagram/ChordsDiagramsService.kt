@@ -8,6 +8,7 @@ import android.widget.TextView
 import igrek.songbook.R
 import igrek.songbook.chords.ChordsConverter
 import igrek.songbook.chords.syntax.chordsPrimaryDelimiters
+import igrek.songbook.chords.syntax.chordsSupplementaryDelimiters
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -49,7 +50,7 @@ class ChordsDiagramsService {
                                 uniqueChords.add(chord)
                             } else {
                                 // split further if not recognized
-                                chord.split(*chordsPrimaryDelimiters).forEach { subchord ->
+                                chord.split(*chordsSupplementaryDelimiters).forEach { subchord ->
                                     val subEngChord = toEnglishConverter.convertChord(subchord)
                                     if (subEngChord in allChordsDiagrams.get()) {
                                         uniqueChords.add(subchord)
