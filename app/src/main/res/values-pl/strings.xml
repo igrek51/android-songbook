@@ -194,7 +194,7 @@
     <string name="settings_autoscroll_volume_keys_hint">Przyciski zwiększania / zmniejszania głośności przyspieszą lub spowolnią autoprzewijanie</string>
     <string name="settings_random_song_section">Losowa piosenka</string>
     <string name="settings_autoscroll_section">Autoprzewijanie</string>
-    <string name="settings_random_favourite">Losowa ulubiona piosenka</string>
+    <string name="settings_random_favourite">Losuj tylko ulubione</string>
     <string name="settings_random_favourite_hint">Losowanie piosenek tylko z listy ulubionych</string>
     <string name="settings_songs_list_section">Lista piosenek</string>
     <string name="settings_exclude_languages">Ukryj piosenki w wybranych językach</string>
@@ -276,5 +276,5 @@
     <string name="instrument_guitar">Gitara</string>
     <string name="instrument_ukulele">Ukulele</string>
     <string name="instrument_mandolin">Mandolina</string>
-    <string name="settings_chords_instrument">Instrument do akordów</string>
+    <string name="settings_chords_instrument">Instrument dla diagramów akordów</string>
 </resources>

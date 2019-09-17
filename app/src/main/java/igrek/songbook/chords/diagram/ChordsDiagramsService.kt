@@ -14,6 +14,7 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.settings.chordsnotation.ChordsNotation
+import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.instrument.ChordsInstrument
 import igrek.songbook.settings.instrument.ChordsInstrumentService
 import igrek.songbook.songpreview.lyrics.LyricsModel
@@ -33,8 +34,10 @@ class ChordsDiagramsService {
     lateinit var activity: Activity
     @Inject
     lateinit var chordsInstrumentService: ChordsInstrumentService
+    @Inject
+    lateinit var chordsNotationService: ChordsNotationService
 
-    private val toEnglishConverter = ChordsConverter(ChordsNotation.GERMAN, ChordsNotation.ENGLISH)
+    private var toEnglishConverter = ChordsConverter(ChordsNotation.GERMAN, ChordsNotation.ENGLISH)
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -89,6 +92,9 @@ class ChordsDiagramsService {
     }
 
     fun showLyricsChordsMenu(crdModel: LyricsModel) {
+        toEnglishConverter = ChordsConverter(chordsNotationService.chordsNotation
+                ?: ChordsNotation.default, ChordsNotation.ENGLISH)
+
         val uniqueChords = findUniqueChords(crdModel)
         if (uniqueChords.isEmpty()) {
             uiInfoService.showInfo(R.string.no_chords_recognized_in_song)

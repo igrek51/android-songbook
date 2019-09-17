@@ -194,7 +194,7 @@
     <string name="settings_autoscroll_volume_keys_hint">Use Up / Down volume buttons to increase or decrease scroll speed respectively</string>
     <string name="settings_random_song_section">Random song</string>
     <string name="settings_autoscroll_section">Autoscroll</string>
-    <string name="settings_random_favourite">Random favourite songs</string>
+    <string name="settings_random_favourite">Random favourites only</string>
     <string name="settings_random_favourite_hint">Shuffle songs from favourite songs only</string>
     <string name="settings_songs_list_section">Songs list</string>
     <string name="settings_exclude_languages">Hide songs with particular languages</string>
@@ -283,5 +283,5 @@
     <string name="instrument_guitar">Guitar</string>
     <string name="instrument_ukulele">Ukulele</string>
     <string name="instrument_mandolin">Mandolin</string>
-    <string name="settings_chords_instrument">Chords instrument</string>
+    <string name="settings_chords_instrument">Instrument for chord diagrams</string>
 </resources>
