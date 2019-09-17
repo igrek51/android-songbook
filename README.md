@@ -18,6 +18,7 @@ The guitar songs database is included and is easily extensible.
 * Chords transposition (to any key)
 * Auto scrolling
 * Playlists with songs
+* Chord diagrams for guitar, ukulele and mandolin
 * Always-on display
 * Songs database included
 * Songs browser with search engine
