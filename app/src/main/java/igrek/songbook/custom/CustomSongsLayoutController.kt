@@ -164,7 +164,9 @@ class CustomSongsLayoutController : InflatedLayout(
     }
 
     override fun onMoreActions(item: CustomSongListItem) {
-        songContextMenuBuilder.showSongActions(item.song!!)
+        item.song?.let {
+            songContextMenuBuilder.showSongActions(it)
+        }
     }
 
 }
