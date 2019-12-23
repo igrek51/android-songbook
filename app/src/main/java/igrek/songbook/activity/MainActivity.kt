@@ -16,6 +16,7 @@ import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.system.PermissionService
 import igrek.songbook.system.SystemKeyDispatcher
+import igrek.songbook.util.RetryDelayed
 import javax.inject.Inject
 
 
@@ -61,7 +62,9 @@ open class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         Handler(Looper.getMainLooper()).post {
-            activityController.get().onStart()
+            RetryDelayed(10, 500, kotlin.UninitializedPropertyAccessException::class.java) {
+                activityController.get().onStart()
+            }
         }
     }
 
