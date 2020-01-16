@@ -1,7 +1,5 @@
 package igrek.songbook.info.logger
 
-import android.app.Activity
-import android.app.AlertDialog
 import android.util.Log
 import com.google.common.base.Joiner
 
@@ -21,26 +19,13 @@ open class Logger internal constructor() {
         log(msg, LogLevel.ERROR, "[ERROR] ")
     }
 
-    open fun fatal(activity: Activity?, ex: Throwable) {
+    open fun fatal(ex: Throwable) {
         var exTitle = ex.javaClass.name
         if (!ex.message.isNullOrEmpty()) {
             exTitle = "$exTitle - ${ex.message}"
         }
         printExceptionStackTrace(ex)
         log(exTitle, LogLevel.FATAL, "[FATAL] ")
-        if (activity == null) {
-            error("FATAL ERROR: No activity")
-            return
-        }
-        val dlgAlert = AlertDialog.Builder(activity)
-        dlgAlert.setMessage(exTitle)
-        dlgAlert.setTitle("Critical error :(")
-        dlgAlert.setPositiveButton("Close app") { _, _ ->
-            activity.finish()
-            throw RuntimeException(ex) // rethrow error to be reported
-        }
-        dlgAlert.setCancelable(false)
-        dlgAlert.create().show()
     }
 
     fun warn(message: String?) {

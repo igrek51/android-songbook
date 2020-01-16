@@ -10,6 +10,8 @@ import android.widget.Toast
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.errorcheck.SafeClickListener
+import igrek.songbook.info.logger.Logger
+import igrek.songbook.info.logger.LoggerFactory
 import java.util.*
 import javax.inject.Inject
 
@@ -22,6 +24,7 @@ class UiInfoService {
     lateinit var uiResourceService: dagger.Lazy<UiResourceService>
 
     private val infobars = HashMap<View?, Snackbar>()
+    private val logger: Logger = LoggerFactory.logger
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -65,6 +68,8 @@ class UiInfoService {
 
         snackbar.show()
         infobars[viewV] = snackbar
+
+        logger.debug("UI: snackbar: $info")
     }
 
     fun showInfo(info: String, dismissName: String) {
@@ -115,6 +120,7 @@ class UiInfoService {
 
     fun showToast(message: String) {
         Toast.makeText(activity.applicationContext, message, Toast.LENGTH_LONG).show()
+        logger.debug("UI: toast: $message")
     }
 
     fun showToast(messageRes: Int) {

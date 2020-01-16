@@ -1,14 +1,11 @@
 package igrek.songbook.mock
 
-
-import android.app.Activity
-
 import igrek.songbook.info.logger.LogLevel
 import igrek.songbook.info.logger.Logger
 
 class LoggerMock : Logger() {
 
-    override fun fatal(activity: Activity?, ex: Throwable) {
+    override fun fatal(ex: Throwable) {
         log(ex.message, LogLevel.FATAL, "[FATAL ERROR] ")
     }
 

@@ -45,7 +45,8 @@ open class MainActivity : AppCompatActivity() {
             DaggerIoc.factoryComponent.inject(this)
             appInitializer.get().init()
         } catch (t: Throwable) {
-            logger.fatal(this, t)
+            logger.fatal(t)
+            throw t
         }
     }
 
@@ -62,7 +63,7 @@ open class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         Handler(Looper.getMainLooper()).post {
-            RetryDelayed(10, 500, kotlin.UninitializedPropertyAccessException::class.java) {
+            RetryDelayed(10, 500, UninitializedPropertyAccessException::class.java) {
                 activityController.get().onStart()
             }
         }
