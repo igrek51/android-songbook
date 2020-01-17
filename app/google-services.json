@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "690032273066",
+    "firebase_url": "https://songbook-firebase.firebaseio.com",
+    "project_id": "songbook-firebase",
+    "storage_bucket": "songbook-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:690032273066:android:03a717901cc8d9fcac92d3",
+        "android_client_info": {
+          "package_name": "igrek.songbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "690032273066-3nqblpkvud93i7q67dtc2jan2fdsrnfu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuCeQnVrK4KnbgWcDL9mI61iiRJ_aZIAE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "690032273066-3nqblpkvud93i7q67dtc2jan2fdsrnfu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
