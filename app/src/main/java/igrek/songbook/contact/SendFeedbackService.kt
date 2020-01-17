@@ -39,7 +39,7 @@ class SendFeedbackService {
 
     companion object {
         private const val APPLICATION_ID = 1
-        private const val url = "http://51.38.128.10:8006/contact/send/"
+        private const val url = "http://51.38.128.10:8006/api/v1/send"
     }
 
     init {
