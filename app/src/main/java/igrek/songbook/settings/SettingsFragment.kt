@@ -25,6 +25,7 @@ import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.FontTypeface
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
+import igrek.songbook.util.RetryDelayed
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import javax.inject.Inject
@@ -260,7 +261,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val preference = findPreference(key) as MultiSelectListPreference
         preference.entryValues = entriesMap.keys.toTypedArray()
         preference.entries = entriesMap.values.toTypedArray()
-        preference.values = onLoad()
+
+        RetryDelayed(5, 500, kotlin.KotlinNullPointerException::class.java) {
+            preference.values = onLoad()
+        }
+
         preference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { pref, newValue ->
             if (newValue != null && newValue is Set<*>) {
                 @Suppress("unchecked_cast")
