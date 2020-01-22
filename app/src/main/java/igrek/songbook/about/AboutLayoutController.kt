@@ -6,7 +6,7 @@ import android.net.Uri
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.R
-import igrek.songbook.about.secret.SecretUnlockerService
+import igrek.songbook.about.secret.SecretCommandService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.persistence.repository.SongsRepository
@@ -20,7 +20,7 @@ class AboutLayoutController {
     @Inject
     lateinit var activity: AppCompatActivity
     @Inject
-    lateinit var secretUnlockerService: SecretUnlockerService
+    lateinit var secretCommandService: SecretCommandService
     @Inject
     lateinit var packageInfoService: PackageInfoService
     @Inject
@@ -42,7 +42,7 @@ class AboutLayoutController {
 
     private fun showDialogWithActions(title: String, message: String) {
         val unlockActionName = uiResourceService.resString(R.string.action_secret)
-        val unlockAction = Runnable { secretUnlockerService.showUnlockAlert() }
+        val unlockAction = Runnable { secretCommandService.showUnlockAlert() }
         val rateActionName = uiResourceService.resString(R.string.action_rate_app)
         val rateAction = Runnable { this.openInGoogleStore() }
 

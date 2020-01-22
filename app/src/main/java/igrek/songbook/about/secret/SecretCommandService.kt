@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import android.text.InputType
 import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.google.common.base.Predicate
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
@@ -24,7 +24,7 @@ import igrek.songbook.system.locale.StringSimplifier
 import javax.inject.Inject
 
 
-class SecretUnlockerService {
+class SecretCommandService {
 
     @Inject
     lateinit var activity: AppCompatActivity
@@ -46,26 +46,30 @@ class SecretUnlockerService {
     private val cowCondition: Predicate<String> = Predicate { it?.matches("^m[ou]+$".toRegex()) ?: false }
     private val dupaCondition: Predicate<String> = Predicate { it?.contains("dupa") ?: false }
 
-    private val rules: List<UnlockerRule> = listOf(
-            UnlockerRule(dupaCondition) { showCowSuperPowers() },
-            UnlockerRule(cowCondition) { showCowSuperPowers() },
-            UnlockerRule("okon") { showCowSuperPowers() },
-            UnlockerRule("lich", "lisz") { toast("\"Trup tu tupta...\"") },
+    private val rules: List<CommandRule> = listOf(
+            CommandRule(dupaCondition) { showCowSuperPowers() },
+            CommandRule(cowCondition) { showCowSuperPowers() },
+            CommandRule("okon") { showCowSuperPowers() },
+            CommandRule("lich", "lisz") { toast("\"Trup tu tupta...\"") },
 
-            UnlockerRule("engineer", "inzynier") { unlockSongs("engineer") },
-            UnlockerRule("zjajem", "z jajem") { unlockSongs("zjajem") },
-            UnlockerRule("afcg") { unlockSongs("afcg") },
+            CommandRule("engineer", "inzynier") { unlockSongs("engineer") },
+            CommandRule("zjajem", "z jajem") { unlockSongs("zjajem") },
+            CommandRule("afcg") { unlockSongs("afcg") },
+
             // debug commands
-            UnlockerRule("reset") { reset() },
-            UnlockerRule("reset config") { preferencesService.clear() },
-            UnlockerRule("reset db") { songsRepository.factoryReset() },
-            UnlockerRule("reset db general") {
+            CommandRule("reset") { reset() },
+            CommandRule("reset config") { preferencesService.clear() },
+            CommandRule("reset db") { songsRepository.factoryReset() },
+            CommandRule("reset db general") {
                 songsRepository.resetGeneralData()
                 songsRepository.reloadSongsDb()
             },
-            UnlockerRule("reset db user") {
+            CommandRule("reset db user") {
                 songsRepository.resetUserData()
                 songsRepository.reloadSongsDb()
+            },
+            CommandRule("crashme") {
+                throw RuntimeException("deliberate disaster")
             }
     )
 
@@ -128,9 +132,7 @@ class SecretUnlockerService {
     private fun checkActivationRules(key: String): Boolean {
         for (rule in rules) {
             if (rule.condition.apply(key)) {
-
                 rule.activator()
-
                 return true
             }
         }

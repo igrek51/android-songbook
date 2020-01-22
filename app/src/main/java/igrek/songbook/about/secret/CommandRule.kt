@@ -2,7 +2,7 @@ package igrek.songbook.about.secret
 
 import com.google.common.base.Predicate
 
-class UnlockerRule {
+class CommandRule {
 
     val condition: Predicate<String>
     val activator: () -> Unit

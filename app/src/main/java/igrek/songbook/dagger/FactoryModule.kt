@@ -8,7 +8,7 @@ import dagger.Module
 import dagger.Provides
 import igrek.songbook.about.AboutLayoutController
 import igrek.songbook.about.HelpLayoutController
-import igrek.songbook.about.secret.SecretUnlockerService
+import igrek.songbook.about.secret.SecretCommandService
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.activity.AppInitializer
 import igrek.songbook.activity.OptionSelectDispatcher
@@ -247,8 +247,8 @@ open class FactoryModule(private val activity: AppCompatActivity) {
 
     @Provides
     @Singleton
-    fun provideSecretUnlockerService(): SecretUnlockerService {
-        return SecretUnlockerService()
+    fun provideSecretCommandService(): SecretCommandService {
+        return SecretCommandService()
     }
 
     @Provides

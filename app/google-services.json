@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "690032273066-thmi42kffv8uti4f8r18iq2ae03ad6dc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "igrek.songbook",
+            "certificate_hash": "58dcff3e0faa4847ec82df8d3239bc7adb519200"
+          }
+        },
+        {
           "client_id": "690032273066-3nqblpkvud93i7q67dtc2jan2fdsrnfu.apps.googleusercontent.com",
           "client_type": 3
         }

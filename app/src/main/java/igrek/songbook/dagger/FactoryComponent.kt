@@ -3,7 +3,7 @@ package igrek.songbook.dagger
 import dagger.Component
 import igrek.songbook.about.AboutLayoutController
 import igrek.songbook.about.HelpLayoutController
-import igrek.songbook.about.secret.SecretUnlockerService
+import igrek.songbook.about.secret.SecretCommandService
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.activity.AppInitializer
 import igrek.songbook.activity.MainActivity
@@ -103,7 +103,7 @@ interface FactoryComponent {
     fun inject(there: LocalDbService)
     fun inject(there: SongsRepository)
     fun inject(there: PermissionService)
-    fun inject(there: SecretUnlockerService)
+    fun inject(there: SecretCommandService)
     fun inject(there: PackageInfoService)
     fun inject(there: SettingsLayoutController)
     fun inject(there: SongDetailsService)
