@@ -29,7 +29,9 @@ class ContextMenuBuilder {
                     }
                 }
                 .setCancelable(true)
-        builder.create().show()
+        if (!activity.isFinishing()) {
+            builder.create().show()
+        }
     }
 
     private fun actionName(action: Action): String {

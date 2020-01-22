@@ -43,7 +43,9 @@ class InputDialogBuilder {
             }
         }
         alertBuilder.setCancelable(true)
-        alertBuilder.create().show()
+        if (!activity.isFinishing()) {
+            alertBuilder.create().show()
+        }
 
         Handler(Looper.getMainLooper()).post {
             softKeyboardService.showSoftKeyboard(input)

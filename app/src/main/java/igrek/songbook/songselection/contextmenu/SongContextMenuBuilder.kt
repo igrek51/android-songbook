@@ -150,7 +150,9 @@ class SongContextMenuBuilder {
         }
 
         val alert = builder.create()
-        alert.show()
+        if (!activity.isFinishing()) {
+            alert.show()
+        }
     }
 
 }
