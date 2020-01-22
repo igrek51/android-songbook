@@ -2,7 +2,7 @@ package igrek.songbook
 
 import android.app.Application
 import android.content.Context
-import android.support.multidex.MultiDex
+import androidx.multidex.MultiDex
 import igrek.songbook.activity.CurrentActivityListener
 import igrek.songbook.info.logger.LoggerFactory
 

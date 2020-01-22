@@ -1,9 +1,9 @@
 package igrek.songbook.info
 
 import android.app.Activity
-import android.support.annotation.ColorInt
-import android.support.annotation.ColorRes
-import android.support.v4.content.ContextCompat
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
 import igrek.songbook.dagger.DaggerIoc
 import javax.inject.Inject
 

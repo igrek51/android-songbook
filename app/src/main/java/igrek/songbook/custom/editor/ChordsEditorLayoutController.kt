@@ -1,14 +1,14 @@
 package igrek.songbook.custom.editor
 
-import android.support.annotation.IdRes
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import androidx.annotation.IdRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.chords.ChordsConverter

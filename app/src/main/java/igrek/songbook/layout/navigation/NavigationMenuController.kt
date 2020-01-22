@@ -3,9 +3,9 @@ package igrek.songbook.layout.navigation
 import android.app.Activity
 import android.os.Handler
 import android.os.Looper
-import android.support.design.widget.NavigationView
-import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
 import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.about.AboutLayoutController

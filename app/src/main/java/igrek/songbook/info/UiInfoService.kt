@@ -2,11 +2,11 @@ package igrek.songbook.info
 
 import android.app.Activity
 import android.graphics.Color
-import android.support.design.widget.Snackbar
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import com.google.android.material.snackbar.Snackbar
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.errorcheck.SafeClickListener

@@ -1,8 +1,8 @@
 package igrek.songbook.system
 
-import android.support.v7.app.AppCompatActivity
 import android.util.DisplayMetrics
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.dagger.DaggerIoc
 import javax.inject.Inject
 

@@ -2,9 +2,9 @@ package igrek.songbook.chords.diagram
 
 import android.app.Activity
 import android.content.Context
-import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import igrek.songbook.R
 import igrek.songbook.chords.ChordsConverter
 import igrek.songbook.chords.syntax.chordsPrimaryDelimiters

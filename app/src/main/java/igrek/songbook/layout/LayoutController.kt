@@ -1,7 +1,7 @@
 package igrek.songbook.layout
 
 import android.app.Activity
-import android.support.design.widget.CoordinatorLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import android.view.ViewGroup
 import dagger.Lazy
 import igrek.songbook.R

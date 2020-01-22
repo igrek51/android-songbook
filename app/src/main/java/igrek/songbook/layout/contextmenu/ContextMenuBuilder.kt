@@ -1,7 +1,7 @@
 package igrek.songbook.layout.contextmenu
 
 import android.app.Activity
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor

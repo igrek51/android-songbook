@@ -1,7 +1,8 @@
 package igrek.songbook.system
 
 import android.content.pm.PackageManager
-import android.support.v7.app.AppCompatActivity
+import android.os.Build
+import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
 import javax.inject.Inject
@@ -14,7 +15,7 @@ class PackageInfoService {
     private val logger = LoggerFactory.logger
     var versionName: String? = null
         private set
-    var versionCode: Int = 0
+    var versionCode: Long = 0
         private set
 
     init {
@@ -24,7 +25,11 @@ class PackageInfoService {
             val pInfo = activity.packageManager
                     .getPackageInfo(activity.packageName, 0)
             versionName = pInfo.versionName
-            versionCode = pInfo.versionCode
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                versionCode = pInfo.longVersionCode
+            } else {
+                versionCode = pInfo.versionCode.toLong()
+            }
         } catch (e: PackageManager.NameNotFoundException) {
             logger.error(e)
         }

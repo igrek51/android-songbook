@@ -1,8 +1,8 @@
 package igrek.songbook.songselection
 
-import android.support.v7.app.ActionBar
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import android.view.View
 import android.widget.ImageButton
 import dagger.Lazy
@@ -16,7 +16,6 @@ import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.general.model.SongsDb
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.songpreview.SongOpener
-import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.tree.SongTreeItem
 import igrek.songbook.songselection.tree.SongTreeSorter
@@ -36,8 +35,6 @@ abstract class SongSelectionLayoutController : SongClickListener {
     lateinit var songsRepository: SongsRepository
     @Inject
     lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var songPreviewLayoutController: Lazy<SongPreviewLayoutController>
     @Inject
     lateinit var songContextMenuBuilder: SongContextMenuBuilder
     @Inject

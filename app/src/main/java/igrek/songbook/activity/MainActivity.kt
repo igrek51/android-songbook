@@ -6,9 +6,9 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.support.v7.app.AppCompatActivity
 import android.view.KeyEvent
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import dagger.Lazy
 import igrek.songbook.custom.SongImportFileChooser
 import igrek.songbook.dagger.DaggerIoc

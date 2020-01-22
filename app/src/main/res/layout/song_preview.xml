@@ -10,12 +10,12 @@
               android:fillViewport="true"
               android:orientation="vertical">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,7 +28,6 @@
             app:contentInsetStart="0dp">
 
             <LinearLayout android:id="@+id/toolbarVerticalLayout"
-                          xmlns:android="http://schemas.android.com/apk/res/android"
                           android:layout_width="match_parent"
                           android:layout_height="wrap_content"
                           android:layout_margin="0dp"
@@ -37,7 +36,6 @@
                           android:padding="0dp">
 
                 <LinearLayout android:id="@+id/toolbarHorizontalLayout"
-                              xmlns:android="http://schemas.android.com/apk/res/android"
                               android:layout_width="match_parent"
                               android:layout_height="34dp"
                               android:fillViewport="true"
@@ -182,24 +180,22 @@
 
             </LinearLayout>
 
-        </android.support.v7.widget.Toolbar>
-    </android.support.design.widget.AppBarLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinator_layout"
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <FrameLayout android:id="@+id/songPreviewContainer"
-                     xmlns:android="http://schemas.android.com/apk/res/android"
                      android:layout_width="match_parent"
                      android:layout_height="match_parent"
                      android:fillViewport="true">
             <!-- Song Preview -->
         </FrameLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/overlayRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -207,14 +203,13 @@
             android:scrollbars="vertical"/>
 
         <FrameLayout android:id="@+id/quickMenuContainer"
-                     xmlns:android="http://schemas.android.com/apk/res/android"
                      android:layout_width="match_parent"
                      android:layout_height="match_parent"
                      android:fillViewport="true">
             <!-- Quick Menus -->
         </FrameLayout>
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/disableFullscreenButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -231,6 +226,6 @@
             app:rippleColor="@color/colorFloatingButtonClicked"
             />
 
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </LinearLayout>

@@ -1,11 +1,11 @@
 package igrek.songbook.custom
 
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.custom.editor.ChordsEditorLayoutController

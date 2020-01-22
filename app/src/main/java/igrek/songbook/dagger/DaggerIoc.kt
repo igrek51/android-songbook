@@ -1,6 +1,6 @@
 package igrek.songbook.dagger
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.info.logger.LoggerFactory
 
 object DaggerIoc {

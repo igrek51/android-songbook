@@ -3,9 +3,9 @@ package igrek.songbook.layout.dialog
 import android.app.Activity
 import android.os.Handler
 import android.os.Looper
-import android.support.v7.app.AlertDialog
 import android.text.InputType
 import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService

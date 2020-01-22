@@ -1,13 +1,8 @@
 package igrek.songbook.settings
 
 import android.os.Bundle
-import android.support.v14.preference.MultiSelectListPreference
-import android.support.v14.preference.SwitchPreference
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.preference.ListPreference
-import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceFragmentCompat
-import android.support.v7.preference.SeekBarPreference
+import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.*
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService

@@ -1,9 +1,9 @@
 package igrek.songbook.system
 
 import android.content.Context
-import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
 import javax.inject.Inject
