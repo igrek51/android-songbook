@@ -121,12 +121,6 @@ class SongContextMenuBuilder {
                         availableCondition = { song -> !song.custom },
                         executor = { song ->
                             customSongService.copySongAsCustom(song)
-                        }),
-                // AMEND
-                SongContextAction(R.string.action_song_amend,
-                        availableCondition = { song -> !song.custom },
-                        executor = { song ->
-                            sendFeedbackService.amendSong(song)
                         })
         )
 
@@ -142,7 +136,6 @@ class SongContextMenuBuilder {
         val actionNames = songActions.map { action -> action.displayName }.toTypedArray()
 
         val builder = AlertDialog.Builder(activity)
-        builder.setTitle(uiResourceService.resString(R.string.song_action_choose))
         builder.setItems(actionNames) { _, item ->
             SafeExecutor().execute {
                 songActions[item].executor(song)
@@ -150,7 +143,7 @@ class SongContextMenuBuilder {
         }
 
         val alert = builder.create()
-        if (!activity.isFinishing()) {
+        if (!activity.isFinishing) {
             alert.show()
         }
     }
