@@ -6,10 +6,13 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import dagger.Lazy
 import igrek.songbook.R
+import igrek.songbook.contact.SendFeedbackService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
@@ -29,6 +32,7 @@ import javax.inject.Inject
 open class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
 
     private var searchFilterEdit: EditText? = null
+    private var emptySearchButton: Button? = null
     private var searchFilterSubject: PublishSubject<String> = PublishSubject.create()
     private var itemNameFilter: String? = null
     private var storedScroll: ListScrollPosition? = null
@@ -37,7 +41,9 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
     @Inject
     lateinit var softKeyboardService: SoftKeyboardService
     @Inject
-    lateinit var songTreeLayoutController: dagger.Lazy<SongTreeLayoutController>
+    lateinit var songTreeLayoutController: Lazy<SongTreeLayoutController>
+    @Inject
+    lateinit var sendFeedbackService: Lazy<SendFeedbackService>
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -54,6 +60,11 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
                 searchFilterSubject.onNext(s.toString())
             }
         })
+
+        emptySearchButton = layout.findViewById(R.id.emptySearchButton)
+        emptySearchButton!!.setOnClickListener {
+            sendFeedbackService.get().requestMissingSong()
+        }
 
         if (isFilterSet()) {
             searchFilterEdit!!.setText(itemNameFilter, TextView.BufferType.EDITABLE)
@@ -114,6 +125,11 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
             Handler(Looper.getMainLooper()).post {
                 itemsListView?.restoreScrollPosition(storedScroll)
             }
+        }
+
+        emptySearchButton?.visibility = when {
+            itemsListView?.count == 0 -> View.VISIBLE
+            else -> View.GONE
         }
     }
 
