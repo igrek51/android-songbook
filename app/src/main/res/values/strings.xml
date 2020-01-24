@@ -284,8 +284,8 @@
     <string name="instrument_ukulele">Ukulele</string>
     <string name="instrument_mandolin">Mandolin</string>
     <string name="settings_chords_instrument">Instrument for chord diagrams</string>
-    <string name="contact_subject_missing_song">Missing song</string>
-    <string name="contact_message_missing_song">Please add following songs (artist - title):\n</string>
-    <string name="nav_missing_song">Suggest song</string>
+    <string name="contact_subject_missing_song">Request for a missing song</string>
+    <string name="contact_message_missing_song">Please add following songs to application (artist - title):\n</string>
+    <string name="nav_missing_song">Missing song</string>
     <string name="search_empty_suggest_it">Missing song? Suggest it</string>
 </resources>

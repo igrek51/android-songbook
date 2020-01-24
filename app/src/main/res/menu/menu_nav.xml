@@ -53,7 +53,7 @@
             android:title="@string/nav_settings"/>
         <item
             android:id="@+id/nav_missing_song"
-            android:icon="@drawable/draft"
+            android:icon="@drawable/add"
             android:title="@string/nav_missing_song" />
         <item
             android:id="@+id/nav_contact"
