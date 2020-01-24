@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.common.base.Predicate
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
@@ -68,8 +69,14 @@ class SecretCommandService {
                 songsRepository.resetUserData()
                 songsRepository.reloadSongsDb()
             },
-            CommandRule("crashme") {
+            CommandRule("firebase crashme") {
+                logger.error(IllegalArgumentException("real reason"))
                 throw RuntimeException("deliberate disaster")
+            },
+            CommandRule("firebase error") {
+                logger.error(IllegalArgumentException("real reason"))
+                logger.error("error log")
+                FirebaseCrashlytics.getInstance().sendUnsentReports()
             }
     )
 

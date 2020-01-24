@@ -2,6 +2,7 @@ package igrek.songbook.info.logger
 
 import android.util.Log
 import com.google.common.base.Joiner
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 
 open class Logger internal constructor() {
 
@@ -77,6 +78,10 @@ open class Logger internal constructor() {
                 level.moreOrEqualImportant(LogLevel.INFO) -> printInfo(consoleMessage)
                 else -> printDebug(consoleMessage)
             }
+
+            if (level.moreOrEqualImportant(LogLevel.ERROR)) {
+                logCrashlytics(consoleMessage)
+            }
         }
     }
 
@@ -140,6 +145,11 @@ open class Logger internal constructor() {
      */
     private fun tagWithKey(): String {
         return LoggerFactory.LOG_TAG + incrementTagKey()
+    }
+
+    private fun logCrashlytics(message: String?) {
+        val crashlytics = FirebaseCrashlytics.getInstance()
+        message?.let { crashlytics.log(it) }
     }
 
     companion object {
