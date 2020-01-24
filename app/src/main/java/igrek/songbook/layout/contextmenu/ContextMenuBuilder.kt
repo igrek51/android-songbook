@@ -29,7 +29,22 @@ class ContextMenuBuilder {
                     }
                 }
                 .setCancelable(true)
-        if (!activity.isFinishing()) {
+        if (!activity.isFinishing) {
+            builder.create().show()
+        }
+    }
+
+    fun showContextMenu(actions: List<Action>) {
+        val actionNames = actions.map { action -> actionName(action) }.toTypedArray()
+
+        val builder = AlertDialog.Builder(activity)
+                .setItems(actionNames) { _, item ->
+                    SafeExecutor().execute {
+                        actions[item].executor()
+                    }
+                }
+                .setCancelable(true)
+        if (!activity.isFinishing) {
             builder.create().show()
         }
     }

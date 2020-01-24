@@ -1,7 +1,6 @@
 package igrek.songbook.custom
 
 import android.view.View
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +14,7 @@ import igrek.songbook.info.errorcheck.SafeClickListener
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
+import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.general.model.Song
@@ -42,6 +42,8 @@ class CustomSongEditLayoutController : MainLayout {
     lateinit var chordsEditorLayoutController: Lazy<ChordsEditorLayoutController>
     @Inject
     lateinit var chordsNotationService: ChordsNotationService
+    @Inject
+    lateinit var contextMenuBuilder: ContextMenuBuilder
 
     private var currentSong: Song? = null
     private var songTitle: String? = null
@@ -57,7 +59,6 @@ class CustomSongEditLayoutController : MainLayout {
     }
 
     override fun showLayout(layout: View) {
-        // Toolbar
         val toolbar1 = layout.findViewById<Toolbar>(R.id.toolbar1)
         activity.setSupportActionBar(toolbar1)
         val actionBar = activity.supportActionBar
@@ -65,29 +66,19 @@ class CustomSongEditLayoutController : MainLayout {
             actionBar.setDisplayHomeAsUpEnabled(false)
             actionBar.setDisplayShowHomeEnabled(false)
         }
-        // navigation menu button
         val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)
         navMenuButton.setOnClickListener { navigationMenuController.navDrawerShow() }
 
-        val saveSongButton = layout.findViewById<Button>(R.id.saveSongButton)
+        val saveSongButton = layout.findViewById<ImageButton>(R.id.saveSongButton)
         saveSongButton.setOnClickListener(SafeClickListener {
             saveSong()
         })
 
-        val removeSongButton = layout.findViewById<Button>(R.id.removeSongButton)
-        removeSongButton.setOnClickListener(SafeClickListener {
-            removeSong()
+        val moreActionsButton = layout.findViewById<ImageButton>(R.id.moreActionsButton)
+        moreActionsButton.setOnClickListener(SafeClickListener {
+            showMoreActions()
         })
 
-        val importFromFileButotn = layout.findViewById<Button>(R.id.importFromFileButotn)
-        importFromFileButotn.setOnClickListener(SafeClickListener {
-            importContentFromFile()
-        })
-
-        val openInChordsEditorButton = layout.findViewById<Button>(R.id.openInChordsEditorButton)
-        openInChordsEditorButton.setOnClickListener(SafeClickListener {
-            openInChordsEditor()
-        })
 
         val tooltipEditChordsLyricsInfo = layout.findViewById<ImageButton>(R.id.tooltipEditChordsLyricsInfo)
         tooltipEditChordsLyricsInfo.setOnClickListener {
@@ -103,6 +94,23 @@ class CustomSongEditLayoutController : MainLayout {
 
         customCategoryNameEdit = layout.findViewById(R.id.customCategoryNameEdit)
         customCategoryNameEdit!!.setText(customCategoryName)
+    }
+
+    private fun showMoreActions() {
+        contextMenuBuilder.showContextMenu(listOf(
+                ContextMenuBuilder.Action(R.string.edit_song_open_in_editor) {
+                    openInChordsEditor()
+                },
+                ContextMenuBuilder.Action(R.string.edit_song_save) {
+                    saveSong()
+                },
+                ContextMenuBuilder.Action(R.string.import_content_from_file) {
+                    importContentFromFile()
+                },
+                ContextMenuBuilder.Action(R.string.edit_song_remove) {
+                    removeSong()
+                }
+        ))
     }
 
     private fun openInChordsEditor() {
