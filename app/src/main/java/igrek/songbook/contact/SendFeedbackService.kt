@@ -105,4 +105,9 @@ class SendFeedbackService {
         contactLayoutController.get().prepareCustomSongPublishing(song.title, song.customCategoryName, song.content)
     }
 
+    fun requestMissingSong() {
+        layoutController.get().showContact()
+        contactLayoutController.get().prepareMissingSongRequest()
+    }
+
 }

@@ -277,4 +277,8 @@
     <string name="instrument_ukulele">Ukulele</string>
     <string name="instrument_mandolin">Mandolina</string>
     <string name="settings_chords_instrument">Instrument dla diagramów akordów</string>
+    <string name="contact_subject_missing_song">Brakująca piosenka</string>
+    <string name="contact_message_missing_song">Proszę o dodanie następujących piosenek (artysta - tytuł):\n</string>
+    <string name="nav_missing_song">Zaproponuj piosenkę</string>
+    <string name="search_empty_suggest_it">Brakuje piosenki? Zaproponuj ją</string>
 </resources>

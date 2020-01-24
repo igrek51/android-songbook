@@ -11,6 +11,7 @@ import igrek.songbook.R
 import igrek.songbook.about.AboutLayoutController
 import igrek.songbook.about.HelpLayoutController
 import igrek.songbook.activity.ActivityController
+import igrek.songbook.contact.SendFeedbackService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -45,6 +46,8 @@ class NavigationMenuController {
     lateinit var softKeyboardService: Lazy<SoftKeyboardService>
     @Inject
     lateinit var randomSongOpener: Lazy<RandomSongOpener>
+    @Inject
+    lateinit var sendFeedbackService: Lazy<SendFeedbackService>
 
     private var drawerLayout: DrawerLayout? = null
     private var navigationView: NavigationView? = null
@@ -69,6 +72,7 @@ class NavigationMenuController {
         actionsMap[R.id.nav_about] = { aboutLayoutController.get().showAbout() }
         actionsMap[R.id.nav_exit] = { activityController.get().quit() }
         actionsMap[R.id.nav_contact] = { layoutController.get().showContact() }
+        actionsMap[R.id.nav_missing_song] = { sendFeedbackService.get().requestMissingSong() }
         actionsMap[R.id.nav_history] = { layoutController.get().showOpenHistory() }
         actionsMap[R.id.nav_latest] = { layoutController.get().showLatestSongs() }
     }

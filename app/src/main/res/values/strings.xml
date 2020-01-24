@@ -63,7 +63,7 @@
     <string name="action_check_secret">OK</string>
     <string name="action_cancel">Cancel</string>
     <string name="ui_db_is_uptodate">Songs database is up-to-date.</string>
-    <string name="contact_label">You can contact me if you have noticed some bugs or you have any ideas how to improve this application. You can also suggest improvements to the chords or propose adding a new song. I would be very grateful for your comments and contributing. Please include your email if you wish to get a reply to your message.</string>
+    <string name="contact_label">You can contact me if you have noticed some bugs or you have any ideas how to improve this application. You can also suggest improvements to the chords or propose adding a new song. I would be very grateful for your comments and contributing. If you wish to get a reply to your message, please include your email as well.</string>
     <string name="contact_message_hint">Your message…</string>
     <string name="contact_send">Send</string>
     <string name="contact_author_hint">Your name or email (optional)</string>
@@ -284,4 +284,8 @@
     <string name="instrument_ukulele">Ukulele</string>
     <string name="instrument_mandolin">Mandolin</string>
     <string name="settings_chords_instrument">Instrument for chord diagrams</string>
+    <string name="contact_subject_missing_song">Missing song</string>
+    <string name="contact_message_missing_song">Please add following songs (artist - title):\n</string>
+    <string name="nav_missing_song">Suggest song</string>
+    <string name="search_empty_suggest_it">Missing song? Suggest it</string>
 </resources>

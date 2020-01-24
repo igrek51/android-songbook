@@ -52,6 +52,10 @@
             android:icon="@drawable/settings"
             android:title="@string/nav_settings"/>
         <item
+            android:id="@+id/nav_missing_song"
+            android:icon="@drawable/draft"
+            android:title="@string/nav_missing_song" />
+        <item
             android:id="@+id/nav_contact"
             android:icon="@drawable/send"
             android:title="@string/nav_contact"/>

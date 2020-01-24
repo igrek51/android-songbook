@@ -1,11 +1,11 @@
 package igrek.songbook.contact
 
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
@@ -119,6 +119,13 @@ class ContactLayoutController : MainLayout {
             "$songTitle - $customCategoryName"
         }
         setSubject("$subjectPrefix: $fullTitle")
-        contactMessageEdit!!.setText(songContent)
+        setMessage(songContent)
+    }
+
+    fun prepareMissingSongRequest() {
+        val subject = uiResourceService.resString(R.string.contact_subject_missing_song)
+        val message = uiResourceService.resString(R.string.contact_message_missing_song)
+        setSubject(subject)
+        setMessage(message)
     }
 }
