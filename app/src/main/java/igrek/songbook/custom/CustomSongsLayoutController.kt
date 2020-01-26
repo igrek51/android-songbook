@@ -26,7 +26,7 @@ import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 class CustomSongsLayoutController : InflatedLayout(
-        _layoutResourceId = R.layout.custom_songs,
+        _layoutResourceId = R.layout.screen_custom_songs,
         _layoutState = LayoutState.CUSTOM_SONGS
 ), ListItemClickListener<CustomSongListItem> {
 

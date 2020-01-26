@@ -47,7 +47,7 @@ open class Logger internal constructor() {
     }
 
     fun debug(vararg objs: Any?) {
-        val message = Joiner.on(" ").join(objs)
+        val message = objs.joinToString(separator = ", ")
         log(message, LogLevel.DEBUG, "[debug] ")
     }
 

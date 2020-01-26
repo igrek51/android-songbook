@@ -25,7 +25,7 @@ import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 class LatestSongsLayoutController : InflatedLayout(
-        _layoutResourceId = R.layout.latest_songs,
+        _layoutResourceId = R.layout.screen_latest_songs,
         _layoutState = LayoutState.LATEST
 ), SongClickListener {
 

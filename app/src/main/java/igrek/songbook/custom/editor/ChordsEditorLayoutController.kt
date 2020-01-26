@@ -454,7 +454,7 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     override fun getLayoutResourceId(): Int {
-        return R.layout.chords_editor
+        return R.layout.screen_chords_editor
     }
 
     override fun onBackClicked() {

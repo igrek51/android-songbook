@@ -60,7 +60,7 @@ class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
     }
 
     override fun getLayoutResourceId(): Int {
-        return R.layout.favourite_songs
+        return R.layout.screen_favourite_songs
     }
 
     override fun updateSongItemsList() {

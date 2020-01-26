@@ -67,7 +67,7 @@ class PlaylistListItemAdapter internal constructor(
     }
 
     private fun createPlaylistView(item: PlaylistListItem, playlist: Playlist, parent: ViewGroup): View {
-        val itemView = inflater.inflate(R.layout.playlist_group_item, parent, false)
+        val itemView = inflater.inflate(R.layout.list_item_playlist_group, parent, false)
         val itemTitleLabel = itemView.findViewById<TextView>(R.id.itemTitleLabel)
         itemTitleLabel.text = playlist.name
 
@@ -78,7 +78,7 @@ class PlaylistListItemAdapter internal constructor(
 
     @SuppressLint("ClickableViewAccessibility")
     private fun createSongView(item: PlaylistListItem, song: Song, parent: ViewGroup, position: Int): View {
-        val itemView = inflater.inflate(R.layout.playlist_song_item, parent, false)
+        val itemView = inflater.inflate(R.layout.list_item_playlist_song, parent, false)
         val itemTitleLabel = itemView.findViewById<TextView>(R.id.itemTitleLabel)
         itemTitleLabel.text = song.displayName()
 

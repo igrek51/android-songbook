@@ -130,7 +130,7 @@ class ChordsDiagramsService {
         }
 
         val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val diagramView = inflater.inflate(R.layout.chord_diagrams, null, false)
+        val diagramView = inflater.inflate(R.layout.component_chord_diagrams, null, false)
         val diagramContent = diagramView.findViewById<TextView>(R.id.chordDiagramContent)
         diagramContent.text = message
         alertBuilder.setView(diagramView)

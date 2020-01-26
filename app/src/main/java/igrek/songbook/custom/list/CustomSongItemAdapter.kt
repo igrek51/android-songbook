@@ -55,7 +55,7 @@ class CustomSongItemAdapter internal constructor(
     }
 
     private fun createCategoryView(customCategory: CustomCategory, parent: ViewGroup): View {
-        val itemView = inflater.inflate(R.layout.custom_category_item, parent, false)
+        val itemView = inflater.inflate(R.layout.list_item_custom_category, parent, false)
         val itemTitleLabel = itemView.findViewById<TextView>(R.id.itemTitleLabel)
         itemTitleLabel.text = customCategory.name
 
@@ -63,7 +63,7 @@ class CustomSongItemAdapter internal constructor(
     }
 
     private fun createSongView(item: CustomSongListItem, song: Song, parent: ViewGroup): View {
-        val itemView = inflater.inflate(R.layout.custom_song_item, parent, false)
+        val itemView = inflater.inflate(R.layout.list_item_custom_song, parent, false)
         val itemTitleLabel = itemView.findViewById<TextView>(R.id.itemTitleLabel)
         itemTitleLabel.text = song.displayName()
 

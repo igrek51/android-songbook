@@ -72,7 +72,7 @@ class SongListItemAdapter internal constructor(
     }
 
     private fun createTreeCategoryView(item: SongTreeItem, parent: ViewGroup): View {
-        val itemView = inflater.inflate(R.layout.song_tree_category, parent, false)
+        val itemView = inflater.inflate(R.layout.list_item_song_tree_category, parent, false)
         val itemCategoryNameLabel = itemView.findViewById<TextView>(R.id.itemCategoryNameLabel)
         // set item title
         itemCategoryNameLabel.text = item.simpleName
@@ -80,7 +80,7 @@ class SongListItemAdapter internal constructor(
     }
 
     private fun createTreeSongView(item: SongTreeItem, parent: ViewGroup): View {
-        val itemView = inflater.inflate(R.layout.song_tree_song, parent, false)
+        val itemView = inflater.inflate(R.layout.list_item_song_tree_song, parent, false)
         val itemSongTitleLabel = itemView.findViewById<TextView>(R.id.itemSongTitleLabel)
         // set item title
         itemSongTitleLabel.text = item.song!!.title
@@ -91,7 +91,7 @@ class SongListItemAdapter internal constructor(
     }
 
     private fun createTitleArtistSongView(item: SongTreeItem, parent: ViewGroup): View {
-        val itemView = inflater.inflate(R.layout.song_tree_song, parent, false)
+        val itemView = inflater.inflate(R.layout.list_item_song_tree_song, parent, false)
         val itemSongTitleLabel = itemView.findViewById<TextView>(R.id.itemSongTitleLabel)
 
         itemSongTitleLabel.text = item.song!!.displayName()

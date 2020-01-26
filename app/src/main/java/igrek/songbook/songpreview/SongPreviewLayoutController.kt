@@ -137,13 +137,13 @@ class SongPreviewLayoutController : MainLayout {
         val quickMenuContainer = layout.findViewById<FrameLayout>(R.id.quickMenuContainer)
         val inflater = activity.layoutInflater
         // transpose panel
-        val quickMenuTransposeView = inflater.inflate(R.layout.quick_menu_transpose, null)
+        val quickMenuTransposeView = inflater.inflate(R.layout.component_quick_menu_transpose, null)
         quickMenuTransposeView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         quickMenuContainer.addView(quickMenuTransposeView)
         quickMenuTranspose.get().setQuickMenuView(quickMenuTransposeView)
         quickMenuTranspose.get().isVisible = false
         // autoscroll panel
-        val quickMenuAutoscrollView = inflater.inflate(R.layout.quick_menu_autoscroll, null)
+        val quickMenuAutoscrollView = inflater.inflate(R.layout.component_quick_menu_autoscroll, null)
         quickMenuAutoscrollView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         quickMenuContainer.addView(quickMenuAutoscrollView)
         quickMenuAutoscroll.get().setQuickMenuView(quickMenuAutoscrollView)
@@ -212,7 +212,7 @@ class SongPreviewLayoutController : MainLayout {
     }
 
     override fun getLayoutResourceId(): Int {
-        return R.layout.song_preview
+        return R.layout.screen_song_preview
     }
 
     fun onGraphicsInitializedEvent(w: Int, paint: Paint?) {

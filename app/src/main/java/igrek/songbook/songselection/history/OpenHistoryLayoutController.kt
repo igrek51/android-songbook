@@ -26,7 +26,7 @@ import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 class OpenHistoryLayoutController : InflatedLayout(
-        _layoutResourceId = R.layout.open_history,
+        _layoutResourceId = R.layout.screen_open_history,
         _layoutState = LayoutState.HISTORY
 ), SongClickListener {
 

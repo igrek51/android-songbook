@@ -31,7 +31,7 @@ import javax.inject.Inject
 
 
 class PlaylistLayoutController : InflatedLayout(
-        _layoutResourceId = R.layout.playlists,
+        _layoutResourceId = R.layout.screen_playlists,
         _layoutState = LayoutState.PLAYLISTS
 ), ListItemClickListener<PlaylistListItem> {
 

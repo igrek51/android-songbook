@@ -115,7 +115,7 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
     }
 
     override fun getLayoutResourceId(): Int {
-        return R.layout.song_search
+        return R.layout.screen_song_search
     }
 
     override fun updateSongItemsList() {

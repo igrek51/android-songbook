@@ -16,7 +16,6 @@ import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
-import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.system.SoftKeyboardService
 import javax.inject.Inject
 
@@ -73,7 +72,7 @@ class ContactLayoutController : MainLayout {
     }
 
     override fun getLayoutResourceId(): Int {
-        return R.layout.contact
+        return R.layout.screen_contact
     }
 
     override fun onBackClicked() {
@@ -103,12 +102,6 @@ class ContactLayoutController : MainLayout {
 
     private fun setMessage(message: String?) {
         contactMessageEdit!!.setText(message)
-    }
-
-    fun prepareSongAmend(song: Song) {
-        val subjectPrefix = uiResourceService.resString(R.string.contact_subject_song_amend)
-        setSubject(subjectPrefix + ": " + song.displayName())
-        setMessage(song.content)
     }
 
     fun prepareCustomSongPublishing(songTitle: String, customCategoryName: String?, songContent: String?) {

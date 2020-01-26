@@ -60,7 +60,7 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
     }
 
     override fun getLayoutResourceId(): Int {
-        return R.layout.song_tree
+        return R.layout.screen_song_tree
     }
 
     override fun onBackClicked() {

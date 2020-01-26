@@ -187,7 +187,7 @@ class CustomSongEditLayoutController : MainLayout {
     }
 
     override fun getLayoutResourceId(): Int {
-        return R.layout.custom_song
+        return R.layout.screen_custom_song_details
     }
 
     override fun onBackClicked() {

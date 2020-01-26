@@ -49,7 +49,7 @@ class SettingsLayoutController : MainLayout {
     }
 
     override fun getLayoutResourceId(): Int {
-        return R.layout.settings
+        return R.layout.screen_settings
     }
 
     override fun onBackClicked() {

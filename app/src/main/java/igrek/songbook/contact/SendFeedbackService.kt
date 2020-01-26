@@ -95,11 +95,6 @@ class SendFeedbackService {
         Handler(Looper.getMainLooper()).post { uiInfoService.showInfoIndefinite(R.string.contact_error_sending) }
     }
 
-    fun amendSong(song: Song) {
-        layoutController.get().showContact()
-        contactLayoutController.get().prepareSongAmend(song)
-    }
-
     fun publishSong(song: Song) {
         layoutController.get().showContact()
         contactLayoutController.get().prepareCustomSongPublishing(song.title, song.customCategoryName, song.content)
