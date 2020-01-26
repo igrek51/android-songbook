@@ -262,6 +262,8 @@
     <string name="settings_group_custom_songs_hint">Grupuj razem własne piosenki należące do tej samej kategorii</string>
     <string name="settings_chords_end_of_line">Wyświetlaj akordy na końcu linii</string>
     <string name="settings_chords_end_of_line_hint">Wyświetlaj wszystkie akordy wyrównane do prawej strony ekranu</string>
+    <string name="settings_chords_above">Wyświetlaj akordy nad tekstem</string>
+    <string name="settings_chords_above_hint">Wyświetlaj akordy w osobnej linii ponad słowami</string>
     <string name="settings_transposition">Transpozycja akordów</string>
     <string name="settings_restore_transposition">Przywracanie ostatnie transpozycji</string>
     <string name="settings_restore_transposition_hint">Zapamiętuj i przywracaj ostatnią transpozycję akordów dla każdej piosenki</string>

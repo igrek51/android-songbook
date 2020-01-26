@@ -269,6 +269,8 @@
     <string name="settings_group_custom_songs_hint">Group custom songs with the same category together</string>
     <string name="settings_chords_end_of_line">Display chords at the end of line</string>
     <string name="settings_chords_end_of_line_hint">Align chords to the right edge of the screen</string>
+    <string name="settings_chords_above">Display chords above lyrics</string>
+    <string name="settings_chords_above_hint">Show chords in separate line above lyrics</string>
     <string name="settings_transposition">Chords transposing</string>
     <string name="settings_restore_transposition">Restore last transposing</string>
     <string name="settings_restore_transposition_hint">Remember and restore last transposing for each song</string>

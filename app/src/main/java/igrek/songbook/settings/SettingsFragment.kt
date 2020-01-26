@@ -143,6 +143,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
         )
 
+        setupSwitchPreference("chordsAbove",
+                onLoad = { preferencesUpdater.get().chordsAbove },
+                onSave = { value: Boolean ->
+                    preferencesUpdater.get().chordsAbove = value
+                }
+        )
+
         setupSwitchPreference("autoscrollSpeedAutoAdjustment",
                 onLoad = { preferencesUpdater.get().autoscrollSpeedAutoAdjustment },
                 onSave = { value: Boolean ->

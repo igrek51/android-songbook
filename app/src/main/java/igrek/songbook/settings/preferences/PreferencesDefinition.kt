@@ -22,6 +22,8 @@ enum class PreferencesDefinition constructor(val type: PropertyType, val default
 
     ChordsEndOfLine(false),
 
+    ChordsAbove(false),
+
     AutoscrollSpeedAutoAdjustment(true),
 
     AutoscrollSpeedVolumeKeys(true),

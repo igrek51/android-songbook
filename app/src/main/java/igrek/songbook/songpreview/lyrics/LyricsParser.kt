@@ -4,7 +4,11 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import java.util.*
 
-class LyricsParser(fontFamily: Typeface, private val chordsEndOfLine: Boolean) {
+class LyricsParser(
+        fontFamily: Typeface,
+        private val chordsEndOfLine: Boolean,
+        private val chordsAbove: Boolean = true
+) {
 
     private var bracket: Boolean = false
     private var paint: Paint? = null
@@ -54,7 +58,61 @@ class LyricsParser(fontFamily: Typeface, private val chordsEndOfLine: Boolean) {
             lines.add(lyricsLine)
         }
 
+        if (chordsAbove) {
+            return extractChordsAbove(lines)
+        }
+
         return lines
+    }
+
+    private fun extractChordsAbove(lines: MutableList<LyricsLine>): MutableList<LyricsLine> {
+        val splitLines: MutableList<LyricsLine> = mutableListOf()
+        lines.forEach { line ->
+            val chords = filterLineByTextType(line, LyricsTextType.CHORDS, LyricsTextType.BRACKET)
+            val texts = removeChordsFromText(line)
+
+            when {
+                texts.fragments.isEmpty() -> {
+                    splitLines.add(chords)
+                }
+                chords.fragments.isEmpty() -> {
+                    splitLines.add(texts)
+                }
+                else -> {
+                    splitLines.add(chords)
+                    splitLines.add(texts)
+                }
+            }
+        }
+        return splitLines
+    }
+
+    private fun removeChordsFromText(line: LyricsLine): LyricsLine {
+        val movedTextFragments: MutableList<LyricsFragment> = mutableListOf()
+        line.fragments.forEachIndexed { index, fragment ->
+            when (fragment.type) {
+                LyricsTextType.LINEWRAPPER, LyricsTextType.REGULAR_TEXT -> {
+                    movedTextFragments.add(fragment)
+                }
+                LyricsTextType.CHORDS -> {
+                    // move back consecutive text parts
+                    line.fragments.drop(index + 1)
+                            .filter { consecutiveFragment ->
+                                consecutiveFragment.type == LyricsTextType.REGULAR_TEXT
+                            }.forEach { consecutiveFragment ->
+                                consecutiveFragment.x -= fragment.width
+                            }
+                }
+            }
+        }
+        return LyricsLine(line.y, movedTextFragments)
+    }
+
+    private fun filterLineByTextType(line: LyricsLine, vararg allowedTypes: LyricsTextType): LyricsLine {
+        val fragments = line.fragments.filter { fragment ->
+            fragment.type in allowedTypes
+        }.toMutableList()
+        return LyricsLine(line.y, fragments)
     }
 
     private fun moveCharChordsAtTheEndOfLine(chars: List<LyricsChar>): List<LyricsChar> {

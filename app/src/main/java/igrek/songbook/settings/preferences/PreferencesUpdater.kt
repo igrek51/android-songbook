@@ -75,6 +75,12 @@ class PreferencesUpdater {
             lyricsThemeService.get().chordsEndOfLine = value
         }
 
+    var chordsAbove: Boolean
+        get() = lyricsThemeService.get().chordsAbove
+        set(value) {
+            lyricsThemeService.get().chordsAbove = value
+        }
+
     var autoscrollInitialPause: Long
         get() = autoscrollService.get().initialPause
         set(value) {
@@ -132,6 +138,7 @@ class PreferencesUpdater {
         preferencesService.setValue(PreferencesDefinition.FontTypefaceId, fontTypeface?.id)
         preferencesService.setValue(PreferencesDefinition.ColorSchemeId, colorScheme?.id)
         preferencesService.setValue(PreferencesDefinition.ChordsEndOfLine, chordsEndOfLine)
+        preferencesService.setValue(PreferencesDefinition.ChordsAbove, chordsAbove)
 
         preferencesService.setValue(PreferencesDefinition.AutoscrollInitialPause, autoscrollInitialPause)
         preferencesService.setValue(PreferencesDefinition.AutoscrollSpeed, autoscrollSpeed)

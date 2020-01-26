@@ -25,6 +25,7 @@ class LyricsThemeService {
     var fontTypeface: FontTypeface? = null
     var colorScheme: ColorScheme? = null
     var chordsEndOfLine = false
+    var chordsAbove = false
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -45,6 +46,8 @@ class LyricsThemeService {
         }
 
         chordsEndOfLine = preferencesService.getValue(PreferencesDefinition.ChordsEndOfLine, Boolean::class.java)
+                ?: false
+        chordsAbove = preferencesService.getValue(PreferencesDefinition.ChordsAbove, Boolean::class.java)
                 ?: false
     }
 
