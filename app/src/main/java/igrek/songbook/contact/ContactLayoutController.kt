@@ -3,9 +3,7 @@ package igrek.songbook.contact
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
@@ -45,18 +43,6 @@ class ContactLayoutController : MainLayout {
     }
 
     override fun showLayout(layout: View) {
-        // Toolbar
-        val toolbar1 = layout.findViewById<Toolbar>(R.id.toolbar1)
-        activity.setSupportActionBar(toolbar1)
-        val actionBar = activity.supportActionBar
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(false)
-            actionBar.setDisplayShowHomeEnabled(false)
-        }
-        // navigation menu button
-        val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)
-        navMenuButton.setOnClickListener { navigationMenuController.navDrawerShow() }
-
         contactSubjectEdit = layout.findViewById(R.id.contactSubjectEdit)
         contactMessageEdit = layout.findViewById(R.id.contactMessageEdit)
         contactAuthorEdit = layout.findViewById(R.id.contactAuthorEdit)

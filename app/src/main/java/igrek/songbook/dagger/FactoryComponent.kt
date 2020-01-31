@@ -27,6 +27,7 @@ import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.layout.dialog.InputDialogBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
+import igrek.songbook.layout.navigation.TitleBarView
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.general.SongsUpdater
 import igrek.songbook.persistence.general.dao.GeneralSongsDao
@@ -150,5 +151,6 @@ interface FactoryComponent {
     fun inject(there: TransposeDao)
     fun inject(there: ChordsDiagramsService)
     fun inject(there: ChordsInstrumentService)
+    fun inject(there: TitleBarView)
 
 }

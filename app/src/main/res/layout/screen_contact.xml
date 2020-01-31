@@ -7,13 +7,11 @@
     android:layout_gravity="center_horizontal"
     android:orientation="vertical">
 
-    <fragment
-        android:name="igrek.songbook.layout.navigation.TitleBarFragment"
+    <igrek.songbook.layout.navigation.TitleBarView
         android:id="@+id/titleBarFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:label="dupa"
-        app:title="dupa" />
+        app:title="@string/nav_contact" />
 
     <ScrollView
         android:layout_width="match_parent"

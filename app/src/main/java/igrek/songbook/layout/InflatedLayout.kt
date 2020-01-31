@@ -49,11 +49,13 @@ open class InflatedLayout(
 
     private fun setupToolbar(layout: View) {
         val toolbar1 = layout.findViewById<Toolbar>(R.id.toolbar1)
-        activity.setSupportActionBar(toolbar1)
-        val actionBar = activity.supportActionBar
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(false)
-            actionBar.setDisplayShowHomeEnabled(false)
+        if (toolbar1 != null) {
+            activity.setSupportActionBar(toolbar1)
+            val actionBar = activity.supportActionBar
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(false)
+                actionBar.setDisplayShowHomeEnabled(false)
+            }
         }
     }
 

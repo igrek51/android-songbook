@@ -1,10 +1,10 @@
 package igrek.songbook.songselection
 
+import android.view.View
+import android.widget.ImageButton
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import android.view.View
-import android.widget.ImageButton
 import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
@@ -47,15 +47,17 @@ abstract class SongSelectionLayoutController : SongClickListener {
     fun initSongSelectionLayout(layout: View) {
         // Toolbar
         val toolbar1 = layout.findViewById<Toolbar>(R.id.toolbar1)
-        activity.setSupportActionBar(toolbar1)
-        actionBar = activity.supportActionBar
-        if (actionBar != null) {
-            actionBar!!.setDisplayHomeAsUpEnabled(false)
-            actionBar!!.setDisplayShowHomeEnabled(false)
+        if (toolbar1 != null) {
+            activity.setSupportActionBar(toolbar1)
+            actionBar = activity.supportActionBar
+            if (actionBar != null) {
+                actionBar!!.setDisplayHomeAsUpEnabled(false)
+                actionBar!!.setDisplayShowHomeEnabled(false)
+            }
+            // navigation menu button
+            val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)
+            navMenuButton.setOnClickListener { navigationMenuController.navDrawerShow() }
         }
-        // navigation menu button
-        val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)
-        navMenuButton.setOnClickListener { navigationMenuController.navDrawerShow() }
 
         itemsListView = layout.findViewById(R.id.filesList)
     }

@@ -1,9 +1,7 @@
 package igrek.songbook.settings
 
 import android.view.View
-import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.layout.LayoutController
@@ -26,18 +24,6 @@ class SettingsLayoutController : MainLayout {
     }
 
     override fun showLayout(layout: View) {
-        // Toolbar
-        val toolbar1 = layout.findViewById<Toolbar>(R.id.toolbar1)
-        activity.setSupportActionBar(toolbar1)
-        val actionBar = activity.supportActionBar
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(false)
-            actionBar.setDisplayShowHomeEnabled(false)
-        }
-        // navigation menu button
-        val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)
-        navMenuButton.setOnClickListener { navigationMenuController.navDrawerShow() }
-
         activity.supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.fragment_content, SettingsFragment())
