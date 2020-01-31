@@ -25,7 +25,8 @@ internal class CustomSongMapper {
                 metre = customSong.metre,
                 scrollSpeed = customSong.scrollSpeed,
                 initialDelay = customSong.initialDelay,
-                chordsNotation = customSong.chordsNotation
+                chordsNotation = customSong.chordsNotation,
+                originalSongId = customSong.originalSongId
         )
     }
 
@@ -45,7 +46,8 @@ internal class CustomSongMapper {
                 language = song.language,
                 scrollSpeed = song.scrollSpeed,
                 initialDelay = song.initialDelay,
-                chordsNotation = song.chordsNotation
+                chordsNotation = song.chordsNotation,
+                originalSongId = song.originalSongId
         )
     }
 

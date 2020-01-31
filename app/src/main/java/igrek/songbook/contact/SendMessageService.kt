@@ -9,7 +9,6 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.system.PackageInfoService
 import okhttp3.*
@@ -32,8 +31,6 @@ class SendMessageService {
     lateinit var songsRepository: SongsRepository
     @Inject
     lateinit var layoutController: dagger.Lazy<LayoutController>
-    @Inject
-    lateinit var publishSongLayoutController: dagger.Lazy<PublishSongLayoutController>
 
     private val logger = LoggerFactory.logger
 
@@ -50,7 +47,8 @@ class SendMessageService {
                            author: String? = null,
                            subject: String? = null,
                            category: String? = null,
-                           title: String? = null
+                           title: String? = null,
+                           originalSongId: Long? = null
     ) {
         uiInfoService.showInfo(uiResourceService.resString(R.string.contact_sending))
 
@@ -65,6 +63,7 @@ class SendMessageService {
                 .addFormDataPart("title", title ?: "")
                 .addFormDataPart("category", category ?: "")
                 .addFormDataPart("origin_id", origin.id.toString())
+                .addFormDataPart("original_song_id", originalSongId?.toString() ?: "")
                 .addFormDataPart("application_id", APPLICATION_ID.toString())
                 .addFormDataPart("app_version", "$appVersionName ($appVersionCode)")
                 .addFormDataPart("db_version", dbVersionNumber)
@@ -102,11 +101,6 @@ class SendMessageService {
     private fun onErrorReceived(errorMessage: String?) {
         logger.error("Contact message sending error: $errorMessage")
         Handler(Looper.getMainLooper()).post { uiInfoService.showInfoIndefinite(R.string.contact_error_sending) }
-    }
-
-    fun publishSong(song: Song) {
-        layoutController.get().showPublishSong()
-        publishSongLayoutController.get().prepareFields(song.title, song.customCategoryName, song.content)
     }
 
     fun requestMissingSong() {

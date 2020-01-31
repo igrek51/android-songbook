@@ -14,10 +14,7 @@ import igrek.songbook.activity.AppInitializer
 import igrek.songbook.activity.OptionSelectDispatcher
 import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.chords.transpose.ChordsTransposerManager
-import igrek.songbook.contact.ContactLayoutController
-import igrek.songbook.contact.MissingSongLayoutController
-import igrek.songbook.contact.PublishSongLayoutController
-import igrek.songbook.contact.SendMessageService
+import igrek.songbook.contact.*
 import igrek.songbook.custom.CustomSongEditLayoutController
 import igrek.songbook.custom.CustomSongService
 import igrek.songbook.custom.CustomSongsLayoutController
@@ -433,11 +430,17 @@ open class FactoryModule(private val activity: AppCompatActivity) {
         return MissingSongLayoutController()
     }
 
+    @Provides
+    @Singleton
+    fun providePublishSongService(): PublishSongService {
+        return PublishSongService()
+    }
+
     /*
 	 * Empty service pattern:
 	@Provides
     @Singleton
-    fun provide(): {
+    fun provide():  {
         return ()
     }
 

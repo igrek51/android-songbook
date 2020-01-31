@@ -31,6 +31,7 @@ class PublishSongLayoutController : MainLayout {
     private var publishSongArtistEdit: EditText? = null
     private var publishSongContentEdit: EditText? = null
     private var contactAuthorEdit: EditText? = null
+    private var originalSongId: Long? = null
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -80,14 +81,16 @@ class PublishSongLayoutController : MainLayout {
 
         ConfirmDialogBuilder().confirmAction(R.string.confirm_send_contact) {
             sendMessageService.sendContactMessage(message = content, origin = MessageOrigin.SONG_PUBLISH,
-                    category = category, title = title, author = author, subject = subject)
+                    category = category, title = title, author = author, subject = subject,
+                    originalSongId = originalSongId)
         }
     }
 
-    fun prepareFields(songTitle: String, customCategoryName: String?, songContent: String?) {
+    fun prepareFields(songTitle: String, customCategoryName: String?, songContent: String?, originalSongId: Long?) {
         publishSongTitleEdit?.setText(songTitle)
         publishSongArtistEdit?.setText(customCategoryName ?: "")
         publishSongContentEdit?.setText(songContent ?: "")
+        this.originalSongId = originalSongId
     }
 
 }

@@ -297,4 +297,6 @@
     <string name="missing_song_description">Here you can propose adding a new song to database, if you feel that some song is missing. It would be great if you\'d like to send your song with chords as well (using \"Share to public\" action on custom songs). Write your song in a manner \"Artist - Title\".</string>
     <string name="missing_song_titles">Artist - Title</string>
     <string name="missing_song_title_invalid_format">Invalid format. Try: \"Artist - Title\"</string>
+    <string name="dialog_warning">Warning</string>
+    <string name="publish_song_no_change">You shouldn\'t publish this song because you did not any change compared to original song. Make some changes first, if you want to send an improved version.</string>
 </resources>

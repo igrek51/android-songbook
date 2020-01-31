@@ -4,6 +4,7 @@ import android.app.Activity
 import androidx.appcompat.app.AlertDialog
 import dagger.Lazy
 import igrek.songbook.R
+import igrek.songbook.contact.PublishSongService
 import igrek.songbook.contact.SendMessageService
 import igrek.songbook.custom.CustomSongService
 import igrek.songbook.dagger.DaggerIoc
@@ -43,6 +44,8 @@ class SongContextMenuBuilder {
     lateinit var songPreviewLayoutController: Lazy<SongPreviewLayoutController>
     @Inject
     lateinit var songDetailsService: SongDetailsService
+    @Inject
+    lateinit var publishSongService: PublishSongService
 
     private var allActions: SimpleCache<List<SongContextAction>> =
             SimpleCache { createAllActions() }
@@ -67,11 +70,11 @@ class SongContextMenuBuilder {
                                 customSongService.removeSong(song)
                             }
                         }),
-                // PUBLISH
+                // publish
                 SongContextAction(R.string.action_song_publish,
                         availableCondition = { song -> song.custom },
                         executor = { song ->
-                            sendMessageService.publishSong(song)
+                            publishSongService.publishSong(song)
                         }),
                 // Add to favourites
                 SongContextAction(R.string.action_song_set_favourite,

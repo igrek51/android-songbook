@@ -290,4 +290,6 @@
     <string name="missing_song_description">Jeśli w aplikcaji brakuje jakiejś piosenki, tutaj możesz zaproponować dodanie jej, aby zasygnalizować zapotrzebowanie na nią. Pamiętaj, że piosenki można również dodawać wraz z opracowanymi akordami (używając opcji publikowania własnych piosenek). Nazwę piosenki napisz w postaci \"Artysta - Tytuł\"</string>
     <string name="missing_song_titles">Artysta - Tytuł</string>
     <string name="missing_song_title_invalid_format">Niepoprawny format. Spróbuj: \"Artysta - Tytuł\"</string>
+    <string name="dialog_warning">Ostrzeżenie</string>
+    <string name="publish_song_no_change">Nie powinieneś wysyłać tej piosenki, ponieważ nie dokonałeś żadnych zmian w stosunku do oryginalnej piosenki. Zmodyfikuj swoją piosenkę, jeśli chcesz wysłać poprawioną wersję.</string>
 </resources>

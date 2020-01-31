@@ -25,7 +25,8 @@ open class Song(
         var scrollSpeed: Double? = null,
         var initialDelay: Double? = null,
         var chordsNotation: ChordsNotation? = null,
-        var tags: String? = null
+        var tags: String? = null,
+        var originalSongId: Long? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (other !is Song)

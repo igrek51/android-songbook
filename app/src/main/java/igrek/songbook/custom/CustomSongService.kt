@@ -103,6 +103,7 @@ class CustomSongService {
         newSong.versionNumber = versionNumber
         newSong.createTime = now
         newSong.updateTime = now
+        newSong.originalSongId = sourceSong.id
 
         songsRepository.customSongsDao.saveCustomSong(newSong)
 
