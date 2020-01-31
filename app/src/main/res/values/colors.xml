@@ -17,4 +17,6 @@
 
     <color name="navMenuText">#ffffff</color>
     <color name="navMenuIconTint">#ffffff</color>
+
+    <color name="navigationBarColor">#000000</color>
 </resources>
