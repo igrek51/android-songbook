@@ -60,8 +60,8 @@ class SendMessageService {
 
         val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM)
                 .addFormDataPart("message", message)
-                .addFormDataPart("author", author ?: "")
                 .addFormDataPart("subject", subject ?: "")
+                .addFormDataPart("author", author ?: "")
                 .addFormDataPart("title", title ?: "")
                 .addFormDataPart("category", category ?: "")
                 .addFormDataPart("origin_id", origin.id.toString())

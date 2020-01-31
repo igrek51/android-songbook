@@ -289,7 +289,7 @@
     <string name="contact_subject_missing_song">Missing song</string>
     <string name="nav_missing_song">Missing song</string>
     <string name="search_empty_suggest_it">Missing song? Suggest it</string>
-    <string name="publish_song_title">Publish a song</string>
+    <string name="publish_song_title">Publish my song</string>
     <string name="publish_song_description">You can publish your song to make it shared along all the other users. Remember that your song needs to be accepted first. I would be very grateful for your contributing.</string>
     <string name="publish_song_title_field">Song title</string>
     <string name="publish_song_artist_field">Artist / Category name</string>
