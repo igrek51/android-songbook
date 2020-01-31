@@ -71,7 +71,11 @@ class PublishSongLayoutController : MainLayout {
             return
         }
 
-        val subjectPrefix = uiResourceService.resString(R.string.contact_subject_publishing_song)
+        val subjectPrefix = if (originalSongId != null) {
+            uiResourceService.resString(R.string.contact_subject_song_amend)
+        } else {
+            uiResourceService.resString(R.string.contact_subject_publishing_song)
+        }
         val fullTitle: String = if (category.isNullOrEmpty()) {
             title
         } else {
