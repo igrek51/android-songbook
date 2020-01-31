@@ -165,7 +165,7 @@ class LayoutController {
     }
 
     fun isState(compareLayoutClass: KClass<out MainLayout>): Boolean {
-        return compareLayoutClass.isInstance(mainContentLayout)
+        return compareLayoutClass.isInstance(currentlyShownLayout)
     }
 
     fun onBackClicked() {
