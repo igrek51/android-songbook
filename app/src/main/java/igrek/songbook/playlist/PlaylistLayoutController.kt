@@ -10,7 +10,6 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.InflatedLayout
-import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.layout.dialog.InputDialogBuilder
@@ -31,8 +30,7 @@ import javax.inject.Inject
 
 
 class PlaylistLayoutController : InflatedLayout(
-        _layoutResourceId = R.layout.screen_playlists,
-        _layoutState = LayoutState.PLAYLISTS
+        _layoutResourceId = R.layout.screen_playlists
 ), ListItemClickListener<PlaylistListItem> {
 
     @Inject

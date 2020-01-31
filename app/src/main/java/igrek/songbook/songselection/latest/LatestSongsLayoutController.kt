@@ -10,7 +10,6 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.InflatedLayout
-import igrek.songbook.layout.LayoutState
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController
@@ -25,8 +24,7 @@ import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 class LatestSongsLayoutController : InflatedLayout(
-        _layoutResourceId = R.layout.screen_latest_songs,
-        _layoutState = LayoutState.LATEST
+        _layoutResourceId = R.layout.screen_latest_songs
 ), SongClickListener {
 
     @Inject

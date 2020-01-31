@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.TextView
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.persistence.general.model.SongsDb
 import igrek.songbook.songselection.ListScrollPosition
@@ -44,19 +43,15 @@ class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
         subscriptions.add(songsRepository.dbChangeSubject
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    if (layoutController.isState(getLayoutState()))
+                    if (layoutController.isState(this::class))
                         updateSongItemsList()
                 })
         subscriptions.add(favouriteSongsService.updateFavouriteSongSubject
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    if (layoutController.isState(getLayoutState()))
+                    if (layoutController.isState(this::class))
                         updateSongItemsList()
                 })
-    }
-
-    override fun getLayoutState(): LayoutState {
-        return LayoutState.FAVOURITE_SONGS
     }
 
     override fun getLayoutResourceId(): Int {

@@ -12,8 +12,7 @@ import igrek.songbook.layout.navigation.NavigationMenuController
 import javax.inject.Inject
 
 open class InflatedLayout(
-        private val _layoutResourceId: Int,
-        private val _layoutState: LayoutState
+        private val _layoutResourceId: Int
 ) : MainLayout {
 
     @Inject
@@ -27,10 +26,6 @@ open class InflatedLayout(
 
     init {
         DaggerIoc.factoryComponent.inject(this)
-    }
-
-    override fun getLayoutState(): LayoutState {
-        return _layoutState
     }
 
     override fun getLayoutResourceId(): Int {
@@ -66,6 +61,6 @@ open class InflatedLayout(
     override fun onLayoutExit() {}
 
     protected fun isLayoutVisible(): Boolean {
-        return layoutController.isState(_layoutState)
+        return layoutController.isState(this::class)
     }
 }

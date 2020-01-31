@@ -4,8 +4,6 @@ import android.view.View
 
 interface MainLayout {
 
-    fun getLayoutState(): LayoutState
-
     fun getLayoutResourceId(): Int
 
     fun showLayout(layout: View)

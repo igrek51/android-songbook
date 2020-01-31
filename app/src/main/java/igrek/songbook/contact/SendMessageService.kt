@@ -16,7 +16,7 @@ import okhttp3.*
 import java.io.IOException
 import javax.inject.Inject
 
-class SendFeedbackService {
+class SendMessageService {
 
     @Inject
     lateinit var uiInfoService: UiInfoService
@@ -33,7 +33,7 @@ class SendFeedbackService {
     @Inject
     lateinit var layoutController: dagger.Lazy<LayoutController>
     @Inject
-    lateinit var contactLayoutController: dagger.Lazy<ContactLayoutController>
+    lateinit var publishSongLayoutController: dagger.Lazy<PublishSongLayoutController>
 
     private val logger = LoggerFactory.logger
 
@@ -46,7 +46,12 @@ class SendFeedbackService {
         DaggerIoc.factoryComponent.inject(this)
     }
 
-    fun sendFeedback(message: String, author: String, subject: String) {
+    fun sendContactMessage(message: String, origin: MessageOrigin,
+                           author: String? = null,
+                           subject: String? = null,
+                           category: String? = null,
+                           title: String? = null
+    ) {
         uiInfoService.showInfo(uiResourceService.resString(R.string.contact_sending))
 
         val appVersionName = packageInfoService.versionName
@@ -55,7 +60,11 @@ class SendFeedbackService {
 
         val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM)
                 .addFormDataPart("message", message)
-                .addFormDataPart("author", author).addFormDataPart("subject", subject)
+                .addFormDataPart("author", author ?: "")
+                .addFormDataPart("subject", subject ?: "")
+                .addFormDataPart("title", title ?: "")
+                .addFormDataPart("category", category ?: "")
+                .addFormDataPart("origin_id", origin.id.toString())
                 .addFormDataPart("application_id", APPLICATION_ID.toString())
                 .addFormDataPart("app_version", "$appVersionName ($appVersionCode)")
                 .addFormDataPart("db_version", dbVersionNumber)
@@ -80,29 +89,28 @@ class SendFeedbackService {
     }
 
     private fun onResponseReceived(response: String) {
-        logger.debug("Feedback sent response: $response")
+        logger.debug("Message sent response: $response")
         Handler(Looper.getMainLooper()).postDelayed({
             if (response.startsWith("200")) {
                 uiInfoService.showInfo(R.string.contact_message_sent_successfully)
             } else {
-                onErrorReceived("Feedback sent bad response: $response")
+                onErrorReceived("Contact message sent bad response: $response")
             }
         }, 500) // additional delay due to sending is "too fast" (user is not sure if it has been sent)
     }
 
     private fun onErrorReceived(errorMessage: String?) {
-        logger.error("Feedback sending error: $errorMessage")
+        logger.error("Contact message sending error: $errorMessage")
         Handler(Looper.getMainLooper()).post { uiInfoService.showInfoIndefinite(R.string.contact_error_sending) }
     }
 
     fun publishSong(song: Song) {
-        layoutController.get().showContact()
-        contactLayoutController.get().prepareCustomSongPublishing(song.title, song.customCategoryName, song.content)
+        layoutController.get().showPublishSong()
+        publishSongLayoutController.get().prepareFields(song.title, song.customCategoryName, song.content)
     }
 
     fun requestMissingSong() {
-        layoutController.get().showContact()
-        contactLayoutController.get().prepareMissingSongRequest()
+        layoutController.get().showContactMissingSong()
     }
 
 }

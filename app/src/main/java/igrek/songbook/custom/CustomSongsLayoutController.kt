@@ -13,7 +13,6 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.InflatedLayout
-import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.list.ListItemClickListener
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.custom.CustomCategory
@@ -26,8 +25,7 @@ import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 class CustomSongsLayoutController : InflatedLayout(
-        _layoutResourceId = R.layout.screen_custom_songs,
-        _layoutState = LayoutState.CUSTOM_SONGS
+        _layoutResourceId = R.layout.screen_custom_songs
 ), ListItemClickListener<CustomSongListItem> {
 
     @Inject

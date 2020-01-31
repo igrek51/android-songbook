@@ -19,7 +19,6 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeClickListener
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
@@ -447,10 +446,6 @@ class ChordsEditorLayoutController : MainLayout {
             return
         }
         history.revertLast(contentEdit!!)
-    }
-
-    override fun getLayoutState(): LayoutState {
-        return LayoutState.CUSTOM_SONG_EDIT
     }
 
     override fun getLayoutResourceId(): Int {

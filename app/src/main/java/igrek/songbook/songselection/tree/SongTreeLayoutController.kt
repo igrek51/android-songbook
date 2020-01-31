@@ -6,7 +6,6 @@ import android.widget.TextView
 import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.persistence.general.model.Category
 import igrek.songbook.persistence.general.model.SongsDb
@@ -50,13 +49,9 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
         subscriptions.add(songsRepository.dbChangeSubject
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    if (layoutController.isState(getLayoutState()))
+                    if (layoutController.isState(this::class))
                         updateSongItemsList()
                 })
-    }
-
-    override fun getLayoutState(): LayoutState {
-        return LayoutState.SONGS_TREE
     }
 
     override fun getLayoutResourceId(): Int {

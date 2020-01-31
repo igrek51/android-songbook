@@ -63,7 +63,7 @@
     <string name="action_check_secret">OK</string>
     <string name="action_cancel">Cancel</string>
     <string name="ui_db_is_uptodate">Songs database is up-to-date.</string>
-    <string name="contact_label">You can contact me if you have noticed some bugs or you have any ideas how to improve this application. You can also suggest improvements to the chords or propose adding a new song. I would be very grateful for your comments and contributing. If you wish to get a reply to your message, please include your email as well.</string>
+    <string name="contact_label">You can contact me if you have noticed some bugs or you have any ideas how to improve this application. I would be very grateful for your comments and contributing. If you wish to get a reply to your message, please include your email as well.</string>
     <string name="contact_message_hint">Your message…</string>
     <string name="contact_send">Send</string>
     <string name="contact_author_hint">Your name or email (optional)</string>
@@ -275,7 +275,7 @@
     <string name="settings_restore_transposition">Restore last transposing</string>
     <string name="settings_restore_transposition_hint">Remember and restore last transposing for each song</string>
     <string name="new_playlist_name">New playlist name</string>
-    <string name="confirm_send_contact">Do you really want to send this message?</string>
+    <string name="confirm_send_contact">Do you really want to send it?</string>
     <string name="no_chords_recognized_in_song">No chords recognized in the song</string>
     <string name="show_chords_definitions">Chord diagrams</string>
     <string name="choose_a_chord">Choose a chord from a song</string>
@@ -286,8 +286,15 @@
     <string name="instrument_ukulele">Ukulele</string>
     <string name="instrument_mandolin">Mandolin</string>
     <string name="settings_chords_instrument">Instrument for chord diagrams</string>
-    <string name="contact_subject_missing_song">Request for a missing song</string>
-    <string name="contact_message_missing_song">Please add following songs to application (artist - title):\n</string>
+    <string name="contact_subject_missing_song">Missing song</string>
     <string name="nav_missing_song">Missing song</string>
     <string name="search_empty_suggest_it">Missing song? Suggest it</string>
+    <string name="publish_song_title">Publish a song</string>
+    <string name="publish_song_description">You can publish your song to make it shared along all the other users. Remember that your song needs to be accepted first. I would be very grateful for your contributing.</string>
+    <string name="publish_song_title_field">Song title</string>
+    <string name="publish_song_artist_field">Artist / Category name</string>
+    <string name="publish_song_content_field">Song with chords</string>
+    <string name="missing_song_description">Here you can propose adding a new song to database, if you feel that some song is missing. It would be great if you\'d like to send your song with chords as well (using \"Share to public\" action on custom songs). Write your song in a manner \"Artist - Title\".</string>
+    <string name="missing_song_titles">Artist - Title</string>
+    <string name="missing_song_title_invalid_format">Invalid format. Try: \"Artist - Title\"</string>
 </resources>

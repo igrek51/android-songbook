@@ -11,7 +11,9 @@ import igrek.songbook.activity.OptionSelectDispatcher
 import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.chords.transpose.ChordsTransposerManager
 import igrek.songbook.contact.ContactLayoutController
-import igrek.songbook.contact.SendFeedbackService
+import igrek.songbook.contact.MissingSongLayoutController
+import igrek.songbook.contact.PublishSongLayoutController
+import igrek.songbook.contact.SendMessageService
 import igrek.songbook.custom.CustomSongEditLayoutController
 import igrek.songbook.custom.CustomSongService
 import igrek.songbook.custom.CustomSongsLayoutController
@@ -108,7 +110,7 @@ interface FactoryComponent {
     fun inject(there: PackageInfoService)
     fun inject(there: SettingsLayoutController)
     fun inject(there: SongDetailsService)
-    fun inject(there: SendFeedbackService)
+    fun inject(there: SendMessageService)
     fun inject(there: SongImportFileChooser)
     fun inject(there: GeneralSongsDao)
     fun inject(there: CustomSongService)
@@ -152,5 +154,7 @@ interface FactoryComponent {
     fun inject(there: ChordsDiagramsService)
     fun inject(there: ChordsInstrumentService)
     fun inject(there: TitleBarView)
+    fun inject(there: PublishSongLayoutController)
+    fun inject(there: MissingSongLayoutController)
 
 }

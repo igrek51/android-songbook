@@ -4,13 +4,12 @@ import android.app.Activity
 import androidx.appcompat.app.AlertDialog
 import dagger.Lazy
 import igrek.songbook.R
-import igrek.songbook.contact.SendFeedbackService
+import igrek.songbook.contact.SendMessageService
 import igrek.songbook.custom.CustomSongService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
@@ -33,7 +32,7 @@ class SongContextMenuBuilder {
     @Inject
     lateinit var customSongService: CustomSongService
     @Inject
-    lateinit var sendFeedbackService: SendFeedbackService
+    lateinit var sendMessageService: SendMessageService
     @Inject
     lateinit var songsRepository: SongsRepository
     @Inject
@@ -72,7 +71,7 @@ class SongContextMenuBuilder {
                 SongContextAction(R.string.action_song_publish,
                         availableCondition = { song -> song.custom },
                         executor = { song ->
-                            sendFeedbackService.publishSong(song)
+                            sendMessageService.publishSong(song)
                         }),
                 // Add to favourites
                 SongContextAction(R.string.action_song_set_favourite,
@@ -106,7 +105,7 @@ class SongContextMenuBuilder {
                         }),
                 // show chords graphs
                 SongContextAction(R.string.show_chords_definitions,
-                        availableCondition = { layoutController.get().isState(LayoutState.SONG_PREVIEW) },
+                        availableCondition = { layoutController.get().isState(SongPreviewLayoutController::class) },
                         executor = {
                             songPreviewLayoutController.get().showChordsGraphs()
                         }),

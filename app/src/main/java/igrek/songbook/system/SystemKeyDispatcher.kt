@@ -3,7 +3,7 @@ package igrek.songbook.system
 import dagger.Lazy
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.layout.LayoutState
+import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import javax.inject.Inject
 
@@ -28,13 +28,13 @@ class SystemKeyDispatcher {
     }
 
     fun onVolumeUp(): Boolean {
-        if (!layoutController.get().isState(LayoutState.SONG_PREVIEW))
+        if (!layoutController.get().isState(SongPreviewLayoutController::class))
             return false
         return autoscrollService.get().onVolumeUp()
     }
 
     fun onVolumeDown(): Boolean {
-        if (!layoutController.get().isState(LayoutState.SONG_PREVIEW))
+        if (!layoutController.get().isState(SongPreviewLayoutController::class))
             return false
         return autoscrollService.get().onVolumeDown()
     }

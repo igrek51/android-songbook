@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.navigation.NavigationMenuController
 import javax.inject.Inject
@@ -28,10 +27,6 @@ class SettingsLayoutController : MainLayout {
                 .beginTransaction()
                 .replace(R.id.fragment_content, SettingsFragment())
                 .commit()
-    }
-
-    override fun getLayoutState(): LayoutState {
-        return LayoutState.SETTINGS
     }
 
     override fun getLayoutResourceId(): Int {

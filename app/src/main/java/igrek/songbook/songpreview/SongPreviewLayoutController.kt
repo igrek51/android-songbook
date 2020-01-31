@@ -2,14 +2,14 @@ package igrek.songbook.songpreview
 
 import android.graphics.Paint
 import android.graphics.PorterDuff
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import android.view.View
 import android.view.View.OVER_SCROLL_ALWAYS
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,7 +21,6 @@ import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.general.model.Song
@@ -205,10 +204,6 @@ class SongPreviewLayoutController : MainLayout {
 
     private fun showMoreActions() {
         songContextMenuBuilder.get().showSongActions(currentSong!!)
-    }
-
-    override fun getLayoutState(): LayoutState {
-        return LayoutState.SONG_PREVIEW
     }
 
     override fun getLayoutResourceId(): Int {

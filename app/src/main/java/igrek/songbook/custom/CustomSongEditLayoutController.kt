@@ -12,7 +12,6 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.SafeClickListener
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.layout.LayoutState
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
@@ -180,10 +179,6 @@ class CustomSongEditLayoutController : MainLayout {
             }
             layoutController.showCustomSongs()
         }
-    }
-
-    override fun getLayoutState(): LayoutState {
-        return LayoutState.CUSTOM_SONG_EDIT
     }
 
     override fun getLayoutResourceId(): Int {

@@ -10,7 +10,6 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.InflatedLayout
-import igrek.songbook.layout.LayoutState
 import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.songpreview.SongOpener
@@ -26,8 +25,7 @@ import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 class OpenHistoryLayoutController : InflatedLayout(
-        _layoutResourceId = R.layout.screen_open_history,
-        _layoutState = LayoutState.HISTORY
+        _layoutResourceId = R.layout.screen_open_history
 ), SongClickListener {
 
     @Inject

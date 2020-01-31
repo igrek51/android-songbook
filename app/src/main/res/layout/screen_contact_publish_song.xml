@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <igrek.songbook.layout.navigation.TitleBarView
+        android:id="@+id/titleBarFragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/publish_song_title" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:gravity="bottom"
+                android:text="@string/publish_song_description"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/publishSongTitleEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="#07ffffff"
+                android:gravity="top"
+                android:hint="@string/publish_song_title_field"
+                android:inputType="text|textMultiLine"
+                android:padding="8dp" />
+
+            <EditText
+                android:id="@+id/publishSongArtistEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="#07ffffff"
+                android:gravity="top"
+                android:hint="@string/publish_song_artist_field"
+                android:inputType="text|textMultiLine"
+                android:padding="8dp" />
+
+            <EditText
+                android:id="@+id/publishSongContentEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="#07ffffff"
+                android:gravity="top"
+                android:hint="@string/publish_song_content_field"
+                android:inputType="text|textMultiLine"
+                android:minHeight="200dp"
+                android:padding="8dp" />
+
+            <EditText
+                android:id="@+id/contactAuthorEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="#07ffffff"
+                android:gravity="center_vertical"
+                android:hint="@string/contact_author_hint"
+                android:inputType="text"
+                android:padding="8dp" />
+
+            <Button
+                android:id="@+id/contactSendButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/contact_send" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

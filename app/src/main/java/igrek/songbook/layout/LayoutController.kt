@@ -1,11 +1,13 @@
 package igrek.songbook.layout
 
 import android.app.Activity
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import android.view.ViewGroup
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.contact.ContactLayoutController
+import igrek.songbook.contact.MissingSongLayoutController
+import igrek.songbook.contact.PublishSongLayoutController
 import igrek.songbook.custom.CustomSongEditLayoutController
 import igrek.songbook.custom.CustomSongsLayoutController
 import igrek.songbook.custom.editor.ChordsEditorLayoutController
@@ -20,6 +22,7 @@ import igrek.songbook.songselection.latest.LatestSongsLayoutController
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.tree.SongTreeLayoutController
 import javax.inject.Inject
+import kotlin.reflect.KClass
 
 class LayoutController {
 
@@ -50,14 +53,16 @@ class LayoutController {
     @Inject
     lateinit var openHistoryLayoutController: Lazy<OpenHistoryLayoutController>
     @Inject
+    lateinit var missingSongLayoutController: Lazy<MissingSongLayoutController>
+    @Inject
+    lateinit var publishSongLayoutController: Lazy<PublishSongLayoutController>
+    @Inject
     lateinit var activity: Activity
 
     private var mainContentLayout: CoordinatorLayout? = null
     private var previouslyShownLayout: MainLayout? = null
     private var currentlyShownLayout: MainLayout? = null
     private var lastSongSelectionLayout: MainLayout? = null
-
-    private var state = LayoutState.SONGS_TREE
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -124,6 +129,14 @@ class LayoutController {
         lastSongSelectionLayout = openHistoryLayoutController.get()
     }
 
+    fun showPublishSong() {
+        showMainLayout(publishSongLayoutController.get())
+    }
+
+    fun showContactMissingSong() {
+        showMainLayout(missingSongLayoutController.get())
+    }
+
 
     private fun showMainLayout(mainLayout: MainLayout) {
         // leave previous (current) layout
@@ -134,7 +147,6 @@ class LayoutController {
         currentlyShownLayout = mainLayout
 
         val layoutResource = mainLayout.getLayoutResourceId()
-        state = mainLayout.getLayoutState()
 
         // replace main content with brand new inflated layout
         mainContentLayout!!.removeAllViews()
@@ -152,8 +164,8 @@ class LayoutController {
         }
     }
 
-    fun isState(compare: LayoutState): Boolean {
-        return state == compare
+    fun isState(compareLayoutClass: KClass<out MainLayout>): Boolean {
+        return compareLayoutClass.isInstance(mainContentLayout)
     }
 
     fun onBackClicked() {
