@@ -86,7 +86,7 @@ class UiInfoService {
         showInfo(info)
     }
 
-    private fun showInfoIndefinite(info: String) {
+    fun showInfoIndefinite(info: String) {
         val dismissName = uiResourceService.get().resString(R.string.action_info_ok)
         showActionInfo(info, null, dismissName, null, null, Snackbar.LENGTH_INDEFINITE)
     }

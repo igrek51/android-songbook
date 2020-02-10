@@ -3,6 +3,7 @@ package igrek.songbook.activity
 import android.app.Activity
 import dagger.Lazy
 import igrek.songbook.BuildConfig
+import igrek.songbook.admin.AdminService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
@@ -26,6 +27,8 @@ class AppInitializer {
     lateinit var appLanguageService: Lazy<AppLanguageService>
     @Inject
     lateinit var songsRepository: Lazy<SongsRepository>
+    @Inject
+    lateinit var adminService: Lazy<AdminService>
 
     private val logger = LoggerFactory.logger
 
@@ -44,6 +47,7 @@ class AppInitializer {
         layoutController.get().init()
         layoutController.get().showSongTree()
         songsUpdater.get().checkUpdateIsAvailable()
+        adminService.get().init()
 
         logger.info("Application has been initialized.")
     }

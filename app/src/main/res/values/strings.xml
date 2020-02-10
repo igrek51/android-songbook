@@ -301,6 +301,6 @@
     <string name="publish_song_no_change">You shouldn\'t publish this song because you did not any change compared to original song. Make some changes first, if you want to send an improved version.</string>
     <string name="nav_admin_antechamber">Antechamber</string>
     <string name="admin_update_songs">Update songs</string>
-    <string name="admin_downloading_antechamber">Downloading antechamber songs...</string>
-    <string name="admin_communication_breakdown">Communication breakdown</string>
+    <string name="admin_downloading_antechamber">Downloading antechamber songs…</string>
+    <string name="admin_communication_breakdown">Communication breakdown: %s</string>
 </resources>

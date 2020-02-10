@@ -27,12 +27,16 @@ class AdminService {
 
     init {
         DaggerIoc.factoryComponent.inject(this)
+    }
+
+    fun init() {
         loadPreferences()
         checkMenuVisibility()
     }
 
     private fun checkMenuVisibility() {
         if (isAdminEnabled()) {
+            LoggerFactory.logger.debug("Enabling admin tools")
             navigationMenuController.get().setAdminMenu()
         }
     }

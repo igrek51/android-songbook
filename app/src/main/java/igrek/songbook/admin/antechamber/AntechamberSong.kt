@@ -54,9 +54,9 @@ data class AntechamberSongDto(
         var language: String? = null,
         var scroll_speed: Double? = null,
         var initial_delay: Double? = null,
-        var chords_notation_id: Long? = null,
+        var chords_notation: Long? = null,
         var original_song_id: Long? = null,
-        var status_id: Long
+        var status: Long
 ) {
     fun toModel(): AntechamberSong {
         return AntechamberSong(
@@ -74,9 +74,17 @@ data class AntechamberSongDto(
                 language = language,
                 scrollSpeed = scroll_speed,
                 initialDelay = initial_delay,
-                chordsNotation = ChordsNotation.parseById(chords_notation_id),
+                chordsNotation = ChordsNotation.parseById(chords_notation),
                 originalSongId = original_song_id,
-                status = AntechamberSongStatus.parseById(status_id)
+                status = AntechamberSongStatus.parseById(status)
         )
+    }
+}
+
+data class AllAntechamberSongsDto(
+        var songs: List<AntechamberSongDto> = emptyList()
+) {
+    fun toModel(): List<AntechamberSong> {
+        return songs.map { dto -> dto.toModel() }.toMutableList()
     }
 }

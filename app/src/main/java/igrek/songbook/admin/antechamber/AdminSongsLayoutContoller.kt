@@ -105,16 +105,19 @@ class AdminSongsLayoutContoller : InflatedLayout(
     private fun onDownloadedSongs(response: Response) {
         val json = response.body()?.string() ?: ""
         val mapper = jacksonObjectMapper()
-        val dtos: List<AntechamberSongDto> = mapper.readValue(json)
-        logger.debug("downloaded songs: ", dtos)
-        experimentalSongs = dtos.map { dto -> dto.toModel() }
-        updateItemsList()
+        val allDtos: AllAntechamberSongsDto = mapper.readValue(json)
+        logger.debug("downloaded songs: ", allDtos)
+        experimentalSongs = allDtos.toModel()
+        Handler(Looper.getMainLooper()).post {
+            updateItemsList()
+        }
     }
 
     private fun onErrorReceived(errorMessage: String?) {
         logger.error("Contact message sending error: $errorMessage")
         Handler(Looper.getMainLooper()).post {
-            uiInfoService.showInfoIndefinite(R.string.admin_communication_breakdown)
+            val message = uiResourceService.resString(R.string.admin_communication_breakdown, errorMessage)
+            uiInfoService.showInfoIndefinite(message)
         }
     }
 
