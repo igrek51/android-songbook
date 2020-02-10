@@ -14,6 +14,7 @@ import igrek.songbook.custom.CustomSongEditLayoutController
 import igrek.songbook.custom.CustomSongsLayoutController
 import igrek.songbook.custom.editor.ChordsEditorLayoutController
 import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.playlist.PlaylistLayoutController
 import igrek.songbook.settings.SettingsLayoutController
@@ -70,6 +71,7 @@ class LayoutController {
     private var currentLayout: MainLayout? = null
     private var layoutHistory: MutableList<MainLayout> = mutableListOf()
     private var registeredLayouts: Map<KClass<out MainLayout>, Lazy<out MainLayout>> = emptyMap()
+    private val logger = LoggerFactory.logger
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -116,6 +118,7 @@ class LayoutController {
             }
         }
 
+        logger.debug("Showing layout ${layoutClass.simpleName} [${layoutHistory.size} in history]")
         showMainLayout(layoutController)
     }
 
@@ -151,8 +154,7 @@ class LayoutController {
         }
 
         val previousLayout = layoutHistory.last()
-        layoutHistory = layoutHistory.dropLast(1).toMutableList()
-
+        logger.debug("Showing previous layout ${previousLayout::class.simpleName} [${layoutHistory.size} in history]")
         showMainLayout(previousLayout)
     }
 

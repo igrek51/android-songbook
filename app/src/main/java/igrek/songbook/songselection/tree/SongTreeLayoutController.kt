@@ -117,7 +117,7 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
             currentCategory = null
             updateSongItemsList()
         } catch (e: NoParentItemException) {
-            activityController.get().quit()
+            layoutController.showPreviousLayoutOrQuit()
         }
     }
 
