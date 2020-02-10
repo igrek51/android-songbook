@@ -21,6 +21,7 @@ class AdminService {
         match?.let {
             userAuthToken = it.groupValues[1]
             LoggerFactory.logger.debug("Admin token entered: $userAuthToken")
+            checkMenuVisibility()
         }
     }
 
