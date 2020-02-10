@@ -10,6 +10,7 @@ import igrek.songbook.layout.MainLayout
 import igrek.songbook.persistence.general.model.Category
 import igrek.songbook.persistence.general.model.SongsDb
 import igrek.songbook.songselection.SongSelectionLayoutController
+import igrek.songbook.songselection.search.SongSearchLayoutController
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
@@ -105,7 +106,7 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
     }
 
     private fun goToSearchSong() {
-        layoutController.showSongSearch()
+        layoutController.showLayout(SongSearchLayoutController::class)
     }
 
     private fun goUp() {

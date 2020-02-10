@@ -121,10 +121,6 @@ class AdminSongsLayoutContoller : InflatedLayout(
         }
     }
 
-    override fun onBackClicked() {
-        layoutController.showSongTree()
-    }
-
     private fun onSongClick(item: AntechamberSong) {
         val song = Song(
                 id = item.id,

@@ -11,7 +11,10 @@ import igrek.songbook.R
 import igrek.songbook.about.AboutLayoutController
 import igrek.songbook.about.HelpLayoutController
 import igrek.songbook.activity.ActivityController
+import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
+import igrek.songbook.contact.ContactLayoutController
 import igrek.songbook.contact.SendMessageService
+import igrek.songbook.custom.CustomSongsLayoutController
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -19,7 +22,14 @@ import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.general.SongsUpdater
+import igrek.songbook.playlist.PlaylistLayoutController
+import igrek.songbook.settings.SettingsLayoutController
+import igrek.songbook.songselection.favourite.FavouritesLayoutController
+import igrek.songbook.songselection.history.OpenHistoryLayoutController
+import igrek.songbook.songselection.latest.LatestSongsLayoutController
 import igrek.songbook.songselection.random.RandomSongOpener
+import igrek.songbook.songselection.search.SongSearchLayoutController
+import igrek.songbook.songselection.tree.SongTreeLayoutController
 import igrek.songbook.system.SoftKeyboardService
 import java.util.*
 import javax.inject.Inject
@@ -60,23 +70,22 @@ class NavigationMenuController {
     }
 
     private fun initOptionActionsMap() {
-        actionsMap[R.id.nav_songs_list] = { layoutController.get().showSongTree() }
-        actionsMap[R.id.nav_search] = { layoutController.get().showSongSearch() }
-        actionsMap[R.id.nav_favourites] = { layoutController.get().showFavourites() }
-        actionsMap[R.id.nav_playlists] = { layoutController.get().showPlaylists() }
+        actionsMap[R.id.nav_songs_list] = { layoutController.get().showLayout(SongTreeLayoutController::class) }
+        actionsMap[R.id.nav_search] = { layoutController.get().showLayout(SongSearchLayoutController::class) }
+        actionsMap[R.id.nav_favourites] = { layoutController.get().showLayout(FavouritesLayoutController::class) }
+        actionsMap[R.id.nav_playlists] = { layoutController.get().showLayout(PlaylistLayoutController::class) }
         actionsMap[R.id.nav_update_db] = { songsUpdater.get().updateSongsDb() }
-        actionsMap[R.id.nav_custom_songs] = { layoutController.get().showCustomSongs() }
+        actionsMap[R.id.nav_custom_songs] = { layoutController.get().showLayout(CustomSongsLayoutController::class) }
         actionsMap[R.id.nav_random_song] = { randomSongOpener.get().openRandomSong() }
-        actionsMap[R.id.nav_settings] = { layoutController.get().showSettings() }
+        actionsMap[R.id.nav_settings] = { layoutController.get().showLayout(SettingsLayoutController::class) }
         actionsMap[R.id.nav_help] = { helpLayoutController.get().showUIHelp() }
         actionsMap[R.id.nav_about] = { aboutLayoutController.get().showAbout() }
         actionsMap[R.id.nav_exit] = { activityController.get().quit() }
-        actionsMap[R.id.nav_contact] = { layoutController.get().showContact() }
+        actionsMap[R.id.nav_contact] = { layoutController.get().showLayout(ContactLayoutController::class) }
         actionsMap[R.id.nav_missing_song] = { sendMessageService.get().requestMissingSong() }
-        actionsMap[R.id.nav_history] = { layoutController.get().showOpenHistory() }
-        actionsMap[R.id.nav_latest] = { layoutController.get().showLatestSongs() }
-        actionsMap[R.id.nav_latest] = { layoutController.get().showLatestSongs() }
-        actionsMap[R.id.nav_admin_antechamber] = { layoutController.get().showAdminAntechamberSongs() }
+        actionsMap[R.id.nav_history] = { layoutController.get().showLayout(OpenHistoryLayoutController::class) }
+        actionsMap[R.id.nav_latest] = { layoutController.get().showLayout(LatestSongsLayoutController::class) }
+        actionsMap[R.id.nav_admin_antechamber] = { layoutController.get().showLayout(AdminSongsLayoutContoller::class) }
     }
 
     fun init() {

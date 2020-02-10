@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import dagger.Lazy
 import igrek.songbook.R
+import igrek.songbook.activity.ActivityController
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.contact.ContactLayoutController
 import igrek.songbook.contact.MissingSongLayoutController
@@ -28,15 +29,20 @@ import kotlin.reflect.KClass
 class LayoutController {
 
     @Inject
-    lateinit var songTreeController: Lazy<SongTreeLayoutController>
-    @Inject
-    lateinit var songSearchController: Lazy<SongSearchLayoutController>
-    @Inject
-    lateinit var songPreviewController: Lazy<SongPreviewLayoutController>
-    @Inject
-    lateinit var contactLayoutController: Lazy<ContactLayoutController>
+    lateinit var activity: Activity
     @Inject
     lateinit var navigationMenuController: Lazy<NavigationMenuController>
+    @Inject
+    lateinit var activityController: Lazy<ActivityController>
+
+    @Inject
+    lateinit var songTreeLayoutController: Lazy<SongTreeLayoutController>
+    @Inject
+    lateinit var songSearchLayoutController: Lazy<SongSearchLayoutController>
+    @Inject
+    lateinit var songPreviewLayoutController: Lazy<SongPreviewLayoutController>
+    @Inject
+    lateinit var contactLayoutController: Lazy<ContactLayoutController>
     @Inject
     lateinit var settingsLayoutController: Lazy<SettingsLayoutController>
     @Inject
@@ -59,13 +65,11 @@ class LayoutController {
     lateinit var publishSongLayoutController: Lazy<PublishSongLayoutController>
     @Inject
     lateinit var adminSongsLayoutContoller: Lazy<AdminSongsLayoutContoller>
-    @Inject
-    lateinit var activity: Activity
 
     private var mainContentLayout: CoordinatorLayout? = null
-    private var previouslyShownLayout: MainLayout? = null
-    private var currentlyShownLayout: MainLayout? = null
-    private var lastSongSelectionLayout: MainLayout? = null
+    private var currentLayout: MainLayout? = null
+    private var layoutHistory: MutableList<MainLayout> = mutableListOf()
+    private var registeredLayouts: Map<KClass<out MainLayout>, Lazy<out MainLayout>> = emptyMap()
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -75,104 +79,85 @@ class LayoutController {
         activity.setContentView(R.layout.main_layout)
         mainContentLayout = activity.findViewById(R.id.main_content)
         navigationMenuController.get().init()
+        registerLayouts()
     }
 
-    fun showSongTree() {
-        showMainLayout(songTreeController.get())
-        lastSongSelectionLayout = songTreeController.get()
+    private fun registerLayouts() {
+        registeredLayouts = mapOf(
+                SongTreeLayoutController::class to songTreeLayoutController,
+                SongSearchLayoutController::class to songSearchLayoutController,
+                SongPreviewLayoutController::class to songPreviewLayoutController,
+                ContactLayoutController::class to contactLayoutController,
+                SettingsLayoutController::class to settingsLayoutController,
+                CustomSongEditLayoutController::class to customSongEditLayoutController,
+                ChordsEditorLayoutController::class to chordsEditorLayoutController,
+                CustomSongsLayoutController::class to customSongsLayoutController,
+                FavouritesLayoutController::class to favouritesLayoutController,
+                PlaylistLayoutController::class to playlistLayoutController,
+                LatestSongsLayoutController::class to latestSongsLayoutController,
+                OpenHistoryLayoutController::class to openHistoryLayoutController,
+                MissingSongLayoutController::class to missingSongLayoutController,
+                PublishSongLayoutController::class to publishSongLayoutController,
+                AdminSongsLayoutContoller::class to adminSongsLayoutContoller
+        )
     }
 
-    fun showSongSearch() {
-        showMainLayout(songSearchController.get())
-        lastSongSelectionLayout = songSearchController.get()
-    }
+    fun showLayout(layoutClass: KClass<out MainLayout>, disableReturn: Boolean = false) {
+        val lazyLayout = registeredLayouts[layoutClass]
+                ?: throw IllegalArgumentException("${layoutClass.simpleName} class not registered as layout")
+        val layoutController = lazyLayout.get()
 
-    fun showSongPreview() {
-        showMainLayout(songPreviewController.get())
-    }
+        if (!disableReturn) {
+            layoutController.let {
+                if (it in layoutHistory) {
+                    layoutHistory.remove(it)
+                }
+                layoutHistory.add(it)
+            }
+        }
 
-    fun showContact() {
-        showMainLayout(contactLayoutController.get())
+        showMainLayout(layoutController)
     }
-
-    fun showSettings() {
-        showMainLayout(settingsLayoutController.get())
-    }
-
-    fun showCustomSong() {
-        showMainLayout(customSongEditLayoutController.get())
-    }
-
-    fun showSongChordEditor() {
-        showMainLayout(chordsEditorLayoutController.get())
-    }
-
-    fun showCustomSongs() {
-        showMainLayout(customSongsLayoutController.get())
-        lastSongSelectionLayout = customSongsLayoutController.get()
-    }
-
-    fun showFavourites() {
-        showMainLayout(favouritesLayoutController.get())
-        lastSongSelectionLayout = favouritesLayoutController.get()
-    }
-
-    fun showPlaylists() {
-        showMainLayout(playlistLayoutController.get())
-        lastSongSelectionLayout = playlistLayoutController.get()
-    }
-
-    fun showLatestSongs() {
-        showMainLayout(latestSongsLayoutController.get())
-        lastSongSelectionLayout = latestSongsLayoutController.get()
-    }
-
-    fun showOpenHistory() {
-        showMainLayout(openHistoryLayoutController.get())
-        lastSongSelectionLayout = openHistoryLayoutController.get()
-    }
-
-    fun showPublishSong() {
-        showMainLayout(publishSongLayoutController.get())
-    }
-
-    fun showContactMissingSong() {
-        showMainLayout(missingSongLayoutController.get())
-    }
-
-    fun showAdminAntechamberSongs() {
-        showMainLayout(adminSongsLayoutContoller.get())
-    }
-
 
     private fun showMainLayout(mainLayout: MainLayout) {
-        // leave previous (current) layout
-        if (currentlyShownLayout != null)
-            currentlyShownLayout!!.onLayoutExit()
+        currentLayout?.onLayoutExit()
 
-        previouslyShownLayout = currentlyShownLayout
-        currentlyShownLayout = mainLayout
-
-        val layoutResource = mainLayout.getLayoutResourceId()
+        currentLayout = mainLayout
 
         // replace main content with brand new inflated layout
-        mainContentLayout!!.removeAllViews()
+        val layoutResource = mainLayout.getLayoutResourceId()
+        mainContentLayout?.removeAllViews()
         val inflater = activity.layoutInflater
         val layoutView = inflater.inflate(layoutResource, null)
         layoutView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        mainContentLayout!!.addView(layoutView)
+        mainContentLayout?.addView(layoutView)
 
         mainLayout.showLayout(layoutView)
     }
 
-    fun showLastSongSelectionLayout() {
-        if (lastSongSelectionLayout != null) {
-            showMainLayout(lastSongSelectionLayout!!)
+    fun showPreviousLayoutOrQuit() {
+        // remove current layout from last place
+        try {
+            val last = layoutHistory.last()
+            if (last == currentLayout) {
+                layoutHistory = layoutHistory.dropLast(1).toMutableList()
+            }
+        } catch (e: NoSuchElementException) {
         }
+
+        if (layoutHistory.isEmpty()) {
+            activityController.get().quit()
+            return
+        }
+
+        val previousLayout = layoutHistory.last()
+        layoutHistory = layoutHistory.dropLast(1).toMutableList()
+
+        showMainLayout(previousLayout)
     }
 
     fun isState(compareLayoutClass: KClass<out MainLayout>): Boolean {
-        return compareLayoutClass.isInstance(currentlyShownLayout)
+        return compareLayoutClass.isInstance(currentLayout)
     }
 
     fun onBackClicked() {
@@ -180,7 +165,7 @@ class LayoutController {
             navigationMenuController.get().navDrawerHide()
             return
         }
-        currentlyShownLayout!!.onBackClicked()
+        currentLayout!!.onBackClicked()
     }
 
 }

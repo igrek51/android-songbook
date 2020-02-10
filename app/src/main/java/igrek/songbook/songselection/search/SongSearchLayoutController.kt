@@ -172,7 +172,7 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
             setSongFilter(null)
         } else {
             softKeyboardService.hideSoftKeyboard(searchFilterEdit)
-            layoutController.showSongTree()
+            layoutController.showPreviousLayoutOrQuit()
         }
     }
 
@@ -181,7 +181,7 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
             setSongFilter(null)
         } else {
             softKeyboardService.hideSoftKeyboard(searchFilterEdit)
-            layoutController.showSongTree()
+            layoutController.showPreviousLayoutOrQuit()
         }
     }
 
@@ -193,7 +193,7 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
         } else {
             // move to selected category
             songTreeLayoutController.get().currentCategory = item.category
-            layoutController.showSongTree()
+            layoutController.showPreviousLayoutOrQuit()
         }
     }
 

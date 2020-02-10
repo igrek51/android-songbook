@@ -172,7 +172,7 @@ class PlaylistLayoutController : InflatedLayout(
             playlist = null
             updateItemsList()
         } catch (e: NoParentItemException) {
-            layoutController.showSongTree()
+            layoutController.showPreviousLayoutOrQuit()
         }
     }
 

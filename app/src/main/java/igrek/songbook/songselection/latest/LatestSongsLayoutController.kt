@@ -85,10 +85,6 @@ class LatestSongsLayoutController : InflatedLayout(
         }
     }
 
-    override fun onBackClicked() {
-        layoutController.showSongTree()
-    }
-
     override fun onSongItemClick(item: SongTreeItem) {
         storedScroll = itemsListView?.currentScrollPosition
         if (item.isSong) {

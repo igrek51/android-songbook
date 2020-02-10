@@ -104,7 +104,7 @@ class SendMessageService {
     }
 
     fun requestMissingSong() {
-        layoutController.get().showContactMissingSong()
+        layoutController.get().showLayout(MissingSongLayoutController::class)
     }
 
 }

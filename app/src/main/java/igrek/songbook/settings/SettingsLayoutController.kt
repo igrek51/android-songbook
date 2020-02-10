@@ -34,7 +34,7 @@ class SettingsLayoutController : MainLayout {
     }
 
     override fun onBackClicked() {
-        layoutController.showLastSongSelectionLayout()
+        layoutController.showPreviousLayoutOrQuit()
     }
 
     override fun onLayoutExit() {}

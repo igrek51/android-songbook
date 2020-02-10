@@ -45,7 +45,7 @@ class PublishSongService {
             }
         }
 
-        layoutController.get().showPublishSong()
+        layoutController.get().showLayout(PublishSongLayoutController::class)
         publishSongLayoutController.get().prepareFields(song.title, song.customCategoryName, song.content, originalSongId)
     }
 

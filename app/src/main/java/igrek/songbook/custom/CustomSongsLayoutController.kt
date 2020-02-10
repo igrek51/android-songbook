@@ -143,7 +143,7 @@ class CustomSongsLayoutController : InflatedLayout(
             customCategory = null
             updateItemsList()
         } catch (e: NoParentItemException) {
-            layoutController.showSongTree()
+            layoutController.showPreviousLayoutOrQuit()
         }
     }
 

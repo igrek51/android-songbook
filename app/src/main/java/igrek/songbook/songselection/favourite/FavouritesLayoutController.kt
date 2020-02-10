@@ -83,7 +83,7 @@ class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
     }
 
     override fun onBackClicked() {
-        layoutController.showSongTree()
+        layoutController.showPreviousLayoutOrQuit()
     }
 
     override fun onSongItemClick(item: SongTreeItem) {

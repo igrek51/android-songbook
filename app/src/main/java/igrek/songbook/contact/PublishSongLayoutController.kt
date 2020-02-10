@@ -53,7 +53,7 @@ class PublishSongLayoutController : MainLayout {
     }
 
     override fun onBackClicked() {
-        layoutController.showLastSongSelectionLayout()
+        layoutController.showPreviousLayoutOrQuit()
     }
 
     override fun onLayoutExit() {

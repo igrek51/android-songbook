@@ -116,7 +116,7 @@ class CustomSongEditLayoutController : MainLayout {
         songTitle = songTitleEdit!!.text.toString()
         songContent = songContentEdit!!.text.toString()
         customCategoryName = customCategoryNameEdit!!.text.toString()
-        layoutController.showSongChordEditor()
+        layoutController.showLayout(ChordsEditorLayoutController::class)
         val chordsNotation = chordsNotationService.chordsNotation
         chordsEditorLayoutController.get().setContent(songContentEdit?.text.toString(), chordsNotation)
     }
@@ -165,7 +165,7 @@ class CustomSongEditLayoutController : MainLayout {
                     .updateSong(currentSong!!, songTitle!!, customCategoryName, songContent)
         }
         uiInfoService.showInfo(R.string.edit_song_has_been_saved)
-        layoutController.showCustomSongs()
+        layoutController.showLayout(CustomSongsLayoutController::class, disableReturn = true)
     }
 
     private fun removeSong() {
@@ -177,7 +177,7 @@ class CustomSongEditLayoutController : MainLayout {
                 // remove song from database
                 customSongService.get().removeSong(currentSong!!)
             }
-            layoutController.showCustomSongs()
+            layoutController.showLayout(CustomSongsLayoutController::class, disableReturn = true)
         }
     }
 
@@ -188,10 +188,10 @@ class CustomSongEditLayoutController : MainLayout {
     override fun onBackClicked() {
         if (hasUnsavedChanges()) {
             ConfirmDialogBuilder().confirmAction(R.string.confirm_discard_custom_song_changes) {
-                layoutController.showCustomSongs()
+                layoutController.showLayout(CustomSongsLayoutController::class, disableReturn = true)
             }
         } else {
-            layoutController.showCustomSongs()
+            layoutController.showLayout(CustomSongsLayoutController::class, disableReturn = true)
         }
     }
 

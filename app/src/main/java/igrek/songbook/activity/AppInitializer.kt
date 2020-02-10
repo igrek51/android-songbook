@@ -10,6 +10,7 @@ import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.general.SongsUpdater
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.language.AppLanguageService
+import igrek.songbook.songselection.tree.SongTreeLayoutController
 import igrek.songbook.system.WindowManagerService
 import javax.inject.Inject
 
@@ -45,7 +46,7 @@ class AppInitializer {
         windowManagerService.get().hideTaskbar()
         songsRepository.get().init()
         layoutController.get().init()
-        layoutController.get().showSongTree()
+        layoutController.get().showLayout(SongTreeLayoutController::class)
         songsUpdater.get().checkUpdateIsAvailable()
         adminService.get().init()
 

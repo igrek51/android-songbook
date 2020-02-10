@@ -55,7 +55,7 @@ open class InflatedLayout(
     }
 
     override fun onBackClicked() {
-        layoutController.showLastSongSelectionLayout()
+        layoutController.showPreviousLayoutOrQuit()
     }
 
     override fun onLayoutExit() {}
