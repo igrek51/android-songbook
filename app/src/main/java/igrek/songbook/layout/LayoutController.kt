@@ -109,13 +109,18 @@ class LayoutController {
                 ?: throw IllegalArgumentException("${layoutClass.simpleName} class not registered as layout")
         val layoutController = lazyLayout.get()
 
-        if (!disableReturn) {
-            layoutController.let {
-                if (it in layoutHistory) {
-                    layoutHistory.remove(it)
-                }
-                layoutHistory.add(it)
+        if (disableReturn) {
+            // remove current layout from history
+            if (currentLayout in layoutHistory) {
+                layoutHistory.remove(currentLayout)
             }
+        }
+
+        layoutController.let {
+            if (it in layoutHistory) {
+                layoutHistory.remove(it)
+            }
+            layoutHistory.add(it)
         }
 
         logger.debug("Showing layout ${layoutClass.simpleName} [${layoutHistory.size} in history]")
