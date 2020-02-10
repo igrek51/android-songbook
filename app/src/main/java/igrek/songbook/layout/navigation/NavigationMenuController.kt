@@ -75,6 +75,8 @@ class NavigationMenuController {
         actionsMap[R.id.nav_missing_song] = { sendMessageService.get().requestMissingSong() }
         actionsMap[R.id.nav_history] = { layoutController.get().showOpenHistory() }
         actionsMap[R.id.nav_latest] = { layoutController.get().showLatestSongs() }
+        actionsMap[R.id.nav_latest] = { layoutController.get().showLatestSongs() }
+        actionsMap[R.id.nav_admin_antechamber] = { layoutController.get().showAdminAntechamberSongs() }
     }
 
     fun init() {
@@ -103,6 +105,13 @@ class NavigationMenuController {
                 }
             }, 500)
             true
+        }
+    }
+
+    fun setAdminMenu() {
+        navigationView?.let {
+            it.menu.clear()
+            it.inflateMenu(R.menu.menu_nav_admin)
         }
     }
 

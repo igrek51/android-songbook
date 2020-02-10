@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import dagger.Lazy
 import igrek.songbook.R
+import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.contact.ContactLayoutController
 import igrek.songbook.contact.MissingSongLayoutController
 import igrek.songbook.contact.PublishSongLayoutController
@@ -56,6 +57,8 @@ class LayoutController {
     lateinit var missingSongLayoutController: Lazy<MissingSongLayoutController>
     @Inject
     lateinit var publishSongLayoutController: Lazy<PublishSongLayoutController>
+    @Inject
+    lateinit var adminSongsLayoutContoller: Lazy<AdminSongsLayoutContoller>
     @Inject
     lateinit var activity: Activity
 
@@ -135,6 +138,10 @@ class LayoutController {
 
     fun showContactMissingSong() {
         showMainLayout(missingSongLayoutController.get())
+    }
+
+    fun showAdminAntechamberSongs() {
+        showMainLayout(adminSongsLayoutContoller.get())
     }
 
 

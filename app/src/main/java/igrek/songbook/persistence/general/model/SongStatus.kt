@@ -8,7 +8,7 @@ enum class SongStatus(val id: Long) {
 
     CUSTOM(3),
 
-    ACCEPTED(3);
+    ACCEPTED(4);
 
     companion object {
         fun parseById(id: Long): SongStatus {
