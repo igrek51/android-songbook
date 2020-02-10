@@ -1,10 +1,15 @@
 package igrek.songbook.admin.antechamber
 
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.Button
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
+import igrek.songbook.admin.AdminService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -15,7 +20,10 @@ import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
+import okhttp3.*
+import java.io.IOException
 import javax.inject.Inject
+
 
 class AdminSongsLayoutContoller : InflatedLayout(
         _layoutResourceId = R.layout.screen_admin_songs
@@ -33,9 +41,19 @@ class AdminSongsLayoutContoller : InflatedLayout(
     lateinit var uiInfoService: UiInfoService
     @Inject
     lateinit var songOpener: SongOpener
+    @Inject
+    lateinit var okHttpClient: Lazy<OkHttpClient>
+    @Inject
+    lateinit var adminService: Lazy<AdminService>
 
     private var itemsListView: AntechamberSongListView? = null
     private var experimentalSongs: List<AntechamberSong> = emptyList()
+
+    companion object {
+        private const val apiUrl = "https://antechamber.chords.igrek.dev/api/v4"
+        private const val getAllSongsUrl = "$apiUrl/songs"
+        private const val authTokenHeader = "X-Auth-Token"
+    }
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -56,12 +74,48 @@ class AdminSongsLayoutContoller : InflatedLayout(
         }
     }
 
-    private fun downloadSongs() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     private fun updateItemsList() {
         itemsListView?.setItems(experimentalSongs)
+    }
+
+    private fun downloadSongs() {
+        uiInfoService.showInfoIndefinite(R.string.admin_downloading_antechamber)
+
+        val request: Request = Request.Builder()
+                .url(getAllSongsUrl)
+                .header(authTokenHeader, adminService.get().userAuthToken)
+                .build()
+
+        okHttpClient.get().newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                onErrorReceived(e.message)
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                if (!response.isSuccessful) {
+                    onErrorReceived("Unexpected code: $response")
+                } else {
+                    onDownloadedSongs(response)
+                }
+            }
+        })
+    }
+
+    private fun onDownloadedSongs(response: Response) {
+        val json = response.body()?.string() ?: ""
+        val mapper = jacksonObjectMapper()
+        val songs: List<AntechamberSong> = mapper.readValue(json)
+        logger.debug("downloaded songs: ", songs)
+        experimentalSongs = songs
+        updateItemsList()
+    }
+
+    private fun onErrorReceived(errorMessage: String?) {
+        logger.error("Contact message sending error: $errorMessage")
+        Handler(Looper.getMainLooper()).post {
+            uiInfoService.showInfoIndefinite(R.string.admin_communication_breakdown)
+        }
     }
 
     override fun onBackClicked() {

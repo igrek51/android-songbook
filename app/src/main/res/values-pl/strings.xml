@@ -294,4 +294,6 @@
     <string name="publish_song_no_change">Nie powinieneś wysyłać tej piosenki, ponieważ nie dokonałeś żadnych zmian w stosunku do oryginalnej piosenki. Zmodyfikuj swoją piosenkę, jeśli chcesz wysłać poprawioną wersję.</string>
     <string name="nav_admin_antechamber">Antechamber</string>
     <string name="admin_update_songs">Update songs</string>
+    <string name="admin_downloading_antechamber">Downloading antechamber songs...</string>
+    <string name="admin_communication_breakdown">Communication breakdown</string>
 </resources>

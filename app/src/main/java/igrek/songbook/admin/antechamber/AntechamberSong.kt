@@ -2,7 +2,7 @@ package igrek.songbook.admin.antechamber
 
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
-class AntechamberSong(
+data class AntechamberSong(
         var id: Long,
         var title: String,
         var categoryName: String? = null,
