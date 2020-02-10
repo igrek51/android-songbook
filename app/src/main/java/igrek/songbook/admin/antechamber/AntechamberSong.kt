@@ -38,3 +38,45 @@ enum class AntechamberSongStatus(val id: Long) {
         }
     }
 }
+
+data class AntechamberSongDto(
+        var id: Long,
+        var title: String,
+        var category_name: String? = null,
+        var content: String? = null,
+        var version_number: Long = 1,
+        var create_time: Long = 0,
+        var update_time: Long = 0,
+        var comment: String? = null,
+        var preferred_key: String? = null,
+        var metre: String? = null,
+        var author: String? = null,
+        var language: String? = null,
+        var scroll_speed: Double? = null,
+        var initial_delay: Double? = null,
+        var chords_notation_id: Long? = null,
+        var original_song_id: Long? = null,
+        var status_id: Long
+) {
+    fun toModel(): AntechamberSong {
+        return AntechamberSong(
+                id = id,
+                title = title,
+                categoryName = category_name,
+                content = content,
+                versionNumber = version_number,
+                createTime = create_time,
+                updateTime = update_time,
+                comment = comment,
+                preferredKey = preferred_key,
+                metre = metre,
+                author = author,
+                language = language,
+                scrollSpeed = scroll_speed,
+                initialDelay = initial_delay,
+                chordsNotation = ChordsNotation.parseById(chords_notation_id),
+                originalSongId = original_song_id,
+                status = AntechamberSongStatus.parseById(status_id)
+        )
+    }
+}

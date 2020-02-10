@@ -105,9 +105,9 @@ class AdminSongsLayoutContoller : InflatedLayout(
     private fun onDownloadedSongs(response: Response) {
         val json = response.body()?.string() ?: ""
         val mapper = jacksonObjectMapper()
-        val songs: List<AntechamberSong> = mapper.readValue(json)
-        logger.debug("downloaded songs: ", songs)
-        experimentalSongs = songs
+        val dtos: List<AntechamberSongDto> = mapper.readValue(json)
+        logger.debug("downloaded songs: ", dtos)
+        experimentalSongs = dtos.map { dto -> dto.toModel() }
         updateItemsList()
     }
 
