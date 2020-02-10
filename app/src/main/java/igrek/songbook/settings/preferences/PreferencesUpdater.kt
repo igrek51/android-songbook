@@ -1,6 +1,7 @@
 package igrek.songbook.settings.preferences
 
 import dagger.Lazy
+import igrek.songbook.admin.AdminService
 import igrek.songbook.custom.CustomSongService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.settings.chordsnotation.ChordsNotation
@@ -37,6 +38,8 @@ class PreferencesUpdater {
     lateinit var lyricsManager: Lazy<LyricsManager>
     @Inject
     lateinit var chordsInstrumentService: Lazy<ChordsInstrumentService>
+    @Inject
+    lateinit var adminService: Lazy<AdminService>
 
     // preferences getters / setters proxy
     var appLanguage: AppLanguage?
@@ -129,6 +132,12 @@ class PreferencesUpdater {
             chordsInstrumentService.get().instrument = value ?: ChordsInstrument.default
         }
 
+    var userAuthToken: String
+        get() = adminService.get().userAuthToken
+        set(value) {
+            adminService.get().userAuthToken = value
+        }
+
     init {
         DaggerIoc.factoryComponent.inject(this)
     }
@@ -150,10 +159,10 @@ class PreferencesUpdater {
         preferencesService.setValue(PreferencesDefinition.ChordsInstrument, chordsInstrument?.id)
 
         preferencesService.setValue(PreferencesDefinition.RandomFavouriteSongsOnly, randomFavouriteSongsOnly)
-
         preferencesService.setValue(PreferencesDefinition.CustomSongsGroupCategories, customSongsGroupCategories)
-
         preferencesService.setValue(PreferencesDefinition.RestoreTransposition, restoreTransposition)
+
+        preferencesService.setValue(PreferencesDefinition.UserAuthToken, userAuthToken)
 
         preferencesService.saveAll()
     }

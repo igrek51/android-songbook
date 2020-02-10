@@ -12,6 +12,7 @@ import igrek.songbook.about.secret.SecretCommandService
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.activity.AppInitializer
 import igrek.songbook.activity.OptionSelectDispatcher
+import igrek.songbook.admin.AdminService
 import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.chords.transpose.ChordsTransposerManager
 import igrek.songbook.contact.*
@@ -434,6 +435,12 @@ open class FactoryModule(private val activity: AppCompatActivity) {
     @Singleton
     fun providePublishSongService(): PublishSongService {
         return PublishSongService()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAdminService(): AdminService {
+        return AdminService()
     }
 
     /*

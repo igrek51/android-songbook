@@ -36,6 +36,8 @@ enum class PreferencesDefinition constructor(val type: PropertyType, val default
 
     ChordsInstrument(igrek.songbook.settings.instrument.ChordsInstrument.default.id),
 
+    UserAuthToken(""),
+
     ;
 
     constructor(defaultValue: String) : this(PropertyType.STRING, defaultValue)

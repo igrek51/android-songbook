@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.common.base.Predicate
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import igrek.songbook.R
+import igrek.songbook.admin.AdminService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -41,44 +42,55 @@ class SecretCommandService {
     lateinit var preferencesService: PreferencesService
     @Inject
     lateinit var localDbService: LocalDbService
+    @Inject
+    lateinit var adminService: AdminService
 
     private val logger = LoggerFactory.logger
 
     private val cowCondition: Predicate<String> = Predicate { it?.matches("^m[ou]+$".toRegex()) ?: false }
-    private val dupaCondition: Predicate<String> = Predicate { it?.contains("dupa") ?: false }
+    private val dupaCondition: Predicate<String> = Predicate { it == "dupa" }
 
-    private val rules: List<CommandRule> = listOf(
-            CommandRule(dupaCondition) { showCowSuperPowers() },
-            CommandRule(cowCondition) { showCowSuperPowers() },
-            CommandRule("okon") { showCowSuperPowers() },
-            CommandRule("lich", "lisz") { toast("\"Trup tu tupta...\"") },
+    private val rules: List<CommandRule> by lazy {
+        listOf(
+                CommandRule(dupaCondition) { showCowSuperPowers() },
+                CommandRule(cowCondition) { showCowSuperPowers() },
+                CommandRule("okon") { showCowSuperPowers() },
+                CommandRule("lich", "lisz") { toast("\"Trup tu tupta...\"") },
 
-            CommandRule("engineer", "inzynier") { unlockSongs("engineer") },
-            CommandRule("zjajem", "z jajem") { unlockSongs("zjajem") },
-            CommandRule("afcg") { unlockSongs("afcg") },
+                CommandRule("engineer", "inzynier") { unlockSongs("engineer") },
+                CommandRule("zjajem", "z jajem") { unlockSongs("zjajem") },
+                CommandRule("afcg") { unlockSongs("afcg") },
 
-            // debug commands
-            CommandRule("reset") { reset() },
-            CommandRule("reset config") { preferencesService.clear() },
-            CommandRule("reset db") { songsRepository.factoryReset() },
-            CommandRule("reset db general") {
-                songsRepository.resetGeneralData()
-                songsRepository.reloadSongsDb()
-            },
-            CommandRule("reset db user") {
-                songsRepository.resetUserData()
-                songsRepository.reloadSongsDb()
-            },
-            CommandRule("firebase crashme") {
-                logger.error(IllegalArgumentException("real reason"))
-                throw RuntimeException("deliberate disaster")
-            },
-            CommandRule("firebase error") {
-                logger.error(IllegalArgumentException("real reason"))
-                logger.error("error log")
-                FirebaseCrashlytics.getInstance().sendUnsentReports()
-            }
-    )
+                // debug commands
+                CommandRule("reset") { reset() },
+                CommandRule("reset config") { preferencesService.clear() },
+                CommandRule("reset db") { songsRepository.factoryReset() },
+                CommandRule("reset db general") {
+                    songsRepository.resetGeneralData()
+                    songsRepository.reloadSongsDb()
+                },
+                CommandRule("reset db user") {
+                    songsRepository.resetUserData()
+                    songsRepository.reloadSongsDb()
+                },
+
+                CommandRule("firebase crashme") {
+                    logger.error(IllegalArgumentException("real reason"))
+                    throw RuntimeException("deliberate disaster")
+                },
+                CommandRule("firebase error") {
+                    logger.error(IllegalArgumentException("real reason"))
+                    logger.error("error log")
+                    FirebaseCrashlytics.getInstance().sendUnsentReports()
+                },
+
+                CommandRule(Predicate {
+                    it?.startsWith("login ") ?: false
+                }) { key: String ->
+                    adminService.login(key)
+                }
+        )
+    }
 
     @SuppressLint("InflateParams")
     private fun showCowSuperPowers() {
@@ -120,6 +132,7 @@ class SecretCommandService {
         dlgAlert.setCancelable(true)
         dlgAlert.create().show()
 
+        input.requestFocus()
         Handler(Looper.getMainLooper()).post {
             softKeyboardService.showSoftKeyboard(input)
         }
@@ -139,7 +152,7 @@ class SecretCommandService {
     private fun checkActivationRules(key: String): Boolean {
         for (rule in rules) {
             if (rule.condition.apply(key)) {
-                rule.activator()
+                rule.activator(key)
                 return true
             }
         }

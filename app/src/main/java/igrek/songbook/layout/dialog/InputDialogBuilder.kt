@@ -43,7 +43,7 @@ class InputDialogBuilder {
             }
         }
         alertBuilder.setCancelable(true)
-        if (!activity.isFinishing()) {
+        if (!activity.isFinishing) {
             alertBuilder.create().show()
         }
 

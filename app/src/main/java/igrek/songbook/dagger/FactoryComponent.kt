@@ -8,6 +8,7 @@ import igrek.songbook.activity.ActivityController
 import igrek.songbook.activity.AppInitializer
 import igrek.songbook.activity.MainActivity
 import igrek.songbook.activity.OptionSelectDispatcher
+import igrek.songbook.admin.AdminService
 import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.chords.transpose.ChordsTransposerManager
 import igrek.songbook.contact.*
@@ -154,5 +155,6 @@ interface FactoryComponent {
     fun inject(there: PublishSongLayoutController)
     fun inject(there: MissingSongLayoutController)
     fun inject(there: PublishSongService)
+    fun inject(there: AdminService)
 
 }
