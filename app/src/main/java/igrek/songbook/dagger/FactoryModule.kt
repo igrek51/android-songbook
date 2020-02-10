@@ -13,6 +13,7 @@ import igrek.songbook.activity.ActivityController
 import igrek.songbook.activity.AppInitializer
 import igrek.songbook.activity.OptionSelectDispatcher
 import igrek.songbook.admin.AdminService
+import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.chords.transpose.ChordsTransposerManager
 import igrek.songbook.contact.*
@@ -91,365 +92,249 @@ open class FactoryModule(private val activity: AppCompatActivity) {
 
     @Provides
     @Singleton
-    fun provideActivityController(): ActivityController {
-        return ActivityController()
-    }
+    fun aActivityController(): ActivityController = ActivityController()
 
     @Provides
     @Singleton
-    fun provideAppInitializer(): AppInitializer {
-        return AppInitializer()
-    }
+    fun aAppInitializer(): AppInitializer = AppInitializer()
 
     @Provides
     @Singleton
-    fun provideOptionSelectDispatcher(): OptionSelectDispatcher {
-        return OptionSelectDispatcher()
-    }
+    fun aOptionSelectDispatcher(): OptionSelectDispatcher = OptionSelectDispatcher()
 
     @Provides
     @Singleton
-    fun provideSystemKeyDispatcher(): SystemKeyDispatcher {
-        return SystemKeyDispatcher()
-    }
+    fun aSystemKeyDispatcher(): SystemKeyDispatcher = SystemKeyDispatcher()
 
     @Provides
     @Singleton
-    fun provideScreenService(): WindowManagerService {
-        return WindowManagerService()
-    }
+    fun aScreenService(): WindowManagerService = WindowManagerService()
 
     @Provides
     @Singleton
-    fun provideUIResourceService(): UiResourceService {
-        return UiResourceService()
-    }
+    fun aUIResourceService(): UiResourceService = UiResourceService()
 
     @Provides
     @Singleton
-    fun provideUserInfoService(): UiInfoService {
-        return UiInfoService()
-    }
+    fun aUserInfoService(): UiInfoService = UiInfoService()
 
     @Provides
     @Singleton
-    fun provideAutoscrollService(): AutoscrollService {
-        return AutoscrollService()
-    }
+    fun aAutoscrollService(): AutoscrollService = AutoscrollService()
 
     @Provides
     @Singleton
-    fun provideChordsManager(): LyricsManager {
-        return LyricsManager()
-    }
+    fun aChordsManager(): LyricsManager = LyricsManager()
 
     @Provides
     @Singleton
-    fun providePreferencesService(): PreferencesService {
-        return PreferencesService()
-    }
+    fun aPreferencesService(): PreferencesService = PreferencesService()
 
     @Provides
     @Singleton
-    fun provideChordsTransposerManager(): ChordsTransposerManager {
-        return ChordsTransposerManager()
-    }
+    fun aChordsTransposerManager(): ChordsTransposerManager = ChordsTransposerManager()
 
     @Provides
     @Singleton
-    fun provideScrollPosBuffer(): ScrollPosBuffer {
-        return ScrollPosBuffer()
-    }
+    fun aScrollPosBuffer(): ScrollPosBuffer = ScrollPosBuffer()
 
     @Provides
     @Singleton
-    fun provideLayoutController(): LayoutController {
-        return LayoutController()
-    }
+    fun aLayoutController(): LayoutController = LayoutController()
 
     @Provides
     @Singleton
-    fun provideSoftKeyboardService(): SoftKeyboardService {
-        return SoftKeyboardService()
-    }
+    fun aSoftKeyboardService(): SoftKeyboardService = SoftKeyboardService()
 
     @Provides
     @Singleton
-    fun provideSongSelectionController(): SongTreeLayoutController {
-        return SongTreeLayoutController()
-    }
+    fun aSongSelectionController(): SongTreeLayoutController = SongTreeLayoutController()
 
     @Provides
     @Singleton
-    fun provideSongPreviewController(): SongPreviewLayoutController {
-        return SongPreviewLayoutController()
-    }
+    fun aSongPreviewController(): SongPreviewLayoutController = SongPreviewLayoutController()
 
     @Provides
     @Singleton
-    fun provideQuickMenu(): QuickMenuTranspose {
-        return QuickMenuTranspose()
-    }
+    fun aQuickMenu(): QuickMenuTranspose = QuickMenuTranspose()
 
     @Provides
     @Singleton
-    fun provideQuickMenuAutoscroll(): QuickMenuAutoscroll {
-        return QuickMenuAutoscroll()
-    }
+    fun aQuickMenuAutoscroll(): QuickMenuAutoscroll = QuickMenuAutoscroll()
 
     @Provides
     @Singleton
-    fun provideNavigationMenuController(): NavigationMenuController {
-        return NavigationMenuController()
-    }
+    fun aNavigationMenuController(): NavigationMenuController = NavigationMenuController()
 
     @Provides
     @Singleton
-    fun provideSongSearchController(): SongSearchLayoutController {
-        return SongSearchLayoutController()
-    }
+    fun aSongSearchController(): SongSearchLayoutController = SongSearchLayoutController()
 
     @Provides
     @Singleton
-    fun provideAboutLayoutController(): AboutLayoutController {
-        return AboutLayoutController()
-    }
+    fun aAboutLayoutController(): AboutLayoutController = AboutLayoutController()
 
     @Provides
     @Singleton
-    fun provideContactLayoutController(): ContactLayoutController {
-        return ContactLayoutController()
-    }
+    fun aContactLayoutController(): ContactLayoutController = ContactLayoutController()
 
     @Provides
     @Singleton
-    fun provideHelpLayoutController(): HelpLayoutController {
-        return HelpLayoutController()
-    }
+    fun aHelpLayoutController(): HelpLayoutController = HelpLayoutController()
 
     @Provides
     @Singleton
-    fun provideSongsDbService(): LocalDbService {
-        return LocalDbService()
-    }
+    fun aSongsDbService(): LocalDbService = LocalDbService()
 
     @Provides
     @Singleton
-    fun provideSongsRepository(): SongsRepository {
-        return SongsRepository()
-    }
+    fun aSongsRepository(): SongsRepository = SongsRepository()
 
     @Provides
     @Singleton
-    fun providePermissionService(): PermissionService {
-        return PermissionService()
-    }
+    fun aPermissionService(): PermissionService = PermissionService()
 
     @Provides
     @Singleton
-    fun provideSecretCommandService(): SecretCommandService {
-        return SecretCommandService()
-    }
+    fun aSecretCommandService(): SecretCommandService = SecretCommandService()
 
     @Provides
     @Singleton
-    fun providePackageInfoService(): PackageInfoService {
-        return PackageInfoService()
-    }
+    fun aPackageInfoService(): PackageInfoService = PackageInfoService()
 
     @Provides
     @Singleton
-    fun provideSettingsLayoutController(): SettingsLayoutController {
-        return SettingsLayoutController()
-    }
+    fun aSettingsLayoutController(): SettingsLayoutController = SettingsLayoutController()
 
     @Provides
     @Singleton
-    fun provideSongDetailsService(): SongDetailsService {
-        return SongDetailsService()
-    }
+    fun aSongDetailsService(): SongDetailsService = SongDetailsService()
 
     @Provides
     @Singleton
-    fun provideSendFeedbackService(): SendMessageService {
-        return SendMessageService()
-    }
+    fun aSendFeedbackService(): SendMessageService = SendMessageService()
 
     @Provides
     @Singleton
-    fun provideSongImportFileChooser(): SongImportFileChooser {
-        return SongImportFileChooser()
-    }
+    fun aSongImportFileChooser(): SongImportFileChooser = SongImportFileChooser()
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
-        return OkHttpClient()
-    }
+    fun aOkHttpClient(): OkHttpClient = OkHttpClient()
 
     @Provides
     @Singleton
-    fun provideSongImportService(): CustomSongService {
-        return CustomSongService()
-    }
+    fun aSongImportService(): CustomSongService = CustomSongService()
 
     @Provides
     @Singleton
-    fun provideEditImportSongLayoutController(): CustomSongEditLayoutController {
-        return CustomSongEditLayoutController()
-    }
+    fun aEditImportSongLayoutController(): CustomSongEditLayoutController = CustomSongEditLayoutController()
 
     @Provides
     @Singleton
-    fun provideSongsUpdater(): SongsUpdater {
-        return SongsUpdater()
-    }
+    fun aSongsUpdater(): SongsUpdater = SongsUpdater()
 
     @Provides
     @Singleton
-    fun provideRandomSongSelector(): RandomSongOpener {
-        return RandomSongOpener()
-    }
+    fun aRandomSongSelector(): RandomSongOpener = RandomSongOpener()
 
     @Provides
     @Singleton
-    fun provideAppLanguageService(): AppLanguageService {
-        return AppLanguageService()
-    }
+    fun aAppLanguageService(): AppLanguageService = AppLanguageService()
 
     @Provides
     @Singleton
-    fun provideFavouriteSongService(): FavouriteSongsService {
-        return FavouriteSongsService()
-    }
+    fun aFavouriteSongService(): FavouriteSongsService = FavouriteSongsService()
 
     @Provides
     @Singleton
-    fun provideFavouritesLayoutController(): FavouritesLayoutController {
-        return FavouritesLayoutController()
-    }
+    fun aFavouritesLayoutController(): FavouritesLayoutController = FavouritesLayoutController()
 
     @Provides
     @Singleton
-    fun provideChordsNotationService(): ChordsNotationService {
-        return ChordsNotationService()
-    }
+    fun aChordsNotationService(): ChordsNotationService = ChordsNotationService()
 
     @Provides
     @Singleton
-    fun providePreferencesUpdater(): PreferencesUpdater {
-        return PreferencesUpdater()
-    }
+    fun aPreferencesUpdater(): PreferencesUpdater = PreferencesUpdater()
 
     @Provides
     @Singleton
-    fun provideLyricsThemeService(): LyricsThemeService {
-        return LyricsThemeService()
-    }
+    fun aLyricsThemeService(): LyricsThemeService = LyricsThemeService()
 
     @Provides
     @Singleton
-    fun provideCustomSongsLayoutController(): CustomSongsLayoutController {
-        return CustomSongsLayoutController()
-    }
+    fun aCustomSongsLayoutController(): CustomSongsLayoutController = CustomSongsLayoutController()
 
     @Provides
     @Singleton
-    fun provideSongContextMenuBuilder(): SongContextMenuBuilder {
-        return SongContextMenuBuilder()
-    }
+    fun aSongContextMenuBuilder(): SongContextMenuBuilder = SongContextMenuBuilder()
 
     @Provides
     @Singleton
-    fun provideChordsEditorLayoutController(): ChordsEditorLayoutController {
-        return ChordsEditorLayoutController()
-    }
+    fun aChordsEditorLayoutController(): ChordsEditorLayoutController = ChordsEditorLayoutController()
 
     @Provides
     @Singleton
-    fun provideContextMenuBuilder(): ContextMenuBuilder {
-        return ContextMenuBuilder()
-    }
+    fun aContextMenuBuilder(): ContextMenuBuilder = ContextMenuBuilder()
 
     @Provides
     @Singleton
-    fun provideUserDbService(): UserDataDao {
-        return UserDataDao()
-    }
+    fun aUserDbService(): UserDataDao = UserDataDao()
 
     @Provides
     @Singleton
-    fun providePlaylistLayoutController(): PlaylistLayoutController {
-        return PlaylistLayoutController()
-    }
+    fun aPlaylistLayoutController(): PlaylistLayoutController = PlaylistLayoutController()
 
     @Provides
     @Singleton
-    fun providePlaylistService(): PlaylistService {
-        return PlaylistService()
-    }
+    fun aPlaylistService(): PlaylistService = PlaylistService()
 
     @Provides
     @Singleton
-    fun provideLatestSongsLayoutController(): LatestSongsLayoutController {
-        return LatestSongsLayoutController()
-    }
+    fun aLatestSongsLayoutController(): LatestSongsLayoutController = LatestSongsLayoutController()
 
     @Provides
     @Singleton
-    fun provideSongOpener(): SongOpener {
-        return SongOpener()
-    }
+    fun aSongOpener(): SongOpener = SongOpener()
 
     @Provides
     @Singleton
-    fun provideOpenHistoryLayoutController(): OpenHistoryLayoutController {
-        return OpenHistoryLayoutController()
-    }
+    fun aOpenHistoryLayoutController(): OpenHistoryLayoutController = OpenHistoryLayoutController()
 
     @Provides
     @Singleton
-    fun provideChordsDefinitionService(): ChordsDiagramsService {
-        return ChordsDiagramsService()
-    }
+    fun aChordsDefinitionService(): ChordsDiagramsService = ChordsDiagramsService()
 
     @Provides
     @Singleton
-    fun provideChordsInstrumentService(): ChordsInstrumentService {
-        return ChordsInstrumentService()
-    }
+    fun aChordsInstrumentService(): ChordsInstrumentService = ChordsInstrumentService()
 
     @Provides
     @Singleton
-    fun providePublishSongLayoutController(): PublishSongLayoutController {
-        return PublishSongLayoutController()
-    }
+    fun aPublishSongLayoutController(): PublishSongLayoutController = PublishSongLayoutController()
 
     @Provides
     @Singleton
-    fun provideMissingSongLayoutController(): MissingSongLayoutController {
-        return MissingSongLayoutController()
-    }
+    fun aMissingSongLayoutController(): MissingSongLayoutController = MissingSongLayoutController()
 
     @Provides
     @Singleton
-    fun providePublishSongService(): PublishSongService {
-        return PublishSongService()
-    }
+    fun aPublishSongService(): PublishSongService = PublishSongService()
 
     @Provides
     @Singleton
-    fun provideAdminService(): AdminService {
-        return AdminService()
-    }
+    fun aAdminService(): AdminService = AdminService()
+
+    @Provides
+    @Singleton
+    fun aAdminSongsLayoutContoller(): AdminSongsLayoutContoller = AdminSongsLayoutContoller()
 
     /*
 	 * Empty service pattern:
 	@Provides
     @Singleton
-    fun provide():  {
-        return ()
-    }
+    fun a():  = ()
 
 	 */
 

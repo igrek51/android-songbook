@@ -70,7 +70,7 @@ class AdminSongsLayoutContoller : InflatedLayout(
         layoutController.showSongTree()
     }
 
-    fun onSongClick(item: AntechamberSong) {
+    private fun onSongClick(item: AntechamberSong) {
         val song = Song(
                 id = item.id,
                 title = item.title,
@@ -96,11 +96,11 @@ class AdminSongsLayoutContoller : InflatedLayout(
         songOpener.openSongPreview(song)
     }
 
-    fun onSongLongClick(item: AntechamberSong) {
+    private fun onSongLongClick(item: AntechamberSong) {
         onMoreMenu(item)
     }
 
-    fun onMoreMenu(item: AntechamberSong) {
+    private fun onMoreMenu(item: AntechamberSong) {
         TODO("not implemented")
 //        songContextMenuBuilder.showSongActions(item.song!!)
     }
