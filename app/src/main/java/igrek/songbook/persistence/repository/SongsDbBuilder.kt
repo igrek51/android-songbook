@@ -110,7 +110,7 @@ class SongsDbBuilder(
         val categoryFinder = FinderById(categories) { e -> e.id }
 
         songCategories.forEach { scRelation ->
-            val song = songFinder.find(SongIdentifier(scRelation.song_id, false))
+            val song = songFinder.find(SongIdentifier(scRelation.song_id, SongNamespace.Public))
             val category = categoryFinder.find(scRelation.category_id)
             if (song != null && category != null) {
                 song.categories.add(category)

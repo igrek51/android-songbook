@@ -11,6 +11,7 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.persistence.general.model.SongIdentifier
+import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController
@@ -78,7 +79,11 @@ class OpenHistoryLayoutController : InflatedLayout(
 
     private fun updateItemsList() {
         val opened = songsRepository.openHistoryDao.historyDb.songs.mapNotNull { openedSong ->
-            val songIdentifier = SongIdentifier(openedSong.songId, openedSong.custom)
+            val namespace = when {
+                openedSong.custom -> SongNamespace.Custom
+                else -> SongNamespace.Public
+            }
+            val songIdentifier = SongIdentifier(openedSong.songId, namespace)
             val song = songsRepository.songsDb?.songFinder?.find(songIdentifier)
             if (song != null) SongSearchItem.song(song) else null
         }

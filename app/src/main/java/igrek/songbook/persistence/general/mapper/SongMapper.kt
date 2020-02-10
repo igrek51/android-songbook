@@ -2,6 +2,7 @@ package igrek.songbook.persistence.general.mapper
 
 import android.database.Cursor
 import igrek.songbook.persistence.general.model.Song
+import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
@@ -31,6 +32,30 @@ class SongMapper : AbstractMapper<Song>() {
         val songStatus = SongStatus.parseById(stateId)
         val chordsNotation = ChordsNotation.parseById(chordsNotationId)
 
-        return Song(id, title, mutableListOf(), content, versionNumber, createTime, updateTime, false, comment, preferredKey, locked, lockPassword, author, songStatus, null, language, metre, rank, scrollSpeed, initialDelay, chordsNotation, tags)
+        return Song(
+                id = id,
+                title = title,
+                categories = mutableListOf(),
+                content = content,
+                versionNumber = versionNumber,
+                createTime = createTime,
+                updateTime = updateTime,
+                custom = false,
+                comment = comment,
+                preferredKey = preferredKey,
+                locked = locked,
+                lockPassword = lockPassword,
+                author = author,
+                state = songStatus,
+                customCategoryName = null,
+                language = language,
+                metre = metre,
+                rank = rank,
+                scrollSpeed = scrollSpeed,
+                initialDelay = initialDelay,
+                chordsNotation = chordsNotation,
+                tags = tags,
+                namespace = SongNamespace.Public
+        )
     }
 }

@@ -10,10 +10,10 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.persistence.general.model.Song
+import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.songpreview.SongOpener
-import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import javax.inject.Inject
 
@@ -27,8 +27,6 @@ class AdminSongsLayoutContoller : InflatedLayout(
     lateinit var songsRepository: SongsRepository
     @Inject
     lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var songPreviewLayoutController: Lazy<SongPreviewLayoutController>
     @Inject
     lateinit var songContextMenuBuilder: SongContextMenuBuilder
     @Inject
@@ -90,7 +88,8 @@ class AdminSongsLayoutContoller : InflatedLayout(
                 scrollSpeed = item.scrollSpeed,
                 initialDelay = item.initialDelay,
                 chordsNotation = item.chordsNotation,
-                originalSongId = item.originalSongId
+                originalSongId = item.originalSongId,
+                namespace = SongNamespace.Antechamber
         )
 
         songOpener.openSongPreview(song)

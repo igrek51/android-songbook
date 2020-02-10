@@ -1,6 +1,7 @@
 package igrek.songbook.persistence.user.custom
 
 import igrek.songbook.persistence.general.model.Song
+import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.general.model.SongStatus
 
 
@@ -26,7 +27,8 @@ internal class CustomSongMapper {
                 scrollSpeed = customSong.scrollSpeed,
                 initialDelay = customSong.initialDelay,
                 chordsNotation = customSong.chordsNotation,
-                originalSongId = customSong.originalSongId
+                originalSongId = customSong.originalSongId,
+                namespace = SongNamespace.Custom
         )
     }
 

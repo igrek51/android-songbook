@@ -3,6 +3,7 @@ package igrek.songbook.persistence.user.transpose
 import android.app.Activity
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.persistence.general.model.SongIdentifier
+import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
 import io.reactivex.subjects.PublishSubject
@@ -37,7 +38,7 @@ class TransposeDao(path: String) : AbstractJsonDao<TransposeDb>(
         val songFound = transposeDb.songs
                 .find {
                     it.songId == songIdentifier.songId
-                            && it.custom == songIdentifier.custom
+                            && it.custom == (songIdentifier.namespace == SongNamespace.Custom)
                 }
         return songFound?.transposition ?: 0
     }
@@ -46,10 +47,12 @@ class TransposeDao(path: String) : AbstractJsonDao<TransposeDb>(
         val songFound = transposeDb.songs
                 .find {
                     it.songId == songIdentifier.songId
-                            && it.custom == songIdentifier.custom
+                            && it.custom == (songIdentifier.namespace == SongNamespace.Custom)
                 }
         if (songFound == null) {
-            val newSong = TransposedSong(songIdentifier.songId, songIdentifier.custom, transposition)
+            val newSong = TransposedSong(songIdentifier.songId,
+                    (songIdentifier.namespace == SongNamespace.Custom),
+                    transposition)
             transposeDb.songs.add(newSong)
         } else {
             songFound.transposition = transposition

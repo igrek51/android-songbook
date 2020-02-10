@@ -7,6 +7,7 @@ import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongIdentifier
+import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import javax.inject.Inject
 
@@ -27,11 +28,10 @@ class PublishSongService {
         DaggerIoc.factoryComponent.inject(this)
     }
 
-
     fun publishSong(song: Song) {
         val originalSongId = song.originalSongId
         if (originalSongId != null) {
-            val identifier = SongIdentifier(originalSongId, false)
+            val identifier = SongIdentifier(originalSongId, SongNamespace.Public)
             val originalSong = songsRepository.songsDb?.songFinder?.find(identifier)
             originalSong?.run {
                 val originalContent = originalSong.content

@@ -26,7 +26,8 @@ open class Song(
         var initialDelay: Double? = null,
         var chordsNotation: ChordsNotation? = null,
         var tags: String? = null,
-        var originalSongId: Long? = null
+        var originalSongId: Long? = null,
+        var namespace: SongNamespace = SongNamespace.Public
 ) {
     override fun equals(other: Any?): Boolean {
         if (other !is Song)
@@ -59,6 +60,6 @@ open class Song(
     }
 
     fun songIdentifier(): SongIdentifier {
-        return SongIdentifier(id, custom)
+        return SongIdentifier(id, namespace)
     }
 }

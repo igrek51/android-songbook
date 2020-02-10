@@ -5,6 +5,7 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.WrapContextError
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongIdentifier
+import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
 import igrek.songbook.persistence.user.migrate.Migration037Favourites
@@ -60,7 +61,8 @@ class FavouriteSongsDao(path: String) : AbstractJsonDao<FavouriteSongsDb>(
     }
 
     fun isSongFavourite(songIdentifier: SongIdentifier): Boolean {
-        val favSong = FavouriteSong(songIdentifier.songId, songIdentifier.custom)
+        val favSong = FavouriteSong(songIdentifier.songId,
+                songIdentifier.namespace == SongNamespace.Custom)
         return favSong in favouriteSongs.favourites
     }
 

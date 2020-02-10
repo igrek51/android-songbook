@@ -15,6 +15,7 @@ import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.layout.dialog.InputDialogBuilder
 import igrek.songbook.layout.list.ListItemClickListener
 import igrek.songbook.persistence.general.model.SongIdentifier
+import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.playlist.Playlist
 import igrek.songbook.playlist.list.PlaylistListItem
@@ -111,7 +112,11 @@ class PlaylistLayoutController : InflatedLayout(
         } else {
             playlist!!.songs
                     .mapNotNull { s ->
-                        val id = SongIdentifier(s.songId, s.custom)
+                        val namespace = when {
+                            s.custom -> SongNamespace.Custom
+                            else -> SongNamespace.Public
+                        }
+                        val id = SongIdentifier(s.songId, namespace)
                         val song = songsRepository.songsDb?.songFinder?.find(id)
                         when {
                             song != null -> PlaylistListItem(song = song)
@@ -221,7 +226,11 @@ class PlaylistLayoutController : InflatedLayout(
         ListMover(playlist!!.songs).move(position, step)
         val items = playlist!!.songs
                 .mapNotNull { s ->
-                    val id = SongIdentifier(s.songId, s.custom)
+                    val namespace = when {
+                        s.custom -> SongNamespace.Custom
+                        else -> SongNamespace.Public
+                    }
+                    val id = SongIdentifier(s.songId, namespace)
                     val song = songsRepository.songsDb?.songFinder?.find(id)
                     when {
                         song != null -> PlaylistListItem(song = song)
