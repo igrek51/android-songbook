@@ -11,7 +11,6 @@ open class Song(
         var versionNumber: Long = 1,
         var createTime: Long = 0,
         var updateTime: Long = 0,
-        var custom: Boolean = false,
         var comment: String? = null,
         var preferredKey: String? = null,
         var locked: Boolean = false,
@@ -33,12 +32,12 @@ open class Song(
         if (other !is Song)
             return false
         return Objects.equal(id, other.id)
-                && Objects.equal(custom, other.custom)
+                && Objects.equal(namespace, other.namespace)
                 && Objects.equal(versionNumber, other.versionNumber)
     }
 
     override fun hashCode(): Int {
-        return Objects.hashCode(id, custom, versionNumber)
+        return Objects.hashCode(id, namespace, versionNumber)
     }
 
     private fun hasArtistCategory(): Boolean {
@@ -54,12 +53,16 @@ open class Song(
     fun displayName(): String {
         return when {
             hasArtistCategory() -> "$title - ${displayCategories()}"
-            custom and !customCategoryName.isNullOrEmpty() -> "$title - $customCategoryName"
+            !customCategoryName.isNullOrEmpty() -> "$title - $customCategoryName"
             else -> title
         }
     }
 
     fun songIdentifier(): SongIdentifier {
         return SongIdentifier(id, namespace)
+    }
+
+    fun isCustom(): Boolean {
+        return namespace == SongNamespace.Custom
     }
 }

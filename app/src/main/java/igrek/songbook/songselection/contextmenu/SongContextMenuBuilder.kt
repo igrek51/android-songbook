@@ -58,13 +58,13 @@ class SongContextMenuBuilder {
         val actions = mutableListOf(
                 // EDIT
                 SongContextAction(R.string.action_song_edit,
-                        availableCondition = { song -> song.custom },
+                        availableCondition = { song -> song.isCustom() },
                         executor = { song ->
                             customSongService.showEditSongScreen(song)
                         }),
                 // REMOVE
                 SongContextAction(R.string.action_song_remove,
-                        availableCondition = { song -> song.custom },
+                        availableCondition = { song -> song.isCustom() },
                         executor = { song ->
                             ConfirmDialogBuilder().confirmAction(R.string.confirm_remove_song) {
                                 customSongService.removeSong(song)
@@ -72,7 +72,7 @@ class SongContextMenuBuilder {
                         }),
                 // publish
                 SongContextAction(R.string.action_song_publish,
-                        availableCondition = { song -> song.custom },
+                        availableCondition = { song -> song.isCustom() },
                         executor = { song ->
                             publishSongService.publishSong(song)
                         }),
@@ -120,7 +120,7 @@ class SongContextMenuBuilder {
                         }),
                 // COPY
                 SongContextAction(R.string.action_song_copy,
-                        availableCondition = { song -> !song.custom },
+                        availableCondition = { song -> !song.isCustom() },
                         executor = { song ->
                             customSongService.copySongAsCustom(song)
                         })

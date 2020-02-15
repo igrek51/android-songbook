@@ -22,6 +22,6 @@ class SongOpener {
     fun openSongPreview(song: Song) {
         songPreviewLayoutController.get().currentSong = song
         layoutController.get().showLayout(SongPreviewLayoutController::class)
-        songsRepository.openHistoryDao.registerOpenedSong(song.id, song.custom)
+        songsRepository.openHistoryDao.registerOpenedSong(song.id, song.isCustom())
     }
 }

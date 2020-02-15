@@ -5,51 +5,6 @@ import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
-data class AntechamberSong(
-        var id: Long,
-        var title: String,
-        var categoryName: String? = null,
-        var content: String? = null,
-        var versionNumber: Long = 1,
-        var createTime: Long = 0,
-        var updateTime: Long = 0,
-        var comment: String? = null,
-        var preferredKey: String? = null,
-        var metre: String? = null,
-        var author: String? = null,
-        var language: String? = null,
-        var scrollSpeed: Double? = null,
-        var initialDelay: Double? = null,
-        var chordsNotation: ChordsNotation? = null,
-        var originalSongId: Long? = null,
-        var status: AntechamberSongStatus
-) {
-    fun toSong(): Song {
-        return Song(
-                id = id,
-                title = title,
-                categories = mutableListOf(),
-                content = content,
-                versionNumber = versionNumber,
-                createTime = createTime,
-                updateTime = updateTime,
-                custom = true,
-                comment = comment,
-                preferredKey = preferredKey,
-                author = author,
-                state = SongStatus.PROPOSED,
-                customCategoryName = categoryName,
-                language = language,
-                metre = metre,
-                scrollSpeed = scrollSpeed,
-                initialDelay = initialDelay,
-                chordsNotation = chordsNotation,
-                originalSongId = originalSongId,
-                namespace = SongNamespace.Antechamber
-        )
-    }
-}
-
 enum class AntechamberSongStatus(val id: Long) {
 
     PROPOSED(1),
@@ -86,33 +41,33 @@ data class AntechamberSongDto(
         var original_song_id: Long? = null,
         var status: Long
 ) {
-    fun toModel(): AntechamberSong {
-        return AntechamberSong(
-                id = id,
-                title = title,
-                categoryName = category_name,
-                content = content,
-                versionNumber = version_number,
-                createTime = create_time,
-                updateTime = update_time,
-                comment = comment,
-                preferredKey = preferred_key,
-                metre = metre,
-                author = author,
-                language = language,
-                scrollSpeed = scroll_speed,
-                initialDelay = initial_delay,
-                chordsNotation = ChordsNotation.parseById(chords_notation),
-                originalSongId = original_song_id,
-                status = AntechamberSongStatus.parseById(status)
-        )
-    }
+    fun toModel(): Song = Song(
+            id = id,
+            title = title,
+            categories = mutableListOf(),
+            content = content,
+            versionNumber = version_number,
+            createTime = create_time,
+            updateTime = update_time,
+            comment = comment,
+            preferredKey = preferred_key,
+            author = author,
+            state = SongStatus.PROPOSED,
+            customCategoryName = category_name,
+            language = language,
+            metre = metre,
+            scrollSpeed = scroll_speed,
+            initialDelay = initial_delay,
+            chordsNotation = ChordsNotation.parseById(chords_notation),
+            originalSongId = original_song_id,
+            namespace = SongNamespace.Antechamber
+    )
 }
 
 data class AllAntechamberSongsDto(
         var songs: List<AntechamberSongDto> = emptyList()
 ) {
-    fun toModel(): List<AntechamberSong> {
+    fun toModel(): List<Song> {
         return songs.map { dto -> dto.toModel() }.toMutableList()
     }
 }

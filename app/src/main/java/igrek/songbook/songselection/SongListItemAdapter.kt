@@ -63,7 +63,7 @@ class SongListItemAdapter internal constructor(
         return if (item.isCategory) {
             createTreeCategoryView(item, parent)
         } else {
-            if (item.song!!.custom) {
+            if (item.song!!.isCustom()) {
                 createTitleArtistSongView(item, parent)
             } else {
                 createTreeSongView(item, parent)

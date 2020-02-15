@@ -1,11 +1,7 @@
 package igrek.songbook.admin.antechamber
 
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.Button
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
@@ -16,12 +12,13 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
+import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
-import okhttp3.*
-import java.io.IOException
+import io.reactivex.android.schedulers.AndroidSchedulers
+import okhttp3.OkHttpClient
 import javax.inject.Inject
 
 
@@ -46,18 +43,12 @@ class AdminSongsLayoutContoller : InflatedLayout(
     @Inject
     lateinit var adminService: Lazy<AdminService>
     @Inject
-    lateinit var contextMenuBuilder: ContextMenuBuilder
-    @Inject
     lateinit var customSongService: CustomSongService
+    @Inject
+    lateinit var antechamberService: AntechamberService
 
     private var itemsListView: AntechamberSongListView? = null
     private var experimentalSongs: List<Song> = emptyList()
-
-    companion object {
-        private const val apiUrl = "https://antechamber.chords.igrek.dev/api/v4"
-        private const val getAllSongsUrl = "$apiUrl/songs"
-        private const val authTokenHeader = "X-Auth-Token"
-    }
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -85,46 +76,13 @@ class AdminSongsLayoutContoller : InflatedLayout(
     private fun downloadSongs() {
         uiInfoService.showInfoIndefinite(R.string.admin_downloading_antechamber)
 
-        val request: Request = Request.Builder()
-                .url(getAllSongsUrl)
-                .header(authTokenHeader, adminService.get().userAuthToken)
-                .build()
-
-        okHttpClient.get().newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                onErrorReceived(e.message)
-            }
-
-            @Throws(IOException::class)
-            override fun onResponse(call: Call, response: Response) {
-                if (!response.isSuccessful) {
-                    onErrorReceived("Unexpected code: $response")
-                } else {
-                    onDownloadedSongs(response)
+        antechamberService.downloadSongs()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { downloadedSongs ->
+                    experimentalSongs = downloadedSongs
+                    uiInfoService.showInfo(R.string.admin_downloaded_antechamber)
+                    updateItemsList()
                 }
-            }
-        })
-    }
-
-    private fun onDownloadedSongs(response: Response) {
-        val json = response.body()?.string() ?: ""
-        val mapper = jacksonObjectMapper()
-        val allDtos: AllAntechamberSongsDto = mapper.readValue(json)
-        logger.debug("downloaded songs: ", allDtos)
-        val antechamberSongs = allDtos.toModel()
-        experimentalSongs = antechamberSongs.map { antechamberSong -> antechamberSong.toSong() }
-        Handler(Looper.getMainLooper()).post {
-            uiInfoService.showInfo(R.string.admin_downloaded_antechamber)
-            updateItemsList()
-        }
-    }
-
-    private fun onErrorReceived(errorMessage: String?) {
-        logger.error("Contact message sending error: $errorMessage")
-        Handler(Looper.getMainLooper()).post {
-            val message = uiResourceService.resString(R.string.admin_communication_breakdown, errorMessage)
-            uiInfoService.showInfoIndefinite(message)
-        }
     }
 
     private fun onSongClick(song: Song) {
@@ -136,7 +94,7 @@ class AdminSongsLayoutContoller : InflatedLayout(
     }
 
     private fun onMoreMenu(song: Song) {
-        val actions = listOf(
+        ContextMenuBuilder().showContextMenu(listOf(
                 ContextMenuBuilder.Action(R.string.admin_antechamber_edit_action) {
                     customSongService.showEditSongScreen(song)
                 },
@@ -144,12 +102,15 @@ class AdminSongsLayoutContoller : InflatedLayout(
 
                 },
                 ContextMenuBuilder.Action(R.string.admin_antechamber_approve_action) {
+                    ConfirmDialogBuilder().confirmAction(R.string.admin_antechamber_confirm_approve) {
 
+                    }
                 },
                 ContextMenuBuilder.Action(R.string.admin_antechamber_delete_action) {
+                    ConfirmDialogBuilder().confirmAction(R.string.admin_antechamber_confirm_delete) {
 
+                    }
                 }
-        )
-        contextMenuBuilder.showContextMenu(actions)
+        ))
     }
 }

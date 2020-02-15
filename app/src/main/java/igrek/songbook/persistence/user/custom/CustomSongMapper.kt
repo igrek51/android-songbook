@@ -16,7 +16,6 @@ internal class CustomSongMapper {
                 versionNumber = customSong.versionNumber,
                 createTime = customSong.createTime,
                 updateTime = customSong.updateTime,
-                custom = true,
                 comment = customSong.comment,
                 preferredKey = customSong.preferredKey,
                 author = customSong.author,

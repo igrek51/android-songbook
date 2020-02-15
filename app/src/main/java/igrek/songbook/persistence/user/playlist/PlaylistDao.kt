@@ -55,7 +55,7 @@ class PlaylistDao(path: String) : AbstractJsonDao<PlaylistDb>(
     }
 
     fun isSongOnPlaylist(song: Song, playlist: Playlist): Boolean {
-        val playlistSong = PlaylistSong(song.id, song.custom)
+        val playlistSong = PlaylistSong(song.id, song.isCustom())
         return playlistSong in playlist.songs
     }
 
@@ -65,13 +65,13 @@ class PlaylistDao(path: String) : AbstractJsonDao<PlaylistDb>(
     }
 
     fun addSongToPlaylist(song: Song, playlist: Playlist) {
-        val playlistSong = PlaylistSong(song.id, song.custom)
+        val playlistSong = PlaylistSong(song.id, song.isCustom())
         playlist.songs.add(playlistSong)
         playlistDbSubject.onNext(playlistDb)
     }
 
     fun removeSongFromPlaylist(song: Song, playlist: Playlist) {
-        val playlistSong = PlaylistSong(song.id, song.custom)
+        val playlistSong = PlaylistSong(song.id, song.isCustom())
         playlist.songs.remove(playlistSong)
         playlistDbSubject.onNext(playlistDb)
     }

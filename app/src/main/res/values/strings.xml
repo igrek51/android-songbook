@@ -308,4 +308,6 @@
     <string name="admin_antechamber_update_action">Update song</string>
     <string name="admin_antechamber_approve_action">Approve song</string>
     <string name="admin_antechamber_delete_action">Delete song</string>
+    <string name="admin_antechamber_confirm_delete">Do you really want to delete it?</string>
+    <string name="admin_antechamber_confirm_approve">Do you really want to approve it?</string>
 </resources>

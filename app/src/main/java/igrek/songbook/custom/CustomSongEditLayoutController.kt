@@ -204,9 +204,9 @@ class CustomSongEditLayoutController : MainLayout {
             if (customCategoryName!!.isNotEmpty()) return true
             if (songContent!!.isNotEmpty()) return true
         } else { // update
-            if (currentSong?.title != songTitle) return true
-            if (currentSong?.customCategoryName != customCategoryName) return true
-            if (currentSong?.content != songContent) return true
+            if (currentSong?.title ?: "" != songTitle) return true
+            if (currentSong?.customCategoryName ?: "" != customCategoryName) return true
+            if (currentSong?.content ?: "" != songContent) return true
         }
         return false
     }

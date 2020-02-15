@@ -14,6 +14,7 @@ import igrek.songbook.activity.AppInitializer
 import igrek.songbook.activity.OptionSelectDispatcher
 import igrek.songbook.admin.AdminService
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
+import igrek.songbook.admin.antechamber.AntechamberService
 import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.chords.transpose.ChordsTransposerManager
 import igrek.songbook.contact.*
@@ -329,6 +330,10 @@ open class FactoryModule(private val activity: AppCompatActivity) {
     @Provides
     @Singleton
     fun aAdminSongsLayoutContoller(): AdminSongsLayoutContoller = AdminSongsLayoutContoller()
+
+    @Provides
+    @Singleton
+    fun aAntechamberService(): AntechamberService = AntechamberService()
 
     /*
 	 * Empty service pattern:

@@ -40,7 +40,6 @@ class SongMapper : AbstractMapper<Song>() {
                 versionNumber = versionNumber,
                 createTime = createTime,
                 updateTime = updateTime,
-                custom = false,
                 comment = comment,
                 preferredKey = preferredKey,
                 locked = locked,

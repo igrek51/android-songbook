@@ -31,7 +31,7 @@ class FavouriteSongsDao(path: String) : AbstractJsonDao<FavouriteSongsDb>(
     private var favouritesCache: SimpleCache<HashSet<Song>> =
             SimpleCache {
                 val favouriteSongs = songsRepository.songsDb!!.songs.filter { song ->
-                    FavouriteSong(song.id, song.custom) in favouriteSongs.favourites
+                    FavouriteSong(song.id, song.isCustom()) in favouriteSongs.favourites
                 }
                 HashSet(favouriteSongs)
             }
@@ -71,14 +71,14 @@ class FavouriteSongsDao(path: String) : AbstractJsonDao<FavouriteSongsDb>(
     }
 
     fun setSongFavourite(song: Song) {
-        val favSong = FavouriteSong(song.id, song.custom)
+        val favSong = FavouriteSong(song.id, song.isCustom())
         if (favSong !in favouriteSongs.favourites)
             favouriteSongs.favourites.add(favSong)
         favouritesCache.get().add(song)
     }
 
     fun unsetSongFavourite(song: Song) {
-        val favSong = FavouriteSong(song.id, song.custom)
+        val favSong = FavouriteSong(song.id, song.isCustom())
         if (favSong in favouriteSongs.favourites)
             favouriteSongs.favourites.remove(favSong)
         favouritesCache.get().remove(song)

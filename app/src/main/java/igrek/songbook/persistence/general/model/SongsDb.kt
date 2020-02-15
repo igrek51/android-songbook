@@ -14,7 +14,7 @@ data class SongsDb(
 
     var customSongs: SimpleCache<List<Song>> =
             SimpleCache {
-                songs.filter { s -> s.custom }
+                songs.filter { s -> s.isCustom() }
             }
 
     var generalCategories: SimpleCache<List<Category>> =
