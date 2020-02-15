@@ -165,7 +165,7 @@ class CustomSongEditLayoutController : MainLayout {
                     .updateSong(currentSong!!, songTitle!!, customCategoryName, songContent)
         }
         uiInfoService.showInfo(R.string.edit_song_has_been_saved)
-        layoutController.showLayout(CustomSongsLayoutController::class, disableReturn = true)
+        layoutController.showPreviousLayoutOrQuit()
     }
 
     private fun removeSong() {
@@ -177,7 +177,7 @@ class CustomSongEditLayoutController : MainLayout {
                 // remove song from database
                 customSongService.get().removeSong(currentSong!!)
             }
-            layoutController.showLayout(CustomSongsLayoutController::class, disableReturn = true)
+            layoutController.showPreviousLayoutOrQuit()
         }
     }
 
@@ -188,10 +188,10 @@ class CustomSongEditLayoutController : MainLayout {
     override fun onBackClicked() {
         if (hasUnsavedChanges()) {
             ConfirmDialogBuilder().confirmAction(R.string.confirm_discard_custom_song_changes) {
-                layoutController.showLayout(CustomSongsLayoutController::class, disableReturn = true)
+                layoutController.showPreviousLayoutOrQuit()
             }
         } else {
-            layoutController.showLayout(CustomSongsLayoutController::class, disableReturn = true)
+            layoutController.showPreviousLayoutOrQuit()
         }
     }
 

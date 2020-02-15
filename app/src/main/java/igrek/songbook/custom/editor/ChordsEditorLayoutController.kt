@@ -484,7 +484,7 @@ class ChordsEditorLayoutController : MainLayout {
             val converter = ChordsConverter(chordsNotation!!, ChordsNotation.default)
             content = converter.convertLyrics(content)
         }
-        layoutController.showLayout(CustomSongEditLayoutController::class, disableReturn = true)
+        layoutController.showPreviousLayoutOrQuit()
         customSongEditLayoutController.get().setSongContent(content)
     }
 
