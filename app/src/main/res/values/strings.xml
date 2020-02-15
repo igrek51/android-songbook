@@ -147,7 +147,7 @@
     <string name="notation_short_german_is">German (-is)</string>
     <string name="notation_short_english">English</string>
     <string name="fill_in_all_fields">Please fill in all required fields.</string>
-    <string name="connection_error">Connection error</string>
+    <string name="connection_error">Communication breakdown: Connection error</string>
     <string name="updating_db_in_progress">Updating songs…</string>
     <string name="update_is_available">New songs update is available.</string>
     <string name="action_update">Update</string>
@@ -181,7 +181,7 @@
     <string name="action_song_unset_favourite">Remove from favourites</string>
     <string name="action_song_add_comment">Add comment</string>
     <string name="song_action_more">More</string>
-    <string name="song_copied_as_custom">Song has been copied to "My songs".</string>
+    <string name="song_copied_as_custom">Song has been copied to \"My songs\".</string>
     <string name="song_action_choose">Choose an action</string>
     <string name="action_song_publish">Share to public</string>
     <string name="settings_song_preview">Song preview appearance</string>
@@ -303,4 +303,9 @@
     <string name="admin_update_songs">Update songs</string>
     <string name="admin_downloading_antechamber">Downloading antechamber songs…</string>
     <string name="admin_communication_breakdown">Communication breakdown: %s</string>
+    <string name="admin_downloaded_antechamber">Songs downloaded</string>
+    <string name="admin_antechamber_edit_action">Edit song</string>
+    <string name="admin_antechamber_update_action">Update song</string>
+    <string name="admin_antechamber_approve_action">Approve song</string>
+    <string name="admin_antechamber_delete_action">Delete song</string>
 </resources>

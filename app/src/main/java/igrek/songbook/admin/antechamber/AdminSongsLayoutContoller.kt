@@ -10,13 +10,13 @@ import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.admin.AdminService
+import igrek.songbook.custom.CustomSongService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.InflatedLayout
+import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.persistence.general.model.Song
-import igrek.songbook.persistence.general.model.SongNamespace
-import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
@@ -45,9 +45,13 @@ class AdminSongsLayoutContoller : InflatedLayout(
     lateinit var okHttpClient: Lazy<OkHttpClient>
     @Inject
     lateinit var adminService: Lazy<AdminService>
+    @Inject
+    lateinit var contextMenuBuilder: ContextMenuBuilder
+    @Inject
+    lateinit var customSongService: CustomSongService
 
     private var itemsListView: AntechamberSongListView? = null
-    private var experimentalSongs: List<AntechamberSong> = emptyList()
+    private var experimentalSongs: List<Song> = emptyList()
 
     companion object {
         private const val apiUrl = "https://antechamber.chords.igrek.dev/api/v4"
@@ -107,8 +111,10 @@ class AdminSongsLayoutContoller : InflatedLayout(
         val mapper = jacksonObjectMapper()
         val allDtos: AllAntechamberSongsDto = mapper.readValue(json)
         logger.debug("downloaded songs: ", allDtos)
-        experimentalSongs = allDtos.toModel()
+        val antechamberSongs = allDtos.toModel()
+        experimentalSongs = antechamberSongs.map { antechamberSong -> antechamberSong.toSong() }
         Handler(Looper.getMainLooper()).post {
+            uiInfoService.showInfo(R.string.admin_downloaded_antechamber)
             updateItemsList()
         }
     }
@@ -121,39 +127,29 @@ class AdminSongsLayoutContoller : InflatedLayout(
         }
     }
 
-    private fun onSongClick(item: AntechamberSong) {
-        val song = Song(
-                id = item.id,
-                title = item.title,
-                categories = mutableListOf(),
-                content = item.content,
-                versionNumber = item.versionNumber,
-                createTime = item.createTime,
-                updateTime = item.updateTime,
-                custom = true,
-                comment = item.comment,
-                preferredKey = item.preferredKey,
-                author = item.author,
-                state = SongStatus.PROPOSED,
-                customCategoryName = item.categoryName,
-                language = item.language,
-                metre = item.metre,
-                scrollSpeed = item.scrollSpeed,
-                initialDelay = item.initialDelay,
-                chordsNotation = item.chordsNotation,
-                originalSongId = item.originalSongId,
-                namespace = SongNamespace.Antechamber
-        )
-
+    private fun onSongClick(song: Song) {
         songOpener.openSongPreview(song)
     }
 
-    private fun onSongLongClick(item: AntechamberSong) {
-        onMoreMenu(item)
+    private fun onSongLongClick(song: Song) {
+        onMoreMenu(song)
     }
 
-    private fun onMoreMenu(item: AntechamberSong) {
-        TODO("not implemented")
-//        songContextMenuBuilder.showSongActions(item.song!!)
+    private fun onMoreMenu(song: Song) {
+        val actions = listOf(
+                ContextMenuBuilder.Action(R.string.admin_antechamber_edit_action) {
+                    customSongService.showEditSongScreen(song)
+                },
+                ContextMenuBuilder.Action(R.string.admin_antechamber_update_action) {
+
+                },
+                ContextMenuBuilder.Action(R.string.admin_antechamber_approve_action) {
+
+                },
+                ContextMenuBuilder.Action(R.string.admin_antechamber_delete_action) {
+
+                }
+        )
+        contextMenuBuilder.showContextMenu(actions)
     }
 }

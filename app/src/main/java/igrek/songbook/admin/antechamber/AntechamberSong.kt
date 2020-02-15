@@ -1,5 +1,8 @@
 package igrek.songbook.admin.antechamber
 
+import igrek.songbook.persistence.general.model.Song
+import igrek.songbook.persistence.general.model.SongNamespace
+import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
 data class AntechamberSong(
@@ -20,7 +23,32 @@ data class AntechamberSong(
         var chordsNotation: ChordsNotation? = null,
         var originalSongId: Long? = null,
         var status: AntechamberSongStatus
-)
+) {
+    fun toSong(): Song {
+        return Song(
+                id = id,
+                title = title,
+                categories = mutableListOf(),
+                content = content,
+                versionNumber = versionNumber,
+                createTime = createTime,
+                updateTime = updateTime,
+                custom = true,
+                comment = comment,
+                preferredKey = preferredKey,
+                author = author,
+                state = SongStatus.PROPOSED,
+                customCategoryName = categoryName,
+                language = language,
+                metre = metre,
+                scrollSpeed = scrollSpeed,
+                initialDelay = initialDelay,
+                chordsNotation = chordsNotation,
+                originalSongId = originalSongId,
+                namespace = SongNamespace.Antechamber
+        )
+    }
+}
 
 enum class AntechamberSongStatus(val id: Long) {
 

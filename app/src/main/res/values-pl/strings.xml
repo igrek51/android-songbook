@@ -181,7 +181,7 @@
     <string name="action_song_unset_favourite">Usuń z ulubionych</string>
     <string name="action_song_add_comment">Dodaj komentarz</string>
     <string name="song_action_more">Więcej</string>
-    <string name="song_copied_as_custom">Piosenka została skopiowana do "Moich piosenek".</string>
+    <string name="song_copied_as_custom">Piosenka została skopiowana do \"Moich piosenek\".</string>
     <string name="song_action_choose">Wybierz akcję</string>
     <string name="action_song_publish">Udostępnij publicznie</string>
     <string name="settings_song_preview">Wygląd podglądu piosenki</string>
@@ -296,4 +296,9 @@
     <string name="admin_update_songs">Update songs</string>
     <string name="admin_downloading_antechamber">Downloading antechamber songs…</string>
     <string name="admin_communication_breakdown">Communication breakdown: %s</string>
+    <string name="admin_downloaded_antechamber">Songs downloaded</string>
+    <string name="admin_antechamber_edit_action">Edit song</string>
+    <string name="admin_antechamber_update_action">Update song</string>
+    <string name="admin_antechamber_approve_action">Approve song</string>
+    <string name="admin_antechamber_delete_action">Delete song</string>
 </resources>

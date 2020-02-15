@@ -5,13 +5,14 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ListView
+import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.songselection.ListScrollPosition
 
 class AntechamberSongListView : ListView, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private var itemAdapter: AntechamberSongListAdapter? = null
-    private var onClick: ((AntechamberSong) -> Unit)? = null
-    private var onLongClick: ((AntechamberSong) -> Unit)? = null
+    private var onClick: ((Song) -> Unit)? = null
+    private var onLongClick: ((Song) -> Unit)? = null
 
     val currentScrollPosition: ListScrollPosition
         get() {
@@ -29,9 +30,9 @@ class AntechamberSongListView : ListView, AdapterView.OnItemClickListener, Adapt
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
     fun init(context: Context,
-             onClick: (item: AntechamberSong) -> Unit,
-             onLongClick: (item: AntechamberSong) -> Unit,
-             onMore: (item: AntechamberSong) -> Unit
+             onClick: (item: Song) -> Unit,
+             onLongClick: (item: Song) -> Unit,
+             onMore: (item: Song) -> Unit
     ) {
         this.onClick = onClick
         this.onLongClick = onLongClick
@@ -54,7 +55,7 @@ class AntechamberSongListView : ListView, AdapterView.OnItemClickListener, Adapt
         return true
     }
 
-    fun setItems(items: List<AntechamberSong>) {
+    fun setItems(items: List<Song>) {
         itemAdapter!!.setDataSource(items)
         invalidate()
     }

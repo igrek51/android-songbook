@@ -8,16 +8,17 @@ import android.widget.ArrayAdapter
 import android.widget.ImageButton
 import android.widget.TextView
 import igrek.songbook.R
+import igrek.songbook.persistence.general.model.Song
 import java.util.*
 
 class AntechamberSongListAdapter internal constructor(
         context: Context,
-        _dataSource: List<AntechamberSong>?
-) : ArrayAdapter<AntechamberSong>(context, 0, ArrayList()) {
+        _dataSource: List<Song>?
+) : ArrayAdapter<Song>(context, 0, ArrayList()) {
 
-    private var dataSource: List<AntechamberSong>? = null
+    private var dataSource: List<Song>? = null
     private val inflater: LayoutInflater
-    private var onMore: ((AntechamberSong) -> Unit)? = null
+    private var onMore: ((Song) -> Unit)? = null
 
     init {
         var dataSource = _dataSource
@@ -27,12 +28,12 @@ class AntechamberSongListAdapter internal constructor(
         inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     }
 
-    fun setDataSource(dataSource: List<AntechamberSong>) {
+    fun setDataSource(dataSource: List<Song>) {
         this.dataSource = dataSource
         notifyDataSetChanged()
     }
 
-    override fun getItem(position: Int): AntechamberSong? {
+    override fun getItem(position: Int): Song? {
         return dataSource!![position]
     }
 
@@ -46,7 +47,7 @@ class AntechamberSongListAdapter internal constructor(
         return if (position >= dataSource!!.size) -1 else position.toLong()
     }
 
-    fun setOnMoreListener(onMore: (item: AntechamberSong) -> Unit) {
+    fun setOnMoreListener(onMore: (item: Song) -> Unit) {
         this.onMore = onMore
     }
 
@@ -55,13 +56,13 @@ class AntechamberSongListAdapter internal constructor(
         return createItemView(item, parent)
     }
 
-    private fun createItemView(item: AntechamberSong, parent: ViewGroup): View {
+    private fun createItemView(item: Song, parent: ViewGroup): View {
         val itemView = inflater.inflate(R.layout.list_item_antichamber_song, parent, false)
         val itemSongTitleLabel = itemView.findViewById<TextView>(R.id.itemSongTitleLabel)
 
         var title = "${item.id} - ${item.title}"
-        if (!item.categoryName.isNullOrEmpty()) {
-            title += " - ${item.categoryName}"
+        if (!item.customCategoryName.isNullOrEmpty()) {
+            title += " - ${item.customCategoryName}"
         }
         itemSongTitleLabel.text = title
 

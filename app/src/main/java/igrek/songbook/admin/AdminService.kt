@@ -17,10 +17,10 @@ class AdminService {
     var userAuthToken: String = ""
 
     fun login(key: String) {
-        val match = Regex("login (.+)").matchEntire(key)
+        val match = Regex("login (.*)").matchEntire(key)
         match?.let {
             userAuthToken = it.groupValues[1]
-            LoggerFactory.logger.debug("Admin token entered: $userAuthToken")
+            LoggerFactory.logger.debug("Admin token entered: [$userAuthToken]")
             checkMenuVisibility()
         }
     }
@@ -47,6 +47,6 @@ class AdminService {
     }
 
     fun isAdminEnabled(): Boolean {
-        return userAuthToken.isNotEmpty()
+        return userAuthToken.isNotBlank()
     }
 }
