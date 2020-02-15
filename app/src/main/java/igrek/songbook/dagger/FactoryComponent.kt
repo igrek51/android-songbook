@@ -14,9 +14,9 @@ import igrek.songbook.admin.antechamber.AntechamberService
 import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.chords.transpose.ChordsTransposerManager
 import igrek.songbook.contact.*
-import igrek.songbook.custom.CustomSongEditLayoutController
 import igrek.songbook.custom.CustomSongService
 import igrek.songbook.custom.CustomSongsLayoutController
+import igrek.songbook.custom.EditSongLayoutController
 import igrek.songbook.custom.SongImportFileChooser
 import igrek.songbook.custom.editor.ChordsEditorLayoutController
 import igrek.songbook.info.UiInfoService
@@ -114,7 +114,7 @@ interface FactoryComponent {
     fun inject(there: SongImportFileChooser)
     fun inject(there: GeneralSongsDao)
     fun inject(there: CustomSongService)
-    fun inject(there: CustomSongEditLayoutController)
+    fun inject(there: EditSongLayoutController)
     fun inject(there: SongsUpdater)
     fun inject(there: RandomSongOpener)
     fun inject(there: AppLanguageService)

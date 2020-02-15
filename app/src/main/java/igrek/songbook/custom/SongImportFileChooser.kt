@@ -28,7 +28,7 @@ class SongImportFileChooser {
     @Inject
     lateinit var uiResourceService: UiResourceService
     @Inject
-    lateinit var editSongLayoutController: Lazy<CustomSongEditLayoutController>
+    lateinit var editSongLayoutController: Lazy<EditSongLayoutController>
 
     init {
         DaggerIoc.factoryComponent.inject(this)

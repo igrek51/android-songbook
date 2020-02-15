@@ -13,7 +13,7 @@ import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.chords.ChordsConverter
 import igrek.songbook.chords.detector.ChordsDetector
-import igrek.songbook.custom.CustomSongEditLayoutController
+import igrek.songbook.custom.EditSongLayoutController
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -41,7 +41,7 @@ class ChordsEditorLayoutController : MainLayout {
     @Inject
     lateinit var navigationMenuController: NavigationMenuController
     @Inject
-    lateinit var customSongEditLayoutController: Lazy<CustomSongEditLayoutController>
+    lateinit var editSongLayoutController: Lazy<EditSongLayoutController>
     @Inject
     lateinit var softKeyboardService: SoftKeyboardService
     @Inject
@@ -485,7 +485,7 @@ class ChordsEditorLayoutController : MainLayout {
             content = converter.convertLyrics(content)
         }
         layoutController.showPreviousLayoutOrQuit()
-        customSongEditLayoutController.get().setSongContent(content)
+        editSongLayoutController.get().setSongContent(content)
     }
 
     override fun onLayoutExit() {

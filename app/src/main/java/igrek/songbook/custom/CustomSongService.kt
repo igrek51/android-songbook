@@ -24,7 +24,7 @@ class CustomSongService {
     @Inject
     lateinit var layoutController: LayoutController
     @Inject
-    lateinit var customSongEditLayoutController: Lazy<CustomSongEditLayoutController>
+    lateinit var editSongLayoutController: Lazy<EditSongLayoutController>
     @Inject
     lateinit var preferencesService: PreferencesService
 
@@ -41,13 +41,13 @@ class CustomSongService {
     }
 
     fun showAddSongScreen() {
-        customSongEditLayoutController.get().setCurrentSong(null)
-        layoutController.showLayout(CustomSongEditLayoutController::class)
+        editSongLayoutController.get().setCurrentSong(null)
+        layoutController.showLayout(EditSongLayoutController::class)
     }
 
     fun showEditSongScreen(song: Song) {
-        customSongEditLayoutController.get().setCurrentSong(song)
-        layoutController.showLayout(CustomSongEditLayoutController::class)
+        editSongLayoutController.get().setCurrentSong(song)
+        layoutController.showLayout(EditSongLayoutController::class)
     }
 
     fun addCustomSong(title: String, customCategoryName: String?, content: String): Song {

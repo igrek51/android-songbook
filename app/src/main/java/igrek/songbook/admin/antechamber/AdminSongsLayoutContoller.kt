@@ -99,7 +99,7 @@ class AdminSongsLayoutContoller : InflatedLayout(
                     customSongService.showEditSongScreen(song)
                 },
                 ContextMenuBuilder.Action(R.string.admin_antechamber_update_action) {
-
+                    antechamberService.updateAntechamberSong(song)
                 },
                 ContextMenuBuilder.Action(R.string.admin_antechamber_approve_action) {
                     ConfirmDialogBuilder().confirmAction(R.string.admin_antechamber_confirm_approve) {

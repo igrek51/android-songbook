@@ -21,7 +21,7 @@ import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.system.SoftKeyboardService
 import javax.inject.Inject
 
-class CustomSongEditLayoutController : MainLayout {
+class EditSongLayoutController : MainLayout {
 
     @Inject
     lateinit var layoutController: LayoutController
