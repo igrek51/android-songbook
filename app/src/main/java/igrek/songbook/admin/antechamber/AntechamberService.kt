@@ -23,6 +23,7 @@ import okhttp3.*
 import java.io.IOException
 import javax.inject.Inject
 
+
 class AntechamberService {
 
     @Inject
@@ -46,9 +47,12 @@ class AntechamberService {
 
     companion object {
         private const val apiUrl = "https://antechamber.chords.igrek.dev/api/v4"
-        private const val getAllSongsUrl = "$apiUrl/songs"
+        private const val allSongsUrl = "$apiUrl/songs"
+        private val specificSongUrl = { id: Long -> "$apiUrl/songs/$id" }
         private const val authTokenHeader = "X-Auth-Token"
     }
+
+    private val jsonType = MediaType.parse("application/json; charset=utf-8")
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -57,11 +61,9 @@ class AntechamberService {
     fun downloadSongs(): Observable<List<Song>> {
         val receiver = BehaviorSubject.create<List<Song>>()
 
-        uiInfoService.showInfoIndefinite(R.string.admin_downloading_antechamber)
-
         val request: Request = Request.Builder()
-                .url(getAllSongsUrl)
-                .header(authTokenHeader, adminService.get().userAuthToken)
+                .url(allSongsUrl)
+                .addHeader(authTokenHeader, adminService.get().userAuthToken)
                 .build()
 
         okHttpClient.get().newCall(request).enqueue(object : Callback {
@@ -94,9 +96,60 @@ class AntechamberService {
         }
     }
 
-
     fun updateAntechamberSong(song: Song) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val antechamberSongDto = AntechamberSongDto.fromModel(song)
+        val mapper = jacksonObjectMapper()
+        val json = mapper.writeValueAsString(antechamberSongDto)
+        val request: Request = Request.Builder()
+                .url(specificSongUrl(song.id))
+                .put(RequestBody.create(jsonType, json))
+                .addHeader(authTokenHeader, adminService.get().userAuthToken)
+                .build()
+
+        okHttpClient.get().newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                onErrorReceived(e.message)
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                if (!response.isSuccessful) {
+                    onErrorReceived("Unexpected code: $response")
+                } else {
+                    Handler(Looper.getMainLooper()).post {
+                        uiInfoService.showInfo(R.string.admin_success)
+                    }
+                }
+            }
+        })
+    }
+
+    fun createAntechamberSong(song: Song) {
+        val antechamberSongDto = AntechamberSongDto.fromModel(song)
+        antechamberSongDto.id = null
+        val mapper = jacksonObjectMapper()
+        val json = mapper.writeValueAsString(antechamberSongDto)
+        val request: Request = Request.Builder()
+                .url(allSongsUrl)
+                .post(RequestBody.create(jsonType, json))
+                .build()
+
+        okHttpClient.get().newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                onErrorReceived(e.message)
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                if (!response.isSuccessful) {
+                    onErrorReceived("Unexpected code: $response")
+                } else {
+                    Handler(Looper.getMainLooper()).post {
+                        uiInfoService.showInfo(R.string.admin_success)
+                    }
+                }
+            }
+        })
     }
 
 }

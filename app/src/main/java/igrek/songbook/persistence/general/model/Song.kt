@@ -9,8 +9,8 @@ open class Song(
         open var categories: MutableList<Category> = mutableListOf(),
         var content: String? = null,
         var versionNumber: Long = 1,
-        var createTime: Long = 0,
-        var updateTime: Long = 0,
+        var createTime: Long = 0, // timestamp in milliseconds
+        var updateTime: Long = 0, // timestamp in milliseconds
         var comment: String? = null,
         var preferredKey: String? = null,
         var locked: Boolean = false,

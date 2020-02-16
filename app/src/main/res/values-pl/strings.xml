@@ -58,7 +58,7 @@
         \nIreneusz Szulc
         \n
         \nWYKORZYSTANE TECHNOLOGIE:
-        \nAndroid SDK, AssertJ, Dagger 2, Espresso, Firebase Analytics, Gradle, Guava, Java, jUnit, Kotlin, Material Design icons, Mockito, OkHttp, RxAndroid, RxKotlin, SQLite
+        \nAndroid SDK, AssertJ, Dagger 2, Espresso, Firebase Analytics, Gradle, Guava, Jackson, Java, jUnit, Kotlin, Material Design icons, Mockito, OkHttp, RxAndroid, RxKotlin, SQLite
     </string>
     <string name="action_info_ok">OK</string>
     <string name="action_secret">\?\?\?</string>
@@ -303,4 +303,6 @@
     <string name="admin_antechamber_delete_action">Delete song</string>
     <string name="admin_antechamber_confirm_delete">Do you really want to delete it?</string>
     <string name="admin_antechamber_confirm_approve">Do you really want to approve it?</string>
+    <string name="admin_sending">Sending…</string>
+    <string name="admin_success">Success.</string>
 </resources>

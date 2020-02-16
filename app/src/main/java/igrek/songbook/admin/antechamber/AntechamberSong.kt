@@ -23,13 +23,13 @@ enum class AntechamberSongStatus(val id: Long) {
 }
 
 data class AntechamberSongDto(
-        var id: Long,
-        var title: String,
+        var id: Long? = null,
+        var title: String? = null,
         var category_name: String? = null,
         var content: String? = null,
-        var version_number: Long = 1,
-        var create_time: Long = 0,
-        var update_time: Long = 0,
+        var version_number: Long? = 1,
+        var create_time: Long? = 0,
+        var update_time: Long? = 0,
         var comment: String? = null,
         var preferred_key: String? = null,
         var metre: String? = null,
@@ -39,16 +39,16 @@ data class AntechamberSongDto(
         var initial_delay: Double? = null,
         var chords_notation: Long? = null,
         var original_song_id: Long? = null,
-        var status: Long
+        var status: Long? = null
 ) {
     fun toModel(): Song = Song(
-            id = id,
-            title = title,
+            id = id!!,
+            title = title!!,
             categories = mutableListOf(),
             content = content,
-            versionNumber = version_number,
-            createTime = create_time,
-            updateTime = update_time,
+            versionNumber = version_number!!,
+            createTime = create_time!!,
+            updateTime = update_time!!,
             comment = comment,
             preferredKey = preferred_key,
             author = author,
@@ -62,6 +62,23 @@ data class AntechamberSongDto(
             originalSongId = original_song_id,
             namespace = SongNamespace.Antechamber
     )
+
+    companion object {
+        fun fromModel(song: Song): AntechamberSongDto = AntechamberSongDto(
+                id = song.id,
+                title = song.title,
+                category_name = song.customCategoryName,
+                content = song.content,
+                version_number = song.versionNumber,
+                create_time = song.createTime,
+                update_time = song.updateTime,
+                author = song.author,
+                language = song.language,
+                chords_notation = song.chordsNotation!!.id,
+                original_song_id = song.originalSongId,
+                status = song.state.id
+        )
+    }
 }
 
 data class AllAntechamberSongsDto(

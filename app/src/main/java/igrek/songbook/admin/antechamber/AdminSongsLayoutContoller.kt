@@ -75,7 +75,6 @@ class AdminSongsLayoutContoller : InflatedLayout(
 
     private fun downloadSongs() {
         uiInfoService.showInfoIndefinite(R.string.admin_downloading_antechamber)
-
         antechamberService.downloadSongs()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { downloadedSongs ->
@@ -99,7 +98,7 @@ class AdminSongsLayoutContoller : InflatedLayout(
                     customSongService.showEditSongScreen(song)
                 },
                 ContextMenuBuilder.Action(R.string.admin_antechamber_update_action) {
-                    antechamberService.updateAntechamberSong(song)
+                    updateAntechamberSong(song)
                 },
                 ContextMenuBuilder.Action(R.string.admin_antechamber_approve_action) {
                     ConfirmDialogBuilder().confirmAction(R.string.admin_antechamber_confirm_approve) {
@@ -112,5 +111,10 @@ class AdminSongsLayoutContoller : InflatedLayout(
                     }
                 }
         ))
+    }
+
+    private fun updateAntechamberSong(song: Song) {
+        uiInfoService.showInfoIndefinite(R.string.admin_sending)
+        antechamberService.updateAntechamberSong(song)
     }
 }
