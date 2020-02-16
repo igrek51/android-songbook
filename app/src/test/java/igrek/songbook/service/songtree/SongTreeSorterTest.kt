@@ -1,12 +1,12 @@
 package igrek.songbook.service.songtree
 
-import org.assertj.core.api.Assertions.assertThat
 import igrek.songbook.persistence.general.model.Category
 import igrek.songbook.persistence.general.model.CategoryType
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.songselection.tree.SongTreeItem
 import igrek.songbook.songselection.tree.SongTreeSorter
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 class SongTreeSorterTest {
@@ -44,7 +44,21 @@ class SongTreeSorterTest {
 
     private fun songItem(title: String, categoryType: CategoryType = CategoryType.OTHERS, categoryName: String = "others", custom: Boolean = false): SongTreeItem {
         val category = Category(categoryType.id, categoryType, categoryName, false)
-        val song = Song(1, title, mutableListOf(category), null, 1, 0, 0, custom, null, null, false, null, null, SongStatus.PUBLISHED)
+        val song = Song(
+                id = 1,
+                title = title,
+                categories = mutableListOf(category),
+                content = null,
+                versionNumber = 1,
+                createTime = 0,
+                updateTime = 0,
+                comment = null,
+                preferredKey = null,
+                locked = false,
+                lockPassword = null,
+                author = null,
+                state = SongStatus.PUBLISHED
+        )
         return SongTreeItem.song(song)
     }
 
