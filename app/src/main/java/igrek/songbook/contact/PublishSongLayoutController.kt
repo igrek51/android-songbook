@@ -93,16 +93,11 @@ class PublishSongLayoutController : MainLayout {
             sendMessageService.sendContactMessage(message = content, origin = MessageOrigin.SONG_PUBLISH,
                     category = category, title = title, author = author, subject = subject,
                     originalSongId = originalSongId)
-            publishSong?.let {
-                antechamberService.createAntechamberSong(it)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({
-                            uiInfoService.showInfo(R.string.antechamber_new_song_sent)
-                        }, { error ->
-                            val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
-                            uiInfoService.showInfoIndefinite(message)
-                        })
-            }
+            antechamberService.createAntechamberSong(publishSong!!)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        uiInfoService.showInfo(R.string.antechamber_new_song_sent)
+                    }, {})
         }
     }
 
