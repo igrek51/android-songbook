@@ -1,11 +1,8 @@
 package igrek.songbook.admin.antechamber
 
-import android.os.Handler
-import android.os.Looper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import dagger.Lazy
-import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.admin.AdminService
 import igrek.songbook.custom.CustomSongService
@@ -59,44 +56,20 @@ class AntechamberService {
     }
 
     fun downloadSongs(): Observable<List<Song>> {
-        val receiver = BehaviorSubject.create<List<Song>>()
-
         val request: Request = Request.Builder()
                 .url(allSongsUrl)
                 .addHeader(authTokenHeader, adminService.get().userAuthToken)
                 .build()
-
-        okHttpClient.get().newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                onErrorReceived(e.message)
-            }
-
-            @Throws(IOException::class)
-            override fun onResponse(call: Call, response: Response) {
-                if (!response.isSuccessful) {
-                    onErrorReceived("Unexpected code: $response")
-                } else {
-                    val json = response.body()?.string() ?: ""
-                    val mapper = jacksonObjectMapper()
-                    val allDtos: AllAntechamberSongsDto = mapper.readValue(json)
-                    val antechamberSongs: List<Song> = allDtos.toModel()
-                    receiver.onNext(antechamberSongs)
-                }
-            }
-        })
-
-        return receiver
-    }
-
-    private fun onErrorReceived(errorMessage: String?) {
-        logger.error("Contact message sending error: $errorMessage")
-        Handler(Looper.getMainLooper()).post {
-            val message = uiResourceService.resString(R.string.admin_communication_breakdown, errorMessage)
-            uiInfoService.showInfoIndefinite(message)
+        return httpRequest(request) { response: Response ->
+            val json = response.body()?.string() ?: ""
+            val mapper = jacksonObjectMapper()
+            val allDtos: AllAntechamberSongsDto = mapper.readValue(json)
+            val antechamberSongs: List<Song> = allDtos.toModel()
+            antechamberSongs
         }
     }
 
-    fun updateAntechamberSong(song: Song) {
+    fun updateAntechamberSong(song: Song): Observable<Boolean> {
         val antechamberSongDto = AntechamberSongDto.fromModel(song)
         val mapper = jacksonObjectMapper()
         val json = mapper.writeValueAsString(antechamberSongDto)
@@ -105,26 +78,10 @@ class AntechamberService {
                 .put(RequestBody.create(jsonType, json))
                 .addHeader(authTokenHeader, adminService.get().userAuthToken)
                 .build()
-
-        okHttpClient.get().newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                onErrorReceived(e.message)
-            }
-
-            @Throws(IOException::class)
-            override fun onResponse(call: Call, response: Response) {
-                if (!response.isSuccessful) {
-                    onErrorReceived("Unexpected code: $response")
-                } else {
-                    Handler(Looper.getMainLooper()).post {
-                        uiInfoService.showInfo(R.string.admin_success)
-                    }
-                }
-            }
-        })
+        return httpRequest(request) { true }
     }
 
-    fun createAntechamberSong(song: Song) {
+    fun createAntechamberSong(song: Song): Observable<Boolean> {
         logger.info("Sending new antechamber song")
         val antechamberSongDto = AntechamberSongDto.fromModel(song)
         antechamberSongDto.id = null
@@ -134,45 +91,35 @@ class AntechamberService {
                 .url(allSongsUrl)
                 .post(RequestBody.create(jsonType, json))
                 .build()
-
-        okHttpClient.get().newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                onErrorReceived(e.message)
-            }
-
-            @Throws(IOException::class)
-            override fun onResponse(call: Call, response: Response) {
-                if (!response.isSuccessful) {
-                    onErrorReceived("Unexpected code: $response")
-                } else {
-                    Handler(Looper.getMainLooper()).post {
-                        uiInfoService.showInfo(R.string.antechamber_new_song_sent)
-                    }
-                }
-            }
-        })
+        return httpRequest(request) { true }
     }
 
     fun deleteAntechamberSong(song: Song): Observable<Boolean> {
-        val receiver = BehaviorSubject.create<Boolean>()
-
         val request: Request = Request.Builder()
                 .url(specificSongUrl(song.id))
                 .delete()
                 .addHeader(authTokenHeader, adminService.get().userAuthToken)
                 .build()
+        return httpRequest(request) { true }
+    }
+
+    private fun <T> httpRequest(request: Request, successor: (Response) -> T): Observable<T> {
+        val receiver = BehaviorSubject.create<T>()
 
         okHttpClient.get().newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                onErrorReceived(e.message)
+                logger.error("Request sending error: ${e.message}")
+                receiver.onError(RuntimeException(e.message))
             }
 
             @Throws(IOException::class)
             override fun onResponse(call: Call, response: Response) {
                 if (!response.isSuccessful) {
-                    onErrorReceived("Unexpected code: $response")
+                    logger.error("Unexpected response code: $response")
+                    receiver.onError(RuntimeException(response.toString()))
                 } else {
-                    receiver.onNext(true)
+                    val responseData = successor(response)
+                    receiver.onNext(responseData)
                 }
             }
         })

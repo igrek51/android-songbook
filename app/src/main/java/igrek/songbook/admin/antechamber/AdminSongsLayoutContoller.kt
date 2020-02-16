@@ -77,11 +77,14 @@ class AdminSongsLayoutContoller : InflatedLayout(
         uiInfoService.showInfoIndefinite(R.string.admin_downloading_antechamber)
         antechamberService.downloadSongs()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { downloadedSongs ->
+                .subscribe({ downloadedSongs ->
                     experimentalSongs = downloadedSongs.toMutableList()
                     uiInfoService.showInfo(R.string.admin_downloaded_antechamber)
                     updateItemsList()
-                }
+                }, { error ->
+                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
+                    uiInfoService.showInfoIndefinite(message)
+                })
     }
 
     private fun onSongClick(song: Song) {
@@ -116,16 +119,26 @@ class AdminSongsLayoutContoller : InflatedLayout(
     private fun updateAntechamberSong(song: Song) {
         uiInfoService.showInfoIndefinite(R.string.admin_sending)
         antechamberService.updateAntechamberSong(song)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    uiInfoService.showInfo(R.string.admin_success)
+                }, { error ->
+                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
+                    uiInfoService.showInfoIndefinite(message)
+                })
     }
 
     private fun deleteAntechamberSong(song: Song) {
         uiInfoService.showInfoIndefinite(R.string.admin_sending)
         antechamberService.deleteAntechamberSong(song)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+                .subscribe({
                     experimentalSongs.remove(song)
                     uiInfoService.showInfo(R.string.admin_success)
                     updateItemsList()
-                }
+                }, { error ->
+                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
+                    uiInfoService.showInfoIndefinite(message)
+                })
     }
 }

@@ -14,6 +14,7 @@ import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.system.SoftKeyboardService
+import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
 class PublishSongLayoutController : MainLayout {
@@ -94,6 +95,13 @@ class PublishSongLayoutController : MainLayout {
                     originalSongId = originalSongId)
             publishSong?.let {
                 antechamberService.createAntechamberSong(it)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            uiInfoService.showInfo(R.string.antechamber_new_song_sent)
+                        }, { error ->
+                            val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
+                            uiInfoService.showInfoIndefinite(message)
+                        })
             }
         }
     }
