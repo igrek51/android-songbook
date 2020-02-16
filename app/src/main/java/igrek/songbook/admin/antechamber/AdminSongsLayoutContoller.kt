@@ -48,7 +48,7 @@ class AdminSongsLayoutContoller : InflatedLayout(
     lateinit var antechamberService: AntechamberService
 
     private var itemsListView: AntechamberSongListView? = null
-    private var experimentalSongs: List<Song> = emptyList()
+    private var experimentalSongs: MutableList<Song> = mutableListOf()
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -78,7 +78,7 @@ class AdminSongsLayoutContoller : InflatedLayout(
         antechamberService.downloadSongs()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { downloadedSongs ->
-                    experimentalSongs = downloadedSongs
+                    experimentalSongs = downloadedSongs.toMutableList()
                     uiInfoService.showInfo(R.string.admin_downloaded_antechamber)
                     updateItemsList()
                 }
@@ -107,7 +107,7 @@ class AdminSongsLayoutContoller : InflatedLayout(
                 },
                 ContextMenuBuilder.Action(R.string.admin_antechamber_delete_action) {
                     ConfirmDialogBuilder().confirmAction(R.string.admin_antechamber_confirm_delete) {
-
+                        deleteAntechamberSong(song)
                     }
                 }
         ))
@@ -116,5 +116,16 @@ class AdminSongsLayoutContoller : InflatedLayout(
     private fun updateAntechamberSong(song: Song) {
         uiInfoService.showInfoIndefinite(R.string.admin_sending)
         antechamberService.updateAntechamberSong(song)
+    }
+
+    private fun deleteAntechamberSong(song: Song) {
+        uiInfoService.showInfoIndefinite(R.string.admin_sending)
+        antechamberService.deleteAntechamberSong(song)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    experimentalSongs.remove(song)
+                    uiInfoService.showInfo(R.string.admin_success)
+                    updateItemsList()
+                }
     }
 }

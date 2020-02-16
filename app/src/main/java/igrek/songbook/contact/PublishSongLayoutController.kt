@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import igrek.songbook.R
+import igrek.songbook.admin.antechamber.AntechamberService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -11,6 +12,7 @@ import igrek.songbook.info.errorcheck.SafeClickListener
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
+import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.system.SoftKeyboardService
 import javax.inject.Inject
 
@@ -26,12 +28,15 @@ class PublishSongLayoutController : MainLayout {
     lateinit var sendMessageService: SendMessageService
     @Inject
     lateinit var softKeyboardService: SoftKeyboardService
+    @Inject
+    lateinit var antechamberService: AntechamberService
 
     private var publishSongTitleEdit: EditText? = null
     private var publishSongArtistEdit: EditText? = null
     private var publishSongContentEdit: EditText? = null
     private var contactAuthorEdit: EditText? = null
     private var originalSongId: Long? = null
+    private var publishSong: Song? = null
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -87,14 +92,18 @@ class PublishSongLayoutController : MainLayout {
             sendMessageService.sendContactMessage(message = content, origin = MessageOrigin.SONG_PUBLISH,
                     category = category, title = title, author = author, subject = subject,
                     originalSongId = originalSongId)
+            publishSong?.let {
+                antechamberService.createAntechamberSong(it)
+            }
         }
     }
 
-    fun prepareFields(songTitle: String, customCategoryName: String?, songContent: String?, originalSongId: Long?) {
-        publishSongTitleEdit?.setText(songTitle)
-        publishSongArtistEdit?.setText(customCategoryName ?: "")
-        publishSongContentEdit?.setText(songContent ?: "")
-        this.originalSongId = originalSongId
+    fun prepareFields(song: Song) {
+        publishSong = song
+        publishSongTitleEdit?.setText(song.title)
+        publishSongArtistEdit?.setText(song.customCategoryName ?: "")
+        publishSongContentEdit?.setText(song.content ?: "")
+        this.originalSongId = song.originalSongId
     }
 
 }

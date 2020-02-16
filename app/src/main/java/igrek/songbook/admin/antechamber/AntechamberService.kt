@@ -125,6 +125,7 @@ class AntechamberService {
     }
 
     fun createAntechamberSong(song: Song) {
+        logger.info("Sending new antechamber song")
         val antechamberSongDto = AntechamberSongDto.fromModel(song)
         antechamberSongDto.id = null
         val mapper = jacksonObjectMapper()
@@ -145,11 +146,38 @@ class AntechamberService {
                     onErrorReceived("Unexpected code: $response")
                 } else {
                     Handler(Looper.getMainLooper()).post {
-                        uiInfoService.showInfo(R.string.admin_success)
+                        uiInfoService.showInfo(R.string.antechamber_new_song_sent)
                     }
                 }
             }
         })
+    }
+
+    fun deleteAntechamberSong(song: Song): Observable<Boolean> {
+        val receiver = BehaviorSubject.create<Boolean>()
+
+        val request: Request = Request.Builder()
+                .url(specificSongUrl(song.id))
+                .delete()
+                .addHeader(authTokenHeader, adminService.get().userAuthToken)
+                .build()
+
+        okHttpClient.get().newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                onErrorReceived(e.message)
+            }
+
+            @Throws(IOException::class)
+            override fun onResponse(call: Call, response: Response) {
+                if (!response.isSuccessful) {
+                    onErrorReceived("Unexpected code: $response")
+                } else {
+                    receiver.onNext(true)
+                }
+            }
+        })
+
+        return receiver
     }
 
 }

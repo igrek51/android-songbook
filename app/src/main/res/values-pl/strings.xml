@@ -305,4 +305,5 @@
     <string name="admin_antechamber_confirm_approve">Do you really want to approve it?</string>
     <string name="admin_sending">Sending…</string>
     <string name="admin_success">Success.</string>
+    <string name="antechamber_new_song_sent">Piosenka została wysłana.</string>
 </resources>
