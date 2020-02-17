@@ -22,7 +22,11 @@ class SafeExecutor {
         } catch (t: Throwable) {
             LoggerFactory.logger.error(t)
             DaggerIoc.factoryComponent.inject(this)
-            uiInfoService.get().showInfo(uiResourceService.get().resString(R.string.error_occurred, t.message))
+            val err: String? = when {
+                t.message != null -> t.message
+                else -> t::class.simpleName
+            }
+            uiInfoService.get().showInfo(uiResourceService.get().resString(R.string.error_occurred, err))
         }
     }
 
