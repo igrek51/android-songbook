@@ -1,31 +1,36 @@
 package igrek.songbook.util
 
+import android.os.Handler
+import android.os.Looper
 import igrek.songbook.info.logger.LoggerFactory
 
 class RetryDelayed(
-        retries: Int,
-        delayMs: Long,
-        errorType: Class<out Throwable>,
-        action: () -> Unit
+        private val retries: Int,
+        private val delayMs: Long,
+        private val errorType: Class<out Throwable>,
+        private val action: () -> Unit
 ) {
+    private var attempt = 0
 
     init {
-        var attempt = 0
-        while (true) {
-            try {
-                action()
-                break
-            } catch (t: Throwable) {
-                if (!errorType.isInstance(t)) {
-                    throw t
-                }
+        makeAttempt()
+    }
 
-                if (attempt++ < retries) {
-                    LoggerFactory.logger.debug("Attempt $attempt/$retries failed, retrying in $delayMs ms")
-                    Thread.sleep(delayMs)
-                } else {
-                    throw RuntimeException("", t)
-                }
+    private fun makeAttempt() {
+        try {
+            action()
+        } catch (t: Throwable) {
+            if (!errorType.isInstance(t)) {
+                throw t
+            }
+
+            if (attempt++ < retries) {
+                LoggerFactory.logger.debug("Attempt $attempt/$retries failed, retrying in $delayMs ms")
+                Handler(Looper.getMainLooper()).postDelayed({
+                    makeAttempt()
+                }, delayMs)
+            } else {
+                throw RuntimeException("", t)
             }
         }
     }

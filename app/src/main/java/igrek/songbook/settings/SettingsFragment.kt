@@ -264,7 +264,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preference.entryValues = entriesMap.keys.toTypedArray()
         preference.entries = entriesMap.values.toTypedArray()
 
-        RetryDelayed(5, 500, kotlin.KotlinNullPointerException::class.java) {
+        RetryDelayed(5, 500, KotlinNullPointerException::class.java) {
             preference.values = onLoad()
         }
 
