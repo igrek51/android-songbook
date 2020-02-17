@@ -38,4 +38,34 @@ class ConfirmDialogBuilder {
         confirmAction(message, action)
     }
 
+    fun chooseFromThree(messageId: Int, titleResId: Int,
+                        positiveButton: Int, positiveAction: () -> Unit,
+                        negativeButton: Int, negativeAction: () -> Unit,
+                        neutralButton: Int, neutralAction: () -> Unit) {
+        val alertBuilder = AlertDialog.Builder(activity)
+
+        val message = uiResourceService.resString(messageId)
+        alertBuilder.setMessage(message)
+        val title = uiResourceService.resString(titleResId)
+        alertBuilder.setTitle(title)
+
+        alertBuilder.setPositiveButton(uiResourceService.resString(positiveButton)) { _, _ ->
+            SafeExecutor().execute {
+                positiveAction.invoke()
+            }
+        }
+        alertBuilder.setNegativeButton(uiResourceService.resString(negativeButton)) { _, _ ->
+            SafeExecutor().execute {
+                negativeAction.invoke()
+            }
+        }
+        alertBuilder.setNeutralButton(uiResourceService.resString(neutralButton)) { _, _ ->
+            SafeExecutor().execute {
+                neutralAction.invoke()
+            }
+        }
+        alertBuilder.setCancelable(true)
+        alertBuilder.create().show()
+    }
+
 }

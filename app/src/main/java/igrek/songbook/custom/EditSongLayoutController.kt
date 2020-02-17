@@ -187,9 +187,12 @@ class EditSongLayoutController : MainLayout {
 
     override fun onBackClicked() {
         if (hasUnsavedChanges()) {
-            ConfirmDialogBuilder().confirmAction(R.string.confirm_discard_custom_song_changes) {
-                layoutController.showPreviousLayoutOrQuit()
-            }
+            ConfirmDialogBuilder().chooseFromThree(
+                    messageId = R.string.confirm_discard_custom_song_changes,
+                    titleResId = R.string.confirm_unsaved_changes_title,
+                    positiveButton = R.string.confirm_unsaved_save, positiveAction = { saveSong() },
+                    negativeButton = R.string.confirm_discard_changes, negativeAction = { layoutController.showPreviousLayoutOrQuit() },
+                    neutralButton = R.string.action_cancel, neutralAction = {})
         } else {
             layoutController.showPreviousLayoutOrQuit()
         }
