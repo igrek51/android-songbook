@@ -5,23 +5,6 @@ import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
-enum class AntechamberSongStatus(val id: Long) {
-
-    PROPOSED(1),
-
-    APPROVED(2),
-
-    PUBLISHED(3),
-
-    ABANDONED(4);
-
-    companion object {
-        fun parseById(id: Long): AntechamberSongStatus {
-            return values().first { v -> v.id == id }
-        }
-    }
-}
-
 data class AntechamberSongDto(
         var id: Long? = null,
         var title: String? = null,
@@ -52,7 +35,7 @@ data class AntechamberSongDto(
             comment = comment,
             preferredKey = preferred_key,
             author = author,
-            state = SongStatus.PROPOSED,
+            status = SongStatus.PROPOSED,
             customCategoryName = category_name,
             language = language,
             metre = metre,
@@ -74,9 +57,9 @@ data class AntechamberSongDto(
                 update_time = song.updateTime,
                 author = song.author,
                 language = song.language,
-                chords_notation = song.chordsNotation!!.id,
+                chords_notation = (song.chordsNotation ?: ChordsNotation.default).id,
                 original_song_id = song.originalSongId,
-                status = song.state.id
+                status = song.status.id
         )
     }
 }

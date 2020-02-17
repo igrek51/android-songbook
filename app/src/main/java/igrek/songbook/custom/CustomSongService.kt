@@ -10,6 +10,7 @@ import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.custom.CustomSong
 import igrek.songbook.persistence.user.custom.CustomSongMapper
+import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.preferences.PreferencesDefinition
 import igrek.songbook.settings.preferences.PreferencesService
 import java.util.*
@@ -59,7 +60,8 @@ class CustomSongService {
                 content = content,
                 versionNumber = 1,
                 createTime = now,
-                updateTime = now
+                updateTime = now,
+                chordsNotation = ChordsNotation.default
         )
         songsRepository.customSongsDao.saveCustomSong(customSong)
 

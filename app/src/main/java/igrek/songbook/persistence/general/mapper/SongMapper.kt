@@ -45,7 +45,7 @@ class SongMapper : AbstractMapper<Song>() {
                 locked = locked,
                 lockPassword = lockPassword,
                 author = author,
-                state = songStatus,
+                status = songStatus,
                 customCategoryName = null,
                 language = language,
                 metre = metre,

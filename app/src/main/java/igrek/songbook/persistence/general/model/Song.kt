@@ -16,7 +16,7 @@ open class Song(
         var locked: Boolean = false,
         var lockPassword: String? = null,
         var author: String? = null,
-        var state: SongStatus,
+        var status: SongStatus,
         var customCategoryName: String? = null,
         var language: String? = null,
         var metre: String? = null,

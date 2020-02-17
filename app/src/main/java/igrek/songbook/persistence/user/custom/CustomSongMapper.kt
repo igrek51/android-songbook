@@ -19,7 +19,7 @@ internal class CustomSongMapper {
                 comment = customSong.comment,
                 preferredKey = customSong.preferredKey,
                 author = customSong.author,
-                state = SongStatus.CUSTOM,
+                status = SongStatus.CUSTOM,
                 customCategoryName = customSong.categoryName,
                 language = customSong.language,
                 metre = customSong.metre,

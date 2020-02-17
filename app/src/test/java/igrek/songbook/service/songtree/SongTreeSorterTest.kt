@@ -57,7 +57,7 @@ class SongTreeSorterTest {
                 locked = false,
                 lockPassword = null,
                 author = null,
-                state = SongStatus.PUBLISHED
+                status = SongStatus.PUBLISHED
         )
         return SongTreeItem.song(song)
     }
