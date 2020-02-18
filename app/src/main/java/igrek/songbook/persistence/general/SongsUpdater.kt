@@ -28,9 +28,9 @@ class SongsUpdater {
     private val logger = LoggerFactory.logger
 
     companion object {
-        private const val apiUrl = "https://chords.igrek.dev/api/v4/"
-        private const val songsdbUrl = apiUrl + "songs"
-        private const val songsDbVersionUrl = apiUrl + "songs_version"
+        private const val apiUrl = "https://chords.igrek.dev/api/v5"
+        private const val songsdbUrl = "$apiUrl/songs_db"
+        private const val songsDbVersionUrl = "$apiUrl/songs_version"
     }
 
     init {
