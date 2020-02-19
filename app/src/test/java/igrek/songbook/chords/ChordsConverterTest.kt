@@ -1,7 +1,7 @@
 package igrek.songbook.chords
 
-import org.assertj.core.api.Assertions.assertThat
 import igrek.songbook.settings.chordsnotation.ChordsNotation
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 class ChordsConverterTest {
@@ -96,6 +96,12 @@ class ChordsConverterTest {
     fun test_convert_german_moll_to_english() {
         val converter = ChordsConverter(ChordsNotation.GERMAN, ChordsNotation.ENGLISH)
         assertThat(converter.convertLyrics("[e]")).isEqualTo("[Em]")
+    }
+
+    @Test
+    fun test_convert_slashed_chord() {
+        val converter = ChordsConverter(ChordsNotation.ENGLISH, ChordsNotation.GERMAN)
+        assertThat(converter.convertLyrics("[C/B]")).isEqualTo("[C/H]")
     }
 
 }

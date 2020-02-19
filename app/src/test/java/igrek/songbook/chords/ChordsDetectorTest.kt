@@ -1,9 +1,9 @@
 package igrek.songbook.chords
 
-import org.assertj.core.api.Assertions.assertThat
 import igrek.songbook.chords.detector.Chord
 import igrek.songbook.chords.detector.ChordsDetector
 import igrek.songbook.settings.chordsnotation.ChordsNotation
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 class ChordsDetectorTest {
@@ -11,50 +11,50 @@ class ChordsDetectorTest {
     @Test
     fun test_recognize_major() {
         val detector = ChordsDetector(ChordsNotation.GERMAN)
-        assertThat(detector.recognizeChord("C")).isEqualTo(Chord(0, false, ""))
-        assertThat(detector.recognizeChord("C#")).isEqualTo(Chord(1, false, ""))
-        assertThat(detector.recognizeChord("D")).isEqualTo(Chord(2, false, ""))
+        assertThat(detector.recognizeSingleChord("C")).isEqualTo(Chord(0, false, ""))
+        assertThat(detector.recognizeSingleChord("C#")).isEqualTo(Chord(1, false, ""))
+        assertThat(detector.recognizeSingleChord("D")).isEqualTo(Chord(2, false, ""))
 
-        assertThat(detector.recognizeChord("Csus4")).isEqualTo(Chord(0, false, "sus4"))
-        assertThat(detector.recognizeChord("C#sus4")).isEqualTo(Chord(1, false, "sus4"))
-        assertThat(detector.recognizeChord("Dsus4")).isEqualTo(Chord(2, false, "sus4"))
+        assertThat(detector.recognizeSingleChord("Csus4")).isEqualTo(Chord(0, false, "sus4"))
+        assertThat(detector.recognizeSingleChord("C#sus4")).isEqualTo(Chord(1, false, "sus4"))
+        assertThat(detector.recognizeSingleChord("Dsus4")).isEqualTo(Chord(2, false, "sus4"))
     }
 
     @Test
     fun test_recognize_minor() {
         val detector = ChordsDetector(ChordsNotation.GERMAN)
-        assertThat(detector.recognizeChord("c")).isEqualTo(Chord(0, true, ""))
-        assertThat(detector.recognizeChord("c#")).isEqualTo(Chord(1, true, ""))
-        assertThat(detector.recognizeChord("d")).isEqualTo(Chord(2, true, ""))
+        assertThat(detector.recognizeSingleChord("c")).isEqualTo(Chord(0, true, ""))
+        assertThat(detector.recognizeSingleChord("c#")).isEqualTo(Chord(1, true, ""))
+        assertThat(detector.recognizeSingleChord("d")).isEqualTo(Chord(2, true, ""))
 
-        assertThat(detector.recognizeChord("csus4")).isEqualTo(Chord(0, true, "sus4"))
-        assertThat(detector.recognizeChord("c#sus4")).isEqualTo(Chord(1, true, "sus4"))
-        assertThat(detector.recognizeChord("dsus4")).isEqualTo(Chord(2, true, "sus4"))
+        assertThat(detector.recognizeSingleChord("csus4")).isEqualTo(Chord(0, true, "sus4"))
+        assertThat(detector.recognizeSingleChord("c#sus4")).isEqualTo(Chord(1, true, "sus4"))
+        assertThat(detector.recognizeSingleChord("dsus4")).isEqualTo(Chord(2, true, "sus4"))
 
-        assertThat(detector.recognizeChord("dis")).isEqualTo(Chord(3, true, ""))
-        assertThat(detector.recognizeChord("es")).isEqualTo(Chord(3, true, ""))
-        assertThat(detector.recognizeChord("dupa")).isNull()
+        assertThat(detector.recognizeSingleChord("dis")).isEqualTo(Chord(3, true, ""))
+        assertThat(detector.recognizeSingleChord("es")).isEqualTo(Chord(3, true, ""))
+        assertThat(detector.recognizeSingleChord("dupa")).isNull()
     }
 
     @Test
     fun test_detect_fmaj7() {
         val detector = ChordsDetector(ChordsNotation.ENGLISH)
-        assertThat(detector.recognizeChord("Fmaj7")).isEqualTo(Chord(5, false, "maj7"))
-        assertThat(detector.detectChords("Fmaj7")).isEqualTo("[Fmaj7]")
+        assertThat(detector.recognizeSingleChord("Fmaj7")).isEqualTo(Chord(5, false, "maj7"))
+        assertThat(detector.detectAndMarkChords("Fmaj7")).isEqualTo("[Fmaj7]")
         assertThat(detector.isWordAChord("Fmaj7")).isTrue()
     }
 
     @Test
     fun test_c_plus() {
         val detector = ChordsDetector(ChordsNotation.GERMAN)
-        assertThat(detector.recognizeChord("C+")).isEqualTo(Chord(0, false, "+"))
+        assertThat(detector.recognizeSingleChord("C+")).isEqualTo(Chord(0, false, "+"))
         assertThat(detector.isWordAChord("C+")).isTrue()
     }
 
     @Test
     fun test_c_minus() {
         val detector = ChordsDetector(ChordsNotation.GERMAN)
-        assertThat(detector.recognizeChord("C-")).isEqualTo(Chord(0, false, "-"))
+        assertThat(detector.recognizeSingleChord("C-")).isEqualTo(Chord(0, false, "-"))
         assertThat(detector.isWordAChord("C-")).isTrue()
     }
 
@@ -77,7 +77,7 @@ class ChordsDetectorTest {
         assertThat(detector.isWordAChord(" ")).isFalse()
         assertThat(detector.isWordAChord("")).isFalse()
         detector = ChordsDetector(ChordsNotation.ENGLISH)
-        assertThat(detector.recognizeChord("Dmupa")).isNull()
+        assertThat(detector.recognizeSingleChord("Dmupa")).isNull()
     }
 
     @Test
@@ -111,22 +111,37 @@ class ChordsDetectorTest {
     @Test
     fun test_detect_long_spaced_chords() {
         val detector = ChordsDetector(ChordsNotation.ENGLISH)
-        assertThat(detector.detectChords("Am    Fm   G")).isEqualTo("[Am    Fm   G]")
+        assertThat(detector.detectAndMarkChords("Am    Fm   G")).isEqualTo("[Am    Fm   G]")
     }
 
     @Test
     fun test_detect_dashed_chords() {
         val detector = ChordsDetector(ChordsNotation.ENGLISH)
-        assertThat(detector.detectChords("Am-G-C")).isEqualTo("[Am-G-C]")
+        assertThat(detector.detectAndMarkChords("Am-G-C")).isEqualTo("[Am-G-C]")
     }
 
     @Test
     fun test_detect_english_minor() {
         val detector = ChordsDetector(ChordsNotation.ENGLISH)
-        assertThat(detector.recognizeChord("Dm")).isEqualTo(Chord(2, true, ""))
-        assertThat(detector.recognizeChord("Dmmaj7")).isEqualTo(Chord(2, true, "maj7"))
-        assertThat(detector.recognizeChord("Dmaj7")).isEqualTo(Chord(2, false, "maj7"))
-        assertThat(detector.recognizeChord("D")).isEqualTo(Chord(2, false, ""))
+        assertThat(detector.recognizeSingleChord("Dm")).isEqualTo(Chord(2, true, ""))
+        assertThat(detector.recognizeSingleChord("Dmmaj7")).isEqualTo(Chord(2, true, "maj7"))
+        assertThat(detector.recognizeSingleChord("Dmaj7")).isEqualTo(Chord(2, false, "maj7"))
+        assertThat(detector.recognizeSingleChord("D")).isEqualTo(Chord(2, false, ""))
+    }
+
+    @Test
+    fun test_slashed_chord() {
+        val detector = ChordsDetector(ChordsNotation.GERMAN)
+        assertThat(detector.isWordAChord("C/H")).isTrue()
+        assertThat(detector.isWordAChord("C/Y")).isFalse()
+        assertThat(detector.isWordAChord("a/G")).isTrue()
+    }
+
+    @Test
+    fun test_g6add11() {
+        val detector = ChordsDetector(ChordsNotation.GERMAN)
+        assertThat(detector.recognizeSingleChord("G6add11")).isNotNull
+        assertThat(detector.recognizeSingleChord("G6add11")).isEqualTo(Chord(noteIndex = 7, minor = false, suffix = "6add11"))
     }
 
 }

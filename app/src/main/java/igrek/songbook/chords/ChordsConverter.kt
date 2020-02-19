@@ -5,6 +5,7 @@ import igrek.songbook.chords.detector.ChordsDetector
 import igrek.songbook.chords.syntax.ChordNameProvider
 import igrek.songbook.chords.syntax.chordsGroupRegex
 import igrek.songbook.chords.syntax.chordsSplitRegex
+import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.util.lookup.SimpleCache
 
@@ -50,7 +51,11 @@ class ChordsConverter(
         if (chord.trim { it <= ' ' }.isEmpty())
             return chord
 
-        val recognized: Chord = fromChordsDetector.recognizeChord(chord) ?: return chord
+        val recognized: Chord? = fromChordsDetector.recognizeSingleChord(chord)
+        if (recognized == null) {
+            logger.warn("Chords detector: chord not recognized: \"$chord\"")
+            return chord
+        }
 
         val prefix = when(recognized.minor) {
             false -> noteIndexToBaseName.get()[recognized.noteIndex]

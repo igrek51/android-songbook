@@ -266,14 +266,14 @@ class ChordsEditorLayoutController : MainLayout {
         reformatAndTrim()
         val detector = ChordsDetector(chordsNotation)
         transformLyrics { lyrics ->
-            detector.detectChords(lyrics)
+            detector.detectAndMarkChords(lyrics)
         }
         val detectedChordsNum = detector.detectedChords.size
         if (detectedChordsNum == 0) {
             // find chords from other notations as well
             val text = contentEdit!!.text.toString()
             val allNotationsDetector = ChordsDetector()
-            allNotationsDetector.detectChords(text)
+            allNotationsDetector.detectAndMarkChords(text)
             val otherChordsDetected = allNotationsDetector.detectedChords
             if (otherChordsDetected.isNotEmpty()) {
                 val message = uiResourceService.resString(R.string.editor_other_chords_detected, otherChordsDetected.joinToString())

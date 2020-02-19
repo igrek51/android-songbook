@@ -8,9 +8,9 @@ val longestChordComparator = Comparator { lhs: String, rhs: String ->
     }
 }
 
-// these delimiters splits chords irrespectively (at any time)
+// these delimiters split chords irrespectively (at any time)
 val chordsPrimaryDelimiters = setOf(" ", ",", "\n").toTypedArray()
-// these delimiters may split chords but may be a part of a chords as well
+// these delimiters may split chords but may be a part of chords as well
 val chordsSupplementaryDelimiters = setOf("(", ")", "-", "/").toTypedArray()
 val chordsAllDelimiters = chordsPrimaryDelimiters + chordsSupplementaryDelimiters
 
@@ -39,6 +39,7 @@ val chordSuffixes = setOf(
         "6-",
         "6-4",
         "6add9",
+        "6add11",
         "7",
         "7#5",
         "7#9",

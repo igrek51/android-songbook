@@ -5,6 +5,7 @@ import igrek.songbook.chords.detector.ChordsDetector
 import igrek.songbook.chords.syntax.ChordNameProvider
 import igrek.songbook.chords.syntax.chordsGroupRegex
 import igrek.songbook.chords.syntax.chordsSplitRegex
+import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.util.lookup.SimpleCache
 
@@ -55,7 +56,11 @@ class ChordsTransposer(
         if (chord.trim { it <= ' ' }.isEmpty())
             return chord
 
-        val recognized: Chord = chordsDetector.recognizeChord(chord) ?: return chord
+        val recognized: Chord? = chordsDetector.recognizeSingleChord(chord)
+        if (recognized == null) {
+            logger.warn("Chords detector: chord not recognized: \"$chord\"")
+            return chord
+        }
 
         val transposedNote = (recognized.noteIndex + t + 12) % 12
 
