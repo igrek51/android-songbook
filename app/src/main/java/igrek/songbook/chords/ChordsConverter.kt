@@ -7,7 +7,6 @@ import igrek.songbook.chords.syntax.chordsGroupRegex
 import igrek.songbook.chords.syntax.chordsSplitRegex
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import igrek.songbook.util.lookup.SimpleCache
 
 class ChordsConverter(
         fromNotation: ChordsNotation,
@@ -17,7 +16,7 @@ class ChordsConverter(
     private val chordNameProvider = ChordNameProvider()
     private val fromChordsDetector = ChordsDetector(fromNotation)
 
-    private val noteIndexToBaseName: SimpleCache<Map<Int, String>> = SimpleCache {
+    private val noteIndexToBaseName: Map<Int, String> by lazy {
         val map = hashMapOf<Int, String>()
         chordNameProvider.baseNotesNames(toNotation).forEachIndexed { index, names ->
             if (names.isNotEmpty())
@@ -26,7 +25,7 @@ class ChordsConverter(
         map
     }
 
-    private val noteIndexToMinorName: SimpleCache<Map<Int, String>> = SimpleCache {
+    private val noteIndexToMinorName: Map<Int, String> by lazy {
         val map = hashMapOf<Int, String>()
         chordNameProvider.minorChords(toNotation).forEachIndexed { index, names ->
             if (names.isNotEmpty())
@@ -58,8 +57,8 @@ class ChordsConverter(
         }
 
         val prefix = when(recognized.minor) {
-            false -> noteIndexToBaseName.get()[recognized.noteIndex]
-            true -> noteIndexToMinorName.get()[recognized.noteIndex]
+            false -> noteIndexToBaseName[recognized.noteIndex]
+            true -> noteIndexToMinorName[recognized.noteIndex]
         }
 
         return prefix + recognized.suffix
