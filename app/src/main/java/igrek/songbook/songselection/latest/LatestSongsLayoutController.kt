@@ -10,6 +10,7 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.InflatedLayout
+import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController
@@ -73,6 +74,7 @@ class LatestSongsLayoutController : InflatedLayout(
 
     private fun updateItemsList() {
         val latestSongs = songsRepository.songsDb!!.songs
+                .filter { song -> song.namespace == SongNamespace.Public }
                 .sortedBy { song -> -song.updateTime }
                 .take(latestSongsCount)
                 .map { song -> SongSearchItem.song(song) }
