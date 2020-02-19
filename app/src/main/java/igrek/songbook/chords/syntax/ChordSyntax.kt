@@ -15,7 +15,7 @@ val singleChordsDelimiters = setOf("(", ")", "-", "/").toTypedArray()
 val chordsAllDelimiters = chordsPrimaryDelimiters + singleChordsDelimiters
 
 val chordsGroupRegex = Regex("""\[((.|\n)+?)]""")
-val singleChordsSplitRegex = Regex("""(.+?)([ ,\n/()\-])""")
+val singleChordsSplitRegex = Regex("""(.*?)([ ,\n/()\-])""")
 
 val chordSuffixes = setOf(
         "+",
