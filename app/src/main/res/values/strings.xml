@@ -316,4 +316,6 @@
     <string name="confirm_unsaved_save">Save</string>
     <string name="confirm_discard_changes">Discard</string>
     <string name="confirm_unsaved_changes_title">Unsaved changes</string>
+    <string name="song_details_namespace_custom">Custom song</string>
+    <string name="song_details_namespace_public">Public song</string>
 </resources>

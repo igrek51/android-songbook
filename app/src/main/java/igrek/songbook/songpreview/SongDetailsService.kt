@@ -8,6 +8,7 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.general.model.Song
+import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,19 +42,29 @@ class SongDetailsService {
         val songVersion = song.versionNumber.toString()
         val modificationDate = getLastModificationDate(song)
 
-        var message = uiResourceService.resString(R.string.song_details, songTitle, category, songVersion, modificationDate)
+        val messageLines = mutableListOf<String>()
+        when (song.namespace) {
+            SongNamespace.Public -> R.string.song_details_namespace_public
+            SongNamespace.Custom -> R.string.song_details_namespace_custom
+            else -> null
+        }?.let {
+            messageLines.add(uiResourceService.resString(it))
+        }
+
+        messageLines.add(uiResourceService.resString(R.string.song_details, songTitle, category, songVersion, modificationDate))
         if (!preferredKey.isNullOrEmpty())
-            message += "\n" + uiResourceService.resString(R.string.song_details_preferred_key, preferredKey)
+            messageLines.add(uiResourceService.resString(R.string.song_details_preferred_key, preferredKey))
         if (!metre.isNullOrEmpty())
-            message += "\n" + uiResourceService.resString(R.string.song_details_metre, metre)
+            messageLines.add(uiResourceService.resString(R.string.song_details_metre, metre))
         if (!comment.isNullOrEmpty())
-            message += "\n" + uiResourceService.resString(R.string.song_details_comment, comment)
+            messageLines.add(uiResourceService.resString(R.string.song_details_comment, comment))
 
         val dialogTitle = uiResourceService.resString(R.string.song_details_title)
 
         val moreActionName = uiResourceService.resString(R.string.song_action_more)
         val moreAction = Runnable { showMoreActions(song) }
 
+        val message = messageLines.joinToString(separator = "\n")
         showDialogWithActions(dialogTitle, message, moreActionName, moreAction, null, null)
     }
 
