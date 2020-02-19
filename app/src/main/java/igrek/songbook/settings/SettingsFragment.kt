@@ -1,9 +1,11 @@
 package igrek.songbook.settings
 
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentTransaction
 import androidx.preference.*
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
@@ -235,6 +237,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
         )
 
+        refreshFragment()
+    }
+
+    private fun refreshFragment() {
+        val ft: FragmentTransaction = fragmentManager!!.beginTransaction()
+        if (Build.VERSION.SDK_INT >= 26) {
+            ft.setReorderingAllowed(false)
+        }
+        ft.detach(this).attach(this).commit()
     }
 
     private fun toggleAllMultiPreference(excludeLanguagesPreference: MultiSelectListPreference) {
