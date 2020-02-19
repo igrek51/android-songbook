@@ -105,7 +105,7 @@ class AdminSongsLayoutContoller : InflatedLayout(
                 },
                 ContextMenuBuilder.Action(R.string.admin_antechamber_approve_action) {
                     ConfirmDialogBuilder().confirmAction(R.string.admin_antechamber_confirm_approve) {
-                        // Todo
+                        approveAntechamberSong(song)
                     }
                 },
                 ContextMenuBuilder.Action(R.string.admin_antechamber_delete_action) {
@@ -114,6 +114,18 @@ class AdminSongsLayoutContoller : InflatedLayout(
                     }
                 }
         ))
+    }
+
+    private fun approveAntechamberSong(song: Song) {
+        uiInfoService.showInfoIndefinite(R.string.admin_sending)
+        antechamberService.approveAntechamberSong(song)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    uiInfoService.showInfo(R.string.admin_success)
+                }, { error ->
+                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
+                    uiInfoService.showInfoIndefinite(message)
+                })
     }
 
     private fun updateAntechamberSong(song: Song) {

@@ -43,9 +43,13 @@ class AntechamberService {
     lateinit var customSongService: CustomSongService
 
     companion object {
-        private const val apiUrl = "https://antechamber.chords.igrek.dev/api/v4"
-        private const val allSongsUrl = "$apiUrl/songs"
-        private val specificSongUrl = { id: Long -> "$apiUrl/songs/$id" }
+        private const val antechamberApiBase = "https://antechamber.chords.igrek.dev/api/v4"
+        private const val chordsApiBase = "https://chords.igrek.dev/api/v5"
+
+        private const val allSongsUrl = "$antechamberApiBase/songs"
+        private val specificSongUrl = { id: Long -> "$antechamberApiBase/songs/$id" }
+        private const val approveSongUrl = "$chordsApiBase/songs"
+
         private const val authTokenHeader = "X-Auth-Token"
     }
 
@@ -101,6 +105,23 @@ class AntechamberService {
                 .addHeader(authTokenHeader, adminService.get().userAuthToken)
                 .build()
         return httpRequest(request) { true }
+    }
+
+    fun approveAntechamberSong(song: Song): Observable<Boolean> {
+        logger.info("Approving antechamber song: $song")
+        val dto = ChordsSongDto.fromModel(song)
+        dto.id = null
+        val mapper = jacksonObjectMapper()
+        val json = mapper.writeValueAsString(dto)
+        val request: Request = Request.Builder()
+                .url(approveSongUrl)
+                .post(RequestBody.create(jsonType, json))
+                .addHeader(authTokenHeader, adminService.get().userAuthToken)
+                .build()
+        return httpRequest(request) { response: Response ->
+            logger.debug("Approve response", response.body()?.string())
+            true
+        }
     }
 
     private fun <T> httpRequest(request: Request, successor: (Response) -> T): Observable<T> {

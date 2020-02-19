@@ -114,13 +114,17 @@ class SongsUpdater {
                     songsRepository.get().reloadSongsDb()
                     uiInfoService.get().showInfo(R.string.ui_db_is_uptodate)
                 } catch (t: Throwable) {
+                    logger.error("Reloading songs db failed: ${t.message}")
                     uiInfoService.get().showInfo(R.string.db_update_failed_incompatible)
                     songsRepository.get().resetGeneralData()
                     songsRepository.get().reloadSongsDb()
                 }
             }
         } catch (e: Throwable) {
-            onErrorReceived(e.message)
+            logger.error("Failed saving new db: ${e.message}")
+            Handler(Looper.getMainLooper()).post {
+                uiInfoService.get().showInfoIndefinite(R.string.connection_error)
+            }
         }
     }
 
