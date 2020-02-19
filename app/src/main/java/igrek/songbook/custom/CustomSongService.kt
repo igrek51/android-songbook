@@ -7,6 +7,7 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.general.model.CategoryType
 import igrek.songbook.persistence.general.model.Song
+import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.custom.CustomSong
 import igrek.songbook.persistence.user.custom.CustomSongMapper
@@ -78,10 +79,11 @@ class CustomSongService {
         song.customCategoryName = customCategoryName
         song.updateTime = Date().time
 
-        val customSongMapper = CustomSongMapper()
-        val customSong = customSongMapper.songToCustomSong(song)
-
-        songsRepository.customSongsDao.saveCustomSong(customSong)
+        if (song.namespace == SongNamespace.Custom) {
+            val customSongMapper = CustomSongMapper()
+            val customSong = customSongMapper.songToCustomSong(song)
+            songsRepository.customSongsDao.saveCustomSong(customSong)
+        }
     }
 
     fun removeSong(song: Song) {
