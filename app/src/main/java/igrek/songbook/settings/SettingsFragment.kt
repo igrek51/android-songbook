@@ -234,6 +234,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     preferencesUpdater.get().restoreTransposition = value
                 }
         )
+
     }
 
     private fun toggleAllMultiPreference(excludeLanguagesPreference: MultiSelectListPreference) {

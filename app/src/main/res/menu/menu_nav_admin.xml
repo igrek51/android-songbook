@@ -16,10 +16,6 @@
             android:icon="@drawable/playlist"
             android:title="@string/nav_playlists" />
         <item
-            android:id="@+id/nav_favourites"
-            android:icon="@drawable/star_filled"
-            android:title="@string/nav_favourites_song" />
-        <item
             android:id="@+id/nav_custom_songs"
             android:icon="@drawable/edit"
             android:title="@string/nav_custom_song" />
@@ -27,6 +23,10 @@
             android:id="@+id/nav_admin_antechamber"
             android:icon="@drawable/edit"
             android:title="@string/nav_admin_antechamber" />
+        <item
+            android:id="@+id/nav_favourites"
+            android:icon="@drawable/star_filled"
+            android:title="@string/nav_favourites_song" />
         <item
             android:id="@+id/nav_latest"
             android:icon="@drawable/newest"
@@ -39,6 +39,10 @@
     <group
         android:id="@+id/nav_group2"
         android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_last_song"
+            android:icon="@drawable/note"
+            android:title="@string/nav_last_song" />
         <item
             android:id="@+id/nav_update_db"
             android:icon="@drawable/sync"
@@ -56,13 +60,13 @@
             android:icon="@drawable/settings"
             android:title="@string/nav_settings" />
         <item
-            android:id="@+id/nav_missing_song"
-            android:icon="@drawable/add"
-            android:title="@string/nav_missing_song" />
-        <item
             android:id="@+id/nav_contact"
             android:icon="@drawable/send"
             android:title="@string/nav_contact" />
+        <item
+            android:id="@+id/nav_missing_song"
+            android:icon="@drawable/add"
+            android:title="@string/nav_missing_song" />
         <item
             android:id="@+id/nav_help"
             android:icon="@drawable/help"

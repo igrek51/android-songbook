@@ -45,9 +45,7 @@ class OpenHistoryLayoutController : InflatedLayout(
     lateinit var songOpener: SongOpener
 
     private var itemsListView: SongListView? = null
-
     private var storedScroll: ListScrollPosition? = null
-
     private var subscriptions = mutableListOf<Disposable>()
 
     init {
