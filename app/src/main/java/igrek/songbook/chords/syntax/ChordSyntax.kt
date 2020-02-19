@@ -11,11 +11,11 @@ val longestChordComparator = Comparator { lhs: String, rhs: String ->
 // these delimiters split chords irrespectively (at any time)
 val chordsPrimaryDelimiters = setOf(" ", ",", "\n").toTypedArray()
 // these delimiters may split chords but may be a part of chords as well
-val chordsSupplementaryDelimiters = setOf("(", ")", "-", "/").toTypedArray()
-val chordsAllDelimiters = chordsPrimaryDelimiters + chordsSupplementaryDelimiters
+val singleChordsDelimiters = setOf("(", ")", "-", "/").toTypedArray()
+val chordsAllDelimiters = chordsPrimaryDelimiters + singleChordsDelimiters
 
 val chordsGroupRegex = Regex("""\[((.|\n)+?)]""")
-val chordsSplitRegex = Regex("""(.*?)([ /,\n()\-])""")
+val singleChordsSplitRegex = Regex("""(.+?)([ ,\n/()\-])""")
 
 val chordSuffixes = setOf(
         "+",

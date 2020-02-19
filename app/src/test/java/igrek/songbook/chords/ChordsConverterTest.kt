@@ -41,10 +41,10 @@ class ChordsConverterTest {
     @Test
     fun test_convertChordSharpMoll() {
         val english2german = ChordsConverter(ChordsNotation.ENGLISH, ChordsNotation.GERMAN)
-        assertThat(english2german.convertChord("Gm")).isEqualTo("g")
-        assertThat(english2german.convertChord("G#")).isEqualTo("G#")
-        assertThat(english2german.convertChord("G#m")).isEqualTo("g#")
-        assertThat(english2german.convertChord("G#m7")).isEqualTo("g#7")
+        assertThat(english2german.convertSingleChord("Gm")).isEqualTo("g")
+        assertThat(english2german.convertSingleChord("G#")).isEqualTo("G#")
+        assertThat(english2german.convertSingleChord("G#m")).isEqualTo("g#")
+        assertThat(english2german.convertSingleChord("G#m7")).isEqualTo("g#7")
     }
 
     @Test
@@ -59,7 +59,7 @@ class ChordsConverterTest {
         val converter = ChordsConverter(ChordsNotation.GERMAN, ChordsNotation.ENGLISH)
         assertThat(converter.convertLyrics("lyrics [a b B h] [Asus4 d7 f#]")).
                 isEqualTo("lyrics [Am Bbm Bb Bm] [Asus4 Dm7 F#m]")
-        assertThat(converter.convertChord("a")).isEqualTo("Am")
+        assertThat(converter.convertSingleChord("a")).isEqualTo("Am")
     }
 
     @Test

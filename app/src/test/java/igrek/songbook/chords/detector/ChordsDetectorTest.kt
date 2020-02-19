@@ -1,7 +1,5 @@
-package igrek.songbook.chords
+package igrek.songbook.chords.detector
 
-import igrek.songbook.chords.detector.Chord
-import igrek.songbook.chords.detector.ChordsDetector
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -42,6 +40,12 @@ class ChordsDetectorTest {
         assertThat(detector.recognizeSingleChord("Fmaj7")).isEqualTo(Chord(5, false, "maj7"))
         assertThat(detector.detectAndMarkChords("Fmaj7")).isEqualTo("[Fmaj7]")
         assertThat(detector.isWordAChord("Fmaj7")).isTrue()
+    }
+
+    @Test
+    fun test_mark_chords() {
+        val detector = ChordsDetector(ChordsNotation.ENGLISH)
+        assertThat(detector.detectAndMarkChords("Fm")).isEqualTo("[Fm]")
     }
 
     @Test

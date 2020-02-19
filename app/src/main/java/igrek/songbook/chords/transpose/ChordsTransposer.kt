@@ -4,7 +4,7 @@ import igrek.songbook.chords.detector.Chord
 import igrek.songbook.chords.detector.ChordsDetector
 import igrek.songbook.chords.syntax.ChordNameProvider
 import igrek.songbook.chords.syntax.chordsGroupRegex
-import igrek.songbook.chords.syntax.chordsSplitRegex
+import igrek.songbook.chords.syntax.singleChordsSplitRegex
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
@@ -37,7 +37,7 @@ class ChordsTransposer(
     fun transposeLyrics(lyrics: String, t: Int): String {
         return lyrics.replace(chordsGroupRegex) { matchResult ->
             val chordsGroup = matchResult.groupValues[1] + " "
-            val replaced = chordsGroup.replace(chordsSplitRegex) { matchResult2 ->
+            val replaced = chordsGroup.replace(singleChordsSplitRegex) { matchResult2 ->
                 val singleChord = matchResult2.groupValues[1]
                 val separator = matchResult2.groupValues[2]
                 transposeChord(singleChord, t) + separator

@@ -36,7 +36,7 @@ class ChordsDetector(notation: ChordsNotation? = null) {
     }
 
     private val allBaseNames: Set<String> by lazy {
-        minorChordNames intersect baseChordNames
+        minorChordNames union baseChordNames
     }
 
     private val baseChordToNoteIndex: Map<String, Int> by lazy {
@@ -115,13 +115,13 @@ class ChordsDetector(notation: ChordsNotation? = null) {
     private fun isASingleChord(chordCandidate: String): Boolean {
         return allBaseNames.any { chordBase ->
             if (chordCandidate == chordBase)
-                return true
+                return@any true
             if (chordCandidate.startsWith(chordBase)) {
                 val remainder = chordCandidate.drop(chordBase.length)
                 if (remainder in chordSuffixes)
-                    return true
+                    return@any true
             }
-            return false
+            return@any false
         }
     }
 
