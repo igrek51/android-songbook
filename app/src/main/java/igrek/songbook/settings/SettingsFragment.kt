@@ -1,6 +1,8 @@
 package igrek.songbook.settings
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.*
 import igrek.songbook.R
@@ -65,7 +67,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         DaggerIoc.factoryComponent.inject(this)
         setPreferencesFromResource(R.xml.settings_def, rootKey)
+        Handler(Looper.getMainLooper()).post {
+            lateInit()
+        }
+    }
 
+    private fun lateInit() {
         setupListPreference("applicationLanguage",
                 appLanguageService.get().languageEntries(),
                 onLoad = { preferencesUpdater.get().appLanguage?.langCode },
