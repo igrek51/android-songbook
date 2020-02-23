@@ -13,7 +13,7 @@ import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.navigation.NavigationMenuController
-import igrek.songbook.persistence.general.model.SongsDb
+import igrek.songbook.persistence.repository.AllSongsRepository
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
@@ -63,12 +63,12 @@ abstract class SongSelectionLayoutController : SongClickListener {
     }
 
     open fun updateSongItemsList() {
-        val items: MutableList<SongTreeItem> = getSongItems(songsRepository.songsDb!!)
+        val items: MutableList<SongTreeItem> = getSongItems(songsRepository.allSongsRepo)
         val sortedItems = SongTreeSorter().sort(items)
         itemsListView!!.setItems(sortedItems)
     }
 
-    open fun getSongItems(songsDb: SongsDb): MutableList<SongTreeItem> {
+    open fun getSongItems(songsRepo: AllSongsRepository): MutableList<SongTreeItem> {
         return mutableListOf()
     }
 

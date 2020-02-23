@@ -117,7 +117,7 @@ class PlaylistLayoutController : InflatedLayout(
                             else -> SongNamespace.Public
                         }
                         val id = SongIdentifier(s.songId, namespace)
-                        val song = songsRepository.songsDb?.songFinder?.find(id)
+                        val song = songsRepository.allSongsRepo.songFinder.find(id)
                         when {
                             song != null -> PlaylistListItem(song = song)
                             else -> null
@@ -231,7 +231,7 @@ class PlaylistLayoutController : InflatedLayout(
                         else -> SongNamespace.Public
                     }
                     val id = SongIdentifier(s.songId, namespace)
-                    val song = songsRepository.songsDb?.songFinder?.find(id)
+                    val song = songsRepository.allSongsRepo.songFinder.find(id)
                     when {
                         song != null -> PlaylistListItem(song = song)
                         else -> null

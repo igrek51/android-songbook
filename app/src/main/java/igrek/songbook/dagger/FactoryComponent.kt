@@ -32,7 +32,7 @@ import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.layout.navigation.TitleBarView
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.general.SongsUpdater
-import igrek.songbook.persistence.general.dao.GeneralSongsDao
+import igrek.songbook.persistence.general.dao.PublicSongsDao
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.persistence.user.custom.CustomSongsDao
@@ -112,7 +112,7 @@ interface FactoryComponent {
     fun inject(there: SongDetailsService)
     fun inject(there: SendMessageService)
     fun inject(there: SongImportFileChooser)
-    fun inject(there: GeneralSongsDao)
+    fun inject(there: PublicSongsDao)
     fun inject(there: CustomSongService)
     fun inject(there: EditSongLayoutController)
     fun inject(there: SongsUpdater)

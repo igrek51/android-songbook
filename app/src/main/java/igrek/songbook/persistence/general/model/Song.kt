@@ -3,10 +3,10 @@ package igrek.songbook.persistence.general.model
 import com.google.common.base.Objects
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
-open class Song(
+data class Song(
         var id: Long,
-        open var title: String,
-        open var categories: MutableList<Category> = mutableListOf(),
+        var title: String,
+        var categories: MutableList<Category> = mutableListOf(),
         var content: String? = null,
         var versionNumber: Long = 1,
         var createTime: Long = 0, // timestamp in milliseconds

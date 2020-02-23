@@ -15,7 +15,7 @@ import igrek.songbook.R
 import igrek.songbook.contact.SendMessageService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.layout.MainLayout
-import igrek.songbook.persistence.general.model.SongsDb
+import igrek.songbook.persistence.repository.AllSongsRepository
 import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.SongSelectionLayoutController
 import igrek.songbook.songselection.tree.SongTreeItem
@@ -137,21 +137,21 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
         updateSongItemsList()
     }
 
-    override fun getSongItems(songsDb: SongsDb): MutableList<SongTreeItem> {
+    override fun getSongItems(songsRepo: AllSongsRepository): MutableList<SongTreeItem> {
         if (!isFilterSet()) { // no filter
-            return songsDb.songs
+            return songsRepo.songs.get()
                     .asSequence()
                     .map { song -> SongSearchItem.song(song) }
                     .toMutableList()
         } else {
             val songNameFilter = SongTreeFilter(itemNameFilter)
             // filter songs
-            val songsSequence = songsDb.songs
+            val songsSequence = songsRepo.songs.get()
                     .asSequence()
                     .map { song -> SongSearchItem.song(song) }
                     .filter { item -> songNameFilter.songMatchesNameFilter(item) }
             // filter categories
-            val categoriesSequence = songsDb.categories
+            val categoriesSequence = songsRepo.categories.get()
                     .asSequence()
                     .map { category -> SongTreeItem.category(category) }
                     .filter { item -> songNameFilter.categoryMatchesNameFilter(item) }

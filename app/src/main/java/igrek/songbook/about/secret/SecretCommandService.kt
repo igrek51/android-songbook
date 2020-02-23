@@ -173,7 +173,7 @@ class SecretCommandService {
     }
 
     private fun unlockSongs(key: String) {
-        val toUnlock = songsRepository.songsDb!!.songs
+        val toUnlock = songsRepository.publicSongsRepo.songs.get()
                 .filter { s -> s.locked && s.lockPassword == key }
         val count = toUnlock.count()
         toUnlock.forEach { s ->

@@ -7,7 +7,7 @@ import android.widget.TextView
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.layout.MainLayout
-import igrek.songbook.persistence.general.model.SongsDb
+import igrek.songbook.persistence.repository.AllSongsRepository
 import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.SongSelectionLayoutController
 import igrek.songbook.songselection.search.SongSearchItem
@@ -74,7 +74,7 @@ class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
         }
     }
 
-    override fun getSongItems(songsDb: SongsDb): MutableList<SongTreeItem> {
+    override fun getSongItems(songsRepo: AllSongsRepository): MutableList<SongTreeItem> {
         // filter songs
         val songsSequence = favouriteSongsService.getFavouriteSongs()
                 .asSequence()

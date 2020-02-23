@@ -13,4 +13,10 @@ class SimpleCache<T>(private val supplier: () -> T) {
     fun invalidate() {
         cachedValue = null
     }
+
+    companion object {
+        inline fun <reified U> emptyList(): SimpleCache<List<U>>{
+            return SimpleCache(supplier = { kotlin.collections.emptyList<U>() })
+        }
+    }
 }

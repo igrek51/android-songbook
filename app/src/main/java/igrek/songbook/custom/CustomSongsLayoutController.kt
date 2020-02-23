@@ -93,7 +93,7 @@ class CustomSongsLayoutController : InflatedLayout(
                 val categories = songsRepository.customSongsDao.customCategories.map {
                     CustomSongListItem(customCategory = it)
                 }
-                val uncategorized = songsRepository.customSongsDao.customSongsUncategorized.map {
+                val uncategorized = songsRepository.customSongsRepo.songs.get().map {
                     CustomSongListItem(song = it)
                 }
                 categories + uncategorized
@@ -103,9 +103,9 @@ class CustomSongsLayoutController : InflatedLayout(
                 }
             }
         } else {
-            itemsListView!!.items = songsRepository.songsDb?.customSongs?.get()?.map {
+            itemsListView!!.items = songsRepository.customSongsRepo.songs.get().map {
                 CustomSongListItem(song = it)
-            } ?: emptyList()
+            }
         }
 
         if (storedScroll != null) {

@@ -77,7 +77,7 @@ class AutoscrollService {
                 .subscribe { linePartScrolled ->
                     scrolledBuffer += linePartScrolled!!
                     aggregatedScrollSubject.onNext(scrolledBuffer)
-                }.isDisposed
+                }
 
         aggregatedScrollSubject
                 .throttleLast(300, TimeUnit.MILLISECONDS)
@@ -86,7 +86,7 @@ class AutoscrollService {
                     if (canvas != null)
                         onCanvasScrollEvent(scrolledBuffer, canvas?.scroll ?: 0f)
                     scrolledBuffer = 0f
-                }.isDisposed
+                }
     }
 
     private fun loadPreferences() {

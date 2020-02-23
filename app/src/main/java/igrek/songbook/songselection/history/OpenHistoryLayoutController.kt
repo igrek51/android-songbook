@@ -82,7 +82,7 @@ class OpenHistoryLayoutController : InflatedLayout(
                 else -> SongNamespace.Public
             }
             val songIdentifier = SongIdentifier(openedSong.songId, namespace)
-            val song = songsRepository.songsDb?.songFinder?.find(songIdentifier)
+            val song = songsRepository.allSongsRepo.songFinder.find(songIdentifier)
             if (song != null) SongSearchItem.song(song) else null
         }
         itemsListView!!.setItems(opened)

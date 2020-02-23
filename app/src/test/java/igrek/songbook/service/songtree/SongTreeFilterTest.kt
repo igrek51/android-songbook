@@ -3,29 +3,29 @@ package igrek.songbook.service.songtree
 import org.assertj.core.api.Assertions.assertThat
 import igrek.songbook.persistence.general.model.Category
 import igrek.songbook.persistence.general.model.CategoryType
+import igrek.songbook.persistence.general.model.Song
+import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.songselection.search.SongTreeFilter
 import igrek.songbook.songselection.tree.SongTreeItem
 import org.junit.Test
-import org.mockito.Mockito
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
 
 class SongTreeFilterTest {
 
     @Test
     fun test_matchesNameFilter() {
-
-        val songItem = mock(SongTreeItem::class.java, Mockito.RETURNS_DEEP_STUBS)
-
-        `when`(songItem.song!!.categories).thenReturn(mutableListOf(
-                Category(1, type = CategoryType.ARTIST, name = "Budka suflera")
+        val songItem = SongTreeItem.song(Song(
+                id = 1,
+                title = "Jolka jolka ążśźęćół ĄĄŻŚŹĘĆ Żółć Łódź",
+                categories = mutableListOf(
+                        Category(1, type = CategoryType.ARTIST, name = "Budka suflera")
+                ),
+                status = SongStatus.PUBLISHED
         ))
-        `when`(songItem.song!!.title).thenReturn("Jolka jolka ążśźęćół ĄĄŻŚŹĘĆ Żółć Łódź")
-        // test mockito
+
         assertThat(songItem.song!!.categories[0].name).isEqualTo("Budka suflera")
 
-        assertThat(songItem.song!!
-                .displayName()).isEqualTo("Jolka jolka ążśźęćół ĄĄŻŚŹĘĆ Żółć Łódź - Budka suflera")
+        assertThat(songItem.song!!.displayName())
+                .isEqualTo("Jolka jolka ążśźęćół ĄĄŻŚŹĘĆ Żółć Łódź - Budka suflera")
 
         assertThat(SongTreeFilter("Budka").songMatchesNameFilter(songItem)).isTrue()
         assertThat(SongTreeFilter("budka").songMatchesNameFilter(songItem)).isTrue()
@@ -42,13 +42,14 @@ class SongTreeFilterTest {
 
     @Test
     fun test_filteringWithQuotes() {
-
-        val songItem = mock(SongTreeItem::class.java, Mockito.RETURNS_DEEP_STUBS)
-
-        `when`(songItem.song!!.categories).thenReturn(mutableListOf(
-                Category(1, type = CategoryType.ARTIST, name = "Budka suflera")
+        val songItem = SongTreeItem.song(Song(
+                id = 1,
+                title = "he's dupa",
+                categories = mutableListOf(
+                        Category(1, type = CategoryType.ARTIST, name = "Budka suflera")
+                ),
+                status = SongStatus.PUBLISHED
         ))
-        `when`(songItem.song!!.title).thenReturn("he's dupa")
 
         assertThat(SongTreeFilter("d'upa hes").songMatchesNameFilter(songItem)).isTrue()
     }

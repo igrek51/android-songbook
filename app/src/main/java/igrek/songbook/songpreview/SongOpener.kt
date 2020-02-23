@@ -46,7 +46,7 @@ class SongOpener {
                 else -> SongNamespace.Public
             }
             val songIdentifier = SongIdentifier(openedSong.songId, namespace)
-            val song: Song? = songsRepository.songsDb?.songFinder?.find(songIdentifier)
+            val song: Song? = songsRepository.allSongsRepo.songFinder.find(songIdentifier)
             if (song != null) {
                 openSongPreview(song)
                 return

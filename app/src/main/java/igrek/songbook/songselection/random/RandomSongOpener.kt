@@ -64,7 +64,7 @@ class RandomSongOpener {
         return if (fromFavouriteSongsOnly) {
             favouriteSongsService.getFavouriteSongs().toList()
         } else {
-            songsRepository.songsDb!!.songs
+            songsRepository.allSongsRepo.songs.get()
         }
     }
 }

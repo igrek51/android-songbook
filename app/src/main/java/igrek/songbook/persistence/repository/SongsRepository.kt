@@ -2,13 +2,10 @@ package igrek.songbook.persistence.repository
 
 import dagger.Lazy
 import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.persistence.LocalDbService
-import igrek.songbook.persistence.general.SongsUpdater
-import igrek.songbook.persistence.general.dao.GeneralSongsDao
-import igrek.songbook.persistence.general.model.SongsDb
+import igrek.songbook.persistence.general.dao.PublicSongsDao
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.persistence.user.custom.CustomSongsDao
 import igrek.songbook.persistence.user.exclusion.ExclusionDao
@@ -17,11 +14,14 @@ import igrek.songbook.persistence.user.history.OpenHistoryDao
 import igrek.songbook.persistence.user.playlist.PlaylistDao
 import igrek.songbook.persistence.user.transpose.TransposeDao
 import igrek.songbook.persistence.user.unlocked.UnlockedSongsDao
+import igrek.songbook.util.lookup.SimpleCache
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class SongsRepository {
 
     @Inject
@@ -30,18 +30,17 @@ class SongsRepository {
     lateinit var userDataDao: Lazy<UserDataDao>
     @Inject
     lateinit var uiResourceService: Lazy<UiResourceService>
-    @Inject
-    lateinit var uiInfoService: Lazy<UiInfoService>
-    @Inject
-    lateinit var songsUpdater: Lazy<SongsUpdater>
 
     private val logger = LoggerFactory.logger
 
-    var dbChangeSubject: PublishSubject<SongsDb> = PublishSubject.create()
+    var dbChangeSubject: PublishSubject<Boolean> = PublishSubject.create()
     private var saveRequestSubject: PublishSubject<Boolean> = PublishSubject.create()
 
-    var songsDb: SongsDb? = null
-    private var generalSongsDao: GeneralSongsDao? = null
+    var publicSongsRepo: PublicSongsRepository = PublicSongsRepository(0, SimpleCache.emptyList(), SimpleCache.emptyList())
+    var customSongsRepo: CustomSongsRepository = CustomSongsRepository(SimpleCache.emptyList(), SimpleCache.emptyList())
+    var allSongsRepo: AllSongsRepository = AllSongsRepository(publicSongsRepo, customSongsRepo)
+    private var publicSongsDao: PublicSongsDao? = null
+
     val unlockedSongsDao: UnlockedSongsDao get() = userDataDao.get().unlockedSongsDao!!
     val favouriteSongsDao: FavouriteSongsDao get() = userDataDao.get().favouriteSongsDao!!
     val customSongsDao: CustomSongsDao get() = userDataDao.get().customSongsDao!!
@@ -59,7 +58,7 @@ class SongsRepository {
                 .subscribe { toSave ->
                     if (toSave)
                         save()
-                }.isDisposed
+                }
     }
 
     fun init() {
@@ -86,18 +85,18 @@ class SongsRepository {
 
     @Synchronized
     fun close() {
-        generalSongsDao?.close()
+        publicSongsDao?.close()
         userDataDao.get().save()
     }
 
     @Synchronized
     fun reloadSongsDb() {
         val versionNumber = try {
-            loadGeneralData()
+            loadPublicData()
         } catch (t: Throwable) {
             logger.error("failed to load general data", t)
             resetGeneralData()
-            loadGeneralData()
+            loadPublicData()
         }
 
         try {
@@ -108,31 +107,39 @@ class SongsRepository {
             userDataDao.get().read()
         }
 
-        val newSongsDb = SongsDbBuilder(versionNumber, generalSongsDao!!, userDataDao.get()).build()
-        refillCategoryDisplayNames(newSongsDb)
+        val dbBuilder = SongsDbBuilder(versionNumber, publicSongsDao!!, userDataDao.get())
 
-        songsDb = newSongsDb
-        dbChangeSubject.onNext(songsDb!!)
+        publicSongsRepo = dbBuilder.buildPublic(uiResourceService.get())
+        customSongsRepo = dbBuilder.buildCustom()
+        allSongsRepo = AllSongsRepository(publicSongsRepo, customSongsRepo)
+
+        dbChangeSubject.onNext(true)
     }
 
-    private fun loadGeneralData(): Long {
+    @Synchronized
+    fun reloadCustomSongsDb() {
+        try {
+            userDataDao.get().read()
+        } catch (t: Throwable) {
+            logger.error("failed to load user data", t)
+            resetUserData()
+            userDataDao.get().read()
+        }
+
+        val dbBuilder = SongsDbBuilder(0, publicSongsDao!!, userDataDao.get())
+        customSongsRepo = dbBuilder.buildCustom()
+        allSongsRepo.invalidate()
+        dbChangeSubject.onNext(true)
+    }
+
+    private fun loadPublicData(): Long {
         localDbService.get().ensureLocalDbExists()
         val dbFile = localDbService.get().songsDbFile
-        generalSongsDao = GeneralSongsDao(dbFile)
-        val versionNumber = generalSongsDao?.readDbVersionNumber()
+        publicSongsDao = PublicSongsDao(dbFile)
+        val versionNumber = publicSongsDao?.readDbVersionNumber()
                 ?: throw RuntimeException("invalid local songs database format")
-        generalSongsDao!!.verifyDbVersion(versionNumber)
+        publicSongsDao!!.verifyDbVersion(versionNumber)
         return versionNumber
-    }
-
-    private fun refillCategoryDisplayNames(songsDb: SongsDb) {
-        songsDb.categories.forEach { category ->
-            category.displayName = when {
-                category.type.localeStringId != null ->
-                    uiResourceService.get().resString(category.type.localeStringId)
-                else -> category.name
-            }
-        }
     }
 
     @Synchronized
@@ -145,7 +152,7 @@ class SongsRepository {
 
     fun resetGeneralData() {
         logger.warn("resetting general data...")
-        generalSongsDao?.close()
+        publicSongsDao?.close()
         localDbService.get().factoryReset()
     }
 
@@ -156,12 +163,12 @@ class SongsRepository {
 
     @Synchronized
     fun songsDbVersion(): Long? {
-        return generalSongsDao?.readDbVersionNumber()
+        return publicSongsDao?.readDbVersionNumber()
     }
 
     fun reloadUserData() {
         userDataDao.get().save()
-        reloadSongsDb()
+        reloadCustomSongsDb()
     }
 
 }

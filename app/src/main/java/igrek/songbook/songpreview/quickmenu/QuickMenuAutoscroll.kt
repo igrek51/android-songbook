@@ -56,13 +56,13 @@ class QuickMenuAutoscroll {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     updateView()
-                }.isDisposed
+                }
         autoscrollService.scrollSpeedAdjustmentSubject
                 .debounce(200, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     updateView()
-                }.isDisposed
+                }
     }
 
     fun setQuickMenuView(quickMenuView: View) {

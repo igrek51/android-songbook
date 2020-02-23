@@ -32,7 +32,7 @@ class PublishSongService {
         val originalSongId = song.originalSongId
         if (originalSongId != null) {
             val identifier = SongIdentifier(originalSongId, SongNamespace.Public)
-            val originalSong = songsRepository.songsDb?.songFinder?.find(identifier)
+            val originalSong = songsRepository.allSongsRepo.songFinder.find(identifier)
             originalSong?.run {
                 val originalContent = originalSong.content
                 val newContent = song.content

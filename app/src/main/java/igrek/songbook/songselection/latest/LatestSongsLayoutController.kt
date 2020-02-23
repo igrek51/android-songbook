@@ -73,7 +73,7 @@ class LatestSongsLayoutController : InflatedLayout(
     }
 
     private fun updateItemsList() {
-        val latestSongs = songsRepository.songsDb!!.songs
+        val latestSongs = songsRepository.publicSongsRepo.songs.get()
                 .filter { song -> song.namespace == SongNamespace.Public }
                 .sortedBy { song -> -song.updateTime }
                 .take(latestSongsCount)

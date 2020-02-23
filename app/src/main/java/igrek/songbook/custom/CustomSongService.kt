@@ -66,7 +66,7 @@ class CustomSongService {
         )
         songsRepository.customSongsDao.saveCustomSong(customSong)
 
-        val customCategory = songsRepository.songsDb?.categoryFinder?.find(CategoryType.CUSTOM.id)!!
+        val customCategory = songsRepository.allSongsRepo.categoryFinder.find(CategoryType.CUSTOM.id)!!
         val customSongMapper = CustomSongMapper()
         val song = customSongMapper.customSongToSong(customSong)
         song.categories = mutableListOf(customCategory)

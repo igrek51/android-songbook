@@ -8,7 +8,7 @@ import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.persistence.general.model.Category
-import igrek.songbook.persistence.general.model.SongsDb
+import igrek.songbook.persistence.repository.AllSongsRepository
 import igrek.songbook.songselection.SongSelectionLayoutController
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -70,8 +70,8 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
     override fun updateSongItemsList() {
         // reload current category
         if (isCategorySelected()) {
-            val songsDb = songsRepository.songsDb!!
-            currentCategory = songsDb.categories.firstOrNull { category -> category.id == currentCategory?.id }
+            currentCategory = songsRepository.allSongsRepo.categories.get()
+                    .firstOrNull { category -> category.id == currentCategory?.id }
         }
         super.updateSongItemsList()
         if (isCategorySelected()) {
@@ -84,7 +84,7 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
         restoreScrollPosition(currentCategory)
     }
 
-    override fun getSongItems(songsDb: SongsDb): MutableList<SongTreeItem> {
+    override fun getSongItems(songsRepo: AllSongsRepository): MutableList<SongTreeItem> {
         return if (isCategorySelected()) {
             // selected category
             currentCategory!!.getUnlockedSongs()
@@ -93,7 +93,7 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
                     .toMutableList()
         } else {
             // all categories apart from custom
-            songsDb.generalCategories.get()
+            songsRepo.publicCategories.get()
                     .asSequence()
                     .map { category -> SongTreeItem.category(category) }
                     .toMutableList()

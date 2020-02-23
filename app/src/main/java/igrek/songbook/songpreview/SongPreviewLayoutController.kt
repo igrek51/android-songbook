@@ -99,12 +99,12 @@ class SongPreviewLayoutController : MainLayout {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     highlightPanelButtons()
-                }.isDisposed
+                }
         favouriteSongsService.get().updateFavouriteSongSubject
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     updateFavouriteButton()
-                }.isDisposed
+                }
     }
 
     override fun showLayout(layout: View) {

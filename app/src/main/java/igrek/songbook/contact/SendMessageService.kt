@@ -54,7 +54,7 @@ class SendMessageService {
 
         val appVersionName = packageInfoService.versionName
         val appVersionCode = packageInfoService.versionCode.toString()
-        val dbVersionNumber = songsRepository.songsDb!!.versionNumber.toString()
+        val dbVersionNumber = songsRepository.publicSongsRepo.versionNumber.toString()
 
         val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM)
                 .addFormDataPart("message", message)

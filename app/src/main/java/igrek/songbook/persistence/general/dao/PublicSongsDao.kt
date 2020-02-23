@@ -12,7 +12,7 @@ import igrek.songbook.persistence.general.model.SongCategoryRelationship
 import java.io.File
 
 
-class GeneralSongsDao(private val dbFile: File) : AbstractSqliteDao() {
+class PublicSongsDao(private val dbFile: File) : AbstractSqliteDao() {
 
     private val songMapper = SongMapper()
     private val categoryMapper = CategoryMapper()

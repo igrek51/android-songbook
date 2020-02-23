@@ -33,7 +33,7 @@ class AboutLayoutController {
     fun showAbout() {
         val appVersionName = packageInfoService.versionName
         val appVersionCode = packageInfoService.versionCode.toString()
-        val dbVersionNumber = songsRepository.songsDb!!.versionNumber.toString()
+        val dbVersionNumber = songsRepository.publicSongsRepo.versionNumber.toString()
         val title = uiResourceService.resString(R.string.nav_about)
         val message = uiResourceService.resString(R.string.ui_about_content, appVersionName, appVersionCode, dbVersionNumber)
 

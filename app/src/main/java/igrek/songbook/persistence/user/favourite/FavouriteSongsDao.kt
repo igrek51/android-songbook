@@ -30,7 +30,7 @@ class FavouriteSongsDao(path: String) : AbstractJsonDao<FavouriteSongsDb>(
 
     private var favouritesCache: SimpleCache<HashSet<Song>> =
             SimpleCache {
-                val favouriteSongs = songsRepository.songsDb!!.songs.filter { song ->
+                val favouriteSongs = songsRepository.allSongsRepo.songs.get().filter { song ->
                     FavouriteSong(song.id, song.isCustom()) in favouriteSongs.favourites
                 }
                 HashSet(favouriteSongs)
@@ -43,7 +43,7 @@ class FavouriteSongsDao(path: String) : AbstractJsonDao<FavouriteSongsDb>(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     favouritesCache.invalidate()
-                }.isDisposed
+                }
 
         read()
     }
