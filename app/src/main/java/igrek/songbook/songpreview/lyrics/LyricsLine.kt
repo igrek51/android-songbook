@@ -14,4 +14,8 @@ data class LyricsLine(
     override fun toString(): String {
         return Joiner.on(" ").join(fragments)
     }
+
+    fun isBlank(): Boolean {
+        return fragments.all { fragment -> fragment.text.isBlank() }
+    }
 }

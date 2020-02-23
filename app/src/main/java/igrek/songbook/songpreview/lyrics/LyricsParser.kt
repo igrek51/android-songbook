@@ -68,14 +68,14 @@ class LyricsParser(
     private fun extractChordsAbove(lines: MutableList<LyricsLine>): MutableList<LyricsLine> {
         val splitLines: MutableList<LyricsLine> = mutableListOf()
         lines.forEach { line ->
-            val chords = filterLineByTextType(line, LyricsTextType.CHORDS, LyricsTextType.BRACKET)
-            val texts = removeChordsFromText(line)
+            val chords: LyricsLine = filterLineByTextType(line, LyricsTextType.CHORDS, LyricsTextType.BRACKET)
+            val texts: LyricsLine = removeChordsFromText(line)
 
             when {
-                texts.fragments.isEmpty() -> {
+                texts.isBlank() -> {
                     splitLines.add(chords)
                 }
-                chords.fragments.isEmpty() -> {
+                chords.isBlank() -> {
                     splitLines.add(texts)
                 }
                 else -> {
