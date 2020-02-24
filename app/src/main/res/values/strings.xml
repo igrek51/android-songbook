@@ -320,4 +320,5 @@
     <string name="song_details_namespace_public">Public song</string>
     <string name="nav_last_song">Last song</string>
     <string name="no_last_song">You haven\'t open any song yet.</string>
+    <string name="song_copied_edit_it">Edit</string>
 </resources>

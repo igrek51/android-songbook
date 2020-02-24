@@ -109,9 +109,13 @@ class CustomSongService {
         newSong.updateTime = now
         newSong.originalSongId = sourceSong.id
 
-        songsRepository.customSongsDao.saveCustomSong(newSong)
+        val newModelSong = songsRepository.customSongsDao.saveCustomSong(newSong)
 
-        uiInfoService.showInfo(R.string.song_copied_as_custom)
+        uiInfoService.showInfoWithAction(
+                R.string.song_copied_as_custom,
+                R.string.song_copied_edit_it) {
+            showEditSongScreen(newModelSong)
+        }
         return newSong
     }
 }

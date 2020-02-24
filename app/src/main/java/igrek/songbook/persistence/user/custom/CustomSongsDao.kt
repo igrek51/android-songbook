@@ -45,8 +45,9 @@ class CustomSongsDao(path: String) : AbstractJsonDao<CustomSongsDb>(
     }
 
     fun saveCustomSong(newSong: CustomSong): Song {
-        val olds = customSongs.songs
-                .filter { song -> song.id != newSong.id }.toMutableList()
+        val olds = customSongs.songs.filter {
+            song -> song.id != newSong.id
+        }.toMutableList()
         if (newSong.id == 0L)
             newSong.id = nextId(olds)
 
