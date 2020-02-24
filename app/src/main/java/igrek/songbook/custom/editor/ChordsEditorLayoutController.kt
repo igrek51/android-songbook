@@ -94,6 +94,7 @@ class ChordsEditorLayoutController : MainLayout {
         buttonOnClick(R.id.moveLeftButton) { moveCursor(-1) }
         buttonOnClick(R.id.moveRightButton) { moveCursor(+1) }
         buttonOnClick(R.id.validateChordsButton) { validateChords() }
+        buttonOnClick(R.id.reformatTrimButton) { reformatAndTrim() }
 
         chordsNotationButton = layout.findViewById(R.id.chordsNotationButton)
 
@@ -122,9 +123,6 @@ class ChordsEditorLayoutController : MainLayout {
 
     private fun showTransformMenu() {
         val actions = listOf(
-                ContextMenuBuilder.Action(R.string.chords_editor_reformat_trim) {
-                    wrapHistoryContext { reformatAndTrim() }
-                },
                 ContextMenuBuilder.Action(R.string.chords_editor_move_chords_to_right) {
                     wrapHistoryContext { moveChordsAboveToRight() }
                 },

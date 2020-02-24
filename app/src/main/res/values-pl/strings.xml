@@ -215,8 +215,8 @@
     <string name="edit_song_chords_notation">Notacja akordów</string>
     <string name="edit_song_undo">Cofnij</string>
     <string name="chords_editor_reformat_trim">Uporządkuj format</string>
-    <string name="chords_editor_move_chords_to_right">Akordy z góry do prawej</string>
-    <string name="chords_editor_fis_to_sharp"><![CDATA[Fis -> F#]]></string>
+    <string name="chords_editor_move_chords_to_right">Przesuń akordy z góry do prawej</string>
+    <string name="chords_editor_fis_to_sharp"><![CDATA[Zamień Fis -> F#]]></string>
     <string name="edit_song_add_chord_splitter">[ / ]</string>
     <string name="no_undo_changes">Brak zmian do cofnięcia</string>
     <string name="edit_song_validate_chords">Sprawdź</string>

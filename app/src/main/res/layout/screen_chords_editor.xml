@@ -183,12 +183,12 @@
                     android:text="@string/edit_song_chords_notation"/>
 
                 <Button
-                    android:id="@+id/transformChordsButton"
+                    android:id="@+id/reformatTrimButton"
                     style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
-                    android:text="@string/edit_song_transform_chords"/>
+                    android:text="@string/chords_editor_reformat_trim" />
 
                 <Button
                     android:id="@+id/validateChordsButton"
@@ -205,6 +205,14 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
                     android:text="@string/edit_song_detect_chords"/>
+
+                <Button
+                    android:id="@+id/transformChordsButton"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:text="@string/edit_song_transform_chords" />
 
             </LinearLayout>
         </HorizontalScrollView>
