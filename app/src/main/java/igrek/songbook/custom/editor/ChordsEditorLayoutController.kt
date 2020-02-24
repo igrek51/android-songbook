@@ -388,6 +388,10 @@ class ChordsEditorLayoutController : MainLayout {
             selStart++
             selEnd++
         } else { // just single cursor
+            // clicked twice accidentaly
+            if (before.endsWith("[") && after.startsWith("]")) {
+                return
+            }
             // if it's the end of line AND there is no space before
             if ((after.isEmpty() || after.startsWith("\n")) && before.isNotEmpty() && !before.endsWith(" ") && !before.endsWith("\n")) {
                 // insert missing space
