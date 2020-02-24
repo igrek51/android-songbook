@@ -1,5 +1,6 @@
 package igrek.songbook.custom
 
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.view.View
@@ -68,7 +69,7 @@ class CustomSongsLayoutController : InflatedLayout(
         goBackButton?.setOnClickListener { goUp() }
 
         itemsListView = layout.findViewById(R.id.itemsListView)
-        itemsListView!!.init(activity, this)
+        itemsListView!!.init(activity as Context, this)
         updateItemsList()
 
         subscriptions.forEach { s -> s.dispose() }
