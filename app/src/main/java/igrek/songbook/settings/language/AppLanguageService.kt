@@ -6,8 +6,8 @@ import dagger.Lazy
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
-import igrek.songbook.settings.preferences.PreferencesField
 import igrek.songbook.settings.preferences.PreferencesService
+import igrek.songbook.settings.preferences.PreferencesState
 import java.util.*
 import javax.inject.Inject
 
@@ -20,22 +20,19 @@ class AppLanguageService {
     lateinit var preferencesService: Lazy<PreferencesService>
     @Inject
     lateinit var uiResourceService: Lazy<UiResourceService>
+    @Inject
+    lateinit var preferencesState: PreferencesState
 
-    var appLanguage: AppLanguage? = null
+    private var appLanguage: AppLanguage
+        get() = preferencesState.appLanguage
+        set(value) {
+            preferencesState.appLanguage = value
+        }
+
     private val logger = LoggerFactory.logger
 
     init {
         DaggerIoc.factoryComponent.inject(this)
-        loadPreferences()
-    }
-
-    private fun loadPreferences() {
-        val appLanguageId = preferencesService.get().getValue(PreferencesField.AppLanguage, String::class)
-        if (appLanguageId != null) {
-            appLanguage = AppLanguage.parseByLangCode(appLanguageId)
-            if (appLanguage == null)
-                appLanguage = AppLanguage.DEFAULT
-        }
     }
 
     /**
@@ -56,8 +53,8 @@ class AppLanguageService {
     }
 
     fun setLocale() {
-        if (appLanguage != null && appLanguage != AppLanguage.DEFAULT) {
-            setLocale(appLanguage!!.langCode)
+        if (appLanguage != AppLanguage.DEFAULT) {
+            setLocale(appLanguage.langCode)
         }
     }
 

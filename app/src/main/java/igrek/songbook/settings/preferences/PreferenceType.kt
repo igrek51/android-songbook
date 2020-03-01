@@ -8,7 +8,7 @@ abstract class PreferenceTypeDefinition<T : Any>(val defaultValue: T) {
     abstract fun load(sharedPreferences: SharedPreferences, propertyName: String): T
     abstract fun save(editor: SharedPreferences.Editor, propertyName: String, value: Any)
 
-    fun validClass(): KClass<out Any> {
+    fun validClass(): KClass<out T> {
         return defaultValue::class
     }
 }

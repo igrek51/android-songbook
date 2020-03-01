@@ -6,10 +6,9 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
-import igrek.songbook.settings.preferences.PreferencesField
 import igrek.songbook.settings.preferences.PreferencesService
+import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songpreview.SongOpener
-import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.favourite.FavouriteSongsService
 import java.util.*
 import javax.inject.Inject
@@ -21,8 +20,6 @@ class RandomSongOpener {
     @Inject
     lateinit var layoutController: LayoutController
     @Inject
-    lateinit var songPreviewLayoutController: dagger.Lazy<SongPreviewLayoutController>
-    @Inject
     lateinit var preferencesService: PreferencesService
     @Inject
     lateinit var favouriteSongsService: FavouriteSongsService
@@ -30,17 +27,17 @@ class RandomSongOpener {
     lateinit var uiInfoService: UiInfoService
     @Inject
     lateinit var songOpener: SongOpener
+    @Inject
+    lateinit var preferencesState: PreferencesState
 
-    var fromFavouriteSongsOnly: Boolean = false
+    private var fromFavouriteSongsOnly: Boolean
+        get() = preferencesState.randomFavouriteSongsOnly
+        set(value) {
+            preferencesState.randomFavouriteSongsOnly = value
+        }
 
     init {
         DaggerIoc.factoryComponent.inject(this)
-        loadPreferences()
-    }
-
-    private fun loadPreferences() {
-        fromFavouriteSongsOnly = preferencesService.getValue(PreferencesField.RandomFavouriteSongsOnly, Boolean::class)
-                ?: false
     }
 
     fun openRandomSong() {

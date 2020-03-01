@@ -81,41 +81,46 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun lateInit() {
         setupListPreference("applicationLanguage",
                 appLanguageService.get().languageEntries(),
-                onLoad = { preferencesState.get().appLanguage?.langCode },
+                onLoad = { preferencesState.get().appLanguage.langCode },
                 onSave = { id: String ->
                     preferencesState.get().appLanguage = AppLanguage.parseByLangCode(id)
+                            ?: AppLanguage.DEFAULT
                 }
         )
 
         setupListPreference("chordsInstrument",
                 chordsInstrumentService.get().instrumentEntries(),
-                onLoad = { preferencesState.get().chordsInstrument?.id.toString() },
+                onLoad = { preferencesState.get().chordsInstrument.id.toString() },
                 onSave = { id: String ->
                     preferencesState.get().chordsInstrument = ChordsInstrument.parseById(id.toLong())
+                            ?: ChordsInstrument.default
                 }
         )
 
         setupListPreference("chordsNotation",
                 chordsNotationService.get().chordsNotationEntries(),
-                onLoad = { preferencesState.get().chordsNotation?.id.toString() },
+                onLoad = { preferencesState.get().chordsNotation.id.toString() },
                 onSave = { id: String ->
                     preferencesState.get().chordsNotation = ChordsNotation.parseById(id.toLong())
+                            ?: ChordsNotation.default
                 }
         )
 
         setupListPreference("fontTypeface",
                 lyricsThemeService.get().fontTypefaceEntries(),
-                onLoad = { preferencesState.get().fontTypeface?.id.toString() },
+                onLoad = { preferencesState.get().fontTypeface.id },
                 onSave = { id: String ->
                     preferencesState.get().fontTypeface = FontTypeface.parseById(id)
+                            ?: FontTypeface.default
                 }
         )
 
         setupListPreference("colorScheme",
                 lyricsThemeService.get().colorSchemeEntries(),
-                onLoad = { preferencesState.get().colorScheme?.id.toString() },
+                onLoad = { preferencesState.get().colorScheme.id.toString() },
                 onSave = { id: String ->
                     preferencesState.get().colorScheme = ColorScheme.parseById(id.toLong())
+                            ?: ColorScheme.default
                 }
         )
 

@@ -27,13 +27,13 @@ enum class PreferencesField constructor(
     )),
 
     FontTypefaceId(GenericStringIdPreferenceType(
-            defaultValue = FontTypeface.SANS_SERIF,
+            defaultValue = FontTypeface.default,
             serializer = FontTypeface::id,
             deserializer = FontTypeface.Companion::parseById
     )),
 
     ColorSchemeId(GenericLongIdPreferenceType(
-            defaultValue = ColorScheme.DARK,
+            defaultValue = ColorScheme.default,
             serializer = ColorScheme::id,
             deserializer = ColorScheme.Companion::parseById
     )),

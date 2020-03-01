@@ -12,6 +12,8 @@ enum class FontTypeface(val id: String, val displayNameResId: Int, val typeface:
     MONOSPACE("monospace", R.string.typeface_monospace, Typeface.MONOSPACE);
 
     companion object {
+        val default = SANS_SERIF
+
         fun parseById(id: String): FontTypeface? {
             return values().firstOrNull { v -> v.id == id }
         }

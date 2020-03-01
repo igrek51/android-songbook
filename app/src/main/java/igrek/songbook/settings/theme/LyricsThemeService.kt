@@ -2,7 +2,6 @@ package igrek.songbook.settings.theme
 
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
-import igrek.songbook.settings.preferences.PreferencesField
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.PreferencesState
 import java.util.*
@@ -27,33 +26,29 @@ class LyricsThemeService {
             preferencesState.fontsize = value
         }
 
-    var fontTypeface: FontTypeface? = null
-    var colorScheme: ColorScheme? = null
-    var chordsEndOfLine = false
-    var chordsAbove = false
+    var fontTypeface: FontTypeface
+        get() = preferencesState.fontTypeface
+        set(value) {
+            preferencesState.fontTypeface = value
+        }
+    var colorScheme: ColorScheme
+        get() = preferencesState.colorScheme
+        set(value) {
+            preferencesState.colorScheme = value
+        }
+    var chordsEndOfLine: Boolean
+        get() = preferencesState.chordsEndOfLine
+        set(value) {
+            preferencesState.chordsEndOfLine = value
+        }
+    var chordsAbove: Boolean
+        get() = preferencesState.chordsAbove
+        set(value) {
+            preferencesState.chordsAbove = value
+        }
 
     init {
         DaggerIoc.factoryComponent.inject(this)
-        loadPreferences()
-    }
-
-    private fun loadPreferences() {
-        fontsize = preferencesService.getValue(PreferencesField.Fontsize, Float::class)!!
-
-        val fontTypefaceId = preferencesService.getValue(PreferencesField.FontTypefaceId, String::class)
-        if (fontTypefaceId != null) {
-            fontTypeface = FontTypeface.parseById(fontTypefaceId)
-        }
-
-        val colorSchemeId = preferencesService.getValue(PreferencesField.ColorSchemeId, Long::class)
-        if (colorSchemeId != null) {
-            colorScheme = ColorScheme.parseById(colorSchemeId)
-        }
-
-        chordsEndOfLine = preferencesService.getValue(PreferencesField.ChordsEndOfLine, Boolean::class)
-                ?: false
-        chordsAbove = preferencesService.getValue(PreferencesField.ChordsAbove, Boolean::class)
-                ?: false
     }
 
     fun fontTypefaceEntries(): LinkedHashMap<String, String> {

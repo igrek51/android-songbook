@@ -8,7 +8,6 @@ import igrek.songbook.info.logger.LoggerFactory
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.set
-import kotlin.reflect.KClass
 
 class PreferencesService {
     @Inject
@@ -76,18 +75,13 @@ class PreferencesService {
         prefDef.typeDef.save(editor, propertyName, propertyValue)
     }
 
-    fun <T : Any> getValue(prefDef: PreferencesField, clazz: KClass<T>): T {
+    fun <T> getValue(prefDef: PreferencesField): T {
         val propertyName = prefDef.preferenceName()
         if (!propertyValues.containsKey(propertyName))
             return prefDef.typeDef.defaultValue as T
 
         val propertyValue = propertyValues[propertyName]
-        @Suppress("unchecked_cast")
         return propertyValue as T
-    }
-
-    inline fun <reified T : Any> getValueCasted(prefDef: PreferencesField): T {
-        return getValue(prefDef, prefDef.typeDef.validClass()) as T
     }
 
     fun setValue(prefDef: PreferencesField, value: Any?) {

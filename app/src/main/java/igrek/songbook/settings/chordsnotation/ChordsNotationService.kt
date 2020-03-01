@@ -7,6 +7,7 @@ import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesField
 import igrek.songbook.settings.preferences.PreferencesService
+import igrek.songbook.settings.preferences.PreferencesState
 import java.util.*
 import javax.inject.Inject
 
@@ -21,8 +22,14 @@ class ChordsNotationService {
     lateinit var uiResourceService: UiResourceService
     @Inject
     lateinit var appLanguageService: AppLanguageService
+    @Inject
+    lateinit var preferencesState: PreferencesState
 
-    var chordsNotation: ChordsNotation? = null
+    var chordsNotation: ChordsNotation
+        get() = preferencesState.chordsNotation
+        set(value) {
+            preferencesState.chordsNotation = value
+        }
 
     private val germanNotationLangs = setOf(
             "pl", "de", "da", "sv", "nb", "nn", "is", "et",
@@ -31,15 +38,7 @@ class ChordsNotationService {
 
     init {
         DaggerIoc.factoryComponent.inject(this)
-        loadPreferences()
         setDefaultChordsNotation()
-    }
-
-    private fun loadPreferences() {
-        val chordsNotationId = preferencesService.getValue(PreferencesField.ChordsNotationId, Long::class)
-        if (chordsNotationId != null) {
-            chordsNotation = ChordsNotation.parseById(chordsNotationId)
-        }
     }
 
     private fun setDefaultChordsNotation() {
@@ -54,7 +53,7 @@ class ChordsNotationService {
             } else {
                 ChordsNotation.ENGLISH
             }
-            logger.info("Default chords notation set: ${chordsNotation.toString()}")
+            logger.info("Default chords notation set: $chordsNotation")
         }
     }
 

@@ -4,8 +4,8 @@ import android.app.Activity
 import dagger.Lazy
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
-import igrek.songbook.settings.preferences.PreferencesField
 import igrek.songbook.settings.preferences.PreferencesService
+import igrek.songbook.settings.preferences.PreferencesState
 import java.util.*
 import javax.inject.Inject
 
@@ -17,17 +17,17 @@ class ChordsInstrumentService {
     lateinit var preferencesService: Lazy<PreferencesService>
     @Inject
     lateinit var uiResourceService: Lazy<UiResourceService>
+    @Inject
+    lateinit var preferencesState: PreferencesState
 
-    var instrument: ChordsInstrument = ChordsInstrument.default
+    var instrument: ChordsInstrument
+        get() = preferencesState.chordsInstrument
+        set(value) {
+            preferencesState.chordsInstrument = value
+        }
 
     init {
         DaggerIoc.factoryComponent.inject(this)
-        loadPreferences()
-    }
-
-    private fun loadPreferences() {
-        val id = preferencesService.get().getValue(PreferencesField.ChordsInstrument, Long::class)
-        instrument = ChordsInstrument.parseById(id ?: ChordsInstrument.default.id) ?: ChordsInstrument.default
     }
 
     fun instrumentEntries(): LinkedHashMap<String, String> {

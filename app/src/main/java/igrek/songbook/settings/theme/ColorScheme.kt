@@ -9,6 +9,8 @@ enum class ColorScheme(val id: Long, val displayNameResId: Int) {
     BRIGHT(2, R.string.color_scheme_bright);
 
     companion object {
+        val default = DARK
+
         fun parseById(id: Long): ColorScheme? {
             return values().firstOrNull { v -> v.id == id }
         }

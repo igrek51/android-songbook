@@ -7,8 +7,8 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
-import igrek.songbook.settings.preferences.PreferencesField
 import igrek.songbook.settings.preferences.PreferencesService
+import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.renderer.SongPreview
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -26,11 +26,29 @@ class AutoscrollService {
     lateinit var uiResourceService: UiResourceService
     @Inject
     lateinit var preferencesService: PreferencesService
+    @Inject
+    lateinit var preferencesState: PreferencesState
 
-    var initialPause: Long = 0 // [ms]
-    var autoscrollSpeed: Float = 0.toFloat() // [em / s]
-    var autoSpeedAdjustment: Boolean = true
-    var volumeKeysSpeedControl: Boolean = true
+    var initialPause: Long // [ms]
+        get() = preferencesState.autoscrollInitialPause
+        set(value) {
+            preferencesState.autoscrollInitialPause = value
+        }
+    var autoscrollSpeed: Float // [em / s]
+        get() = preferencesState.autoscrollSpeed
+        set(value) {
+            preferencesState.autoscrollSpeed = value
+        }
+    var autoSpeedAdjustment: Boolean
+        get() = preferencesState.autoscrollSpeedAutoAdjustment
+        set(value) {
+            preferencesState.autoscrollSpeedAutoAdjustment = value
+        }
+    var volumeKeysSpeedControl: Boolean
+        get() = preferencesState.autoscrollSpeedVolumeKeys
+        set(value) {
+            preferencesState.autoscrollSpeedVolumeKeys = value
+        }
 
     private val logger = LoggerFactory.logger
     private var state: AutoscrollState? = null
@@ -68,7 +86,6 @@ class AutoscrollService {
 
     init {
         DaggerIoc.factoryComponent.inject(this)
-        loadPreferences()
         reset()
 
         // aggreagate many little scrolls into greater parts (not proper RX method found)
@@ -87,13 +104,6 @@ class AutoscrollService {
                         onCanvasScrollEvent(scrolledBuffer, canvas?.scroll ?: 0f)
                     scrolledBuffer = 0f
                 }
-    }
-
-    private fun loadPreferences() {
-        initialPause = preferencesService.getValue(PreferencesField.AutoscrollInitialPause, Long::class)!!
-        autoscrollSpeed = preferencesService.getValue(PreferencesField.AutoscrollSpeed, Float::class)!!
-        autoSpeedAdjustment = preferencesService.getValue(PreferencesField.AutoscrollSpeedAutoAdjustment, Boolean::class)!!
-        volumeKeysSpeedControl = preferencesService.getValue(PreferencesField.AutoscrollSpeedVolumeKeys, Boolean::class)!!
     }
 
     fun reset() {

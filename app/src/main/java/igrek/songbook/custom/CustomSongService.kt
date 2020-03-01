@@ -11,8 +11,8 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.custom.CustomSong
 import igrek.songbook.persistence.user.custom.CustomSongMapper
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import igrek.songbook.settings.preferences.PreferencesField
 import igrek.songbook.settings.preferences.PreferencesService
+import igrek.songbook.settings.preferences.PreferencesState
 import java.util.*
 import javax.inject.Inject
 
@@ -28,17 +28,17 @@ class CustomSongService {
     lateinit var editSongLayoutController: Lazy<EditSongLayoutController>
     @Inject
     lateinit var preferencesService: PreferencesService
+    @Inject
+    lateinit var preferencesState: PreferencesState
 
-    var customSongsGroupCategories: Boolean = false
+    var customSongsGroupCategories: Boolean
+        get() = preferencesState.customSongsGroupCategories
+        set(value) {
+            preferencesState.customSongsGroupCategories = value
+        }
 
     init {
         DaggerIoc.factoryComponent.inject(this)
-        loadPreferences()
-    }
-
-    private fun loadPreferences() {
-        customSongsGroupCategories = preferencesService.getValue(PreferencesField.CustomSongsGroupCategories, Boolean::class)
-                ?: false
     }
 
     fun showAddSongScreen() {

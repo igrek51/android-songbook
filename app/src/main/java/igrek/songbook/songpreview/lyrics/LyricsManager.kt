@@ -4,8 +4,8 @@ import android.graphics.Paint
 import dagger.Lazy
 import igrek.songbook.chords.transpose.ChordsTransposerManager
 import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.settings.preferences.PreferencesField
 import igrek.songbook.settings.preferences.PreferencesService
+import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.system.WindowManagerService
@@ -23,6 +23,8 @@ class LyricsManager {
     lateinit var windowManagerService: WindowManagerService
     @Inject
     lateinit var preferencesService: PreferencesService
+    @Inject
+    lateinit var preferencesState: PreferencesState
 
     private var lyricsParser: LyricsParser? = null
     var crdModel: LyricsModel? = null
@@ -31,16 +33,14 @@ class LyricsManager {
     private var paint: Paint? = null
     private var originalFileContent: String? = null
 
-    var restoreTransposition = true
+    private var restoreTransposition
+        get() = preferencesState.restoreTransposition
+        set(value) {
+            preferencesState.restoreTransposition = value
+        }
 
     init {
         DaggerIoc.factoryComponent.inject(this)
-        loadPreferences()
-    }
-
-    private fun loadPreferences() {
-        restoreTransposition = preferencesService.getValue(PreferencesField.RestoreTransposition, Boolean::class)
-                ?: true
     }
 
     private fun normalizeContent(content: String): String {
@@ -67,7 +67,7 @@ class LyricsManager {
         if (paint != null)
             this.paint = paint
 
-        val typeface = lyricsThemeService.fontTypeface!!.typeface
+        val typeface = lyricsThemeService.fontTypeface.typeface
         val chordsEndOfLine = lyricsThemeService.chordsEndOfLine
         val chordsAbove = lyricsThemeService.chordsAbove
         lyricsParser = LyricsParser(typeface, chordsEndOfLine, chordsAbove)
