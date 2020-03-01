@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">Guitar Songbook</string>
+    <string name="server_client_id" translatable="false">690032273066-pl5qcv3kb3vmpv5vd744mnhkavgesjme.apps.googleusercontent.com</string>
     <string name="nav_categories_list">Categories</string>
     <string name="nav_search_song">Search</string>
     <string name="nav_favourites_song">Favourites</string>
@@ -85,7 +86,7 @@
     <string name="song_category_custom">My songs</string>
     <string name="song_search_edit_hint">Song title or artist</string>
     <string name="unlock_key_invalid">Key is not valid.</string>
-    <string name="unlock_new_songs_unlocked">New songs have been unlocked: %d</string>
+    <string name="unlock_new_songs_unlocked">Songs unlocked: %d</string>
     <string name="settings_scroll_initial_pause">Autoscroll initial delay: %s s</string>
     <string name="autoscroll_panel_speed">Autoscroll speed: %s line / s</string>
     <string name="settings_font_size_value">%s dp</string>
@@ -266,7 +267,7 @@
     <string name="settings_toggle_all_artists">Toggle all categories</string>
     <string name="settings_custom_songs">My songs</string>
     <string name="settings_group_custom_songs">Group custom songs</string>
-    <string name="settings_group_custom_songs_hint">Group custom songs with the same category together</string>
+    <string name="settings_group_custom_songs_hint">Group custom songs with the same category / artist together</string>
     <string name="settings_chords_end_of_line">Display chords at the end of line</string>
     <string name="settings_chords_end_of_line_hint">Align chords to the right edge of the screen</string>
     <string name="settings_chords_above">Display chords above lyrics</string>
@@ -321,4 +322,18 @@
     <string name="nav_last_song">Last song</string>
     <string name="no_last_song">You haven\'t open any song yet.</string>
     <string name="song_copied_edit_it">Edit</string>
+    <string name="settings_sync">Backup &amp; Restore / Synchronize devices</string>
+    <string name="settings_sync_save">Save Backup</string>
+    <string name="settings_sync_restore">Restore Backup</string>
+    <string name="settings_sync_save_hint">Save all application data (settings, custom songs, playlists, favourites) on your Google Drive Account in hidden application data folder. This will overwrite your previous backup.</string>
+    <string name="settings_sync_save_success">Application data backed up successfully.</string>
+    <string name="settings_sync_save_error">Error when saving backup: %s</string>
+    <string name="settings_sync_restore_hint">Restore all application data from your Google Drive Account.\nWarning: This will overwrite all your current application data.</string>
+    <string name="settings_sync_restore_confirm">Do you really want to restore all application data from your Google Drive Account?\nThis will overwrite all your current application data. Application restart is needed after restoring.</string>
+    <string name="settings_sync_restore_success">Application data restored successfully. Please restart app.</string>
+    <string name="settings_sync_restore_error">Error when restoring data: %s</string>
+    <string name="operation_cancelled">Operation cancelled</string>
+    <string name="error_unable_to_sing_in_google">Unable to sign in to Google account</string>
+    <string name="settings_sync_in_progress">Sync in progress… %s%%</string>
+    <string name="settings_sync_restore_partial_success">Some backup files couldn\'t be found. Backup restored partially. Restart app.</string>
 </resources>

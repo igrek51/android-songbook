@@ -12,6 +12,9 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.errorcheck.SafeClickListener
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
@@ -37,38 +40,39 @@ class UiInfoService {
      * @param action     action perforfmed on button click (if null - dismiss displayed snackbar)
      */
     private fun showActionInfo(info: String, view: View?, actionName: String?, action: (() -> Unit)?, color: Int?, snackbarLength: Int) {
-        var viewV = view
-        var actionV = action
-        if (viewV == null)
-            viewV = activity.findViewById(R.id.main_content)
+        GlobalScope.launch(Dispatchers.Main) {
+            var viewV = view
+            var actionV = action
+            if (viewV == null)
+                viewV = activity.findViewById(R.id.main_content)
 
-        // dont create new snackbars if one is already shown
-        var snackbar: Snackbar? = infobars[viewV]
-        if (snackbar == null || !snackbar.isShown) { // a new one
-            snackbar = Snackbar.make(viewV!!, info, snackbarLength)
-            snackbar.setActionTextColor(Color.WHITE)
-        } else { // visible - use it one more time
-            snackbar.duration = snackbarLength
-            snackbar.setText(info)
-        }
-
-        if (actionName != null) {
-            if (actionV == null) {
-                val finalSnackbar = snackbar
-                actionV = { finalSnackbar.dismiss() }
+            // dont create new snackbars if one is already shown
+            var snackbar: Snackbar? = infobars[viewV]
+            if (snackbar == null || !snackbar.isShown) { // a new one
+                snackbar = Snackbar.make(viewV!!, info, snackbarLength)
+                snackbar.setActionTextColor(Color.WHITE)
+            } else { // visible - use it one more time
+                snackbar.duration = snackbarLength
+                snackbar.setText(info)
             }
 
-            snackbar.setAction(actionName, SafeClickListener {
-                actionV.invoke()
-            })
-            if (color != null) {
-                snackbar.setActionTextColor(color)
+            if (actionName != null) {
+                if (actionV == null) {
+                    val finalSnackbar = snackbar
+                    actionV = { finalSnackbar.dismiss() }
+                }
+
+                snackbar.setAction(actionName, SafeClickListener {
+                    actionV.invoke()
+                })
+                if (color != null) {
+                    snackbar.setActionTextColor(color)
+                }
             }
+
+            snackbar.show()
+            infobars[viewV] = snackbar
         }
-
-        snackbar.show()
-        infobars[viewV] = snackbar
-
         logger.debug("UI: snackbar: $info")
     }
 
@@ -91,8 +95,8 @@ class UiInfoService {
         showActionInfo(info, null, dismissName, null, null, Snackbar.LENGTH_INDEFINITE)
     }
 
-    fun showInfoIndefinite(infoRes: Int) {
-        val info = uiResourceService.get().resString(infoRes)
+    fun showInfoIndefinite(infoRes: Int, vararg args: String) {
+        val info = uiResourceService.get().resString(infoRes, *args)
         showInfoIndefinite(info)
     }
 
@@ -119,7 +123,9 @@ class UiInfoService {
     }
 
     fun showToast(message: String) {
-        Toast.makeText(activity.applicationContext, message, Toast.LENGTH_LONG).show()
+        GlobalScope.launch(Dispatchers.Main) {
+            Toast.makeText(activity.applicationContext, message, Toast.LENGTH_LONG).show()
+        }
         logger.debug("UI: toast: $message")
     }
 

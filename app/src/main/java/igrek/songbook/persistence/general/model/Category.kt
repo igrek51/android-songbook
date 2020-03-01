@@ -3,7 +3,7 @@ package igrek.songbook.persistence.general.model
 import com.google.common.base.Objects
 import igrek.songbook.util.lookup.SimpleCache
 
-open class Category(
+data class Category(
         val id: Long = 0,
         val type: CategoryType,
         val name: String? = null,

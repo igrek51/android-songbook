@@ -6,6 +6,10 @@ import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.general.dao.PublicSongsDao
+import igrek.songbook.persistence.general.model.Category
+import igrek.songbook.persistence.general.model.CategoryType
+import igrek.songbook.persistence.repository.builder.CustomSongsDbBuilder
+import igrek.songbook.persistence.repository.builder.PublicSongsDbBuilder
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.persistence.user.custom.CustomSongsDao
 import igrek.songbook.persistence.user.exclusion.ExclusionDao
@@ -37,7 +41,17 @@ class SongsRepository {
     private var saveRequestSubject: PublishSubject<Boolean> = PublishSubject.create()
 
     var publicSongsRepo: PublicSongsRepository = PublicSongsRepository(0, SimpleCache.emptyList(), SimpleCache.emptyList())
-    var customSongsRepo: CustomSongsRepository = CustomSongsRepository(SimpleCache.emptyList(), SimpleCache.emptyList())
+    var customSongsRepo: CustomSongsRepository = CustomSongsRepository(
+            SimpleCache.emptyList(),
+            SimpleCache.emptyList(),
+            allCustomCategory = Category(
+                    id = CategoryType.CUSTOM.id,
+                    type = CategoryType.CUSTOM,
+                    name = null,
+                    custom = false,
+                    songs = mutableListOf()
+            )
+    )
     var allSongsRepo: AllSongsRepository = AllSongsRepository(publicSongsRepo, customSongsRepo)
     private var publicSongsDao: PublicSongsDao? = null
 
@@ -107,10 +121,11 @@ class SongsRepository {
             userDataDao.get().read()
         }
 
-        val dbBuilder = SongsDbBuilder(versionNumber, publicSongsDao!!, userDataDao.get())
+        val publicDbBuilder = PublicSongsDbBuilder(versionNumber, publicSongsDao!!, userDataDao.get())
+        val customDbBuilder = CustomSongsDbBuilder(userDataDao.get())
 
-        publicSongsRepo = dbBuilder.buildPublic(uiResourceService.get())
-        customSongsRepo = dbBuilder.buildCustom()
+        publicSongsRepo = publicDbBuilder.buildPublic(uiResourceService.get())
+        customSongsRepo = customDbBuilder.buildCustom()
         allSongsRepo = AllSongsRepository(publicSongsRepo, customSongsRepo)
 
         dbChangeSubject.onNext(true)
@@ -126,8 +141,8 @@ class SongsRepository {
             userDataDao.get().read()
         }
 
-        val dbBuilder = SongsDbBuilder(0, publicSongsDao!!, userDataDao.get())
-        customSongsRepo = dbBuilder.buildCustom()
+        val customDbBuilder = CustomSongsDbBuilder(userDataDao.get())
+        customSongsRepo = customDbBuilder.buildCustom()
         allSongsRepo.invalidate()
         dbChangeSubject.onNext(true)
     }

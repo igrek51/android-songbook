@@ -87,7 +87,7 @@
     <string name="song_category_custom">Moje piosenki</string>
     <string name="song_search_edit_hint">Tytuł piosenki lub artysta</string>
     <string name="unlock_key_invalid">Hasło jest niepoprawne.</string>
-    <string name="unlock_new_songs_unlocked">Odblokowano nowe piosenki: %d</string>
+    <string name="unlock_new_songs_unlocked">Odblokowano piosenki: %d</string>
     <string name="settings_scroll_initial_pause">Opóźnienie autoprzewijania: %s s</string>
     <string name="autoscroll_panel_speed">Szybkość autoprzewijania: %s linii / s</string>
     <string name="settings_font_size_value">%s dp</string>
@@ -259,7 +259,7 @@
     <string name="settings_toggle_all_artists">Zaznacz / Odznacz wszystkie kategorie</string>
     <string name="settings_custom_songs">Moje piosenki</string>
     <string name="settings_group_custom_songs">Grupuj własne piosenki</string>
-    <string name="settings_group_custom_songs_hint">Grupuj razem własne piosenki należące do tej samej kategorii</string>
+    <string name="settings_group_custom_songs_hint">Grupuj razem własne piosenki należące do tej samej kategorii / artysty</string>
     <string name="settings_chords_end_of_line">Wyświetlaj akordy na końcu linii</string>
     <string name="settings_chords_end_of_line_hint">Wyświetlaj wszystkie akordy wyrównane do prawej strony ekranu</string>
     <string name="settings_chords_above">Wyświetlaj akordy nad tekstem</string>
@@ -314,4 +314,18 @@
     <string name="nav_last_song">Ostatnia piosenka</string>
     <string name="no_last_song">Nie otworzyłeś jeszcze żadnej piosenki.</string>
     <string name="song_copied_edit_it">Edytuj</string>
+    <string name="settings_sync">Kopia zapasowa i Przywracanie / Synchronizacja urządzeń</string>
+    <string name="settings_sync_save">Zapisz kopię zapasową</string>
+    <string name="settings_sync_restore">Przywróć kopię zapasową</string>
+    <string name="settings_sync_save_hint">Zapisz wszystkie dane aplikacji (ustawienia, własne piosenki, playlisty, ulubione) na Twoim koncie Google Drive w ukrytym folderze danych aplikacji. Nadpisze to Twoją poprzednią kopię zapasową.</string>
+    <string name="settings_sync_save_success">Dane aplikacji zostały zapisane.</string>
+    <string name="settings_sync_save_error">Błąd tworzenia kopii zapasowej: %s</string>
+    <string name="settings_sync_restore_hint">Przywróć zapisane dane aplikacji z twojego konta Google Drive.\nUwaga: Przywracanie nadpisze twoje obecne niezapisane dane aplikacji.</string>
+    <string name="settings_sync_restore_confirm">Czy na pewno chcesz przywrócić zapisane dane aplikacji z twojego konta Google Drive?\nPrzywracanie nadpisze twoje obecne niezapisane dane aplikacji. Po zakończeniu wymagany jest restart aplikacji.</string>
+    <string name="settings_sync_restore_success">Dane aplikacji zostały przywrócone. Zrestartuj aplikację</string>
+    <string name="settings_sync_restore_error">Błąd przywracania danych: %s</string>
+    <string name="operation_cancelled">Operacja anulowana</string>
+    <string name="error_unable_to_sing_in_google">Błąd logowania do konta Google</string>
+    <string name="settings_sync_in_progress">Synchronizacja w trakcie… %s%%</string>
+    <string name="settings_sync_restore_partial_success">Brak wszystkich plików kopii. Kopia zapasowa przywrócona częściowo. Zrestartuj aplikację.</string>
 </resources>

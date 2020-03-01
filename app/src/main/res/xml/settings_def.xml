@@ -121,4 +121,17 @@
             app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/settings_sync">
+        <Preference
+            android:title="@string/settings_sync_save"
+            android:key="settingsSyncSave"
+            android:summary="@string/settings_sync_save_hint"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:title="@string/settings_sync_restore"
+            android:key="settingsSyncRestore"
+            android:summary="@string/settings_sync_restore_hint"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

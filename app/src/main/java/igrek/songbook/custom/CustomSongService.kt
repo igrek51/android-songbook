@@ -5,7 +5,6 @@ import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.persistence.general.model.CategoryType
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
@@ -66,7 +65,7 @@ class CustomSongService {
         )
         songsRepository.customSongsDao.saveCustomSong(customSong)
 
-        val customCategory = songsRepository.allSongsRepo.categoryFinder.find(CategoryType.CUSTOM.id)!!
+        val customCategory = songsRepository.customSongsRepo.allCustomCategory
         val customSongMapper = CustomSongMapper()
         val song = customSongMapper.customSongToSong(customSong)
         song.categories = mutableListOf(customCategory)

@@ -14,6 +14,7 @@ import igrek.songbook.custom.SongImportFileChooser
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.settings.preferences.sync.GoogleSyncManager
 import igrek.songbook.system.PermissionService
 import igrek.songbook.system.SystemKeyDispatcher
 import igrek.songbook.util.RetryDelayed
@@ -34,6 +35,8 @@ open class MainActivity : AppCompatActivity() {
     lateinit var permissionService: Lazy<PermissionService>
     @Inject
     lateinit var songImportFileChooser: Lazy<SongImportFileChooser>
+    @Inject
+    lateinit var googleSyncManager: Lazy<GoogleSyncManager>
 
     private val logger: Logger = LoggerFactory.logger
 
@@ -111,10 +114,15 @@ open class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            SongImportFileChooser.FILE_SELECT_CODE -> if (resultCode == Activity.RESULT_OK) {
-                songImportFileChooser.get().onFileSelect(data?.data)
-            }
+            SongImportFileChooser.FILE_SELECT_CODE ->
+                if (resultCode == Activity.RESULT_OK) {
+                    songImportFileChooser.get().onFileSelect(data?.data)
+                }
+            GoogleSyncManager.REQUEST_CODE_SIGN_IN_SYNC_SAVE,
+            GoogleSyncManager.REQUEST_CODE_SIGN_IN_SYNC_RESTORE ->
+                googleSyncManager.get().handleSignInResult(data, this, requestCode, resultCode)
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
+
 }

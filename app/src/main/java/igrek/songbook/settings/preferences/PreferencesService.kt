@@ -26,7 +26,7 @@ class PreferencesService {
         loadAll()
     }
 
-    private fun loadAll() {
+    fun loadAll() {
         for (propertyDefinition in PreferencesDefinition.values()) {
             loadProperty(propertyDefinition)
         }

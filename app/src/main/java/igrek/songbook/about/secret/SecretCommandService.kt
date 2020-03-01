@@ -152,6 +152,7 @@ class SecretCommandService {
     private fun checkActivationRules(key: String): Boolean {
         for (rule in rules) {
             if (rule.condition.apply(key)) {
+                logger.debug("rule activated: ${rule.condition}")
                 rule.activator(key)
                 return true
             }
@@ -174,7 +175,7 @@ class SecretCommandService {
 
     private fun unlockSongs(key: String) {
         val toUnlock = songsRepository.publicSongsRepo.songs.get()
-                .filter { s -> s.locked && s.lockPassword == key }
+                .filter { s -> s.lockPassword == key }
         val count = toUnlock.count()
         toUnlock.forEach { s ->
             s.locked = false
@@ -186,12 +187,12 @@ class SecretCommandService {
 
     companion object {
         private const val EA5T3R_M00: String = """
-     ____________________
-    / Congratulations!   \
-    |                    |
-    | You have found     |
-    \ an Easter Egg :)   /
-     --------------------
+     _____________________
+    / Congratulations!    \
+    |                     |
+    | You have now        |
+    \ Super Cow Powers :) /
+     ---------------------
        \   ^__^
         \  (oo)\_______
            (__)\       )\/\

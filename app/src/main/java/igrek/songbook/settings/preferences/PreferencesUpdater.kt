@@ -4,6 +4,7 @@ import dagger.Lazy
 import igrek.songbook.admin.AdminService
 import igrek.songbook.custom.CustomSongService
 import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.instrument.ChordsInstrument
@@ -40,6 +41,8 @@ class PreferencesUpdater {
     lateinit var chordsInstrumentService: Lazy<ChordsInstrumentService>
     @Inject
     lateinit var adminService: Lazy<AdminService>
+
+    private val logger = LoggerFactory.logger
 
     // preferences getters / setters proxy
     var appLanguage: AppLanguage?
@@ -165,6 +168,11 @@ class PreferencesUpdater {
         preferencesService.setValue(PreferencesDefinition.UserAuthToken, userAuthToken)
 
         preferencesService.saveAll()
+    }
+
+    fun reload() {
+        logger.debug("reloading preferences")
+        preferencesService.loadAll()
     }
 
 }

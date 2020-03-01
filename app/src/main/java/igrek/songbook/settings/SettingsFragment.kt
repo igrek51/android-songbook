@@ -12,6 +12,7 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.LayoutController
+import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
@@ -20,6 +21,7 @@ import igrek.songbook.settings.instrument.ChordsInstrumentService
 import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesUpdater
+import igrek.songbook.settings.preferences.sync.GoogleSyncManager
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.FontTypeface
 import igrek.songbook.settings.theme.LyricsThemeService
@@ -53,6 +55,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
     lateinit var preferencesUpdater: dagger.Lazy<PreferencesUpdater>
     @Inject
     lateinit var songsRepository: dagger.Lazy<SongsRepository>
+    @Inject
+    lateinit var googleSyncManager: dagger.Lazy<GoogleSyncManager>
 
     private var decimalFormat1: DecimalFormat = DecimalFormat("#.#")
     private var decimalFormat3: DecimalFormat = DecimalFormat("#.###")
@@ -236,6 +240,16 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     preferencesUpdater.get().restoreTransposition = value
                 }
         )
+
+        setupClickPreference("settingsSyncSave") {
+            googleSyncManager.get().syncSave()
+        }
+
+        setupClickPreference("settingsSyncRestore") {
+            ConfirmDialogBuilder().confirmAction(R.string.settings_sync_restore_confirm) {
+                googleSyncManager.get().syncRestore()
+            }
+        }
 
         refreshFragment()
     }

@@ -1,16 +1,18 @@
-package igrek.songbook.persistence.repository
+package igrek.songbook.persistence.repository.builder
 
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.persistence.general.dao.PublicSongsDao
-import igrek.songbook.persistence.general.model.*
+import igrek.songbook.persistence.general.model.Category
+import igrek.songbook.persistence.general.model.Song
+import igrek.songbook.persistence.general.model.SongIdentifier
+import igrek.songbook.persistence.general.model.SongNamespace
+import igrek.songbook.persistence.repository.PublicSongsRepository
 import igrek.songbook.persistence.user.UserDataDao
-import igrek.songbook.persistence.user.custom.CustomCategory
-import igrek.songbook.persistence.user.custom.CustomSongMapper
 import igrek.songbook.util.lookup.FinderById
 import igrek.songbook.util.lookup.FinderByTuple
 import igrek.songbook.util.lookup.SimpleCache
 
-class SongsDbBuilder(
+class PublicSongsDbBuilder(
         private val versionNumber: Long,
         private val publicSongsDao: PublicSongsDao,
         private val userDataDao: UserDataDao) {
@@ -28,13 +30,6 @@ class SongsDbBuilder(
         refillCategoryDisplayNames(uiResourceService, categories)
 
         return PublicSongsRepository(versionNumber, SimpleCache { categories }, SimpleCache { songs })
-    }
-
-    fun buildCustom(): CustomSongsRepository {
-        val categories: MutableList<Category> = publicSongsDao.readAllCategories()
-
-        val (customSongs, customSongsUncategorized) = assembleCustomSongs(categories)
-        return CustomSongsRepository(SimpleCache { customSongs }, SimpleCache { customSongsUncategorized })
     }
 
     private fun refillCategoryDisplayNames(uiResourceService: UiResourceService, categories: List<Category>) {
@@ -55,48 +50,6 @@ class SongsDbBuilder(
 
         val excludedLanguages = userDataDao.exclusionDao!!.exclusionDb.languages
         songs.removeAll { song -> song.language?.let { it in excludedLanguages } ?: false }
-    }
-
-    private fun assembleCustomSongs(categories: MutableList<Category>): Pair<List<Song>, List<Song>> {
-        val customSongs = userDataDao.customSongsDao!!.customSongs.songs
-        val categoryFinder = FinderById(categories) { e -> e.id }
-        val customGeneralCategory = categoryFinder.find(CategoryType.CUSTOM.id)!!
-        val mapper = CustomSongMapper()
-
-        // bind custom categories to songs
-        userDataDao.customSongsDao!!.customCategories = customSongs
-                .asSequence()
-                .map { song ->
-                    song.categoryName
-                }.toSet()
-                .filterNotNull()
-                .filter { it.isNotEmpty() }
-                .map { categoryName ->
-                    CustomCategory(name = categoryName)
-                }.toList()
-        val customCategoryFinder = FinderByTuple(userDataDao.customSongsDao!!.customCategories) {
-            it.name
-        }
-        val customSongsUncategorized = mutableListOf<Song>()
-        val customModelSongs = mutableListOf<Song>()
-
-        customSongs.forEach { customSong ->
-            val song = mapper.customSongToSong(customSong)
-
-            song.categories = mutableListOf(customGeneralCategory)
-            customGeneralCategory.songs.add(song)
-
-            customModelSongs.add(song)
-
-            val customCategory: CustomCategory? = customCategoryFinder.find(customSong.categoryName ?: "")
-            if (customCategory == null) {
-                customSongsUncategorized.add(song)
-            } else {
-                customCategory.songs.add(song)
-            }
-        }
-
-        return customModelSongs to customSongsUncategorized
     }
 
     private fun unlockSongs(songs: MutableList<Song>) {
