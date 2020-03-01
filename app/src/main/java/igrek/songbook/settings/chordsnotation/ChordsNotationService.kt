@@ -5,7 +5,7 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.settings.language.AppLanguageService
-import igrek.songbook.settings.preferences.PreferencesDefinition
+import igrek.songbook.settings.preferences.PreferencesField
 import igrek.songbook.settings.preferences.PreferencesService
 import java.util.*
 import javax.inject.Inject
@@ -36,7 +36,7 @@ class ChordsNotationService {
     }
 
     private fun loadPreferences() {
-        val chordsNotationId = preferencesService.getValue(PreferencesDefinition.ChordsNotationId, Long::class.java)
+        val chordsNotationId = preferencesService.getValue(PreferencesField.ChordsNotationId, Long::class)
         if (chordsNotationId != null) {
             chordsNotation = ChordsNotation.parseById(chordsNotationId)
         }
@@ -45,7 +45,7 @@ class ChordsNotationService {
     private fun setDefaultChordsNotation() {
         // running for the first time - set german / polish notation if lang pl
         // set default chords notation depending on locale settings
-        if (!preferencesService.exists(PreferencesDefinition.ChordsNotationId)) {
+        if (!preferencesService.exists(PreferencesField.ChordsNotationId)) {
             val current: Locale = appLanguageService.getCurrentLocale()
             val lang = current.language
 

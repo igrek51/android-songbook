@@ -4,7 +4,7 @@ import android.graphics.Paint
 import dagger.Lazy
 import igrek.songbook.chords.transpose.ChordsTransposerManager
 import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.settings.preferences.PreferencesDefinition
+import igrek.songbook.settings.preferences.PreferencesField
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
@@ -39,7 +39,7 @@ class LyricsManager {
     }
 
     private fun loadPreferences() {
-        restoreTransposition = preferencesService.getValue(PreferencesDefinition.RestoreTransposition, Boolean::class.java)
+        restoreTransposition = preferencesService.getValue(PreferencesField.RestoreTransposition, Boolean::class)
                 ?: true
     }
 

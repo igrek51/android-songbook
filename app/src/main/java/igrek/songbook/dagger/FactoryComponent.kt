@@ -50,7 +50,7 @@ import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.instrument.ChordsInstrumentService
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesService
-import igrek.songbook.settings.preferences.PreferencesUpdater
+import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.sync.GoogleSyncManager
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.SongDetailsService
@@ -123,7 +123,7 @@ interface FactoryComponent {
     fun inject(there: FavouritesLayoutController)
     fun inject(there: SettingsFragment)
     fun inject(there: ChordsNotationService)
-    fun inject(there: PreferencesUpdater)
+    fun inject(there: PreferencesState)
     fun inject(there: LyricsThemeService)
     fun inject(there: CustomSongsLayoutController)
     fun inject(there: SongContextMenuBuilder)

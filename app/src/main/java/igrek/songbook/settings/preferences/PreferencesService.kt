@@ -8,6 +8,7 @@ import igrek.songbook.info.logger.LoggerFactory
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.set
+import kotlin.reflect.KClass
 
 class PreferencesService {
     @Inject
@@ -27,46 +28,39 @@ class PreferencesService {
     }
 
     fun loadAll() {
-        for (propertyDefinition in PreferencesDefinition.values()) {
-            loadProperty(propertyDefinition)
+        for (prefDef in PreferencesField.values()) {
+            loadProperty(prefDef)
         }
     }
 
     fun saveAll() {
         val editor = sharedPreferences.edit()
-        for (propertyDefinition in PreferencesDefinition.values()) {
-            saveProperty(propertyDefinition, editor)
+        for (prefDef in PreferencesField.values()) {
+            saveProperty(prefDef, editor)
         }
         editor.apply()
     }
 
-    private fun loadProperty(propertyDefinition: PreferencesDefinition) {
-        val propertyName = propertyDefinition.preferenceName()
+    private fun loadProperty(prefDef: PreferencesField) {
+        val propertyName = prefDef.preferenceName()
         var value: Any?
-        if (exists(propertyDefinition)) {
+        if (exists(prefDef)) {
             try {
-                value = when (propertyDefinition.type) {
-                    PropertyType.STRING -> sharedPreferences.getString(propertyName, null)
-                    PropertyType.BOOLEAN -> sharedPreferences.getBoolean(propertyName, false)
-                    PropertyType.INTEGER -> sharedPreferences.getInt(propertyName, 0)
-                    PropertyType.LONG -> sharedPreferences.getLong(propertyName, 0)
-                    PropertyType.FLOAT -> sharedPreferences.getFloat(propertyName, 0.0f)
-                }
+                value = prefDef.typeDef.load(sharedPreferences, propertyName)
             } catch (e: ClassCastException) {
-                value = propertyDefinition.defaultValue
+                value = prefDef.typeDef.defaultValue
                 logger.warn("Invalid property type, loading default value: $propertyName = $value")
             }
-
         } else {
-            value = propertyDefinition.defaultValue
+            value = prefDef.typeDef.defaultValue
             logger.debug("Missing preferences property, loading default value: $propertyName = $value")
         }
         // logger.debug("Property loaded: $propertyName = $value")
         propertyValues[propertyName] = value
     }
 
-    private fun saveProperty(propertyDefinition: PreferencesDefinition, editor: SharedPreferences.Editor) {
-        val propertyName = propertyDefinition.preferenceName()
+    private fun saveProperty(prefDef: PreferencesField, editor: SharedPreferences.Editor) {
+        val propertyName = prefDef.preferenceName()
         if (!propertyValues.containsKey(propertyName)) {
             logger.warn("No shared preferences property found in map")
         }
@@ -79,36 +73,29 @@ class PreferencesService {
             return
         }
 
-        when (propertyDefinition.type) {
-            PropertyType.STRING -> editor.putString(propertyName, castIfNotNull(propertyValue))
-            PropertyType.BOOLEAN -> editor.putBoolean(propertyName, castIfNotNull(propertyValue)!!)
-            PropertyType.INTEGER -> editor.putInt(propertyName, castIfNotNull(propertyValue)!!)
-            PropertyType.LONG -> editor.putLong(propertyName, castIfNotNull(propertyValue)!!)
-            PropertyType.FLOAT -> editor.putFloat(propertyName, castIfNotNull(propertyValue)!!)
-        }
+        prefDef.typeDef.save(editor, propertyName, propertyValue)
     }
 
-    fun <T> getValue(propertyDefinition: PreferencesDefinition, clazz: Class<T>): T? {
-        val propertyName = propertyDefinition.preferenceName()
+    fun <T : Any> getValue(prefDef: PreferencesField, clazz: KClass<T>): T {
+        val propertyName = prefDef.preferenceName()
         if (!propertyValues.containsKey(propertyName))
-            return null
+            return prefDef.typeDef.defaultValue as T
 
         val propertyValue = propertyValues[propertyName]
-
-        return castIfNotNull(propertyValue)
-    }
-
-    private fun <T> castIfNotNull(o: Any?): T? {
         @Suppress("unchecked_cast")
-        return o as? T
+        return propertyValue as T
     }
 
-    fun setValue(propertyDefinition: PreferencesDefinition, value: Any?) {
-        val propertyName = propertyDefinition.preferenceName()
+    inline fun <reified T : Any> getValueCasted(prefDef: PreferencesField): T {
+        return getValue(prefDef, prefDef.typeDef.validClass()) as T
+    }
+
+    fun setValue(prefDef: PreferencesField, value: Any?) {
+        val propertyName = prefDef.preferenceName()
         // class type validation
         if (value != null) {
-            val validClazz = propertyDefinition.type.clazz.name
-            val givenClazz = value.javaClass.name
+            val validClazz = prefDef.typeDef.validClass().simpleName
+            val givenClazz = value::class.simpleName
             require(givenClazz == validClazz) {
                 "invalid value type, expected: $validClazz, but given: $givenClazz"
             }
@@ -122,8 +109,8 @@ class PreferencesService {
         editor.apply()
     }
 
-    fun exists(propertyDefinition: PreferencesDefinition): Boolean {
-        return sharedPreferences.contains(propertyDefinition.preferenceName())
+    fun exists(prefDef: PreferencesField): Boolean {
+        return sharedPreferences.contains(prefDef.preferenceName())
     }
 
 }

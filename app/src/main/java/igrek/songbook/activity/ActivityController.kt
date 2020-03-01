@@ -7,7 +7,7 @@ import dagger.Lazy
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.persistence.repository.SongsRepository
-import igrek.songbook.settings.preferences.PreferencesUpdater
+import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.system.WindowManagerService
 import javax.inject.Inject
 
@@ -20,7 +20,7 @@ class ActivityController {
     @Inject
     lateinit var songsRepository: Lazy<SongsRepository>
     @Inject
-    lateinit var preferencesUpdater: Lazy<PreferencesUpdater>
+    lateinit var preferencesState: Lazy<PreferencesState>
 
     private val logger = LoggerFactory.logger
 
@@ -58,7 +58,7 @@ class ActivityController {
     fun onStop() {
         logger.debug("stopping activity...")
         songsRepository.get().requestSave(true)
-        preferencesUpdater.get().updateAndSave()
+        preferencesState.get().updateAndSave()
     }
 
     fun onDestroy() {

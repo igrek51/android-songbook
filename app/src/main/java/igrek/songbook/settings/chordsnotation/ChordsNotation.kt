@@ -21,5 +21,9 @@ enum class ChordsNotation(val id: Long, val displayNameResId: Int, val shortName
                 return null
             return values().firstOrNull { v -> v.id == id }
         }
+
+        fun deserialize(id: Long): ChordsNotation? {
+            return values().firstOrNull { v -> v.id == id }
+        }
     }
 }

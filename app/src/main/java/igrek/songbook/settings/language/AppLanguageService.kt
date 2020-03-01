@@ -6,7 +6,7 @@ import dagger.Lazy
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
-import igrek.songbook.settings.preferences.PreferencesDefinition
+import igrek.songbook.settings.preferences.PreferencesField
 import igrek.songbook.settings.preferences.PreferencesService
 import java.util.*
 import javax.inject.Inject
@@ -30,7 +30,7 @@ class AppLanguageService {
     }
 
     private fun loadPreferences() {
-        val appLanguageId = preferencesService.get().getValue(PreferencesDefinition.AppLanguage, String::class.java)
+        val appLanguageId = preferencesService.get().getValue(PreferencesField.AppLanguage, String::class)
         if (appLanguageId != null) {
             appLanguage = AppLanguage.parseByLangCode(appLanguageId)
             if (appLanguage == null)

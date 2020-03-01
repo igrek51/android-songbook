@@ -6,7 +6,7 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
-import igrek.songbook.settings.preferences.PreferencesDefinition
+import igrek.songbook.settings.preferences.PreferencesField
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController
@@ -39,7 +39,7 @@ class RandomSongOpener {
     }
 
     private fun loadPreferences() {
-        fromFavouriteSongsOnly = preferencesService.getValue(PreferencesDefinition.RandomFavouriteSongsOnly, Boolean::class.java)
+        fromFavouriteSongsOnly = preferencesService.getValue(PreferencesField.RandomFavouriteSongsOnly, Boolean::class)
                 ?: false
     }
 

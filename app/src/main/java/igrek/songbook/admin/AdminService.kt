@@ -4,7 +4,7 @@ import dagger.Lazy
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.navigation.NavigationMenuController
-import igrek.songbook.settings.preferences.PreferencesDefinition
+import igrek.songbook.settings.preferences.PreferencesField
 import igrek.songbook.settings.preferences.PreferencesService
 import javax.inject.Inject
 
@@ -42,7 +42,7 @@ class AdminService {
     }
 
     private fun loadPreferences() {
-        userAuthToken = preferencesService.get().getValue(PreferencesDefinition.UserAuthToken, String::class.java)
+        userAuthToken = preferencesService.get().getValue(PreferencesField.UserAuthToken, String::class)
                 ?: ""
     }
 

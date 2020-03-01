@@ -24,7 +24,7 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.repository.SongsRepository
-import igrek.songbook.settings.preferences.PreferencesUpdater
+import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.system.filesystem.saveInputStreamToFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -45,7 +45,7 @@ class GoogleSyncManager {
     @Inject
     lateinit var songsRepository: Lazy<SongsRepository>
     @Inject
-    lateinit var preferencesUpdater: Lazy<PreferencesUpdater>
+    lateinit var preferencesState: Lazy<PreferencesState>
     @Inject
     lateinit var activityController: Lazy<ActivityController>
 
@@ -86,7 +86,7 @@ class GoogleSyncManager {
         showSyncProgress(0, syncFiles.size + 1)
         GlobalScope.launch(Dispatchers.IO) {
             songsRepository.get().saveNow()
-            preferencesUpdater.get().updateAndSave()
+            preferencesState.get().updateAndSave()
             runCatching {
                 syncFiles.forEachIndexed { index, syncFile ->
                     showSyncProgress(index + 1, syncFiles.size + 1)
@@ -120,7 +120,7 @@ class GoogleSyncManager {
                         ?: "")
             }.onSuccess {
                 songsRepository.get().reloadSongsDb()
-                preferencesUpdater.get().reload()
+                preferencesState.get().reload()
                 if (errors.isEmpty()) {
                     uiInfoService.showToast(R.string.settings_sync_restore_success)
                     uiInfoService.showInfo(R.string.settings_sync_restore_success)

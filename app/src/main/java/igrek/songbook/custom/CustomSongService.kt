@@ -11,7 +11,7 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.custom.CustomSong
 import igrek.songbook.persistence.user.custom.CustomSongMapper
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import igrek.songbook.settings.preferences.PreferencesDefinition
+import igrek.songbook.settings.preferences.PreferencesField
 import igrek.songbook.settings.preferences.PreferencesService
 import java.util.*
 import javax.inject.Inject
@@ -37,7 +37,7 @@ class CustomSongService {
     }
 
     private fun loadPreferences() {
-        customSongsGroupCategories = preferencesService.getValue(PreferencesDefinition.CustomSongsGroupCategories, Boolean::class.java)
+        customSongsGroupCategories = preferencesService.getValue(PreferencesField.CustomSongsGroupCategories, Boolean::class)
                 ?: false
     }
 

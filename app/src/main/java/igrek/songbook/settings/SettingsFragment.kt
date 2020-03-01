@@ -20,7 +20,7 @@ import igrek.songbook.settings.instrument.ChordsInstrument
 import igrek.songbook.settings.instrument.ChordsInstrumentService
 import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.language.AppLanguageService
-import igrek.songbook.settings.preferences.PreferencesUpdater
+import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.sync.GoogleSyncManager
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.FontTypeface
@@ -52,7 +52,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     @Inject
     lateinit var chordsInstrumentService: dagger.Lazy<ChordsInstrumentService>
     @Inject
-    lateinit var preferencesUpdater: dagger.Lazy<PreferencesUpdater>
+    lateinit var preferencesState: dagger.Lazy<PreferencesState>
     @Inject
     lateinit var songsRepository: dagger.Lazy<SongsRepository>
     @Inject
@@ -81,48 +81,48 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun lateInit() {
         setupListPreference("applicationLanguage",
                 appLanguageService.get().languageEntries(),
-                onLoad = { preferencesUpdater.get().appLanguage?.langCode },
+                onLoad = { preferencesState.get().appLanguage?.langCode },
                 onSave = { id: String ->
-                    preferencesUpdater.get().appLanguage = AppLanguage.parseByLangCode(id)
+                    preferencesState.get().appLanguage = AppLanguage.parseByLangCode(id)
                 }
         )
 
         setupListPreference("chordsInstrument",
                 chordsInstrumentService.get().instrumentEntries(),
-                onLoad = { preferencesUpdater.get().chordsInstrument?.id.toString() },
+                onLoad = { preferencesState.get().chordsInstrument?.id.toString() },
                 onSave = { id: String ->
-                    preferencesUpdater.get().chordsInstrument = ChordsInstrument.parseById(id.toLong())
+                    preferencesState.get().chordsInstrument = ChordsInstrument.parseById(id.toLong())
                 }
         )
 
         setupListPreference("chordsNotation",
                 chordsNotationService.get().chordsNotationEntries(),
-                onLoad = { preferencesUpdater.get().chordsNotation?.id.toString() },
+                onLoad = { preferencesState.get().chordsNotation?.id.toString() },
                 onSave = { id: String ->
-                    preferencesUpdater.get().chordsNotation = ChordsNotation.parseById(id.toLong())
+                    preferencesState.get().chordsNotation = ChordsNotation.parseById(id.toLong())
                 }
         )
 
         setupListPreference("fontTypeface",
                 lyricsThemeService.get().fontTypefaceEntries(),
-                onLoad = { preferencesUpdater.get().fontTypeface?.id.toString() },
+                onLoad = { preferencesState.get().fontTypeface?.id.toString() },
                 onSave = { id: String ->
-                    preferencesUpdater.get().fontTypeface = FontTypeface.parseById(id)
+                    preferencesState.get().fontTypeface = FontTypeface.parseById(id)
                 }
         )
 
         setupListPreference("colorScheme",
                 lyricsThemeService.get().colorSchemeEntries(),
-                onLoad = { preferencesUpdater.get().colorScheme?.id.toString() },
+                onLoad = { preferencesState.get().colorScheme?.id.toString() },
                 onSave = { id: String ->
-                    preferencesUpdater.get().colorScheme = ColorScheme.parseById(id.toLong())
+                    preferencesState.get().colorScheme = ColorScheme.parseById(id.toLong())
                 }
         )
 
         setupSeekBarPreference("autoscrollInitialPause", min = 0, max = 90000,
-                onLoad = { preferencesUpdater.get().autoscrollInitialPause.toFloat() },
+                onLoad = { preferencesState.get().autoscrollInitialPause.toFloat() },
                 onSave = { value: Float ->
-                    preferencesUpdater.get().autoscrollInitialPause = value.toLong()
+                    preferencesState.get().autoscrollInitialPause = value.toLong()
                 },
                 stringConverter = { value: Float ->
                     uiResourceService.get().resString(R.string.settings_scroll_initial_pause_value, msToS(value).toString())
@@ -130,9 +130,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
         )
 
         setupSeekBarPreference("autoscrollSpeed", min = AutoscrollService.MIN_SPEED, max = AutoscrollService.MAX_SPEED,
-                onLoad = { preferencesUpdater.get().autoscrollSpeed },
+                onLoad = { preferencesState.get().autoscrollSpeed },
                 onSave = { value: Float ->
-                    preferencesUpdater.get().autoscrollSpeed = value
+                    preferencesState.get().autoscrollSpeed = value
                 },
                 stringConverter = { value: Float ->
                     uiResourceService.get().resString(R.string.settings_autoscroll_speed_value, decimal3(value))
@@ -140,9 +140,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
         )
 
         setupSeekBarPreference("fontSize", min = 5, max = 100,
-                onLoad = { preferencesUpdater.get().fontsize },
+                onLoad = { preferencesState.get().fontsize },
                 onSave = { value: Float ->
-                    preferencesUpdater.get().fontsize = value
+                    preferencesState.get().fontsize = value
                 },
                 stringConverter = { value: Float ->
                     uiResourceService.get().resString(R.string.settings_font_size_value, decimal1(value))
@@ -150,37 +150,37 @@ class SettingsFragment : PreferenceFragmentCompat() {
         )
 
         setupSwitchPreference("chordsEndOfLine",
-                onLoad = { preferencesUpdater.get().chordsEndOfLine },
+                onLoad = { preferencesState.get().chordsEndOfLine },
                 onSave = { value: Boolean ->
-                    preferencesUpdater.get().chordsEndOfLine = value
+                    preferencesState.get().chordsEndOfLine = value
                 }
         )
 
         setupSwitchPreference("chordsAbove",
-                onLoad = { preferencesUpdater.get().chordsAbove },
+                onLoad = { preferencesState.get().chordsAbove },
                 onSave = { value: Boolean ->
-                    preferencesUpdater.get().chordsAbove = value
+                    preferencesState.get().chordsAbove = value
                 }
         )
 
         setupSwitchPreference("autoscrollSpeedAutoAdjustment",
-                onLoad = { preferencesUpdater.get().autoscrollSpeedAutoAdjustment },
+                onLoad = { preferencesState.get().autoscrollSpeedAutoAdjustment },
                 onSave = { value: Boolean ->
-                    preferencesUpdater.get().autoscrollSpeedAutoAdjustment = value
+                    preferencesState.get().autoscrollSpeedAutoAdjustment = value
                 }
         )
 
         setupSwitchPreference("autoscrollSpeedVolumeKeys",
-                onLoad = { preferencesUpdater.get().autoscrollSpeedVolumeKeys },
+                onLoad = { preferencesState.get().autoscrollSpeedVolumeKeys },
                 onSave = { value: Boolean ->
-                    preferencesUpdater.get().autoscrollSpeedVolumeKeys = value
+                    preferencesState.get().autoscrollSpeedVolumeKeys = value
                 }
         )
 
         setupSwitchPreference("randomFavouriteSongsOnly",
-                onLoad = { preferencesUpdater.get().randomFavouriteSongsOnly },
+                onLoad = { preferencesState.get().randomFavouriteSongsOnly },
                 onSave = { value: Boolean ->
-                    preferencesUpdater.get().randomFavouriteSongsOnly = value
+                    preferencesState.get().randomFavouriteSongsOnly = value
                 }
         )
 
@@ -228,16 +228,16 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         setupSwitchPreference("customSongsGroupCategories",
-                onLoad = { preferencesUpdater.get().customSongsGroupCategories },
+                onLoad = { preferencesState.get().customSongsGroupCategories },
                 onSave = { value: Boolean ->
-                    preferencesUpdater.get().customSongsGroupCategories = value
+                    preferencesState.get().customSongsGroupCategories = value
                 }
         )
 
         setupSwitchPreference("restoreTransposition",
-                onLoad = { preferencesUpdater.get().restoreTransposition },
+                onLoad = { preferencesState.get().restoreTransposition },
                 onSave = { value: Boolean ->
-                    preferencesUpdater.get().restoreTransposition = value
+                    preferencesState.get().restoreTransposition = value
                 }
         )
 

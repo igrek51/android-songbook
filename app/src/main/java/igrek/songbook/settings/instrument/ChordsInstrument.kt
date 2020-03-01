@@ -16,9 +16,7 @@ enum class ChordsInstrument(val id: Long, val displayNameResId: Int) {
         val default: ChordsInstrument
             get() = GUITAR
 
-        fun parseById(id: Long?): ChordsInstrument? {
-            if (id == null)
-                return null
+        fun parseById(id: Long): ChordsInstrument? {
             return values().firstOrNull { v -> v.id == id }
         }
     }

@@ -41,7 +41,7 @@ import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.instrument.ChordsInstrumentService
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesService
-import igrek.songbook.settings.preferences.PreferencesUpdater
+import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.sync.GoogleSyncManager
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.SongDetailsService
@@ -258,7 +258,7 @@ open class FactoryModule(private val activity: AppCompatActivity) {
 
     @Provides
     @Singleton
-    fun aPreferencesUpdater(): PreferencesUpdater = PreferencesUpdater()
+    fun aPreferencesUpdater(): PreferencesState = PreferencesState()
 
     @Provides
     @Singleton

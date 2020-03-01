@@ -18,8 +18,10 @@ import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.lyrics.LyricsManager
 import igrek.songbook.songselection.random.RandomSongOpener
 import javax.inject.Inject
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
-class PreferencesUpdater {
+class PreferencesState {
 
     @Inject
     lateinit var preferencesService: PreferencesService
@@ -45,6 +47,8 @@ class PreferencesUpdater {
     private val logger = LoggerFactory.logger
 
     // preferences getters / setters proxy
+    var fontsize: Float by PreferenceDelegate(PreferencesField.Fontsize)
+
     var appLanguage: AppLanguage?
         get() = appLanguageService.get().appLanguage
         set(value) {
@@ -55,12 +59,6 @@ class PreferencesUpdater {
         get() = chordsNotationService.get().chordsNotation
         set(value) {
             chordsNotationService.get().chordsNotation = value
-        }
-
-    var fontsize: Float
-        get() = lyricsThemeService.get().fontsize
-        set(value) {
-            lyricsThemeService.get().fontsize = value
         }
 
     var fontTypeface: FontTypeface?
@@ -146,26 +144,26 @@ class PreferencesUpdater {
     }
 
     fun updateAndSave() {
-        preferencesService.setValue(PreferencesDefinition.Fontsize, fontsize)
-        preferencesService.setValue(PreferencesDefinition.FontTypefaceId, fontTypeface?.id)
-        preferencesService.setValue(PreferencesDefinition.ColorSchemeId, colorScheme?.id)
-        preferencesService.setValue(PreferencesDefinition.ChordsEndOfLine, chordsEndOfLine)
-        preferencesService.setValue(PreferencesDefinition.ChordsAbove, chordsAbove)
+        preferencesService.setValue(PreferencesField.Fontsize, fontsize)
+        preferencesService.setValue(PreferencesField.FontTypefaceId, fontTypeface)
+        preferencesService.setValue(PreferencesField.ColorSchemeId, colorScheme)
+        preferencesService.setValue(PreferencesField.ChordsEndOfLine, chordsEndOfLine)
+        preferencesService.setValue(PreferencesField.ChordsAbove, chordsAbove)
 
-        preferencesService.setValue(PreferencesDefinition.AutoscrollInitialPause, autoscrollInitialPause)
-        preferencesService.setValue(PreferencesDefinition.AutoscrollSpeed, autoscrollSpeed)
-        preferencesService.setValue(PreferencesDefinition.AutoscrollSpeedAutoAdjustment, autoscrollSpeedAutoAdjustment)
-        preferencesService.setValue(PreferencesDefinition.AutoscrollSpeedVolumeKeys, autoscrollSpeedVolumeKeys)
+        preferencesService.setValue(PreferencesField.AutoscrollInitialPause, autoscrollInitialPause)
+        preferencesService.setValue(PreferencesField.AutoscrollSpeed, autoscrollSpeed)
+        preferencesService.setValue(PreferencesField.AutoscrollSpeedAutoAdjustment, autoscrollSpeedAutoAdjustment)
+        preferencesService.setValue(PreferencesField.AutoscrollSpeedVolumeKeys, autoscrollSpeedVolumeKeys)
 
-        preferencesService.setValue(PreferencesDefinition.AppLanguage, appLanguage?.langCode)
-        preferencesService.setValue(PreferencesDefinition.ChordsNotationId, chordsNotation?.id)
-        preferencesService.setValue(PreferencesDefinition.ChordsInstrument, chordsInstrument?.id)
+        preferencesService.setValue(PreferencesField.AppLanguage, appLanguage)
+        preferencesService.setValue(PreferencesField.ChordsNotationId, chordsNotation)
+        preferencesService.setValue(PreferencesField.ChordsInstrument, chordsInstrument)
 
-        preferencesService.setValue(PreferencesDefinition.RandomFavouriteSongsOnly, randomFavouriteSongsOnly)
-        preferencesService.setValue(PreferencesDefinition.CustomSongsGroupCategories, customSongsGroupCategories)
-        preferencesService.setValue(PreferencesDefinition.RestoreTransposition, restoreTransposition)
+        preferencesService.setValue(PreferencesField.RandomFavouriteSongsOnly, randomFavouriteSongsOnly)
+        preferencesService.setValue(PreferencesField.CustomSongsGroupCategories, customSongsGroupCategories)
+        preferencesService.setValue(PreferencesField.RestoreTransposition, restoreTransposition)
 
-        preferencesService.setValue(PreferencesDefinition.UserAuthToken, userAuthToken)
+        preferencesService.setValue(PreferencesField.UserAuthToken, userAuthToken)
 
         preferencesService.saveAll()
     }
@@ -173,6 +171,20 @@ class PreferencesUpdater {
     fun reload() {
         logger.debug("reloading preferences")
         preferencesService.loadAll()
+    }
+
+}
+
+class PreferenceDelegate<T>(
+        private val field: PreferencesField
+): ReadWriteProperty<PreferencesState, T> {
+
+    override fun getValue(thisRef: PreferencesState, property: KProperty<*>): T {
+        return thisRef.preferencesService.getValue(field, field.typeDef.validClass()) as T
+    }
+
+    override fun setValue(thisRef: PreferencesState, property: KProperty<*>, value: T) {
+        thisRef.preferencesService.setValue(field, value)
     }
 
 }

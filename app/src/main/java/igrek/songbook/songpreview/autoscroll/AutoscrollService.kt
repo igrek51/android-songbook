@@ -7,7 +7,7 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
-import igrek.songbook.settings.preferences.PreferencesDefinition
+import igrek.songbook.settings.preferences.PreferencesField
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.renderer.SongPreview
@@ -90,10 +90,10 @@ class AutoscrollService {
     }
 
     private fun loadPreferences() {
-        initialPause = preferencesService.getValue(PreferencesDefinition.AutoscrollInitialPause, Long::class.java)!!
-        autoscrollSpeed = preferencesService.getValue(PreferencesDefinition.AutoscrollSpeed, Float::class.java)!!
-        autoSpeedAdjustment = preferencesService.getValue(PreferencesDefinition.AutoscrollSpeedAutoAdjustment, Boolean::class.java)!!
-        volumeKeysSpeedControl = preferencesService.getValue(PreferencesDefinition.AutoscrollSpeedVolumeKeys, Boolean::class.java)!!
+        initialPause = preferencesService.getValue(PreferencesField.AutoscrollInitialPause, Long::class)!!
+        autoscrollSpeed = preferencesService.getValue(PreferencesField.AutoscrollSpeed, Float::class)!!
+        autoSpeedAdjustment = preferencesService.getValue(PreferencesField.AutoscrollSpeedAutoAdjustment, Boolean::class)!!
+        volumeKeysSpeedControl = preferencesService.getValue(PreferencesField.AutoscrollSpeedVolumeKeys, Boolean::class)!!
     }
 
     fun reset() {

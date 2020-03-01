@@ -4,7 +4,7 @@ import android.app.Activity
 import dagger.Lazy
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
-import igrek.songbook.settings.preferences.PreferencesDefinition
+import igrek.songbook.settings.preferences.PreferencesField
 import igrek.songbook.settings.preferences.PreferencesService
 import java.util.*
 import javax.inject.Inject
@@ -26,8 +26,8 @@ class ChordsInstrumentService {
     }
 
     private fun loadPreferences() {
-        val id = preferencesService.get().getValue(PreferencesDefinition.ChordsInstrument, Long::class.java)
-        instrument = ChordsInstrument.parseById(id) ?: ChordsInstrument.default
+        val id = preferencesService.get().getValue(PreferencesField.ChordsInstrument, Long::class)
+        instrument = ChordsInstrument.parseById(id ?: ChordsInstrument.default.id) ?: ChordsInstrument.default
     }
 
     fun instrumentEntries(): LinkedHashMap<String, String> {
