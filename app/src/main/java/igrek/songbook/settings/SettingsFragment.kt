@@ -21,7 +21,7 @@ import igrek.songbook.settings.instrument.ChordsInstrumentService
 import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesUpdater
-import igrek.songbook.settings.preferences.sync.GoogleSyncManager
+import igrek.songbook.settings.sync.GoogleSyncManager
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.FontTypeface
 import igrek.songbook.settings.theme.LyricsThemeService

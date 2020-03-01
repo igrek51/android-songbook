@@ -1,4 +1,4 @@
-package igrek.songbook.settings.preferences.sync
+package igrek.songbook.settings.sync
 
 import android.app.Activity
 import android.content.Intent

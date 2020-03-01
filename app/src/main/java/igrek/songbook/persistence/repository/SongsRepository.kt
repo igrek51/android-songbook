@@ -125,7 +125,7 @@ class SongsRepository {
         val customDbBuilder = CustomSongsDbBuilder(userDataDao.get())
 
         publicSongsRepo = publicDbBuilder.buildPublic(uiResourceService.get())
-        customSongsRepo = customDbBuilder.buildCustom()
+        customSongsRepo = customDbBuilder.buildCustom(uiResourceService.get())
         allSongsRepo = AllSongsRepository(publicSongsRepo, customSongsRepo)
 
         dbChangeSubject.onNext(true)
@@ -142,7 +142,7 @@ class SongsRepository {
         }
 
         val customDbBuilder = CustomSongsDbBuilder(userDataDao.get())
-        customSongsRepo = customDbBuilder.buildCustom()
+        customSongsRepo = customDbBuilder.buildCustom(uiResourceService.get())
         allSongsRepo.invalidate()
         dbChangeSubject.onNext(true)
     }

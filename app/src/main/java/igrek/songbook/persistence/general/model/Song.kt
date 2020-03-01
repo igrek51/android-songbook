@@ -47,7 +47,7 @@ data class Song(
     }
 
     fun displayCategories(): String {
-        return categories.joinToString(", ") { c -> c.displayName!! }
+        return categories.joinToString(", ") { c -> c.displayName ?: "" }
     }
 
     fun displayName(): String {

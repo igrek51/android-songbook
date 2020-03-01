@@ -14,7 +14,7 @@ import igrek.songbook.custom.SongImportFileChooser
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
-import igrek.songbook.settings.preferences.sync.GoogleSyncManager
+import igrek.songbook.settings.sync.GoogleSyncManager
 import igrek.songbook.system.PermissionService
 import igrek.songbook.system.SystemKeyDispatcher
 import igrek.songbook.util.RetryDelayed

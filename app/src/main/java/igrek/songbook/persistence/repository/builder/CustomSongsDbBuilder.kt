@@ -1,5 +1,6 @@
 package igrek.songbook.persistence.repository.builder
 
+import igrek.songbook.info.UiResourceService
 import igrek.songbook.persistence.general.model.Category
 import igrek.songbook.persistence.general.model.CategoryType
 import igrek.songbook.persistence.general.model.Song
@@ -12,7 +13,7 @@ import igrek.songbook.util.lookup.SimpleCache
 
 class CustomSongsDbBuilder(private val userDataDao: UserDataDao) {
 
-    fun buildCustom(): CustomSongsRepository {
+    fun buildCustom(uiResourceService: UiResourceService): CustomSongsRepository {
         val allCustomCategory = Category(
                 id = CategoryType.CUSTOM.id,
                 type = CategoryType.CUSTOM,
@@ -20,12 +21,21 @@ class CustomSongsDbBuilder(private val userDataDao: UserDataDao) {
                 custom = false,
                 songs = mutableListOf()
         )
+        refillCategoryDisplayName(uiResourceService, allCustomCategory)
         val (customSongs, customSongsUncategorized) = assembleCustomSongs(allCustomCategory)
         return CustomSongsRepository(
                 songs = SimpleCache { customSongs },
                 uncategorizedSongs = SimpleCache { customSongsUncategorized },
                 allCustomCategory = allCustomCategory
         )
+    }
+
+    private fun refillCategoryDisplayName(uiResourceService: UiResourceService, category: Category) {
+        category.displayName = when {
+            category.type.localeStringId != null ->
+                uiResourceService.resString(category.type.localeStringId)
+            else -> category.name
+        }
     }
 
     private fun assembleCustomSongs(customGeneralCategory: Category): Pair<List<Song>, List<Song>> {

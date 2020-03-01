@@ -42,7 +42,7 @@ import igrek.songbook.settings.instrument.ChordsInstrumentService
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.PreferencesUpdater
-import igrek.songbook.settings.preferences.sync.GoogleSyncManager
+import igrek.songbook.settings.sync.GoogleSyncManager
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.SongDetailsService
 import igrek.songbook.songpreview.SongOpener
