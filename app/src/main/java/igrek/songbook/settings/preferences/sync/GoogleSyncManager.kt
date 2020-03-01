@@ -28,7 +28,7 @@ import igrek.songbook.settings.preferences.PreferencesUpdater
 import igrek.songbook.system.filesystem.saveInputStreamToFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -84,7 +84,7 @@ class GoogleSyncManager {
 
     private fun syncSaveSignedIn(driveService: Drive) {
         showSyncProgress(0, syncFiles.size + 1)
-        GlobalScope.async(Dispatchers.IO) {
+        GlobalScope.launch(Dispatchers.IO) {
             songsRepository.get().saveNow()
             preferencesUpdater.get().updateAndSave()
             runCatching {
@@ -103,7 +103,7 @@ class GoogleSyncManager {
 
     private fun syncRestoreSignedIn(driveService: Drive) {
         showSyncProgress(0, syncFiles.size + 1)
-        GlobalScope.async(Dispatchers.IO) {
+        GlobalScope.launch(Dispatchers.IO) {
             val errors = mutableListOf<String>()
             runCatching {
                 syncFiles.forEachIndexed { index, syncFile ->
