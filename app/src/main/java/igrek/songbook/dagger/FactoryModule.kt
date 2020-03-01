@@ -3,6 +3,7 @@ package igrek.songbook.dagger
 
 import android.app.Activity
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import dagger.Module
 import dagger.Provides
@@ -88,6 +89,11 @@ open class FactoryModule(private val activity: AppCompatActivity) {
     @Provides
     open fun provideLogger(): Logger {
         return LoggerFactory.logger
+    }
+
+    @Provides
+    fun aSharedPreferences(activity: AppCompatActivity): SharedPreferences {
+        return activity.applicationContext.getSharedPreferences(PreferencesService.sharedPreferencesName, Context.MODE_PRIVATE)
     }
 
     /* Services */

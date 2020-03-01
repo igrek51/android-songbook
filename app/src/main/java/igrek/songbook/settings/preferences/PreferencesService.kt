@@ -1,7 +1,5 @@
 package igrek.songbook.settings.preferences
 
-import android.app.Activity
-import android.content.Context
 import android.content.SharedPreferences
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
@@ -11,18 +9,17 @@ import kotlin.collections.set
 
 class PreferencesService {
     @Inject
-    lateinit var activity: Activity
+    lateinit var sharedPreferences: SharedPreferences
 
     private val logger = LoggerFactory.logger
     private val propertyValues = HashMap<String, Any?>()
-    private val sharedPreferences: SharedPreferences
 
-    private val sharedPreferencesName = "SongBook-UserPreferences"
+    companion object {
+        const val sharedPreferencesName = "SongBook-UserPreferences"
+    }
 
     init {
         DaggerIoc.factoryComponent.inject(this)
-        sharedPreferences = activity.applicationContext
-                .getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE)
         loadAll()
     }
 
