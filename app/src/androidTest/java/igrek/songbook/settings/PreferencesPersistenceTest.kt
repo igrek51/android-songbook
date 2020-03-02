@@ -7,6 +7,7 @@ import igrek.songbook.dagger.DaggerBreach
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.preferences.PreferencesField
+import igrek.songbook.settings.preferences.PreferencesService
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -39,8 +40,8 @@ class PreferencesPersistenceTest {
 
     @Test
     fun test_saving_reading() {
-        val preferencesService = DaggerBreach.factory().aPreferencesService()
-        val preferencesState = DaggerBreach.factory().aPreferencesState()
+        val preferencesService: PreferencesService = DaggerBreach.inject("apreferencesServiceProvider")
+        val preferencesState = DaggerBreach.inject("apreferencesServiceProvider")
 
         preferencesService.clear()
 
