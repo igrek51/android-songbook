@@ -264,7 +264,7 @@ open class FactoryModule(private val activity: AppCompatActivity) {
 
     @Provides
     @Singleton
-    fun aPreferencesUpdater(): PreferencesState = PreferencesState()
+    fun aPreferencesState(): PreferencesState = PreferencesState()
 
     @Provides
     @Singleton

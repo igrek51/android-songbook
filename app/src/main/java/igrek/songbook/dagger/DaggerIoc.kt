@@ -9,10 +9,13 @@ object DaggerIoc {
 
     private val logger = LoggerFactory.logger
 
+    private var factoryModule: FactoryModule? = null
+
     fun init(activity: AppCompatActivity) {
         logger.info("Initializing Dagger IOC container...")
+        factoryModule = FactoryModule(activity)
         factoryComponent = DaggerFactoryComponent.builder()
-                .factoryModule(FactoryModule(activity))
+                .factoryModule(factoryModule)
                 .build()
     }
 }

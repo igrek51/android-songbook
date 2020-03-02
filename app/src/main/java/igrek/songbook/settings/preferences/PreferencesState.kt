@@ -55,27 +55,6 @@ class PreferencesState {
     }
 
     fun updateAndSave() {
-        preferencesService.setValue(PreferencesField.Fontsize, fontsize)
-        preferencesService.setValue(PreferencesField.FontTypefaceId, fontTypeface)
-        preferencesService.setValue(PreferencesField.ColorSchemeId, colorScheme)
-        preferencesService.setValue(PreferencesField.ChordsEndOfLine, chordsEndOfLine)
-        preferencesService.setValue(PreferencesField.ChordsAbove, chordsAbove)
-
-        preferencesService.setValue(PreferencesField.AutoscrollInitialPause, autoscrollInitialPause)
-        preferencesService.setValue(PreferencesField.AutoscrollSpeed, autoscrollSpeed)
-        preferencesService.setValue(PreferencesField.AutoscrollSpeedAutoAdjustment, autoscrollSpeedAutoAdjustment)
-        preferencesService.setValue(PreferencesField.AutoscrollSpeedVolumeKeys, autoscrollSpeedVolumeKeys)
-
-        preferencesService.setValue(PreferencesField.AppLanguage, appLanguage)
-        preferencesService.setValue(PreferencesField.ChordsNotationId, chordsNotation)
-        preferencesService.setValue(PreferencesField.ChordsInstrument, chordsInstrument)
-
-        preferencesService.setValue(PreferencesField.RandomFavouriteSongsOnly, randomFavouriteSongsOnly)
-        preferencesService.setValue(PreferencesField.CustomSongsGroupCategories, customSongsGroupCategories)
-        preferencesService.setValue(PreferencesField.RestoreTransposition, restoreTransposition)
-
-        preferencesService.setValue(PreferencesField.UserAuthToken, userAuthToken)
-
         preferencesService.saveAll()
     }
 

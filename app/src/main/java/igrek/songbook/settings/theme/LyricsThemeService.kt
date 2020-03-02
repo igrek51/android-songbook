@@ -16,16 +16,14 @@ class LyricsThemeService {
     @Inject
     lateinit var preferencesState: PreferencesState
 
-    var fontsize: Float = 0f
+    var fontsize: Float
         get() = preferencesState.fontsize
         set(value) {
-            field = if (value < 1)
+            preferencesState.fontsize = if (value < 1)
                 1f
             else
                 value
-            preferencesState.fontsize = value
         }
-
     var fontTypeface: FontTypeface
         get() = preferencesState.fontTypeface
         set(value) {

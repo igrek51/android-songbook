@@ -24,6 +24,7 @@ class PreferencesService {
     }
 
     fun loadAll() {
+        propertyValues.clear()
         for (prefDef in PreferencesField.values()) {
             loadProperty(prefDef)
         }
@@ -98,6 +99,7 @@ class PreferencesService {
         val editor = sharedPreferences.edit()
         editor.clear()
         editor.apply()
+        loadAll()
     }
 
     fun exists(prefDef: PreferencesField): Boolean {

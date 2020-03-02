@@ -17,7 +17,7 @@ class ChordDiagramBuilder(private val instrument: ChordsInstrument = ChordsInstr
         val fretsStr = definition.split(",")
 
         val stringsCount = stringsNames.getValue(instrument).size
-        assert(fretsStr.size == stringsCount) { "invalid frets size" }
+        check(fretsStr.size == stringsCount) { "invalid frets size" }
 
         val frets = fretsStr.map {
             if (it == "x")
