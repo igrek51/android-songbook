@@ -328,7 +328,7 @@
     <string name="settings_sync_save_hint">Save all application data (settings, custom songs, playlists, favourites) on your Google Drive Account in hidden application data folder. This will overwrite your previous backup.</string>
     <string name="settings_sync_save_success">Application data backed up successfully.</string>
     <string name="settings_sync_save_error">Error when saving backup: %s</string>
-    <string name="settings_sync_restore_hint">Restore all application data from your Google Drive Account.\nWarning: This will overwrite all your current application data.</string>
+    <string name="settings_sync_restore_hint">Restore all application data from your Google Drive Account.\nWarning: This will overwrite all your current application data. Requires restart.</string>
     <string name="settings_sync_restore_confirm">Do you really want to restore all application data from your Google Drive Account?\nThis will overwrite all your current application data. Application restart is needed after restoring.</string>
     <string name="settings_sync_restore_success">Application data restored successfully. Please restart app.</string>
     <string name="settings_sync_restore_error">Error when restoring data: %s</string>
@@ -336,4 +336,6 @@
     <string name="error_unable_to_sing_in_google">Unable to sign in to Google account</string>
     <string name="settings_sync_in_progress">Sync in progress… %s%%</string>
     <string name="settings_sync_restore_partial_success">Some backup files couldn\'t be found. Backup restored partially. Restart app.</string>
+    <string name="sync_singed_out">You are signed out.</string>
+    <string name="settings_sync_sign_out">Sign out sync account</string>
 </resources>

@@ -209,8 +209,21 @@ class GoogleSyncManager {
                 .requestScopes(Scope(Scopes.DRIVE_APPFOLDER))
                 .build()
         val client = GoogleSignIn.getClient(activity, signInOptions)
+
         // The result of the sign-in Intent is handled in onActivityResult.
         activity.startActivityForResult(client.signInIntent, requestCode)
+    }
+
+    fun signOut() {
+        val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestScopes(Scope(Scopes.DRIVE_APPFOLDER))
+                .build()
+        val client = GoogleSignIn.getClient(activity, signInOptions)
+
+        client.signOut().addOnCompleteListener {
+            uiInfoService.showInfo(R.string.sync_singed_out)
+        }
     }
 
     fun handleSignInResult(result: Intent?, activity: AppCompatActivity?, requestCode: Int, resultCode: Int) {

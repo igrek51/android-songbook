@@ -320,7 +320,7 @@
     <string name="settings_sync_save_hint">Zapisz wszystkie dane aplikacji (ustawienia, własne piosenki, playlisty, ulubione) na Twoim koncie Google Drive w ukrytym folderze danych aplikacji. Nadpisze to Twoją poprzednią kopię zapasową.</string>
     <string name="settings_sync_save_success">Dane aplikacji zostały zapisane.</string>
     <string name="settings_sync_save_error">Błąd tworzenia kopii zapasowej: %s</string>
-    <string name="settings_sync_restore_hint">Przywróć zapisane dane aplikacji z twojego konta Google Drive.\nUwaga: Przywracanie nadpisze twoje obecne niezapisane dane aplikacji.</string>
+    <string name="settings_sync_restore_hint">Przywróć zapisane dane aplikacji z twojego konta Google Drive.\nUwaga: Przywracanie nadpisze twoje obecne niezapisane dane aplikacji. Wymagany restart.</string>
     <string name="settings_sync_restore_confirm">Czy na pewno chcesz przywrócić zapisane dane aplikacji z twojego konta Google Drive?\nPrzywracanie nadpisze twoje obecne niezapisane dane aplikacji. Po zakończeniu wymagany jest restart aplikacji.</string>
     <string name="settings_sync_restore_success">Dane aplikacji zostały przywrócone. Zrestartuj aplikację</string>
     <string name="settings_sync_restore_error">Błąd przywracania danych: %s</string>
@@ -328,4 +328,6 @@
     <string name="error_unable_to_sing_in_google">Błąd logowania do konta Google</string>
     <string name="settings_sync_in_progress">Synchronizacja w trakcie… %s%%</string>
     <string name="settings_sync_restore_partial_success">Brak wszystkich plików kopii. Kopia zapasowa przywrócona częściowo. Zrestartuj aplikację.</string>
+    <string name="sync_singed_out">Jesteś wylogowany.</string>
+    <string name="settings_sync_sign_out">Wyloguj się z konta synchronizacji</string>
 </resources>

@@ -256,6 +256,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
         }
 
+        setupClickPreference("settingsSyncSignOut") {
+            googleSyncManager.get().signOut()
+        }
+
         refreshFragment()
     }
 
