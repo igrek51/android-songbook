@@ -2,10 +2,7 @@ package igrek.songbook.admin.antechamber
 
 import android.view.View
 import android.widget.Button
-import dagger.Lazy
 import igrek.songbook.R
-import igrek.songbook.activity.ActivityController
-import igrek.songbook.admin.AdminService
 import igrek.songbook.custom.CustomSongService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
@@ -18,7 +15,6 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import io.reactivex.android.schedulers.AndroidSchedulers
-import okhttp3.OkHttpClient
 import javax.inject.Inject
 
 
@@ -26,8 +22,6 @@ class AdminSongsLayoutContoller : InflatedLayout(
         _layoutResourceId = R.layout.screen_admin_songs
 ) {
 
-    @Inject
-    lateinit var activityController: Lazy<ActivityController>
     @Inject
     lateinit var songsRepository: SongsRepository
     @Inject
@@ -38,10 +32,6 @@ class AdminSongsLayoutContoller : InflatedLayout(
     lateinit var uiInfoService: UiInfoService
     @Inject
     lateinit var songOpener: SongOpener
-    @Inject
-    lateinit var okHttpClient: Lazy<OkHttpClient>
-    @Inject
-    lateinit var adminService: Lazy<AdminService>
     @Inject
     lateinit var customSongService: CustomSongService
     @Inject

@@ -4,7 +4,6 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
 import igrek.songbook.activity.MainActivity
 import igrek.songbook.dagger.DaggerBreach
-import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.preferences.PreferencesField
 import igrek.songbook.settings.preferences.PreferencesService
@@ -20,8 +19,6 @@ class PreferencesPersistenceTest {
     @Rule
     @JvmField
     var rule = ActivityTestRule(MainActivity::class.java)
-
-    private val logger = LoggerFactory.logger
 
     @Test
     fun test_default_values() {

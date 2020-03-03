@@ -5,7 +5,6 @@ import androidx.appcompat.app.AlertDialog
 import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.contact.PublishSongService
-import igrek.songbook.contact.SendMessageService
 import igrek.songbook.custom.CustomSongService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
@@ -32,8 +31,6 @@ class SongContextMenuBuilder {
     lateinit var favouriteSongsService: FavouriteSongsService
     @Inject
     lateinit var customSongService: CustomSongService
-    @Inject
-    lateinit var sendMessageService: SendMessageService
     @Inject
     lateinit var songsRepository: SongsRepository
     @Inject

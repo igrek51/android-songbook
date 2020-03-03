@@ -3,9 +3,7 @@ package igrek.songbook.songselection.latest
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import dagger.Lazy
 import igrek.songbook.R
-import igrek.songbook.activity.ActivityController
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -13,7 +11,6 @@ import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.songpreview.SongOpener
-import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.SongClickListener
 import igrek.songbook.songselection.SongListView
@@ -29,13 +26,9 @@ class LatestSongsLayoutController : InflatedLayout(
 ), SongClickListener {
 
     @Inject
-    lateinit var activityController: Lazy<ActivityController>
-    @Inject
     lateinit var songsRepository: SongsRepository
     @Inject
     lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var songPreviewLayoutController: Lazy<SongPreviewLayoutController>
     @Inject
     lateinit var songContextMenuBuilder: SongContextMenuBuilder
     @Inject

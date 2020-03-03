@@ -68,8 +68,7 @@ class ChordsDiagramsService {
     }
 
     fun showLyricsChordsMenu(crdModel: LyricsModel) {
-        toEnglishConverter = ChordsConverter(chordsNotationService.chordsNotation
-                ?: ChordsNotation.default, ChordsNotation.ENGLISH)
+        toEnglishConverter = ChordsConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH)
 
         val uniqueChords = findUniqueChords(crdModel)
         if (uniqueChords.isEmpty()) {

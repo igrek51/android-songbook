@@ -1,7 +1,6 @@
 package igrek.songbook.info.logger
 
 import android.util.Log
-import com.google.common.base.Joiner
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 
 open class Logger internal constructor() {

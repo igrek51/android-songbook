@@ -70,7 +70,7 @@ class ContactLayoutController : MainLayout {
             return
         }
         ConfirmDialogBuilder().confirmAction(R.string.confirm_send_contact) {
-            sendMessageService.sendContactMessage(message, origin = MessageOrigin.MISSING_SONG,
+            sendMessageService.sendContactMessage(message, origin = MessageOrigin.CONTACT_MESSAGE,
                     author = author, subject = subject)
         }
     }

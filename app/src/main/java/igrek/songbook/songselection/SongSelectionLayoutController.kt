@@ -5,9 +5,7 @@ import android.widget.ImageButton
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import dagger.Lazy
 import igrek.songbook.R
-import igrek.songbook.activity.ActivityController
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
@@ -22,9 +20,6 @@ import igrek.songbook.songselection.tree.SongTreeSorter
 import javax.inject.Inject
 
 abstract class SongSelectionLayoutController : SongClickListener {
-
-    @Inject
-    lateinit var activityController: Lazy<ActivityController>
     @Inject
     lateinit var layoutController: LayoutController
     @Inject

@@ -18,7 +18,6 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
-import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.system.SoftKeyboardService
@@ -40,8 +39,6 @@ class SecretCommandService {
     lateinit var softKeyboardService: SoftKeyboardService
     @Inject
     lateinit var preferencesService: PreferencesService
-    @Inject
-    lateinit var localDbService: LocalDbService
     @Inject
     lateinit var adminService: AdminService
 

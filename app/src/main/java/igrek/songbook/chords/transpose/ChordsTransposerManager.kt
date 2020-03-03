@@ -46,7 +46,7 @@ class ChordsTransposerManager {
     fun reset(initialTransposed: Int = 0) {
         transposedBy = initialTransposed
         val chordsNotation = chordsNotationService.get().chordsNotation
-        chordsTransposer = ChordsTransposer(fromNotation = ChordsNotation.default, toNotation = chordsNotation!!)
+        chordsTransposer = ChordsTransposer(fromNotation = ChordsNotation.default, toNotation = chordsNotation)
     }
 
     fun transposeContent(fileContent: String): String {

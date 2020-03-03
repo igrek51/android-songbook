@@ -41,8 +41,6 @@ class PlaylistLayoutController : InflatedLayout(
     @Inject
     lateinit var songContextMenuBuilder: SongContextMenuBuilder
     @Inject
-    lateinit var playlistService: PlaylistService
-    @Inject
     lateinit var contextMenuBuilder: ContextMenuBuilder
     @Inject
     lateinit var uiInfoService: UiInfoService

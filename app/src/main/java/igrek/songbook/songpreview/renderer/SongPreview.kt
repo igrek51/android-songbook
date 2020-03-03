@@ -118,7 +118,7 @@ class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListe
     }
 
     private fun drawBackground() {
-        val backgroundColor = when (lyricsThemeService.colorScheme!!) {
+        val backgroundColor = when (lyricsThemeService.colorScheme) {
             ColorScheme.DARK -> 0x000000
             ColorScheme.BRIGHT -> 0xf0f0f0
         }
@@ -229,8 +229,8 @@ class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListe
         this.lyricsRenderer = LyricsRenderer(
                 this,
                 lyricsModel,
-                lyricsThemeService.fontTypeface!!,
-                lyricsThemeService.colorScheme!!,
+                lyricsThemeService.fontTypeface,
+                lyricsThemeService.colorScheme,
                 lyricsThemeService.chordsEndOfLine
         )
         repaint()
