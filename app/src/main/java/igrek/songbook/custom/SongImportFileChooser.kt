@@ -81,7 +81,7 @@ class SongImportFileChooser {
     private fun getFileNameFromUri(uri: Uri): String {
         var result: String? = null
         if (uri.scheme == "content") {
-            activity.contentResolver.query(uri, null, null, null, null)!!.use { cursor ->
+            activity.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
                 if (cursor.moveToFirst()) {
                     result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
                 }

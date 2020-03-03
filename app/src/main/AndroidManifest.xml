@@ -11,6 +11,7 @@
     <application
         android:name="igrek.songbook.MainApplication"
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/icon_launcher"
         android:label="@string/app_name"
         android:roundIcon="@drawable/icon_launcher"

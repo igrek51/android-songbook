@@ -25,10 +25,10 @@ class PackageInfoService {
             val pInfo = activity.packageManager
                     .getPackageInfo(activity.packageName, 0)
             versionName = pInfo.versionName
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                versionCode = pInfo.longVersionCode
+            versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                pInfo.longVersionCode
             } else {
-                versionCode = pInfo.versionCode.toLong()
+                pInfo.versionCode.toLong()
             }
         } catch (e: PackageManager.NameNotFoundException) {
             logger.error(e)

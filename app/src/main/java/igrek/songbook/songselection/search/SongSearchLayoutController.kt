@@ -122,8 +122,8 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
             }
         }
 
-        emptySearchButton?.visibility = when {
-            itemsListView?.count == 0 -> View.VISIBLE
+        emptySearchButton?.visibility = when (itemsListView?.count) {
+            0 -> View.VISIBLE
             else -> View.GONE
         }
     }

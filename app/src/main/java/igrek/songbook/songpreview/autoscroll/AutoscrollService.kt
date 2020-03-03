@@ -39,12 +39,12 @@ class AutoscrollService {
         set(value) {
             preferencesState.autoscrollSpeed = value
         }
-    var autoSpeedAdjustment: Boolean
+    private var autoSpeedAdjustment: Boolean
         get() = preferencesState.autoscrollSpeedAutoAdjustment
         set(value) {
             preferencesState.autoscrollSpeedAutoAdjustment = value
         }
-    var volumeKeysSpeedControl: Boolean
+    private var volumeKeysSpeedControl: Boolean
         get() = preferencesState.autoscrollSpeedVolumeKeys
         set(value) {
             preferencesState.autoscrollSpeedVolumeKeys = value

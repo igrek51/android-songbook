@@ -142,8 +142,8 @@ class PlaylistLayoutController : InflatedLayout(
             null -> uiResourceService.resString(R.string.empty_playlists)
             else -> uiResourceService.resString(R.string.empty_playlist_songs)
         }
-        emptyListLabel?.visibility = when {
-            itemsListView!!.count == 0 -> View.VISIBLE
+        emptyListLabel?.visibility = when (itemsListView!!.count) {
+            0 -> View.VISIBLE
             else -> View.GONE
         }
 

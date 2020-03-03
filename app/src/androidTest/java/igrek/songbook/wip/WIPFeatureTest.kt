@@ -1,8 +1,8 @@
 package igrek.songbook.wip
 
 import android.app.Activity
-import androidx.test.runner.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
+import androidx.test.runner.AndroidJUnit4
 import igrek.songbook.activity.MainActivity
 import igrek.songbook.dagger.DaggerAndroidTestComponent
 import igrek.songbook.dagger.DaggerIoc
@@ -50,7 +50,7 @@ class WIPFeatureTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("Development purposes")
     fun factoryReset() {
         preferencesService.clear()
         songsRepository.factoryReset()

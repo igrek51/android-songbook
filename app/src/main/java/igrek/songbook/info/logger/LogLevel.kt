@@ -14,6 +14,8 @@ enum class LogLevel constructor(private val levelNumber: Int) {
 
     TRACE(60),
 
+    ;
+
     fun moreOrEqualImportant(than: LogLevel): Boolean {
         return levelNumber <= than.levelNumber
     }

@@ -24,7 +24,6 @@ open class SliderController(private val seekBar: SeekBar, private val label: Tex
         }
 
     init {
-
         value = currentValue
         updateLabel(currentValue)
 
