@@ -1,15 +1,23 @@
 package igrek.songbook.settings.preferences
 
+import android.app.Activity
+import android.app.backup.BackupAgentHelper
+import android.app.backup.SharedPreferencesBackupHelper
+import android.content.Context
 import android.content.SharedPreferences
+import androidx.preference.PreferenceManager
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.set
 
+
 class PreferencesService {
     @Inject
     lateinit var sharedPreferences: SharedPreferences
+    @Inject
+    lateinit var activity: Activity
 
     private val logger = LoggerFactory.logger
     private val propertyValues = HashMap<String, Any?>()
@@ -104,6 +112,11 @@ class PreferencesService {
 
     fun exists(prefDef: PreferencesField): Boolean {
         return sharedPreferences.contains(prefDef.preferenceName())
+    }
+
+    fun reload() {
+        sharedPreferences = activity.getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE)
+        loadAll()
     }
 
 }

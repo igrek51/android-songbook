@@ -120,7 +120,7 @@ class GoogleSyncManager {
                         ?: "")
             }.onSuccess {
                 songsRepository.get().reloadSongsDb()
-                preferencesService.get().loadAll()
+                preferencesService.get().reload()
                 if (errors.size == syncFiles.size) {
                     uiInfoService.showInfo(R.string.settings_sync_restore_failed)
                     return@onSuccess
