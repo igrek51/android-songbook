@@ -330,4 +330,5 @@
     <string name="settings_sync_restore_partial_success">Brak wszystkich plików kopii. Kopia zapasowa przywrócona częściowo. Zrestartuj aplikację.</string>
     <string name="sync_singed_out">Jesteś wylogowany.</string>
     <string name="settings_sync_sign_out">Wyloguj się z konta synchronizacji</string>
+    <string name="settings_sync_restore_failed">Błąd przywracania: brak kopii zapasowej</string>
 </resources>
