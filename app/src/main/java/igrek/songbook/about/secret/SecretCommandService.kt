@@ -62,7 +62,10 @@ class SecretCommandService {
                 CommandRule("afcg") { unlockSongs("afcg") },
 
                 // debug commands
-                CommandRule("reset") { reset() },
+                CommandRule("reset") {
+                    songsRepository.factoryReset()
+                    preferencesService.clear()
+                },
                 CommandRule("reset config") { preferencesService.clear() },
                 CommandRule("reset db") { songsRepository.factoryReset() },
                 CommandRule("reset db general") {
@@ -158,11 +161,6 @@ class SecretCommandService {
             }
         }
         return false
-    }
-
-    private fun reset() {
-        songsRepository.factoryReset()
-        preferencesService.clear()
     }
 
     private fun toast(message: String) {

@@ -67,7 +67,7 @@ class PreferencesPersistenceTest {
         preferencesState.autoscrollInitialPause = 51
         assertEquals(preferencesState.autoscrollInitialPause, 51L)
         // lose changes by reloading without saving
-        preferencesState.reload()
+        preferencesService.loadAll()
         assertEquals(preferencesState.autoscrollInitialPause, 23L)
         pause = preferencesService.getValue(PreferencesField.AutoscrollInitialPause)
         assertEquals(pause, 23L)

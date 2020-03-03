@@ -24,7 +24,7 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.repository.SongsRepository
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.system.filesystem.saveInputStreamToFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -45,7 +45,7 @@ class GoogleSyncManager {
     @Inject
     lateinit var songsRepository: Lazy<SongsRepository>
     @Inject
-    lateinit var preferencesState: Lazy<PreferencesState>
+    lateinit var preferencesService: Lazy<PreferencesService>
     @Inject
     lateinit var activityController: Lazy<ActivityController>
 
@@ -86,7 +86,7 @@ class GoogleSyncManager {
         showSyncProgress(0, syncFiles.size + 1)
         GlobalScope.launch(Dispatchers.IO) {
             songsRepository.get().saveNow()
-            preferencesState.get().updateAndSave()
+            preferencesService.get().saveAll()
             runCatching {
                 syncFiles.forEachIndexed { index, syncFile ->
                     showSyncProgress(index + 1, syncFiles.size + 1)
@@ -120,7 +120,7 @@ class GoogleSyncManager {
                         ?: "")
             }.onSuccess {
                 songsRepository.get().reloadSongsDb()
-                preferencesState.get().reload()
+                preferencesService.get().loadAll()
                 if (errors.size == syncFiles.size) {
                     uiInfoService.showInfo(R.string.settings_sync_restore_failed)
                     return@onSuccess
@@ -133,7 +133,7 @@ class GoogleSyncManager {
                     uiInfoService.showInfo(R.string.settings_sync_restore_partial_success)
                 }
                 withContext(Dispatchers.Main) {
-                    activityController.get().quit()
+                    activityController.get().instantQuit()
                 }
             }
         }

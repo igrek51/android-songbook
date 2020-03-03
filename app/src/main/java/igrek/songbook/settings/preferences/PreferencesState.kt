@@ -1,7 +1,6 @@
 package igrek.songbook.settings.preferences
 
 import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.instrument.ChordsInstrument
 import igrek.songbook.settings.language.AppLanguage
@@ -15,9 +14,6 @@ class PreferencesState {
     @Inject
     lateinit var preferencesService: PreferencesService
 
-    private val logger = LoggerFactory.logger
-
-    // preferences getters / setters proxy
     var fontsize: Float by PreferenceDelegate(PreferencesField.Fontsize)
 
     var appLanguage: AppLanguage by PreferenceDelegate(PreferencesField.AppLanguage)
@@ -54,15 +50,6 @@ class PreferencesState {
         DaggerIoc.factoryComponent.inject(this)
     }
 
-    fun updateAndSave() {
-        preferencesService.saveAll()
-    }
-
-    fun reload() {
-        logger.debug("reloading preferences")
-        preferencesService.loadAll()
-    }
-
 }
 
 class PreferenceDelegate<T : Any>(
@@ -76,5 +63,4 @@ class PreferenceDelegate<T : Any>(
     override fun setValue(thisRef: PreferencesState, property: KProperty<*>, value: T) {
         thisRef.preferencesService.setValue(field, value)
     }
-
 }

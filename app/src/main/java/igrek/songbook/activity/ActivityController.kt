@@ -7,12 +7,11 @@ import dagger.Lazy
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.persistence.repository.SongsRepository
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.system.WindowManagerService
 import javax.inject.Inject
 
 class ActivityController {
-
     @Inject
     lateinit var windowManagerService: Lazy<WindowManagerService>
     @Inject
@@ -20,9 +19,10 @@ class ActivityController {
     @Inject
     lateinit var songsRepository: Lazy<SongsRepository>
     @Inject
-    lateinit var preferencesState: Lazy<PreferencesState>
+    lateinit var preferencesService: Lazy<PreferencesService>
 
     private val logger = LoggerFactory.logger
+    private var instantlyQuitting = false
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -50,20 +50,29 @@ class ActivityController {
         activity.get().finish()
     }
 
+    fun instantQuit() {
+        instantlyQuitting = true
+        activity.get().finish()
+    }
+
     fun onStart() {
         logger.debug("starting activity...")
         songsRepository.get().requestSave(false)
     }
 
     fun onStop() {
-        logger.debug("stopping activity...")
-        songsRepository.get().requestSave(true)
-        preferencesState.get().updateAndSave()
+        if (!instantlyQuitting) {
+            logger.debug("stopping activity...")
+            songsRepository.get().requestSave(true)
+            preferencesService.get().saveAll()
+        }
     }
 
     fun onDestroy() {
-        songsRepository.get().saveNow()
-        logger.info("activity has been destroyed")
+        if (!instantlyQuitting) {
+            songsRepository.get().saveNow()
+            logger.info("activity has been destroyed")
+        }
     }
 
     fun minimize() {
