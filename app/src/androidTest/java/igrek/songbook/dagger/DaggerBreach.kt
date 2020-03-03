@@ -21,10 +21,10 @@ object DaggerBreach {
         val daggerComponent: DaggerFactoryComponent = component as DaggerFactoryComponent
         val field = daggerComponent::class.java.getDeclaredField(providerName)
         field.isAccessible = true
-        val provider = field.get(daggerComponent)!!
-        val field2 = provider::class.java.getDeclaredField("instance")
-        field2.isAccessible = true
-        val serviceValue = field2.get(provider)!!
+        val doubleCheck = field.get(daggerComponent)!!
+        val instanceField = doubleCheck::class.java.getDeclaredField("instance")
+        instanceField.isAccessible = true
+        val serviceValue = instanceField.get(doubleCheck)!!
         return serviceValue as T
     }
 

@@ -8,6 +8,7 @@ import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.preferences.PreferencesField
 import igrek.songbook.settings.preferences.PreferencesService
+import igrek.songbook.settings.preferences.PreferencesState
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -40,8 +41,8 @@ class PreferencesPersistenceTest {
 
     @Test
     fun test_saving_reading() {
-        val preferencesService: PreferencesService = DaggerBreach.inject("apreferencesServiceProvider")
-        val preferencesState = DaggerBreach.inject("apreferencesServiceProvider")
+        val preferencesService: PreferencesService = DaggerBreach.inject("aPreferencesServiceProvider")
+        val preferencesState: PreferencesState = DaggerBreach.inject("aPreferencesStateProvider")
 
         preferencesService.clear()
 
@@ -75,13 +76,19 @@ class PreferencesPersistenceTest {
     @Test
     fun test_mislead_types() {
         val preferencesService = DaggerBreach.factory().aPreferencesService()
-        val preferencesState = DaggerBreach.factory().aPreferencesState()
-
         preferencesService.clear()
 
-        var pause: Boolean = preferencesService.getValue(PreferencesField.AutoscrollInitialPause)
+        try {
+            var pause: Boolean = preferencesService.getValue(PreferencesField.AutoscrollInitialPause)
+            check(false) { "should throw type error" }
+        } catch (e: RuntimeException) {
+        }
 
-        preferencesService.setValue(PreferencesField.AutoscrollInitialPause, true)
+        try {
+            preferencesService.setValue(PreferencesField.AutoscrollInitialPause, true)
+            check(false) { "should throw type error" }
+        } catch (e: RuntimeException) {
+        }
 
     }
 }
