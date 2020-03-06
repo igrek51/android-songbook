@@ -38,6 +38,7 @@ class UnlockedSongsDao(path: String) : AbstractJsonDao<UnlockedSongsDb>(
         val keys = unlockedSongs.keys
         if (key !in keys)
             keys.add(key)
+        save()
         songsRepository.reloadSongsDb()
     }
 
