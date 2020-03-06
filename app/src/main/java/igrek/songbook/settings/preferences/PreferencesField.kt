@@ -60,6 +60,8 @@ enum class PreferencesField constructor(
 
     UserAuthToken(""),
 
+    AppExecutionCount(0),
+
     ;
 
     constructor(defaultValue: String) : this(StringPreferenceType(defaultValue))

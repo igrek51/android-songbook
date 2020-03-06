@@ -9,7 +9,10 @@ import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.general.SongsUpdater
 import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.persistence.user.UserDataDao
+import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.language.AppLanguageService
+import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songselection.tree.SongTreeLayoutController
 import igrek.songbook.system.WindowManagerService
 import javax.inject.Inject
@@ -31,6 +34,15 @@ class AppInitializer {
     @Inject
     lateinit var adminService: Lazy<AdminService>
 
+    @Inject
+    lateinit var preferencesState: Lazy<PreferencesState>
+
+    @Inject
+    lateinit var userDataDao: Lazy<UserDataDao>
+
+    @Inject
+    lateinit var chordsNotationService: Lazy<ChordsNotationService>
+
     private val logger = LoggerFactory.logger
 
     init {
@@ -42,6 +54,7 @@ class AppInitializer {
             debugInit()
         }
 
+        userDataDao.get().read()
         appLanguageService.get().setLocale()
         windowManagerService.get().hideTaskbar()
         songsRepository.get().init()
@@ -49,13 +62,28 @@ class AppInitializer {
         layoutController.get().showLayout(SongTreeLayoutController::class)
         songsUpdater.get().checkUpdateIsAvailable()
         adminService.get().init()
+        if (isRunningFirstTime())
+            firstRunInit()
+        reportExecution()
 
         logger.info("Application has been initialized.")
+    }
+
+    private fun firstRunInit() {
+        chordsNotationService.get().setDefaultChordsNotation()
     }
 
     private fun debugInit() {
         // Allow showing the activity even if the device is locked
         windowManagerService.get().showAppWhenLocked()
+    }
+
+    private fun isRunningFirstTime(): Boolean {
+        return preferencesState.get().appExecutionCount == 0L
+    }
+
+    private fun reportExecution() {
+        preferencesState.get().appExecutionCount += 1
     }
 
 }

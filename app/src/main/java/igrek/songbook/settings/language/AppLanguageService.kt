@@ -21,12 +21,12 @@ class AppLanguageService {
     @Inject
     lateinit var uiResourceService: Lazy<UiResourceService>
     @Inject
-    lateinit var preferencesState: PreferencesState
+    lateinit var preferencesState: Lazy<PreferencesState>
 
     private var appLanguage: AppLanguage
-        get() = preferencesState.appLanguage
+        get() = preferencesState.get().appLanguage
         set(value) {
-            preferencesState.appLanguage = value
+            preferencesState.get().appLanguage = value
         }
 
     private val logger = LoggerFactory.logger

@@ -1,30 +1,20 @@
 package igrek.songbook.settings.preferences
 
-import android.app.Activity
-import android.app.backup.BackupAgentHelper
-import android.app.backup.SharedPreferencesBackupHelper
-import android.content.Context
-import android.content.SharedPreferences
-import androidx.preference.PreferenceManager
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
-import java.util.*
+import igrek.songbook.persistence.user.UserDataDao
 import javax.inject.Inject
 import kotlin.collections.set
 
 
 class PreferencesService {
     @Inject
-    lateinit var sharedPreferences: SharedPreferences
+    lateinit var userDataDao: UserDataDao
     @Inject
-    lateinit var activity: Activity
+    lateinit var sharedPreferencesService: SharedPreferencesService
 
     private val logger = LoggerFactory.logger
-    private val propertyValues = HashMap<String, Any?>()
-
-    companion object {
-        const val sharedPreferencesName = "SongBook-UserPreferences"
-    }
+    private var entityValues = HashMap<String, Any>()
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -32,90 +22,92 @@ class PreferencesService {
     }
 
     fun loadAll() {
-        propertyValues.clear()
+        entityValues = HashMap(readEntities())
+        applyDefaults()
+    }
+
+    private fun readEntities(): Map<String, Any> {
+        val primitives = userDataDao.preferencesDao!!.getPrimitiveEntries()
+        if (!primitives.isNullOrEmpty())
+            return primitives2entities(primitives)
+
+        logger.warn("no user data preferences found, reading from shared preferences")
+        return sharedPreferencesService.getEntities()
+    }
+
+    private fun primitives2entities(primitives: Map<String, Any>): Map<String, Any> {
+        val entities = mutableMapOf<String, Any>()
         for (prefDef in PreferencesField.values()) {
-            loadProperty(prefDef)
+            val name = prefDef.preferenceName()
+            primitives[name]?.let {
+                val entityVal = prefDef.typeDef.primitive2entity(it)
+                entities[name] = entityVal
+            }
+        }
+        return entities
+    }
+
+    private fun entities2primitives(entities: Map<String, Any>): Map<String, Any> {
+        val primitives = mutableMapOf<String, Any>()
+        for (prefDef in PreferencesField.values()) {
+            val name = prefDef.preferenceName()
+            entities[name]?.let {
+                val primitiveVal = prefDef.typeDef.entity2primitive(it)
+                primitives[name] = primitiveVal
+            }
+        }
+        return primitives
+    }
+
+    private fun applyDefaults() {
+        for (prefDef in PreferencesField.values()) {
+            val prefName = prefDef.preferenceName()
+            if (prefName !in entityValues) {
+                entityValues[prefName] = prefDef.typeDef.defaultValue
+            }
         }
     }
 
     fun saveAll() {
-        val editor = sharedPreferences.edit()
-        for (prefDef in PreferencesField.values()) {
-            saveProperty(prefDef, editor)
-        }
-        editor.apply()
-    }
-
-    private fun loadProperty(prefDef: PreferencesField) {
-        val propertyName = prefDef.preferenceName()
-        var value: Any?
-        if (exists(prefDef)) {
-            try {
-                value = prefDef.typeDef.load(sharedPreferences, propertyName)
-            } catch (e: ClassCastException) {
-                value = prefDef.typeDef.defaultValue
-                logger.warn("Invalid property type, loading default value: $propertyName = $value")
-            }
-        } else {
-            value = prefDef.typeDef.defaultValue
-            logger.debug("Missing preferences property, loading default value: $propertyName = $value")
-        }
-        // logger.debug("Property loaded: $propertyName = $value")
-        propertyValues[propertyName] = value
-    }
-
-    private fun saveProperty(prefDef: PreferencesField, editor: SharedPreferences.Editor) {
-        val propertyName = prefDef.preferenceName()
-        if (!propertyValues.containsKey(propertyName)) {
-            logger.warn("No shared preferences property found in map")
-        }
-
-        val propertyValue = propertyValues[propertyName]
-        // logger.debug("Saving property: $propertyName = $propertyValue")
-
-        if (propertyValue == null) {
-            editor.remove(propertyName)
-            return
-        }
-
-        prefDef.typeDef.save(editor, propertyName, propertyValue)
+        val primitiveValues = entities2primitives(entityValues)
+        userDataDao.preferencesDao!!.setPrimitiveEntries(primitiveValues)
     }
 
     fun <T> getValue(prefDef: PreferencesField): T {
         val propertyName = prefDef.preferenceName()
-        if (!propertyValues.containsKey(propertyName))
+        if (propertyName !in entityValues)
             return prefDef.typeDef.defaultValue as T
 
-        val propertyValue = propertyValues[propertyName]
+        val propertyValue = entityValues[propertyName]
         return propertyValue as T
     }
 
     fun setValue(prefDef: PreferencesField, value: Any?) {
         val propertyName = prefDef.preferenceName()
-        // class type validation
-        if (value != null) {
-            val validClazz = prefDef.typeDef.validClass().simpleName
-            val givenClazz = value::class.simpleName
-            require(givenClazz == validClazz) {
-                "invalid value type, expected: $validClazz, but given: $givenClazz"
-            }
+
+        if (value == null) {
+            entityValues.remove(propertyName)
+            return
         }
-        propertyValues[propertyName] = value
+
+        // class type validation
+        val validClazz = prefDef.typeDef.validClass().simpleName
+        val givenClazz = value::class.simpleName
+        require(givenClazz == validClazz) {
+            "invalid value type, expected: $validClazz, but given: $givenClazz"
+        }
+
+        entityValues[propertyName] = value
     }
 
     fun clear() {
-        val editor = sharedPreferences.edit()
-        editor.clear()
-        editor.apply()
+        userDataDao.preferencesDao?.factoryReset()
+        entityValues.clear()
+        saveAll()
         loadAll()
     }
 
-    fun exists(prefDef: PreferencesField): Boolean {
-        return sharedPreferences.contains(prefDef.preferenceName())
-    }
-
     fun reload() {
-        sharedPreferences = activity.getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE)
         loadAll()
     }
 

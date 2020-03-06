@@ -6,7 +6,16 @@ import kotlin.reflect.KClass
 
 abstract class PreferenceTypeDefinition<T : Any>(val defaultValue: T) {
     abstract fun load(sharedPreferences: SharedPreferences, propertyName: String): T
+
     abstract fun save(editor: SharedPreferences.Editor, propertyName: String, value: Any)
+
+    open fun primitive2entity(primitive: Any): T {
+        return primitive as T
+    }
+
+    open fun entity2primitive(entity: Any): Any {
+        return entity
+    }
 
     fun validClass(): KClass<out T> {
         return defaultValue::class
@@ -80,6 +89,15 @@ class GenericStringIdPreferenceType<T : Any> (
         val serialized: String = serializer(value as T)
         editor.putString(propertyName, serialized)
     }
+
+    override fun primitive2entity(primitive: Any): T {
+        val id = primitive as? String ?: return defaultValue
+        return deserializer(id) ?: defaultValue
+    }
+
+    override fun entity2primitive(entity: Any): String {
+        return serializer((entity as? T) ?: defaultValue)
+    }
 }
 
 class GenericLongIdPreferenceType<T : Any> (
@@ -97,5 +115,14 @@ class GenericLongIdPreferenceType<T : Any> (
     override fun save(editor: SharedPreferences.Editor, propertyName: String, value: Any) {
         val serialized: Long = serializer(value as T)
         editor.putLong(propertyName, serialized)
+    }
+
+    override fun primitive2entity(primitive: Any): T {
+        val id = primitive as? Long ?: return defaultValue
+        return deserializer(id) ?: defaultValue
+    }
+
+    override fun entity2primitive(entity: Any): Long {
+        return serializer((entity as? T) ?: defaultValue)
     }
 }

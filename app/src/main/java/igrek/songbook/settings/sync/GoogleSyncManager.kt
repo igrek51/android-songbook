@@ -24,6 +24,7 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.system.filesystem.saveInputStreamToFile
 import kotlinx.coroutines.Dispatchers
@@ -49,6 +50,9 @@ class GoogleSyncManager {
     @Inject
     lateinit var activityController: Lazy<ActivityController>
 
+    @Inject
+    lateinit var userDataDao: Lazy<UserDataDao>
+
     private val syncFiles = listOf(
             "files/customsongs.1.json",
             "files/exclusion.1.json",
@@ -57,8 +61,7 @@ class GoogleSyncManager {
             "files/playlist.1.json",
             "files/transpose.1.json",
             "files/unlocked.1.json",
-            "shared_prefs/SongBook-UserPreferences.xml"
-//            "shared_prefs/igrek.songbook_preferences.xml"
+            "files/preferences.1.json"
     )
 
     private val logger = LoggerFactory.logger
@@ -85,7 +88,7 @@ class GoogleSyncManager {
     private fun syncSaveSignedIn(driveService: Drive) {
         showSyncProgress(0, syncFiles.size + 1)
         GlobalScope.launch(Dispatchers.IO) {
-            songsRepository.get().saveNow()
+            userDataDao.get().saveNow()
             preferencesService.get().saveAll()
             runCatching {
                 syncFiles.forEachIndexed { index, syncFile ->
@@ -133,7 +136,7 @@ class GoogleSyncManager {
                     uiInfoService.showInfo(R.string.settings_sync_restore_partial_success)
                 }
                 withContext(Dispatchers.Main) {
-                    activityController.get().instantQuit()
+                    activityController.get().quit()
                 }
             }
         }

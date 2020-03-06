@@ -43,6 +43,7 @@ import igrek.songbook.settings.instrument.ChordsInstrumentService
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SharedPreferencesService
 import igrek.songbook.settings.sync.GoogleSyncManager
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.SongDetailsService
@@ -92,9 +93,7 @@ open class FactoryModule(private val activity: AppCompatActivity) {
     }
 
     @Provides
-    fun aSharedPreferences(activity: AppCompatActivity): SharedPreferences {
-        return activity.applicationContext.getSharedPreferences(PreferencesService.sharedPreferencesName, Context.MODE_PRIVATE)
-    }
+    fun aSharedPreferences(activity: AppCompatActivity): SharedPreferences = SharedPreferencesService.sharedPreferencesCreator(activity)
 
     /* Services */
 
@@ -288,7 +287,7 @@ open class FactoryModule(private val activity: AppCompatActivity) {
 
     @Provides
     @Singleton
-    fun aUserDbService(): UserDataDao = UserDataDao()
+    fun aUserDataDao(): UserDataDao = UserDataDao()
 
     @Provides
     @Singleton
@@ -345,6 +344,10 @@ open class FactoryModule(private val activity: AppCompatActivity) {
     @Provides
     @Singleton
     fun aGoogleSyncManager(): GoogleSyncManager = GoogleSyncManager()
+
+    @Provides
+    @Singleton
+    fun aSharedPreferencesService(): SharedPreferencesService = SharedPreferencesService()
 
     /*
 	 * Empty service pattern:

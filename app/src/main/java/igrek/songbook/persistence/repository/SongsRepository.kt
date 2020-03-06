@@ -19,9 +19,7 @@ import igrek.songbook.persistence.user.playlist.PlaylistDao
 import igrek.songbook.persistence.user.transpose.TransposeDao
 import igrek.songbook.persistence.user.unlocked.UnlockedSongsDao
 import igrek.songbook.util.lookup.SimpleCache
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -38,7 +36,6 @@ class SongsRepository {
     private val logger = LoggerFactory.logger
 
     var dbChangeSubject: PublishSubject<Boolean> = PublishSubject.create()
-    private var saveRequestSubject: PublishSubject<Boolean> = PublishSubject.create()
 
     var publicSongsRepo: PublicSongsRepository = PublicSongsRepository(0, SimpleCache.emptyList(), SimpleCache.emptyList())
     var customSongsRepo: CustomSongsRepository = CustomSongsRepository(
@@ -65,14 +62,6 @@ class SongsRepository {
 
     init {
         DaggerIoc.factoryComponent.inject(this)
-
-        saveRequestSubject
-                .debounce(1500, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { toSave ->
-                    if (toSave)
-                        save()
-                }
     }
 
     fun init() {
@@ -81,20 +70,6 @@ class SongsRepository {
         } catch (t: Throwable) {
             factoryReset()
         }
-    }
-
-    @Synchronized
-    private fun save() {
-        userDataDao.get().save()
-    }
-
-    fun requestSave(toSave: Boolean) {
-        saveRequestSubject.onNext(toSave)
-    }
-
-    fun saveNow() {
-        requestSave(false)
-        save()
     }
 
     @Synchronized

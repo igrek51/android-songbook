@@ -40,6 +40,7 @@ import igrek.songbook.persistence.user.exclusion.ExclusionDao
 import igrek.songbook.persistence.user.favourite.FavouriteSongsDao
 import igrek.songbook.persistence.user.history.OpenHistoryDao
 import igrek.songbook.persistence.user.playlist.PlaylistDao
+import igrek.songbook.persistence.user.preferences.PreferencesDao
 import igrek.songbook.persistence.user.transpose.TransposeDao
 import igrek.songbook.persistence.user.unlocked.UnlockedSongsDao
 import igrek.songbook.playlist.PlaylistLayoutController
@@ -51,6 +52,7 @@ import igrek.songbook.settings.instrument.ChordsInstrumentService
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SharedPreferencesService
 import igrek.songbook.settings.sync.GoogleSyncManager
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.SongDetailsService
@@ -162,5 +164,7 @@ interface FactoryComponent {
     fun inject(there: AdminSongsLayoutContoller)
     fun inject(there: AntechamberService)
     fun inject(there: GoogleSyncManager)
+    fun inject(there: SharedPreferencesService)
+    fun inject(there: PreferencesDao)
 
 }
