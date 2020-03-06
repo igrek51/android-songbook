@@ -15,8 +15,8 @@ enum class SongStatus(val id: Long) {
     ;
 
     companion object {
-        fun parseById(id: Long): SongStatus {
-            return values().first { v -> v.id == id }
+        fun parseById(id: Long): SongStatus? {
+            return values().firstOrNull { v -> v.id == id }
         }
     }
 }

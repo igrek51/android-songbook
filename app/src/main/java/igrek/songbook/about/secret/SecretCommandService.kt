@@ -127,7 +127,7 @@ class SecretCommandService {
         dlgAlert.setView(input)
 
         val actionCheck = uiResourceService.resString(R.string.action_check_secret)
-        dlgAlert.setPositiveButton(actionCheck) { _, _ -> unlockAttempt(input.text.toString()) }
+        dlgAlert.setPositiveButton(actionCheck) { _, _ -> commandAttempt(input.text.toString()) }
         dlgAlert.setNegativeButton(uiResourceService.resString(R.string.action_cancel)) { _, _ -> }
         dlgAlert.setCancelable(true)
         dlgAlert.create().show()
@@ -138,8 +138,8 @@ class SecretCommandService {
         }
     }
 
-    private fun unlockAttempt(key0: String) {
-        logger.info("unlocking attempt with a key: $key0")
+    private fun commandAttempt(key0: String) {
+        logger.info("command attempt with a key: $key0")
         val key = StringSimplifier.simplify(key0)
 
         if (!checkActivationRules(key)) {
@@ -152,7 +152,7 @@ class SecretCommandService {
     private fun checkActivationRules(key: String): Boolean {
         for (rule in rules) {
             if (rule.condition.apply(key)) {
-                logger.debug("rule activated: ${rule.condition}")
+                logger.debug("rule activated: $key")
                 rule.activator(key)
                 return true
             }
@@ -169,14 +169,16 @@ class SecretCommandService {
     }
 
     private fun unlockSongs(key: String) {
+        logger.info("unlocking songs with key $key")
         val toUnlock = songsRepository.publicSongsRepo.songs.get()
                 .filter { s -> s.lockPassword == key }
-        val count = toUnlock.count()
         toUnlock.forEach { s ->
             s.locked = false
         }
         songsRepository.unlockedSongsDao.unlockKey(key)
-        val message = uiResourceService.resString(R.string.unlock_new_songs_unlocked, count)
+        val unlocked = songsRepository.publicSongsRepo.songs.get()
+                .filter { s -> s.lockPassword == key }.count()
+        val message = uiResourceService.resString(R.string.unlock_new_songs_unlocked, unlocked)
         uiInfoService.showToast(message)
     }
 

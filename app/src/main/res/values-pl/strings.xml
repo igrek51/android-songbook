@@ -265,7 +265,7 @@
     <string name="settings_chords_above">Wyświetlaj akordy nad tekstem</string>
     <string name="settings_chords_above_hint">Wyświetlaj akordy w osobnej linii ponad słowami</string>
     <string name="settings_transposition">Transpozycja akordów</string>
-    <string name="settings_restore_transposition">Przywracanie ostatnie transpozycji</string>
+    <string name="settings_restore_transposition">Przywracanie ostatniej transpozycji</string>
     <string name="settings_restore_transposition_hint">Zapamiętuj i przywracaj ostatnią transpozycję akordów dla każdej piosenki</string>
     <string name="new_playlist_name">Nazwa nowej playlisty</string>
     <string name="confirm_send_contact">Czy na pewno chcesz to wysłać?</string>

@@ -41,13 +41,13 @@ class ExclusionDao(path: String) : AbstractJsonDao<ExclusionDb>(
     fun setExcludedLanguages(languages: MutableList<String>) {
         exclusionDb.languages = languages
         exclusionDbSubject.onNext(exclusionDb)
-        songsRepository.reloadUserData()
+        songsRepository.reloadSongsDb()
     }
 
     fun setExcludedArtists(artistIds: MutableList<Long>) {
         exclusionDb.artistIds = artistIds
         exclusionDbSubject.onNext(exclusionDb)
-        songsRepository.reloadUserData()
+        songsRepository.reloadSongsDb()
     }
 
     fun setAllArtists(categories: List<Category>) {
