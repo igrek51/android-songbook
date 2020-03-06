@@ -127,7 +127,8 @@
         \n3. Jeśli fragment piosenki się powtarza (refren), skopiuj go we wszystkie miejsca wystąpień. Kiedy piosenka zachowuje ciągłość, ułatwia to jej przewijanie.
         \n4. Upewnij się, że wybrałeś odpowiednią notację dla swoich akordów.
         \n5. Jeśli piosenka ma trudny rytm z często zmieniającymi się akordami, umieść akordy między poszczególnymi słowami lub nawet w środku wyrazów, aby wskazać sylabę, w której akcentowany jest akord. W pozostałych przypadkach umieszczaj akordy na końcu linii.
-        \n6. Przed zapisaniem piosenki sprawdź jej poprawność i skonwertuj do standardowego formatu, szczególnie jeśli zamierzasz udostępnić ją publicznie.
+        \n6. Możesz użyć kreski "-", aby połączyć szybko zmieniające się akordy: "D Dsus2-D-Dsus4" lub użyć nawiasów "()", aby wskazać opcjonalność akordów: [C G (G7)].
+        \n7. Przed zapisaniem piosenki sprawdź jej poprawność i skonwertuj do standardowego formatu, szczególnie jeśli zamierzasz udostępnić ją publicznie.
         \n
         \nEdytor posiada wiele przydatnych narzędzi: cofanie zmian, wstawianie pasującego nawiasu (otwierającego lub zamykającego), wstawianie pary nawiasów, przesuwanie kursora o jeden znak, kopiowanie akordów, wklejanie akordów, porządkowanie do standardowego formatu, automatyczne wykrywanie akordów, przesuwanie akordów z linii wyżej na koniec linii, sprawdzanie poprawności akordów.
     </string>
@@ -214,7 +215,7 @@
     <string name="no_chords_selected">Brak zaznaczonych akordów</string>
     <string name="edit_song_chords_notation">Notacja akordów</string>
     <string name="edit_song_undo">Cofnij</string>
-    <string name="chords_editor_reformat_trim">Uporządkuj format</string>
+    <string name="chords_editor_reformat_trim">Uporządkuj</string>
     <string name="chords_editor_move_chords_to_right">Przesuń akordy z góry do prawej</string>
     <string name="chords_editor_fis_to_sharp"><![CDATA[Zamień Fis -> F#]]></string>
     <string name="edit_song_add_chord_splitter">[ / ]</string>

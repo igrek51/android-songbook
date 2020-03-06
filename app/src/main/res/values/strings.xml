@@ -126,7 +126,8 @@
         \n3. If some part of song is repeated (refrain), copy it to all its occurrences. When lyrics are continuous, scrolling through the song works better.
         \n4. Make sure you have chosen appropriate notation for your chords.
         \n5. If a song has difficult rhythm with chords changing frequently, place the chords between words or even inside the words in order to indicate the syllable with a chord accent. In other cases, place chords at the end of line.
-        \n6. Reformat and validate your song before saving it, especially when you are going to publish it.
+        \n6. You can use dash "-" to couple quickly changing chords: "D Dsus2-D-Dsus4" or use parentheses "()" to indicate some chords optional: [C G (G7)].
+        \n7. Reformat and validate your song before saving it, especially when you are going to publish it.
         \n
         \nThere are many useful tools in editor: undoing change, inserting suitable bracket (either opening or closing one), inserting brackets pair, moving cursor by one character, copying chords, pasting chords, transforming to standard chords format, automatic chords detection, moving chords from above to the end of the line, validating chords.
     </string>
