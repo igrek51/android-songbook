@@ -1,6 +1,6 @@
 package igrek.songbook.chords.detector
 
-import igrek.songbook.chords.ChordsConverter
+import igrek.songbook.chords.converter.ChordsConverter
 import igrek.songbook.chords.diagram.allGuitarChordsDiagrams
 import igrek.songbook.chords.diagram.allMandolinChordsDiagrams
 import igrek.songbook.chords.diagram.allUkuleleChordsDiagrams
@@ -16,7 +16,7 @@ class UniqueChordsFinder(
         instrument: ChordsInstrument
 ) {
 
-    private var toEnglishConverter = ChordsConverter(ChordsNotation.GERMAN, ChordsNotation.ENGLISH)
+    private var toEnglishConverter = ChordsConverter(ChordsNotation.default, ChordsNotation.ENGLISH)
     private val chordDiagramCodes = getChordDiagrams(instrument)
 
     fun findUniqueChordsInLyrics(crdModel: LyricsModel): Set<String> {

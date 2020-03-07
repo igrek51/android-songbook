@@ -1,4 +1,4 @@
-package igrek.songbook.chords
+package igrek.songbook.chords.converter
 
 import igrek.songbook.chords.detector.Chord
 import igrek.songbook.chords.detector.ChordsDetector
@@ -9,8 +9,8 @@ import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
 class ChordsConverter(
-        fromNotation: ChordsNotation,
-        toNotation: ChordsNotation
+        private val fromNotation: ChordsNotation,
+        private val toNotation: ChordsNotation
 ) {
 
     private val chordNameProvider = ChordNameProvider()
@@ -35,6 +35,9 @@ class ChordsConverter(
     }
 
     fun convertLyrics(lyrics: String): String {
+        if (fromNotation == toNotation) {
+            return lyrics
+        }
         return lyrics.replace(chordsGroupRegex) { matchResult ->
             val chordsGroup = matchResult.groupValues[1]
             val (converted, unrecognized) = convertChordsGroup(chordsGroup)
@@ -57,7 +60,7 @@ class ChordsConverter(
             }
             converted + separator
         }.dropLast(1)
-        return converted to unrecognized
+        return Pair(converted, unrecognized)
     }
 
     fun convertSingleChord(chord: String): String? {

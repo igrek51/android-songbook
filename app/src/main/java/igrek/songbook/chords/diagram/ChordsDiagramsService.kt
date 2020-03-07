@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import igrek.songbook.R
-import igrek.songbook.chords.ChordsConverter
+import igrek.songbook.chords.converter.ChordsConverter
 import igrek.songbook.chords.detector.UniqueChordsFinder
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
@@ -35,7 +35,7 @@ class ChordsDiagramsService {
     @Inject
     lateinit var chordsNotationService: ChordsNotationService
 
-    private var toEnglishConverter = ChordsConverter(ChordsNotation.GERMAN, ChordsNotation.ENGLISH)
+    private var toEnglishConverter = ChordsConverter(ChordsNotation.default, ChordsNotation.ENGLISH)
 
     init {
         DaggerIoc.factoryComponent.inject(this)

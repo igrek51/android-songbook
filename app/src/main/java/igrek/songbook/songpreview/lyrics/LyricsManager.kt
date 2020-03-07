@@ -4,6 +4,7 @@ import android.graphics.Paint
 import dagger.Lazy
 import igrek.songbook.chords.transpose.ChordsTransposerManager
 import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.theme.LyricsThemeService
@@ -50,13 +51,13 @@ class LyricsManager {
                 .replace("\u00A0", " ") // NO-BREAK SPACE (0xC2 0xA0)
     }
 
-    fun load(fileContent: String, screenW: Int?, paint: Paint?, initialTransposed: Int) {
+    fun load(fileContent: String, screenW: Int?, paint: Paint?, initialTransposed: Int, srcNotation: ChordsNotation) {
         chordsTransposerManager.get().run {
             val transposed = when {
                 restoreTransposition -> initialTransposed
                 else -> 0
             }
-            reset(transposed)
+            reset(transposed, srcNotation)
         }
         autoscrollService.get().reset()
 

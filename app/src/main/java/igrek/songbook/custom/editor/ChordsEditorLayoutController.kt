@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import dagger.Lazy
 import igrek.songbook.R
-import igrek.songbook.chords.ChordsConverter
+import igrek.songbook.chords.converter.ChordsConverter
 import igrek.songbook.chords.detector.ChordsDetector
 import igrek.songbook.custom.EditSongLayoutController
 import igrek.songbook.dagger.DaggerIoc
@@ -52,7 +52,6 @@ class ChordsEditorLayoutController : MainLayout {
     private var layout: View? = null
     private var chordsNotation: ChordsNotation? = null
     private var history = LyricsEditorHistory()
-    private var chordsNotationButton: Button? = null
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -90,13 +89,10 @@ class ChordsEditorLayoutController : MainLayout {
         buttonOnClick(R.id.detectChordsButton) { wrapHistoryContext { detectChords() } }
         buttonOnClick(R.id.undoChordsButton) { undoChange() }
         buttonOnClick(R.id.transformChordsButton) { showTransformMenu() }
-        buttonOnClick(R.id.chordsNotationButton) { chooseChordsNotation() }
         buttonOnClick(R.id.moveLeftButton) { moveCursor(-1) }
         buttonOnClick(R.id.moveRightButton) { moveCursor(+1) }
         buttonOnClick(R.id.validateChordsButton) { validateChords() }
         buttonOnClick(R.id.reformatTrimButton) { reformatAndTrim() }
-
-        chordsNotationButton = layout.findViewById(R.id.chordsNotationButton)
 
         contentEdit = layout.findViewById(R.id.songContentEdit)
         contentEdit?.addTextChangedListener(object : TextWatcher {
@@ -288,7 +284,6 @@ class ChordsEditorLayoutController : MainLayout {
         val actions = ChordsNotation.values().map { notation ->
             ContextMenuBuilder.Action(notation.displayNameResId) {
                 chordsNotation = notation
-                invalidateChordsNotationButton()
             }
         }
         contextMenuBuilder.showContextMenu(R.string.settings_chords_notation, actions)
@@ -330,16 +325,6 @@ class ChordsEditorLayoutController : MainLayout {
         selEnd = selStart + 2 + clipboardChords!!.length
 
         setContentWithSelection(edited, selStart, selEnd)
-    }
-
-    private fun invalidateChordsNotationButton() {
-        chordsNotationButton?.apply {
-            chordsNotation?.apply {
-                val shortName = uiResourceService.resString(shortNameResId)
-                val display = uiResourceService.resString(R.string.edit_chords_notation_button, shortName)
-                text = display
-            }
-        }
     }
 
     private fun addChordSplitter() {
@@ -468,14 +453,12 @@ class ChordsEditorLayoutController : MainLayout {
 
     fun setContent(content: String, chordsNotation: ChordsNotation?) {
         this.chordsNotation = chordsNotation
-        invalidateChordsNotationButton()
-        var content2 = content
-        if (chordsNotation != null) {
-            val converter = ChordsConverter(ChordsNotation.default, chordsNotation)
-            content2 = converter.convertLyrics(content)
-        }
-        val length = content2.length
-        setContentWithSelection(content2, length, length)
+//        if (chordsNotation != null) {
+//            val converter = ChordsConverter(ChordsNotation.default, chordsNotation)
+//            content2 = converter.convertLyrics(content)
+//        }
+        val length = content.length
+        setContentWithSelection(content, length, length)
         history.reset(contentEdit!!)
         softKeyboardService.showSoftKeyboard(contentEdit)
     }

@@ -1,5 +1,6 @@
 package igrek.songbook.chords
 
+import igrek.songbook.chords.converter.ChordsConverter
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test

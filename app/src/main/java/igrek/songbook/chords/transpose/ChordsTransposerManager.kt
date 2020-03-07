@@ -15,9 +15,6 @@ import javax.inject.Inject
 
 class ChordsTransposerManager {
 
-    private var transposedBy = 0
-    private var chordsTransposer: ChordsTransposer? = null
-
     @Inject
     lateinit var lyricsManager: Lazy<LyricsManager>
     @Inject
@@ -33,6 +30,9 @@ class ChordsTransposerManager {
     @Inject
     lateinit var songsRepository: SongsRepository
 
+    private var transposedBy = 0
+    private var chordsTransposer: ChordsTransposer? = null
+
     val isTransposed: Boolean
         get() = transposedBy != 0
 
@@ -43,10 +43,10 @@ class ChordsTransposerManager {
         DaggerIoc.factoryComponent.inject(this)
     }
 
-    fun reset(initialTransposed: Int = 0) {
+    fun reset(initialTransposed: Int = 0, srcNotation: ChordsNotation) {
         transposedBy = initialTransposed
-        val chordsNotation = chordsNotationService.get().chordsNotation
-        chordsTransposer = ChordsTransposer(fromNotation = ChordsNotation.default, toNotation = chordsNotation)
+        val displayNotation = chordsNotationService.get().chordsNotation
+        chordsTransposer = ChordsTransposer(fromNotation = srcNotation, toNotation = displayNotation)
     }
 
     fun transposeContent(fileContent: String): String {

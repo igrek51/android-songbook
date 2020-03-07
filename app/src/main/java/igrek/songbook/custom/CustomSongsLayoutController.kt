@@ -65,8 +65,9 @@ class CustomSongsLayoutController : InflatedLayout(
         tabTitleLabel = layout.findViewById(R.id.tabTitleLabel)
         emptyListLabel = layout.findViewById(R.id.emptyListLabel)
 
-        goBackButton = layout.findViewById(R.id.goBackButton)
-        goBackButton?.setOnClickListener { goUp() }
+        goBackButton = layout.findViewById<ImageButton>(R.id.goBackButton)?.also {
+            it.setOnClickListener { goUp() }
+        }
 
         itemsListView = layout.findViewById(R.id.itemsListView)
         itemsListView!!.init(activity as Context, this)

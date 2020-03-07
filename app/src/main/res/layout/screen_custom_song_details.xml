@@ -142,6 +142,19 @@
                 android:inputType="text"
                 android:padding="8dp"/>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:gravity="bottom"
+                android:text="@string/edit_song_chords_notation"
+                android:textSize="18sp" />
+
+            <Spinner
+                android:id="@+id/songChordNotationSpinner"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -193,11 +206,6 @@
                 android:padding="8dp"
                 android:inputType="none"
                 android:text=""/>
-
-            <Spinner
-                android:id="@+id/songChordNotationSpinner"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </ScrollView>

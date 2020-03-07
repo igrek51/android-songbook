@@ -47,7 +47,6 @@ class EditSongLayoutController : MainLayout {
     lateinit var chordsNotationService: ChordsNotationService
     @Inject
     lateinit var contextMenuBuilder: ContextMenuBuilder
-
     @Inject
     lateinit var preferencesState: PreferencesState
 
@@ -108,9 +107,9 @@ class EditSongLayoutController : MainLayout {
                 layout = layout,
                 activity = activity,
                 chordsNotationDisplayNames = chordsNotationService.chordsNotationDisplayNames
-        )
-        chordsNotationSpinner?.selectedNotation = chordsNotation
-                ?: preferencesState.chordsNotation
+        ).also {
+            it.selectedNotation = chordsNotation ?: preferencesState.chordsNotation
+        }
     }
 
     private fun showMoreActions() {
@@ -161,7 +160,7 @@ class EditSongLayoutController : MainLayout {
         val songContent = songContentEdit?.text.toString()
         val customCategoryName: String? = customCategoryNameEdit?.text.toString().ifEmpty { null }
         val chordsNotation: ChordsNotation = chordsNotationSpinner?.selectedNotation
-                ?: ChordsNotation.default
+                ?: chordsNotationService.chordsNotation
 
         if (currentSong == null) {
             // add
