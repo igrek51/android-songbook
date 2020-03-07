@@ -23,20 +23,22 @@ class PublicSongsDao(private val dbFile: File) : AbstractSqliteDao() {
     private val supportedDbVersion = 50
 
     override fun getDatabase(): SQLiteDatabase {
-        if (songsDbHelper == null) {
+        if (songsDbHelper == null)
             songsDbHelper = openDatabase(dbFile)
-        }
         return songsDbHelper!!
     }
 
     private fun openDatabase(songsDbFile: File): SQLiteDatabase {
         if (!songsDbFile.exists())
-            logger.warn("Database file does not exist: " + songsDbFile.absolutePath)
-        return openDatabase(songsDbFile.absolutePath, null, SQLiteDatabase.OPEN_READWRITE)
+            throw NoSuchFileException(songsDbFile, null, "Database file does not exist: ${songsDbFile.absolutePath}")
+        val db = openDatabase(songsDbFile.absolutePath, null, SQLiteDatabase.OPEN_READONLY)
+        db.disableWriteAheadLogging()
+        return db
     }
 
     fun close() {
         songsDbHelper?.close()
+        songsDbHelper = null
     }
 
     fun readAllCategories(): MutableList<Category> {

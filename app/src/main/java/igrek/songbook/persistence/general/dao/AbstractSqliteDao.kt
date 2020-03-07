@@ -1,8 +1,6 @@
 package igrek.songbook.persistence.general.dao
 
-import android.content.ContentValues
 import android.database.Cursor
-import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import igrek.songbook.info.logger.Logger
@@ -34,20 +32,17 @@ abstract class AbstractSqliteDao {
             }
         } catch (e: IllegalArgumentException) {
             logger.error(e)
+            throw e
         } catch (e: SQLiteException) {
             logger.error(e)
+            throw e
         }
         return defaultValue
     }
 
-    protected fun safeInsert(table: String, values: ContentValues) {
-        try {
-            val result = getDatabase().insertWithOnConflict(table, null, values, SQLiteDatabase.CONFLICT_NONE)
-            if (result == -1L)
-                throw SQLException("result -1")
-        } catch (e: SQLException) {
-            logger.error("SQL insertion error: $e.message")
-        }
+    protected fun count(table: String): Long? {
+        val mapper: (Cursor) -> Long = { cursor -> cursor.getLong(0) }
+        return queryOneValue(mapper, null, "SELECT count(*) FROM $table")
     }
 
     protected fun <T> readEntities(query: String, mapper: AbstractMapper<T>): MutableList<T> {
@@ -60,6 +55,7 @@ abstract class AbstractSqliteDao {
             cursor.close()
         } catch (e: IllegalArgumentException) {
             logger.error(e)
+            throw e
         }
         return entities
     }

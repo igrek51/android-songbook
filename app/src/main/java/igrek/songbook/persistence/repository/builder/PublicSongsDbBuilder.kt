@@ -2,10 +2,7 @@ package igrek.songbook.persistence.repository.builder
 
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.persistence.general.dao.PublicSongsDao
-import igrek.songbook.persistence.general.model.Category
-import igrek.songbook.persistence.general.model.Song
-import igrek.songbook.persistence.general.model.SongIdentifier
-import igrek.songbook.persistence.general.model.SongNamespace
+import igrek.songbook.persistence.general.model.*
 import igrek.songbook.persistence.repository.PublicSongsRepository
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.util.lookup.FinderById
@@ -20,11 +17,12 @@ class PublicSongsDbBuilder(
     fun buildPublic(uiResourceService: UiResourceService): PublicSongsRepository {
         val categories: MutableList<Category> = publicSongsDao.readAllCategories()
         val songs: MutableList<Song> = publicSongsDao.readAllSongs()
+        val songCategories: MutableList<SongCategoryRelationship> = publicSongsDao.readAllSongCategories()
 
         unlockSongs(songs)
         removeLockedSongs(songs)
         excludeSongs(categories, songs)
-        assignSongsToCategories(categories, songs)
+        assignSongsToCategories(categories, songs, songCategories)
         pruneEmptyCategories(categories)
 
         refillCategoryDisplayNames(uiResourceService, categories)
@@ -69,9 +67,7 @@ class PublicSongsDbBuilder(
         categories.removeAll { category -> category.songs.isEmpty() }
     }
 
-    private fun assignSongsToCategories(categories: MutableList<Category>, songs: MutableList<Song>) {
-        val songCategories = publicSongsDao.readAllSongCategories()
-
+    private fun assignSongsToCategories(categories: MutableList<Category>, songs: MutableList<Song>, songCategories: MutableList<SongCategoryRelationship>) {
         val songFinder = FinderByTuple(songs) { song -> song.songIdentifier() }
         val categoryFinder = FinderById(categories) { e -> e.id }
 

@@ -28,8 +28,9 @@ class LocalDbService {
         @SuppressLint("SdCardPath")
         get() {
             /*
-            1. /data/data/PACKAGE/files
+            1. /data/data/PACKAGE/files or /data/user/0/PACKAGE/files
             2. INTERNAL_STORAGE/Android/data/PACKAGE/files/data
+            3. /data/data/PACKAGE/files
             */
             var dir: File? = activity.filesDir
             if (dir != null && dir.isDirectory)
@@ -65,13 +66,15 @@ class LocalDbService {
     }
 
     fun factoryReset() {
-        removeDb(songsDbFile)
+        removeFile(songsDbFile)
+        removeFile(File(songsDbFile.absolutePath + "-shm"))
+        removeFile(File(songsDbFile.absolutePath + "-wal"))
     }
 
-    private fun removeDb(songsDbFile: File) {
+    private fun removeFile(songsDbFile: File) {
         if (songsDbFile.exists()) {
             if (!songsDbFile.delete() || songsDbFile.exists())
-                logger.error("failed to delete database file: " + songsDbFile.absolutePath)
+                logger.error("failed to delete file: " + songsDbFile.absolutePath)
         }
     }
 
