@@ -60,10 +60,14 @@ class EditSongLayoutController : MainLayout {
     private var songTitle: String? = null
     private var songContent: String? = null
     private var customCategoryName: String? = null
-    private var chordsNotation: ChordsNotation? = null
+    private var songChordsNotation: ChordsNotation? = null
 
     init {
         DaggerIoc.factoryComponent.inject(this)
+    }
+
+    override fun getLayoutResourceId(): Int {
+        return R.layout.screen_custom_song_details
     }
 
     override fun showLayout(layout: View) {
@@ -108,7 +112,7 @@ class EditSongLayoutController : MainLayout {
                 activity = activity,
                 chordsNotationDisplayNames = chordsNotationService.chordsNotationDisplayNames
         ).also {
-            it.selectedNotation = chordsNotation ?: preferencesState.chordsNotation
+            it.selectedNotation = songChordsNotation ?: preferencesState.chordsNotation
         }
     }
 
@@ -131,7 +135,8 @@ class EditSongLayoutController : MainLayout {
 
     private fun openInChordsEditor() {
         layoutController.showLayout(ChordsEditorLayoutController::class)
-        val chordsNotation = chordsNotationService.chordsNotation
+        val chordsNotation = chordsNotationSpinner?.selectedNotation
+                ?: chordsNotationService.chordsNotation
         chordsEditorLayoutController.get().setContent(songContentEdit?.text.toString(), chordsNotation)
     }
 
@@ -144,7 +149,7 @@ class EditSongLayoutController : MainLayout {
         this.songTitle = song?.title
         this.songContent = song?.content
         this.customCategoryName = song?.customCategoryName
-        this.chordsNotation = song?.chordsNotation
+        this.songChordsNotation = song?.chordsNotation
     }
 
     fun setSongContent(content: String) {
@@ -187,10 +192,6 @@ class EditSongLayoutController : MainLayout {
             }
             layoutController.showPreviousLayoutOrQuit()
         }
-    }
-
-    override fun getLayoutResourceId(): Int {
-        return R.layout.screen_custom_song_details
     }
 
     override fun onBackClicked() {

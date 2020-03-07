@@ -57,6 +57,10 @@ class ChordsEditorLayoutController : MainLayout {
         DaggerIoc.factoryComponent.inject(this)
     }
 
+    override fun getLayoutResourceId(): Int {
+        return R.layout.screen_chords_editor
+    }
+
     override fun showLayout(layout: View) {
         this.layout = layout
 
@@ -124,9 +128,27 @@ class ChordsEditorLayoutController : MainLayout {
                 },
                 ContextMenuBuilder.Action(R.string.chords_editor_fis_to_sharp) {
                     wrapHistoryContext { chordsFisTofSharp() }
+                },
+                ContextMenuBuilder.Action(R.string.chords_editor_convert_from_notation) {
+                    wrapHistoryContext { convertFromOtherNotationDialog() }
                 }
         )
         contextMenuBuilder.showContextMenu(R.string.edit_song_transform_chords, actions)
+    }
+
+    private fun convertFromOtherNotationDialog() {
+        val actions = ChordsNotation.values().map { notation ->
+            ContextMenuBuilder.Action(notation.displayNameResId) {
+                convertFromNotation(notation)
+            }
+        }
+        ContextMenuBuilder().showContextMenu(R.string.chords_editor_convert_from_notation, actions)
+    }
+
+    private fun convertFromNotation(fromNotation: ChordsNotation) {
+        val converter = ChordsConverter(fromNotation, chordsNotation ?: ChordsNotation.default)
+        val converted = converter.convertLyrics(contentEdit!!.text.toString())
+        contentEdit?.setText(converted)
     }
 
     private fun wrapHistoryContext(action: () -> Unit) {
@@ -280,15 +302,6 @@ class ChordsEditorLayoutController : MainLayout {
         }
     }
 
-    private fun chooseChordsNotation() {
-        val actions = ChordsNotation.values().map { notation ->
-            ContextMenuBuilder.Action(notation.displayNameResId) {
-                chordsNotation = notation
-            }
-        }
-        contextMenuBuilder.showContextMenu(R.string.settings_chords_notation, actions)
-    }
-
     private fun onCopyChordClick() {
         val edited = contentEdit!!.text.toString()
         val selStart = contentEdit!!.selectionStart
@@ -435,10 +448,6 @@ class ChordsEditorLayoutController : MainLayout {
         history.revertLast(contentEdit!!)
     }
 
-    override fun getLayoutResourceId(): Int {
-        return R.layout.screen_chords_editor
-    }
-
     override fun onBackClicked() {
         val err = quietValidate()
         if (err != null) {
@@ -453,10 +462,6 @@ class ChordsEditorLayoutController : MainLayout {
 
     fun setContent(content: String, chordsNotation: ChordsNotation?) {
         this.chordsNotation = chordsNotation
-//        if (chordsNotation != null) {
-//            val converter = ChordsConverter(ChordsNotation.default, chordsNotation)
-//            content2 = converter.convertLyrics(content)
-//        }
         val length = content.length
         setContentWithSelection(content, length, length)
         history.reset(contentEdit!!)
