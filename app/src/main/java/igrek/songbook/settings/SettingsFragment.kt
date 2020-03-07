@@ -34,7 +34,6 @@ import kotlin.math.roundToInt
 
 
 class SettingsFragment : PreferenceFragmentCompat() {
-
     @Inject
     lateinit var layoutController: dagger.Lazy<LayoutController>
     @Inject
@@ -256,10 +255,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
         }
 
-        setupClickPreference("settingsSyncSignOut") {
-            googleSyncManager.get().signOut()
-        }
-
         refreshFragment()
     }
 
@@ -346,7 +341,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val currentValueF: Float = onLoad()
         val minF = min.toFloat()
         val maxF = max.toFloat()
-        preference.value = calculateProgress(minF, maxF, currentValueF, SEEKBAR_RESOLUTION)
+        preference.value = calculateProgress(minF, maxF, currentValueF)
         preference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { pref, newValue ->
             val progress = newValue.toString().toFloat() / SEEKBAR_RESOLUTION
             val valueF = progress * (maxF - minF) + minF
@@ -377,7 +372,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private fun calculateProgress(min: Float, max: Float, value: Float, resolution: Int): Int {
+    private fun calculateProgress(min: Float, max: Float, value: Float): Int {
+        val resolution = SEEKBAR_RESOLUTION
         if (value < min) {
             return 0
         }

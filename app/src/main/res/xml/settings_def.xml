@@ -133,10 +133,6 @@
             android:key="settingsSyncRestore"
             android:summary="@string/settings_sync_restore_hint"
             app:iconSpaceReserved="false" />
-        <Preference
-            android:title="@string/settings_sync_sign_out"
-            android:key="settingsSyncSignOut"
-            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
 </PreferenceScreen>

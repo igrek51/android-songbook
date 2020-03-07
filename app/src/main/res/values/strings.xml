@@ -338,7 +338,6 @@
     <string name="settings_sync_in_progress">Sync in progress… %s%%</string>
     <string name="settings_sync_restore_partial_success">Some backup files couldn\'t be found. Backup restored partially. Restart app.</string>
     <string name="sync_singed_out">You are signed out.</string>
-    <string name="settings_sync_sign_out">Sign out sync account</string>
     <string name="settings_sync_restore_failed">Restoring failed: no backup files found</string>
     <string name="settings_chords_section">Chords style</string>
 </resources>
