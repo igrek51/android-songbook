@@ -50,7 +50,7 @@ class SendMessageService {
                            title: String? = null,
                            originalSongId: Long? = null
     ) {
-        uiInfoService.showInfo(uiResourceService.resString(R.string.contact_sending))
+        uiInfoService.showInfoIndefinite(uiResourceService.resString(R.string.contact_sending))
 
         val appVersionName = packageInfoService.versionName
         val appVersionCode = packageInfoService.versionCode.toString()

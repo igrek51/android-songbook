@@ -65,7 +65,7 @@
     <string name="action_check_secret">OK</string>
     <string name="action_cancel">Anuluj</string>
     <string name="ui_db_is_uptodate">Baza piosenek jest aktualna.</string>
-    <string name="contact_label">Możesz przesłać wiadomość do autora, jeśli zauważyłeś jakieś błędy lub jeśli masz pomysły na usprawnienie tej aplikacji. Będę wdzięczny za Twój komentarz oraz wkład w rozwój aplikacji. Jeśli chcesz otrzymać odpowiedź na swoją wiadomość, pamiętaj, aby podać także swój email.</string>
+    <string name="contact_label">Cześć, prześlij wiadomość do mnie (autora aplikacji), jeśli zauważyłeś jakieś błędy lub jeśli masz pomysły na usprawnienia apki. Będę wdzięczny za Twój komentarz oraz wkład w rozwój aplikacji. Jeśli chcesz otrzymać odpowiedź na swoją wiadomość, pamiętaj, aby podać także swój email.</string>
     <string name="contact_message_hint">Twoja wiadomość…</string>
     <string name="contact_send">Wyślij</string>
     <string name="contact_author_hint">Twoje imię lub email (opcjonalne)</string>

@@ -64,7 +64,7 @@
     <string name="action_check_secret">OK</string>
     <string name="action_cancel">Cancel</string>
     <string name="ui_db_is_uptodate">Songs database is up-to-date.</string>
-    <string name="contact_label">You can contact me if you have noticed some bugs or you have any ideas how to improve this application. I would be very grateful for your comments and contributing. If you wish to get a reply to your message, please include your email as well.</string>
+    <string name="contact_label">Hi, please contact me (application author) if you have noticed some bugs or you have any ideas how to improve this application. I would be very grateful for your comments and contributing. If you wish to get a reply to your message, please include your email as well.</string>
     <string name="contact_message_hint">Your message…</string>
     <string name="contact_send">Send</string>
     <string name="contact_author_hint">Your name or email (optional)</string>
