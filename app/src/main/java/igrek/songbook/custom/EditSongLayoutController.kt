@@ -16,10 +16,14 @@ import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
+import igrek.songbook.layout.spinner.ChordNotationSpinner
 import igrek.songbook.persistence.general.model.Song
+import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
+import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.system.SoftKeyboardService
 import javax.inject.Inject
+
 
 class EditSongLayoutController : MainLayout {
 
@@ -44,14 +48,20 @@ class EditSongLayoutController : MainLayout {
     @Inject
     lateinit var contextMenuBuilder: ContextMenuBuilder
 
+    @Inject
+    lateinit var preferencesState: PreferencesState
+
     private var currentSong: Song? = null
-    private var songTitle: String? = null
-    private var songContent: String? = null
-    private var customCategoryName: String? = null
 
     private var songTitleEdit: EditText? = null
     private var songContentEdit: EditText? = null
     private var customCategoryNameEdit: EditText? = null
+    private var chordsNotationSpinner: ChordNotationSpinner? = null
+
+    private var songTitle: String? = null
+    private var songContent: String? = null
+    private var customCategoryName: String? = null
+    private var chordsNotation: ChordsNotation? = null
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -81,17 +91,26 @@ class EditSongLayoutController : MainLayout {
         }
 
         songContentEdit = layout.findViewById<EditText>(R.id.songContentEdit)?.also {
-            it.setText(songContent)
+            it.setText(songContent.orEmpty())
             it.setOnClickListener { openInChordsEditor() }
         }
 
         songTitleEdit = layout.findViewById<EditText>(R.id.songTitleEdit)?.also {
-            it.setText(songTitle)
+            it.setText(songTitle.orEmpty())
         }
 
         customCategoryNameEdit = layout.findViewById<EditText>(R.id.customCategoryNameEdit)?.also {
-            it.setText(customCategoryName)
+            it.setText(customCategoryName.orEmpty())
         }
+
+        chordsNotationSpinner = ChordNotationSpinner(
+                spinnerId = R.id.songChordNotationSpinner,
+                layout = layout,
+                activity = activity,
+                chordsNotationDisplayNames = chordsNotationService.chordsNotationDisplayNames
+        )
+        chordsNotationSpinner?.selectedNotation = chordsNotation
+                ?: preferencesState.chordsNotation
     }
 
     private fun showMoreActions() {
@@ -112,9 +131,6 @@ class EditSongLayoutController : MainLayout {
     }
 
     private fun openInChordsEditor() {
-        songTitle = songTitleEdit!!.text.toString()
-        songContent = songContentEdit!!.text.toString()
-        customCategoryName = customCategoryNameEdit!!.text.toString()
         layoutController.showLayout(ChordsEditorLayoutController::class)
         val chordsNotation = chordsNotationService.chordsNotation
         chordsEditorLayoutController.get().setContent(songContentEdit?.text.toString(), chordsNotation)
@@ -126,38 +142,35 @@ class EditSongLayoutController : MainLayout {
 
     fun setCurrentSong(song: Song?) {
         this.currentSong = song
-        if (currentSong == null) {
-            songTitle = null
-            songContent = null
-            customCategoryName = null
-        } else {
-            songTitle = currentSong!!.title
-            songContent = currentSong!!.content
-            customCategoryName = currentSong!!.customCategoryName
-        }
+        this.songTitle = song?.title
+        this.songContent = song?.content
+        this.customCategoryName = song?.customCategoryName
+        this.chordsNotation = song?.chordsNotation
     }
 
     fun setSongContent(content: String) {
-        songContentEdit!!.setText(content)
+        songContentEdit?.setText(content)
     }
 
     private fun saveSong() {
-        val songTitle = songTitleEdit!!.text.toString()
+        val songTitle = songTitleEdit?.text.toString()
         if (songTitle.isEmpty()) {
             uiInfoService.showInfo(R.string.fill_in_all_fields)
             return
         }
-        val songContent = songContentEdit!!.text.toString()
-        val customCategoryName: String? = customCategoryNameEdit!!.text.toString().ifEmpty { null }
+        val songContent = songContentEdit?.text.toString()
+        val customCategoryName: String? = customCategoryNameEdit?.text.toString().ifEmpty { null }
+        val chordsNotation: ChordsNotation = chordsNotationSpinner?.selectedNotation
+                ?: ChordsNotation.default
 
         if (currentSong == null) {
             // add
             currentSong = customSongService.get()
-                    .addCustomSong(songTitle, customCategoryName, songContent)
+                    .addCustomSong(songTitle, customCategoryName, songContent, chordsNotation)
         } else {
             // update
             customSongService.get()
-                    .updateSong(currentSong!!, songTitle, customCategoryName, songContent)
+                    .updateSong(currentSong!!, songTitle, customCategoryName, songContent, chordsNotation)
         }
 
         uiInfoService.showInfo(R.string.edit_song_has_been_saved)
@@ -195,9 +208,9 @@ class EditSongLayoutController : MainLayout {
     }
 
     private fun hasUnsavedChanges(): Boolean {
-        val songTitle = songTitleEdit!!.text.toString()
-        val customCategoryName = customCategoryNameEdit!!.text.toString()
-        val songContent = songContentEdit!!.text.toString()
+        val songTitle = songTitleEdit?.text.toString()
+        val customCategoryName = customCategoryNameEdit?.text.toString()
+        val songContent = songContentEdit?.text.toString()
         if (currentSong == null) { // add
             if (songTitle.isNotEmpty()) return true
             if (customCategoryName.isNotEmpty()) return true
@@ -215,9 +228,9 @@ class EditSongLayoutController : MainLayout {
     }
 
     fun setupImportedSong(filename: String, content: String) {
-        if (songTitleEdit!!.text.toString().isEmpty()) {
-            songTitleEdit!!.setText(filename)
+        if (songTitleEdit?.text.toString().isEmpty()) {
+            songTitleEdit?.setText(filename)
         }
-        songContentEdit!!.setText(content)
+        songContentEdit?.setText(content)
     }
 }

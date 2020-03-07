@@ -51,7 +51,7 @@ class CustomSongService {
         layoutController.showLayout(EditSongLayoutController::class)
     }
 
-    fun addCustomSong(title: String, customCategoryName: String?, content: String): Song {
+    fun addCustomSong(title: String, customCategoryName: String?, content: String, chordsNotation: ChordsNotation): Song {
         val now: Long = Date().time
         val customSong = CustomSong(
                 id = 0,
@@ -61,7 +61,7 @@ class CustomSongService {
                 versionNumber = 1,
                 createTime = now,
                 updateTime = now,
-                chordsNotation = ChordsNotation.default
+                chordsNotation = chordsNotation
         )
         songsRepository.customSongsDao.saveCustomSong(customSong)
 
@@ -72,11 +72,12 @@ class CustomSongService {
         return song
     }
 
-    fun updateSong(song: Song, songTitle: String, customCategoryName: String?, songContent: String?) {
+    fun updateSong(song: Song, songTitle: String, customCategoryName: String?, songContent: String?, chordsNotation: ChordsNotation) {
         song.title = songTitle
         song.content = songContent
         song.customCategoryName = customCategoryName
         song.updateTime = Date().time
+        song.chordsNotation = chordsNotation
 
         if (song.namespace == SongNamespace.Custom) {
             val customSongMapper = CustomSongMapper()

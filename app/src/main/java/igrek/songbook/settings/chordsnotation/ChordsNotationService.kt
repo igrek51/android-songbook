@@ -59,4 +59,13 @@ class ChordsNotationService {
         return map
     }
 
+    val chordsNotationDisplayNames: LinkedHashMap<ChordsNotation, String> by lazy {
+        val map = LinkedHashMap<ChordsNotation, String>()
+        for (item in ChordsNotation.values()) {
+            val displayName = uiResourceService.resString(item.displayNameResId)
+            map[item] = displayName
+        }
+        map
+    }
+
 }
