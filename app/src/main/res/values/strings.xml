@@ -142,11 +142,11 @@
     <string name="edit_song_has_been_saved">Song has been saved in \"My songs\".</string>
     <string name="edit_song_has_been_removed">Song has been removed.</string>
     <string name="settings_chords_notation">Chords notation</string>
-    <string name="notation_german">German / European (#):\na b B H C C# d f#</string>
-    <string name="notation_german_is">German / European (-is):\na b B H C Cis d fis</string>
-    <string name="notation_english">English / American:\nAm Bbm Bb B C C# Dm F#m</string>
-    <string name="notation_short_german">German (#)</string>
-    <string name="notation_short_german_is">German (-is)</string>
+    <string name="notation_german">German:\na b B H C C# d f#</string>
+    <string name="notation_german_is">German (fis):\na b B H C Cis d fis</string>
+    <string name="notation_english">English:\nAm Bbm Bb B C C# Dm F#m</string>
+    <string name="notation_short_german">German</string>
+    <string name="notation_short_german_is">German (fis)</string>
     <string name="notation_short_english">English</string>
     <string name="fill_in_all_fields">Please fill in all required fields.</string>
     <string name="connection_error">Communication breakdown: Connection error</string>

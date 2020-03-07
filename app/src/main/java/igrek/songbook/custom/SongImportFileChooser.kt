@@ -63,7 +63,7 @@ class SongImportFileChooser {
 
                 val content = convert(inputStream, Charset.forName("UTF-8"))
 
-                editSongLayoutController.get().setSongFromFile(filename, content)
+                editSongLayoutController.get().setupImportedSong(filename, content)
             }
         } catch (e: IOException) {
             logger.error(e)

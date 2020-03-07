@@ -60,39 +60,38 @@ class EditSongLayoutController : MainLayout {
     override fun showLayout(layout: View) {
         val toolbar1 = layout.findViewById<Toolbar>(R.id.toolbar1)
         activity.setSupportActionBar(toolbar1)
-        val actionBar = activity.supportActionBar
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(false)
-            actionBar.setDisplayShowHomeEnabled(false)
+        activity.supportActionBar?.run {
+            this.setDisplayHomeAsUpEnabled(false)
+            this.setDisplayShowHomeEnabled(false)
         }
-        val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)
-        navMenuButton.setOnClickListener { navigationMenuController.navDrawerShow() }
+        layout.findViewById<ImageButton>(R.id.navMenuButton).setOnClickListener {
+            navigationMenuController.navDrawerShow()
+        }
 
-        val saveSongButton = layout.findViewById<ImageButton>(R.id.saveSongButton)
-        saveSongButton.setOnClickListener(SafeClickListener {
+        layout.findViewById<ImageButton>(R.id.saveSongButton).setOnClickListener(SafeClickListener {
             saveSong()
         })
 
-        val moreActionsButton = layout.findViewById<ImageButton>(R.id.moreActionsButton)
-        moreActionsButton.setOnClickListener(SafeClickListener {
+        layout.findViewById<ImageButton>(R.id.moreActionsButton).setOnClickListener(SafeClickListener {
             showMoreActions()
         })
 
-
-        val tooltipEditChordsLyricsInfo = layout.findViewById<ImageButton>(R.id.tooltipEditChordsLyricsInfo)
-        tooltipEditChordsLyricsInfo.setOnClickListener {
+        layout.findViewById<ImageButton>(R.id.tooltipEditChordsLyricsInfo).setOnClickListener {
             uiInfoService.showTooltip(R.string.tooltip_edit_chords_lyrics)
         }
 
-        songContentEdit = layout.findViewById(R.id.songContentEdit)
-        songContentEdit!!.setText(songContent)
-        songContentEdit!!.setOnClickListener { openInChordsEditor() }
+        songContentEdit = layout.findViewById<EditText>(R.id.songContentEdit)?.also {
+            it.setText(songContent)
+            it.setOnClickListener { openInChordsEditor() }
+        }
 
-        songTitleEdit = layout.findViewById(R.id.songTitleEdit)
-        songTitleEdit!!.setText(songTitle)
+        songTitleEdit = layout.findViewById<EditText>(R.id.songTitleEdit)?.also {
+            it.setText(songTitle)
+        }
 
-        customCategoryNameEdit = layout.findViewById(R.id.customCategoryNameEdit)
-        customCategoryNameEdit!!.setText(customCategoryName)
+        customCategoryNameEdit = layout.findViewById<EditText>(R.id.customCategoryNameEdit)?.also {
+            it.setText(customCategoryName)
+        }
     }
 
     private fun showMoreActions() {
@@ -143,27 +142,24 @@ class EditSongLayoutController : MainLayout {
     }
 
     private fun saveSong() {
-        songTitle = songTitleEdit!!.text.toString()
-        songContent = songContentEdit!!.text.toString()
-        customCategoryName = customCategoryNameEdit!!.text.toString()
-
-        if (songTitle!!.isEmpty()) {
+        val songTitle = songTitleEdit!!.text.toString()
+        if (songTitle.isEmpty()) {
             uiInfoService.showInfo(R.string.fill_in_all_fields)
             return
         }
-
-        if (customCategoryName!!.isEmpty())
-            customCategoryName = null
+        val songContent = songContentEdit!!.text.toString()
+        val customCategoryName: String? = customCategoryNameEdit!!.text.toString().ifEmpty { null }
 
         if (currentSong == null) {
             // add
             currentSong = customSongService.get()
-                    .addCustomSong(songTitle!!, customCategoryName, songContent ?: "")
+                    .addCustomSong(songTitle, customCategoryName, songContent)
         } else {
             // update
             customSongService.get()
-                    .updateSong(currentSong!!, songTitle!!, customCategoryName, songContent)
+                    .updateSong(currentSong!!, songTitle, customCategoryName, songContent)
         }
+
         uiInfoService.showInfo(R.string.edit_song_has_been_saved)
         layoutController.showPreviousLayoutOrQuit()
     }
@@ -199,17 +195,17 @@ class EditSongLayoutController : MainLayout {
     }
 
     private fun hasUnsavedChanges(): Boolean {
-        songTitle = songTitleEdit!!.text.toString()
-        customCategoryName = customCategoryNameEdit!!.text.toString()
-        songContent = songContentEdit!!.text.toString()
+        val songTitle = songTitleEdit!!.text.toString()
+        val customCategoryName = customCategoryNameEdit!!.text.toString()
+        val songContent = songContentEdit!!.text.toString()
         if (currentSong == null) { // add
-            if (songTitle!!.isNotEmpty()) return true
-            if (customCategoryName!!.isNotEmpty()) return true
-            if (songContent!!.isNotEmpty()) return true
+            if (songTitle.isNotEmpty()) return true
+            if (customCategoryName.isNotEmpty()) return true
+            if (songContent.isNotEmpty()) return true
         } else { // update
-            if (currentSong?.title ?: "" != songTitle) return true
-            if (currentSong?.customCategoryName ?: "" != customCategoryName) return true
-            if (currentSong?.content ?: "" != songContent) return true
+            if (currentSong?.title.orEmpty() != songTitle) return true
+            if (currentSong?.customCategoryName.orEmpty() != customCategoryName) return true
+            if (currentSong?.content.orEmpty() != songContent) return true
         }
         return false
     }
@@ -218,17 +214,10 @@ class EditSongLayoutController : MainLayout {
         softKeyboardService.hideSoftKeyboard()
     }
 
-    fun setSongFromFile(filename: String, content: String) {
-        songTitle = songTitleEdit!!.text.toString()
-        songContent = songContentEdit!!.text.toString()
-        customCategoryName = customCategoryNameEdit!!.text.toString()
-
-        if (songTitle!!.isEmpty()) {
-            songTitle = filename
-            songTitleEdit!!.setText(songTitle)
+    fun setupImportedSong(filename: String, content: String) {
+        if (songTitleEdit!!.text.toString().isEmpty()) {
+            songTitleEdit!!.setText(filename)
         }
-
-        songContent = content
-        songContentEdit!!.setText(songContent)
+        songContentEdit!!.setText(content)
     }
 }
