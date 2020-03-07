@@ -159,6 +159,7 @@ class GoogleSyncManager {
 
         val metadata = File().setName(syncFile)
         driveService.files().update(fileId, metadata, fileContent).execute()
+        logger.info("file $syncFile ($fileId) backed up: ${localFile.readLines()}")
     }
 
     private fun restoreFile(driveService: Drive, syncFile: String) {
@@ -173,7 +174,7 @@ class GoogleSyncManager {
                 .get(fileId)
                 .executeMediaAsInputStream().use { inputStream ->
                     saveInputStreamToFile(inputStream, localFile)
-                    logger.debug("file $syncFile restored: ${localFile.readLines()}")
+                    logger.info("file $syncFile ($fileId) restored: ${localFile.readLines()}")
                 }
     }
 
