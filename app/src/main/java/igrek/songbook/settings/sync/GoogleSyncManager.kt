@@ -235,6 +235,7 @@ class GoogleSyncManager {
 
     fun handleSignInResult(result: Intent?, activity: AppCompatActivity?, requestCode: Int, resultCode: Int) {
         if (resultCode != Activity.RESULT_OK || result == null) {
+            logger.warn("Sign in request failed: result code=$resultCode, result=$result")
             uiInfoService.showToast(R.string.operation_cancelled)
             return
         }
