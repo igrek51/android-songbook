@@ -213,7 +213,6 @@ class GoogleSyncManager {
     private fun requestSingIn(requestCode: Int) {
         logger.debug("requesting Google Sign In")
         val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
                 .requestScopes(Scope(Scopes.DRIVE_APPFOLDER))
                 .build()
         val client = GoogleSignIn.getClient(activity, signInOptions)
@@ -226,7 +225,6 @@ class GoogleSyncManager {
 
     fun signOut() {
         val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
                 .requestScopes(Scope(Scopes.DRIVE_APPFOLDER))
                 .build()
         val client = GoogleSignIn.getClient(activity, signInOptions)
@@ -239,6 +237,9 @@ class GoogleSyncManager {
     fun handleSignInResult(result: Intent?, activity: AppCompatActivity?, requestCode: Int, resultCode: Int) {
         if (resultCode != Activity.RESULT_OK || result == null) {
             logger.warn("Sign in request failed: result code=$resultCode, result=$result, extras=${result?.extras}")
+            result?.extras?.keySet()?.forEach { key ->
+                logger.warn("key=$key, value=${result.extras?.get(key)}")
+            }
             uiInfoService.showToast(R.string.operation_cancelled)
             return
         }

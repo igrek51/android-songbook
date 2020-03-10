@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name" translatable="false">Guitar Songbook</string>
-    <string name="server_client_id" translatable="false">690032273066-pl5qcv3kb3vmpv5vd744mnhkavgesjme.apps.googleusercontent.com</string>
     <string name="nav_categories_list">Categories</string>
     <string name="nav_search_song">Search</string>
     <string name="nav_favourites_song">Favourites</string>
@@ -104,7 +103,7 @@
     <string name="song_details_metre">Metre: %s</string>
     <string name="easter_egg_discovered">Congratulations!
         \nYou have found an Easter Egg :)</string>
-    <string name="error_occurred">Error occurred: %s</string>
+    <string name="error_occurred">Aw snap, error occurred: %s</string>
     <string name="unlock_type_in_secret_key">Type in a secret key:</string>
     <string name="contact_message_field_empty">Message field can\'t be empty.</string>
     <string name="contact_sending">Sending…</string>
