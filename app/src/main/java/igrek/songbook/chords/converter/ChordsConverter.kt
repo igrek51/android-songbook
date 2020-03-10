@@ -35,9 +35,6 @@ class ChordsConverter(
     }
 
     fun convertLyrics(lyrics: String): String {
-        if (fromNotation == toNotation) {
-            return lyrics
-        }
         return lyrics.replace(chordsGroupRegex) { matchResult ->
             val chordsGroup = matchResult.groupValues[1]
             val (converted, unrecognized) = convertChordsGroup(chordsGroup)

@@ -35,9 +35,6 @@ class ChordsTransposer(
     }
 
     fun transposeLyrics(lyrics: String, t: Int): String {
-        if (t == 0 && fromNotation == toNotation)
-            return lyrics
-
         return lyrics.replace(chordsGroupRegex) { matchResult ->
             val chordsGroup = matchResult.groupValues[1] + " "
             val replaced = chordsGroup.replace(singleChordsSplitRegex) { matchResult2 ->
@@ -56,9 +53,6 @@ class ChordsTransposer(
      */
     fun transposeChord(chord: String, t: Int): String {
         if (chord.trim { it <= ' ' }.isEmpty())
-            return chord
-
-        if (t == 0 && fromNotation == toNotation)
             return chord
 
         val recognized: Chord? = chordsDetector.recognizeSingleChord(chord)

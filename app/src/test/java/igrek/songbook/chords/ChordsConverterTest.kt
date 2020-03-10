@@ -94,6 +94,12 @@ class ChordsConverterTest {
     }
 
     @Test
+    fun test_convert_to_simpler_form() {
+        val converter = ChordsConverter(ChordsNotation.GERMAN_IS, ChordsNotation.GERMAN)
+        assertThat(converter.convertLyrics("[Es]")).isEqualTo("[D#]")
+    }
+
+    @Test
     fun test_convert_german_moll_to_english() {
         val converter = ChordsConverter(ChordsNotation.GERMAN, ChordsNotation.ENGLISH)
         assertThat(converter.convertLyrics("[e]")).isEqualTo("[Em]")
