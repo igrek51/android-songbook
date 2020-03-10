@@ -24,7 +24,7 @@ object DaggerBreach {
         val doubleCheck = field.get(daggerComponent)!!
         val instanceField = doubleCheck::class.java.getDeclaredField("instance")
         instanceField.isAccessible = true
-        return instanceField.get(doubleCheck)!!
+        return instanceField.get(doubleCheck)!! as T
     }
 
 }
