@@ -45,6 +45,6 @@ class SuperCowPowersTest {
         onView(withId(android.R.id.button1)).perform(click())
 
         onView(withText(containsString("Moooo"))).check(matches(isDisplayed()))
-        onView(withText(containsString("Easter Egg"))).check(matches(isDisplayed()))
+        onView(withText(containsString("Super Cow Powers"))).check(matches(isDisplayed()))
     }
 }
