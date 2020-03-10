@@ -96,6 +96,7 @@ class GoogleSyncManager {
                     backupFile(driveService, syncFile)
                 }
             }.onFailure { error ->
+                logger.error(error)
                 uiInfoService.showInfoIndefinite(R.string.settings_sync_save_error, error.message
                         ?: "")
             }.onSuccess {
@@ -114,11 +115,12 @@ class GoogleSyncManager {
                     try {
                         restoreFile(driveService, syncFile)
                     } catch (e: FileNotFoundException) {
-                        logger.error(e)
+                        logger.warn(e.message)
                         errors.add(syncFile)
                     }
                 }
             }.onFailure { error ->
+                logger.error(error)
                 uiInfoService.showInfoIndefinite(R.string.settings_sync_restore_error, error.message
                         ?: "")
             }.onSuccess {
@@ -213,6 +215,7 @@ class GoogleSyncManager {
     private fun requestSingIn(requestCode: Int) {
         logger.debug("requesting Google Sign In")
         val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
                 .requestScopes(Scope(Scopes.DRIVE_APPFOLDER))
                 .build()
         val client = GoogleSignIn.getClient(activity, signInOptions)

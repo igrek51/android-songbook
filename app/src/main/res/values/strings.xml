@@ -102,8 +102,8 @@
     <string name="song_details_preferred_key">Preferred key: %s</string>
     <string name="song_details_metre">Metre: %s</string>
     <string name="easter_egg_discovered">Congratulations!
-        \nYou have found an Easter Egg :)</string>
-    <string name="error_occurred">Aw snap, error occurred: %s</string>
+        \nYou have found a Secret Cow Level :)</string>
+    <string name="error_occurred">Aw snap! Error occurred: %s</string>
     <string name="unlock_type_in_secret_key">Type in a secret key:</string>
     <string name="contact_message_field_empty">Message field can\'t be empty.</string>
     <string name="contact_sending">Sending…</string>
