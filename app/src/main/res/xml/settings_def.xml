@@ -135,4 +135,11 @@
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/settings_privacy">
+        <Preference
+            android:title="@string/settings_show_privacy_policy"
+            android:key="settingsPrivacyPolicy"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
 </PreferenceScreen>

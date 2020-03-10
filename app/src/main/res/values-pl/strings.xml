@@ -333,4 +333,6 @@
     <string name="sync_singed_out">Jesteś wylogowany.</string>
     <string name="settings_sync_restore_failed">Błąd przywracania: brak kopii zapasowej</string>
     <string name="settings_chords_section">Styl akordów</string>
+    <string name="settings_privacy">Prywatność</string>
+    <string name="settings_show_privacy_policy">Polityka prywatności</string>
 </resources>

@@ -1,5 +1,7 @@
 package igrek.songbook.settings
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -255,7 +257,17 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
         }
 
+        setupClickPreference("settingsPrivacyPolicy") {
+            openPrivacyPolicy()
+        }
+
         refreshFragment()
+    }
+
+    private fun openPrivacyPolicy() {
+        val uri = Uri.parse("https://docs.google.com/document/d/1_lzknjB5ZfBWwxEeOaaqE3qb_0ghx2HRmqpE5WIdTKQ")
+        val i = Intent(Intent.ACTION_VIEW, uri)
+        activity.get().startActivity(i)
     }
 
     private fun refreshFragment() {

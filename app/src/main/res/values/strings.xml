@@ -341,4 +341,6 @@
     <string name="sync_singed_out">You are signed out.</string>
     <string name="settings_sync_restore_failed">Restoring failed: no backup files found</string>
     <string name="settings_chords_section">Chords style</string>
+    <string name="settings_privacy">Privacy</string>
+    <string name="settings_show_privacy_policy">Privacy Policy</string>
 </resources>
