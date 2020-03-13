@@ -18,7 +18,7 @@ class SoftKeyboardService {
 
     init {
         DaggerIoc.factoryComponent.inject(this)
-        imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
     }
 
     fun hideSoftKeyboard(view: View?) {
