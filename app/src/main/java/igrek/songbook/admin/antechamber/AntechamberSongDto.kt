@@ -4,7 +4,9 @@ import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.settings.chordsnotation.ChordsNotation
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class AntechamberSongDto(
         var id: Long? = null,
         var title: String? = null,
@@ -64,6 +66,7 @@ data class AntechamberSongDto(
     }
 }
 
+@Serializable
 data class AllAntechamberSongsDto(
         var songs: List<AntechamberSongDto> = emptyList()
 ) {

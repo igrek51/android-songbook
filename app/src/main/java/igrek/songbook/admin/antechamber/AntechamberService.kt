@@ -1,7 +1,5 @@
 package igrek.songbook.admin.antechamber
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import dagger.Lazy
 import igrek.songbook.admin.AdminService
 import igrek.songbook.dagger.DaggerIoc
@@ -13,6 +11,8 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonConfiguration
 import okhttp3.*
 import java.io.IOException
 import javax.inject.Inject
@@ -45,6 +45,7 @@ class AntechamberService {
     }
 
     private val jsonType = MediaType.parse("application/json; charset=utf-8")
+    private val jsonSerializer = Json(JsonConfiguration.Stable)
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -57,8 +58,7 @@ class AntechamberService {
                 .build()
         return httpRequest(request) { response: Response ->
             val json = response.body()?.string() ?: ""
-            val mapper = jacksonObjectMapper()
-            val allDtos: AllAntechamberSongsDto = mapper.readValue(json)
+            val allDtos: AllAntechamberSongsDto = jsonSerializer.parse(AllAntechamberSongsDto.serializer(), json)
             val antechamberSongs: List<Song> = allDtos.toModel()
             antechamberSongs
         }
@@ -66,8 +66,7 @@ class AntechamberService {
 
     fun updateAntechamberSong(song: Song): Observable<Boolean> {
         val antechamberSongDto = AntechamberSongDto.fromModel(song)
-        val mapper = jacksonObjectMapper()
-        val json = mapper.writeValueAsString(antechamberSongDto)
+        val json = jsonSerializer.stringify(AntechamberSongDto.serializer(), antechamberSongDto)
         val request: Request = Request.Builder()
                 .url(specificSongUrl(song.id))
                 .put(RequestBody.create(jsonType, json))
@@ -80,8 +79,7 @@ class AntechamberService {
         logger.info("Sending new antechamber song")
         val antechamberSongDto = AntechamberSongDto.fromModel(song)
         antechamberSongDto.id = null
-        val mapper = jacksonObjectMapper()
-        val json = mapper.writeValueAsString(antechamberSongDto)
+        val json = jsonSerializer.stringify(AntechamberSongDto.serializer(), antechamberSongDto)
         val request: Request = Request.Builder()
                 .url(allSongsUrl)
                 .post(RequestBody.create(jsonType, json))
@@ -102,8 +100,7 @@ class AntechamberService {
         logger.info("Approving antechamber song: $song")
         val dto = ChordsSongDto.fromModel(song)
         dto.id = null
-        val mapper = jacksonObjectMapper()
-        val json = mapper.writeValueAsString(dto)
+        val json = jsonSerializer.stringify(ChordsSongDto.serializer(), dto)
         val request: Request = Request.Builder()
                 .url(approveSongUrl)
                 .post(RequestBody.create(jsonType, json))
@@ -120,7 +117,7 @@ class AntechamberService {
 
         okHttpClient.get().newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                logger.error("Request sending error: ${e.message}")
+                logger.error("Request sending error: ${e.message}", e)
                 receiver.onError(RuntimeException(e.message))
             }
 
@@ -130,8 +127,13 @@ class AntechamberService {
                     logger.error("Unexpected response code: $response")
                     receiver.onError(RuntimeException(response.toString()))
                 } else {
-                    val responseData = successor(response)
-                    receiver.onNext(responseData)
+                    try {
+                        val responseData = successor(response)
+                        receiver.onNext(responseData)
+                    } catch (e: Throwable) {
+                        logger.error("onResponse error: ${e.message}", e)
+                        receiver.onError(RuntimeException(e.message))
+                    }
                 }
             }
         })
