@@ -86,27 +86,10 @@ class AdminSongsLayoutContoller : InflatedLayout(
     }
 
     private fun onMoreMenu(song: Song) {
-        ContextMenuBuilder().showContextMenu(listOf(
-                ContextMenuBuilder.Action(R.string.admin_antechamber_edit_action) {
-                    customSongService.showEditSongScreen(song)
-                },
-                ContextMenuBuilder.Action(R.string.admin_antechamber_update_action) {
-                    updateAntechamberSong(song)
-                },
-                ContextMenuBuilder.Action(R.string.admin_antechamber_approve_action) {
-                    ConfirmDialogBuilder().confirmAction(R.string.admin_antechamber_confirm_approve) {
-                        approveAntechamberSong(song)
-                    }
-                },
-                ContextMenuBuilder.Action(R.string.admin_antechamber_delete_action) {
-                    ConfirmDialogBuilder().confirmAction(R.string.admin_antechamber_confirm_delete) {
-                        deleteAntechamberSong(song)
-                    }
-                }
-        ))
+        ContextMenuBuilder().showContextMenu(generateMenuOptions(song))
     }
 
-    private fun approveAntechamberSong(song: Song) {
+    private fun approveAntechamberSongUI(song: Song) {
         uiInfoService.showInfoIndefinite(R.string.admin_sending)
         antechamberService.approveAntechamberSong(song)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -118,7 +101,7 @@ class AdminSongsLayoutContoller : InflatedLayout(
                 })
     }
 
-    private fun updateAntechamberSong(song: Song) {
+    private fun updateAntechamberSongUI(song: Song) {
         uiInfoService.showInfoIndefinite(R.string.admin_sending)
         antechamberService.updateAntechamberSong(song)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -130,7 +113,7 @@ class AdminSongsLayoutContoller : InflatedLayout(
                 })
     }
 
-    private fun deleteAntechamberSong(song: Song) {
+    private fun deleteAntechamberSongUI(song: Song) {
         uiInfoService.showInfoIndefinite(R.string.admin_sending)
         antechamberService.deleteAntechamberSong(song)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -142,5 +125,27 @@ class AdminSongsLayoutContoller : InflatedLayout(
                     val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
                     uiInfoService.showInfoIndefinite(message)
                 })
+    }
+
+
+    private fun generateMenuOptions(song: Song): List<ContextMenuBuilder.Action> {
+        return listOf(
+                ContextMenuBuilder.Action(R.string.admin_antechamber_edit_action) {
+                    customSongService.showEditSongScreen(song)
+                },
+                ContextMenuBuilder.Action(R.string.admin_antechamber_update_action) {
+                    updateAntechamberSongUI(song)
+                },
+                ContextMenuBuilder.Action(R.string.admin_antechamber_approve_action) {
+                    ConfirmDialogBuilder().confirmAction(R.string.admin_antechamber_confirm_approve) {
+                        approveAntechamberSongUI(song)
+                    }
+                },
+                ContextMenuBuilder.Action(R.string.admin_antechamber_delete_action) {
+                    ConfirmDialogBuilder().confirmAction(R.string.admin_antechamber_confirm_delete) {
+                        deleteAntechamberSongUI(song)
+                    }
+                }
+        )
     }
 }

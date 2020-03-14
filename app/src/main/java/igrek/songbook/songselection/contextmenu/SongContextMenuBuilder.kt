@@ -4,6 +4,7 @@ import android.app.Activity
 import androidx.appcompat.app.AlertDialog
 import dagger.Lazy
 import igrek.songbook.R
+import igrek.songbook.admin.AdminService
 import igrek.songbook.contact.PublishSongService
 import igrek.songbook.custom.CustomSongService
 import igrek.songbook.dagger.DaggerIoc
@@ -43,6 +44,8 @@ class SongContextMenuBuilder {
     lateinit var songDetailsService: SongDetailsService
     @Inject
     lateinit var publishSongService: PublishSongService
+    @Inject
+    lateinit var adminService: AdminService
 
     private var allActions: SimpleCache<List<SongContextAction>> =
             SimpleCache { createAllActions() }
@@ -55,7 +58,7 @@ class SongContextMenuBuilder {
         val actions = mutableListOf(
                 // EDIT
                 SongContextAction(R.string.action_song_edit,
-                        availableCondition = { song -> song.isCustom() },
+                        availableCondition = { song -> song.isCustom() || adminService.isAdminEnabled() },
                         executor = { song ->
                             customSongService.showEditSongScreen(song)
                         }),
