@@ -4,6 +4,7 @@ import android.util.DisplayMetrics
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.*
+import com.google.android.gms.ads.AdRequest.*
 import igrek.songbook.BuildConfig
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
@@ -61,7 +62,13 @@ class AdService {
             override fun onAdLoaded() {}
 
             override fun onAdFailedToLoad(errorCode: Int) {
-                logger.error("ad failed to load, error code: $errorCode")
+                logger.warn("ad failed to load, error code: $errorCode")
+                when (errorCode) {
+                    ERROR_CODE_INTERNAL_ERROR -> logger.warn("Something happened internally; for instance, an invalid response was received from the ad server")
+                    ERROR_CODE_INVALID_REQUEST -> logger.warn("The ad request was invalid")
+                    ERROR_CODE_NETWORK_ERROR -> logger.warn("The ad request was unsuccessful due to network connectivity")
+                    ERROR_CODE_NO_FILL -> logger.warn("The ad request was successful, but no ad was returned due to lack of ad inventory")
+                }
             }
 
             override fun onAdOpened() {
