@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">Guitar Songbook</string>
+    <string name="adaptive_banner_ad_unit_id_test" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="adaptive_banner_ad_unit_id_prod" translatable="false">ca-app-pub-8517210898119735/5760576809</string>
     <string name="nav_categories_list">Categories</string>
     <string name="nav_search_song">Search</string>
     <string name="nav_favourites_song">Favourites</string>

@@ -7,6 +7,7 @@ import igrek.songbook.admin.AdminService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
+import igrek.songbook.layout.ad.AdService
 import igrek.songbook.persistence.general.SongsUpdater
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.UserDataDao
@@ -16,6 +17,7 @@ import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songselection.tree.SongTreeLayoutController
 import igrek.songbook.system.WindowManagerService
 import javax.inject.Inject
+
 
 class AppInitializer {
 
@@ -33,15 +35,14 @@ class AppInitializer {
     lateinit var songsRepository: Lazy<SongsRepository>
     @Inject
     lateinit var adminService: Lazy<AdminService>
-
     @Inject
     lateinit var preferencesState: Lazy<PreferencesState>
-
     @Inject
     lateinit var userDataDao: Lazy<UserDataDao>
-
     @Inject
     lateinit var chordsNotationService: Lazy<ChordsNotationService>
+    @Inject
+    lateinit var adService: Lazy<AdService>
 
     private val logger = LoggerFactory.logger
 
@@ -54,6 +55,7 @@ class AppInitializer {
             debugInit()
         }
 
+        adService.get().initialize()
         userDataDao.get().read()
         appLanguageService.get().setLocale()
         windowManagerService.get().hideTaskbar()

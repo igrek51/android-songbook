@@ -128,6 +128,8 @@ dependencies {
     implementation('com.google.apis:google-api-services-drive:v3-rev136-1.25.0') {
         exclude group: 'org.apache.httpcomponents'
     }
+    // AdMob
+    implementation 'com.google.android.gms:play-services-ads:19.0.0'
     // Kotlin
     implementation "androidx.core:core-ktx:1.2.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"

@@ -25,6 +25,7 @@ import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.info.errorcheck.UIErrorHandler
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.LayoutController
+import igrek.songbook.layout.ad.AdService
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.layout.dialog.InputDialogBuilder
@@ -166,5 +167,6 @@ interface FactoryComponent {
     fun inject(there: GoogleSyncManager)
     fun inject(there: SharedPreferencesService)
     fun inject(there: PreferencesDao)
+    fun inject(there: AdService)
 
 }

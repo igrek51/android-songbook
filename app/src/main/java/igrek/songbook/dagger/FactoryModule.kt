@@ -29,6 +29,7 @@ import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
+import igrek.songbook.layout.ad.AdService
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.LocalDbService
@@ -348,6 +349,10 @@ open class FactoryModule(private val activity: AppCompatActivity) {
     @Provides
     @Singleton
     fun aSharedPreferencesService(): SharedPreferencesService = SharedPreferencesService()
+
+    @Provides
+    @Singleton
+    fun aAdService(): AdService = AdService()
 
     /*
 	 * Empty service pattern:

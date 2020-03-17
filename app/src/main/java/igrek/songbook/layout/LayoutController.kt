@@ -15,6 +15,7 @@ import igrek.songbook.custom.EditSongLayoutController
 import igrek.songbook.custom.editor.ChordsEditorLayoutController
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.layout.ad.AdService
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.playlist.PlaylistLayoutController
 import igrek.songbook.settings.SettingsLayoutController
@@ -35,6 +36,8 @@ class LayoutController {
     lateinit var navigationMenuController: Lazy<NavigationMenuController>
     @Inject
     lateinit var activityController: Lazy<ActivityController>
+    @Inject
+    lateinit var adService: Lazy<AdService>
 
     @Inject
     lateinit var songTreeLayoutController: Lazy<SongTreeLayoutController>
@@ -67,7 +70,7 @@ class LayoutController {
     @Inject
     lateinit var adminSongsLayoutContoller: Lazy<AdminSongsLayoutContoller>
 
-    private var mainContentLayout: CoordinatorLayout? = null
+    private lateinit var mainContentLayout: CoordinatorLayout
     private var currentLayout: MainLayout? = null
     private var layoutHistory: MutableList<MainLayout> = mutableListOf()
     private var registeredLayouts: Map<KClass<out MainLayout>, Lazy<out MainLayout>> = emptyMap()
@@ -129,18 +132,20 @@ class LayoutController {
 
     private fun showMainLayout(mainLayout: MainLayout) {
         currentLayout?.onLayoutExit()
-
         currentLayout = mainLayout
 
-        // replace main content with brand new inflated layout
-        val layoutResource = mainLayout.getLayoutResourceId()
-        mainContentLayout?.removeAllViews()
         val inflater = activity.layoutInflater
-        val layoutView = inflater.inflate(layoutResource, null)
-        layoutView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        mainContentLayout?.addView(layoutView)
+        val properLayoutView = inflater.inflate(mainLayout.getLayoutResourceId(), null)
+        properLayoutView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        mainContentLayout.removeAllViews()
+        mainContentLayout.addView(properLayoutView)
 
-        mainLayout.showLayout(layoutView)
+        mainLayout.showLayout(properLayoutView)
+        postInitLayout(mainLayout)
+    }
+
+    private fun postInitLayout(currentLayout: MainLayout) {
+        adService.get().updateAdBanner(currentLayout)
     }
 
     fun showPreviousLayoutOrQuit() {
