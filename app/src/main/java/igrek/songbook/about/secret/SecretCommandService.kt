@@ -45,7 +45,7 @@ class SecretCommandService {
     private val logger = LoggerFactory.logger
 
     private val cowCondition: Predicate<String> = Predicate { it?.matches("^m[ou]+$".toRegex()) ?: false }
-    private val dupaCondition: Predicate<String> = Predicate { it == "dupa" }
+    private val dupaCondition: Predicate<String> = Predicate { it?.toLowerCase() == "dupa" }
 
     private val rules: List<CommandRule> by lazy {
         listOf(

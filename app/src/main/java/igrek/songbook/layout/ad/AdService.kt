@@ -5,7 +5,6 @@ import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.AdRequest.*
-import igrek.songbook.BuildConfig
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory.logger
@@ -18,16 +17,21 @@ class AdService {
     @Inject
     lateinit var activity: AppCompatActivity
 
+    private var testingMode = false
+
     init {
         DaggerIoc.factoryComponent.inject(this)
     }
 
     fun initialize() {
+        MobileAds.initialize(activity) {}
+    }
+
+    private fun setTagForChildDirectedTreatment() {
         val conf = RequestConfiguration.Builder()
                 .setTagForChildDirectedTreatment(RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE)
                 .build()
         MobileAds.setRequestConfiguration(conf)
-        MobileAds.initialize(activity) {}
     }
 
     fun updateAdBanner(currentLayout: MainLayout) {
@@ -99,7 +103,7 @@ class AdService {
         val adSize: AdSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adWidth)
 
         val adUnitResId = when {
-            BuildConfig.DEBUG -> R.string.adaptive_banner_ad_unit_id_test
+            testingMode -> R.string.adaptive_banner_ad_unit_id_test
             else -> R.string.adaptive_banner_ad_unit_id_prod
         }
         adView.adUnitId = activity.getString(adUnitResId)
