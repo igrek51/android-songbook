@@ -56,13 +56,11 @@ class SongContextMenuBuilder {
 
     private fun createAllActions(): List<SongContextAction> {
         val actions = mutableListOf(
-                // EDIT
                 SongContextAction(R.string.action_song_edit,
-                        availableCondition = { song -> song.isCustom() || adminService.isAdminEnabled() },
+                        availableCondition = { song -> song.isCustom() },
                         executor = { song ->
                             customSongService.showEditSongScreen(song)
                         }),
-                // REMOVE
                 SongContextAction(R.string.action_song_remove,
                         availableCondition = { song -> song.isCustom() },
                         executor = { song ->
@@ -70,13 +68,11 @@ class SongContextMenuBuilder {
                                 customSongService.removeSong(song)
                             }
                         }),
-                // publish
                 SongContextAction(R.string.action_song_publish,
                         availableCondition = { song -> song.isCustom() },
                         executor = { song ->
                             publishSongService.publishSong(song)
                         }),
-                // Add to favourites
                 SongContextAction(R.string.action_song_set_favourite,
                         availableCondition = { song ->
                             !favouriteSongsService.isSongFavourite(song)
@@ -84,7 +80,6 @@ class SongContextMenuBuilder {
                         executor = { song ->
                             favouriteSongsService.setSongFavourite(song)
                         }),
-                // Remove from favourites
                 SongContextAction(R.string.action_song_unset_favourite,
                         availableCondition = { song ->
                             favouriteSongsService.isSongFavourite(song)
@@ -92,13 +87,11 @@ class SongContextMenuBuilder {
                         executor = { song ->
                             favouriteSongsService.unsetSongFavourite(song)
                         }),
-                // Add to playlist
                 SongContextAction(R.string.action_add_to_playlist,
                         availableCondition = { true },
                         executor = { song ->
                             playlistService.showAddSongToPlaylistDialog(song)
                         }),
-                // Remove from playlist
                 SongContextAction(R.string.action_remove_from_playlist,
                         availableCondition = { song ->
                             songsRepository.playlistDao.isSongOnAnyPlaylist(song)
@@ -106,23 +99,30 @@ class SongContextMenuBuilder {
                         executor = { song ->
                             playlistService.removeFromPlaylist(song)
                         }),
-                // show chords graphs
                 SongContextAction(R.string.show_chords_definitions,
                         availableCondition = { layoutController.get().isState(SongPreviewLayoutController::class) },
                         executor = {
                             songPreviewLayoutController.get().showChordsGraphs()
                         }),
-                // show song details
                 SongContextAction(R.string.song_details_title,
                         availableCondition = { true },
                         executor = { song ->
                             songDetailsService.showSongDetails(song)
                         }),
-                // COPY
                 SongContextAction(R.string.action_song_copy,
                         availableCondition = { song -> !song.isCustom() },
                         executor = { song ->
                             customSongService.copySongAsCustom(song)
+                        }),
+                SongContextAction(R.string.admin_antechamber_edit_action,
+                        availableCondition = { adminService.isAdminEnabled() },
+                        executor = { song ->
+                            customSongService.showEditSongScreen(song)
+                        }),
+                SongContextAction(R.string.admin_song_content_update_action,
+                        availableCondition = { song -> song.isPublic() && adminService.isAdminEnabled() },
+                        executor = { song ->
+                            adminService.updatePublicSongUi(song)
                         })
         )
 

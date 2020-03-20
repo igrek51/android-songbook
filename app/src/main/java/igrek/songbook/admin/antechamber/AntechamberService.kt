@@ -2,6 +2,7 @@ package igrek.songbook.admin.antechamber
 
 import dagger.Lazy
 import igrek.songbook.admin.AdminService
+import igrek.songbook.admin.HttpRequester
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -10,11 +11,13 @@ import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import io.reactivex.Observable
-import io.reactivex.subjects.BehaviorSubject
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
-import okhttp3.*
-import java.io.IOException
+import okhttp3.MediaType
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.Response
+import java.util.*
 import javax.inject.Inject
 
 
@@ -29,8 +32,6 @@ class AntechamberService {
     @Inject
     lateinit var uiInfoService: UiInfoService
     @Inject
-    lateinit var okHttpClient: Lazy<OkHttpClient>
-    @Inject
     lateinit var adminService: Lazy<AdminService>
 
     companion object {
@@ -40,10 +41,12 @@ class AntechamberService {
         private const val allSongsUrl = "$antechamberApiBase/songs"
         private val specificSongUrl = { id: Long -> "$antechamberApiBase/songs/$id" }
         private const val approveSongUrl = "$chordsApiBase/songs"
+        private val updatePublicSongIdUrl = { id: Long -> "$chordsApiBase/songs/$id" }
 
         private const val authTokenHeader = "X-Auth-Token"
     }
 
+    private val httpRequester = HttpRequester()
     private val jsonType = MediaType.parse("application/json; charset=utf-8")
     private val jsonSerializer = Json(JsonConfiguration.Stable)
 
@@ -56,7 +59,7 @@ class AntechamberService {
                 .url(allSongsUrl)
                 .addHeader(authTokenHeader, adminService.get().userAuthToken)
                 .build()
-        return httpRequest(request) { response: Response ->
+        return httpRequester.httpRequest(request) { response: Response ->
             val json = response.body()?.string() ?: ""
             val allDtos: AllAntechamberSongsDto = jsonSerializer.parse(AllAntechamberSongsDto.serializer(), json)
             val antechamberSongs: List<Song> = allDtos.toModel()
@@ -72,7 +75,7 @@ class AntechamberService {
                 .put(RequestBody.create(jsonType, json))
                 .addHeader(authTokenHeader, adminService.get().userAuthToken)
                 .build()
-        return httpRequest(request) { true }
+        return httpRequester.httpRequest(request) { true }
     }
 
     fun createAntechamberSong(song: Song): Observable<Boolean> {
@@ -84,7 +87,7 @@ class AntechamberService {
                 .url(allSongsUrl)
                 .post(RequestBody.create(jsonType, json))
                 .build()
-        return httpRequest(request) { true }
+        return httpRequester.httpRequest(request) { true }
     }
 
     fun deleteAntechamberSong(song: Song): Observable<Boolean> {
@@ -93,7 +96,24 @@ class AntechamberService {
                 .delete()
                 .addHeader(authTokenHeader, adminService.get().userAuthToken)
                 .build()
-        return httpRequest(request) { true }
+        return httpRequester.httpRequest(request) { true }
+    }
+
+    fun updatePublicSong(song: Song): Observable<Boolean> {
+        logger.info("Updating public song: $song")
+        song.versionNumber++
+        song.updateTime = Date().time
+        val dto = ChordsSongDto.fromModel(song)
+        val json = jsonSerializer.stringify(ChordsSongDto.serializer(), dto)
+        val request: Request = Request.Builder()
+                .url(updatePublicSongIdUrl(song.id))
+                .put(RequestBody.create(jsonType, json))
+                .addHeader(authTokenHeader, adminService.get().userAuthToken)
+                .build()
+        return httpRequester.httpRequest(request) { response: Response ->
+            logger.debug("Update response", response.body()?.string())
+            true
+        }
     }
 
     fun approveAntechamberSong(song: Song): Observable<Boolean> {
@@ -106,39 +126,10 @@ class AntechamberService {
                 .post(RequestBody.create(jsonType, json))
                 .addHeader(authTokenHeader, adminService.get().userAuthToken)
                 .build()
-        return httpRequest(request) { response: Response ->
+        return httpRequester.httpRequest(request) { response: Response ->
             logger.debug("Approve response", response.body()?.string())
             true
         }
-    }
-
-    private fun <T> httpRequest(request: Request, successor: (Response) -> T): Observable<T> {
-        val receiver = BehaviorSubject.create<T>()
-
-        okHttpClient.get().newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                logger.error("Request sending error: ${e.message}", e)
-                receiver.onError(RuntimeException(e.message))
-            }
-
-            @Throws(IOException::class)
-            override fun onResponse(call: Call, response: Response) {
-                if (!response.isSuccessful) {
-                    logger.error("Unexpected response code: $response")
-                    receiver.onError(RuntimeException(response.toString()))
-                } else {
-                    try {
-                        val responseData = successor(response)
-                        receiver.onNext(responseData)
-                    } catch (e: Throwable) {
-                        logger.error("onResponse error: ${e.message}", e)
-                        receiver.onError(RuntimeException(e.message))
-                    }
-                }
-            }
-        })
-
-        return receiver
     }
 
 }

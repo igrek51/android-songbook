@@ -65,4 +65,8 @@ data class Song(
     fun isCustom(): Boolean {
         return namespace == SongNamespace.Custom
     }
+
+    fun isPublic(): Boolean {
+        return namespace == SongNamespace.Public
+    }
 }

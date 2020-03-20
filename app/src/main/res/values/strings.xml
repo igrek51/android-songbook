@@ -303,19 +303,19 @@
     <string name="missing_song_title_invalid_format">Invalid format. Try: \"Artist - Title\"</string>
     <string name="dialog_warning">Warning</string>
     <string name="publish_song_no_change">You shouldn\'t publish this song because you did not any change compared to original song. Make some changes first, if you want to send an improved version.</string>
-    <string name="nav_admin_antechamber">Antechamber</string>
-    <string name="admin_update_songs">Fetch songs</string>
-    <string name="admin_downloading_antechamber">Downloading antechamber songs…</string>
-    <string name="admin_communication_breakdown">Communication breakdown: %s</string>
-    <string name="admin_downloaded_antechamber">Songs downloaded</string>
-    <string name="admin_antechamber_edit_action">Edit song</string>
-    <string name="admin_antechamber_update_action">Update song</string>
-    <string name="admin_antechamber_approve_action">Approve song</string>
-    <string name="admin_antechamber_delete_action">Delete song</string>
-    <string name="admin_antechamber_confirm_delete">Do you really want to delete it?</string>
-    <string name="admin_antechamber_confirm_approve">Do you really want to approve it?</string>
-    <string name="admin_sending">Sending…</string>
-    <string name="admin_success">Success.</string>
+    <string name="nav_admin_antechamber" translatable="false">Antechamber</string>
+    <string name="admin_update_songs" translatable="false">Fetch songs</string>
+    <string name="admin_downloading_antechamber" translatable="false">Downloading antechamber songs…</string>
+    <string name="admin_communication_breakdown" translatable="false">Communication breakdown: %s</string>
+    <string name="admin_downloaded_antechamber" translatable="false">Songs downloaded</string>
+    <string name="admin_antechamber_edit_action" translatable="false">[admin] Edit song</string>
+    <string name="admin_antechamber_update_action" translatable="false">[admin] Push update to antechamber</string>
+    <string name="admin_antechamber_approve_action" translatable="false">Approve song</string>
+    <string name="admin_antechamber_delete_action" translatable="false">Delete song</string>
+    <string name="admin_antechamber_confirm_delete" translatable="false">Do you really want to delete it?</string>
+    <string name="admin_antechamber_confirm_approve" translatable="false">Do you really want to approve it?</string>
+    <string name="admin_sending" translatable="false">Sending…</string>
+    <string name="admin_success" translatable="false">Success.</string>
     <string name="antechamber_new_song_sent">A song has been sent.</string>
     <string name="confirm_unsaved_save">Save</string>
     <string name="confirm_discard_changes">Discard</string>
@@ -344,4 +344,5 @@
     <string name="settings_chords_section">Chords style</string>
     <string name="settings_privacy">Privacy</string>
     <string name="settings_show_privacy_policy">Privacy Policy</string>
+    <string name="admin_song_content_update_action" translatable="false">[admin] Push content update</string>
 </resources>
