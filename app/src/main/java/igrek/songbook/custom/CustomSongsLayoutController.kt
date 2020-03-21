@@ -15,12 +15,15 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.list.ListItemClickListener
+import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.custom.CustomCategory
+import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.tree.NoParentItemException
+import igrek.songbook.system.locale.InsensitiveNameComparator
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
@@ -31,16 +34,24 @@ class CustomSongsLayoutController : InflatedLayout(
 
     @Inject
     lateinit var songsRepository: SongsRepository
+
     @Inject
     lateinit var uiResourceService: UiResourceService
+
     @Inject
     lateinit var songContextMenuBuilder: SongContextMenuBuilder
+
     @Inject
     lateinit var uiInfoService: UiInfoService
+
     @Inject
     lateinit var songOpener: SongOpener
+
     @Inject
     lateinit var customSongService: Lazy<CustomSongService>
+
+    @Inject
+    lateinit var appLanguageService: Lazy<AppLanguageService>
 
     private var itemsListView: CustomSongListView? = null
     private var goBackButton: ImageButton? = null
@@ -88,34 +99,37 @@ class CustomSongsLayoutController : InflatedLayout(
     }
 
     private fun updateItemsList() {
+        val locale = appLanguageService.get().getCurrentLocale()
+        val categoryNameComparator = InsensitiveNameComparator<CustomCategory>(locale) { category -> category.name }
+        val songNameComparator = InsensitiveNameComparator<Song>(locale) { song -> song.displayName() }
         val groupingEnabled = customSongService.get().customSongsGroupCategories
 
         if (groupingEnabled) {
             itemsListView!!.items = if (customCategory == null) {
-                val categories = songsRepository.customSongsDao.customCategories.sortedBy { category ->
-                    category.name
-                }.map {
-                    CustomSongListItem(customCategory = it)
-                }
-                val uncategorized = songsRepository.customSongsRepo.songs.get().sortedBy { song ->
-                    song.displayName()
-                }.map {
-                    CustomSongListItem(song = it)
-                }
+                val categories = songsRepository.customSongsDao.customCategories
+                        .sortedWith(categoryNameComparator)
+                        .map {
+                            CustomSongListItem(customCategory = it)
+                        }
+                val uncategorized = songsRepository.customSongsRepo.songs.get()
+                        .sortedWith(songNameComparator)
+                        .map {
+                            CustomSongListItem(song = it)
+                        }
                 categories + uncategorized
             } else {
-                customCategory!!.songs.sortedBy { song ->
-                    song.displayName()
-                }.map {
-                    CustomSongListItem(song = it)
-                }
+                customCategory!!.songs
+                        .sortedWith(songNameComparator)
+                        .map {
+                            CustomSongListItem(song = it)
+                        }
             }
         } else {
-            itemsListView!!.items = songsRepository.customSongsRepo.songs.get().sortedBy { song ->
-                song.displayName()
-            }.map {
-                CustomSongListItem(song = it)
-            }
+            itemsListView!!.items = songsRepository.customSongsRepo.songs.get()
+                    .sortedWith(songNameComparator)
+                    .map {
+                        CustomSongListItem(song = it)
+                    }
         }
 
         if (storedScroll != null) {
