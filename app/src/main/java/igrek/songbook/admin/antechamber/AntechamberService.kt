@@ -9,7 +9,6 @@ import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
-import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import io.reactivex.Observable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
@@ -27,8 +26,6 @@ class AntechamberService {
     lateinit var songsRepository: SongsRepository
     @Inject
     lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var songContextMenuBuilder: SongContextMenuBuilder
     @Inject
     lateinit var uiInfoService: UiInfoService
     @Inject

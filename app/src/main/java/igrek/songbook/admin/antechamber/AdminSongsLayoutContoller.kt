@@ -13,7 +13,6 @@ import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.songpreview.SongOpener
-import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
@@ -26,8 +25,6 @@ class AdminSongsLayoutContoller : InflatedLayout(
     lateinit var songsRepository: SongsRepository
     @Inject
     lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var songContextMenuBuilder: SongContextMenuBuilder
     @Inject
     lateinit var uiInfoService: UiInfoService
     @Inject

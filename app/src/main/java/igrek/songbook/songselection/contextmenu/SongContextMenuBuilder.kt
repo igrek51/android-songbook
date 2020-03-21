@@ -45,7 +45,7 @@ class SongContextMenuBuilder {
     @Inject
     lateinit var publishSongService: PublishSongService
     @Inject
-    lateinit var adminService: AdminService
+    lateinit var adminService: Lazy<AdminService>
 
     private var allActions: SimpleCache<List<SongContextAction>> =
             SimpleCache { createAllActions() }
@@ -115,14 +115,14 @@ class SongContextMenuBuilder {
                             customSongService.copySongAsCustom(song)
                         }),
                 SongContextAction(R.string.admin_antechamber_edit_action,
-                        availableCondition = { adminService.isAdminEnabled() },
+                        availableCondition = { adminService.get().isAdminEnabled() },
                         executor = { song ->
                             customSongService.showEditSongScreen(song)
                         }),
                 SongContextAction(R.string.admin_song_content_update_action,
-                        availableCondition = { song -> song.isPublic() && adminService.isAdminEnabled() },
+                        availableCondition = { song -> song.isPublic() && adminService.get().isAdminEnabled() },
                         executor = { song ->
-                            adminService.updatePublicSongUi(song)
+                            adminService.get().updatePublicSongUi(song)
                         })
         )
 
