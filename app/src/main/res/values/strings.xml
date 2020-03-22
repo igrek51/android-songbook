@@ -235,14 +235,14 @@
     <string name="confirm_remove_song">Do you really want to remove this song?</string>
     <string name="confirm_discard_custom_song_changes">Do you want to save unsaved changes?</string>
     <string name="edit_chords_notation_button">Notation: %s</string>
-    <string name="no_new_chords_detected">No new chords detected</string>
-    <string name="new_chords_detected">New chords have been detected: %s</string>
+    <string name="no_new_chords_detected">No new chords</string>
+    <string name="new_chords_detected">I\'ve found new chords: %s</string>
     <string name="transpose_minus_5" translatable="false">-5</string>
     <string name="transpose_minus_1" translatable="false">-1</string>
     <string name="transpose_zero" translatable="false">0</string>
     <string name="transpose_plus_1" translatable="false">+1</string>
     <string name="transpose_plus_5" translatable="false">+5</string>
-    <string name="editor_other_chords_detected">There was chords found but from other notation: \"%s\"</string>
+    <string name="editor_other_chords_detected">I\'ve found chords but related to another notation: \"%s\"</string>
     <string name="editor_onexit_validation_failed">%s.
         \n
         \nMake sure you have chosen right chords notation and verify the chords syntax.

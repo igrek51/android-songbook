@@ -231,9 +231,9 @@
     <string name="confirm_remove_song">Czy na pewno chcesz usunąć piosenkę?</string>
     <string name="confirm_discard_custom_song_changes">Czy chcesz zapisać niezapisane zmiany w piosence?</string>
     <string name="edit_chords_notation_button">Notacja: %s</string>
-    <string name="no_new_chords_detected">Nie znaleziono nowych akordów</string>
-    <string name="new_chords_detected">Znaleziono nowe akordy: %s</string>
-    <string name="editor_other_chords_detected">Znaleziono akordy, ale z innej notacji: \"%s\"</string>
+    <string name="no_new_chords_detected">Brak nowych akordów</string>
+    <string name="new_chords_detected">Znalazłem nowe akordy: %s</string>
+    <string name="editor_other_chords_detected">Znalazłem nowe akordy, ale z innej notacji: \"%s\"</string>
     <string name="editor_onexit_validation_failed">%s.
         \n
         \nUpewnij się, że wybrałeś odpowiednią notację akordów oraz zweryfikuj poprawność składni.
