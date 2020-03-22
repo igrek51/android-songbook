@@ -69,4 +69,6 @@ data class Song(
     fun isPublic(): Boolean {
         return namespace == SongNamespace.Public
     }
+
+    override fun toString(): String = displayName()
 }
