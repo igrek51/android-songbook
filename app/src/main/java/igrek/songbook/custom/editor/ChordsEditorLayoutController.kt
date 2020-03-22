@@ -242,7 +242,7 @@ class ChordsEditorLayoutController : MainLayout {
 
     fun transformMoveChordsAboveToRight(lyrics: String): String {
         val input = "\n" + lyrics + "\n"
-        val regex = Regex("""\n((?:\[[\w /()\-]+?] *)+)\n(\w.+)(?=\n)""")
+        val regex = Regex("""\n((?:\[[\w /()\-,#]+?] *)+)\n(\w.+)(?=\n)""")
         val transformed = input.replace(regex, "\n$2 $1")
         return transformed.drop(1).dropLast(1)
     }
