@@ -134,10 +134,14 @@ class EditSongLayoutController : MainLayout {
     }
 
     private fun openInChordsEditor() {
-        layoutController.showLayout(ChordsEditorLayoutController::class)
-        val chordsNotation = chordsNotationSpinner?.selectedNotation
+        this.songTitle = songTitleEdit?.text?.toString().orEmpty()
+        this.songContent = songContentEdit?.text?.toString().orEmpty()
+        this.customCategoryName = customCategoryNameEdit?.text?.toString().orEmpty()
+        this.songChordsNotation = chordsNotationSpinner?.selectedNotation
                 ?: chordsNotationService.chordsNotation
-        chordsEditorLayoutController.get().setContent(songContentEdit?.text.toString(), chordsNotation)
+
+        layoutController.showLayout(ChordsEditorLayoutController::class)
+        chordsEditorLayoutController.get().setContent(songContentEdit?.text.toString(), this.songChordsNotation)
     }
 
     private fun importContentFromFile() {
@@ -208,9 +212,9 @@ class EditSongLayoutController : MainLayout {
     }
 
     private fun hasUnsavedChanges(): Boolean {
-        val songTitle = songTitleEdit?.text.toString()
-        val customCategoryName = customCategoryNameEdit?.text.toString()
-        val songContent = songContentEdit?.text.toString()
+        val songTitle = songTitleEdit?.text?.toString().orEmpty()
+        val customCategoryName = customCategoryNameEdit?.text?.toString().orEmpty()
+        val songContent = songContentEdit?.text?.toString().orEmpty()
         if (currentSong == null) { // add
             if (songTitle.isNotEmpty()) return true
             if (customCategoryName.isNotEmpty()) return true
