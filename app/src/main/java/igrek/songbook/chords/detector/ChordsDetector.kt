@@ -11,6 +11,13 @@ class ChordsDetector(notation: ChordsNotation? = null) {
     var detectedChords = mutableListOf<String>()
         private set
 
+    private val falseFriends: Set<String> by lazy {
+        when {
+            notation != null -> chordNameProvider.falseFriends(notation)
+            else -> emptySet()
+        }
+    }
+
     private val baseChordNames: Set<String> by lazy {
         val names = sortedSetOf(longestChordComparator)
         if (notation == null) {
@@ -113,14 +120,19 @@ class ChordsDetector(notation: ChordsNotation? = null) {
     }
 
     private fun isASingleChord(chordCandidate: String): Boolean {
+        if (chordCandidate in falseFriends)
+            return false
+
         return allBaseNames.any { chordBase ->
             if (chordCandidate == chordBase)
                 return@any true
+
             if (chordCandidate.startsWith(chordBase)) {
                 val remainder = chordCandidate.drop(chordBase.length)
                 if (remainder in chordSuffixes)
                     return@any true
             }
+
             return@any false
         }
     }

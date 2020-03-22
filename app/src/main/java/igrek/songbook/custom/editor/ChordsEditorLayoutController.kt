@@ -13,6 +13,7 @@ import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.chords.converter.ChordsConverter
 import igrek.songbook.chords.detector.ChordsDetector
+import igrek.songbook.chords.syntax.ChordNameProvider
 import igrek.songbook.custom.EditSongLayoutController
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
@@ -202,20 +203,28 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     private fun validateChordsNotation(text: String) {
+        val chordsNotation = chordsNotation
         val detector = ChordsDetector(chordsNotation)
+        val chordNameProvider = ChordNameProvider()
+        val falseFriends: Set<String> = when {
+            chordsNotation != null -> chordNameProvider.falseFriends(chordsNotation)
+            else -> emptySet()
+        }
         text.replace(Regex("""\[((.|\n)+?)]""")) { matchResult ->
-            validateChordsGroup(matchResult.groupValues[1], detector)
+            validateChordsGroup(matchResult.groupValues[1], detector, falseFriends)
             ""
         }
     }
 
-    private fun validateChordsGroup(chordsGroup: String, detector: ChordsDetector) {
+    private fun validateChordsGroup(chordsGroup: String, detector: ChordsDetector, falseFriends: Set<String>) {
         val chords = chordsGroup.split(" ", "\n", "(", ")")
         chords.forEach { chord ->
-            if (chord.isNotEmpty() && !detector.isWordAChord(chord)) {
-                val placeholder = uiResourceService.resString(R.string.chords_unknown_chord)
-                val errorMessage = placeholder.format(chord)
-                throw ChordsValidationError(errorMessage)
+            if (chord.isNotEmpty()) {
+                if (!detector.isWordAChord(chord) || chord in falseFriends) {
+                    val placeholder = uiResourceService.resString(R.string.chords_unknown_chord)
+                    val errorMessage = placeholder.format(chord)
+                    throw ChordsValidationError(errorMessage)
+                }
             }
         }
     }

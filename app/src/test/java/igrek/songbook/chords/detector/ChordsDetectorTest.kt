@@ -148,4 +148,10 @@ class ChordsDetectorTest {
         assertThat(detector.recognizeSingleChord("G6add11")).isEqualTo(Chord(noteIndex = 7, minor = false, suffix = "6add11"))
     }
 
+    @Test
+    fun test_false_friends() {
+        val detector = ChordsDetector(ChordsNotation.GERMAN)
+        assertThat(detector.isWordAChord("Am")).isFalse()
+        assertThat(detector.isWordAChord("co")).isFalse()
+    }
 }
