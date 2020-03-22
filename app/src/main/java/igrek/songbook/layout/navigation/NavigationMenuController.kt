@@ -14,7 +14,7 @@ import igrek.songbook.activity.ActivityController
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.contact.ContactLayoutController
 import igrek.songbook.contact.SendMessageService
-import igrek.songbook.custom.CustomSongsLayoutController
+import igrek.songbook.custom.CustomSongsListLayoutController
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -78,7 +78,7 @@ class NavigationMenuController {
         actionsMap[R.id.nav_favourites] = { layoutController.get().showLayout(FavouritesLayoutController::class) }
         actionsMap[R.id.nav_playlists] = { layoutController.get().showLayout(PlaylistLayoutController::class) }
         actionsMap[R.id.nav_update_db] = { songsUpdater.get().updateSongsDb() }
-        actionsMap[R.id.nav_custom_songs] = { layoutController.get().showLayout(CustomSongsLayoutController::class) }
+        actionsMap[R.id.nav_custom_songs] = { layoutController.get().showLayout(CustomSongsListLayoutController::class) }
         actionsMap[R.id.nav_random_song] = { randomSongOpener.get().openRandomSong() }
         actionsMap[R.id.nav_settings] = { layoutController.get().showLayout(SettingsLayoutController::class) }
         actionsMap[R.id.nav_help] = { helpLayoutController.get().showUIHelp() }

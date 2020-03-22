@@ -472,11 +472,7 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     private fun returnNewContent() {
-        var content = contentEdit?.text.toString()
-        if (chordsNotation != null) {
-            val converter = ChordsConverter(chordsNotation!!, ChordsNotation.default)
-            content = converter.convertLyrics(content)
-        }
+        val content = contentEdit?.text?.toString().orEmpty()
         layoutController.showPreviousLayoutOrQuit()
         editSongLayoutController.get().setSongContent(content)
     }

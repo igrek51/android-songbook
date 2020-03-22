@@ -15,7 +15,7 @@ import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.chords.transpose.ChordsTransposerManager
 import igrek.songbook.contact.*
 import igrek.songbook.custom.CustomSongService
-import igrek.songbook.custom.CustomSongsLayoutController
+import igrek.songbook.custom.CustomSongsListLayoutController
 import igrek.songbook.custom.EditSongLayoutController
 import igrek.songbook.custom.SongImportFileChooser
 import igrek.songbook.custom.editor.ChordsEditorLayoutController
@@ -128,7 +128,7 @@ interface FactoryComponent {
     fun inject(there: ChordsNotationService)
     fun inject(there: PreferencesState)
     fun inject(there: LyricsThemeService)
-    fun inject(there: CustomSongsLayoutController)
+    fun inject(there: CustomSongsListLayoutController)
     fun inject(there: SongContextMenuBuilder)
     fun inject(there: ChordsEditorLayoutController)
     fun inject(there: ContextMenuBuilder)

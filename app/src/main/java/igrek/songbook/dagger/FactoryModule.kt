@@ -20,7 +20,7 @@ import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.chords.transpose.ChordsTransposerManager
 import igrek.songbook.contact.*
 import igrek.songbook.custom.CustomSongService
-import igrek.songbook.custom.CustomSongsLayoutController
+import igrek.songbook.custom.CustomSongsListLayoutController
 import igrek.songbook.custom.EditSongLayoutController
 import igrek.songbook.custom.SongImportFileChooser
 import igrek.songbook.custom.editor.ChordsEditorLayoutController
@@ -272,7 +272,7 @@ open class FactoryModule(private val activity: AppCompatActivity) {
 
     @Provides
     @Singleton
-    fun aCustomSongsLayoutController(): CustomSongsLayoutController = CustomSongsLayoutController()
+    fun aCustomSongsLayoutController(): CustomSongsListLayoutController = CustomSongsListLayoutController()
 
     @Provides
     @Singleton

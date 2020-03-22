@@ -28,7 +28,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
-class CustomSongsLayoutController : InflatedLayout(
+class CustomSongsListLayoutController : InflatedLayout(
         _layoutResourceId = R.layout.screen_custom_songs
 ), ListItemClickListener<CustomSongListItem> {
 

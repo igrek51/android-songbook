@@ -10,7 +10,7 @@ import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.contact.ContactLayoutController
 import igrek.songbook.contact.MissingSongLayoutController
 import igrek.songbook.contact.PublishSongLayoutController
-import igrek.songbook.custom.CustomSongsLayoutController
+import igrek.songbook.custom.CustomSongsListLayoutController
 import igrek.songbook.custom.EditSongLayoutController
 import igrek.songbook.custom.editor.ChordsEditorLayoutController
 import igrek.songbook.dagger.DaggerIoc
@@ -54,7 +54,7 @@ class LayoutController {
     @Inject
     lateinit var chordsEditorLayoutController: Lazy<ChordsEditorLayoutController>
     @Inject
-    lateinit var customSongsLayoutController: Lazy<CustomSongsLayoutController>
+    lateinit var customSongsListLayoutController: Lazy<CustomSongsListLayoutController>
     @Inject
     lateinit var favouritesLayoutController: Lazy<FavouritesLayoutController>
     @Inject
@@ -96,7 +96,7 @@ class LayoutController {
                 SettingsLayoutController::class to settingsLayoutController,
                 EditSongLayoutController::class to editSongLayoutController,
                 ChordsEditorLayoutController::class to chordsEditorLayoutController,
-                CustomSongsLayoutController::class to customSongsLayoutController,
+                CustomSongsListLayoutController::class to customSongsListLayoutController,
                 FavouritesLayoutController::class to favouritesLayoutController,
                 PlaylistLayoutController::class to playlistLayoutController,
                 LatestSongsLayoutController::class to latestSongsLayoutController,
