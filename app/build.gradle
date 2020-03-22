@@ -27,7 +27,8 @@ def getVersionName = { ->
             commandLine 'git', 'describe', '--tags', '--dirty'
             standardOutput = stdout
         }
-        return stdout.toString().trim()
+        def variantSuffix = (variant.getName() == "release") ? "" : "-debug"
+        return stdout.toString().trim() + variantSuffix
     } catch (ignored) {
         return null
     }
