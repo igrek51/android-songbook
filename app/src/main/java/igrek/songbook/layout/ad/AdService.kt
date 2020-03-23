@@ -5,10 +5,12 @@ import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.AdRequest.*
+import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.layout.MainLayout
+import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import javax.inject.Inject
 
@@ -16,6 +18,9 @@ class AdService {
 
     @Inject
     lateinit var activity: AppCompatActivity
+
+    @Inject
+    lateinit var preferencesState: Lazy<PreferencesState>
 
     private var testingMode = false
 
@@ -47,7 +52,7 @@ class AdService {
     }
 
     private fun bannerToBeDisplayed(currentLayout: MainLayout): Boolean {
-        return !SongPreviewLayoutController::class.isInstance(currentLayout)
+        return !SongPreviewLayoutController::class.isInstance(currentLayout) && !areAdsDisabled()
     }
 
     private fun hideAdBanner() {
@@ -111,5 +116,13 @@ class AdService {
 
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
+    }
+
+    fun disableAds() {
+        preferencesState.get().adsStatus = 1
+    }
+
+    private fun areAdsDisabled(): Boolean {
+        return preferencesState.get().adsStatus == 1L
     }
 }

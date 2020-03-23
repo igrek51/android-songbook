@@ -62,6 +62,8 @@ enum class PreferencesField constructor(
 
     AppExecutionCount(0),
 
+    AdsStatus(0),
+
     ;
 
     constructor(defaultValue: String) : this(StringPreferenceType(defaultValue))

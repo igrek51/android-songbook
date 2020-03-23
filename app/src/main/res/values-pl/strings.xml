@@ -322,4 +322,5 @@
     <string name="settings_chords_section">Styl akordów</string>
     <string name="settings_privacy">Prywatność</string>
     <string name="settings_show_privacy_policy">Polityka prywatności</string>
+    <string name="ads_disabled">Reklamy wyłączone</string>
 </resources>

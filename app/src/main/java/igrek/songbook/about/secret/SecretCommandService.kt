@@ -18,6 +18,7 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.layout.ad.AdService
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.system.SoftKeyboardService
@@ -29,22 +30,33 @@ class SecretCommandService {
 
     @Inject
     lateinit var activity: AppCompatActivity
+
     @Inject
     lateinit var uiResourceService: UiResourceService
+
     @Inject
     lateinit var uiInfoService: UiInfoService
+
     @Inject
     lateinit var songsRepository: SongsRepository
+
     @Inject
     lateinit var softKeyboardService: SoftKeyboardService
+
     @Inject
     lateinit var preferencesService: PreferencesService
+
     @Inject
     lateinit var adminService: AdminService
 
+    @Inject
+    lateinit var adService: AdService
+
     private val logger = LoggerFactory.logger
 
-    private val cowCondition: Predicate<String> = Predicate { it?.matches("^m[ou]+$".toRegex()) ?: false }
+    private val cowCondition: Predicate<String> = Predicate {
+        it?.matches("^m[ou]+$".toRegex()) ?: false
+    }
     private val dupaCondition: Predicate<String> = Predicate { it?.toLowerCase() == "dupa" }
 
     private val rules: List<CommandRule> by lazy {
@@ -58,7 +70,6 @@ class SecretCommandService {
                 CommandRule("zjajem", "z jajem") { unlockSongs("zjajem") },
                 CommandRule("afcg") { unlockSongs("afcg") },
 
-                // debug commands
                 CommandRule("reset") {
                     songsRepository.factoryReset()
                     preferencesService.clear()
@@ -88,8 +99,36 @@ class SecretCommandService {
                     it?.startsWith("login ") ?: false
                 }) { key: String ->
                     adminService.login(key)
+                },
+
+                CommandRule(Predicate {
+                    it?.startsWith("hush ") ?: false
+                }) { key: String ->
+                    hashedCommand(key.drop(5))
                 }
         )
+    }
+
+    private val hashedCommands: Map<String, () -> Unit> by lazy {
+        mapOf(
+                "5581b03c159338d1e17cdc04c424788209a4c52cfa65c981af93de3a0600a427" to { disableAds() }
+        )
+    }
+
+    private fun hashedCommand(cmd: String) {
+        val hash = ShaHasher().hash(cmd)
+        if (hash !in hashedCommands) {
+            logger.warn("invalid hashed command entered: $cmd (#$hash)")
+            return
+        }
+        logger.info("hashed command entered: $cmd (#$hash)")
+        val command = hashedCommands[hash]
+        command?.invoke()
+    }
+
+    private fun disableAds() {
+        adService.disableAds()
+        toast(R.string.ads_disabled)
     }
 
     @SuppressLint("InflateParams")
@@ -187,8 +226,8 @@ class SecretCommandService {
      _____________________
     / Congratulations!    \
     |                     |
-    | You have now        |
-    \ Super Cow Powers :) /
+    | You have found a    |
+    \ Secret Cow Level :) /
      ---------------------
        \   ^__^
         \  (oo)\_______

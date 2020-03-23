@@ -345,4 +345,5 @@
     <string name="settings_privacy">Privacy</string>
     <string name="settings_show_privacy_policy">Privacy Policy</string>
     <string name="admin_song_content_update_action" translatable="false">[admin] Push content update</string>
+    <string name="ads_disabled">Ads disabled</string>
 </resources>

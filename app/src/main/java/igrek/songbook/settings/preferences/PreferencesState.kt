@@ -31,6 +31,7 @@ class PreferencesState {
     var chordsInstrument: ChordsInstrument by PreferenceDelegate(PreferencesField.ChordsInstrument)
     var userAuthToken: String by PreferenceDelegate(PreferencesField.UserAuthToken)
     var appExecutionCount: Long by PreferenceDelegate(PreferencesField.AppExecutionCount)
+    var adsStatus: Long by PreferenceDelegate(PreferencesField.AdsStatus)
 
     init {
         DaggerIoc.factoryComponent.inject(this)
