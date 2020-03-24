@@ -73,7 +73,11 @@ class PublishSongLayoutController : MainLayout {
         val author = contactAuthorEdit?.text?.toString()
 
         if (content.isNullOrBlank() || title.isNullOrBlank()) {
-            uiInfoService.showToast(uiResourceService.resString(R.string.fill_in_all_fields))
+            uiInfoService.showToast(R.string.fill_in_all_fields)
+            return
+        }
+
+        if (!isContentValid(content)) {
             return
         }
 
@@ -99,6 +103,14 @@ class PublishSongLayoutController : MainLayout {
                         uiInfoService.showInfo(R.string.antechamber_new_song_sent)
                     }, {})
         }
+    }
+
+    private fun isContentValid(content: String): Boolean {
+        if ("[" !in content || "]" !in content) {
+            uiInfoService.showToast(R.string.error_no_chords_marked_in_song)
+            return false
+        }
+        return true
     }
 
     fun prepareFields(song: Song) {

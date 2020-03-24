@@ -123,8 +123,8 @@
     <string name="edit_song_content_label">Tekst piosenki z akordami w nawiasach kwadratowych:</string>
     <string name="tooltip_edit_chords_lyrics">Umieść tu tekst piosenki z akordami. Postaraj się trzymać następujących reguł, aby zachować spójność ze standardem piosenek:
         \n1. Zaznacz akordy w nawiasach kwadratowych, np. "tekst [C G]".
-        \n2. Mieszaj akordy z tekstem w tej samej linii, aby uzyskać zwięzły układ. Nie umieszczaj ich w osobnej linii ponad tekstem.
-        \n3. Jeśli fragment piosenki się powtarza (refren), skopiuj go we wszystkie miejsca wystąpień. Kiedy piosenka zachowuje ciągłość, ułatwia to jej przewijanie.
+        \n2. Mieszaj akordy z tekstem w tej samej linii, aby dokładnie wskazać moment zmiany akordu w tekście. Nie umieszczaj ich w osobnej linii ponad tekstem.
+        \n3. Jeśli fragment piosenki się powtarza (np. refren), skopiuj go we wszystkie miejsca wystąpień. Kiedy piosenka zachowuje ciągłość, ułatwia to jej przewijanie.
         \n4. Upewnij się, że wybrałeś odpowiednią notację dla swoich akordów.
         \n5. Jeśli piosenka ma trudny rytm z często zmieniającymi się akordami, umieść akordy między poszczególnymi słowami lub nawet w środku wyrazów, aby wskazać sylabę, w której akcentowany jest akord. W pozostałych przypadkach umieszczaj akordy na końcu linii.
         \n6. Możesz użyć kreski "-", aby połączyć szybko zmieniające się akordy: "D Dsus2-D-Dsus4" lub użyć nawiasów "()", aby wskazać opcjonalność akordów: [C G (G7)].
@@ -323,4 +323,5 @@
     <string name="settings_privacy">Prywatność</string>
     <string name="settings_show_privacy_policy">Polityka prywatności</string>
     <string name="ads_disabled">Reklamy wyłączone</string>
+    <string name="error_no_chords_marked_in_song">W tej piosence nie zaznaczono żadnych akordów.\nDodaj akordy do piosenki.</string>
 </resources>

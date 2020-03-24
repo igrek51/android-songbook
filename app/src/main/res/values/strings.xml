@@ -123,8 +123,8 @@
     <string name="edit_song_content_label">Lyrics with chords in square brackets:</string>
     <string name="tooltip_edit_chords_lyrics">Put here the lyrics with chords. Try to keep these rules in order to be consistent with other songs:
         \n1. Mark chords by surrounding them with square brackets, e.g. "text [C G]".
-        \n2. Mix chords with the lyrics in the same line in order to make them compact. Do not place them in the separate line above text.
-        \n3. If some part of song is repeated (refrain), copy it to all its occurrences. When lyrics are continuous, scrolling through the song works better.
+        \n2. Mix chords with the lyrics in the same line in order to indicate precisely when a chord is being changed in a text. Do not place them in the separate line above text.
+        \n3. If some part of song is repeated (e.g. refrain), copy it to all its occurrences. When lyrics are continuous, it facilitates scrolling through the song.
         \n4. Make sure you have chosen appropriate notation for your chords.
         \n5. If a song has difficult rhythm with chords changing frequently, place the chords between words or even inside the words in order to indicate the syllable with a chord accent. In other cases, place chords at the end of line.
         \n6. You can use dash "-" to couple quickly changing chords: "D Dsus2-D-Dsus4" or use parentheses "()" to indicate some chords optional: [C G (G7)].
@@ -346,4 +346,5 @@
     <string name="settings_show_privacy_policy">Privacy Policy</string>
     <string name="admin_song_content_update_action" translatable="false">[admin] Push content update</string>
     <string name="ads_disabled">Ads disabled</string>
+    <string name="error_no_chords_marked_in_song">This song doesn\'t have any chords marked properly.\nPut chords in your song.</string>
 </resources>
