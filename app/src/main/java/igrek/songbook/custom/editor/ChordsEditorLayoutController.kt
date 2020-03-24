@@ -476,6 +476,7 @@ class ChordsEditorLayoutController : MainLayout {
         setContentWithSelection(content, 0, 0)
         history.reset(contentEdit!!)
         softKeyboardService.showSoftKeyboard(contentEdit)
+        contentEdit?.setSelection(0, 0)
     }
 
     private fun returnNewContent() {
