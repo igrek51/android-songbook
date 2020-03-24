@@ -474,8 +474,7 @@ class ChordsEditorLayoutController : MainLayout {
 
     fun setContent(content: String, chordsNotation: ChordsNotation?) {
         this.chordsNotation = chordsNotation
-        val length = content.length
-        setContentWithSelection(content, length, length)
+        setContentWithSelection(content, 0, 0)
         history.reset(contentEdit!!)
         softKeyboardService.showSoftKeyboard(contentEdit)
     }
