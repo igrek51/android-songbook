@@ -291,7 +291,6 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     private fun detectChords() {
-        reformatAndTrim()
         val detector = ChordsDetector(chordsNotation)
         transformLyrics { lyrics ->
             detector.detectAndMarkChords(lyrics)
