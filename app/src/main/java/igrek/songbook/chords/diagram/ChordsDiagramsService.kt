@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog
 import igrek.songbook.R
 import igrek.songbook.chords.converter.ChordsConverter
 import igrek.songbook.chords.detector.UniqueChordsFinder
+import igrek.songbook.chords.lyrics.model.LyricsModel
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -16,7 +17,6 @@ import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.instrument.ChordsInstrument
 import igrek.songbook.settings.instrument.ChordsInstrumentService
-import igrek.songbook.songpreview.lyrics.LyricsModel
 import javax.inject.Inject
 
 

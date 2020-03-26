@@ -1,13 +1,17 @@
-package igrek.songbook.songpreview.lyrics
+package igrek.songbook.chords.lyrics
 
 import android.graphics.Paint
 import android.graphics.Typeface
+import igrek.songbook.chords.lyrics.model.LyricsFragment
+import igrek.songbook.chords.lyrics.model.LyricsLine
+import igrek.songbook.chords.lyrics.model.LyricsModel
+import igrek.songbook.chords.lyrics.model.LyricsTextType
 import java.util.*
 
-class LyricsParser(
-        fontFamily: Typeface,
+class LyricsWrapper(
         private val chordsEndOfLine: Boolean,
-        private val chordsAbove: Boolean = true
+        private val chordsAbove: Boolean = true,
+        screenW: Float
 ) {
 
     private var bracket: Boolean = false
@@ -20,26 +24,8 @@ class LyricsParser(
     private var boldSpaceWidth = 0f
 
     @Synchronized
-    fun parseFileContent(content: String, screenW: Float, fontsize: Float, paint: Paint): LyricsModel {
-        this.paint = paint
-        paint.textSize = fontsize
-
-        setBoldFont()
-        val fw = FloatArray(1)
-        paint.getTextWidths(" ", fw)
-        boldSpaceWidth = fw[0]
-
+    fun parseFileContent(model: LyricsModel): LyricsModel {
         val model = LyricsModel()
-        setBracket(false)
-        val lines1 = content.split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        for (line1 in lines1) {
-            model.addLines(parseLine(line1, screenW, fontsize))
-        }
-
-        // store line numbers
-        for ((y, line) in model.lines.withIndex()) {
-            line.y = y
-        }
 
         return model
     }
@@ -285,22 +271,4 @@ class LyricsParser(
         return line
     }
 
-
-    private fun setBracket(bracket: Boolean) {
-        this.bracket = bracket
-        // change typeface due to text width calculation
-        if (bracket) {
-            setBoldFont()
-        } else {
-            setNormalFont()
-        }
-    }
-
-    private fun setNormalFont() {
-        paint?.typeface = normalTypeface
-    }
-
-    private fun setBoldFont() {
-        paint?.typeface = boldTypeface
-    }
 }

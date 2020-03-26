@@ -17,6 +17,7 @@ import igrek.songbook.admin.AdminService
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.admin.antechamber.AntechamberService
 import igrek.songbook.chords.diagram.ChordsDiagramsService
+import igrek.songbook.chords.lyrics.LyricsLoader
 import igrek.songbook.chords.transpose.ChordsTransposerManager
 import igrek.songbook.contact.*
 import igrek.songbook.custom.CustomSongService
@@ -51,7 +52,6 @@ import igrek.songbook.songpreview.SongDetailsService
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
-import igrek.songbook.songpreview.lyrics.LyricsManager
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
@@ -132,7 +132,7 @@ open class FactoryModule(private val activity: AppCompatActivity) {
 
     @Provides
     @Singleton
-    fun aChordsManager(): LyricsManager = LyricsManager()
+    fun aChordsManager(): LyricsLoader = LyricsLoader()
 
     @Provides
     @Singleton

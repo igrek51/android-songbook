@@ -2,6 +2,7 @@ package igrek.songbook.chords.transpose
 
 import dagger.Lazy
 import igrek.songbook.R
+import igrek.songbook.chords.lyrics.LyricsLoader
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -9,14 +10,13 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.songpreview.SongPreviewLayoutController
-import igrek.songbook.songpreview.lyrics.LyricsManager
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import javax.inject.Inject
 
 class ChordsTransposerManager {
 
     @Inject
-    lateinit var lyricsManager: Lazy<LyricsManager>
+    lateinit var lyricsLoader: Lazy<LyricsLoader>
     @Inject
     lateinit var chordsNotationService: Lazy<ChordsNotationService>
     @Inject
@@ -83,7 +83,7 @@ class ChordsTransposerManager {
             transposedBy -= 12
         if (transposedBy <= -12)
             transposedBy += 12
-        lyricsManager.get().reparse()
+        lyricsLoader.get().reparse()
     }
 
     private fun getSemitonesDisplayName(transposed: Int): String {

@@ -4,12 +4,12 @@ import android.content.Context
 import android.view.MotionEvent
 import android.view.View
 import dagger.Lazy
+import igrek.songbook.chords.lyrics.model.LyricsModel
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
-import igrek.songbook.songpreview.lyrics.LyricsModel
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.canvas.BaseCanvasView
@@ -81,9 +81,8 @@ class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListe
             val lines = lyricsModel!!.lines
             if (lines.isEmpty())
                 return 0f
-            val lastLine = lines.last()
             val lineheight = lineheightPx
-            return lastLine.y * lineheight + lineheight
+            return lines.size * lineheight + lineheight
         }
 
     val scrollWidth: Float

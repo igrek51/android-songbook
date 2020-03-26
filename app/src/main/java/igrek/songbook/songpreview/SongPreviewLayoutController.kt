@@ -18,6 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.chords.diagram.ChordsDiagramsService
+import igrek.songbook.chords.lyrics.LyricsLoader
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.layout.LayoutController
@@ -28,7 +29,6 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
-import igrek.songbook.songpreview.lyrics.LyricsManager
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.OverlayRecyclerAdapter
@@ -44,7 +44,7 @@ import javax.inject.Inject
 class SongPreviewLayoutController : MainLayout {
 
     @Inject
-    lateinit var lyricsManager: Lazy<LyricsManager>
+    lateinit var lyricsLoader: Lazy<LyricsLoader>
     @Inject
     lateinit var lyricsThemeService: Lazy<LyricsThemeService>
     @Inject
@@ -218,10 +218,10 @@ class SongPreviewLayoutController : MainLayout {
             val srcNotation = it.chordsNotation ?: ChordsNotation.default
             val transposed = songsRepository.get().transposeDao.getSongTransposition(it.songIdentifier())
             // initialize - first file loading
-            lyricsManager.get().load(fileContent, w, paint, transposed, srcNotation)
+            lyricsLoader.get().load(fileContent, w, paint, transposed, srcNotation)
 
             songPreview?.setFontSizes(lyricsThemeService.get().fontsize)
-            songPreview?.setCRDModel(lyricsManager.get().crdModel)
+            songPreview?.setCRDModel(lyricsLoader.get().crdModel)
             resetOverlayScroll()
         }
     }
@@ -233,7 +233,7 @@ class SongPreviewLayoutController : MainLayout {
     }
 
     fun onLyricsModelUpdated() {
-        songPreview!!.setCRDModel(lyricsManager.get().crdModel)
+        songPreview!!.setCRDModel(lyricsLoader.get().crdModel)
         resetOverlayScroll()
         highlightPanelButtons()
     }
@@ -254,7 +254,7 @@ class SongPreviewLayoutController : MainLayout {
     fun onFontsizeChangedEvent(fontsize: Float) {
         lyricsThemeService.get().fontsize = fontsize
         // parse without reading a whole file again
-        lyricsManager.get().reparse()
+        lyricsLoader.get().reparse()
         onLyricsModelUpdated()
     }
 
@@ -315,7 +315,7 @@ class SongPreviewLayoutController : MainLayout {
     }
 
     fun onPreviewSizeChange(w: Int) {
-        lyricsManager.get().onPreviewSizeChange(w, songPreview!!.paint)
+        lyricsLoader.get().onPreviewSizeChange(w, songPreview!!.paint)
         onLyricsModelUpdated()
     }
 
@@ -345,7 +345,7 @@ class SongPreviewLayoutController : MainLayout {
     }
 
     fun showChordsGraphs() {
-        val crdModel = lyricsManager.get().crdModel ?: return
+        val crdModel = lyricsLoader.get().crdModel ?: return
         chordsDiagramsService.get().showLyricsChordsMenu(crdModel)
     }
 

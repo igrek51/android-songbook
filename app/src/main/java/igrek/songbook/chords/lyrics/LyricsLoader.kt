@@ -1,7 +1,8 @@
-package igrek.songbook.songpreview.lyrics
+package igrek.songbook.chords.lyrics
 
 import android.graphics.Paint
 import dagger.Lazy
+import igrek.songbook.chords.lyrics.model.LyricsModel
 import igrek.songbook.chords.transpose.ChordsTransposerManager
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.settings.chordsnotation.ChordsNotation
@@ -12,7 +13,7 @@ import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.system.WindowManagerService
 import javax.inject.Inject
 
-class LyricsManager {
+class LyricsLoader {
 
     @Inject
     lateinit var chordsTransposerManager: Lazy<ChordsTransposerManager>
@@ -27,7 +28,7 @@ class LyricsManager {
     @Inject
     lateinit var preferencesState: PreferencesState
 
-    private var lyricsParser: LyricsParser? = null
+    private var lyricsWrapper: LyricsWrapper? = null
     var crdModel: LyricsModel? = null
         private set
     private var screenW = 0
@@ -71,7 +72,7 @@ class LyricsManager {
         val typeface = lyricsThemeService.fontTypeface.typeface
         val chordsEndOfLine = lyricsThemeService.chordsEndOfLine
         val chordsAbove = lyricsThemeService.chordsAbove
-        lyricsParser = LyricsParser(typeface, chordsEndOfLine, chordsAbove)
+        lyricsWrapper = LyricsWrapper(typeface, chordsEndOfLine, chordsAbove)
 
         parseAndTranspose(originalFileContent!!)
     }
@@ -90,7 +91,7 @@ class LyricsManager {
         val transposedContent = chordsTransposerManager.get()
                 .transposeContent(originalFileContent)
         val realFontsize = windowManagerService.dp2px(lyricsThemeService.fontsize)
-        crdModel = lyricsParser?.parseFileContent(transposedContent, screenW.toFloat(), realFontsize, paint!!)
+        crdModel = lyricsWrapper?.parseFileContent(transposedContent, screenW.toFloat(), realFontsize, paint!!)
     }
 
 }

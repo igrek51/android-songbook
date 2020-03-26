@@ -1,11 +1,11 @@
 package igrek.songbook.songpreview.renderer
 
 import android.graphics.Typeface
+import igrek.songbook.chords.lyrics.model.LyricsLine
+import igrek.songbook.chords.lyrics.model.LyricsModel
+import igrek.songbook.chords.lyrics.model.LyricsTextType
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.FontTypeface
-import igrek.songbook.songpreview.lyrics.LyricsLine
-import igrek.songbook.songpreview.lyrics.LyricsModel
-import igrek.songbook.songpreview.lyrics.LyricsTextType
 import igrek.songbook.songpreview.renderer.canvas.Align
 
 class LyricsRenderer internal constructor(private val canvas: SongPreview,
@@ -48,22 +48,20 @@ class LyricsRenderer internal constructor(private val canvas: SongPreview,
      */
     fun drawFileContent(fontsize: Float, lineheight: Float) {
         canvas.setFontSize(fontsize)
-        if (lyricsModel != null) {
-            for (line in lyricsModel.lines) {
-                drawTextLine(line, canvas.scroll, fontsize, lineheight)
-            }
+        lyricsModel?.lines?.forEachIndexed { lineIndex, line ->
+            drawTextLine(line, canvas.scroll, fontsize, lineheight, lineIndex)
         }
     }
 
-    private fun drawTextLine(line: LyricsLine, scroll: Float, fontsize: Float, lineheight: Float) {
-        val y = lineheight * line.y - scroll
+    private fun drawTextLine(line: LyricsLine, scroll: Float, fontsize: Float, lineheight: Float, lineIndex: Int) {
+        val y = lineheight * lineIndex - scroll
         if (y > h)
             return
         if (y + lineheight < 0)
             return
 
         // line wrapper on bottom layer
-        if (line.fragments.size > 0) {
+        if (line.fragments.isNotEmpty()) {
             val lastFragment = line.fragments[line.fragments.size - 1]
             if (lastFragment.type == LyricsTextType.LINEWRAPPER) {
                 canvas.setFontTypeface(normalTypeface)

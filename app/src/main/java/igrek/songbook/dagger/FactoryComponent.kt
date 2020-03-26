@@ -12,6 +12,7 @@ import igrek.songbook.admin.AdminService
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.admin.antechamber.AntechamberService
 import igrek.songbook.chords.diagram.ChordsDiagramsService
+import igrek.songbook.chords.lyrics.LyricsLoader
 import igrek.songbook.chords.transpose.ChordsTransposerManager
 import igrek.songbook.contact.*
 import igrek.songbook.custom.CustomSongService
@@ -60,7 +61,6 @@ import igrek.songbook.songpreview.SongDetailsService
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
-import igrek.songbook.songpreview.lyrics.LyricsManager
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.SongPreview
@@ -93,7 +93,7 @@ interface FactoryComponent {
     fun inject(there: UiResourceService)
     fun inject(there: UiInfoService)
     fun inject(there: AutoscrollService)
-    fun inject(there: LyricsManager)
+    fun inject(there: LyricsLoader)
     fun inject(there: PreferencesService)
     fun inject(there: ChordsTransposerManager)
     fun inject(there: SoftKeyboardService)

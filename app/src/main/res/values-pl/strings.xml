@@ -324,4 +324,9 @@
     <string name="settings_show_privacy_policy">Polityka prywatności</string>
     <string name="ads_disabled">Reklamy wyłączone</string>
     <string name="error_no_chords_marked_in_song">W tej piosence nie zaznaczono żadnych akordów.\nDodaj akordy do piosenki.</string>
+    <string name="display_style_chords_inline">Akordy w tej samej linii, między słowami</string>
+    <string name="display_style_chords_above">Akordy nad tekstem, w osobnej linii</string>
+    <string name="display_style_chords_aligned_right">Akordy po prawej stronie, na końcu linii</string>
+    <string name="display_style_chords_only">Tylko akordy, tekst ukryty</string>
+    <string name="display_style_lyrics_only">Tylko tekst, akordy ukryte</string>
 </resources>

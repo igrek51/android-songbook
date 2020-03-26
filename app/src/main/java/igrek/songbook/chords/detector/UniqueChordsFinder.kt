@@ -4,13 +4,13 @@ import igrek.songbook.chords.converter.ChordsConverter
 import igrek.songbook.chords.diagram.allGuitarChordsDiagrams
 import igrek.songbook.chords.diagram.allMandolinChordsDiagrams
 import igrek.songbook.chords.diagram.allUkuleleChordsDiagrams
+import igrek.songbook.chords.lyrics.model.LyricsModel
+import igrek.songbook.chords.lyrics.model.LyricsTextType
 import igrek.songbook.chords.syntax.chordsPrimaryDelimiters
 import igrek.songbook.chords.syntax.singleChordsDelimiters
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.instrument.ChordsInstrument
-import igrek.songbook.songpreview.lyrics.LyricsModel
-import igrek.songbook.songpreview.lyrics.LyricsTextType
 
 class UniqueChordsFinder(
         instrument: ChordsInstrument
