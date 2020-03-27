@@ -17,7 +17,16 @@ class LyricsArrangerTest {
             'o' to 1f,
             'm' to 2f,
             'F' to 1f,
+            'C' to 1f,
     )
+
+    private fun text(str: String): LyricsFragment {
+        return LyricsFragment.Text(str, width = str.length.toFloat())
+    }
+
+    private fun chord(str: String): LyricsFragment {
+        return LyricsFragment.Chord(str, width = str.length.toFloat())
+    }
 
     @Test
     fun test_chords_inline_untouched() {
@@ -43,9 +52,9 @@ class LyricsArrangerTest {
         val wrapper = LyricsArranger(displayStyle = DisplayStyle.ChordsInline, screenWRelative = 100f, lengthMapper = lengthMapper)
         val wrapped = wrapper.arrangeModel(LyricsModel(
                 LyricsLine(
-                        LyricsFragment.Text("bb", x = 0f, width = 2f),
-                        LyricsFragment.Chord("a", x = 2f, width = 1f),
-                        LyricsFragment.Text("bb", x = 3f, width = 2f),
+                        LyricsFragment.Text("bb", width = 2f),
+                        LyricsFragment.Chord("a", width = 1f),
+                        LyricsFragment.Text("bb", width = 2f),
                 )
         ))
         Assertions.assertThat(wrapped.lines).containsExactly(
@@ -62,9 +71,9 @@ class LyricsArrangerTest {
         val wrapper = LyricsArranger(displayStyle = DisplayStyle.ChordsOnly, screenWRelative = 100f, lengthMapper = lengthMapper)
         val wrapped = wrapper.arrangeModel(LyricsModel(
                 LyricsLine(
-                        LyricsFragment.Text("bb", x = 0f, width = 2f),
-                        LyricsFragment.Chord("a", x = 2f, width = 1f),
-                        LyricsFragment.Text("bb", x = 3f, width = 2f),
+                        LyricsFragment.Text("bb", width = 2f),
+                        LyricsFragment.Chord("a", width = 1f),
+                        LyricsFragment.Text("bb", width = 2f),
                 )
         ))
         Assertions.assertThat(wrapped.lines).containsExactly(
@@ -79,16 +88,63 @@ class LyricsArrangerTest {
         val wrapper = LyricsArranger(displayStyle = DisplayStyle.LyricsOnly, screenWRelative = 100f, lengthMapper = lengthMapper)
         val wrapped = wrapper.arrangeModel(LyricsModel(
                 LyricsLine(
-                        LyricsFragment.Text("bb", x = 0f, width = 2f),
-                        LyricsFragment.Chord("a", x = 2f, width = 1f),
-                        LyricsFragment.Text("bb", x = 3f, width = 2f),
+                        LyricsFragment.Text("bb", width = 2f),
+                        LyricsFragment.Chord("a", width = 1f),
+                        LyricsFragment.Text("bb", width = 2f),
                 )
         ))
         Assertions.assertThat(wrapped.lines).containsExactly(
                 LyricsLine(
-                        LyricsFragment.Text("bb", x = 0f, width = 3f),
-                        LyricsFragment.Text(" bb", x = 4f, width = 3f),
+                        LyricsFragment.Text("bb", x = 0f, width = 2f),
+                        LyricsFragment.Text("bb", x = 2f, width = 2f),
                 )
+        )
+    }
+
+    @Test
+    fun test_chords_aligned_right() {
+        val wrapper = LyricsArranger(displayStyle = DisplayStyle.ChordsAlignedRight, screenWRelative = 100f, lengthMapper = lengthMapper)
+        val wrapped = wrapper.arrangeModel(LyricsModel(
+                LyricsLine(
+                        text("bb"),
+                        chord("a F"),
+                        text(" "),
+                        chord("C"),
+                        text("bb"),
+                )
+        ))
+        Assertions.assertThat(wrapped.lines).containsExactly(
+                LyricsLine(
+                        LyricsFragment.Text("bb", x = 0f, width = 2f),
+                        LyricsFragment.Text("bb", x = 3f, width = 3f),
+                        LyricsFragment.Chord("a F", x = 94f, width = 3f),
+                        LyricsFragment.Chord(" C", x = 97f, width = 2f),
+                )
+        )
+    }
+
+    @Test
+    fun test_chords_above() {
+        val wrapper = LyricsArranger(displayStyle = DisplayStyle.ChordsAbove, screenWRelative = 100f, lengthMapper = lengthMapper)
+        val wrapped = wrapper.arrangeModel(LyricsModel(
+                LyricsLine(
+                        text("here"),
+                        chord("a F"),
+                        text("goes"),
+                        chord("C"),
+                        text("accent"),
+                )
+        ))
+        Assertions.assertThat(wrapped.lines).containsExactly(
+                LyricsLine(
+                        LyricsFragment.Chord("a F", x = 4f, width = 3f),
+                        LyricsFragment.Chord("C", x = 8f, width = 1f),
+                ),
+                LyricsLine(
+                        LyricsFragment.Text("here", x = 0f, width = 4f),
+                        LyricsFragment.Text("goes", x = 4f, width = 4f),
+                        LyricsFragment.Text("accent", x = 8f, width = 6f),
+                ),
         )
     }
 

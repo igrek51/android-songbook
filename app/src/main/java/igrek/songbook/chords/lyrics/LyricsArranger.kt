@@ -26,15 +26,13 @@ class LyricsArranger(
 
         val fragments = preProcessFragments(line.fragments)
 
-        if (displayStyle == DisplayStyle.ChordsInline) {
-            addInlineChordsPadding(fragments)
-        }
+        addInlineChordsPadding(fragments)
 
         calculateXPositions(fragments)
 
         val lines: List<LyricsLine> = linewWrapper.wrapLine(LyricsLine(fragments))
 
-        return lines.onEach(this::postProcessLine)
+        return lines.map(this::postProcessLine)
     }
 
     private fun preProcessFragments(fragments: List<LyricsFragment>): List<LyricsFragment> {
@@ -122,7 +120,6 @@ class LyricsArranger(
             if (fragment.type == LyricsTextType.CHORDS) {
                 // previous neighbour
                 fragments.getOrNull(index - 1)
-                        ?.takeIf { previous -> previous.type == LyricsTextType.REGULAR_TEXT }
                         ?.takeIf { previous -> !previous.text.endsWith(" ") && !fragment.text.startsWith(" ") }
                         ?.let {
                             it.text = it.text + " "
@@ -130,7 +127,6 @@ class LyricsArranger(
                         }
                 // next neighbour
                 fragments.getOrNull(index + 1)
-                        ?.takeIf { next -> next.type == LyricsTextType.REGULAR_TEXT }
                         ?.takeIf { next -> !fragment.text.endsWith(" ") && !next.text.startsWith(" ") }
                         ?.let {
                             it.text = " " + it.text
