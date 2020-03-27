@@ -86,6 +86,7 @@ class LyricsArranger(
 
         val lines2 = lines.flatMap { line ->
             val chords = LyricsLine(filterFragments(line.fragments, LyricsTextType.CHORDS))
+            preventChordsOverlapping(chords.fragments)
             val texts = LyricsLine(filterFragments(line.fragments, LyricsTextType.REGULAR_TEXT))
             when {
                 texts.isBlank() -> {
@@ -101,6 +102,19 @@ class LyricsArranger(
         }
 
         return lines2.onEach(this::postProcessLine)
+    }
+
+    private fun preventChordsOverlapping(fragments: List<LyricsFragment>) {
+        fragments.forEachIndexed { index, fragment ->
+            fragments.getOrNull(index - 1)
+                    ?.let {
+                        val spaceWidth = lengthMapper.get(LyricsTextType.CHORDS, ' ')
+                        val overlappedBy = it.x + it.width - fragment.x
+                        if (overlappedBy > 0) {
+                            fragment.x += overlappedBy + spaceWidth
+                        }
+                    }
+        }
     }
 
     private fun alignChordsRight(line: LyricsLine) {
