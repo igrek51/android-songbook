@@ -17,13 +17,13 @@ class LyricsInflaterTest {
         val model = LyricsModel(listOf(
                 LyricsLine(listOf(
                         LyricsFragment(text = "dupa", type = LyricsTextType.REGULAR_TEXT),
-                        LyricsFragment(text = "a F", type = LyricsTextType.CHORDS)
+                        LyricsFragment(text = "a F", type = LyricsTextType.CHORDS),
                 )),
                 LyricsLine(listOf(
                         LyricsFragment(text = "i", type = LyricsTextType.REGULAR_TEXT),
                         LyricsFragment(text = "m", type = LyricsTextType.REGULAR_TEXT),
                         LyricsFragment(text = "i", type = LyricsTextType.CHORDS),
-                        LyricsFragment(text = "m", type = LyricsTextType.CHORDS)
+                        LyricsFragment(text = "m", type = LyricsTextType.CHORDS),
                 ))
         ))
 
@@ -32,13 +32,13 @@ class LyricsInflaterTest {
         assertThat(model.lines).isEqualTo(listOf(
                 LyricsLine(listOf(
                         LyricsFragment(x = 0f, width = 40f, text = "dupa", type = LyricsTextType.REGULAR_TEXT),
-                        LyricsFragment(x = 40f, width = 30f, text = "a F", type = LyricsTextType.CHORDS)
+                        LyricsFragment(x = 40f, width = 30f, text = "a F", type = LyricsTextType.CHORDS),
                 )),
                 LyricsLine(listOf(
                         LyricsFragment(x = 0f, width = 10f, text = "i", type = LyricsTextType.REGULAR_TEXT),
                         LyricsFragment(x = 10f, width = 10f, text = "m", type = LyricsTextType.REGULAR_TEXT),
                         LyricsFragment(x = 20f, width = 10f, text = "i", type = LyricsTextType.CHORDS),
-                        LyricsFragment(x = 30f, width = 10f, text = "m", type = LyricsTextType.CHORDS)
+                        LyricsFragment(x = 30f, width = 10f, text = "m", type = LyricsTextType.CHORDS),
                 ))
         ))
     }

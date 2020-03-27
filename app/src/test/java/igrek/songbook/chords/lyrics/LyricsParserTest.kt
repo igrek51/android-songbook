@@ -23,24 +23,24 @@ class LyricsParserTest {
         assertThat(model.lines).isEqualTo(listOf(
                 LyricsLine(listOf(
                         LyricsFragment(text = "dupa ", type = LyricsTextType.REGULAR_TEXT),
-                        LyricsFragment(text = "a F C7/G(-A) G", type = LyricsTextType.CHORDS)
+                        LyricsFragment(text = "a F C7/G(-A) G", type = LyricsTextType.CHORDS),
                 )),
                 LyricsLine(listOf(
                         LyricsFragment(text = "D", type = LyricsTextType.CHORDS),
                         LyricsFragment(text = "next li", type = LyricsTextType.REGULAR_TEXT),
                         LyricsFragment(text = "e", type = LyricsTextType.CHORDS),
                         LyricsFragment(text = "ne ", type = LyricsTextType.REGULAR_TEXT),
-                        LyricsFragment(text = "C", type = LyricsTextType.CHORDS)
+                        LyricsFragment(text = "C", type = LyricsTextType.CHORDS),
                 )),
                 LyricsLine(listOf()),
                 LyricsLine(listOf(
                         LyricsFragment(text = "next ", type = LyricsTextType.REGULAR_TEXT),
                         LyricsFragment(text = "a", type = LyricsTextType.CHORDS),
                         LyricsFragment(text = "verse ", type = LyricsTextType.REGULAR_TEXT),
-                        LyricsFragment(text = "G", type = LyricsTextType.CHORDS)
+                        LyricsFragment(text = "G", type = LyricsTextType.CHORDS),
                 )),
                 LyricsLine(listOf(
-                        LyricsFragment(text = "without chords", type = LyricsTextType.REGULAR_TEXT)
+                        LyricsFragment(text = "without chords", type = LyricsTextType.REGULAR_TEXT),
                 ))
         ))
     }
@@ -59,7 +59,7 @@ class LyricsParserTest {
                         LyricsFragment(text = "b", type = LyricsTextType.REGULAR_TEXT)
                 )),
                 LyricsLine(listOf(
-                        LyricsFragment(text = "c", type = LyricsTextType.CHORDS)
+                        LyricsFragment(text = "c", type = LyricsTextType.CHORDS),
                 ))
         ))
     }
