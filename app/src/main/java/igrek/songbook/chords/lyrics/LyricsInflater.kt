@@ -15,8 +15,7 @@ class LyricsInflater(
     private val boldTypeface: Typeface = Typeface.create(fontFamily, Typeface.BOLD)
     private val normalPaint = buildPaint(normalTypeface)
     private val boldPaint = buildPaint(boldTypeface)
-    val normalCharLengths = HashMap<Char, Float>()
-    val boldCharLengths = HashMap<Char, Float>()
+    val lengthMapper = TypefaceLengthMapper()
 
     fun inflateLyrics(model: LyricsModel): LyricsModel {
         calculateTextWidth(" ", LyricsTextType.REGULAR_TEXT)
@@ -46,21 +45,18 @@ class LyricsInflater(
             else -> return 0f
         }
 
-        val charLengths = when (type) {
-            LyricsTextType.REGULAR_TEXT -> normalCharLengths
-            LyricsTextType.CHORDS -> boldCharLengths
-            else -> return 0f
-        }
-
         val widths = FloatArray(text.length)
         paint.getTextWidths(text, widths)
-        widths.forEachIndexed { index, width -> charLengths[text[index]] = width / fontsize }
+        widths.forEachIndexed { index, width ->
+            lengthMapper.put(type, text[index], width / fontsize)
+        }
+
         return widths.sum() / fontsize
     }
 
     private fun inflateFragment(fragment: LyricsFragment): Float {
-        fragment.widthEm = calculateTextWidth(fragment.text, fragment.type)
-        return fragment.widthEm
+        fragment.width = calculateTextWidth(fragment.text, fragment.type)
+        return fragment.width
     }
 
 }

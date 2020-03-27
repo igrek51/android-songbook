@@ -31,14 +31,14 @@ class LyricsInflaterTest {
         assertThat(inflated.lines).hasSize(2)
         assertThat(model.lines).isEqualTo(listOf(
                 LyricsLine(listOf(
-                        LyricsFragment(xEm = 0f, widthEm = 40f, text = "dupa", type = LyricsTextType.REGULAR_TEXT),
-                        LyricsFragment(xEm = 40f, widthEm = 30f, text = "a F", type = LyricsTextType.CHORDS)
+                        LyricsFragment(x = 0f, width = 40f, text = "dupa", type = LyricsTextType.REGULAR_TEXT),
+                        LyricsFragment(x = 40f, width = 30f, text = "a F", type = LyricsTextType.CHORDS)
                 )),
                 LyricsLine(listOf(
-                        LyricsFragment(xEm = 0f, widthEm = 10f, text = "i", type = LyricsTextType.REGULAR_TEXT),
-                        LyricsFragment(xEm = 10f, widthEm = 10f, text = "m", type = LyricsTextType.REGULAR_TEXT),
-                        LyricsFragment(xEm = 20f, widthEm = 10f, text = "i", type = LyricsTextType.CHORDS),
-                        LyricsFragment(xEm = 30f, widthEm = 10f, text = "m", type = LyricsTextType.CHORDS)
+                        LyricsFragment(x = 0f, width = 10f, text = "i", type = LyricsTextType.REGULAR_TEXT),
+                        LyricsFragment(x = 10f, width = 10f, text = "m", type = LyricsTextType.REGULAR_TEXT),
+                        LyricsFragment(x = 20f, width = 10f, text = "i", type = LyricsTextType.CHORDS),
+                        LyricsFragment(x = 30f, width = 10f, text = "m", type = LyricsTextType.CHORDS)
                 ))
         ))
     }

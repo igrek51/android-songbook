@@ -6,24 +6,20 @@ import igrek.songbook.chords.lyrics.model.LyricsModel
 import igrek.songbook.chords.lyrics.model.LyricsTextType
 import igrek.songbook.settings.theme.DisplayStyle
 
-class LyricsWrapper(
+class LyricsArranger(
         private val displayStyle: DisplayStyle,
-        private val screenWEm: Float,
-        private val normalCharLengths: Map<Char, Float>,
-        private val boldCharLengths: Map<Char, Float>
+        screenWRelative: Float,
+        private val lengthMapper: TypefaceLengthMapper
 ) {
-    private val linewWrapper = LineWrapper(
-            screenWEm = screenWEm,
-            normalCharLengths = normalCharLengths,
-            boldCharLengths = boldCharLengths
-    )
+    private val linewWrapper = LineWrapper(screenWRelative = screenWRelative,
+            lengthMapper = lengthMapper)
 
-    fun wrapModel(model: LyricsModel): LyricsModel {
-        val wrappedLines = model.lines.flatMap(this::wrapLine)
+    fun arrangeModel(model: LyricsModel): LyricsModel {
+        val wrappedLines = model.lines.flatMap(this::arrangeLine)
         return LyricsModel(lines = wrappedLines)
     }
 
-    private fun wrapLine(line: LyricsLine): List<LyricsLine> {
+    private fun arrangeLine(line: LyricsLine): List<LyricsLine> {
         val chords = filterFragments(line.fragments, LyricsTextType.CHORDS)
         val texts = filterFragments(line.fragments, LyricsTextType.REGULAR_TEXT)
 
@@ -34,8 +30,7 @@ class LyricsWrapper(
                 if (areFragmentsBlank(chords)) {
                     texts
                 } else {
-                    val boldSpaceWidth = boldCharLengths[' '] ?: 0f
-                    texts + chords + LyricsFragment(" ", type = LyricsTextType.CHORDS, widthEm = boldSpaceWidth)
+                    texts + chords + chordSpaceFragment()
                 }
             }
             else -> line.fragments
@@ -45,9 +40,9 @@ class LyricsWrapper(
 
             var x = 0f
             fragments.forEach { fragment ->
-                fragment.xEm = x
+                fragment.x = x
                 if (fragment.type == LyricsTextType.REGULAR_TEXT) {
-                    x += fragment.widthEm
+                    x += fragment.width
                 }
             }
 
@@ -55,8 +50,8 @@ class LyricsWrapper(
 
             var x = 0f
             fragments.forEach { fragment ->
-                fragment.xEm = x
-                x += fragment.widthEm
+                fragment.x = x
+                x += fragment.width
             }
 
         }
@@ -84,6 +79,11 @@ class LyricsWrapper(
         }
 
         return lines
+    }
+
+    private fun chordSpaceFragment(): LyricsFragment {
+        val boldSpaceWidth = lengthMapper.get(LyricsTextType.CHORDS, ' ')
+        return LyricsFragment(" ", type = LyricsTextType.CHORDS, width = boldSpaceWidth)
     }
 
     private fun areFragmentsBlank(fragments: List<LyricsFragment>): Boolean {

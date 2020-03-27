@@ -8,79 +8,101 @@ import org.junit.Test
 
 class LineWrapperTest {
 
+    private val lengthMapper = TypefaceLengthMapper(
+            ' ' to 1f,
+            'a' to 1f,
+            'b' to 1f,
+            'c' to 2f,
+            'd' to 2f,
+            'F' to 1f
+    )
+
     @Test
     fun test_wrap_short_line() {
-        val charLength = hashMapOf(' ' to 1f, 'a' to 2f, 'b' to 2f)
-        val lineWrapper = LineWrapper(screenWEm = 1024f, normalCharLengths = charLength, boldCharLengths = charLength)
-        val wrapped = lineWrapper.wrapLine(LyricsLine(listOf(
-                LyricsFragment(text = "a b", type = LyricsTextType.REGULAR_TEXT, widthEm = 5f)
-        )))
-        assertThat(wrapped).isEqualTo(listOf(LyricsLine(listOf(
-                LyricsFragment(text = "a b", type = LyricsTextType.REGULAR_TEXT, widthEm = 5f)
-        ))))
+        val lineWrapper = LineWrapper(screenWRelative = 1024f, lengthMapper = lengthMapper)
+        val wrapped = lineWrapper.wrapLine(LyricsLine(
+                LyricsFragment(text = "c d", type = LyricsTextType.REGULAR_TEXT, width = 5f)
+        ))
+        assertThat(wrapped).containsExactly(LyricsLine(
+                LyricsFragment(text = "c d", type = LyricsTextType.REGULAR_TEXT, width = 5f)
+        ))
     }
 
     @Test
     fun test_wrap_word_end() {
-        val charLength = hashMapOf(' ' to 1f, 'a' to 1f, 'b' to 1f)
-        val lineWrapper = LineWrapper(screenWEm = 4f, normalCharLengths = charLength, boldCharLengths = charLength)
-        val wrapped = lineWrapper.wrapLine(LyricsLine(listOf(
-                LyricsFragment(text = "aa bb aa", type = LyricsTextType.REGULAR_TEXT, widthEm = 8f)
-        )))
-        assertThat(wrapped).isEqualTo(listOf(
-                LyricsLine(listOf(
-                        LyricsFragment(text = "aa ", type = LyricsTextType.REGULAR_TEXT, widthEm = 3f),
-                        LyricsFragment(text = "\u21B5", type = LyricsTextType.LINEWRAPPER)
-                )),
-                LyricsLine(listOf(
-                        LyricsFragment(text = "bb ", type = LyricsTextType.REGULAR_TEXT, widthEm = 3f),
-                        LyricsFragment(text = "\u21B5", type = LyricsTextType.LINEWRAPPER)
-                )),
-                LyricsLine(listOf(
-                        LyricsFragment(text = "aa", type = LyricsTextType.REGULAR_TEXT, widthEm = 2f)
-                ))
+        val lineWrapper = LineWrapper(screenWRelative = 4f, lengthMapper = lengthMapper)
+        val wrapped = lineWrapper.wrapLine(LyricsLine(
+                LyricsFragment(text = "aa bb aa", type = LyricsTextType.REGULAR_TEXT, width = 8f)
         ))
+        assertThat(wrapped).containsExactly(
+                LyricsLine(
+                        LyricsFragment(text = "aa ", type = LyricsTextType.REGULAR_TEXT, width = 3f),
+                        LyricsFragment.lineWrapper
+                ),
+                LyricsLine(
+                        LyricsFragment(text = "bb ", type = LyricsTextType.REGULAR_TEXT, width = 3f),
+                        LyricsFragment.lineWrapper
+                ),
+                LyricsLine(
+                        LyricsFragment(text = "aa", type = LyricsTextType.REGULAR_TEXT, width = 2f)
+                )
+        )
     }
 
     @Test
     fun test_very_long_word() {
-        val charLength = hashMapOf(' ' to 1f, 'a' to 1f)
-        val lineWrapper = LineWrapper(screenWEm = 3f, normalCharLengths = charLength, boldCharLengths = charLength)
-        val wrapped = lineWrapper.wrapLine(LyricsLine(listOf(
-                LyricsFragment(text = "aaaaaaa", type = LyricsTextType.REGULAR_TEXT, widthEm = 8f)
-        )))
-        assertThat(wrapped).isEqualTo(listOf(
-                LyricsLine(listOf(
-                        LyricsFragment(text = "aaa", type = LyricsTextType.REGULAR_TEXT, widthEm = 3f),
-                        LyricsFragment(text = "\u21B5", type = LyricsTextType.LINEWRAPPER)
-                )),
-                LyricsLine(listOf(
-                        LyricsFragment(text = "aaa", type = LyricsTextType.REGULAR_TEXT, widthEm = 3f),
-                        LyricsFragment(text = "\u21B5", type = LyricsTextType.LINEWRAPPER)
-                )),
-                LyricsLine(listOf(
-                        LyricsFragment(text = "a", type = LyricsTextType.REGULAR_TEXT, widthEm = 1f)
-                ))
+        val lineWrapper = LineWrapper(screenWRelative = 3f, lengthMapper = lengthMapper)
+        val wrapped = lineWrapper.wrapLine(LyricsLine(
+                LyricsFragment(text = "aaaaaaa", type = LyricsTextType.REGULAR_TEXT, width = 8f)
         ))
+        assertThat(wrapped).containsExactly(
+                LyricsLine(
+                        LyricsFragment(text = "aaa", type = LyricsTextType.REGULAR_TEXT, width = 3f),
+                        LyricsFragment.lineWrapper
+                ),
+                LyricsLine(
+                        LyricsFragment(text = "aaa", type = LyricsTextType.REGULAR_TEXT, width = 3f),
+                        LyricsFragment.lineWrapper
+                ),
+                LyricsLine(
+                        LyricsFragment(text = "a", type = LyricsTextType.REGULAR_TEXT, width = 1f)
+                )
+        )
     }
 
     @Test
     fun test_mixed_chords_split() {
-        val charLength = hashMapOf(' ' to 1f, 'a' to 1f, 'F' to 1f)
-        val lineWrapper = LineWrapper(screenWEm = 3f, normalCharLengths = charLength, boldCharLengths = charLength)
-        val wrapped = lineWrapper.wrapLine(LyricsLine(listOf(
-                LyricsFragment(text = "a", type = LyricsTextType.REGULAR_TEXT, widthEm = 1f),
-                LyricsFragment(text = "aaF", type = LyricsTextType.CHORDS, widthEm = 3f)
-        )))
-        assertThat(wrapped).isEqualTo(listOf(
-                LyricsLine(listOf(
-                        LyricsFragment(text = "a", type = LyricsTextType.REGULAR_TEXT, widthEm = 1f),
-                        LyricsFragment(text = "\u21B5", type = LyricsTextType.LINEWRAPPER)
-                )),
-                LyricsLine(listOf(
-                        LyricsFragment(text = "aaF", type = LyricsTextType.CHORDS, widthEm = 3f)
-                ))
+        val lineWrapper = LineWrapper(screenWRelative = 3f, lengthMapper = lengthMapper)
+        val wrapped = lineWrapper.wrapLine(LyricsLine(
+                LyricsFragment(text = "a", type = LyricsTextType.REGULAR_TEXT, width = 1f),
+                LyricsFragment(text = "aaF", type = LyricsTextType.CHORDS, width = 3f)
         ))
+        assertThat(wrapped).containsExactly(
+                LyricsLine(
+                        LyricsFragment(text = "a", type = LyricsTextType.REGULAR_TEXT, width = 1f),
+                        LyricsFragment.lineWrapper
+                ),
+                LyricsLine(
+                        LyricsFragment(text = "aaF", type = LyricsTextType.CHORDS, width = 3f)
+                )
+        )
+    }
+
+    @Test
+    fun test_many_words() {
+        val lineWrapper = LineWrapper(screenWRelative = 9f, lengthMapper = lengthMapper)
+        val wrapped = lineWrapper.wrapLine(LyricsLine(
+                LyricsFragment(text = "baba ab bab", type = LyricsTextType.REGULAR_TEXT, width = 11f)
+        ))
+        assertThat(wrapped).containsExactly(
+                LyricsLine(
+                        LyricsFragment(text = "baba ab ", type = LyricsTextType.REGULAR_TEXT, width = 8f),
+                        LyricsFragment.lineWrapper
+                ),
+                LyricsLine(
+                        LyricsFragment(text = "bab", type = LyricsTextType.REGULAR_TEXT, width = 3f)
+                )
+        )
     }
 
 }

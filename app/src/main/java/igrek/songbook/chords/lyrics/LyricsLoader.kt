@@ -29,7 +29,7 @@ class LyricsLoader {
     @Inject
     lateinit var preferencesState: PreferencesState
 
-    private var lyricsWrapper: LyricsWrapper? = null
+    private var lyricsArranger: LyricsArranger? = null
     var crdModel: LyricsModel? = null
         private set
     private var screenW = 0
@@ -95,10 +95,12 @@ class LyricsLoader {
 
         val lyricsParser = LyricsParser()
         val parsedModel = lyricsParser.parseContent(transposedContent)
+
         val lyricsInflater = LyricsInflater(lyricsThemeService.fontTypeface.typeface, realFontsize)
         val infaltedModel = lyricsInflater.inflateLyrics(parsedModel)
-        val lyricsWrapper = LyricsWrapper(DisplayStyle.ChordsInline, screenWRelative, lyricsInflater.normalCharLengths, lyricsInflater.boldCharLengths)
-        val wrappedModel = lyricsWrapper.wrapModel(infaltedModel)
+
+        val lyricsWrapper = LyricsArranger(DisplayStyle.ChordsInline, screenWRelative, lyricsInflater.lengthMapper)
+        val wrappedModel = lyricsWrapper.arrangeModel(infaltedModel)
 
 //        crdModel = lyricsWrapper.parseFileContent(transposedContent, screenW.toFloat(), realFontsize, paint!!)
         crdModel = wrappedModel
