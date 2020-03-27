@@ -35,16 +35,33 @@ class LineWrapper(
         }
     }
 
+    private fun charsToFragments(chars: List<LyricsChar>): List<LyricsFragment> {
+        val groups = mutableListOf<MutableList<LyricsChar>>()
+        chars.forEach { char ->
+            if (groups.isEmpty()) {
+                groups.add(mutableListOf(char))
+            } else {
+                val lastGroup = groups.last()
+                val lastGroupType = lastGroup.first().type
+                if (char.type == lastGroupType) {
+                    lastGroup.add(char)
+                } else {
+                    groups.add(mutableListOf(char))
+                }
+            }
+        }
+        return groups.map { group ->
+            val groupType = group.first().type
+            val text = group.map { char -> char.c }.joinToString(separator = "")
+            val x = group.first().x
+            val width = group.map { char -> char.width }.sum()
+            LyricsFragment(text = text, type = groupType, x = x, width = width)
+        }
+    }
+
     private fun charsToLines(wrappedChars: List<List<LyricsChar>>): List<LyricsLine> {
         return wrappedChars.map { lineChars ->
-            val fragments = lineChars
-                    .groupBy { char -> char.type }
-                    .map { (type, fragmentChars) ->
-                        val text = fragmentChars.map { char -> char.c }.joinToString(separator = "")
-                        val x = fragmentChars.first().x
-                        val width = fragmentChars.map { char -> char.width }.sum()
-                        LyricsFragment(text = text, type = type, x = x, width = width)
-                    }
+            val fragments = charsToFragments(lineChars)
             LyricsLine(fragments)
         }
     }

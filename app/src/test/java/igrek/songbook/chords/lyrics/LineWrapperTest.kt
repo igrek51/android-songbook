@@ -3,12 +3,14 @@ package igrek.songbook.chords.lyrics
 import igrek.songbook.chords.lyrics.model.LyricsFragment
 import igrek.songbook.chords.lyrics.model.LyricsLine
 import igrek.songbook.chords.lyrics.model.LyricsTextType
+import igrek.songbook.chords.lyrics.model.lineWrapperChar
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 class LineWrapperTest {
 
     private val lengthMapper = TypefaceLengthMapper(
+            lineWrapperChar to 1f,
             ' ' to 1f,
             'a' to 1f,
             'b' to 1f,
@@ -16,7 +18,17 @@ class LineWrapperTest {
             'c' to 2f,
             'd' to 2f,
             'F' to 1f,
+            'C' to 1f,
+            'G' to 1f,
     )
+
+    private fun text(str: String, x: Float = 0f): LyricsFragment {
+        return LyricsFragment.Text(str, width = str.length.toFloat(), x = x)
+    }
+
+    private fun chord(str: String, x: Float = 0f): LyricsFragment {
+        return LyricsFragment.Chord(str, width = str.length.toFloat(), x = x)
+    }
 
     @Test
     fun test_wrap_short_line() {
@@ -38,11 +50,11 @@ class LineWrapperTest {
         assertThat(wrapped).containsExactly(
                 LyricsLine(
                         LyricsFragment(text = "aa ", type = LyricsTextType.REGULAR_TEXT, width = 3f),
-                        LyricsFragment.lineWrapper.apply { x = 4f }
+                        LyricsFragment.lineWrapper.apply { x = 3f; width = 1f }
                 ),
                 LyricsLine(
                         LyricsFragment(text = "bb ", type = LyricsTextType.REGULAR_TEXT, width = 3f),
-                        LyricsFragment.lineWrapper.apply { x = 4f }
+                        LyricsFragment.lineWrapper.apply { x = 3f; width = 1f }
                 ),
                 LyricsLine(
                         LyricsFragment(text = "aa", type = LyricsTextType.REGULAR_TEXT, width = 2f),
@@ -59,11 +71,11 @@ class LineWrapperTest {
         assertThat(wrapped).containsExactly(
                 LyricsLine(
                         LyricsFragment(text = "aaa", type = LyricsTextType.REGULAR_TEXT, width = 3f),
-                        LyricsFragment.lineWrapper.apply { x = 3f }
+                        LyricsFragment.lineWrapper.apply { x = 2f; width = 1f }
                 ),
                 LyricsLine(
                         LyricsFragment(text = "aaa", type = LyricsTextType.REGULAR_TEXT, width = 3f),
-                        LyricsFragment.lineWrapper.apply { x = 3f }
+                        LyricsFragment.lineWrapper.apply { x = 2f; width = 1f }
                 ),
                 LyricsLine(
                         LyricsFragment(text = "a", type = LyricsTextType.REGULAR_TEXT, width = 1f),
@@ -81,7 +93,7 @@ class LineWrapperTest {
         assertThat(wrapped).containsExactly(
                 LyricsLine(
                         LyricsFragment(text = "a", type = LyricsTextType.REGULAR_TEXT, width = 1f),
-                        LyricsFragment.lineWrapper.apply { x = 3f }
+                        LyricsFragment.lineWrapper.apply { x = 2f; width = 1f }
                 ),
                 LyricsLine(
                         LyricsFragment(text = "aaF", type = LyricsTextType.CHORDS, width = 3f),
@@ -98,7 +110,7 @@ class LineWrapperTest {
         assertThat(wrapped).containsExactly(
                 LyricsLine(
                         LyricsFragment(text = "baba ab ", type = LyricsTextType.REGULAR_TEXT, width = 8f),
-                        LyricsFragment.lineWrapper.apply { x = 9f }
+                        LyricsFragment.lineWrapper.apply { x = 8f; width = 1f }
                 ),
                 LyricsLine(
                         LyricsFragment(text = "bab", type = LyricsTextType.REGULAR_TEXT, width = 3f),
@@ -119,6 +131,29 @@ class LineWrapperTest {
                         LyricsFragment(text = "baba ab", type = LyricsTextType.REGULAR_TEXT, width = 7f, x = 0f),
                         LyricsFragment(text = "a F", type = LyricsTextType.CHORDS, width = 3f, x = 7f),
                         LyricsFragment(text = "baobab", type = LyricsTextType.REGULAR_TEXT, width = 6f, x = 10f),
+                )
+        )
+    }
+
+    @Test
+    fun test_wrapping_mixed_types() {
+        val lineWrapper = LineWrapper(screenWRelative = 20f, lengthMapper = lengthMapper)
+        val wrapped = lineWrapper.wrapLine(LyricsLine(
+                chord("G", x = 0f),
+                text("abo obobabao", x = 1f),
+                chord("F", x = 13f),
+                text("ba ba ba", x = 14f),
+        ))
+        assertThat(wrapped).containsExactly(
+                LyricsLine(
+                        LyricsFragment.Chord("G", x = 0f, width = 1f),
+                        LyricsFragment.Text("abo obobabao", x = 1f, width = 12f),
+                        LyricsFragment.Chord("F", x = 13f, width = 1f),
+                        LyricsFragment.Text("ba ba ", x = 14f, width = 6f),
+                        LyricsFragment.lineWrapper.apply { x = 19f; width = 1f }
+                ),
+                LyricsLine(
+                        LyricsFragment.Text("ba", x = 0f, width = 2f),
                 )
         )
     }
