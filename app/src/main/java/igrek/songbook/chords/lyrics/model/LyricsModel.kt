@@ -27,8 +27,8 @@ data class LyricsLine(
 data class LyricsFragment(
         val text: String,
         val type: LyricsTextType,
-        var x: Float = 0f,
-        var width: Float = 0f
+        var xEm: Float = 0f,
+        var widthEm: Float = 0f
 ) {
 
     override fun toString(): String {

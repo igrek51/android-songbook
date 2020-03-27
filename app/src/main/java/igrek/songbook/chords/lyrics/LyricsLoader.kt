@@ -8,6 +8,7 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.theme.DisplayStyle
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.system.WindowManagerService
@@ -72,7 +73,6 @@ class LyricsLoader {
         val typeface = lyricsThemeService.fontTypeface.typeface
         val chordsEndOfLine = lyricsThemeService.chordsEndOfLine
         val chordsAbove = lyricsThemeService.chordsAbove
-        lyricsWrapper = LyricsWrapper(typeface, chordsEndOfLine, chordsAbove)
 
         parseAndTranspose(originalFileContent!!)
     }
@@ -91,7 +91,17 @@ class LyricsLoader {
         val transposedContent = chordsTransposerManager.get()
                 .transposeContent(originalFileContent)
         val realFontsize = windowManagerService.dp2px(lyricsThemeService.fontsize)
-        crdModel = lyricsWrapper?.parseFileContent(transposedContent, screenW.toFloat(), realFontsize, paint!!)
+        val screenWRelative = screenW.toFloat() / realFontsize
+
+        val lyricsParser = LyricsParser()
+        val parsedModel = lyricsParser.parseContent(transposedContent)
+        val lyricsInflater = LyricsInflater(lyricsThemeService.fontTypeface.typeface, realFontsize)
+        val infaltedModel = lyricsInflater.inflateLyrics(parsedModel)
+        val lyricsWrapper = LyricsWrapper(DisplayStyle.ChordsInline, screenWRelative, lyricsInflater.normalCharLengths, lyricsInflater.boldCharLengths)
+        val wrappedModel = lyricsWrapper.wrapModel(infaltedModel)
+
+//        crdModel = lyricsWrapper.parseFileContent(transposedContent, screenW.toFloat(), realFontsize, paint!!)
+        crdModel = wrappedModel
     }
 
 }

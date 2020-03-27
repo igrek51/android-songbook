@@ -15,13 +15,16 @@ class LyricsInflater(
     private val boldTypeface: Typeface = Typeface.create(fontFamily, Typeface.BOLD)
     private val normalPaint = buildPaint(normalTypeface)
     private val boldPaint = buildPaint(boldTypeface)
-    private val boldSpaceWidth = calculateTextWidth(boldPaint, " ")
+    val normalCharLengths = HashMap<Char, Float>()
+    val boldCharLengths = HashMap<Char, Float>()
 
     fun inflateLyrics(model: LyricsModel): LyricsModel {
+        calculateTextWidth(" ", LyricsTextType.REGULAR_TEXT)
+        calculateTextWidth(" ", LyricsTextType.CHORDS)
+
         model.lines.forEach { line ->
-            var x = 0f
             line.fragments.forEach { fragment ->
-                x += inflateFragment(fragment, x)
+                inflateFragment(fragment)
             }
         }
         return model
@@ -36,22 +39,28 @@ class LyricsInflater(
         }
     }
 
-    private fun calculateTextWidth(paint: Paint, text: String): Float {
-        val widths = FloatArray(text.length)
-        paint.getTextWidths(text, widths)
-        return widths.sum()
-    }
-
-    private fun inflateFragment(fragment: LyricsFragment, x: Float): Float {
-        val paint = when (fragment.type) {
+    private fun calculateTextWidth(text: String, type: LyricsTextType): Float {
+        val paint = when (type) {
             LyricsTextType.REGULAR_TEXT -> normalPaint
             LyricsTextType.CHORDS -> boldPaint
             else -> return 0f
         }
 
-        fragment.x = x
-        fragment.width = calculateTextWidth(paint, fragment.text)
-        return fragment.width
+        val charLengths = when (type) {
+            LyricsTextType.REGULAR_TEXT -> normalCharLengths
+            LyricsTextType.CHORDS -> boldCharLengths
+            else -> return 0f
+        }
+
+        val widths = FloatArray(text.length)
+        paint.getTextWidths(text, widths)
+        widths.forEachIndexed { index, width -> charLengths[text[index]] = width / fontsize }
+        return widths.sum() / fontsize
+    }
+
+    private fun inflateFragment(fragment: LyricsFragment): Float {
+        fragment.widthEm = calculateTextWidth(fragment.text, fragment.type)
+        return fragment.widthEm
     }
 
 }

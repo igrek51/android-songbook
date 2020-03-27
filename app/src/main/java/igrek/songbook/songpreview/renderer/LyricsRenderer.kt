@@ -75,14 +75,14 @@ class LyricsRenderer internal constructor(private val canvas: SongPreview,
             if (fragment.type == LyricsTextType.REGULAR_TEXT) {
                 canvas.setFontTypeface(normalTypeface)
                 canvas.setColor(textColor)
-                canvas.drawText(fragment.text, fragment.x * fontsize, y + lineheight, Align.LEFT)
+                canvas.drawText(fragment.text, fragment.xEm * fontsize, y + lineheight, Align.LEFT)
             } else if (fragment.type == LyricsTextType.CHORDS) {
                 canvas.setFontTypeface(boldTypeface)
                 canvas.setColor(chordColor)
                 val x = if (chordsEndOfLine) {
-                    fragment.x * fontsize - canvas.scrollWidth
+                    fragment.xEm * fontsize - canvas.scrollWidth
                 } else {
-                    fragment.x * fontsize
+                    fragment.xEm * fontsize
                 }
                 canvas.drawText(fragment.text, x, y + lineheight, Align.LEFT)
             }

@@ -67,4 +67,13 @@ class LyricsThemeService {
         return map
     }
 
+    fun displayStyleEntries(): LinkedHashMap<String, String> {
+        val map = LinkedHashMap<String, String>()
+        for (item in DisplayStyle.values()) {
+            val displayName = uiResourceService.resString(item.nameResId)
+            map[item.id.toString()] = displayName
+        }
+        return map
+    }
+
 }
