@@ -25,6 +25,7 @@ import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.sync.GoogleSyncManager
 import igrek.songbook.settings.theme.ColorScheme
+import igrek.songbook.settings.theme.DisplayStyle
 import igrek.songbook.settings.theme.FontTypeface
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
@@ -107,6 +108,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
         )
 
+        setupListPreference("chordsDisplayStyle",
+                lyricsThemeService.get().displayStyleEntries(),
+                onLoad = { preferencesState.get().chordsDisplayStyle.id.toString() },
+                onSave = { id: String ->
+                    preferencesState.get().chordsDisplayStyle = DisplayStyle.mustParseById(id.toLong())
+                }
+        )
+
         setupListPreference("fontTypeface",
                 lyricsThemeService.get().fontTypefaceEntries(),
                 onLoad = { preferencesState.get().fontTypeface.id },
@@ -152,20 +161,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 },
                 stringConverter = { value: Float ->
                     uiResourceService.get().resString(R.string.settings_font_size_value, decimal1(value))
-                }
-        )
-
-        setupSwitchPreference("chordsEndOfLine",
-                onLoad = { preferencesState.get().chordsEndOfLine },
-                onSave = { value: Boolean ->
-                    preferencesState.get().chordsEndOfLine = value
-                }
-        )
-
-        setupSwitchPreference("chordsAbove",
-                onLoad = { preferencesState.get().chordsAbove },
-                onSave = { value: Boolean ->
-                    preferencesState.get().chordsAbove = value
                 }
         )
 

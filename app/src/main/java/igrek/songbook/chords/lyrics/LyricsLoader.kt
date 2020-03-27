@@ -8,7 +8,6 @@ import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.PreferencesState
-import igrek.songbook.settings.theme.DisplayStyle
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.system.WindowManagerService
@@ -29,12 +28,11 @@ class LyricsLoader {
     @Inject
     lateinit var preferencesState: PreferencesState
 
-    private var lyricsArranger: LyricsArranger? = null
-    var crdModel: LyricsModel? = null
+    var lyricsModel: LyricsModel? = null
         private set
     private var screenW = 0
     private var paint: Paint? = null
-    private var originalFileContent: String? = null
+    private var originalFileContent: String = ""
 
     private var restoreTransposition
         get() = preferencesState.restoreTransposition
@@ -44,13 +42,6 @@ class LyricsLoader {
 
     init {
         DaggerIoc.factoryComponent.inject(this)
-    }
-
-    private fun normalizeContent(content: String): String {
-        return content
-                .replace("\r", "")
-                .replace("\t", " ")
-                .replace("\u00A0", " ") // NO-BREAK SPACE (0xC2 0xA0)
     }
 
     fun load(fileContent: String, screenW: Int?, paint: Paint?, initialTransposed: Int, srcNotation: ChordsNotation) {
@@ -63,18 +54,14 @@ class LyricsLoader {
         }
         autoscrollService.get().reset()
 
-        originalFileContent = normalizeContent(fileContent)
+        originalFileContent = fileContent
 
         if (screenW != null)
             this.screenW = screenW
         if (paint != null)
             this.paint = paint
 
-        val typeface = lyricsThemeService.fontTypeface.typeface
-        val chordsEndOfLine = lyricsThemeService.chordsEndOfLine
-        val chordsAbove = lyricsThemeService.chordsAbove
-
-        parseAndTranspose(originalFileContent!!)
+        parseAndTranspose(originalFileContent)
     }
 
     fun onPreviewSizeChange(screenW: Int, paint: Paint?) {
@@ -84,7 +71,7 @@ class LyricsLoader {
     }
 
     fun reparse() {
-        parseAndTranspose(originalFileContent!!)
+        parseAndTranspose(originalFileContent)
     }
 
     private fun parseAndTranspose(originalFileContent: String) {
@@ -92,18 +79,19 @@ class LyricsLoader {
                 .transposeContent(originalFileContent)
         val realFontsize = windowManagerService.dp2px(lyricsThemeService.fontsize)
         val screenWRelative = screenW.toFloat() / realFontsize
+        val typeface = lyricsThemeService.fontTypeface.typeface
+        val displayStyle = lyricsThemeService.displayStyle
 
         val lyricsParser = LyricsParser()
         val parsedModel = lyricsParser.parseContent(transposedContent)
 
-        val lyricsInflater = LyricsInflater(lyricsThemeService.fontTypeface.typeface, realFontsize)
+        val lyricsInflater = LyricsInflater(typeface, realFontsize)
         val infaltedModel = lyricsInflater.inflateLyrics(parsedModel)
 
-        val lyricsWrapper = LyricsArranger(DisplayStyle.ChordsInline, screenWRelative, lyricsInflater.lengthMapper)
+        val lyricsWrapper = LyricsArranger(displayStyle, screenWRelative, lyricsInflater.lengthMapper)
         val wrappedModel = lyricsWrapper.arrangeModel(infaltedModel)
 
-//        crdModel = lyricsWrapper.parseFileContent(transposedContent, screenW.toFloat(), realFontsize, paint!!)
-        crdModel = wrappedModel
+        lyricsModel = wrappedModel
     }
 
 }

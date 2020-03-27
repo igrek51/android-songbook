@@ -1,9 +1,6 @@
 package igrek.songbook.chords.lyrics
 
-import igrek.songbook.chords.lyrics.model.LyricsChar
-import igrek.songbook.chords.lyrics.model.LyricsFragment
-import igrek.songbook.chords.lyrics.model.LyricsLine
-import igrek.songbook.chords.lyrics.model.LyricsTextType
+import igrek.songbook.chords.lyrics.model.*
 
 class LineWrapper(
         private val screenWRelative: Float,
@@ -25,15 +22,17 @@ class LineWrapper(
     }
 
     private fun fragmentsToChars(fragments: List<LyricsFragment>): List<LyricsChar> {
-        val chars = fragments.flatMap(this::fragmentToChars)
-        chars.forEach { char ->
-            char.width = lengthMapper.get(char.type, char.c)
-        }
-        return chars
+        return fragments.flatMap(this::fragmentToChars)
     }
 
     private fun fragmentToChars(fragment: LyricsFragment): List<LyricsChar> {
-        return fragment.text.map { char -> LyricsChar(c = char, type = fragment.type) }
+        var previousWidths = 0f
+        return fragment.text.map { char ->
+            val x = fragment.x + previousWidths
+            val width = lengthMapper.get(fragment.type, char)
+            previousWidths += width
+            LyricsChar(c = char, type = fragment.type, x = x, width = width)
+        }
     }
 
     private fun charsToLines(wrappedChars: List<List<LyricsChar>>): List<LyricsLine> {
@@ -42,8 +41,9 @@ class LineWrapper(
                     .groupBy { char -> char.type }
                     .map { (type, fragmentChars) ->
                         val text = fragmentChars.map { char -> char.c }.joinToString(separator = "")
+                        val x = fragmentChars.first().x
                         val width = fragmentChars.map { char -> char.width }.sum()
-                        LyricsFragment(text = text, type = type, width = width)
+                        LyricsFragment(text = text, type = type, x = x, width = width)
                     }
             LyricsLine(fragments)
         }
@@ -56,10 +56,22 @@ class LineWrapper(
 
         val maxLength = maxScreenStringLength(chars)
         val before = chars.take(maxLength)
-        val after = chars.subList(maxLength, chars.size)
-        val linewrapper = LyricsChar('\u21B5', type = LyricsTextType.LINEWRAPPER, width = 0f)
+        val after = chars.drop(maxLength)
+        alignToLeft(after)
+
+        val linewrapperW = lengthMapper.get(LyricsTextType.REGULAR_TEXT, lineWrapperChar)
+        val linewrapperX = screenWRelative - linewrapperW
+        val linewrapper = LyricsChar(lineWrapperChar, type = LyricsTextType.LINEWRAPPER,
+                x = linewrapperX, width = linewrapperW)
 
         return listOf(before + linewrapper) + wrapChars(after)
+    }
+
+    private fun alignToLeft(chars: List<LyricsChar>) {
+        val moveBy = chars.firstOrNull()?.x ?: 0f
+        chars.forEach { char ->
+            char.x -= moveBy
+        }
     }
 
     private fun charsWidth(chars: List<LyricsChar>): Float {

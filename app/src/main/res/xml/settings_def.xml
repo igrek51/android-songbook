@@ -17,19 +17,14 @@
             android:summary="%s"
             app:iconSpaceReserved="false"/>
         <ListPreference
+            android:key="chordsDisplayStyle"
+            android:title="@string/settings_chords_display_style"
+            android:summary="%s"
+            app:iconSpaceReserved="false" />
+        <ListPreference
             android:key="chordsInstrument"
             android:title="@string/settings_chords_instrument"
             android:summary="%s"
-            app:iconSpaceReserved="false"/>
-        <SwitchPreference
-            android:key="chordsAbove"
-            android:title="@string/settings_chords_above"
-            android:summary="@string/settings_chords_above_hint"
-            app:iconSpaceReserved="false" />
-        <SwitchPreference
-            android:key="chordsEndOfLine"
-            android:title="@string/settings_chords_end_of_line"
-            android:summary="@string/settings_chords_end_of_line_hint"
             app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 

@@ -5,6 +5,7 @@ import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.instrument.ChordsInstrument
 import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.theme.ColorScheme
+import igrek.songbook.settings.theme.DisplayStyle
 import igrek.songbook.settings.theme.FontTypeface
 import javax.inject.Inject
 import kotlin.properties.ReadWriteProperty
@@ -19,8 +20,6 @@ class PreferencesState {
     var chordsNotation: ChordsNotation by PreferenceDelegate(PreferencesField.ChordsNotationId)
     var fontTypeface: FontTypeface by PreferenceDelegate(PreferencesField.FontTypefaceId)
     var colorScheme: ColorScheme by PreferenceDelegate(PreferencesField.ColorSchemeId)
-    var chordsEndOfLine: Boolean by PreferenceDelegate(PreferencesField.ChordsEndOfLine)
-    var chordsAbove: Boolean by PreferenceDelegate(PreferencesField.ChordsAbove)
     var autoscrollInitialPause: Long by PreferenceDelegate(PreferencesField.AutoscrollInitialPause)
     var autoscrollSpeed: Float by PreferenceDelegate(PreferencesField.AutoscrollSpeed)
     var autoscrollSpeedAutoAdjustment: Boolean by PreferenceDelegate(PreferencesField.AutoscrollSpeedAutoAdjustment)
@@ -32,6 +31,7 @@ class PreferencesState {
     var userAuthToken: String by PreferenceDelegate(PreferencesField.UserAuthToken)
     var appExecutionCount: Long by PreferenceDelegate(PreferencesField.AppExecutionCount)
     var adsStatus: Long by PreferenceDelegate(PreferencesField.AdsStatus)
+    var chordsDisplayStyle: DisplayStyle by PreferenceDelegate(PreferencesField.ChordsDisplayStyle)
 
     init {
         DaggerIoc.factoryComponent.inject(this)

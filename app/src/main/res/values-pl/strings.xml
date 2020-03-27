@@ -329,4 +329,5 @@
     <string name="display_style_chords_aligned_right">Akordy po prawej stronie, na końcu linii</string>
     <string name="display_style_chords_only">Tylko akordy, tekst ukryty</string>
     <string name="display_style_lyrics_only">Tylko tekst, akordy ukryte</string>
+    <string name="settings_chords_display_style">Styl wyświetlania tekstu i akordów</string>
 </resources>

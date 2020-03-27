@@ -9,10 +9,17 @@ import java.util.concurrent.atomic.AtomicBoolean
 class LyricsParser {
 
     fun parseContent(content: String): LyricsModel {
-        val normalized = content.replace("\t", " ").trim()
+        val normalized = normalizeContent(content)
         val rawLines = normalized.lines().dropLastWhile { it.isEmpty() }
 
         return parseLines(rawLines)
+    }
+
+    private fun normalizeContent(content: String): String {
+        return content
+                .replace("\t", " ")
+                .replace("\u00A0", " ") // no-break space
+                .trim()
     }
 
     private fun parseLines(rawLines: List<String>): LyricsModel {

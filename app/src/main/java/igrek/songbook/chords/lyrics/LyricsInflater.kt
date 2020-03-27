@@ -5,6 +5,7 @@ import android.graphics.Typeface
 import igrek.songbook.chords.lyrics.model.LyricsFragment
 import igrek.songbook.chords.lyrics.model.LyricsModel
 import igrek.songbook.chords.lyrics.model.LyricsTextType
+import igrek.songbook.chords.lyrics.model.lineWrapperChar
 
 class LyricsInflater(
         fontFamily: Typeface,
@@ -20,6 +21,7 @@ class LyricsInflater(
     fun inflateLyrics(model: LyricsModel): LyricsModel {
         calculateTextWidth(" ", LyricsTextType.REGULAR_TEXT)
         calculateTextWidth(" ", LyricsTextType.CHORDS)
+        calculateTextWidth(lineWrapperChar.toString(), LyricsTextType.REGULAR_TEXT)
 
         model.lines.forEach { line ->
             line.fragments.forEach { fragment ->

@@ -34,15 +34,10 @@ class LyricsThemeService {
         set(value) {
             preferencesState.colorScheme = value
         }
-    var chordsEndOfLine: Boolean
-        get() = preferencesState.chordsEndOfLine
+    var displayStyle: DisplayStyle
+        get() = preferencesState.chordsDisplayStyle
         set(value) {
-            preferencesState.chordsEndOfLine = value
-        }
-    var chordsAbove: Boolean
-        get() = preferencesState.chordsAbove
-        set(value) {
-            preferencesState.chordsAbove = value
+            preferencesState.chordsDisplayStyle = value
         }
 
     init {

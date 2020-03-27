@@ -2,6 +2,7 @@ package igrek.songbook.settings.preferences
 
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.theme.ColorScheme
+import igrek.songbook.settings.theme.DisplayStyle
 import igrek.songbook.settings.theme.FontTypeface
 
 enum class PreferencesField constructor(
@@ -63,6 +64,12 @@ enum class PreferencesField constructor(
     AppExecutionCount(0),
 
     AdsStatus(0),
+
+    ChordsDisplayStyle(GenericLongIdPreferenceType(
+            defaultValue = DisplayStyle.default,
+            serializer = DisplayStyle::id,
+            deserializer = DisplayStyle.Companion::parseById
+    )),
 
     ;
 

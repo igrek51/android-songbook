@@ -230,7 +230,7 @@ class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListe
                 lyricsModel,
                 lyricsThemeService.fontTypeface,
                 lyricsThemeService.colorScheme,
-                lyricsThemeService.chordsEndOfLine
+                lyricsThemeService.displayStyle
         )
         repaint()
     }

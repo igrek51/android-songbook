@@ -221,7 +221,7 @@ class SongPreviewLayoutController : MainLayout {
             lyricsLoader.get().load(fileContent, w, paint, transposed, srcNotation)
 
             songPreview?.setFontSizes(lyricsThemeService.get().fontsize)
-            songPreview?.setCRDModel(lyricsLoader.get().crdModel)
+            songPreview?.setCRDModel(lyricsLoader.get().lyricsModel)
             resetOverlayScroll()
         }
     }
@@ -233,7 +233,7 @@ class SongPreviewLayoutController : MainLayout {
     }
 
     fun onLyricsModelUpdated() {
-        songPreview!!.setCRDModel(lyricsLoader.get().crdModel)
+        songPreview!!.setCRDModel(lyricsLoader.get().lyricsModel)
         resetOverlayScroll()
         highlightPanelButtons()
     }
@@ -345,7 +345,7 @@ class SongPreviewLayoutController : MainLayout {
     }
 
     fun showChordsGraphs() {
-        val crdModel = lyricsLoader.get().crdModel ?: return
+        val crdModel = lyricsLoader.get().lyricsModel ?: return
         chordsDiagramsService.get().showLyricsChordsMenu(crdModel)
     }
 

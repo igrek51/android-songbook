@@ -352,4 +352,5 @@
     <string name="display_style_chords_aligned_right">Chords aligned to right, at the end of line</string>
     <string name="display_style_chords_only">Chords only, lyrics hidden</string>
     <string name="display_style_lyrics_only">Lyrics only, chords hidden</string>
+    <string name="settings_chords_display_style"><![CDATA[Lyrics & Chords displaying style]]></string>
 </resources>
