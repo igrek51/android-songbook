@@ -1,50 +1,38 @@
-# Guitar Songbook (android-songbook)
+# Guitar Songbook
 [![Build Status](https://travis-ci.org/igrek51/android-songbook.svg?branch=master)](https://travis-ci.org/igrek51/android-songbook)
 
-Guitar Songbook is a songs lyrics viewer for Android. 
-It has a transposition tool and automatic scrolling feature for guitarists.
+Songs lyrics viewer with guitar chords toolkit
 
-Guitar SongBook highlights chords in lyrics.
-While displaying songs the screen is always on, so it can be used while playing on guitar.
-It allows you to transpose the chords to every different key (using transposing panel).
-The autoscrolling mode scrolls the lyrics automatically with user-defined speed so there is no need to scroll it manually while playing.
+## Main features
+Guitar Songbook is a songs lyrics viewer with guitar chords toolkit.
 
-The guitar songs database is included and is easily extensible.
+Main features:
+- Songs lyrics viewer with highlighted chords
+- Chords transposition (any song to any key)
+- Auto scrolling while playing
+- Adding custom songs with advanced chords editor
+- Playlists / setlists with songs
+- Chord diagrams for guitar, ukulele and mandolin
+- Songs database available offline as well as with online updates
+- Customizable displaying styles: chords among words, chords above lyrics or at the end of line
+- Several chords notations supported: English ("Am Bbm Bb B C Dm") and German ("a b B H C d")
+- Automatic chords detection
+- Custom songs & settings synchronization between many devices, back-ups & restoring all application data
+- Always-on display while playing
+- User favourite songs, latest songs and recent history list
+- Filtering songs by languages
+- Fullscreen mode
+- Importing songs from files
+- Social contributing to songs database
+- Editing any song
+- Songs browser with search engine
+- Scroll speed adjustment
+- Color schemes and font typeface selection
+- Saving last chords transposing
+- Opening a random song
 
-## Features
-
-* Lyrics viewer
-* Chords highlighting
-* Chords transposition (to any key)
-* Auto scrolling
-* Playlists with songs
-* Chord diagrams for guitar, ukulele and mandolin
-* Always-on display
-* Songs database included
-* Songs browser with search engine
-* Adding custom songs
-* Advanced chords editor
-* Chords auto detection
-* Scroll speed auto-adjustment
-* Font size scaling
-* Importing songs from files
-* Songs updater
-* English (American) / German (European) chords notation support
-* Fullscreen mode
-* Adding songs to favourites
-* Social contributing to songs database
-* Screen rotation support
-* Displaying random song
-* Song context menu actions
-* Scroll speed adjustment by volume buttons
-* Color scheme selection
-* Configurable font typeface
-* Setting default chords notation depending on system language
-* Hiding particular languages or artists
-* Restoring last chords transposing
-* Displaying chords among words or at the end of line
-* Latest songs list
-* History of recently opened songs
+Guitar Songbook is a tool mainly focused on guitarists, but it also can be used just to view the songs lyrics on mobile devices.
+It has many songs with chords on board and its database can be easily extended with your own songs.
 
 ## Example Screenshots
 Example application screenshots are shown below:
