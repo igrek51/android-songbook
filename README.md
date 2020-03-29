@@ -39,8 +39,8 @@ Example application screenshots are shown below:
 
 | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/01-songpreview.png) | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/02-autoscroll.png) | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/03-transpose.png) |
 |---|---|---|
-| ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/04-editor.png) | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/05-diagram.png) | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/06-nav.png) |
-| ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/07-songslist.png) | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/08-settings.png) | |
+| ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/04-editor.png) | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/05-diagram.png) | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/06-songpreview2.png) |
+| ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/07-songslist.png) | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/08-settings.png) | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/wiki/screenshots/mobile/en/09-bright.png) |
 
 ## Available on Google Play
 
