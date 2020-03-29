@@ -160,20 +160,6 @@
                     android:layout_gravity="start|center_vertical"
                     android:text="@string/edit_song_paste_chord"/>
 
-            </LinearLayout>
-
-        </HorizontalScrollView>
-
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                style="?android:attr/buttonBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
                 <Button
                     android:id="@+id/reformatTrimButton"
                     style="?android:attr/buttonBarButtonStyle"
@@ -218,7 +204,7 @@
             android:hint="@string/import_song_content_hint"
             android:inputType="text|textMultiLine"
             android:minHeight="240dp"
-            android:padding="8dp"
+            android:padding="2dp"
             android:text=""
             />
 
