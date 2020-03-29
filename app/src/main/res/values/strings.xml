@@ -170,8 +170,8 @@
     <string name="favourite_song_has_been_unset">Song has been removed from favourites.</string>
     <string name="empty_favourite_songs">No favourite songs.\nClick a star icon on a song preview to add it to favourites.</string>
     <string name="empty_custom_songs">No custom songs</string>
-    <string name="color_scheme_dark">Dark</string>
-    <string name="color_scheme_bright">Bright</string>
+    <string name="color_scheme_dark">Dark Side of the Moon</string>
+    <string name="color_scheme_bright">Whiter Shade of Pale</string>
     <string name="typeface_sans_serif">Sans Serif</string>
     <string name="typeface_serif">Serif</string>
     <string name="typeface_monospace">Monospace</string>
