@@ -103,4 +103,55 @@ class DoubleLineWrapperTest {
         )
     }
 
+    @Test
+    fun test_text_only_wrapped() {
+        val wrapper = DoubleLineWrapper(screenWRelative = 18f, lengthMapper = equalLengthMapper)
+        val wrapped = wrapper.wrapDoubleLine(chords = LyricsLine(
+                chord("F#m", x = 15f),
+        ), texts = LyricsLine(
+                text("turning tables ", x = 0f),
+                text("instead", x = 15f),
+        ))
+        assertThat(wrapped).containsExactly(
+                LyricsLine(
+                        LyricsFragment.Text("turning tables ", x = 0f, width = 15f),
+                        linewrapper(18f),
+                ),
+                LyricsLine(
+                        LyricsFragment.Chord("F#m", x = 0f, width = 3f),
+                ),
+                LyricsLine(
+                        LyricsFragment.Text("instead", x = 0f, width = 7f),
+                ),
+        )
+    }
+
+    @Test
+    fun test_chords_longer_wrap() {
+        val wrapper = DoubleLineWrapper(screenWRelative = 26f, lengthMapper = equalLengthMapper)
+        val wrapped = wrapper.wrapDoubleLine(chords = LyricsLine(
+                chord("A", x = 0f),
+                chord("F#m", x = 25f),
+        ), texts = LyricsLine(
+                text("dont think sorrys easily ", x = 0f),
+                text("s", x = 25f),
+        ))
+        assertThat(wrapped).containsExactly(
+                LyricsLine(
+                        LyricsFragment.Chord("A", x = 0f, width = 1f),
+                        linewrapper(26f),
+                ),
+                LyricsLine(
+                        LyricsFragment.Text("dont think sorrys easily ", x = 0f, width = 25f),
+                        linewrapper(26f),
+                ),
+                LyricsLine(
+                        LyricsFragment.Chord("F#m", x = 0f, width = 3f),
+                ),
+                LyricsLine(
+                        LyricsFragment.Text("s", x = 0f, width = 1f),
+                ),
+        )
+    }
+
 }

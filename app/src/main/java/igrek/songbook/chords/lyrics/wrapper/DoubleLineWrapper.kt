@@ -24,8 +24,8 @@ class DoubleLineWrapper(
 
         val (wrappedChordSegments, wrappedTextSegments) = wrapDoubleSegments(chordSegments, textSegments)
 
-        val chordLines: List<Line> = wrappedChordSegments.toLines().addLineWrappers()
-        val textLines: List<Line> = wrappedTextSegments.toLines().addLineWrappers()
+        val chordLines: List<Line> = wrappedChordSegments.toLines().clearBlanksOnEnd().addLineWrappers()
+        val textLines: List<Line> = wrappedTextSegments.toLines().clearBlanksOnEnd().addLineWrappers()
         val lines = chordLines zipUneven textLines
 
         return lines.nonEmptyLines()
@@ -33,6 +33,9 @@ class DoubleLineWrapper(
 
     private fun List<Line>.nonEmptyLines(): List<Line> =
             this.filterNot { it.isBlank() }.ifEmpty { listOf(Line()) }
+
+    private fun List<Line>.clearBlanksOnEnd(): List<Line> =
+            this.dropLastWhile { it.isBlank() }
 
     private infix fun List<Line>.zipUneven(below: List<Line>): List<Line> =
             this.zip(below).flatMap { (a, b) -> listOf(a, b) } +
@@ -82,7 +85,7 @@ class DoubleLineWrapper(
             val segment = Segment(it, type = this.type, x = baseX, width = width)
             baseX += width
             segment
-        }
+        }.filterNot { it.text.isEmpty() }
     }
 
     private fun Line.end(): Float {
@@ -97,23 +100,26 @@ class DoubleLineWrapper(
 
     private fun wrapDoubleSegments(chords: List<Segment>, texts: List<Segment>): Pair<List<List<Segment>>, List<List<Segment>>> {
         when {
-            chords.isEmpty() && texts.isEmpty() -> return emptyList<List<Segment>>() to emptyList()
+            chords.end() <= screenWRelative && texts.end() <= screenWRelative -> return listOf(chords) to listOf(texts)
+            chords.end() <= screenWRelative / 2 -> return listOf(chords) to wrapSingleSegments(texts)
+            texts.end() <= screenWRelative / 2 -> return wrapSingleSegments(chords) to listOf(texts)
             chords.isEmpty() -> return emptyList<List<Segment>>() to wrapSingleSegments(texts)
             texts.isEmpty() -> return wrapSingleSegments(chords) to emptyList()
         }
 
         val maxChords = fittingSegmentsCount(chords)
         val maxTexts = fittingSegmentsCount(texts)
-        val xLimit = listOfNotNull(
-                chords.take(maxChords),
-                texts.take(maxTexts),
-        ).mapNotNull { it.lastOrNull()?.end }.max() ?: screenWRelative
+        val firstExceedings = listOfNotNull(
+                chords.drop(maxChords).firstOrNull(),
+                texts.drop(maxTexts).firstOrNull(),
+        )
+        val xLimitEnd = firstExceedings.map { it.x }.min() ?: screenWRelative
 
-        val (beforeChords, afterChords) = chords.splitByXLimit(xLimit)
-        val (beforeTexts, afterTexts) = texts.splitByXLimit(xLimit)
+        val (beforeChords, afterChords) = chords.splitByXLimit(xLimitEnd)
+        val (beforeTexts, afterTexts) = texts.splitByXLimit(xLimitEnd)
 
-        alignToLeft(afterChords, xLimit)
-        alignToLeft(afterTexts, xLimit)
+        alignToLeft(afterChords, xLimitEnd)
+        alignToLeft(afterTexts, xLimitEnd)
 
         val (nextChordWraps, nextTextWraps) = wrapDoubleSegments(afterChords, afterTexts)
 
@@ -124,9 +130,8 @@ class DoubleLineWrapper(
     }
 
     private fun wrapSingleSegments(segments: List<Segment>): List<List<Segment>> {
-        if (segments.end() <= screenWRelative) {
+        if (segments.end() <= screenWRelative)
             return listOf(segments)
-        }
 
         val maxSegments = fittingSegmentsCount(segments)
         val before = segments.take(maxSegments)
