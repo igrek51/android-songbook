@@ -1,16 +1,20 @@
-package igrek.songbook.chords.lyrics
+package igrek.songbook.chords.lyrics.wrapper
 
-import igrek.songbook.chords.lyrics.model.*
+import igrek.songbook.chords.lyrics.TypefaceLengthMapper
+import igrek.songbook.chords.lyrics.model.LyricsFragment
+import igrek.songbook.chords.lyrics.model.LyricsLine
+import igrek.songbook.chords.lyrics.model.LyricsTextType
+import igrek.songbook.chords.lyrics.model.lineWrapperChar
+
+internal val wordSplitters = hashSetOf(' ', '.', ',', '-', ':', ';', '/', '?', '!', ')')
 
 class LineWrapper(
         private val screenWRelative: Float,
         private val lengthMapper: TypefaceLengthMapper
 ) {
 
-    private val wordSplitters = hashSetOf(' ', '.', ',', '-', ':', ';', '/', '?', '!', ')')
-
     fun wrapLine(line: LyricsLine): List<LyricsLine> {
-        if (fragmentsWidth(line.fragments) <= screenWRelative) {
+        if (lineXEnd(line) <= screenWRelative) {
             return listOf(line)
         }
 
@@ -29,34 +33,22 @@ class LineWrapper(
         var previousWidths = 0f
         return fragment.text.map { char ->
             val x = fragment.x + previousWidths
-            val width = lengthMapper.get(fragment.type, char)
+            val width = lengthMapper.charWidth(fragment.type, char)
             previousWidths += width
             LyricsChar(c = char, type = fragment.type, x = x, width = width)
         }
     }
 
     private fun charsToFragments(chars: List<LyricsChar>): List<LyricsFragment> {
-        val groups = mutableListOf<MutableList<LyricsChar>>()
-        chars.forEach { char ->
-            if (groups.isEmpty()) {
-                groups.add(mutableListOf(char))
-            } else {
-                val lastGroup = groups.last()
-                val lastGroupType = lastGroup.first().type
-                if (char.type == lastGroupType) {
-                    lastGroup.add(char)
-                } else {
-                    groups.add(mutableListOf(char))
+        return chars
+                .groupConsecutiveDuplicates { char -> char.type }
+                .map { group ->
+                    val groupType = group.first().type
+                    val text = group.map { char -> char.c }.joinToString(separator = "")
+                    val x = group.first().x
+                    val width = group.map { char -> char.width }.sum()
+                    LyricsFragment(text = text, type = groupType, x = x, width = width)
                 }
-            }
-        }
-        return groups.map { group ->
-            val groupType = group.first().type
-            val text = group.map { char -> char.c }.joinToString(separator = "")
-            val x = group.first().x
-            val width = group.map { char -> char.width }.sum()
-            LyricsFragment(text = text, type = groupType, x = x, width = width)
-        }
     }
 
     private fun charsToLines(wrappedChars: List<List<LyricsChar>>): List<LyricsLine> {
@@ -67,16 +59,17 @@ class LineWrapper(
     }
 
     private fun wrapChars(chars: List<LyricsChar>): List<List<LyricsChar>> {
-        if (charsWidth(chars) <= screenWRelative) {
+        if (charsXEnd(chars) <= screenWRelative) {
             return listOf(chars)
         }
 
         val maxLength = maxScreenStringLength(chars)
         val before = chars.take(maxLength)
         val after = chars.drop(maxLength)
+
         alignToLeft(after)
 
-        val linewrapperW = lengthMapper.get(LyricsTextType.REGULAR_TEXT, lineWrapperChar)
+        val linewrapperW = lengthMapper.charWidth(LyricsTextType.REGULAR_TEXT, lineWrapperChar)
         val linewrapperX = screenWRelative - linewrapperW
         val linewrapper = LyricsChar(lineWrapperChar, type = LyricsTextType.LINEWRAPPER,
                 x = linewrapperX, width = linewrapperW)
@@ -84,24 +77,25 @@ class LineWrapper(
         return listOf(before + linewrapper) + wrapChars(after)
     }
 
-    private fun alignToLeft(chars: List<LyricsChar>) {
+    private fun alignToLeft(chars: List<LyricsChar>): Float {
         val moveBy = chars.firstOrNull()?.x ?: 0f
         chars.forEach { char ->
             char.x -= moveBy
         }
+        return moveBy
     }
 
-    private fun charsWidth(chars: List<LyricsChar>): Float {
-        return chars.map { char -> char.width }.sum()
+    private fun charsXEnd(chars: List<LyricsChar>): Float {
+        return chars.lastOrNull()?.run { x + width } ?: 0f
     }
 
-    private fun fragmentsWidth(fragments: List<LyricsFragment>): Float {
-        return fragments.map { fragment -> fragment.width }.sum()
+    private fun lineXEnd(line: LyricsLine): Float {
+        return line.fragments.lastOrNull()?.run { x + width } ?: 0f
     }
 
     private fun maxScreenStringLength(chars: List<LyricsChar>): Int {
         val carriage = bisectLongestRange(
-                evaluator = { index -> charsWidth(chars.subList(0, index)) },
+                evaluator = { index -> chars.getOrNull(index - 1)?.run { x + width } ?: 0f },
                 maxCarriage = chars.size,
                 valueLimit = screenWRelative
         )
@@ -140,3 +134,13 @@ class LineWrapper(
         return -1
     }
 }
+
+fun <T, C> Iterable<T>.groupConsecutiveDuplicates(comparisonSelector: (T) -> C): List<List<T>> =
+        mutableListOf<MutableList<T>>().also { lists ->
+            forEach {
+                if (lists.isEmpty() || comparisonSelector(lists.last().last()) != comparisonSelector(it))
+                    lists += mutableListOf(it) // add new group
+                else
+                    lists.last() += it // add to the last group
+            }
+        }

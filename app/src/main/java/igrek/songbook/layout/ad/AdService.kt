@@ -7,6 +7,7 @@ import com.google.android.gms.ads.*
 import com.google.android.gms.ads.AdRequest.*
 import dagger.Lazy
 import igrek.songbook.R
+import igrek.songbook.custom.editor.ChordsEditorLayoutController
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.layout.MainLayout
@@ -52,7 +53,12 @@ class AdService {
     }
 
     private fun bannerToBeDisplayed(currentLayout: MainLayout): Boolean {
-        return !SongPreviewLayoutController::class.isInstance(currentLayout) && !areAdsDisabled()
+        return when {
+            SongPreviewLayoutController::class.isInstance(currentLayout) -> false
+            ChordsEditorLayoutController::class.isInstance(currentLayout) -> false
+            areAdsDisabled() -> false
+            else -> true
+        }
     }
 
     private fun hideAdBanner() {

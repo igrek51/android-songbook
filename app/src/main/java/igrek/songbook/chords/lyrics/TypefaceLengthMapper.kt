@@ -2,9 +2,9 @@ package igrek.songbook.chords.lyrics
 
 import igrek.songbook.chords.lyrics.model.LyricsTextType
 
-data class TypefaceLengthMapper(
-        val normalCharLengths: HashMap<Char, Float> = hashMapOf(),
-        val boldCharLengths: HashMap<Char, Float> = hashMapOf()
+open class TypefaceLengthMapper(
+        private val normalCharLengths: HashMap<Char, Float> = hashMapOf(),
+        private val boldCharLengths: HashMap<Char, Float> = hashMapOf()
 ) {
 
     constructor(vararg pairs: Pair<Char, Float>) : this(HashMap(pairs.toMap()), HashMap(pairs.toMap()))
@@ -17,12 +17,16 @@ data class TypefaceLengthMapper(
         charLengths[char] = length
     }
 
-    fun get(type: LyricsTextType, char: Char): Float {
+    open fun charWidth(type: LyricsTextType, char: Char): Float {
         val charLengths: HashMap<Char, Float> = when (type) {
             LyricsTextType.CHORDS -> boldCharLengths
             else -> normalCharLengths
         }
         return charLengths[char] ?: 0f
+    }
+
+    fun stringWidth(type: LyricsTextType, text: String): Float {
+        return text.toList().map { charWidth(type, it) }.sum()
     }
 
 }

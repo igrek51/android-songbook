@@ -4,6 +4,7 @@ import igrek.songbook.chords.lyrics.model.LyricsFragment
 import igrek.songbook.chords.lyrics.model.LyricsLine
 import igrek.songbook.chords.lyrics.model.LyricsTextType
 import igrek.songbook.chords.lyrics.model.lineWrapperChar
+import igrek.songbook.chords.lyrics.wrapper.LineWrapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
@@ -21,14 +22,6 @@ class LineWrapperTest {
             'C' to 1f,
             'G' to 1f,
     )
-
-    private fun text(str: String, x: Float = 0f): LyricsFragment {
-        return LyricsFragment.Text(str, width = str.length.toFloat(), x = x)
-    }
-
-    private fun chord(str: String, x: Float = 0f): LyricsFragment {
-        return LyricsFragment.Chord(str, width = str.length.toFloat(), x = x)
-    }
 
     @Test
     fun test_wrap_short_line() {
@@ -87,8 +80,8 @@ class LineWrapperTest {
     fun test_mixed_chords_split() {
         val lineWrapper = LineWrapper(screenWRelative = 3f, lengthMapper = lengthMapper)
         val wrapped = lineWrapper.wrapLine(LyricsLine(
-                LyricsFragment(text = "a", type = LyricsTextType.REGULAR_TEXT, width = 1f),
-                LyricsFragment(text = "aaF", type = LyricsTextType.CHORDS, width = 3f),
+                text("a", x = 0f),
+                chord("aaF", x = 1f),
         ))
         assertThat(wrapped).containsExactly(
                 LyricsLine(

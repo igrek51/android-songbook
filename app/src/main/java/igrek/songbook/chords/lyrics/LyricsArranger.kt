@@ -4,6 +4,7 @@ import igrek.songbook.chords.lyrics.model.LyricsFragment
 import igrek.songbook.chords.lyrics.model.LyricsLine
 import igrek.songbook.chords.lyrics.model.LyricsModel
 import igrek.songbook.chords.lyrics.model.LyricsTextType
+import igrek.songbook.chords.lyrics.wrapper.LineWrapper
 import igrek.songbook.settings.theme.DisplayStyle
 
 class LyricsArranger(
@@ -11,26 +12,31 @@ class LyricsArranger(
         private val screenWRelative: Float,
         private val lengthMapper: TypefaceLengthMapper
 ) {
-    private val linewWrapper = LineWrapper(screenWRelative = screenWRelative,
-            lengthMapper = lengthMapper)
+    private val lineWrapper = LineWrapper(
+            screenWRelative = screenWRelative,
+            lengthMapper = lengthMapper,
+    )
 
     fun arrangeModel(model: LyricsModel): LyricsModel {
-        val wrappedLines = model.lines.flatMap(this::arrangeLine)
-        return LyricsModel(lines = wrappedLines)
+        val arrangerStrategy = when (displayStyle) {
+            DisplayStyle.ChordsAbove -> {
+                val arranger = ChordsAboveArranger(screenWRelative, lengthMapper)
+                arranger::arrangeLine
+            }
+            else -> this::arrangeLine
+        }
+        val lines = model.lines.flatMap(arrangerStrategy)
+        return LyricsModel(lines = lines)
     }
 
     private fun arrangeLine(line: LyricsLine): List<LyricsLine> {
-        if (displayStyle == DisplayStyle.ChordsAbove) {
-            return arrangeChordsAbove(line.fragments)
-        }
-
         val fragments = preProcessFragments(line.fragments)
 
         addInlineChordsPadding(fragments)
 
         calculateXPositions(fragments)
 
-        val lines: List<LyricsLine> = linewWrapper.wrapLine(LyricsLine(fragments))
+        val lines: List<LyricsLine> = lineWrapper.wrapLine(LyricsLine(fragments))
 
         return lines.map(this::postProcessLine)
     }
@@ -73,50 +79,6 @@ class LyricsArranger(
         }
     }
 
-    private fun arrangeChordsAbove(fragments: List<LyricsFragment>): List<LyricsLine> {
-        var x = 0f
-        fragments.forEach { fragment ->
-            fragment.x = x
-            if (fragment.type == LyricsTextType.REGULAR_TEXT) {
-                x += fragment.width
-            }
-        }
-
-        val lines = linewWrapper.wrapLine(LyricsLine(fragments))
-
-        val lines2 = lines.flatMap { line ->
-            val chords = LyricsLine(filterFragments(line.fragments, LyricsTextType.CHORDS))
-            preventChordsOverlapping(chords.fragments)
-            val texts = LyricsLine(filterFragments(line.fragments, LyricsTextType.REGULAR_TEXT))
-            when {
-                texts.isBlank() -> {
-                    listOf(chords)
-                }
-                chords.isBlank() -> {
-                    listOf(texts)
-                }
-                else -> {
-                    listOf(chords, texts)
-                }
-            }
-        }
-
-        return lines2.onEach(this::postProcessLine)
-    }
-
-    private fun preventChordsOverlapping(fragments: List<LyricsFragment>) {
-        fragments.forEachIndexed { index, fragment ->
-            fragments.getOrNull(index - 1)
-                    ?.let {
-                        val spaceWidth = lengthMapper.get(LyricsTextType.CHORDS, ' ')
-                        val overlappedBy = it.x + it.width - fragment.x
-                        if (overlappedBy > 0) {
-                            fragment.x += overlappedBy + spaceWidth
-                        }
-                    }
-        }
-    }
-
     private fun alignChordsRight(line: LyricsLine) {
         val chords = filterFragments(line.fragments, LyricsTextType.CHORDS)
         val lastChord = chords.lastOrNull()
@@ -129,7 +91,7 @@ class LyricsArranger(
     }
 
     private fun addInlineChordsPadding(fragments: List<LyricsFragment>) {
-        val textSpaceWidth = lengthMapper.get(LyricsTextType.REGULAR_TEXT, ' ')
+        val textSpaceWidth = lengthMapper.charWidth(LyricsTextType.REGULAR_TEXT, ' ')
         fragments.forEachIndexed { index, fragment ->
             if (fragment.type == LyricsTextType.CHORDS) {
                 // previous neighbour
@@ -151,7 +113,7 @@ class LyricsArranger(
     }
 
     private fun chordSpaceFragment(): LyricsFragment {
-        val chordSpaceWidth = lengthMapper.get(LyricsTextType.CHORDS, ' ')
+        val chordSpaceWidth = lengthMapper.charWidth(LyricsTextType.CHORDS, ' ')
         return LyricsFragment(" ", type = LyricsTextType.CHORDS, width = chordSpaceWidth)
     }
 
@@ -159,8 +121,8 @@ class LyricsArranger(
         return fragments.all { fragment -> fragment.text.isBlank() }
     }
 
-    private fun filterFragments(fragments: List<LyricsFragment>, textType: LyricsTextType): List<LyricsFragment> {
-        return fragments.filter { fragment -> fragment.type == textType }
-    }
+}
 
+internal fun filterFragments(fragments: List<LyricsFragment>, textType: LyricsTextType): List<LyricsFragment> {
+    return fragments.filter { fragment -> fragment.type == textType }
 }
