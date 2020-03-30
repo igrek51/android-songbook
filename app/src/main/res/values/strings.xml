@@ -123,7 +123,7 @@
     <string name="edit_song_content_label">Lyrics with chords in square brackets:</string>
     <string name="tooltip_edit_chords_lyrics">Put here the lyrics with chords. Try to keep these rules in order to be consistent with other songs:
         \n1. Mark chords by surrounding them with square brackets, e.g. "text [C G]".
-        \n2. Mix chords with the lyrics in the same line in order to indicate precisely when a chord is being changed in a text. Do not place them in the separate line above text.
+        \n2. Mix chords with the lyrics in the same line placing them nearby words where they occur in order to precisely indicate where a chord is emphasized. Do not place them in a separate line above text (though you can always change your displaying style in settings - so let others choose their favourite displaying style).
         \n3. If some part of song is repeated (e.g. refrain), copy it to all its occurrences. When lyrics are continuous, it facilitates scrolling through the song.
         \n4. Make sure you have chosen appropriate notation for your chords.
         \n5. If a song has difficult rhythm with chords changing frequently, place the chords between words or even inside the words in order to indicate the syllable with a chord accent. In other cases, place chords at the end of line.
@@ -248,7 +248,7 @@
         \nMake sure you have chosen right chords notation and verify the chords syntax.
         Do you want to ignore these errors?</string>
     <string name="nav_playlists">Playlists</string>
-    <string name="empty_playlists">No playlists</string>
+    <string name="empty_playlists">No playlists. Create your own playlists e.g.:\n\"Learning\",\n\"Campfire songs\",\n\"Concert setlist\",\n\"Fingerstyle\"</string>
     <string name="action_add_to_playlist">Add to playlist</string>
     <string name="no_playlists_to_add">No playlists found. Create a new playlist first.</string>
     <string name="choose_playlist">Choose a playlist</string>
