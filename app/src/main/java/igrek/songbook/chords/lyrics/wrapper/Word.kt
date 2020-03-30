@@ -3,7 +3,7 @@ package igrek.songbook.chords.lyrics.wrapper
 import igrek.songbook.chords.lyrics.model.LyricsTextType
 
 
-internal data class Segment(
+data class Word(
         var text: String,
         val type: LyricsTextType,
         var x: Float = 0f,

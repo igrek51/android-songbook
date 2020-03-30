@@ -1,6 +1,5 @@
 package igrek.songbook.kotlin
 
-import igrek.songbook.chords.lyrics.wrapper.groupConsecutiveDuplicates
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
@@ -42,3 +41,13 @@ class GroupSameNeighboursTest {
     }
 
 }
+
+internal fun <T, C> Iterable<T>.groupConsecutiveDuplicates(comparisonSelector: (T) -> C): List<List<T>> =
+        mutableListOf<MutableList<T>>().also { lists ->
+            forEach {
+                if (lists.isEmpty() || comparisonSelector(lists.last().last()) != comparisonSelector(it))
+                    lists += mutableListOf(it) // add new group
+                else
+                    lists.last() += it // add to the last group
+            }
+        }

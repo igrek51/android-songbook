@@ -56,23 +56,15 @@ class LineWrapperTest {
     }
 
     @Test
-    fun test_very_long_word() {
+    fun test_very_long_word_left_intact() {
         val lineWrapper = LineWrapper(screenWRelative = 3f, lengthMapper = lengthMapper)
         val wrapped = lineWrapper.wrapLine(LyricsLine(
-                LyricsFragment(text = "aaaaaaa", type = LyricsTextType.REGULAR_TEXT, width = 8f),
+                text("aaaaaaa"),
         ))
         assertThat(wrapped).containsExactly(
                 LyricsLine(
-                        LyricsFragment(text = "aaa", type = LyricsTextType.REGULAR_TEXT, width = 3f),
-                        LyricsFragment.lineWrapper.apply { x = 2f; width = 1f }
+                        LyricsFragment.Text(text = "aaaaaaa", width = 7f),
                 ),
-                LyricsLine(
-                        LyricsFragment(text = "aaa", type = LyricsTextType.REGULAR_TEXT, width = 3f),
-                        LyricsFragment.lineWrapper.apply { x = 2f; width = 1f }
-                ),
-                LyricsLine(
-                        LyricsFragment(text = "a", type = LyricsTextType.REGULAR_TEXT, width = 1f),
-                )
         )
     }
 
