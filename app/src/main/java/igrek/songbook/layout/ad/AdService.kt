@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.AdRequest.*
 import dagger.Lazy
+import igrek.songbook.BuildConfig
 import igrek.songbook.R
 import igrek.songbook.custom.editor.ChordsEditorLayoutController
 import igrek.songbook.dagger.DaggerIoc
@@ -54,6 +55,7 @@ class AdService {
 
     private fun bannerToBeDisplayed(currentLayout: MainLayout): Boolean {
         return when {
+            BuildConfig.DEBUG -> false
             SongPreviewLayoutController::class.isInstance(currentLayout) -> false
             ChordsEditorLayoutController::class.isInstance(currentLayout) -> false
             areAdsDisabled() -> false
