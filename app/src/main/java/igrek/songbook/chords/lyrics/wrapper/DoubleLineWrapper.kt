@@ -98,48 +98,103 @@ class DoubleLineWrapper(
     private fun List<Segment>.splitByXLimit(xLimit: Float): Pair<List<Segment>, List<Segment>> =
             this.partition { it.end <= xLimit }
 
+    private fun List<Segment>.splitOnThree(xLimit: Float): Triple<List<Segment>, List<Segment>, List<Segment>> =
+            Triple(
+                    this.filter { it.x <= xLimit && it.end <= xLimit },
+                    this.filter { it.x <= xLimit && it.end > xLimit },
+                    this.filter { it.x > xLimit && it.end > xLimit },
+            )
+
+    private fun List<Segment>.takeAndDrop(position: Int): Pair<List<Segment>, List<Segment>> =
+            this.take(position) to this.drop(position)
+
     private fun wrapDoubleSegments(chords: List<Segment>, texts: List<Segment>): Pair<List<List<Segment>>, List<List<Segment>>> {
         when {
             chords.end() <= screenWRelative && texts.end() <= screenWRelative -> return listOf(chords) to listOf(texts)
-            chords.end() <= screenWRelative / 2 -> return listOf(chords) to wrapSingleSegments(texts)
-            texts.end() <= screenWRelative / 2 -> return wrapSingleSegments(chords) to listOf(texts)
-            chords.isEmpty() -> return emptyList<List<Segment>>() to wrapSingleSegments(texts)
-            texts.isEmpty() -> return wrapSingleSegments(chords) to emptyList()
+            chords.end() <= screenWRelative -> return wrapSingleSegments(chords) to wrapSingleSegments(texts)
+            texts.end() <= screenWRelative -> return wrapSingleSegments(chords) to wrapSingleSegments(texts)
         }
 
-        val maxChords = fittingSegmentsCount(chords)
-        val maxTexts = fittingSegmentsCount(texts)
-        val firstExceedings = listOfNotNull(
-                chords.drop(maxChords).firstOrNull(),
-                texts.drop(maxTexts).firstOrNull(),
-        )
-        val xLimitEnd = firstExceedings.map { it.x }.min() ?: screenWRelative
+//        val maxChords = fittingSegmentsCount(chords)
+//        val maxTexts = fittingSegmentsCount(texts)
+//
+//        val (beforeChords, afterChords) = chords.takeAndDrop(maxChords)
+//        val (beforeTexts, afterTexts) = texts.takeAndDrop(maxTexts)
 
-        val (beforeChords, afterChords) = chords.splitByXLimit(xLimitEnd)
-        val (beforeTexts, afterTexts) = texts.splitByXLimit(xLimitEnd)
+        val (beforeC, middleC, afterC) = chords.splitOnThree(screenWRelative)
+        val (beforeT, middleT, afterT) = texts.splitOnThree(screenWRelative)
 
-        alignToLeft(afterChords, xLimitEnd)
-        alignToLeft(afterTexts, xLimitEnd)
+        val toWrapC = middleC + afterC
+        val toWrapT = middleT + afterT
 
-        val (nextChordWraps, nextTextWraps) = wrapDoubleSegments(afterChords, afterTexts)
+        val moveByC = toWrapC.firstOrNull()?.x ?: 0f
+        val moveByT = toWrapT.firstOrNull()?.x ?: 0f
 
-        val allWrappedChords = listOf(beforeChords) + nextChordWraps
-        val allWrappedTexts = listOf(beforeTexts) + nextTextWraps
+        // very long segment, cant be wrapped
+        if (moveByC <= 0f)
+            return listOf(chords) to wrapSingleSegments(texts)
+        if (moveByT <= 0f)
+            return wrapSingleSegments(chords) to listOf(texts)
+
+        if (toWrapC.isEmpty())
+            return listOf(chords) to wrapSingleSegments(texts)
+        if (toWrapT.isEmpty())
+            return wrapSingleSegments(chords) to listOf(texts)
+
+        val moveBy = listOf(moveByC, moveByT).min() ?: 0f
+
+        if (moveBy <= 0f)
+            return wrapSingleSegments(chords) to wrapSingleSegments(texts)
+
+//            listOfNotNull(
+//                afterChords.firstOrNull(),
+//                afterTexts.firstOrNull(),
+//        ).map { it.x }.min() ?: screenWRelative
+
+        alignToLeft(toWrapC, moveBy)
+        alignToLeft(toWrapT, moveBy)
+
+//        if (moveBy <= 0) {
+//            when {
+//                maxChords == 0 && maxTexts == 0 -> return listOf(chords) to listOf(texts)
+//                maxChords == 0 -> return listOf(chords) to wrapSingleSegments(texts)
+//                maxTexts == 0 -> return wrapSingleSegments(chords) to listOf(texts)
+//            }
+//        }
+
+        val (nextC, nextT) = wrapDoubleSegments(toWrapC, toWrapT)
+
+        val allWrappedChords = listOf(beforeC) + nextC
+        val allWrappedTexts = listOf(beforeT) + nextT
 
         return allWrappedChords to allWrappedTexts
     }
 
     private fun wrapSingleSegments(segments: List<Segment>): List<List<Segment>> {
+        if (segments.isEmpty())
+            return emptyList()
         if (segments.end() <= screenWRelative)
             return listOf(segments)
 
-        val maxSegments = fittingSegmentsCount(segments)
-        val before = segments.take(maxSegments)
-        val after = segments.drop(maxSegments)
+//        val maxSegments = fittingSegmentsCount(segments)
 
-        alignToLeft(after, moveBy = after.firstOrNull()?.x ?: 0f)
+        val (before, middle, after) = segments.splitOnThree(screenWRelative)
 
-        return listOf(before) + wrapSingleSegments(after)
+        val toWrap = middle + after
+        val moveBy = toWrap.firstOrNull()?.x ?: 0f
+
+        if (toWrap.isEmpty())
+            return listOf(segments)
+        if (moveBy <= 0f) // very long segment, cant be wrapped
+            return listOf(segments)
+
+//        val before = segments.take(maxSegments)
+//        val after = segments.drop(maxSegments)
+//        val moveBy = after.firstOrNull()?.x ?: 0f
+
+        alignToLeft(toWrap, moveBy)
+
+        return listOf(before) + wrapSingleSegments(toWrap)
     }
 
     private fun createLineWrapper(): Fragment {
