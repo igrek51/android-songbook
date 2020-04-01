@@ -250,4 +250,35 @@ class LyricsArrangerTest {
         )
     }
 
+    @Test
+    fun test_align_to_left_single_chords_section() {
+        val wrapper = LyricsArranger(displayStyle = DisplayStyle.ChordsAbove, screenWRelative = 100f, lengthMapper = lengthMapper)
+        val wrapped = wrapper.arrangeModel(LyricsModel(
+                LyricsLine(
+                        text("wo lo lo"),
+                        chord("G e"),
+                ),
+                LyricsLine(
+                        text("wo lo lo"),
+                        chord("G"),
+                        chord("e"),
+                ),
+        ))
+        Assertions.assertThat(wrapped.lines).containsExactly(
+                LyricsLine(
+                        LyricsFragment.Chord("G e", x = 0f, width = 3f),
+                ),
+                LyricsLine(
+                        LyricsFragment.Text("wo lo lo", x = 0f, width = 8f),
+                ),
+                LyricsLine(
+                        LyricsFragment.Chord("G", x = 8f, width = 1f),
+                        LyricsFragment.Chord("e", x = 10f, width = 1f),
+                ),
+                LyricsLine(
+                        LyricsFragment.Text("wo lo lo", x = 0f, width = 8f),
+                ),
+        )
+    }
+
 }

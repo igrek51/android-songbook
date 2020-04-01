@@ -20,10 +20,22 @@ class ChordsAboveArranger(
         val chords = LyricsLine(filterFragments(line.fragments, LyricsTextType.CHORDS))
         val texts = LyricsLine(filterFragments(line.fragments, LyricsTextType.REGULAR_TEXT))
         preventChordsOverlapping(chords.fragments, texts.fragments)
+        alignSingleChordsLeft(chords.fragments, texts.fragments)
 
         val lines = doubleLineWrapper.wrapDoubleLine(chords = chords, texts = texts)
 
         return lines.onEach(this::postProcessLine)
+    }
+
+    private fun alignSingleChordsLeft(chords: List<LyricsFragment>, texts: List<LyricsFragment>) {
+        // if there's one chords section at end only, align it to left
+        if (!(chords.size == 1 && texts.isNotEmpty()))
+            return
+        val textEnd = texts.last().run { x + width }
+        val firstChord = chords.first()
+        if (textEnd <= firstChord.x) {
+            firstChord.x = 0f
+        }
     }
 
     private fun postProcessLine(line: LyricsLine): LyricsLine {
