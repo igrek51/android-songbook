@@ -122,20 +122,22 @@
     <string name="edit_song_title_hint">Tytuł…</string>
     <string name="edit_song_content_label">Tekst piosenki z akordami w nawiasach kwadratowych:</string>
     <string name="tooltip_edit_chords_lyrics">Umieść tu tekst piosenki z akordami. Postaraj się trzymać następujących reguł, aby zachować spójność ze standardem piosenek:
-        \n1. Zaznacz akordy w nawiasach kwadratowych, np. "tekst [C G]".
-        \n2. Mieszaj akordy z tekstem w tej samej linii, umieszczając je między słowami, w których występują, dokładnie wskazując moment zmiany akordu i jego akcentu w tekście. Nie umieszczaj ich w osobnej linii ponad tekstem (wtedy sposób wyświetlania możesz zawsze zmienić w ustawieniach, więc pozwól innym wybrać ich ulubiony sposób wyświetlania).
-        \n3. Jeśli fragment piosenki się powtarza (np. refren), skopiuj go we wszystkie miejsca wystąpień. Kiedy piosenka zachowuje ciągłość, ułatwia to jej przewijanie.
+        \n1. Zaznacz akordy w nawiasach kwadratowych, np. \"między [C G# A7 F#maj7] słowami\".
+        \n2. Mieszaj akordy z tekstem w tej samej linii, umieszczając je tuż przed słowami, gdzie występują, dokładnie wskazując moment zmiany akordu i jego akcentu w tekście, np. \"[C]So, so you think you can [D]tell\". Nie umieszczaj ich w osobnej linii ponad tekstem (wtedy sposób wyświetlania możesz zawsze zmienić w ustawieniach, więc pozwól innym wybrać ich ulubiony sposób wyświetlania). Umieszczanie akordów w tej samej linii jest niezmiernie ważne, bo pozwala to wyświetlać akordy zawsze w poprawnym miejscu, niezależnie od róźnych krojów czcionki i zawijania wyrazów. Nie martw się o Twój ulubiony styl wyświetlania akordów - Guitar Songbook wykona całą tą magię dla Ciebie.
+        \n3. Jeśli fragment piosenki się powtarza (np. refren), skopiuj go we wszystkie miejsca wystąpień. Nie umieszczaj sekcji w stylu \"Refren…\". Kiedy piosenka zachowuje ciągłość, ułatwi to jej późniejsze przewijanie i nie będziesz musiał przewijać piosenki za każdym razem, aby zobaczyć akordy refrenu.
         \n4. Upewnij się, że wybrałeś odpowiednią notację dla swoich akordów.
-        \n5. Jeśli piosenka ma trudny rytm z często zmieniającymi się akordami, umieść akordy między poszczególnymi słowami lub nawet w środku wyrazów, aby wskazać sylabę, w której akcentowany jest akord. W pozostałych przypadkach umieszczaj akordy na końcu linii.
-        \n6. Możesz użyć kreski "-", aby połączyć szybko zmieniające się akordy: "D Dsus2-D-Dsus4" lub użyć nawiasów "()", aby wskazać opcjonalność akordów: [C G (G7)].
+        \n5. Jeśli piosenka ma trudny rytm z często zmieniającymi się akordami, umieść akordy między poszczególnymi słowami lub nawet w środku wyrazów, aby wskazać sylabę, w której akcentowany jest akord, np. \"[G]Hotel Cali[D]fornia\". W przypadku prostych akordów możesz umieścić akordy na końcu linii: \"Smoke on the water [C G#]\"
+        \n6. Możesz użyć kreski "-", aby połączyć szybko zmieniające się akordy: \"D Dsus2-D-Dsus4\" lub użyć nawiasów \"()\", aby wskazać opcjonalność akordów: [C G (G7)].
         \n7. Przed zapisaniem piosenki sprawdź jej poprawność i skonwertuj do standardowego formatu, szczególnie jeśli zamierzasz udostępnić ją publicznie.
         \n
         \nEdytor posiada wiele przydatnych narzędzi: cofanie zmian, wstawianie pasującego nawiasu (otwierającego lub zamykającego), wstawianie pary nawiasów, przesuwanie kursora o jeden znak, kopiowanie akordów, wklejanie akordów, porządkowanie do standardowego formatu, automatyczne wykrywanie akordów, przesuwanie akordów z linii wyżej na koniec linii, sprawdzanie poprawności akordów.
     </string>
     <string name="import_song_content_hint">
-        Tekst piosenki z [akordami w nawiasach]
-        \nPrzykładowy tekst [C G# A7 F#maj7]
-        \n…
+        Tekst piosenki z [akordami] w tej samej linii
+        \n…[C]Przykładowy [G#]tekst [C G# A7 F#maj7]…
+        \n…[C]So, so you think you can [D]tell…
+        \n…Smoke on the water [C G#]…
+        \nOtwórz pomoc (?), aby uzyskać więcej szczegółów.
     </string>
     <string name="import_content_from_file">Importuj z pliku</string>
     <string name="edit_song_save">Zapisz piosenkę</string>
