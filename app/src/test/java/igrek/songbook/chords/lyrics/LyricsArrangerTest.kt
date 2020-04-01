@@ -53,25 +53,6 @@ class LyricsArrangerTest {
     }
 
     @Test
-    fun test_adding_inline_padding() {
-        val wrapper = LyricsArranger(displayStyle = DisplayStyle.ChordsInline, screenWRelative = 100f, lengthMapper = lengthMapper)
-        val wrapped = wrapper.arrangeModel(LyricsModel(
-                LyricsLine(
-                        LyricsFragment.Text("bb", width = 2f),
-                        LyricsFragment.Chord("a", width = 1f),
-                        LyricsFragment.Text("bb", width = 2f),
-                )
-        ))
-        Assertions.assertThat(wrapped.lines).containsExactly(
-                LyricsLine(
-                        LyricsFragment.Text("bb", x = 0f, width = 3f),
-                        LyricsFragment.Chord("a", x = 3f, width = 1f),
-                        LyricsFragment.Text(" bb", x = 4f, width = 3f),
-                )
-        )
-    }
-
-    @Test
     fun test_chords_only() {
         val wrapper = LyricsArranger(displayStyle = DisplayStyle.ChordsOnly, screenWRelative = 100f, lengthMapper = lengthMapper)
         val wrapped = wrapper.arrangeModel(LyricsModel(
@@ -155,7 +136,8 @@ class LyricsArrangerTest {
 
     @Test
     fun test_wrapping_chords_joining_groups() {
-        val wrapper = LyricsArranger(displayStyle = DisplayStyle.ChordsInline, screenWRelative = 33f, lengthMapper = lengthMapper)
+        val screenWRelative = 32f
+        val wrapper = LyricsArranger(DisplayStyle.ChordsInline, screenWRelative, lengthMapper)
         val wrapped = wrapper.arrangeModel(LyricsModel(
                 LyricsLine(
                         chord("G"),
@@ -170,12 +152,12 @@ class LyricsArrangerTest {
         Assertions.assertThat(wrapped.lines).containsExactly(
                 LyricsLine(
                         LyricsFragment.Chord("G", x = 0f, width = 1f),
-                        LyricsFragment.Text(" mrs robinson", x = 1f, width = 14f),
-                        LyricsFragment.Chord("e", x = 15f, width = 1f),
-                        LyricsFragment.Text(" know", x = 16f, width = 6f),
-                        LyricsFragment.Chord("a7 D", x = 22f, width = 4f),
-                        LyricsFragment.Text(" wo wo", x = 26f, width = 7f),
-                        LyricsFragment.lineWrapper.apply { x = 32f; width = 1f }
+                        LyricsFragment.Text(" mrs robinson", x = 1f, width = 13f),
+                        LyricsFragment.Chord("e", x = 14f, width = 1f),
+                        LyricsFragment.Text("know", x = 15f, width = 5f),
+                        LyricsFragment.Chord("a7 D", x = 20f, width = 4f),
+                        LyricsFragment.Text(" wo wo", x = 24f, width = 7f),
+                        linewrapper(screenWRelative),
                 ),
                 LyricsLine(
                         LyricsFragment.Text("wo", x = 0f, width = 2f),
@@ -231,6 +213,39 @@ class LyricsArrangerTest {
                 ),
                 LyricsLine(
                         LyricsFragment.Text("wo wo wo", x = 0f, width = 8f),
+                ),
+        )
+    }
+
+    @Test
+    fun test_inline_chords_padding() {
+        val wrapper = LyricsArranger(displayStyle = DisplayStyle.ChordsInline, screenWRelative = 100f, lengthMapper = lengthMapper)
+        val wrapped = wrapper.arrangeModel(LyricsModel(
+                LyricsLine(
+                        chord("A"),
+                        text("before. "),
+                        chord("B"),
+                        text(" after"),
+                        chord("H"),
+                ),
+                LyricsLine(
+                        text("middle"),
+                        chord("A"),
+                        text("word"),
+                ),
+        ))
+        Assertions.assertThat(wrapped.lines).containsExactly(
+                LyricsLine(
+                        LyricsFragment.Chord("A", width = 1f, x = 0f),
+                        LyricsFragment.Text(" before.", width = 9f, x = 1f),
+                        LyricsFragment.Chord("B", width = 1f, x = 10f),
+                        LyricsFragment.Text(" after", width = 7f, x = 11f),
+                        LyricsFragment.Chord("H", width = 1f, x = 18f),
+                ),
+                LyricsLine(
+                        LyricsFragment.Text("middle", width = 6f, x = 0f),
+                        LyricsFragment.Chord("A", width = 1f, x = 6f),
+                        LyricsFragment.Text("word", width = 4f, x = 7f),
                 ),
         )
     }
