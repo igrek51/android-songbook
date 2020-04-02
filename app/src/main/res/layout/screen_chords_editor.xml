@@ -204,7 +204,7 @@
             android:hint="@string/import_song_content_hint"
             android:inputType="text|textMultiLine"
             android:minHeight="240dp"
-            android:padding="2dp"
+            android:padding="4dp"
             android:text=""
             />
 

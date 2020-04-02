@@ -101,11 +101,15 @@ class SecretCommandService {
                     adminService.login(key)
                 },
 
+                CommandRule("ad show") {
+                    adService.enableAds()
+                },
+
                 CommandRule(Predicate {
                     it?.startsWith("hush ") ?: false
                 }) { key: String ->
                     hashedCommand(key.drop(5))
-                }
+                },
         )
     }
 

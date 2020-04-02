@@ -1,6 +1,7 @@
 package igrek.songbook.layout.ad
 
 import android.util.DisplayMetrics
+import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.*
@@ -14,6 +15,9 @@ import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songpreview.SongPreviewLayoutController
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class AdService {
@@ -24,10 +28,18 @@ class AdService {
     @Inject
     lateinit var preferencesState: Lazy<PreferencesState>
 
-    private var testingMode = false
+    private var testingMode = BuildConfig.DEBUG
+    private val requestAdViewSubject = PublishSubject.create<Boolean>()
+    private val hideAdsOnDebug = true
 
     init {
         DaggerIoc.factoryComponent.inject(this)
+        requestAdViewSubject
+                .throttleFirst(60, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    requestAdRefresh()
+                }
     }
 
     fun initialize() {
@@ -55,7 +67,7 @@ class AdService {
 
     private fun bannerToBeDisplayed(currentLayout: MainLayout): Boolean {
         return when {
-            BuildConfig.DEBUG -> false
+            BuildConfig.DEBUG && hideAdsOnDebug -> false
             SongPreviewLayoutController::class.isInstance(currentLayout) -> false
             ChordsEditorLayoutController::class.isInstance(currentLayout) -> false
             areAdsDisabled() -> false
@@ -65,15 +77,23 @@ class AdService {
 
     private fun hideAdBanner() {
         val adViewContainer: FrameLayout? = activity.findViewById(R.id.ad_view_container)
-        adViewContainer?.removeAllViews()
+        adViewContainer?.visibility = View.GONE
     }
 
     private fun showAdBanner() {
+        val adViewContainer: FrameLayout? = activity.findViewById(R.id.ad_view_container)
+        adViewContainer?.visibility = View.VISIBLE
+        requestAdViewSubject.onNext(true)
+    }
+
+    private fun requestAdRefresh() {
         logger.debug("initializing ad banner")
         val adViewContainer: FrameLayout? = activity.findViewById(R.id.ad_view_container)
 
         val adView = AdView(activity)
+        adViewContainer?.removeAllViews()
         adViewContainer?.addView(adView)
+        adViewContainer?.visibility = View.VISIBLE
 
         adView.adListener = object : AdListener() {
             override fun onAdLoaded() {}
@@ -122,8 +142,12 @@ class AdService {
         adView.adUnitId = activity.getString(adUnitResId)
         adView.adSize = adSize
 
-        val adRequest = AdRequest.Builder().build()
+        val adRequest = Builder().build()
         adView.loadAd(adRequest)
+    }
+
+    fun enableAds() {
+        preferencesState.get().adsStatus = 0
     }
 
     fun disableAds() {
