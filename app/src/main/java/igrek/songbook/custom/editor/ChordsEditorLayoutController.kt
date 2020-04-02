@@ -11,9 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import dagger.Lazy
 import igrek.songbook.R
-import igrek.songbook.chords.converter.ChordsConverter
-import igrek.songbook.chords.detector.ChordsDetector
-import igrek.songbook.chords.syntax.ChordNameProvider
 import igrek.songbook.custom.EditSongLayoutController
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
@@ -49,10 +46,10 @@ class ChordsEditorLayoutController : MainLayout {
     lateinit var contextMenuBuilder: ContextMenuBuilder
 
     private var contentEdit: EditText? = null
-    private var clipboardChords: String? = null
     private var layout: View? = null
     private var chordsNotation: ChordsNotation? = null
     private var history = LyricsEditorHistory()
+    private var transformer: ChordsEditorTransformer? = null
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -87,18 +84,6 @@ class ChordsEditorLayoutController : MainLayout {
             uiInfoService.showTooltip(R.string.tooltip_edit_chords_lyrics)
         }
 
-        buttonOnClick(R.id.addChordButton) { onAddChordClick() }
-        buttonOnClick(R.id.addChordSplitterButton) { addChordSplitter() }
-        buttonOnClick(R.id.copyChordButton) { onCopyChordClick() }
-        buttonOnClick(R.id.pasteChordButton) { onPasteChordClick() }
-        buttonOnClick(R.id.detectChordsButton) { wrapHistoryContext { detectChords() } }
-        buttonOnClick(R.id.undoChordsButton) { undoChange() }
-        buttonOnClick(R.id.transformChordsButton) { showTransformMenu() }
-        buttonOnClick(R.id.moveLeftButton) { moveCursor(-1) }
-        buttonOnClick(R.id.moveRightButton) { moveCursor(+1) }
-        buttonOnClick(R.id.validateChordsButton) { validateChords() }
-        buttonOnClick(R.id.reformatTrimButton) { reformatAndTrim() }
-
         contentEdit = layout.findViewById(R.id.songContentEdit)
         contentEdit?.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {}
@@ -113,6 +98,20 @@ class ChordsEditorLayoutController : MainLayout {
             }
         })
         softKeyboardService.showSoftKeyboard(contentEdit)
+
+        transformer = ChordsEditorTransformer(contentEdit!!, history, chordsNotation, uiResourceService, uiInfoService)
+
+        buttonOnClick(R.id.addChordButton) { transformer?.onAddChordClick() }
+        buttonOnClick(R.id.addChordSplitterButton) { transformer?.addChordSplitter() }
+        buttonOnClick(R.id.copyChordButton) { transformer?.onCopyChordClick() }
+        buttonOnClick(R.id.pasteChordButton) { transformer?.onPasteChordClick() }
+        buttonOnClick(R.id.detectChordsButton) { wrapHistoryContext { transformer?.detectChords() } }
+        buttonOnClick(R.id.undoChordsButton) { undoChange() }
+        buttonOnClick(R.id.transformChordsButton) { showTransformMenu() }
+        buttonOnClick(R.id.moveLeftButton) { moveCursor(-1) }
+        buttonOnClick(R.id.moveRightButton) { moveCursor(+1) }
+        buttonOnClick(R.id.validateChordsButton) { transformer?.validateChords() }
+        buttonOnClick(R.id.reformatTrimButton) { transformer?.reformatAndTrim() }
     }
 
     private fun buttonOnClick(@IdRes buttonId: Int, onclickAction: () -> Unit) {
@@ -125,301 +124,22 @@ class ChordsEditorLayoutController : MainLayout {
     private fun showTransformMenu() {
         val actions = listOf(
                 ContextMenuBuilder.Action(R.string.chords_editor_move_chords_to_right) {
-                    wrapHistoryContext { moveChordsAboveToRight() }
+                    wrapHistoryContext { transformer?.moveChordsAboveToRight() }
                 },
                 ContextMenuBuilder.Action(R.string.chords_editor_fis_to_sharp) {
-                    wrapHistoryContext { chordsFisTofSharp() }
+                    wrapHistoryContext { transformer?.chordsFisTofSharp() }
                 },
                 ContextMenuBuilder.Action(R.string.chords_editor_convert_from_notation) {
-                    wrapHistoryContext { convertFromOtherNotationDialog() }
+                    wrapHistoryContext { transformer?.convertFromOtherNotationDialog() }
                 }
         )
         contextMenuBuilder.showContextMenu(R.string.edit_song_transform_chords, actions)
-    }
-
-    private fun convertFromOtherNotationDialog() {
-        val actions = ChordsNotation.values().map { notation ->
-            ContextMenuBuilder.Action(notation.displayNameResId) {
-                convertFromNotation(notation)
-            }
-        }
-        ContextMenuBuilder().showContextMenu(R.string.chords_editor_convert_from_notation, actions)
-    }
-
-    private fun convertFromNotation(fromNotation: ChordsNotation) {
-        val converter = ChordsConverter(fromNotation, chordsNotation ?: ChordsNotation.default)
-        val converted = converter.convertLyrics(contentEdit!!.text.toString())
-        contentEdit?.setText(converted)
     }
 
     private fun wrapHistoryContext(action: () -> Unit) {
         history.save(contentEdit!!)
         action.invoke()
         restoreSelectionFromHistory()
-    }
-
-    private fun validateChords() {
-        val errorMessage = quietValidate()
-        if (errorMessage == null) {
-            uiInfoService.showToast(R.string.chords_are_valid)
-        } else {
-            val placeholder = uiResourceService.resString(R.string.chords_invalid)
-            uiInfoService.showToast(placeholder.format(errorMessage))
-        }
-    }
-
-    private fun quietValidate(): String? {
-        val text = contentEdit!!.text.toString()
-        return try {
-            validateChordsBrackets(text)
-            validateChordsNotation(text)
-            null
-        } catch (e: ChordsValidationError) {
-            var errorMessage = e.errorMessage
-            if (errorMessage.isNullOrEmpty())
-                errorMessage = uiResourceService.resString(e.messageResId!!)
-            errorMessage
-        }
-    }
-
-    private fun validateChordsBrackets(text: String) {
-        var inBracket = false
-        for (char in text) {
-            when (char) {
-                '[' -> {
-                    if (inBracket)
-                        throw ChordsValidationError(R.string.chords_invalid_missing_closing_bracket)
-                    inBracket = true
-                }
-                ']' -> {
-                    if (!inBracket)
-                        throw ChordsValidationError(R.string.chords_invalid_missing_opening_bracket)
-                    inBracket = false
-                }
-            }
-        }
-        if (inBracket)
-            throw ChordsValidationError(R.string.chords_invalid_missing_closing_bracket)
-    }
-
-    private fun validateChordsNotation(text: String) {
-        val chordsNotation = chordsNotation
-        val detector = ChordsDetector(chordsNotation)
-        val chordNameProvider = ChordNameProvider()
-        val falseFriends: Set<String> = when {
-            chordsNotation != null -> chordNameProvider.falseFriends(chordsNotation)
-            else -> emptySet()
-        }
-        text.replace(Regex("""\[((.|\n)+?)]""")) { matchResult ->
-            validateChordsGroup(matchResult.groupValues[1], detector, falseFriends)
-            ""
-        }
-    }
-
-    private fun validateChordsGroup(chordsGroup: String, detector: ChordsDetector, falseFriends: Set<String>) {
-        val chords = chordsGroup.split(" ", "\n", "(", ")")
-        chords.forEach { chord ->
-            if (chord.isNotEmpty()) {
-                if (!detector.isWordAChord(chord) || chord in falseFriends) {
-                    val placeholder = uiResourceService.resString(R.string.chords_unknown_chord)
-                    val errorMessage = placeholder.format(chord)
-                    throw ChordsValidationError(errorMessage)
-                }
-            }
-        }
-    }
-
-    private fun chordsFisTofSharp() {
-        transformChords { chord ->
-            chord.replace(Regex("""(\w)is"""), "$1#")
-        }
-    }
-
-    private fun moveChordsAboveToRight() {
-        reformatAndTrim()
-        transformLyrics(this::transformMoveChordsAboveToRight)
-    }
-
-    fun transformMoveChordsAboveToRight(lyrics: String): String {
-        val input = "\n" + lyrics + "\n"
-        val regex = Regex("""\n((?:\[[\w /()\-,#]+?] *)+)\n(\w.+)(?=\n)""")
-        val transformed = input.replace(regex, "\n$2 $1")
-        return transformed.drop(1).dropLast(1)
-    }
-
-    private fun reformatAndTrim() {
-        transformLines { line ->
-            line.trim()
-                    .replace("\r\n", "\n")
-                    .replace("\r", "\n")
-                    .replace("\t", " ")
-                    .replace("\u00A0", " ")
-                    .replace(Regex("""\[+"""), "[")
-                    .replace(Regex("""]+"""), "]")
-                    .replace(Regex("""\[ +"""), "[")
-                    .replace(Regex(""" +]"""), "]")
-                    .replace(Regex("""] ?\["""), " ") // join adjacent chords
-                    .replace(Regex("""\[]"""), "")
-                    .replace(Regex(""" +"""), " ") // double+ spaces
-        }
-        transformLyrics { lyrics ->
-            lyrics.replace(Regex("\n\n+"), "\n\n") // max 1 empty line
-                    .replace(Regex("^\n+"), "")
-                    .replace(Regex("\n+$"), "")
-        }
-    }
-
-    private fun transformLyrics(transformer: (String) -> String) {
-        val text = contentEdit!!.text.toString()
-        contentEdit!!.setText(transformer.invoke(text))
-    }
-
-    private fun transformLines(transformer: (String) -> String) {
-        val text = contentEdit!!.text.toString()
-                .lines().joinToString(separator = "\n") { line ->
-                    transformer.invoke(line)
-                }
-        contentEdit!!.setText(text)
-    }
-
-    private fun transformChords(transformer: (String) -> String) {
-        val text = contentEdit!!.text.toString()
-                .replace(Regex("""\[(.*?)]""")) { matchResult ->
-                    "[" + transformer.invoke(matchResult.groupValues[1]) + "]"
-                }
-        contentEdit!!.setText(text)
-    }
-
-    private fun detectChords() {
-        val detector = ChordsDetector(chordsNotation)
-        transformLyrics { lyrics ->
-            detector.detectAndMarkChords(lyrics)
-        }
-        val detectedChordsNum = detector.detectedChords.size
-        if (detectedChordsNum == 0) {
-            // find chords from other notations as well
-            val text = contentEdit!!.text.toString()
-            val allNotationsDetector = ChordsDetector()
-            allNotationsDetector.detectAndMarkChords(text)
-            val otherChordsDetected = allNotationsDetector.detectedChords
-            if (otherChordsDetected.isNotEmpty()) {
-                val message = uiResourceService.resString(R.string.editor_other_chords_detected, otherChordsDetected.joinToString())
-                uiInfoService.showToast(message)
-            } else {
-                uiInfoService.showToast(R.string.no_new_chords_detected)
-            }
-        } else {
-            uiInfoService.showToast(uiResourceService.resString(R.string.new_chords_detected, detectedChordsNum.toString()))
-        }
-    }
-
-    private fun onCopyChordClick() {
-        val edited = contentEdit!!.text.toString()
-        val selStart = contentEdit!!.selectionStart
-        val selEnd = contentEdit!!.selectionEnd
-
-        var selection = edited.substring(selStart, selEnd).trim()
-        if (selection.startsWith("["))
-            selection = selection.drop(1)
-        if (selection.endsWith("]"))
-            selection = selection.dropLast(1)
-        clipboardChords = selection.trim()
-
-        if (clipboardChords.isNullOrEmpty()) {
-            uiInfoService.showToast(R.string.no_chords_selected)
-        } else {
-            uiInfoService.showToast(uiResourceService.resString(R.string.chords_copied, clipboardChords))
-        }
-    }
-
-    private fun onPasteChordClick() {
-        history.save(contentEdit!!)
-        if (clipboardChords.isNullOrEmpty()) {
-            uiInfoService.showToast(R.string.paste_chord_empty)
-            return
-        }
-
-        var edited = contentEdit!!.text.toString()
-        val selStart = contentEdit!!.selectionStart
-        var selEnd = contentEdit!!.selectionEnd
-        val before = edited.take(selStart)
-        val after = edited.drop(selEnd)
-
-        edited = "$before[$clipboardChords]$after"
-        selEnd = selStart + 2 + clipboardChords!!.length
-
-        setContentWithSelection(edited, selStart, selEnd)
-    }
-
-    private fun addChordSplitter() {
-        history.save(contentEdit!!)
-        val edited = contentEdit!!.text.toString()
-        val selStart = contentEdit!!.selectionStart
-        val before = edited.take(selStart)
-        // count previous opening and closing brackets
-        val opening = before.count { c -> c == '[' }
-        val closing = before.count { c -> c == ']' }
-
-        if (opening > closing) {
-            onAddSequenceClick("]")
-        } else {
-            onAddSequenceClick("[")
-        }
-    }
-
-    private fun onAddSequenceClick(s: String) {
-        var edited = contentEdit!!.text.toString()
-        var selStart = contentEdit!!.selectionStart
-        var selEnd = contentEdit!!.selectionEnd
-        val before = edited.take(selStart)
-        val after = edited.drop(selEnd)
-
-        edited = "$before$s$after"
-        selStart += s.length
-        selEnd = selStart
-
-        setContentWithSelection(edited, selStart, selEnd)
-    }
-
-    private fun onAddChordClick() {
-        history.save(contentEdit!!)
-
-        var edited = contentEdit!!.text.toString()
-        var selStart = contentEdit!!.selectionStart
-        var selEnd = contentEdit!!.selectionEnd
-        val before = edited.take(selStart)
-        val after = edited.drop(selEnd)
-
-        // if there's nonempty selection
-        if (selStart < selEnd) {
-            val selected = edited.substring(selStart, selEnd)
-            edited = "$before[$selected]$after"
-            selStart++
-            selEnd++
-        } else { // just single cursor
-            // clicked twice accidentaly
-            if (before.endsWith("[") && after.startsWith("]")) {
-                return
-            }
-            // if it's the end of line AND there is no space before
-            if ((after.isEmpty() || after.startsWith("\n")) && before.isNotEmpty() && !before.endsWith(" ") && !before.endsWith("\n")) {
-                // insert missing space
-                edited = "$before []$after"
-                selStart += 2
-            } else {
-                edited = "$before[]$after"
-                selStart += 1
-            }
-            selEnd = selStart
-        }
-
-        setContentWithSelection(edited, selStart, selEnd)
-    }
-
-    private fun setContentWithSelection(edited: String, selStart: Int, selEnd: Int) {
-        contentEdit?.setText(edited)
-        contentEdit?.setSelection(selStart, selEnd)
-        contentEdit?.requestFocus()
     }
 
     private fun restoreSelectionFromHistory() {
@@ -460,7 +180,7 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     override fun onBackClicked() {
-        val err = quietValidate()
+        val err = transformer?.quietValidate()
         if (err != null) {
             val message = uiResourceService.resString(R.string.editor_onexit_validation_failed, err)
             ConfirmDialogBuilder().confirmAction(message) {
@@ -473,7 +193,7 @@ class ChordsEditorLayoutController : MainLayout {
 
     fun setContent(content: String, chordsNotation: ChordsNotation?) {
         this.chordsNotation = chordsNotation
-        setContentWithSelection(content, 0, 0)
+        transformer?.setContentWithSelection(content, 0, 0)
         history.reset(contentEdit!!)
         softKeyboardService.showSoftKeyboard(contentEdit)
         contentEdit?.setSelection(0, 0)
