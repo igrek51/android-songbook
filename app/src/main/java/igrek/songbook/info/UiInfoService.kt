@@ -19,7 +19,7 @@ import java.util.*
 import javax.inject.Inject
 
 
-class UiInfoService {
+open class UiInfoService {
 
     @Inject
     lateinit var activity: Activity

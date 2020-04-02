@@ -101,7 +101,7 @@ class ChordsEditorLayoutController : MainLayout {
 
         transformer = ChordsEditorTransformer(contentEdit!!, history, chordsNotation, uiResourceService, uiInfoService)
 
-        buttonOnClick(R.id.addChordButton) { transformer?.onAddChordClick() }
+        buttonOnClick(R.id.addChordButton) { transformer?.onWrapChordClick() }
         buttonOnClick(R.id.addChordSplitterButton) { transformer?.addChordSplitter() }
         buttonOnClick(R.id.copyChordButton) { transformer?.onCopyChordClick() }
         buttonOnClick(R.id.pasteChordButton) { transformer?.onPasteChordClick() }

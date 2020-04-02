@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat
 import igrek.songbook.dagger.DaggerIoc
 import javax.inject.Inject
 
-class UiResourceService {
+open class UiResourceService {
 
     @Inject
     lateinit var activity: Activity

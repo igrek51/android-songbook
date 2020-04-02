@@ -2,7 +2,7 @@ package igrek.songbook.custom.editor
 
 import android.widget.EditText
 
-class LyricsEditorHistory {
+open class LyricsEditorHistory {
 
     data class Entry(val text: String,
                      val startSelection: Int,

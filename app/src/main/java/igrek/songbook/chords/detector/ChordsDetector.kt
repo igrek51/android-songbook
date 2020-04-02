@@ -86,17 +86,6 @@ class ChordsDetector(notation: ChordsNotation? = null) {
         allNames.toSortedMap(longestChordComparator)
     }
 
-    fun detectAndMarkChords(lyrics: String): String {
-        return lyrics.lines().joinToString(separator = "\n") { line ->
-            // inverted chords match - find expressions which are not chords
-            var line2 = "]$line["
-            line2 = line2.replace(Regex("""](.*?)\[""")) { matchResult ->
-                "]" + markChordsInSentence(matchResult.groupValues[1]) + "["
-            }
-            line2.drop(1).dropLast(1)
-        }
-    }
-
     fun isWordAChord(word: String): Boolean {
         return isWordAChord(word, chordsPrimaryDelimiters)
                 || isWordAChord(word, chordsAllDelimiters)
@@ -165,7 +154,7 @@ class ChordsDetector(notation: ChordsNotation? = null) {
         return null
     }
 
-    private fun markChordsInSentence(sentence: String): String {
+    fun markChordsInSentence(sentence: String): String {
         // seek chords from right to left
         val words = sentence.split(" ").filter { it.isNotEmpty() }
         var chordsFound = 0

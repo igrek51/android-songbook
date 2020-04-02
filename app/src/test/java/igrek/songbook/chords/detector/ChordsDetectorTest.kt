@@ -1,10 +1,24 @@
 package igrek.songbook.chords.detector
 
+import android.widget.EditText
+import igrek.songbook.custom.editor.ChordsEditorTransformer
+import igrek.songbook.custom.editor.LyricsEditorHistory
+import igrek.songbook.info.UiInfoService
+import igrek.songbook.info.UiResourceService
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import org.mockito.Mockito
 
 class ChordsDetectorTest {
+
+    private val transformer = ChordsEditorTransformer(
+            contentEdit = Mockito.mock(EditText::class.java),
+            history = Mockito.mock(LyricsEditorHistory::class.java),
+            chordsNotation = ChordsNotation.GERMAN,
+            uiResourceService = Mockito.mock(UiResourceService::class.java),
+            uiInfoService = Mockito.mock(UiInfoService::class.java),
+    )
 
     @Test
     fun test_recognize_major() {
@@ -38,14 +52,14 @@ class ChordsDetectorTest {
     fun test_detect_fmaj7() {
         val detector = ChordsDetector(ChordsNotation.ENGLISH)
         assertThat(detector.recognizeSingleChord("Fmaj7")).isEqualTo(Chord(5, false, "maj7"))
-        assertThat(detector.detectAndMarkChords("Fmaj7")).isEqualTo("[Fmaj7]")
+        assertThat(transformer.detectAndMarkChords("Fmaj7", detector)).isEqualTo("[Fmaj7]")
         assertThat(detector.isWordAChord("Fmaj7")).isTrue()
     }
 
     @Test
     fun test_mark_chords() {
         val detector = ChordsDetector(ChordsNotation.ENGLISH)
-        assertThat(detector.detectAndMarkChords("Fm")).isEqualTo("[Fm]")
+        assertThat(transformer.detectAndMarkChords("Fm", detector)).isEqualTo("[Fm]")
     }
 
     @Test
@@ -115,13 +129,13 @@ class ChordsDetectorTest {
     @Test
     fun test_detect_long_spaced_chords() {
         val detector = ChordsDetector(ChordsNotation.ENGLISH)
-        assertThat(detector.detectAndMarkChords("Am    Fm   G")).isEqualTo("[Am    Fm   G]")
+        assertThat(transformer.detectAndMarkChords("Am    Fm   G", detector)).isEqualTo("[Am    Fm   G]")
     }
 
     @Test
     fun test_detect_dashed_chords() {
         val detector = ChordsDetector(ChordsNotation.ENGLISH)
-        assertThat(detector.detectAndMarkChords("Am-G-C")).isEqualTo("[Am-G-C]")
+        assertThat(transformer.detectAndMarkChords("Am-G-C", detector)).isEqualTo("[Am-G-C]")
     }
 
     @Test
