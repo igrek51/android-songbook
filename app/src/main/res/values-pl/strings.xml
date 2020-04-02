@@ -224,7 +224,7 @@
     <string name="edit_song_add_chord_splitter">[ / ]</string>
     <string name="no_undo_changes">Brak zmian do cofnięcia</string>
     <string name="edit_song_validate_chords">Sprawdź</string>
-    <string name="chords_are_valid">Akordy są poprawne</string>
+    <string name="chords_are_valid">Akordy poprawne. Wszystko jest git.</string>
     <string name="chords_invalid">Akordy są niepoprawne: %s</string>
     <string name="chords_invalid_missing_closing_bracket">Brak nawiasu domykającego \"]\"</string>
     <string name="chords_invalid_missing_opening_bracket">Brak nawiasu otwierającego \"[\"</string>
@@ -333,4 +333,5 @@
     <string name="display_style_lyrics_only">Tylko tekst, akordy ukryte</string>
     <string name="settings_chords_display_style">Styl wyświetlania tekstu i akordów</string>
     <string name="chords_editor_move_chords_above_to_inline">Przesuń akordy z góry do słów</string>
+    <string name="chords_editor_remove_double_empty_lines">Usuń podwójne puste linie</string>
 </resources>

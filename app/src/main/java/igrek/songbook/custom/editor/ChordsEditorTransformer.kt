@@ -357,4 +357,10 @@ class ChordsEditorTransformer(
         }
     }
 
+    fun removeDoubleEmptyLines() {
+        transformLyrics { lyrics ->
+            lyrics.replace(Regex("\n\n"), "\n")
+        }
+    }
+
 }

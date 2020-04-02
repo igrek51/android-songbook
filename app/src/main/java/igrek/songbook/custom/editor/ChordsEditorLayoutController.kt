@@ -111,7 +111,7 @@ class ChordsEditorLayoutController : MainLayout {
         buttonOnClick(R.id.moveLeftButton) { moveCursor(-1) }
         buttonOnClick(R.id.moveRightButton) { moveCursor(+1) }
         buttonOnClick(R.id.validateChordsButton) { transformer?.validateChords() }
-        buttonOnClick(R.id.reformatTrimButton) { transformer?.reformatAndTrim() }
+        buttonOnClick(R.id.reformatTrimButton) { wrapHistoryContext { transformer?.reformatAndTrim() } }
     }
 
     private fun buttonOnClick(@IdRes buttonId: Int, onclickAction: () -> Unit) {
@@ -129,12 +129,15 @@ class ChordsEditorLayoutController : MainLayout {
                 ContextMenuBuilder.Action(R.string.chords_editor_move_chords_to_right) {
                     wrapHistoryContext { transformer?.moveChordsAboveToRight() }
                 },
+                ContextMenuBuilder.Action(R.string.chords_editor_convert_from_notation) {
+                    wrapHistoryContext { transformer?.convertFromOtherNotationDialog() }
+                },
+                ContextMenuBuilder.Action(R.string.chords_editor_remove_double_empty_lines) {
+                    wrapHistoryContext { transformer?.removeDoubleEmptyLines() }
+                },
                 ContextMenuBuilder.Action(R.string.chords_editor_fis_to_sharp) {
                     wrapHistoryContext { transformer?.chordsFisTofSharp() }
                 },
-                ContextMenuBuilder.Action(R.string.chords_editor_convert_from_notation) {
-                    wrapHistoryContext { transformer?.convertFromOtherNotationDialog() }
-                }
         )
         contextMenuBuilder.showContextMenu(R.string.edit_song_transform_chords, actions)
     }
