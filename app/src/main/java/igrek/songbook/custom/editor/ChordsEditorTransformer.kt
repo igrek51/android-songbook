@@ -260,17 +260,17 @@ class ChordsEditorTransformer(
 
 
     fun detectChords() {
-        val detector = ChordsDetector(chordsNotation)
+        val chordsMarker = ChordsMarker(ChordsDetector(chordsNotation))
         transformLyrics { lyrics ->
-            detectAndMarkChords(lyrics, detector)
+            chordsMarker.detectAndMarkChords(lyrics)
         }
-        val detectedChordsNum = detector.detectedChords.size
+        val detectedChordsNum = chordsMarker.allMarkedChords.size
         if (detectedChordsNum == 0) {
             // find chords from other notations as well
             val text = contentEdit.text.toString()
-            val allNotationsDetector = ChordsDetector()
-            detectAndMarkChords(text, allNotationsDetector)
-            val otherChordsDetected = allNotationsDetector.detectedChords
+            val genericChordsMarker = ChordsMarker(ChordsDetector())
+            genericChordsMarker.detectAndMarkChords(text)
+            val otherChordsDetected = genericChordsMarker.allMarkedChords
             if (otherChordsDetected.isNotEmpty()) {
                 val message = uiResourceService.resString(R.string.editor_other_chords_detected, otherChordsDetected.joinToString())
                 uiInfoService.showToast(message)
@@ -279,17 +279,6 @@ class ChordsEditorTransformer(
             }
         } else {
             uiInfoService.showToast(uiResourceService.resString(R.string.new_chords_detected, detectedChordsNum.toString()))
-        }
-    }
-
-    fun detectAndMarkChords(lyrics: String, detector: ChordsDetector): String {
-        return lyrics.lines().joinToString(separator = "\n") { line ->
-            // inverted chords match - find expressions which are not chords
-            var line2 = "]$line["
-            line2 = line2.replace(Regex("""](.*?)\[""")) { matchResult ->
-                "]" + detector.markChordsInSentence(matchResult.groupValues[1]) + "["
-            }
-            line2.drop(1).dropLast(1)
         }
     }
 
@@ -304,11 +293,26 @@ class ChordsEditorTransformer(
         transformLyrics(this::transformMoveChordsAboveToRight)
     }
 
+    fun moveChordsAboveToInline() {
+        transformLyrics(this::transformMoveChordsAboveToInline)
+    }
+
     fun transformMoveChordsAboveToRight(lyrics: String): String {
         return transformDoubleLines(lyrics) { first: String, second: String ->
             if (first.hasOnlyChords() && second.isNotBlank() && !second.hasChords()) {
                 val trimmedChords = first.trimChordsLine()
                 val joined = "$second $trimmedChords"
+                return@transformDoubleLines listOf(joined)
+            }
+            null
+        }
+    }
+
+    fun transformMoveChordsAboveToInline(lyrics: String): String {
+        return transformDoubleLines(lyrics) { first: String, second: String ->
+            if (first.hasOnlyChords() && second.isNotBlank() && !second.hasChords()) {
+                val chords = ChordSegmentDetector().detectChords(first)
+                val joined = ChordSegmentApplier().applyChords(second, chords)
                 return@transformDoubleLines listOf(joined)
             }
             null

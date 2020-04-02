@@ -220,7 +220,7 @@
     <string name="edit_song_chords_notation">Song chords notation:</string>
     <string name="edit_song_undo">Undo</string>
     <string name="chords_editor_reformat_trim">Reformat</string>
-    <string name="chords_editor_move_chords_to_right">Move chords from top to right</string>
+    <string name="chords_editor_move_chords_to_right">Move chords from top to line end</string>
     <string name="chords_editor_convert_from_notation">Convert from other chords notation</string>
     <string name="chords_editor_fis_to_sharp"><![CDATA[Replace Fis -> F#]]></string>
     <string name="edit_song_add_chord_splitter">[ / ]</string>
@@ -355,4 +355,5 @@
     <string name="display_style_chords_only">Chords only, lyrics hidden</string>
     <string name="display_style_lyrics_only">Lyrics only, chords hidden</string>
     <string name="settings_chords_display_style"><![CDATA[Lyrics & Chords displaying style]]></string>
+    <string name="chords_editor_move_chords_above_to_inline">Move chords from top to words</string>
 </resources>

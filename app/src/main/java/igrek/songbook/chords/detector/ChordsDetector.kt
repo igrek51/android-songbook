@@ -154,30 +154,4 @@ class ChordsDetector(notation: ChordsNotation? = null) {
         return null
     }
 
-    fun markChordsInSentence(sentence: String): String {
-        // seek chords from right to left
-        val words = sentence.split(" ").filter { it.isNotEmpty() }
-        var chordsFound = 0
-        for (i in words.size - 1 downTo 0) {
-            val word = words[i]
-            if (!isWordAChord(word))
-                break
-            chordsFound++
-            detectedChords.add(word)
-        }
-
-        if (chordsFound == 0) { // no chords
-            return sentence
-        }
-        if (chordsFound == words.size) { // all chords
-            return "[$sentence]"
-        }
-
-        val chords = words.takeLast(chordsFound)
-        val wordsNotChords = words.dropLast(chordsFound)
-
-        return wordsNotChords.joinToString(separator = " ") +
-                " [" + chords.joinToString(separator = " ") + "]"
-    }
-
 }

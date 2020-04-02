@@ -123,6 +123,9 @@ class ChordsEditorLayoutController : MainLayout {
 
     private fun showTransformMenu() {
         val actions = listOf(
+                ContextMenuBuilder.Action(R.string.chords_editor_move_chords_above_to_inline) {
+                    wrapHistoryContext { transformer?.moveChordsAboveToInline() }
+                },
                 ContextMenuBuilder.Action(R.string.chords_editor_move_chords_to_right) {
                     wrapHistoryContext { transformer?.moveChordsAboveToRight() }
                 },
