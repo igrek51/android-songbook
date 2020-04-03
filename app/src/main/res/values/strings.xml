@@ -356,5 +356,7 @@
     <string name="display_style_lyrics_only">Lyrics only, chords hidden</string>
     <string name="settings_chords_display_style"><![CDATA[Lyrics & Chords displaying style]]></string>
     <string name="chords_editor_move_chords_above_to_inline">Move chords from top to words</string>
-    <string name="chords_editor_remove_double_empty_lines">Remove double empty lines</string>
+    <string name="chords_editor_remove_double_empty_lines">Remove doubled blank lines</string>
+    <string name="chords_editor_duplicate">Duplicate</string>
+    <string name="chords_editor_select_line">Line</string>
 </resources>

@@ -359,8 +359,48 @@ class ChordsEditorTransformer(
 
     fun removeDoubleEmptyLines() {
         transformLyrics { lyrics ->
-            lyrics.replace(Regex("\n\n"), "\n")
+            lyrics.replace(Regex("""\n\w*\n"""), "\n")
         }
+    }
+
+    fun duplicateSelection() {
+        val text = contentEdit.text.toString()
+        if (hasAnySelection()) {
+            // TODO
+        } else {
+            val (start, end) = findLineRange(text, contentEdit.selectionStart)
+            // TODO copy start-end, paste past end, select pasted
+        }
+    }
+
+    fun selectNextLine() {
+        val text = contentEdit.text.toString()
+        if (hasAnySelection()) {
+            val (start1, _) = findLineRange(text, contentEdit.selectionStart)
+            val (_, end2) = findLineRange(text, contentEdit.selectionEnd)
+            contentEdit.setSelection(start1, end2)
+            contentEdit.requestFocus()
+        } else {
+            val (start, end) = findLineRange(text, contentEdit.selectionStart)
+            contentEdit.setSelection(start, end)
+            contentEdit.requestFocus()
+        }
+    }
+
+    private fun hasAnySelection(): Boolean {
+        return contentEdit.run { selectionStart != selectionEnd }
+    }
+
+    private fun findLineRange(text: String, at: Int): Pair<Int, Int> {
+        val before = text.take(at)
+        val after = text.drop(at)
+        val beforeIndex = before.lastIndexOf('\n') + 1 // even for -1
+        var afterIndex = after.indexOf('\n')
+        if (afterIndex == -1)
+            afterIndex = text.length
+        else
+            afterIndex += before.length
+        return beforeIndex to afterIndex
     }
 
 }

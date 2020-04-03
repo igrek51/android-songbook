@@ -161,6 +161,22 @@
                     android:text="@string/edit_song_paste_chord"/>
 
                 <Button
+                    android:id="@+id/selectLineButton"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:text="@string/chords_editor_select_line"/>
+
+                <Button
+                    android:id="@+id/duplicateButton"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:text="@string/chords_editor_duplicate"/>
+
+                <Button
                     android:id="@+id/reformatTrimButton"
                     style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
