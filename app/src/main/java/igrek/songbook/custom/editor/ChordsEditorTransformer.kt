@@ -346,12 +346,14 @@ class ChordsEditorTransformer(
                     .replace(Regex("""]+"""), "]")
                     .replace(Regex("""\[ +"""), "[")
                     .replace(Regex(""" +]"""), "]")
-                    .replace(Regex("""] ?\["""), " ") // join adjacent chords
                     .replace(Regex("""\[]"""), "")
                     .replace(Regex(""" +"""), " ") // double+ spaces
+                    .replace(Regex("""] ?\["""), " ") // join adjacent chords
         }
         transformLyrics { lyrics ->
-            lyrics.replace(Regex("\n\n+"), "\n\n") // max 1 empty line
+            lyrics.replace("\r\n", "\n")
+                    .replace("\r", "\n")
+                    .replace(Regex("\n\n+"), "\n\n") // max 1 empty line
                     .replace(Regex("^\n+"), "")
                     .replace(Regex("\n+$"), "")
         }
@@ -359,7 +361,9 @@ class ChordsEditorTransformer(
 
     fun removeDoubleEmptyLines() {
         transformLyrics { lyrics ->
-            lyrics.replace(Regex("""\n\w*\n"""), "\n")
+            lyrics.replace("\r\n", "\n")
+                    .replace("\r", "\n")
+                    .replace(Regex("""\n\s*\n"""), "\n")
         }
     }
 
