@@ -17,6 +17,8 @@ import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 
 @Singleton
@@ -25,14 +27,14 @@ class UserDataDao {
     @Inject
     lateinit var localDbService: Lazy<LocalDbService>
 
-    var unlockedSongsDao: UnlockedSongsDao? = null
-    var favouriteSongsDao: FavouriteSongsDao? = null
-    var customSongsDao: CustomSongsDao? = null
-    var playlistDao: PlaylistDao? = null
-    var openHistoryDao: OpenHistoryDao? = null
-    var exclusionDao: ExclusionDao? = null
-    var transposeDao: TransposeDao? = null
-    var preferencesDao: PreferencesDao? = null
+    var unlockedSongsDao: UnlockedSongsDao by LazyDaoLoader { path -> UnlockedSongsDao(path) }
+    var favouriteSongsDao: FavouriteSongsDao by LazyDaoLoader { path -> FavouriteSongsDao(path) }
+    var customSongsDao: CustomSongsDao by LazyDaoLoader { path -> CustomSongsDao(path) }
+    var playlistDao: PlaylistDao by LazyDaoLoader { path -> PlaylistDao(path) }
+    var openHistoryDao: OpenHistoryDao by LazyDaoLoader { path -> OpenHistoryDao(path) }
+    var exclusionDao: ExclusionDao by LazyDaoLoader { path -> ExclusionDao(path) }
+    var transposeDao: TransposeDao by LazyDaoLoader { path -> TransposeDao(path) }
+    var preferencesDao: PreferencesDao by LazyDaoLoader { path -> PreferencesDao(path) }
 
     private var saveRequestSubject: PublishSubject<Boolean> = PublishSubject.create()
     private val logger = LoggerFactory.logger
@@ -49,7 +51,7 @@ class UserDataDao {
                 }
     }
 
-    fun read() {
+    fun reload() {
         val path = localDbService.get().songDbDir.absolutePath
 
         unlockedSongsDao = UnlockedSongsDao(path)
@@ -60,30 +62,32 @@ class UserDataDao {
         exclusionDao = ExclusionDao(path)
         transposeDao = TransposeDao(path)
         preferencesDao = PreferencesDao(path)
+
+        logger.trace("user data reloaded")
     }
 
     @Synchronized
     fun save() {
-        unlockedSongsDao?.save()
-        favouriteSongsDao?.save()
-        customSongsDao?.save()
-        playlistDao?.save()
-        openHistoryDao?.save()
-        exclusionDao?.save()
-        transposeDao?.save()
-        preferencesDao?.save()
-        logger.info("user data have been saved")
+        unlockedSongsDao.save()
+        favouriteSongsDao.save()
+        customSongsDao.save()
+        playlistDao.save()
+        openHistoryDao.save()
+        exclusionDao.save()
+        transposeDao.save()
+        preferencesDao.save()
+        logger.info("user data saved")
     }
 
     fun factoryReset() {
-        customSongsDao?.factoryReset()
-        favouriteSongsDao?.factoryReset()
-        unlockedSongsDao?.factoryReset()
-        playlistDao?.factoryReset()
-        openHistoryDao?.factoryReset()
-        exclusionDao?.factoryReset()
-        transposeDao?.factoryReset()
-        preferencesDao?.factoryReset()
+        customSongsDao.factoryReset()
+        favouriteSongsDao.factoryReset()
+        unlockedSongsDao.factoryReset()
+        playlistDao.factoryReset()
+        openHistoryDao.factoryReset()
+        exclusionDao.factoryReset()
+        transposeDao.factoryReset()
+        preferencesDao.factoryReset()
     }
 
     fun requestSave(toSave: Boolean) {
@@ -95,4 +99,26 @@ class UserDataDao {
         save()
     }
 
+}
+
+class LazyDaoLoader<T : AbstractJsonDao<out Any>>(
+        private val loader: (path: String) -> T,
+) : ReadWriteProperty<UserDataDao, T> {
+
+    private var loaded: T? = null
+
+    override fun getValue(thisRef: UserDataDao, property: KProperty<*>): T {
+        val loadedVal = loaded
+        if (loadedVal != null)
+            return loadedVal
+
+        val path = thisRef.localDbService.get().songDbDir.absolutePath
+        val loadedNN = loader.invoke(path)
+        loaded = loadedNN
+        return loadedNN
+    }
+
+    override fun setValue(thisRef: UserDataDao, property: KProperty<*>, value: T) {
+        loaded = value
+    }
 }

@@ -55,14 +55,15 @@ class AppInitializer {
             debugInit()
         }
 
-        adService.get().initialize()
-        userDataDao.get().read()
+        logger.info("Initializing application...")
+
         appLanguageService.get().setLocale()
-        windowManagerService.get().hideTaskbar()
         songsRepository.get().init()
         layoutController.get().init()
+        windowManagerService.get().hideTaskbar()
         layoutController.get().showLayout(SongTreeLayoutController::class)
         songsUpdater.get().checkUpdateIsAvailable()
+        adService.get().initialize()
         adminService.get().init()
         if (isRunningFirstTime())
             firstRunInit()

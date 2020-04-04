@@ -52,13 +52,13 @@ class SongsRepository {
     var allSongsRepo: AllSongsRepository = AllSongsRepository(publicSongsRepo, customSongsRepo)
     private var publicSongsDao: PublicSongsDao? = null
 
-    val unlockedSongsDao: UnlockedSongsDao get() = userDataDao.get().unlockedSongsDao!!
-    val favouriteSongsDao: FavouriteSongsDao get() = userDataDao.get().favouriteSongsDao!!
-    val customSongsDao: CustomSongsDao get() = userDataDao.get().customSongsDao!!
-    val playlistDao: PlaylistDao get() = userDataDao.get().playlistDao!!
-    val openHistoryDao: OpenHistoryDao get() = userDataDao.get().openHistoryDao!!
-    val exclusionDao: ExclusionDao get() = userDataDao.get().exclusionDao!!
-    val transposeDao: TransposeDao get() = userDataDao.get().transposeDao!!
+    val unlockedSongsDao: UnlockedSongsDao get() = userDataDao.get().unlockedSongsDao
+    val favouriteSongsDao: FavouriteSongsDao get() = userDataDao.get().favouriteSongsDao
+    val customSongsDao: CustomSongsDao get() = userDataDao.get().customSongsDao
+    val playlistDao: PlaylistDao get() = userDataDao.get().playlistDao
+    val openHistoryDao: OpenHistoryDao get() = userDataDao.get().openHistoryDao
+    val exclusionDao: ExclusionDao get() = userDataDao.get().exclusionDao
+    val transposeDao: TransposeDao get() = userDataDao.get().transposeDao
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -89,11 +89,11 @@ class SongsRepository {
         }
 
         try {
-            userDataDao.get().read()
+            userDataDao.get().reload()
         } catch (t: Throwable) {
             logger.error("failed to load user data", t)
             resetUserData()
-            userDataDao.get().read()
+            userDataDao.get().reload()
         }
 
         val publicDbBuilder = PublicSongsDbBuilder(versionNumber, publicSongsDao!!, userDataDao.get())
@@ -109,11 +109,11 @@ class SongsRepository {
     @Synchronized
     fun reloadCustomSongsDb() {
         try {
-            userDataDao.get().read()
+            userDataDao.get().reload()
         } catch (t: Throwable) {
             logger.error("failed to load user data", t)
             resetUserData()
-            userDataDao.get().read()
+            userDataDao.get().reload()
         }
 
         val customDbBuilder = CustomSongsDbBuilder(userDataDao.get())

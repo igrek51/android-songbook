@@ -197,7 +197,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     if (ids.isEmpty())
                         uiResourceService.get().resString(R.string.none)
                     else
-                        ids.map { id -> entriesMap[id]!! }.sorted().joinToString(separator = ", ")
+                        ids.map { id -> entriesMap[id].orEmpty() }.sorted().joinToString(separator = ", ")
                 }
         )
 
@@ -216,7 +216,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     if (ids.isEmpty())
                         uiResourceService.get().resString(R.string.none)
                     else
-                        ids.map { id -> entriesMap[id]!! }.sorted().joinToString(separator = ", ")
+                        ids.map { id -> entriesMap[id].orEmpty() }.sorted().joinToString(separator = ", ")
                 }
         )
 
@@ -266,11 +266,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     private fun refreshFragment() {
-        val ft: FragmentTransaction = fragmentManager!!.beginTransaction()
-        if (Build.VERSION.SDK_INT >= 26) {
-            ft.setReorderingAllowed(false)
+        fragmentManager?.let { fragmentManager ->
+            val ft: FragmentTransaction = fragmentManager.beginTransaction()
+            if (Build.VERSION.SDK_INT >= 26) {
+                ft.setReorderingAllowed(false)
+            }
+            ft.detach(this).attach(this).commit()
         }
-        ft.detach(this).attach(this).commit()
     }
 
     private fun toggleAllMultiPreference(excludeLanguagesPreference: MultiSelectListPreference) {
@@ -283,10 +285,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
         excludeLanguagesPreference.callChangeListener(excludeLanguagesPreference.values)
     }
 
-    private fun setupListPreference(key: String,
-                                    entriesMap: LinkedHashMap<String, String>,
-                                    onLoad: () -> String?,
-                                    onSave: (id: String) -> Unit) {
+    private fun setupListPreference(
+            key: String,
+            entriesMap: LinkedHashMap<String, String>,
+            onLoad: () -> String?,
+            onSave: (id: String) -> Unit,
+    ) {
         val preference = findPreference(key) as ListPreference
         preference.entryValues = entriesMap.keys.toTypedArray()
         preference.entries = entriesMap.values.toTypedArray()
@@ -336,12 +340,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
         return true
     }
 
-    private fun setupSeekBarPreference(key: String,
-                                       min: Number,
-                                       max: Number,
-                                       onLoad: () -> Float,
-                                       onSave: (value: Float) -> Unit,
-                                       stringConverter: (value: Float) -> String) {
+    private fun setupSeekBarPreference(
+            key: String,
+            min: Number,
+            max: Number,
+            onLoad: () -> Float,
+            onSave: (value: Float) -> Unit,
+            stringConverter: (value: Float) -> String,
+    ) {
         val preference = findPreference(key) as SeekBarPreference
         preference.isAdjustable = true
         preference.max = SEEKBAR_RESOLUTION
@@ -359,9 +365,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preference.summary = stringConverter(currentValueF)
     }
 
-    private fun setupSwitchPreference(key: String,
-                                      onLoad: () -> Boolean,
-                                      onSave: (value: Boolean) -> Unit) {
+    private fun setupSwitchPreference(
+            key: String,
+            onLoad: () -> Boolean,
+            onSave: (value: Boolean) -> Unit,
+    ) {
         val preference = findPreference(key) as SwitchPreference
         preference.isChecked = onLoad()
         preference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
@@ -370,8 +378,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private fun setupClickPreference(key: String,
-                                     onClick: () -> Unit) {
+    private fun setupClickPreference(
+            key: String,
+            onClick: () -> Unit,
+    ) {
         val button = findPreference(key)
         button.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             onClick.invoke()

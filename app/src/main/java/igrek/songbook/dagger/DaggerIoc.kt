@@ -12,7 +12,7 @@ object DaggerIoc {
     private var factoryModule: FactoryModule? = null
 
     fun init(activity: AppCompatActivity) {
-        logger.info("Initializing Dagger IOC container...")
+        logger.info("Initializing Dependencies container...")
         factoryModule = FactoryModule(activity)
         factoryComponent = DaggerFactoryComponent.builder()
                 .factoryModule(factoryModule)

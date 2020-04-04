@@ -65,7 +65,6 @@ abstract class AbstractJsonDao<T>(
 
         val content = file.readText(Charsets.UTF_8)
         val parsed = json.parse(serializer, content)
-        logger.debug("'$dbName' db loaded from ${file.absoluteFile}")
         return parsed
     }
 
