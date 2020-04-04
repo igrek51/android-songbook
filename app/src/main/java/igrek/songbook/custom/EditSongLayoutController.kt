@@ -146,6 +146,8 @@ class EditSongLayoutController : MainLayout {
 
         layoutController.showLayout(ChordsEditorLayoutController::class)
         chordsEditorLayoutController.get().setContent(songContentEdit?.text.toString(), this.songChordsNotation)
+
+        customSongService.get().showEditorHintsIfNeeded()
     }
 
     private fun importContentFromFile() {

@@ -118,4 +118,10 @@ class CustomSongService {
         }
         return newSong
     }
+
+    fun showEditorHintsIfNeeded() {
+        if (songsRepository.customSongsRepo.songs.get().count() == 0) {
+            uiInfoService.showTooltip(R.string.tooltip_edit_chords_lyrics)
+        }
+    }
 }
