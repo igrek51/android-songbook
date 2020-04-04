@@ -92,8 +92,8 @@ val chordSuffixes = setOf(
         "maj9#11",
         "mmaj7",
         "mmaj9",
-        "o",
         "sus2",
         "sus2sus4",
-        "sus4"
+        "sus4",
+//        "o",
 )

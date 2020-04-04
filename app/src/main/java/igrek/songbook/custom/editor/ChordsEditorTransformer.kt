@@ -369,19 +369,27 @@ class ChordsEditorTransformer(
 
     fun duplicateSelection() {
         val text = contentEdit.text.toString()
-        if (hasAnySelection()) {
-            // TODO
-        } else {
-            val (start, end) = findLineRange(text, contentEdit.selectionStart)
-            // TODO copy start-end, paste past end, select pasted
-        }
+        // expand to closest lines
+        val (start1, _) = findLineRange(text, contentEdit.selectionStart)
+        val (_, end2) = findLineRange(text, contentEdit.selectionEnd)
+
+        val selected = text.substring(start1, end2)
+        val result = text.take(end2) + "\n" + selected + text.drop(end2)
+
+        val newStart = end2 + 1
+        val newEnd = end2 + 1 + selected.length
+
+        contentEdit.setText(result)
+        contentEdit.setSelection(newStart, newEnd)
+        contentEdit.requestFocus()
     }
 
     fun selectNextLine() {
         val text = contentEdit.text.toString()
         if (hasAnySelection()) {
             val (start1, _) = findLineRange(text, contentEdit.selectionStart)
-            val (_, end2) = findLineRange(text, contentEdit.selectionEnd)
+            val nextEndOffset = if (start1 == contentEdit.selectionStart) 1 else 0
+            val (_, end2) = findLineRange(text, contentEdit.selectionEnd + nextEndOffset)
             contentEdit.setSelection(start1, end2)
             contentEdit.requestFocus()
         } else {
