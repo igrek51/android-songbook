@@ -63,7 +63,7 @@ class UserDataDao {
         transposeDao = TransposeDao(path)
         preferencesDao = PreferencesDao(path)
 
-        logger.trace("user data reloaded")
+        logger.debug("user data reloaded")
     }
 
     @Synchronized
