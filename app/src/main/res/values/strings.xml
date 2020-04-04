@@ -312,8 +312,8 @@
     <string name="admin_downloaded_antechamber" translatable="false">Songs downloaded</string>
     <string name="admin_antechamber_edit_action" translatable="false">[admin] Edit song</string>
     <string name="admin_antechamber_update_action" translatable="false">[admin] Push update to antechamber</string>
-    <string name="admin_antechamber_approve_action" translatable="false">Approve song</string>
-    <string name="admin_antechamber_delete_action" translatable="false">Delete song</string>
+    <string name="admin_antechamber_approve_action" translatable="false">[admin] Approve song</string>
+    <string name="admin_antechamber_delete_action" translatable="false">[admin] Delete song</string>
     <string name="admin_antechamber_confirm_delete" translatable="false">Do you really want to delete it?</string>
     <string name="admin_antechamber_confirm_approve" translatable="false">Do you really want to approve it?</string>
     <string name="admin_sending" translatable="false">Sending…</string>
