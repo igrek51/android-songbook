@@ -105,7 +105,9 @@ class NavigationMenuController {
                 val action = actionsMap[id]
                 // postpone action - smoother navigation hide
                 Handler(Looper.getMainLooper()).post {
-                    SafeExecutor().execute(action!!)
+                    SafeExecutor {
+                        action!!.invoke()
+                    }
                 }
             } else {
                 logger.warn("unknown navigation item has been selected.")

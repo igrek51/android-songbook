@@ -24,7 +24,7 @@ class ContextMenuBuilder {
         val builder = AlertDialog.Builder(activity)
                 .setTitle(uiResourceService.resString(titleResId))
                 .setItems(actionNames) { _, item ->
-                    SafeExecutor().execute {
+                    SafeExecutor {
                         actions[item].executor()
                     }
                 }
@@ -39,7 +39,7 @@ class ContextMenuBuilder {
 
         val builder = AlertDialog.Builder(activity)
                 .setItems(actionNames) { _, item ->
-                    SafeExecutor().execute {
+                    SafeExecutor {
                         actions[item].executor()
                     }
                 }

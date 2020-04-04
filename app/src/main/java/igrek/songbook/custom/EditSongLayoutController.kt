@@ -81,6 +81,10 @@ class EditSongLayoutController : MainLayout {
             navigationMenuController.navDrawerShow()
         }
 
+        layout.findViewById<ImageButton>(R.id.goBackButton)?.setOnClickListener {
+            onBackClicked()
+        }
+
         layout.findViewById<ImageButton>(R.id.saveSongButton).setOnClickListener(SafeClickListener {
             saveSong()
         })

@@ -16,7 +16,7 @@ class OptionSelectDispatcher {
     fun optionsSelect(id: Int): Boolean {
         if (optionActions.get(id) != null) {
             val action = optionActions.get(id)
-            SafeExecutor().execute(action)
+            SafeExecutor(action)
             return true
         }
         return false

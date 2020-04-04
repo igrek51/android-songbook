@@ -139,7 +139,7 @@ class SongContextMenuBuilder {
 
         val builder = AlertDialog.Builder(activity)
         builder.setItems(actionNames) { _, item ->
-            SafeExecutor().execute {
+            SafeExecutor {
                 songActions[item].executor(song)
             }
         }

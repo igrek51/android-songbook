@@ -25,7 +25,7 @@ class ConfirmDialogBuilder {
         alertBuilder.setTitle(uiResourceService.resString(R.string.action_confirmation_title))
         alertBuilder.setNegativeButton(uiResourceService.resString(R.string.action_cancel)) { _, _ -> }
         alertBuilder.setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { _, _ ->
-            SafeExecutor().execute {
+            SafeExecutor {
                 action.invoke()
             }
         }
@@ -50,17 +50,17 @@ class ConfirmDialogBuilder {
         alertBuilder.setTitle(title)
 
         alertBuilder.setPositiveButton(uiResourceService.resString(positiveButton)) { _, _ ->
-            SafeExecutor().execute {
+            SafeExecutor {
                 positiveAction.invoke()
             }
         }
         alertBuilder.setNegativeButton(uiResourceService.resString(negativeButton)) { _, _ ->
-            SafeExecutor().execute {
+            SafeExecutor {
                 negativeAction.invoke()
             }
         }
         alertBuilder.setNeutralButton(uiResourceService.resString(neutralButton)) { _, _ ->
-            SafeExecutor().execute {
+            SafeExecutor {
                 neutralAction.invoke()
             }
         }

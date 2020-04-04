@@ -38,7 +38,7 @@ class InputDialogBuilder {
 
         alertBuilder.setNegativeButton(uiResourceService.resString(R.string.action_cancel)) { _, _ -> }
         alertBuilder.setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { _, _ ->
-            SafeExecutor().execute {
+            SafeExecutor {
                 action.invoke(input.text.toString())
             }
         }
