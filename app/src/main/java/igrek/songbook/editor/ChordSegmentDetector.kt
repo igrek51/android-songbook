@@ -1,4 +1,4 @@
-package igrek.songbook.custom.editor
+package igrek.songbook.editor
 
 class ChordSegmentDetector {
     fun detectChords(line: String): List<ChordSegment> {

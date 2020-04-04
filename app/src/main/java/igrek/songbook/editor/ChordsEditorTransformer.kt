@@ -1,4 +1,4 @@
-package igrek.songbook.custom.editor
+package igrek.songbook.editor
 
 import android.widget.EditText
 import igrek.songbook.R
@@ -413,6 +413,12 @@ class ChordsEditorTransformer(
         else
             afterIndex += before.length
         return beforeIndex to afterIndex
+    }
+
+    fun unmarkChords() {
+        transformLyrics { lyrics ->
+            lyrics.replace("[", "").replace("]", "")
+        }
     }
 
 }

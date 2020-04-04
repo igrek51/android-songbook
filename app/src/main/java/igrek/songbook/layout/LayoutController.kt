@@ -12,8 +12,8 @@ import igrek.songbook.contact.MissingSongLayoutController
 import igrek.songbook.contact.PublishSongLayoutController
 import igrek.songbook.custom.CustomSongsListLayoutController
 import igrek.songbook.custom.EditSongLayoutController
-import igrek.songbook.custom.editor.ChordsEditorLayoutController
 import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.editor.ChordsEditorLayoutController
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.ad.AdService
 import igrek.songbook.layout.navigation.NavigationMenuController

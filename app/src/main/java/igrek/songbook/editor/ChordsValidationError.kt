@@ -1,4 +1,4 @@
-package igrek.songbook.custom.editor
+package igrek.songbook.editor
 
 class ChordsValidationError(val messageResId: Int?, val errorMessage: String?) : RuntimeException() {
 

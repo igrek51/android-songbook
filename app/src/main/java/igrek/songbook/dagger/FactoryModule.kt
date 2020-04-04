@@ -24,7 +24,7 @@ import igrek.songbook.custom.CustomSongService
 import igrek.songbook.custom.CustomSongsListLayoutController
 import igrek.songbook.custom.EditSongLayoutController
 import igrek.songbook.custom.SongImportFileChooser
-import igrek.songbook.custom.editor.ChordsEditorLayoutController
+import igrek.songbook.editor.ChordsEditorLayoutController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.Logger

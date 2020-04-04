@@ -1,6 +1,6 @@
 package igrek.songbook.chords.detector
 
-import igrek.songbook.custom.editor.ChordsMarker
+import igrek.songbook.editor.ChordsMarker
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test

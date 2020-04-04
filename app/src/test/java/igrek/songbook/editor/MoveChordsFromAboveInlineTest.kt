@@ -1,4 +1,4 @@
-package igrek.songbook.custom.editor
+package igrek.songbook.editor
 
 
 import android.widget.EditText
@@ -10,7 +10,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.mockito.Mockito
 
-class MoveChordsFromAboveRightTest : BaseDaggerTest() {
+class MoveChordsFromAboveInlineTest : BaseDaggerTest() {
 
     private val transformer = ChordsEditorTransformer(
             contentEdit = Mockito.mock(EditText::class.java),
@@ -21,69 +21,72 @@ class MoveChordsFromAboveRightTest : BaseDaggerTest() {
     )
 
     @Test
-    fun test_transformMoveChordsAboveToRight() {
+    fun test_move_single_chords() {
+        val lyrics = """
+            [a]   [F]
+            first line
+            [C]    [G]
+            second line
+            """.trimIndent()
+        val transformed = transformer.transformMoveChordsAboveToInline(lyrics)
+        val expected = """
+            [a]first [F]line
+            [C]second [G]line
+            """.trimIndent()
+        assertThat(transformed).isEqualTo(expected)
+        assertThat(transformer.transformMoveChordsAboveToInline(expected)).isEqualTo(expected)
+    }
+
+    @Test
+    fun test_move_double_chords() {
         val lyrics = """
             [a F]
             first line
-            [C G]
-            second line
             """.trimIndent()
-        val transformed = transformer.transformMoveChordsAboveToRight(lyrics)
+        val transformed = transformer.transformMoveChordsAboveToInline(lyrics)
         val expected = """
-            first line [a F]
-            second line [C G]
+            [a F]first line
             """.trimIndent()
         assertThat(transformed).isEqualTo(expected)
-        assertThat(transformer.transformMoveChordsAboveToRight(expected)).isEqualTo(expected)
+        assertThat(transformer.transformMoveChordsAboveToInline(expected)).isEqualTo(expected)
     }
 
     @Test
-    fun test_many_chords_with_sharp_or_numbers() {
-        val lyrics = """
-            [g Gmaj7/C(sus4)]
-            esencja istnienia
-            [D# B c Dsus4-A, C#/G]
-            second line
-            """.trimIndent()
-        val transformed = transformer.transformMoveChordsAboveToRight(lyrics)
-        val expected = """
-            esencja istnienia [g Gmaj7/C(sus4)]
-            second line [D# B c Dsus4-A, C#/G]
-            """.trimIndent()
-        assertThat(transformed).isEqualTo(expected)
-    }
-
-    @Test
-    fun test_move_chords_from_above_leave_dont_inline_unclear() {
-        val lyrics = """
-            [a]inlined[F]
-            first line
-            """.trimIndent()
-        val transformed = transformer.transformMoveChordsAboveToRight(lyrics)
-        assertThat(transformed).isEqualTo(lyrics)
-    }
-
-    @Test
-    fun test_move_chords_from_above_multipart() {
-        val lyrics = """
-            [a] [F C]
-            first line
-            """.trimIndent()
-        val transformed = transformer.transformMoveChordsAboveToRight(lyrics)
-        val expected = """
-            first line [a] [F C]
-            """.trimIndent()
-        assertThat(transformed).isEqualTo(expected)
-    }
-
-    @Test
-    fun test_dont_move_from_above_if_already_chrods() {
+    fun test_dont_move_when_already_chords() {
         val lyrics = """
             [a]
             first line [F]
+            second line
+            third line
             """.trimIndent()
-        val transformed = transformer.transformMoveChordsAboveToRight(lyrics)
+        val transformed = transformer.transformMoveChordsAboveToInline(lyrics)
         assertThat(transformed).isEqualTo(lyrics)
+    }
+
+    @Test
+    fun test_move_inside_word() {
+        val lyrics = """
+                [a] [F]
+            veryLongWord
+            """.trimIndent()
+        val transformed = transformer.transformMoveChordsAboveToInline(lyrics)
+        val expected = """
+            very[a]Long[F]Word
+            """.trimIndent()
+        assertThat(transformed).isEqualTo(expected)
+    }
+
+    @Test
+    fun test_chords_longer_than_word() {
+        val lyrics = """
+              [C]  [a] [F]
+            s ort
+            """.trimIndent()
+        val transformed = transformer.transformMoveChordsAboveToInline(lyrics)
+        val expected = """
+            s [C]ort  [a]    [F]
+            """.trimIndent()
+        assertThat(transformed).isEqualTo(expected)
     }
 
 }

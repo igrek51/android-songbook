@@ -336,4 +336,5 @@
     <string name="chords_editor_remove_double_empty_lines">Usuń podwójne puste linie</string>
     <string name="chords_editor_duplicate">Duplikuj</string>
     <string name="chords_editor_select_line">Linia</string>
+    <string name="chords_editor_unmark_chords">Odznacz akordy</string>
 </resources>

@@ -1,4 +1,4 @@
-package igrek.songbook.custom.editor
+package igrek.songbook.editor
 
 import android.text.Editable
 import android.text.TextWatcher
@@ -139,6 +139,9 @@ class ChordsEditorLayoutController : MainLayout {
                 },
                 ContextMenuBuilder.Action(R.string.chords_editor_fis_to_sharp) {
                     wrapHistoryContext { transformer?.chordsFisTofSharp() }
+                },
+                ContextMenuBuilder.Action(R.string.chords_editor_unmark_chords) {
+                    wrapHistoryContext { transformer?.unmarkChords() }
                 },
         )
         contextMenuBuilder.showContextMenu(R.string.edit_song_transform_chords, actions)

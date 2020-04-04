@@ -9,8 +9,8 @@ import com.google.android.gms.ads.AdRequest.*
 import dagger.Lazy
 import igrek.songbook.BuildConfig
 import igrek.songbook.R
-import igrek.songbook.custom.editor.ChordsEditorLayoutController
 import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.editor.ChordsEditorLayoutController
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.settings.preferences.PreferencesState
