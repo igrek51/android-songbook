@@ -181,7 +181,7 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
             setSongFilter(null)
         } else {
             softKeyboardService.hideSoftKeyboard(searchFilterEdit)
-            layoutController.showPreviousLayoutOrQuit()
+            layoutController.showLayout(SongTreeLayoutController::class)
         }
     }
 
@@ -193,7 +193,7 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
         } else {
             // move to selected category
             songTreeLayoutController.get().currentCategory = item.category
-            layoutController.showPreviousLayoutOrQuit()
+            layoutController.showLayout(SongTreeLayoutController::class)
         }
     }
 
