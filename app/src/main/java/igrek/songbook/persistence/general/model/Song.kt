@@ -70,5 +70,9 @@ data class Song(
         return namespace == SongNamespace.Public
     }
 
+    fun isAntechamber(): Boolean {
+        return namespace == SongNamespace.Antechamber
+    }
+
     override fun toString(): String = displayName()
 }

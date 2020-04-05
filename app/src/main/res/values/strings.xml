@@ -314,8 +314,8 @@
     <string name="admin_antechamber_update_action" translatable="false">[admin] Push update to antechamber</string>
     <string name="admin_antechamber_approve_action" translatable="false">[admin] Approve song</string>
     <string name="admin_antechamber_delete_action" translatable="false">[admin] Delete song</string>
-    <string name="admin_antechamber_confirm_delete" translatable="false">Do you really want to delete it?</string>
-    <string name="admin_antechamber_confirm_approve" translatable="false">Do you really want to approve it?</string>
+    <string name="admin_antechamber_confirm_delete" translatable="false">Do you really want to delete song \"%s\"?</string>
+    <string name="admin_antechamber_confirm_approve" translatable="false">Do you really want to approve song \"%s\"?</string>
     <string name="admin_sending" translatable="false">Sending…</string>
     <string name="admin_success" translatable="false">Success.</string>
     <string name="antechamber_new_song_sent">A song has been sent.</string>

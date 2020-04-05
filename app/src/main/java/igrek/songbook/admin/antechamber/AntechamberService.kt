@@ -1,15 +1,18 @@
 package igrek.songbook.admin.antechamber
 
 import dagger.Lazy
+import igrek.songbook.R
 import igrek.songbook.admin.AdminService
 import igrek.songbook.admin.HttpRequester
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory.logger
+import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import okhttp3.MediaType
@@ -126,6 +129,48 @@ class AntechamberService {
         return httpRequester.httpRequest(request) { response: Response ->
             logger.debug("Approve response", response.body()?.string())
             true
+        }
+    }
+
+    fun updateAntechamberSongUI(song: Song) {
+        uiInfoService.showInfoIndefinite(R.string.admin_sending)
+        updateAntechamberSong(song)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    uiInfoService.showInfo(R.string.admin_success)
+                }, { error ->
+                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
+                    uiInfoService.showInfoIndefinite(message)
+                })
+    }
+
+    fun approveAntechamberSongUI(song: Song) {
+        val message1 = uiResourceService.resString(R.string.admin_antechamber_confirm_approve, song.toString())
+        ConfirmDialogBuilder().confirmAction(message1) {
+            uiInfoService.showInfoIndefinite(R.string.admin_sending)
+            approveAntechamberSong(song)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        uiInfoService.showInfo(R.string.admin_success)
+                    }, { error ->
+                        val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
+                        uiInfoService.showInfoIndefinite(message)
+                    })
+        }
+    }
+
+    fun deleteAntechamberSongUI(song: Song) {
+        val message1 = uiResourceService.resString(R.string.admin_antechamber_confirm_delete, song.toString())
+        ConfirmDialogBuilder().confirmAction(message1) {
+            uiInfoService.showInfoIndefinite(R.string.admin_sending)
+            deleteAntechamberSong(song)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        uiInfoService.showInfo(R.string.admin_success)
+                    }, { error ->
+                        val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
+                        uiInfoService.showInfoIndefinite(message)
+                    })
         }
     }
 

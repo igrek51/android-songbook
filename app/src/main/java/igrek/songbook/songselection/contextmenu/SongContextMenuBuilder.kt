@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog
 import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.admin.AdminService
+import igrek.songbook.admin.antechamber.AntechamberService
 import igrek.songbook.contact.PublishSongService
 import igrek.songbook.custom.CustomSongService
 import igrek.songbook.dagger.DaggerIoc
@@ -46,6 +47,9 @@ class SongContextMenuBuilder {
     lateinit var publishSongService: PublishSongService
     @Inject
     lateinit var adminService: Lazy<AdminService>
+
+    @Inject
+    lateinit var antechamberService: Lazy<AntechamberService>
 
     private var allActions: SimpleCache<List<SongContextAction>> =
             SimpleCache { createAllActions() }
@@ -123,7 +127,22 @@ class SongContextMenuBuilder {
                         availableCondition = { song -> song.isPublic() && adminService.get().isAdminEnabled() },
                         executor = { song ->
                             adminService.get().updatePublicSongUi(song)
-                        })
+                        }),
+                SongContextAction(R.string.admin_antechamber_update_action,
+                        availableCondition = { song -> song.isAntechamber() && adminService.get().isAdminEnabled() },
+                        executor = { song ->
+                            antechamberService.get().updateAntechamberSongUI(song)
+                        }),
+                SongContextAction(R.string.admin_antechamber_approve_action,
+                        availableCondition = { song -> song.isAntechamber() && adminService.get().isAdminEnabled() },
+                        executor = { song ->
+                            antechamberService.get().approveAntechamberSongUI(song)
+                        }),
+                SongContextAction(R.string.admin_antechamber_delete_action,
+                        availableCondition = { song -> song.isAntechamber() && adminService.get().isAdminEnabled() },
+                        executor = { song ->
+                            antechamberService.get().deleteAntechamberSongUI(song)
+                        }),
         )
 
         actions.forEach { action ->
