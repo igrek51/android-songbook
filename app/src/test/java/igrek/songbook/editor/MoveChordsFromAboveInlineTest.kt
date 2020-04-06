@@ -89,4 +89,22 @@ class MoveChordsFromAboveInlineTest : BaseDaggerTest() {
         assertThat(transformed).isEqualTo(expected)
     }
 
+    @Test
+    fun test_remove_double_empty_lines() {
+        val transformed = transformer.transformRemoveDoubleEmptyLines("""
+abc
+   
+def
+
+
+ghi
+""")
+        assertThat(transformed).isEqualTo("""
+abc
+def
+
+ghi
+""")
+    }
+
 }

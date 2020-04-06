@@ -360,11 +360,13 @@ class ChordsEditorTransformer(
     }
 
     fun removeDoubleEmptyLines() {
-        transformLyrics { lyrics ->
-            lyrics.replace("\r\n", "\n")
+        transformLyrics(this::transformRemoveDoubleEmptyLines)
+    }
+
+    fun transformRemoveDoubleEmptyLines(lyrics: String): String {
+        return lyrics.replace("\r\n", "\n")
                     .replace("\r", "\n")
-                    .replace(Regex("""\n\s*\n"""), "\n")
-        }
+                .replace(Regex("""\n[ \t\f]*\n"""), "\n")
     }
 
     fun duplicateSelection() {
