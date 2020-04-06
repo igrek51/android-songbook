@@ -110,6 +110,8 @@ class SecretCommandService {
                 }) { key: String ->
                     hashedCommand(key.drop(5))
                 },
+
+                SubCommandRule("unlock") { key -> unlockSongs(key) },
         )
     }
 

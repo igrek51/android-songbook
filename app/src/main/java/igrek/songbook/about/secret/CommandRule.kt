@@ -2,7 +2,7 @@ package igrek.songbook.about.secret
 
 import com.google.common.base.Predicate
 
-class CommandRule {
+open class CommandRule {
 
     val condition: Predicate<String>
     val activator: (key: String) -> Unit
@@ -22,3 +22,12 @@ class CommandRule {
         this.activator = activator
     }
 }
+
+class SubCommandRule(
+        prefix: String,
+        subcommandActivator: (key: String) -> Unit,
+) : CommandRule(condition = Predicate {
+    it?.startsWith("$prefix ") ?: false
+}, activator = { key: String ->
+    subcommandActivator(key.drop(prefix.length + 1))
+})
