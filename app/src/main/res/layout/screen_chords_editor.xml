@@ -212,17 +212,22 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <EditText
-                android:id="@+id/songContentEdit"
+            <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#07ffffff"
-                android:gravity="top"
-                android:hint="@string/import_song_content_hint"
-                android:inputType="text|textMultiLine"
-                android:minHeight="240dp"
-                android:padding="4dp"
-                android:text="" />
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/songContentEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#07ffffff"
+                    android:gravity="top"
+                    android:hint="@string/import_song_content_hint"
+                    android:inputType="text|textMultiLine"
+                    android:minHeight="240dp"
+                    android:padding="4dp"
+                    android:text="" />
+            </HorizontalScrollView>
         </ScrollView>
 
     </LinearLayout>
