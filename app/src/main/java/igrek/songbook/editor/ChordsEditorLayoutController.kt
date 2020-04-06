@@ -1,5 +1,6 @@
 package igrek.songbook.editor
 
+import android.graphics.Typeface
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -22,6 +23,8 @@ import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.settings.chordsnotation.ChordsNotation
+import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.theme.FontTypeface
 import igrek.songbook.system.SoftKeyboardService
 import javax.inject.Inject
 
@@ -44,6 +47,9 @@ class ChordsEditorLayoutController : MainLayout {
     lateinit var softKeyboardService: SoftKeyboardService
     @Inject
     lateinit var contextMenuBuilder: ContextMenuBuilder
+
+    @Inject
+    lateinit var preferencesState: PreferencesState
 
     private var contentEdit: EditText? = null
     private var layout: View? = null
@@ -84,20 +90,22 @@ class ChordsEditorLayoutController : MainLayout {
             uiInfoService.showTooltip(R.string.tooltip_edit_chords_lyrics)
         }
 
-        contentEdit = layout.findViewById(R.id.songContentEdit)
-        contentEdit?.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {}
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                if (start == 0 && count == s?.length) {
-                    return // skip in order not to save undo / transforming operations again
+        contentEdit = layout.findViewById<EditText>(R.id.songContentEdit)?.also {
+            it.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {}
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    if (start == 0 && count == s?.length) {
+                        return // skip in order not to save undo / transforming operations again
+                    }
+                    history.save(it)
                 }
-                history.save(contentEdit!!)
-            }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-        })
-        softKeyboardService.showSoftKeyboard(contentEdit)
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+            })
+            softKeyboardService.showSoftKeyboard(it)
+            configureTypeface(it)
+        }
 
         transformer = ChordsEditorTransformer(contentEdit!!, history, chordsNotation, uiResourceService, uiInfoService)
 
@@ -114,6 +122,14 @@ class ChordsEditorLayoutController : MainLayout {
         buttonOnClick(R.id.reformatTrimButton) { wrapHistoryContext { transformer?.reformatAndTrim() } }
         buttonOnClick(R.id.duplicateButton) { transformer?.duplicateSelection() }
         buttonOnClick(R.id.selectLineButton) { transformer?.selectNextLine() }
+    }
+
+    private fun configureTypeface(edit: EditText) {
+        edit.typeface = when (preferencesState.fontTypeface) {
+            FontTypeface.SANS_SERIF -> Typeface.SANS_SERIF
+            FontTypeface.SERIF -> Typeface.SERIF
+            FontTypeface.MONOSPACE -> Typeface.MONOSPACE
+        }
     }
 
     private fun buttonOnClick(@IdRes buttonId: Int, onclickAction: () -> Unit) {
