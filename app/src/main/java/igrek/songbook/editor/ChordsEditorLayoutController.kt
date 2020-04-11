@@ -47,7 +47,6 @@ class ChordsEditorLayoutController : MainLayout {
     lateinit var softKeyboardService: SoftKeyboardService
     @Inject
     lateinit var contextMenuBuilder: ContextMenuBuilder
-
     @Inject
     lateinit var preferencesState: PreferencesState
 
@@ -56,6 +55,7 @@ class ChordsEditorLayoutController : MainLayout {
     private var chordsNotation: ChordsNotation? = null
     private var history = LyricsEditorHistory()
     private var transformer: ChordsEditorTransformer? = null
+    private var textEditor: ITextEditor = EmptyTextEditor()
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -91,13 +91,14 @@ class ChordsEditorLayoutController : MainLayout {
         }
 
         contentEdit = layout.findViewById<EditText>(R.id.songContentEdit)?.also {
+            textEditor = EditTextTextEditor(it)
             it.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {}
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                     if (start == 0 && count == s?.length) {
                         return // skip in order not to save undo / transforming operations again
                     }
-                    history.save(it)
+                    history.save(textEditor)
                 }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -105,9 +106,8 @@ class ChordsEditorLayoutController : MainLayout {
             })
             softKeyboardService.showSoftKeyboard(it)
             configureTypeface(it)
+            transformer = ChordsEditorTransformer(history, chordsNotation, uiResourceService, uiInfoService, textEditor = textEditor)
         }
-
-        transformer = ChordsEditorTransformer(contentEdit!!, history, chordsNotation, uiResourceService, uiInfoService)
 
         buttonOnClick(R.id.addChordButton) { transformer?.onWrapChordClick() }
         buttonOnClick(R.id.addChordSplitterButton) { transformer?.addChordSplitter() }
@@ -159,12 +159,15 @@ class ChordsEditorLayoutController : MainLayout {
                 ContextMenuBuilder.Action(R.string.chords_editor_unmark_chords) {
                     wrapHistoryContext { transformer?.unmarkChords() }
                 },
+                ContextMenuBuilder.Action(R.string.chords_editor_detect_chords_keeping_indent) {
+                    wrapHistoryContext { transformer?.detectChords(keepIndentation = true) }
+                },
         )
         contextMenuBuilder.showContextMenu(R.string.edit_song_transform_chords, actions)
     }
 
     private fun wrapHistoryContext(action: () -> Unit) {
-        history.save(contentEdit!!)
+        history.save(textEditor)
         action.invoke()
         restoreSelectionFromHistory()
     }
@@ -203,7 +206,7 @@ class ChordsEditorLayoutController : MainLayout {
             uiInfoService.showToast(R.string.no_undo_changes)
             return
         }
-        history.revertLast(contentEdit!!)
+        history.revertLast(textEditor)
     }
 
     override fun onBackClicked() {
@@ -221,7 +224,7 @@ class ChordsEditorLayoutController : MainLayout {
     fun setContent(content: String, chordsNotation: ChordsNotation?) {
         this.chordsNotation = chordsNotation
         transformer?.setContentWithSelection(content, 0, 0)
-        history.reset(contentEdit!!)
+        history.reset(textEditor)
         softKeyboardService.showSoftKeyboard(contentEdit)
         contentEdit?.setSelection(0, 0)
     }

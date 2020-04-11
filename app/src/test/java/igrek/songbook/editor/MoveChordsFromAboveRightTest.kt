@@ -1,8 +1,6 @@
 package igrek.songbook.editor
 
 
-import android.widget.EditText
-import igrek.songbook.dagger.base.BaseDaggerTest
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.settings.chordsnotation.ChordsNotation
@@ -10,14 +8,14 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.mockito.Mockito
 
-class MoveChordsFromAboveRightTest : BaseDaggerTest() {
+class MoveChordsFromAboveRightTest {
 
     private val transformer = ChordsEditorTransformer(
-            contentEdit = Mockito.mock(EditText::class.java),
             history = Mockito.mock(LyricsEditorHistory::class.java),
             chordsNotation = ChordsNotation.GERMAN,
             uiResourceService = Mockito.mock(UiResourceService::class.java),
             uiInfoService = Mockito.mock(UiInfoService::class.java),
+            textEditor = EmptyTextEditor(),
     )
 
     @Test

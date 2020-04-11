@@ -1,6 +1,5 @@
 package igrek.songbook.editor
 
-import android.widget.EditText
 import igrek.songbook.R
 import igrek.songbook.chords.converter.ChordsConverter
 import igrek.songbook.chords.detector.ChordsDetector
@@ -11,25 +10,27 @@ import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
 class ChordsEditorTransformer(
-        private var contentEdit: EditText,
         private var history: LyricsEditorHistory,
         private val chordsNotation: ChordsNotation?,
         private val uiResourceService: UiResourceService,
         private val uiInfoService: UiInfoService,
+        private val textEditor: ITextEditor,
 ) {
     private var clipboardChords: String? = null
 
     private fun transformLyrics(transformer: (String) -> String) {
-        val text = contentEdit.text.toString()
-        contentEdit.setText(transformer.invoke(text))
+        textEditor.getText()
+                .let { transformer.invoke(it) }
+                .let { textEditor.setText(it) }
     }
 
     private fun transformLines(transformer: (String) -> String) {
-        val text = contentEdit.text.toString()
-                .lines().joinToString(separator = "\n") { line ->
+        textEditor.getText()
+                .lines()
+                .joinToString(separator = "\n") { line ->
                     transformer.invoke(line)
                 }
-        contentEdit.setText(text)
+                .let { textEditor.setText(it) }
     }
 
     private fun transformDoubleLines(input: String, transformer: (String, String) -> List<String>?): String {
@@ -55,23 +56,21 @@ class ChordsEditorTransformer(
     }
 
     private fun transformChords(transformer: (String) -> String) {
-        val text = contentEdit.text.toString()
+        textEditor.getText()
                 .replace(Regex("""\[(.*?)]""")) { matchResult ->
                     "[" + transformer.invoke(matchResult.groupValues[1]) + "]"
                 }
-        contentEdit.setText(text)
+                .let { textEditor.setText(it) }
     }
 
     fun setContentWithSelection(edited: String, selStart: Int, selEnd: Int) {
-        contentEdit.setText(edited)
-        contentEdit.setSelection(selStart, selEnd)
-        contentEdit.requestFocus()
+        textEditor.setText(edited)
+        textEditor.setSelection(selStart, selEnd)
     }
 
     private fun onAddSequenceClick(s: String) {
-        var edited = contentEdit.text.toString()
-        var selStart = contentEdit.selectionStart
-        var selEnd = contentEdit.selectionEnd
+        var edited = textEditor.getText()
+        var (selStart, selEnd) = textEditor.getSelection()
         val before = edited.take(selStart)
         val after = edited.drop(selEnd)
 
@@ -79,15 +78,15 @@ class ChordsEditorTransformer(
         selStart += s.length
         selEnd = selStart
 
-        setContentWithSelection(edited, selStart, selEnd)
+        textEditor.setText(edited)
+        textEditor.setSelection(selStart, selEnd)
     }
 
     fun onWrapChordClick() {
-        history.save(contentEdit)
+        history.save(textEditor)
 
-        var edited = contentEdit.text.toString()
-        var selStart = contentEdit.selectionStart
-        var selEnd = contentEdit.selectionEnd
+        var edited = textEditor.getText()
+        var (selStart, selEnd) = textEditor.getSelection()
         val before = edited.take(selStart)
         val after = edited.drop(selEnd)
 
@@ -174,8 +173,8 @@ class ChordsEditorTransformer(
 
     private fun convertFromNotation(fromNotation: ChordsNotation) {
         val converter = ChordsConverter(fromNotation, chordsNotation ?: ChordsNotation.default)
-        val converted = converter.convertLyrics(contentEdit.text.toString())
-        contentEdit.setText(converted)
+        val converted = converter.convertLyrics(textEditor.getText())
+        textEditor.setText(converted)
     }
 
 
@@ -190,7 +189,7 @@ class ChordsEditorTransformer(
     }
 
     fun quietValidate(): String? {
-        val text = contentEdit.text.toString()
+        val text = textEditor.getText()
         return try {
             validateChordsBrackets(text)
             validateChordsNotation(text)
@@ -205,9 +204,8 @@ class ChordsEditorTransformer(
 
 
     fun onCopyChordClick() {
-        val edited = contentEdit.text.toString()
-        val selStart = contentEdit.selectionStart
-        val selEnd = contentEdit.selectionEnd
+        val edited = textEditor.getText()
+        var (selStart, selEnd) = textEditor.getSelection()
 
         var selection = edited.substring(selStart, selEnd).trim()
         if (selection.startsWith("["))
@@ -224,15 +222,14 @@ class ChordsEditorTransformer(
     }
 
     fun onPasteChordClick() {
-        history.save(contentEdit)
+        history.save(textEditor)
         if (clipboardChords.isNullOrEmpty()) {
             uiInfoService.showToast(R.string.paste_chord_empty)
             return
         }
 
-        var edited = contentEdit.text.toString()
-        val selStart = contentEdit.selectionStart
-        var selEnd = contentEdit.selectionEnd
+        var edited = textEditor.getText()
+        var (selStart, selEnd) = textEditor.getSelection()
         val before = edited.take(selStart)
         val after = edited.drop(selEnd)
 
@@ -243,9 +240,9 @@ class ChordsEditorTransformer(
     }
 
     fun addChordSplitter() {
-        history.save(contentEdit)
-        val edited = contentEdit.text.toString()
-        val selStart = contentEdit.selectionStart
+        history.save(textEditor)
+        val edited = textEditor.getText()
+        val (selStart, _) = textEditor.getSelection()
         val before = edited.take(selStart)
         // count previous opening and closing brackets
         val opening = before.count { c -> c == '[' }
@@ -259,7 +256,7 @@ class ChordsEditorTransformer(
     }
 
 
-    fun detectChords() {
+    fun detectChords(keepIndentation: Boolean = false) {
         val chordsMarker = ChordsMarker(ChordsDetector(chordsNotation))
         transformLyrics { lyrics ->
             chordsMarker.detectAndMarkChords(lyrics)
@@ -267,7 +264,7 @@ class ChordsEditorTransformer(
         val detectedChordsNum = chordsMarker.allMarkedChords.size
         if (detectedChordsNum == 0) {
             // find chords from other notations as well
-            val text = contentEdit.text.toString()
+            val text = textEditor.getText()
             val genericChordsMarker = ChordsMarker(ChordsDetector())
             genericChordsMarker.detectAndMarkChords(text)
             val otherChordsDetected = genericChordsMarker.allMarkedChords
@@ -365,15 +362,16 @@ class ChordsEditorTransformer(
 
     fun transformRemoveDoubleEmptyLines(lyrics: String): String {
         return lyrics.replace("\r\n", "\n")
-                    .replace("\r", "\n")
+                .replace("\r", "\n")
                 .replace(Regex("""\n[ \t\f]*\n"""), "\n")
     }
 
     fun duplicateSelection() {
-        val text = contentEdit.text.toString()
+        val text = textEditor.getText()
         // expand to closest lines
-        val (start1, _) = findLineRange(text, contentEdit.selectionStart)
-        val (_, end2) = findLineRange(text, contentEdit.selectionEnd)
+        val (selStart, selEnd) = textEditor.getSelection()
+        val (start1, _) = findLineRange(text, selStart)
+        val (_, end2) = findLineRange(text, selEnd)
 
         val selected = text.substring(start1, end2)
         val result = text.take(end2) + "\n" + selected + text.drop(end2)
@@ -381,28 +379,27 @@ class ChordsEditorTransformer(
         val newStart = end2 + 1
         val newEnd = end2 + 1 + selected.length
 
-        contentEdit.setText(result)
-        contentEdit.setSelection(newStart, newEnd)
-        contentEdit.requestFocus()
+        textEditor.setText(result)
+        textEditor.setSelection(newStart, newEnd)
     }
 
     fun selectNextLine() {
-        val text = contentEdit.text.toString()
+        val text = textEditor.getText()
+        val (selStart, selEnd) = textEditor.getSelection()
         if (hasAnySelection()) {
-            val (start1, _) = findLineRange(text, contentEdit.selectionStart)
-            val nextEndOffset = if (start1 == contentEdit.selectionStart) 1 else 0
-            val (_, end2) = findLineRange(text, contentEdit.selectionEnd + nextEndOffset)
-            contentEdit.setSelection(start1, end2)
-            contentEdit.requestFocus()
+            val (start1, _) = findLineRange(text, selStart)
+            val nextEndOffset = if (start1 == selStart) 1 else 0
+            val (_, end2) = findLineRange(text, selEnd + nextEndOffset)
+            textEditor.setSelection(start1, end2)
         } else {
-            val (start, end) = findLineRange(text, contentEdit.selectionStart)
-            contentEdit.setSelection(start, end)
-            contentEdit.requestFocus()
+            val (start, end) = findLineRange(text, selStart)
+            textEditor.setSelection(start, end)
         }
     }
 
     private fun hasAnySelection(): Boolean {
-        return contentEdit.run { selectionStart != selectionEnd }
+        val (selStart, selEnd) = textEditor.getSelection()
+        return selStart != selEnd
     }
 
     private fun findLineRange(text: String, at: Int): Pair<Int, Int> {
@@ -424,3 +421,4 @@ class ChordsEditorTransformer(
     }
 
 }
+

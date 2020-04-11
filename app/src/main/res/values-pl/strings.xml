@@ -337,4 +337,5 @@
     <string name="chords_editor_duplicate">Duplikuj</string>
     <string name="chords_editor_select_line">Linia</string>
     <string name="chords_editor_unmark_chords">Odznacz akordy</string>
+    <string name="chords_editor_detect_chords_keeping_indent">Wykryj akordy zachowując wcięcia</string>
 </resources>
