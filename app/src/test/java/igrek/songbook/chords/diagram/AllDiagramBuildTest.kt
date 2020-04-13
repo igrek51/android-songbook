@@ -11,7 +11,7 @@ class AllDiagramBuildTest {
 
     @Test
     fun test_all_guitar_diagrams_build() {
-        allGuitarChordsDiagrams.get().forEach { (_, diagrams) ->
+        allGuitarChordsDiagrams.forEach { (_, diagrams) ->
             diagrams.forEach { diagram ->
                 guitarBuilder.buildDiagram(diagram)
             }
@@ -20,7 +20,7 @@ class AllDiagramBuildTest {
 
     @Test
     fun test_all_ukulele_diagrams_build() {
-        allUkuleleChordsDiagrams.get().forEach { (_, diagrams) ->
+        allUkuleleChordsDiagrams.forEach { (_, diagrams) ->
             diagrams.forEach { diagram ->
                 ukuleleBuilder.buildDiagram(diagram)
             }
@@ -29,7 +29,7 @@ class AllDiagramBuildTest {
 
     @Test
     fun test_all_mandolin_diagrams_build() {
-        allMandolinChordsDiagrams.get().forEach { (_, diagrams) ->
+        allMandolinChordsDiagrams.forEach { (_, diagrams) ->
             diagrams.forEach { diagram ->
                 mandolinBuilder.buildDiagram(diagram)
             }

@@ -61,9 +61,9 @@ class ChordsDiagramsService {
 
     private fun getChordDiagrams(instrument: ChordsInstrument): Map<String, List<String>> {
         return when (instrument) {
-            ChordsInstrument.GUITAR -> allGuitarChordsDiagrams.get()
-            ChordsInstrument.UKULELE -> allUkuleleChordsDiagrams.get()
-            ChordsInstrument.MANDOLIN -> allMandolinChordsDiagrams.get()
+            ChordsInstrument.GUITAR -> allGuitarChordsDiagrams
+            ChordsInstrument.UKULELE -> allUkuleleChordsDiagrams
+            ChordsInstrument.MANDOLIN -> allMandolinChordsDiagrams
         }
     }
 

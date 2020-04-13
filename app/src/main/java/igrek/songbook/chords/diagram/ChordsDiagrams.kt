@@ -1,7 +1,5 @@
 package igrek.songbook.chords.diagram
 
-import igrek.songbook.util.lookup.SimpleCache
-
 val guitarChordsDiagrams: Map<String, List<String>> = hashMapOf(
 
         "C" to listOf("x,3,2,0,1,0", "8,10,10,9,8,8", "x,3,5,5,5,3", "x,x,10,12,13,12", "x,x,5,5,5,8"),
@@ -51,6 +49,7 @@ val guitarChordsDiagrams: Map<String, List<String>> = hashMapOf(
         "Cdim7" to listOf("8,x,7,8,7,x", "11,x,10,11,10,x", "5,x,4,5,4,x", "2,x,1,2,1,x", "14,x,13,14,13,x", "x,3,4,2,4,x", "x,9,10,8,10,x", "x,6,7,5,7,x", "x,12,13,11,13,x", "x,x,10,11,10,11"),
         "C5" to listOf("8,10,x,x,x,x", "8,10,10,x,x,x", "x,10,10,x,x,x", "x,3,5,x,x,x", "x,3,5,5,x,x", "x,x,5,5,x,x", "x,x,10,12,x,x", "x,x,10,12,13,x", "x,x,x,0,1,x", "x,x,x,12,13,x"),
         "Csus4" to listOf("8,10,10,10,8,8", "x,3,5,5,6,3", "x,x,10,12,13,13", "x,3,3,0,1,x", "x,x,5,5,6,8", "x,x,10,10,8,8"),
+        "Csus" to listOf("8,10,10,10,8,8", "x,3,5,5,6,3", "x,x,10,12,13,13", "x,3,3,0,1,x", "x,x,5,5,6,8", "x,x,10,10,8,8"),
         "Csus2" to listOf("x,3,5,5,3,3", "x,x,10,12,13,10"),
         "Csus2sus4" to listOf("8,8,10,10,8,10", "x,3,3,5,3,3", "x,x,10,10,13,10"),
         "C-5" to listOf("x,3,4,5,5,x", "8,9,10,9,x,x"),
@@ -103,6 +102,7 @@ val guitarChordsDiagrams: Map<String, List<String>> = hashMapOf(
         "C#/Dbdim7" to listOf("9,x,8,9,8,x", "12,x,11,12,11,x", "6,x,5,6,5,x", "3,x,2,3,2,x", "15,x,14,15,14,x", "x,4,5,3,5,x", "x,10,11,9,11,x", "x,7,8,6,8,x", "x,1,2,0,2,x", "x,13,14,12,14,x"),
         "C#/Db5" to listOf("9,11,x,x,x,x", "9,11,11,x,x,x", "x,11,11,x,x,x", "x,4,6,x,x,x", "x,4,6,6,x,x", "x,x,6,6,x,x", "x,x,11,13,x,x", "x,x,11,13,14,x", "x,x,x,1,2,x", "x,x,x,13,14,x"),
         "C#/Dbsus4" to listOf("9,11,11,11,9,9", "x,4,6,6,7,4", "x,x,11,13,14,14", "x,4,4,1,2,x", "x,x,6,6,7,9", "x,x,11,11,9,9"),
+        "C#/Dbsus" to listOf("9,11,11,11,9,9", "x,4,6,6,7,4", "x,x,11,13,14,14", "x,4,4,1,2,x", "x,x,6,6,7,9", "x,x,11,11,9,9"),
         "C#/Dbsus2" to listOf("x,4,6,6,4,4", "x,x,11,13,14,11"),
         "C#/Dbsus2sus4" to listOf("9,9,11,11,9,11", "x,4,4,6,4,4", "x,x,11,11,14,11"),
         "C#/Db-5" to listOf("x,4,5,6,6,x", "9,10,11,10,x,x"),
@@ -155,6 +155,7 @@ val guitarChordsDiagrams: Map<String, List<String>> = hashMapOf(
         "Ddim7" to listOf("10,x,9,10,9,x", "1,x,0,1,0,x", "13,x,12,13,12,x", "7,x,6,7,6,x", "4,x,3,4,3,x", "x,5,6,4,6,x", "x,11,12,10,12,x", "x,8,9,7,9,x", "x,2,3,1,3,x", "x,x,0,1,0,1"),
         "D5" to listOf("10,12,x,x,x,x", "10,12,12,x,x,x", "x,0,0,x,x,x", "x,12,12,x,x,x", "x,5,7,x,x,x", "x,5,7,7,x,x", "x,x,7,7,x,x", "x,x,0,2,x,x", "x,x,12,14,x,x", "x,x,0,2,3,x"),
         "Dsus4" to listOf("10,12,12,12,10,10", "x,5,7,7,8,5", "x,x,0,2,3,3", "x,x,12,14,15,15", "x,5,5,2,3,x", "x,x,7,7,8,10", "x,x,12,12,10,10"),
+        "Dsus" to listOf("10,12,12,12,10,10", "x,5,7,7,8,5", "x,x,0,2,3,3", "x,x,12,14,15,15", "x,5,5,2,3,x", "x,x,7,7,8,10", "x,x,12,12,10,10"),
         "Dsus2" to listOf("x,5,7,7,5,5", "x,x,0,2,3,0", "x,x,12,14,15,12"),
         "Dsus2sus4" to listOf("10,10,12,12,10,12", "x,5,5,7,5,5", "x,x,0,0,3,0", "x,x,12,12,15,12"),
         "D-5" to listOf("x,5,6,7,7,x", "10,11,12,11,x,x"),
@@ -207,6 +208,7 @@ val guitarChordsDiagrams: Map<String, List<String>> = hashMapOf(
         "D#/Ebdim7" to listOf("11,x,10,11,10,x", "2,x,1,2,1,x", "14,x,13,14,13,x", "8,x,7,8,7,x", "5,x,4,5,4,x", "x,6,7,5,7,x", "x,12,13,11,13,x", "x,9,10,8,10,x", "x,3,4,2,4,x", "x,x,1,2,1,2"),
         "D#/Eb5" to listOf("11,13,x,x,x,x", "11,13,13,x,x,x", "x,1,1,x,x,x", "x,13,13,x,x,x", "x,6,8,x,x,x", "x,6,8,8,x,x", "x,x,8,8,x,x", "x,x,1,3,x,x", "x,x,13,15,x,x", "x,x,1,3,4,x"),
         "D#/Ebsus4" to listOf("11,13,13,13,11,11", "x,6,8,8,9,6", "x,x,1,3,4,4", "x,6,6,3,4,x", "x,x,8,8,9,11", "x,x,13,13,11,11"),
+        "D#/Ebsus" to listOf("11,13,13,13,11,11", "x,6,8,8,9,6", "x,x,1,3,4,4", "x,6,6,3,4,x", "x,x,8,8,9,11", "x,x,13,13,11,11"),
         "D#/Ebsus2" to listOf("x,6,8,8,6,6", "x,x,1,3,4,1"),
         "D#/Ebsus2sus4" to listOf("11,11,13,13,11,13", "x,6,6,8,6,6", "x,x,1,1,4,1"),
         "D#/Eb-5" to listOf("x,6,7,8,8,x", "11,12,13,12,x,x"),
@@ -259,6 +261,7 @@ val guitarChordsDiagrams: Map<String, List<String>> = hashMapOf(
         "Edim7" to listOf("12,x,11,12,11,x", "3,x,2,3,2,x", "15,x,14,15,14,x", "9,x,8,9,8,x", "6,x,5,6,5,x", "x,7,8,6,8,x", "x,1,2,0,2,x", "x,13,14,12,14,x", "x,10,11,9,11,x", "x,4,5,3,5,x"),
         "E5" to listOf("0,2,x,x,x,x", "12,14,x,x,x,x", "0,2,2,x,x,x", "12,14,14,x,x,x", "x,2,2,x,x,x", "x,14,14,x,x,x", "x,7,9,x,x,x", "x,7,9,9,x,x", "x,x,9,9,x,x", "x,x,2,4,x,x"),
         "Esus4" to listOf("0,2,2,2,0,0", "12,14,14,14,12,12", "x,7,9,9,10,7", "x,x,2,4,5,5", "x,7,7,4,5,x", "x,x,9,9,10,12", "x,x,2,2,0,0", "x,x,14,14,12,12"),
+        "Esus" to listOf("0,2,2,2,0,0", "12,14,14,14,12,12", "x,7,9,9,10,7", "x,x,2,4,5,5", "x,7,7,4,5,x", "x,x,9,9,10,12", "x,x,2,2,0,0", "x,x,14,14,12,12"),
         "Esus2" to listOf("x,7,9,9,7,7", "x,x,2,4,5,2"),
         "Esus2sus4" to listOf("0,0,2,2,0,2", "12,12,14,14,12,14", "x,7,7,9,7,7", "x,x,2,2,5,2"),
         "E-5" to listOf("x,7,8,9,9,x", "0,1,2,1,x,x", "12,13,14,13,x,x"),
@@ -311,6 +314,7 @@ val guitarChordsDiagrams: Map<String, List<String>> = hashMapOf(
         "Fdim7" to listOf("1,x,0,1,0,x", "13,x,12,13,12,x", "4,x,3,4,3,x", "10,x,9,10,9,x", "7,x,6,7,6,x", "x,8,9,7,9,x", "x,2,3,1,3,x", "x,11,12,10,12,x", "x,5,6,4,6,x", "x,x,3,4,3,4"),
         "F5" to listOf("1,3,x,x,x,x", "13,15,x,x,x,x", "1,3,3,x,x,x", "13,15,15,x,x,x", "x,3,3,x,x,x", "x,8,10,x,x,x", "x,8,10,10,x,x", "x,x,10,10,x,x", "x,x,3,5,x,x", "x,x,3,5,6,x"),
         "Fsus4" to listOf("1,3,3,3,1,1", "13,15,15,15,13,13", "x,8,10,10,11,8", "x,x,3,5,6,6", "x,8,8,5,6,x", "x,x,10,10,11,13", "x,x,3,3,1,1"),
+        "Fsus" to listOf("1,3,3,3,1,1", "13,15,15,15,13,13", "x,8,10,10,11,8", "x,x,3,5,6,6", "x,8,8,5,6,x", "x,x,10,10,11,13", "x,x,3,3,1,1"),
         "Fsus2" to listOf("x,8,10,10,8,8", "x,x,3,5,6,3"),
         "Fsus2sus4" to listOf("1,1,3,3,1,3", "13,13,15,15,13,15", "x,8,8,10,8,8", "x,x,3,3,6,3"),
         "F-5" to listOf("x,8,9,10,10,x", "1,2,3,2,x,x", "13,14,15,14,x,x"),
@@ -363,6 +367,7 @@ val guitarChordsDiagrams: Map<String, List<String>> = hashMapOf(
         "F#/Gbdim7" to listOf("2,x,1,2,1,x", "14,x,13,14,13,x", "5,x,4,5,4,x", "11,x,10,11,10,x", "8,x,7,8,7,x", "x,9,10,8,10,x", "x,3,4,2,4,x", "x,12,13,11,13,x", "x,6,7,5,7,x", "x,x,4,5,4,5"),
         "F#/Gb5" to listOf("2,4,x,x,x,x", "2,4,4,x,x,x", "x,4,4,x,x,x", "x,9,11,x,x,x", "x,9,11,11,x,x", "x,x,11,11,x,x", "x,x,4,6,x,x", "x,x,4,6,7,x", "x,x,x,6,7,x", "x,x,x,11,14,x"),
         "F#/Gbsus4" to listOf("2,4,4,4,2,2", "x,9,11,11,12,9", "x,x,4,6,7,7", "x,9,9,6,7,x", "x,x,11,11,12,14", "x,x,4,4,2,2"),
+        "F#/Gbsus" to listOf("2,4,4,4,2,2", "x,9,11,11,12,9", "x,x,4,6,7,7", "x,9,9,6,7,x", "x,x,11,11,12,14", "x,x,4,4,2,2"),
         "F#/Gbsus2" to listOf("x,9,11,11,9,9", "x,x,4,6,7,4"),
         "F#/Gbsus2sus4" to listOf("2,2,4,4,2,4", "x,9,9,11,9,9", "x,x,4,4,7,4"),
         "F#/Gb-5" to listOf("x,9,10,11,11,x", "2,3,4,3,x,x"),
@@ -416,6 +421,7 @@ val guitarChordsDiagrams: Map<String, List<String>> = hashMapOf(
         "Gdim7" to listOf("3,x,2,3,2,x", "6,x,5,6,5,x", "12,x,11,12,11,x", "9,x,8,9,8,x", "x,10,11,9,11,x", "x,4,5,3,5,x", "x,1,2,0,2,x", "x,13,14,12,14,x", "x,7,8,6,8,x", "x,x,5,6,5,6"),
         "G5" to listOf("3,5,x,x,x,x", "3,5,5,x,x,x", "x,5,5,x,x,x", "x,10,12,x,x,x", "x,10,12,12,x,x", "x,x,0,0,x,x", "x,x,12,12,x,x", "x,x,5,7,x,x", "x,x,5,7,8,x", "x,x,x,7,8,x"),
         "Gsus4" to listOf("3,5,5,5,3,3", "x,10,12,12,13,10", "x,x,5,7,8,8", "x,10,10,7,8,x", "x,x,0,0,1,3", "x,x,5,5,3,3"),
+        "Gsus" to listOf("3,5,5,5,3,3", "x,10,12,12,13,10", "x,x,5,7,8,8", "x,10,10,7,8,x", "x,x,0,0,1,3", "x,x,5,5,3,3"),
         "Gsus2" to listOf("x,10,12,12,10,10", "x,x,5,7,8,5"),
         "Gsus2sus4" to listOf("3,3,5,5,3,5", "x,10,10,12,10,10", "x,x,5,5,8,5"),
         "G-5" to listOf("x,10,11,12,12,x", "3,4,5,4,x,x"),
@@ -468,6 +474,7 @@ val guitarChordsDiagrams: Map<String, List<String>> = hashMapOf(
         "G#/Abdim7" to listOf("4,x,3,4,3,x", "7,x,6,7,6,x", "1,x,0,1,0,x", "13,x,12,13,12,x", "10,x,9,10,9,x", "x,11,12,10,12,x", "x,5,6,4,6,x", "x,2,3,1,3,x", "x,14,15,13,15,x", "x,8,9,7,9,x"),
         "G#/Ab5" to listOf("4,6,x,x,x,x", "4,6,6,x,x,x", "x,6,6,x,x,x", "x,11,13,x,x,x", "x,11,13,13,x,x", "x,x,1,1,x,x", "x,x,13,13,x,x", "x,x,6,8,x,x", "x,x,6,8,9,x", "x,x,x,8,9,x"),
         "G#/Absus4" to listOf("4,6,6,6,4,4", "x,11,13,13,14,11", "x,x,6,8,9,9", "x,11,11,8,9,x", "x,x,1,1,2,4", "x,x,6,6,4,4"),
+        "G#/Absus" to listOf("4,6,6,6,4,4", "x,11,13,13,14,11", "x,x,6,8,9,9", "x,11,11,8,9,x", "x,x,1,1,2,4", "x,x,6,6,4,4"),
         "G#/Absus2" to listOf("x,11,13,13,11,11", "x,x,6,8,9,6"),
         "G#/Absus2sus4" to listOf("4,4,6,6,4,6", "x,11,11,13,11,11", "x,x,6,6,9,6"),
         "G#/Ab-5" to listOf("x,11,12,13,13,x", "4,5,6,5,x,x"),
@@ -520,6 +527,7 @@ val guitarChordsDiagrams: Map<String, List<String>> = hashMapOf(
         "Adim7" to listOf("5,x,4,5,4,x", "8,x,7,8,7,x", "2,x,1,2,1,x", "14,x,13,14,13,x", "11,x,10,11,10,x", "x,12,13,11,13,x", "x,6,7,5,7,x", "x,3,4,2,4,x", "x,9,10,8,10,x", "x,x,7,8,7,8"),
         "A5" to listOf("5,7,x,x,x,x", "5,7,7,x,x,x", "x,7,7,x,x,x", "x,0,2,x,x,x", "x,12,14,x,x,x", "x,0,2,2,x,x", "x,12,14,14,x,x", "x,x,2,2,x,x", "x,x,14,14,x,x", "x,x,7,9,x,x"),
         "Asus4" to listOf("5,7,7,7,5,5", "x,0,2,2,3,0", "x,12,14,14,15,12", "x,x,7,9,10,10", "x,12,12,9,10,x", "x,x,2,2,3,5", "x,x,7,7,5,5"),
+        "Asus" to listOf("5,7,7,7,5,5", "x,0,2,2,3,0", "x,12,14,14,15,12", "x,x,7,9,10,10", "x,12,12,9,10,x", "x,x,2,2,3,5", "x,x,7,7,5,5"),
         "Asus2" to listOf("x,0,2,2,0,0", "x,12,14,14,12,12", "x,x,7,9,10,7"),
         "Asus2sus4" to listOf("5,5,7,7,5,7", "x,0,0,2,0,0", "x,12,12,14,12,12", "x,x,7,7,10,7"),
         "A-5" to listOf("x,0,1,2,2,x", "x,12,13,14,14,x", "5,6,7,6,x,x"),
@@ -573,6 +581,7 @@ val guitarChordsDiagrams: Map<String, List<String>> = hashMapOf(
         "A#/Bbdim7" to listOf("6,x,5,6,5,x", "9,x,8,9,8,x", "3,x,2,3,2,x", "12,x,11,12,11,x", "x,1,2,0,2,x", "x,13,14,12,14,x", "x,7,8,6,8,x", "x,4,5,3,5,x", "x,10,11,9,11,x", "x,x,8,9,8,9"),
         "A#/Bb5" to listOf("6,8,x,x,x,x", "6,8,8,x,x,x", "x,8,8,x,x,x", "x,1,3,x,x,x", "x,13,15,x,x,x", "x,1,3,3,x,x", "x,13,15,15,x,x", "x,x,3,3,x,x", "x,x,8,10,x,x", "x,x,8,10,11,x"),
         "A#/Bbsus4" to listOf("6,8,8,8,6,6", "x,1,3,3,4,1", "x,x,8,10,11,11", "x,13,13,10,11,x", "x,x,3,3,4,6", "x,x,8,8,6,6"),
+        "A#/Bbsus" to listOf("6,8,8,8,6,6", "x,1,3,3,4,1", "x,x,8,10,11,11", "x,13,13,10,11,x", "x,x,3,3,4,6", "x,x,8,8,6,6"),
         "A#/Bbsus2" to listOf("x,1,3,3,1,1", "x,13,15,15,13,13", "x,x,8,10,11,8"),
         "A#/Bbsus2sus4" to listOf("6,6,8,8,6,8", "x,1,1,3,1,1", "x,13,13,15,13,13", "x,x,8,8,11,8"),
         "A#/Bb-5" to listOf("x,1,2,3,3,x", "x,13,14,15,15,x", "6,7,8,7,x,x"),
@@ -625,6 +634,7 @@ val guitarChordsDiagrams: Map<String, List<String>> = hashMapOf(
         "Bdim7" to listOf("7,x,6,7,6,x", "10,x,9,10,9,x", "4,x,3,4,3,x", "1,x,0,1,0,x", "13,x,12,13,12,x", "x,2,3,1,3,x", "x,14,15,13,15,x", "x,8,9,7,9,x", "x,5,6,4,6,x", "x,11,12,10,12,x"),
         "B5" to listOf("7,9,x,x,x,x", "7,9,9,x,x,x", "x,9,9,x,x,x", "x,2,4,x,x,x", "x,2,4,4,x,x", "x,x,4,4,x,x", "x,x,9,11,x,x", "x,x,9,11,12,x", "x,x,x,11,12,x", "x,x,x,4,7,x"),
         "Bsus4" to listOf("7,9,9,9,7,7", "x,2,4,4,5,2", "x,x,9,11,12,12", "x,14,14,11,12,x", "x,x,4,4,5,7", "x,x,9,9,7,7"),
+        "Bsus" to listOf("7,9,9,9,7,7", "x,2,4,4,5,2", "x,x,9,11,12,12", "x,14,14,11,12,x", "x,x,4,4,5,7", "x,x,9,9,7,7"),
         "Bsus2" to listOf("x,2,4,4,2,2", "x,x,9,11,12,9"),
         "Bsus2sus4" to listOf("7,7,9,9,7,9", "x,2,2,4,2,2", "x,x,9,9,12,9"),
         "B-5" to listOf("x,2,3,4,4,x", "7,8,9,8,x,x"),
@@ -751,15 +761,15 @@ private val chordDiagramPrefixAliases: Map<String, List<String>> = hashMapOf(
         "A#/Bb" to listOf("A#", "Bb")
 )
 
-val allGuitarChordsDiagrams: SimpleCache<Map<String, List<String>>> = SimpleCache {
+val allGuitarChordsDiagrams: Map<String, List<String>> by lazy {
     populateAllChordDiagrams(guitarChordsDiagrams)
 }
 
-val allUkuleleChordsDiagrams: SimpleCache<Map<String, List<String>>> = SimpleCache {
+val allUkuleleChordsDiagrams: Map<String, List<String>> by lazy {
     populateAllChordDiagrams(ukuleleChordsDiagrams)
 }
 
-val allMandolinChordsDiagrams: SimpleCache<Map<String, List<String>>> = SimpleCache {
+val allMandolinChordsDiagrams: Map<String, List<String>> by lazy {
     populateAllChordDiagrams(mandolinChordsDiagrams)
 }
 
