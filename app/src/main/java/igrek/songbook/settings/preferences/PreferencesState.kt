@@ -32,7 +32,7 @@ class PreferencesState {
     var appExecutionCount: Long by PreferenceDelegate(PreferencesField.AppExecutionCount)
     var adsStatus: Long by PreferenceDelegate(PreferencesField.AdsStatus)
     var chordsDisplayStyle: DisplayStyle by PreferenceDelegate(PreferencesField.ChordsDisplayStyle)
-    var chordsEditorFontTypeface: FontTypeface by PreferenceDelegate(PreferencesField.FontTypefaceId)
+    var chordsEditorFontTypeface: FontTypeface by PreferenceDelegate(PreferencesField.ChordsEditorFontTypeface)
 
     init {
         DaggerIoc.factoryComponent.inject(this)

@@ -88,7 +88,7 @@
     <PreferenceCategory android:title="@string/settings_chords_editor">
         <ListPreference
             android:key="chordsEditorFontTypeface"
-            android:title="@string/settings_typeface"
+            android:title="@string/settings_chords_editor_typeface"
             android:summary="%s"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>

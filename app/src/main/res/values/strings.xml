@@ -362,4 +362,5 @@
     <string name="chords_editor_unmark_chords">Unmark chords</string>
     <string name="chords_editor_detect_chords_keeping_indent">Detect chords preserving indentation</string>
     <string name="settings_chords_editor">Song Editor</string>
+    <string name="settings_chords_editor_typeface">Editor font typeface</string>
 </resources>
