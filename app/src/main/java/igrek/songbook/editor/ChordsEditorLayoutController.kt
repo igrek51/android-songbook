@@ -125,7 +125,7 @@ class ChordsEditorLayoutController : MainLayout {
     }
 
     private fun configureTypeface(edit: EditText) {
-        edit.typeface = when (preferencesState.fontTypeface) {
+        edit.typeface = when (preferencesState.chordsEditorFontTypeface) {
             FontTypeface.SANS_SERIF -> Typeface.SANS_SERIF
             FontTypeface.SERIF -> Typeface.SERIF
             FontTypeface.MONOSPACE -> Typeface.MONOSPACE

@@ -71,6 +71,12 @@ enum class PreferencesField constructor(
             deserializer = DisplayStyle.Companion::parseById
     )),
 
+    ChordsEditorFontTypeface(GenericStringIdPreferenceType(
+            defaultValue = FontTypeface.default,
+            serializer = FontTypeface::id,
+            deserializer = FontTypeface.Companion::parseById
+    )),
+
     ;
 
     constructor(defaultValue: String) : this(StringPreferenceType(defaultValue))

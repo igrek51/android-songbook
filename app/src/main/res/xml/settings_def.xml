@@ -77,6 +77,22 @@
             app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/settings_custom_songs">
+        <SwitchPreference
+            android:key="customSongsGroupCategories"
+            android:title="@string/settings_group_custom_songs"
+            android:summary="@string/settings_group_custom_songs_hint"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/settings_chords_editor">
+        <ListPreference
+            android:key="chordsEditorFontTypeface"
+            android:title="@string/settings_typeface"
+            android:summary="%s"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/settings_random_song_section">
         <SwitchPreference
             android:key="randomFavouriteSongsOnly"
@@ -106,14 +122,6 @@
             android:title="@string/settings_toggle_all_artists"
             android:key="settingsToggleAllArtists"
             android:summary=""
-            app:iconSpaceReserved="false"/>
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="@string/settings_custom_songs">
-        <SwitchPreference
-            android:key="customSongsGroupCategories"
-            android:title="@string/settings_group_custom_songs"
-            android:summary="@string/settings_group_custom_songs_hint"
             app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 

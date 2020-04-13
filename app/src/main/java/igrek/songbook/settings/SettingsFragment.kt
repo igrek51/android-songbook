@@ -125,6 +125,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
         )
 
+        setupListPreference("chordsEditorFontTypeface",
+                lyricsThemeService.get().fontTypefaceEntries(),
+                onLoad = { preferencesState.get().chordsEditorFontTypeface.id },
+                onSave = { id: String ->
+                    preferencesState.get().chordsEditorFontTypeface = FontTypeface.parseById(id)
+                            ?: FontTypeface.default
+                }
+        )
+
         setupListPreference("colorScheme",
                 lyricsThemeService.get().colorSchemeEntries(),
                 onLoad = { preferencesState.get().colorScheme.id.toString() },

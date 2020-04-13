@@ -361,4 +361,5 @@
     <string name="chords_editor_select_line">Line</string>
     <string name="chords_editor_unmark_chords">Unmark chords</string>
     <string name="chords_editor_detect_chords_keeping_indent">Detect chords preserving indentation</string>
+    <string name="settings_chords_editor">Chords Editor</string>
 </resources>
