@@ -370,14 +370,18 @@ class ChordsEditorTransformer(
         val (start1, _) = findLineRange(text, selStart)
         val (_, end2) = findLineRange(text, selEnd)
 
-        val selected = text.substring(start1, end2)
-        val result = text.take(end2) + "\n" + selected + text.drop(end2)
+        var copied = text.substring(start1, end2)
+        val prefix = text.take(end2)
+        val suffix = text.drop(end2)
 
-        val newStart = end2 + 1
-        val newEnd = end2 + 1 + selected.length
+        if (!prefix.endsWith("\n") && !copied.startsWith("\n"))
+            copied = "\n$copied"
+        if (!copied.endsWith("\n") && !suffix.startsWith("\n"))
+            copied = "$copied\n"
 
+        val result = prefix + copied + suffix
         textEditor.setText(result)
-        textEditor.setSelection(newStart, newEnd)
+        textEditor.setSelection(end2, end2 + copied.length)
     }
 
     fun selectNextLine() {
@@ -385,14 +389,10 @@ class ChordsEditorTransformer(
         val (selStart, selEnd) = textEditor.getSelection()
         if (hasAnySelection()) {
             val (start1, _) = findLineRange(text, selStart)
-            val nextEndOffset = if (start1 == selStart) 1 else 0
-            val (_, end2) = findLineRange(text, selEnd + nextEndOffset)
+            val (_, end2) = findLineRange(text, selEnd)
             textEditor.setSelection(start1, end2)
         } else {
-            var (start, end) = findLineRange(text, selStart)
-            if (start == end && end + 1 <= text.length) { // empty line
-                end += 1
-            }
+            val (start, end) = findLineRange(text, selStart)
             textEditor.setSelection(start, end)
         }
     }
@@ -406,18 +406,21 @@ class ChordsEditorTransformer(
         val before = text.take(at)
         val after = text.drop(at)
         val beforeIndex = before.lastIndexOf('\n') + 1 // even for -1
-        var afterIndex = after.indexOf('\n')
-        if (afterIndex == -1)
-            afterIndex = text.length
-        else
-            afterIndex += before.length
-        return beforeIndex to afterIndex
+        val afterIndex2 = when (val afterIndex = after.indexOf('\n')) {
+            -1 -> text.length
+            else -> afterIndex + before.length + 1
+        }
+        return beforeIndex to afterIndex2.trimTo(text.length)
     }
 
     fun unmarkChords() {
         transformLyrics { lyrics ->
             lyrics.replace("[", "").replace("]", "")
         }
+    }
+
+    private fun Int.trimTo(max: Int): Int {
+        return if (this > max) max else this
     }
 
 }

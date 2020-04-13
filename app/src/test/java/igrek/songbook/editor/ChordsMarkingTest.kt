@@ -7,7 +7,7 @@ import org.junit.Test
 import org.mockito.Mockito
 
 
-class ChordsEditorTransformerTest {
+class ChordsMarkingTest {
 
     private val textEditor = EmptyTextEditor()
 
