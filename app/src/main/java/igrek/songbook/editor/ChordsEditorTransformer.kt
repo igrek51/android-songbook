@@ -389,7 +389,10 @@ class ChordsEditorTransformer(
             val (_, end2) = findLineRange(text, selEnd + nextEndOffset)
             textEditor.setSelection(start1, end2)
         } else {
-            val (start, end) = findLineRange(text, selStart)
+            var (start, end) = findLineRange(text, selStart)
+            if (start == end && end + 1 <= text.length) { // empty line
+                end += 1
+            }
             textEditor.setSelection(start, end)
         }
     }
