@@ -130,7 +130,27 @@
         \n\n6. You can use dash "-" to couple quickly changing chords: \"D Dsus2-D-Dsus4\" or use parentheses \"()\" to indicate some chords optional: [C G (G7)].
         \n\n7. Reformat and validate your song before saving it, especially when you are going to publish it.
         \n
-        \nThere are many useful tools in editor: undoing changes, inserting suitable bracket (either opening or closing one), inserting brackets pair, moving cursor by one character, copying &amp; pasting chords, reformatting to standard chords format, automatic chords detection, moving chords from line above to same line among the words or moving at the end of the line, validating chords, selecting whole lines, duplicating lines, converting from other chords notations, removing redundant empty lines.
+        \nThere are many useful tools in editor:
+        \n- Undo - revert last changes
+        \n- Line - select whole line or next lines
+        \n- Duplicate - duplicate selection
+        \n- Reformat - Reformat and rearrange to standard chords format
+        \n- Validate - Validate chords
+        \n- Detect chords - Find and mark chords automatically based on the chosen chords notation
+        \n- Transform - Open menu with more transformations
+        \n- Move chords from upper line to matching words - merge each two lines by moving chords (aligned with spaces) from upper line to lower line with lyrics, moving them to matching words they are above.
+        \n- Move chords from upper line to the right - merge each two lines (upper with chords, lower with lyrics) by moving all chords to the end of line after lyrics
+        \n- Convert from other chords notation - Convert all chord from other chords notation to the chosen one for a song
+        \n- Remove doubled blank lines - Replace each double Enter (line break) with single one
+        \n- Replace Fis -> F# - Replace all sound names ending with \"is\" to \"#\"
+        \n- Unmark chords - Drop all chord marks: \"[\" and \"]\"
+        \n- Detect chords preserving indentation - Find and mark chords automatically but keeping their original horizontal position (aligned with spaces) by removing 2 redundant spaces for each inserted \"[]\" characters.
+        \n- \u276E - move cursor by one character left
+        \n- \u276F - move cursor by one character right
+        \n- [ / ] - insert suitable bracket (either opening or closing one)
+        \n- [Mark] - Mark selection with chord brackets pair
+        \n- [Copy] - Copy selected chords
+        \n- [Paste] - Paste copied chords
     </string>
     <string name="import_song_content_hint">
         Song lyrics with [chords] in the same line
@@ -156,7 +176,7 @@
     <string name="updating_db_in_progress">Updating songs…</string>
     <string name="update_is_available">New songs update is available.</string>
     <string name="action_update">Update</string>
-    <string name="edit_song_add_chord">[add]</string>
+    <string name="edit_song_add_chord">[Mark]</string>
     <string name="edit_song_category_name_label">Artist / category:</string>
     <string name="edit_song_category_name_hint">Artist or category name</string>
     <string name="contact_subject_hint">Subject</string>
@@ -220,7 +240,7 @@
     <string name="edit_song_chords_notation">Song chords notation:</string>
     <string name="edit_song_undo">Undo</string>
     <string name="chords_editor_reformat_trim">Reformat</string>
-    <string name="chords_editor_move_chords_to_right">Move chords from top to line end</string>
+    <string name="chords_editor_move_chords_to_right">Move chords from upper line to the right</string>
     <string name="chords_editor_convert_from_notation">Convert from other chords notation</string>
     <string name="chords_editor_fis_to_sharp"><![CDATA[Replace Fis -> F#]]></string>
     <string name="edit_song_add_chord_splitter">[ / ]</string>

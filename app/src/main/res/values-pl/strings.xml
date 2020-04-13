@@ -130,7 +130,27 @@
         \n\n6. Możesz użyć kreski "-", aby połączyć szybko zmieniające się akordy: \"D Dsus2-D-Dsus4\" lub użyć nawiasów \"()\", aby wskazać opcjonalność akordów: [C G (G7)].
         \n\n7. Przed zapisaniem piosenki sprawdź jej poprawność i skonwertuj do standardowego formatu, szczególnie jeśli zamierzasz udostępnić ją publicznie.
         \n
-        \nEdytor posiada wiele przydatnych narzędzi: cofanie zmian, wstawianie pasującego nawiasu (otwierającego lub zamykającego), wstawianie pary nawiasów, przesuwanie kursora o jeden znak, kopiowanie i wklejanie akordów, porządkowanie do standardowego formatu, automatyczne wykrywanie akordów, przesuwanie akordów z linii wyżej pomiędzy słowa lub na koniec linii, sprawdzanie poprawności akordów, zaznaczanie całych linii, powielanie linii, konwertowanie z innych notacji akordów, usuwanie zbędnych pustych linii.
+        \nEdytor posiada wiele przydatnych narzędzi:
+        \n- Cofnij - cofnięcie ostatnich zmian
+        \n- Linia - zaznacz całą linię lub następne linie
+        \n- Duplikuj - powiel zaznaczenie
+        \n- Uporządkuj - Sformatuj tekst i akordy do standardowego fromatu
+        \n- Sprawdź - Zweryfikuj poprawność akordów
+        \n- Wykryj akordy - Automatycznie znajdź i oznacz akordy na podstawie wybranej notacji akordów
+        \n- Transformuj - Otwiera listę pozostałych transformacji
+        \n- Przesuń akordy z górnych linii do pasujących słów - łączy po dwie linie (górną z akordami i dolną z tekstem), przesuwając akordy (wyrównane spacjami) z górnej linii to dolnej, dopasowując akordy do słów, nad którymi się znajdują.
+        \n- Przesuń akordy z góry na koniec linii - łączy po dwie linie (górną z akordami i dolną z tekstem), przesuwając wszystkie akordy na koniec linii za tekstem
+        \n- Konwertuj z innej notacji akordów - Konwertuje wszystkie akordy z innej notacji akordów na notację wybraną dla piosenki
+        \n- Usuń podwójne puste linie - Zamienia podwójne Entery (załamania wierszy) na pojedyncze
+        \n- Zamień Fis -> F# - Zamienia wszystkie nazwy dźwięków kończące się na \"is\" na notację \"#\"
+        \n- Odznacz akordy - Usuwa wszystkie znaczniki akordów: \"[\" i \"]\"
+        \n- Wykryj akordy zachowując wcięcia - Automatycznie znajduje i zaznacza akordy, zachowując ich oryginalną poziomą pozycję (ustawioną spacjami) poprzez usunięcie zbędnych 2 spacji na każde dodane znaczniki \"[]\".
+        \n- \u276E - przesuwa kursor o jeden znak w lewo
+        \n- \u276F - przesuwa kursor o jeden znak w prawo
+        \n- [ / ] - wstawia pasujący nawias (otwierający lub zamykający)
+        \n- [Mark] - Wstawia parę nawiasów wokół zaznaczonego tekstu
+        \n- [Copy] - Kopiuje zaznaczone akordy
+        \n- [Paste] - Wkleja skopiowane akordy
     </string>
     <string name="import_song_content_hint">
         Tekst piosenki z [akordami] w tej samej linii

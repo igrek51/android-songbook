@@ -72,7 +72,7 @@ enum class PreferencesField constructor(
     )),
 
     ChordsEditorFontTypeface(GenericStringIdPreferenceType(
-            defaultValue = FontTypeface.default,
+            defaultValue = FontTypeface.MONOSPACE,
             serializer = FontTypeface::id,
             deserializer = FontTypeface.Companion::parseById
     )),

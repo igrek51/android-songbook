@@ -130,7 +130,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 onLoad = { preferencesState.get().chordsEditorFontTypeface.id },
                 onSave = { id: String ->
                     preferencesState.get().chordsEditorFontTypeface = FontTypeface.parseById(id)
-                            ?: FontTypeface.default
+                            ?: FontTypeface.MONOSPACE
                 }
         )
 
