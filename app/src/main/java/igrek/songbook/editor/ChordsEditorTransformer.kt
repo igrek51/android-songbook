@@ -366,22 +366,27 @@ class ChordsEditorTransformer(
     fun duplicateSelection() {
         val text = textEditor.getText()
         // expand to closest lines
-        val (selStart, selEnd) = textEditor.getSelection()
-        val (start1, _) = findLineRange(text, selStart)
-        val (_, end2) = findLineRange(text, selEnd)
+        val (start, end) = when {
+            hasAnySelection() -> textEditor.getSelection()
+            else -> {
+                val (selStart, selEnd) = textEditor.getSelection()
+                val (start1, _) = findLineRange(text, selStart)
+                val (_, end2) = findLineRange(text, selEnd)
+                start1 to end2
+            }
+        }
 
-        var copied = text.substring(start1, end2)
-        val prefix = text.take(end2)
-        val suffix = text.drop(end2)
+        var copied = text.substring(start, end)
+        val prefix = text.take(end)
+        val suffix = text.drop(end)
 
-        if (!prefix.endsWith("\n") && !copied.startsWith("\n"))
+        if (end == text.length && !copied.startsWith("\n") && !copied.endsWith("\n"))
             copied = "\n$copied"
-        if (!copied.endsWith("\n") && !suffix.startsWith("\n"))
-            copied = "$copied\n"
 
         val result = prefix + copied + suffix
+
         textEditor.setText(result)
-        textEditor.setSelection(end2, end2 + copied.length)
+        textEditor.setSelection(end, end + copied.length)
     }
 
     fun selectNextLine() {
