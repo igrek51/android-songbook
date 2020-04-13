@@ -1,23 +1,48 @@
 package igrek.songbook.editor
 
-import igrek.songbook.info.UiInfoService
-import igrek.songbook.info.UiResourceService
+import igrek.songbook.mock.UiInfoServiceMock
 import igrek.songbook.settings.chordsnotation.ChordsNotation
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.mockito.Mockito
 
+
 class ChordsEditorTransformerTest {
+
+    private val textEditor = EmptyTextEditor()
 
     private val transformer = ChordsEditorTransformer(
             history = Mockito.mock(LyricsEditorHistory::class.java),
             chordsNotation = ChordsNotation.GERMAN,
-            uiResourceService = Mockito.mock(UiResourceService::class.java),
-            uiInfoService = Mockito.mock(UiInfoService::class.java),
-            textEditor = EmptyTextEditor(),
+            uiInfoService = UiInfoServiceMock(),
+            textEditor = textEditor,
     )
 
     @Test
-    fun test_transformMoveChordsAboveToRight() {
+    fun test_detectChords() {
+        textEditor.setText("""
+            F    G
+            word work Csus4 D
+            a is a [e]
+            """.trimIndent())
+        transformer.detectChords()
+        assertThat(textEditor.getText()).isEqualTo("""
+            [F]    [G]
+            word work [Csus4] [D]
+            a is [a] [e]
+            """.trimIndent())
+    }
 
+    @Test
+    fun test_detectChords_keeping_indentation() {
+        textEditor.setText("""
+            F    Gsus4 a   
+            word work  work
+            """.trimIndent())
+        transformer.detectChords(keepIndentation = true)
+        assertThat(textEditor.getText()).isEqualTo("""
+            [F]  [Gsus4][a] 
+            word work  work
+            """.trimIndent())
     }
 }

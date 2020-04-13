@@ -120,11 +120,11 @@ open class FactoryModule(private val activity: AppCompatActivity) {
 
     @Provides
     @Singleton
-    fun aUIResourceService(): UiResourceService = UiResourceService()
+    fun aUIResourceService(activity: Activity): UiResourceService = UiResourceService(activity)
 
     @Provides
     @Singleton
-    fun aUserInfoService(): UiInfoService = UiInfoService()
+    fun aUserInfoService(activity: Activity, uiResourceService: dagger.Lazy<UiResourceService>): UiInfoService = UiInfoService(activity, uiResourceService)
 
     @Provides
     @Singleton

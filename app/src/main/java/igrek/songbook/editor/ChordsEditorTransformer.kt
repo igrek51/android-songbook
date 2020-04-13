@@ -5,14 +5,12 @@ import igrek.songbook.chords.converter.ChordsConverter
 import igrek.songbook.chords.detector.ChordsDetector
 import igrek.songbook.chords.syntax.ChordNameProvider
 import igrek.songbook.info.UiInfoService
-import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
 class ChordsEditorTransformer(
         private var history: LyricsEditorHistory,
         private val chordsNotation: ChordsNotation?,
-        private val uiResourceService: UiResourceService,
         private val uiInfoService: UiInfoService,
         private val textEditor: ITextEditor,
 ) {
@@ -154,8 +152,7 @@ class ChordsEditorTransformer(
         chords.forEach { chord ->
             if (chord.isNotEmpty()) {
                 if (!detector.isWordAChord(chord) || chord in falseFriends) {
-                    val placeholder = uiResourceService.resString(R.string.chords_unknown_chord)
-                    val errorMessage = placeholder.format(chord)
+                    val errorMessage = uiInfoService.resString(R.string.chords_unknown_chord, chord)
                     throw ChordsValidationError(errorMessage)
                 }
             }
@@ -183,7 +180,7 @@ class ChordsEditorTransformer(
         if (errorMessage == null) {
             uiInfoService.showToast(R.string.chords_are_valid)
         } else {
-            val placeholder = uiResourceService.resString(R.string.chords_invalid)
+            val placeholder = uiInfoService.resString(R.string.chords_invalid)
             uiInfoService.showToast(placeholder.format(errorMessage))
         }
     }
@@ -197,7 +194,7 @@ class ChordsEditorTransformer(
         } catch (e: ChordsValidationError) {
             var errorMessage = e.errorMessage
             if (errorMessage.isNullOrEmpty())
-                errorMessage = uiResourceService.resString(e.messageResId!!)
+                errorMessage = uiInfoService.resString(e.messageResId!!)
             errorMessage
         }
     }
@@ -205,7 +202,7 @@ class ChordsEditorTransformer(
 
     fun onCopyChordClick() {
         val edited = textEditor.getText()
-        var (selStart, selEnd) = textEditor.getSelection()
+        val (selStart, selEnd) = textEditor.getSelection()
 
         var selection = edited.substring(selStart, selEnd).trim()
         if (selection.startsWith("["))
@@ -217,7 +214,7 @@ class ChordsEditorTransformer(
         if (clipboardChords.isNullOrEmpty()) {
             uiInfoService.showToast(R.string.no_chords_selected)
         } else {
-            uiInfoService.showToast(uiResourceService.resString(R.string.chords_copied, clipboardChords))
+            uiInfoService.showToast(uiInfoService.resString(R.string.chords_copied, clipboardChords))
         }
     }
 
@@ -259,23 +256,23 @@ class ChordsEditorTransformer(
     fun detectChords(keepIndentation: Boolean = false) {
         val chordsMarker = ChordsMarker(ChordsDetector(chordsNotation))
         transformLyrics { lyrics ->
-            chordsMarker.detectAndMarkChords(lyrics)
+            chordsMarker.detectAndMarkChords(lyrics, keepIndentation)
         }
         val detectedChordsNum = chordsMarker.allMarkedChords.size
         if (detectedChordsNum == 0) {
             // find chords from other notations as well
             val text = textEditor.getText()
             val genericChordsMarker = ChordsMarker(ChordsDetector())
-            genericChordsMarker.detectAndMarkChords(text)
+            genericChordsMarker.detectAndMarkChords(text, keepIndentation)
             val otherChordsDetected = genericChordsMarker.allMarkedChords
             if (otherChordsDetected.isNotEmpty()) {
-                val message = uiResourceService.resString(R.string.editor_other_chords_detected, otherChordsDetected.joinToString())
+                val message = uiInfoService.resString(R.string.editor_other_chords_detected, otherChordsDetected.joinToString())
                 uiInfoService.showToast(message)
             } else {
                 uiInfoService.showToast(R.string.no_new_chords_detected)
             }
         } else {
-            uiInfoService.showToast(uiResourceService.resString(R.string.new_chords_detected, detectedChordsNum.toString()))
+            uiInfoService.showToast(uiInfoService.resString(R.string.new_chords_detected, detectedChordsNum.toString()))
         }
     }
 

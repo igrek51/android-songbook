@@ -119,7 +119,7 @@ dependencies {
         exclude group: 'org.apache.httpcomponents'
     }
     // AdMob
-    implementation 'com.google.android.gms:play-services-ads:19.0.0'
+    implementation 'com.google.android.gms:play-services-ads:19.0.1'
     // Kotlin
     implementation "androidx.core:core-ktx:1.2.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"

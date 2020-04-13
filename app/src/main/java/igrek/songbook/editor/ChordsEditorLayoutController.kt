@@ -106,7 +106,7 @@ class ChordsEditorLayoutController : MainLayout {
             })
             softKeyboardService.showSoftKeyboard(it)
             configureTypeface(it)
-            transformer = ChordsEditorTransformer(history, chordsNotation, uiResourceService, uiInfoService, textEditor = textEditor)
+            transformer = ChordsEditorTransformer(history, chordsNotation, uiInfoService, textEditor = textEditor)
         }
 
         buttonOnClick(R.id.addChordButton) { transformer?.onWrapChordClick() }

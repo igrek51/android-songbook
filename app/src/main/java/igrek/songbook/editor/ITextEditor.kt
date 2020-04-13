@@ -31,13 +31,20 @@ class EditTextTextEditor(private val component: EditText) : ITextEditor {
 }
 
 class EmptyTextEditor : ITextEditor {
+    private var text = ""
+    private var selStart = 0
+    private var selEnd = 0
 
-    override fun setText(text: String) {}
+    override fun setText(text: String) {
+        this.text = text
+    }
 
-    override fun getText(): String = ""
+    override fun getText(): String = this.text
 
-    override fun setSelection(start: Int, end: Int) {}
+    override fun setSelection(start: Int, end: Int) {
+        this.selStart = start
+        this.selEnd = end
+    }
 
-    override fun getSelection(): Pair<Int, Int> = 0 to 0
-
+    override fun getSelection(): Pair<Int, Int> = this.selStart to this.selEnd
 }
