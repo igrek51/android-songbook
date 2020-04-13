@@ -45,4 +45,15 @@ class ChordsEditorTransformerTest {
             word work  work
             """.trimIndent())
     }
+
+    @Test
+    fun test_detect_complex_chords() {
+        textEditor.setText("""
+            Asus4-C(G)-F/G E
+            """.trimIndent())
+        transformer.detectChords()
+        assertThat(textEditor.getText()).isEqualTo("""
+            [Asus4-C(G)-F/G] [E]
+            """.trimIndent())
+    }
 }
