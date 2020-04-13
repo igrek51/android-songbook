@@ -87,7 +87,7 @@ class ChordsEditorLayoutController : MainLayout {
 
         val tooltipEditChordsLyricsInfo = layout.findViewById<ImageButton>(R.id.tooltipEditChordsLyricsInfo)
         tooltipEditChordsLyricsInfo.setOnClickListener {
-            uiInfoService.showTooltip(R.string.tooltip_edit_chords_lyrics)
+            uiInfoService.showTooltip(R.string.chords_editor_hint)
         }
 
         contentEdit = layout.findViewById<EditText>(R.id.songContentEdit)?.also {

@@ -121,7 +121,7 @@
     <string name="edit_song_title_label">Tytuł piosenki:</string>
     <string name="edit_song_title_hint">Tytuł…</string>
     <string name="edit_song_content_label">Tekst piosenki z akordami w nawiasach kwadratowych:</string>
-    <string name="tooltip_edit_chords_lyrics">Umieść tu tekst piosenki z akordami. Postaraj się trzymać następujących reguł, aby zachować spójność ze standardem piosenek:
+    <string name="chords_editor_hint">Umieść tu tekst piosenki z akordami. Postaraj się trzymać następujących reguł, aby zachować spójność ze standardem piosenek:
         \n\n1. Zaznacz akordy w nawiasach kwadratowych, np. \"między [C G# A7 F#maj7] słowami\".
         \n\n2. Mieszaj akordy z tekstem w tej samej linii, umieszczając je tuż przed słowami, gdzie występują, dokładnie wskazując moment zmiany akordu i jego akcentu w tekście, np. \"[C]And no reli[Cmaj7]gion [F]too\". Nie umieszczaj ich w osobnej linii ponad tekstem (wtedy sposób wyświetlania możesz zawsze zmienić w ustawieniach, więc pozwól innym wybrać ich ulubiony sposób wyświetlania). Umieszczanie akordów w tej samej linii jest niezmiernie ważne, bo pozwala to wyświetlać akordy zawsze w poprawnym miejscu, niezależnie od róźnych krojów czcionki i zawijania wyrazów. Nie martw się o Twój ulubiony styl wyświetlania akordów - Guitar Songbook wykona całą tą magię dla Ciebie.
         \n\n3. Jeśli fragment piosenki się powtarza (np. refren), skopiuj go we wszystkie miejsca wystąpień. Kiedy piosenka zachowuje ciągłość, ułatwi to jej późniejsze przewijanie i nie będziesz musiał przewijać piosenki za każdym razem, aby wrócić do akordów refrenu. Nie umieszczaj odnośników lub akapitów w stylu \"Refren\", \"Zwrotka\", \"Tytuł\", \"Solo\", \"Instrumental\". Umieść tylko tekst piosenki z akordami.
@@ -130,7 +130,7 @@
         \n\n6. Możesz użyć kreski "-", aby połączyć szybko zmieniające się akordy: \"D Dsus2-D-Dsus4\" lub użyć nawiasów \"()\", aby wskazać opcjonalność akordów: [C G (G7)].
         \n\n7. Przed zapisaniem piosenki sprawdź jej poprawność i skonwertuj do standardowego formatu, szczególnie jeśli zamierzasz udostępnić ją publicznie.
         \n
-        \nEdytor posiada wiele przydatnych narzędzi: cofanie zmian, wstawianie pasującego nawiasu (otwierającego lub zamykającego), wstawianie pary nawiasów, przesuwanie kursora o jeden znak, kopiowanie akordów, wklejanie akordów, porządkowanie do standardowego formatu, automatyczne wykrywanie akordów, przesuwanie akordów z linii wyżej na koniec linii, sprawdzanie poprawności akordów.
+        \nEdytor posiada wiele przydatnych narzędzi: cofanie zmian, wstawianie pasującego nawiasu (otwierającego lub zamykającego), wstawianie pary nawiasów, przesuwanie kursora o jeden znak, kopiowanie i wklejanie akordów, porządkowanie do standardowego formatu, automatyczne wykrywanie akordów, przesuwanie akordów z linii wyżej pomiędzy słowa lub na koniec linii, sprawdzanie poprawności akordów, zaznaczanie całych linii, powielanie linii, konwertowanie z innych notacji akordów, usuwanie zbędnych pustych linii.
     </string>
     <string name="import_song_content_hint">
         Tekst piosenki z [akordami] w tej samej linii
@@ -332,11 +332,11 @@
     <string name="display_style_chords_only">Tylko akordy, tekst ukryty</string>
     <string name="display_style_lyrics_only">Tylko tekst, akordy ukryte</string>
     <string name="settings_chords_display_style">Styl wyświetlania tekstu i akordów</string>
-    <string name="chords_editor_move_chords_above_to_inline">Przesuń akordy z góry do słów</string>
+    <string name="chords_editor_move_chords_above_to_inline">Przesuń akordy z górnych linii do pasujących słów</string>
     <string name="chords_editor_remove_double_empty_lines">Usuń podwójne puste linie</string>
     <string name="chords_editor_duplicate">Duplikuj</string>
     <string name="chords_editor_select_line">Linia</string>
     <string name="chords_editor_unmark_chords">Odznacz akordy</string>
     <string name="chords_editor_detect_chords_keeping_indent">Wykryj akordy zachowując wcięcia</string>
-    <string name="settings_chords_editor">Edytor akordów</string>
+    <string name="settings_chords_editor">Edytor piosenek</string>
 </resources>

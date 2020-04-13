@@ -121,7 +121,7 @@
     <string name="edit_song_title_label">Song Title:</string>
     <string name="edit_song_title_hint">Title…</string>
     <string name="edit_song_content_label">Lyrics with chords in square brackets:</string>
-    <string name="tooltip_edit_chords_lyrics">Put here the lyrics with chords. Try to stick to these following rules in order to keep songs consistent with others:
+    <string name="chords_editor_hint">Put here the lyrics with chords. Try to stick to these following rules in order to keep songs consistent with others:
         \n\n1. Mark chords by surrounding them with square brackets, e.g. \"between [C G# A7 F#maj7] words\".
         \n\n2. Mix chords with the lyrics in the same line placing them just before the words where they occur in order to precisely indicate where a chord should be accentuated, e.g. \"[C]And no reli[Cmaj7]gion [F]too\". Do not place them in a separate line above text (though you can always change your displaying style in settings - so let others choose their favourite displaying style). Placing chords in the same line is extremely important, because it allows to display chord always in correct place regardless different font styles and word wrapping. Don\'t worry about your favourite chords displaying style - Guitar Songbook will do all the magic for you.
         \n\n3. If some part of song is repeated (e.g. chorus), copy it to all its occurrences. When lyrics are continuous, it facilitates scrolling through the song and then you will not have to scroll back every time to see the refrain chords. Don\'t put any annotations or paragraphs like \"Chorus\", \"Verse\", \"Title\", \"Solo\", \"Instrumental\". Include only lyrics with chords.
@@ -130,7 +130,7 @@
         \n\n6. You can use dash "-" to couple quickly changing chords: \"D Dsus2-D-Dsus4\" or use parentheses \"()\" to indicate some chords optional: [C G (G7)].
         \n\n7. Reformat and validate your song before saving it, especially when you are going to publish it.
         \n
-        \nThere are many useful tools in editor: undoing change, inserting suitable bracket (either opening or closing one), inserting brackets pair, moving cursor by one character, copying chords, pasting chords, transforming to standard chords format, automatic chords detection, moving chords from above to the end of the line, validating chords.
+        \nThere are many useful tools in editor: undoing changes, inserting suitable bracket (either opening or closing one), inserting brackets pair, moving cursor by one character, copying &amp; pasting chords, reformatting to standard chords format, automatic chords detection, moving chords from line above to same line among the words or moving at the end of the line, validating chords, selecting whole lines, duplicating lines, converting from other chords notations, removing redundant empty lines.
     </string>
     <string name="import_song_content_hint">
         Song lyrics with [chords] in the same line
@@ -355,11 +355,11 @@
     <string name="display_style_chords_only">Chords only, lyrics hidden</string>
     <string name="display_style_lyrics_only">Lyrics only, chords hidden</string>
     <string name="settings_chords_display_style"><![CDATA[Lyrics & Chords displaying style]]></string>
-    <string name="chords_editor_move_chords_above_to_inline">Move chords from top to words</string>
+    <string name="chords_editor_move_chords_above_to_inline">Move chords from upper line to matching words</string>
     <string name="chords_editor_remove_double_empty_lines">Remove doubled blank lines</string>
     <string name="chords_editor_duplicate">Duplicate</string>
     <string name="chords_editor_select_line">Line</string>
     <string name="chords_editor_unmark_chords">Unmark chords</string>
     <string name="chords_editor_detect_chords_keeping_indent">Detect chords preserving indentation</string>
-    <string name="settings_chords_editor">Chords Editor</string>
+    <string name="settings_chords_editor">Song Editor</string>
 </resources>

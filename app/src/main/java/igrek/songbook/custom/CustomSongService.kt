@@ -121,7 +121,7 @@ class CustomSongService {
 
     fun showEditorHintsIfNeeded() {
         if (songsRepository.customSongsRepo.songs.get().count() == 0) {
-            uiInfoService.showTooltip(R.string.tooltip_edit_chords_lyrics)
+            uiInfoService.showTooltip(R.string.chords_editor_hint)
         }
     }
 }

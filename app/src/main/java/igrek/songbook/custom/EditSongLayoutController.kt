@@ -94,7 +94,7 @@ class EditSongLayoutController : MainLayout {
         })
 
         layout.findViewById<ImageButton>(R.id.tooltipEditChordsLyricsInfo).setOnClickListener {
-            uiInfoService.showTooltip(R.string.tooltip_edit_chords_lyrics)
+            uiInfoService.showTooltip(R.string.chords_editor_hint)
         }
 
         songContentEdit = layout.findViewById<EditText>(R.id.songContentEdit)?.also {
