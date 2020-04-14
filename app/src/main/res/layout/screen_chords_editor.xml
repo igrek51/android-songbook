@@ -224,6 +224,7 @@
                     android:layout_height="match_parent"
                     android:background="#07ffffff"
                     android:gravity="top"
+                    android:imeOptions="flagNoExtractUi"
                     android:hint="@string/import_song_content_hint"
                     android:inputType="text|textMultiLine"
                     android:minHeight="240dp"
