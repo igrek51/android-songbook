@@ -144,13 +144,13 @@
         \n- Usuń podwójne puste linie - Zamienia podwójne Entery (załamania wierszy) na pojedyncze
         \n- Zamień Fis -> F# - Zamienia wszystkie nazwy dźwięków kończące się na \"is\" na notację \"#\"
         \n- Odznacz akordy - Usuwa wszystkie znaczniki akordów: \"[\" i \"]\"
-        \n- Wykryj akordy zachowując wcięcia - Automatycznie znajduje i zaznacza akordy, zachowując ich oryginalną poziomą pozycję (ustawioną spacjami) poprzez usunięcie zbędnych 2 spacji na każde dodane znaczniki \"[]\".
+        \n- Wykryj akordy zachowując wcięcia - Automatycznie znajduje i zaznacza akordy, zachowując ich oryginalną poziomą pozycję (ustawioną spacjami) poprzez usunięcie zbędnych 2 spacji na każde dodane znaczniki \"[ ]\".
         \n- \u276E - przesuwa kursor o jeden znak w lewo
         \n- \u276F - przesuwa kursor o jeden znak w prawo
         \n- [ / ] - wstawia pasujący nawias (otwierający lub zamykający)
-        \n- [Mark] - Wstawia parę nawiasów wokół zaznaczonego tekstu
-        \n- [Copy] - Kopiuje zaznaczone akordy
-        \n- [Paste] - Wkleja skopiowane akordy
+        \n- [Akord] - Wstawia parę nawiasów wokół zaznaczonego tekstu
+        \n- [Kopiuj] - Kopiuje zaznaczone akordy
+        \n- [Wklej] - Wkleja skopiowane akordy
     </string>
     <string name="import_song_content_hint">
         Tekst piosenki z [akordami] w tej samej linii
@@ -360,4 +360,6 @@
     <string name="chords_editor_detect_chords_keeping_indent">Wykryj akordy zachowując wcięcia</string>
     <string name="settings_chords_editor">Edytor piosenek</string>
     <string name="settings_chords_editor_typeface">Krój czcionki edytora</string>
+    <string name="settings_keep_screen_on">Zawsze włączony ekran</string>
+    <string name="settings_keep_screen_on_hint">Utrzymuj niegasnący wyświetlacz na podglądzie piosenki</string>
 </resources>

@@ -27,6 +27,7 @@ import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.chordsnotation.ChordsNotation
+import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
@@ -76,6 +77,9 @@ class SongPreviewLayoutController : MainLayout {
     @Inject
     lateinit var chordsDiagramsService: Lazy<ChordsDiagramsService>
 
+    @Inject
+    lateinit var preferencesState: Lazy<PreferencesState>
+
     var songPreview: SongPreview? = null
         private set
     var currentSong: Song? = null
@@ -109,7 +113,9 @@ class SongPreviewLayoutController : MainLayout {
     }
 
     override fun showLayout(layout: View) {
-        windowManagerService.get().keepScreenOn(true)
+        if (preferencesState.get().keepScreenOn)
+            windowManagerService.get().keepScreenOn(true)
+
         softKeyboardService.get().hideSoftKeyboard()
 
         // Toolbar

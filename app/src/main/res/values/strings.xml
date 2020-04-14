@@ -144,7 +144,7 @@
         \n- Remove doubled blank lines - Replace each double Enter (line break) with single one
         \n- Replace Fis -> F# - Replace all sound names ending with \"is\" to \"#\"
         \n- Unmark chords - Drop all chord marks: \"[\" and \"]\"
-        \n- Detect chords preserving indentation - Find and mark chords automatically but keeping their original horizontal position (aligned with spaces) by removing 2 redundant spaces for each inserted \"[]\" characters.
+        \n- Detect chords preserving indentation - Find and mark chords automatically but keeping their original horizontal position (aligned with spaces) by removing 2 redundant spaces for each inserted \"[ ]\" characters.
         \n- \u276E - move cursor by one character left
         \n- \u276F - move cursor by one character right
         \n- [ / ] - insert suitable bracket (either opening or closing one)
@@ -383,4 +383,6 @@
     <string name="chords_editor_detect_chords_keeping_indent">Detect chords preserving indentation</string>
     <string name="settings_chords_editor">Song Editor</string>
     <string name="settings_chords_editor_typeface">Editor font typeface</string>
+    <string name="settings_keep_screen_on">Screen always on</string>
+    <string name="settings_keep_screen_on_hint">Keep display always on when a song is opened</string>
 </resources>

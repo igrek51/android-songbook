@@ -265,6 +265,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
             openPrivacyPolicy()
         }
 
+        setupSwitchPreference("keepScreenOn",
+                onLoad = { preferencesState.get().keepScreenOn },
+                onSave = { value: Boolean ->
+                    preferencesState.get().keepScreenOn = value
+                }
+        )
+
         refreshFragment()
     }
 

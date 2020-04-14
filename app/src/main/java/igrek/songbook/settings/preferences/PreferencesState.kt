@@ -33,6 +33,7 @@ class PreferencesState {
     var adsStatus: Long by PreferenceDelegate(PreferencesField.AdsStatus)
     var chordsDisplayStyle: DisplayStyle by PreferenceDelegate(PreferencesField.ChordsDisplayStyle)
     var chordsEditorFontTypeface: FontTypeface by PreferenceDelegate(PreferencesField.ChordsEditorFontTypeface)
+    var keepScreenOn: Boolean by PreferenceDelegate(PreferencesField.KeepScreenOn)
 
     init {
         DaggerIoc.factoryComponent.inject(this)

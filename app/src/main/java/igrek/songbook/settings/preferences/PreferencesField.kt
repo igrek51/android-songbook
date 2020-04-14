@@ -77,6 +77,8 @@ enum class PreferencesField constructor(
             deserializer = FontTypeface.Companion::parseById
     )),
 
+    KeepScreenOn(true),
+
     ;
 
     constructor(defaultValue: String) : this(StringPreferenceType(defaultValue))

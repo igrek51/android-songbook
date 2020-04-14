@@ -44,6 +44,11 @@
             android:title="@string/settings_typeface"
             android:summary="%s"
             app:iconSpaceReserved="false"/>
+        <SwitchPreference
+            android:key="keepScreenOn"
+            android:title="@string/settings_keep_screen_on"
+            android:summary="@string/settings_keep_screen_on_hint"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_autoscroll_section">
