@@ -31,6 +31,9 @@ class CustomSongService {
     @Inject
     lateinit var preferencesState: PreferencesState
 
+    @Inject
+    lateinit var songExportFileChooser: Lazy<SongExportFileChooser>
+
     var customSongsGroupCategories: Boolean
         get() = preferencesState.customSongsGroupCategories
         set(value) {
@@ -49,6 +52,15 @@ class CustomSongService {
     fun showEditSongScreen(song: Song) {
         editSongLayoutController.get().setCurrentSong(song)
         layoutController.showLayout(EditSongLayoutController::class)
+    }
+
+    fun exportSong(song: Song) {
+        var songTitle = song.title
+        songTitle = songTitle.takeIf { it.toLowerCase().endsWith(".txt") } ?: "$songTitle.txt"
+        val songContent = song.content.orEmpty()
+        songExportFileChooser.get().showFileChooser(songContent, songTitle) {
+            uiInfoService.showInfo(R.string.song_content_exported)
+        }
     }
 
     fun addCustomSong(title: String, customCategoryName: String?, content: String, chordsNotation: ChordsNotation): Song {

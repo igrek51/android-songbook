@@ -143,6 +143,11 @@ class SongContextMenuBuilder {
                         executor = { song ->
                             antechamberService.get().deleteAntechamberSongUI(song)
                         }),
+                SongContextAction(R.string.export_content_to_file,
+                        availableCondition = { song -> song.isCustom() },
+                        executor = { song ->
+                            customSongService.exportSong(song)
+                        }),
         )
 
         actions.forEach { action ->

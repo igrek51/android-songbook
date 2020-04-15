@@ -41,7 +41,6 @@ class EditSongLayoutController : MainLayout {
     lateinit var softKeyboardService: SoftKeyboardService
     @Inject
     lateinit var songImportFileChooser: Lazy<SongImportFileChooser>
-
     @Inject
     lateinit var songExportFileChooser: Lazy<SongExportFileChooser>
     @Inject
@@ -162,7 +161,7 @@ class EditSongLayoutController : MainLayout {
 
     private fun exportContentToFile() {
         var songTitle = songTitleEdit?.text?.toString().orEmpty()
-        songTitle = songTitle.takeIf { it.endsWith(".txt") } ?: "$songTitle.txt"
+        songTitle = songTitle.takeIf { it.toLowerCase().endsWith(".txt") } ?: "$songTitle.txt"
         val songContent = songContentEdit?.text?.toString().orEmpty()
         songExportFileChooser.get().showFileChooser(songContent, songTitle) {
             uiInfoService.showInfo(R.string.song_content_exported)
