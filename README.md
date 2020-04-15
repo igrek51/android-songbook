@@ -22,14 +22,14 @@ Main features:
 - User favourite songs, latest songs and recent history list
 - Filtering songs by languages
 - Fullscreen mode
-- Importing songs from files
+- Importing & Exporting songs from / to files or Google Drive
 - Social contributing to songs database
 - Editing any song
 - Songs browser with search engine
 - Scroll speed adjustment
 - Color schemes and font typeface selection
 - Saving last chords transposing
-- Opening a random song
+- Shuffling songs
 
 Guitar Songbook is a tool mainly focused on guitarists, but it also can be used just to view the songs lyrics on mobile devices.
 It has many songs with chords on board and its database can be easily extended with your own songs.

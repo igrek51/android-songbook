@@ -16,7 +16,7 @@ Główne funkcje:
 - Zapisywanie ulubionych piosenek, lista najnowszych piosenek oraz historia ostatnio otwieranych piosenek
 - Filtrowanie według języków
 - Tryb pełnoekranowy
-- Import piosenek z plików
+- Import i Eksport piosenek z / do plików lub dysku Google
 - Współtworzenie publicznej bazy piosenek
 - Edycja dowolnych piosenek
 - Przeglądarka i wyszukiwarka piosenek
