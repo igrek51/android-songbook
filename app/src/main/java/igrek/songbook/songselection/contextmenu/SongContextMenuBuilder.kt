@@ -118,6 +118,11 @@ class SongContextMenuBuilder {
                         executor = { song ->
                             customSongService.copySongAsCustom(song)
                         }),
+                SongContextAction(R.string.export_content_to_file,
+                        availableCondition = { song -> song.isCustom() },
+                        executor = { song ->
+                            customSongService.exportSong(song)
+                        }),
                 SongContextAction(R.string.admin_antechamber_edit_action,
                         availableCondition = { adminService.get().isAdminEnabled() },
                         executor = { song ->
@@ -142,11 +147,6 @@ class SongContextMenuBuilder {
                         availableCondition = { song -> song.isAntechamber() && adminService.get().isAdminEnabled() },
                         executor = { song ->
                             antechamberService.get().deleteAntechamberSongUI(song)
-                        }),
-                SongContextAction(R.string.export_content_to_file,
-                        availableCondition = { song -> song.isCustom() },
-                        executor = { song ->
-                            customSongService.exportSong(song)
                         }),
         )
 
