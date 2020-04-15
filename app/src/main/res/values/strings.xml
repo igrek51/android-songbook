@@ -385,4 +385,7 @@
     <string name="settings_chords_editor_typeface">Editor font typeface</string>
     <string name="settings_keep_screen_on">Screen always on</string>
     <string name="settings_keep_screen_on_hint">Keep display always on when a song is opened</string>
+    <string name="select_file_to_export">Save file</string>
+    <string name="export_content_to_file">Export to file</string>
+    <string name="song_content_exported">Song content has been exported</string>
 </resources>

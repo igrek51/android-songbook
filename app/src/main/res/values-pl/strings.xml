@@ -362,4 +362,7 @@
     <string name="settings_chords_editor_typeface">Krój czcionki edytora</string>
     <string name="settings_keep_screen_on">Zawsze włączony ekran</string>
     <string name="settings_keep_screen_on_hint">Utrzymuj niegasnący wyświetlacz na podglądzie piosenki</string>
+    <string name="select_file_to_export">Zapisz plik</string>
+    <string name="export_content_to_file">Eksportuj do pliku</string>
+    <string name="song_content_exported">Zawartość piosenki została wyeksportowana.</string>
 </resources>

@@ -41,6 +41,9 @@ class EditSongLayoutController : MainLayout {
     lateinit var softKeyboardService: SoftKeyboardService
     @Inject
     lateinit var songImportFileChooser: Lazy<SongImportFileChooser>
+
+    @Inject
+    lateinit var songExportFileChooser: Lazy<SongExportFileChooser>
     @Inject
     lateinit var chordsEditorLayoutController: Lazy<ChordsEditorLayoutController>
     @Inject
@@ -131,6 +134,9 @@ class EditSongLayoutController : MainLayout {
                 ContextMenuBuilder.Action(R.string.import_content_from_file) {
                     importContentFromFile()
                 },
+                ContextMenuBuilder.Action(R.string.export_content_to_file) {
+                    exportContentToFile()
+                },
                 ContextMenuBuilder.Action(R.string.edit_song_remove) {
                     removeSong()
                 }
@@ -152,6 +158,15 @@ class EditSongLayoutController : MainLayout {
 
     private fun importContentFromFile() {
         songImportFileChooser.get().showFileChooser()
+    }
+
+    private fun exportContentToFile() {
+        var songTitle = songTitleEdit?.text?.toString().orEmpty()
+        songTitle = songTitle.takeIf { it.endsWith(".txt") } ?: "$songTitle.txt"
+        val songContent = songContentEdit?.text?.toString().orEmpty()
+        songExportFileChooser.get().showFileChooser(songContent, songTitle) {
+            uiInfoService.showInfo(R.string.song_content_exported)
+        }
     }
 
     fun setCurrentSong(song: Song?) {

@@ -10,6 +10,7 @@ import android.view.KeyEvent
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import dagger.Lazy
+import igrek.songbook.custom.SongExportFileChooser
 import igrek.songbook.custom.SongImportFileChooser
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.Logger
@@ -35,6 +36,9 @@ open class MainActivity : AppCompatActivity() {
     lateinit var permissionService: Lazy<PermissionService>
     @Inject
     lateinit var songImportFileChooser: Lazy<SongImportFileChooser>
+
+    @Inject
+    lateinit var songExportFileChooser: Lazy<SongExportFileChooser>
     @Inject
     lateinit var googleSyncManager: Lazy<GoogleSyncManager>
 
@@ -117,6 +121,10 @@ open class MainActivity : AppCompatActivity() {
             SongImportFileChooser.FILE_SELECT_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
                     songImportFileChooser.get().onFileSelect(data?.data)
+                }
+            SongExportFileChooser.FILE_EXPORT_SELECT_CODE ->
+                if (resultCode == Activity.RESULT_OK) {
+                    songExportFileChooser.get().onFileSelect(data?.data)
                 }
             GoogleSyncManager.REQUEST_CODE_SIGN_IN_SYNC_SAVE,
             GoogleSyncManager.REQUEST_CODE_SIGN_IN_SYNC_RESTORE ->

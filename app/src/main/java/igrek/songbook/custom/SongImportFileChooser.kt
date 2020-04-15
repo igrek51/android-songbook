@@ -10,67 +10,70 @@ import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
-import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.info.errorcheck.SafeExecutor
 import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.nio.charset.Charset
-import java.nio.charset.UnsupportedCharsetException
 import javax.inject.Inject
 
 class SongImportFileChooser {
 
-    private val logger = LoggerFactory.logger
     @Inject
     lateinit var activity: Activity
+
     @Inject
     lateinit var uiInfoService: UiInfoService
+
     @Inject
     lateinit var uiResourceService: UiResourceService
+
     @Inject
     lateinit var editSongLayoutController: Lazy<EditSongLayoutController>
+
+    companion object {
+        const val FILE_SELECT_CODE = 7
+
+        const val FILE_IMPORT_LIMIT_B = 50 * 1024
+    }
 
     init {
         DaggerIoc.factoryComponent.inject(this)
     }
 
     fun showFileChooser() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "*/*"
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        SafeExecutor {
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.type = "*/*"
+            intent.addCategory(Intent.CATEGORY_OPENABLE)
 
-        try {
-            val title = uiResourceService.resString(R.string.select_file_to_import)
-            activity.startActivityForResult(Intent.createChooser(intent, title), FILE_SELECT_CODE)
-        } catch (ex: android.content.ActivityNotFoundException) {
-            uiInfoService.showToast(R.string.file_manager_not_found)
+            try {
+                val title = uiResourceService.resString(R.string.select_file_to_import)
+                activity.startActivityForResult(Intent.createChooser(intent, title), FILE_SELECT_CODE)
+            } catch (ex: android.content.ActivityNotFoundException) {
+                uiInfoService.showToast(R.string.file_manager_not_found)
+            }
         }
-
     }
 
     fun onFileSelect(selectedUri: Uri?) {
-        try {
+        SafeExecutor {
             if (selectedUri != null) {
-                val inputStream = activity.contentResolver
-                        .openInputStream(selectedUri)
-                val filename = getFileNameFromUri(selectedUri)
+                activity.contentResolver.openInputStream(selectedUri)?.use { inputStream: InputStream ->
+                    val filename = getFileNameFromUri(selectedUri)
 
-                val length = inputStream!!.available()
-                if (length > 50 * 1024) {
-                    uiInfoService.showToast(R.string.selected_file_is_too_big)
-                    return
+                    val length = inputStream.available()
+                    if (length > FILE_IMPORT_LIMIT_B) {
+                        uiInfoService.showToast(R.string.selected_file_is_too_big)
+                        return@SafeExecutor
+                    }
+
+                    val content = convert(inputStream, Charset.forName("UTF-8"))
+
+                    editSongLayoutController.get().setupImportedSong(filename, content)
                 }
-
-                val content = convert(inputStream, Charset.forName("UTF-8"))
-
-                editSongLayoutController.get().setupImportedSong(filename, content)
             }
-        } catch (e: IOException) {
-            logger.error(e)
-        } catch (e: UnsupportedCharsetException) {
-            logger.error(e)
         }
-
     }
 
     @Throws(IOException::class)
@@ -94,10 +97,6 @@ class SongImportFileChooser {
                 result = result!!.substring(cut + 1)
             }
         }
-        return result!!
-    }
-
-    companion object {
-        const val FILE_SELECT_CODE = 7
+        return result.orEmpty()
     }
 }
