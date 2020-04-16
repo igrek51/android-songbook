@@ -7,8 +7,11 @@ import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.layout.MainLayout
+import igrek.songbook.layout.spinner.MultiPicker
 import igrek.songbook.persistence.general.model.Category
 import igrek.songbook.persistence.repository.AllSongsRepository
+import igrek.songbook.settings.language.AppLanguageService
+import igrek.songbook.settings.language.SongLanguage
 import igrek.songbook.songselection.SongSelectionLayoutController
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -20,11 +23,14 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
     @Inject
     lateinit var scrollPosBuffer: Lazy<ScrollPosBuffer>
 
+    @Inject
+    lateinit var appLanguageService: Lazy<AppLanguageService>
+
     var currentCategory: Category? = null
     private var toolbarTitle: TextView? = null
     private var goBackButton: ImageButton? = null
     private var searchSongButton: ImageButton? = null
-
+    private var languagePicker: MultiPicker<SongLanguage>? = null
     private var subscriptions = mutableListOf<Disposable>()
 
     init {
@@ -53,6 +59,24 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
                     if (layoutController.isState(this::class))
                         updateSongItemsList()
                 })
+
+        layout.findViewById<ImageButton>(R.id.languageFilterButton)?.apply {
+            val songLanguageEntries = appLanguageService.get().songLanguageEntries()
+            val selected = appLanguageService.get().selectedSongLanguages
+            val title = uiResourceService.resString(R.string.song_languages)
+            languagePicker = MultiPicker(
+                    activity,
+                    entityNames = songLanguageEntries,
+                    selected = selected,
+                    title = title,
+            ) { selectedLanguages ->
+                if (appLanguageService.get().selectedSongLanguages != selectedLanguages) {
+                    appLanguageService.get().selectedSongLanguages = selectedLanguages.toSet()
+                    updateSongItemsList()
+                }
+            }
+            setOnClickListener { languagePicker?.showChoiceDialog() }
+        }
     }
 
     override fun getLayoutResourceId(): Int {
@@ -85,15 +109,21 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
     }
 
     override fun getSongItems(songsRepo: AllSongsRepository): MutableList<SongTreeItem> {
+        val acceptedLanguages = appLanguageService.get().selectedSongLanguages
+        val acceptedLangCodes = acceptedLanguages.map { lang -> lang.langCode } + ""
         return if (isCategorySelected()) {
             // selected category
-            currentCategory!!.getUnlockedSongs()
+            currentCategory?.getUnlockedSongs().orEmpty()
+                    .filter { song -> song.language in acceptedLangCodes }
                     .asSequence()
                     .map { song -> SongTreeItem.song(song) }
                     .toMutableList()
         } else {
             // all categories apart from custom
             songsRepo.publicCategories.get()
+                    .filter { category ->
+                        category.songs.any { song -> song.language in acceptedLangCodes }
+                    }
                     .asSequence()
                     .map { category -> SongTreeItem.category(category) }
                     .toMutableList()

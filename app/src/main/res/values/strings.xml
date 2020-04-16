@@ -388,4 +388,6 @@
     <string name="select_file_to_export">Save file</string>
     <string name="export_content_to_file">Export to file</string>
     <string name="song_content_exported">Song content has been exported</string>
+    <string name="multichoice_invert">Invert</string>
+    <string name="song_languages">Song languages</string>
 </resources>

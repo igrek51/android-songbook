@@ -10,6 +10,7 @@ import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.PreferencesState
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.LinkedHashMap
 
 
 class AppLanguageService {
@@ -30,6 +31,8 @@ class AppLanguageService {
         }
 
     private val logger = LoggerFactory.logger
+
+    var selectedSongLanguages: Set<SongLanguage> = SongLanguage.allKnown()
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -66,7 +69,18 @@ class AppLanguageService {
         }
     }
 
-    fun languageEntries(): LinkedHashMap<String, String> {
+    fun songLanguageEntries(): LinkedHashMap<SongLanguage, String> {
+        val map = LinkedHashMap<SongLanguage, String>()
+        SongLanguage.allKnown()
+                .forEach { lang ->
+                    val locale = Locale(lang.langCode)
+                    val langDisplayName = locale.getDisplayLanguage(locale)
+                    map[lang] = langDisplayName
+                }
+        return map
+    }
+
+    fun languageStringEntries(): LinkedHashMap<String, String> {
         val map = LinkedHashMap<String, String>()
         for (item in AppLanguage.values()) {
             val displayName = uiResourceService.get().resString(item.displayNameResId)

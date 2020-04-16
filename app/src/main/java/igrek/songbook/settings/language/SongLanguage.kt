@@ -12,5 +12,7 @@ enum class SongLanguage(val langCode: String) {
         fun parseByLangCode(langCode: String): SongLanguage? {
             return values().firstOrNull { v -> v.langCode == langCode }
         }
+
+        fun allKnown(): Set<SongLanguage> = values().filterNot { it == UNKNOWN }.toSet()
     }
 }

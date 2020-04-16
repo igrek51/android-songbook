@@ -82,7 +82,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun lateInit() {
         setupListPreference("applicationLanguage",
-                appLanguageService.get().languageEntries(),
+                appLanguageService.get().languageStringEntries(),
                 onLoad = { preferencesState.get().appLanguage.langCode },
                 onSave = { id: String ->
                     preferencesState.get().appLanguage = AppLanguage.parseByLangCode(id)

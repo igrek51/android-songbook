@@ -365,4 +365,6 @@
     <string name="select_file_to_export">Zapisz plik</string>
     <string name="export_content_to_file">Eksportuj do pliku</string>
     <string name="song_content_exported">Zawartość piosenki została wyeksportowana.</string>
+    <string name="multichoice_invert">Odwróć</string>
+    <string name="song_languages">Języki piosenek</string>
 </resources>
