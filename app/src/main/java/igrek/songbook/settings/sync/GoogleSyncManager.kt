@@ -55,7 +55,7 @@ class GoogleSyncManager {
 
     private val syncFiles = listOf(
             "files/customsongs.1.json",
-            "files/exclusion.1.json",
+            "files/exclusion.2.json",
             "files/favourites.1.json",
             "files/history.1.json",
             "files/playlist.1.json",
