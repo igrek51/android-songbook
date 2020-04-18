@@ -28,6 +28,7 @@ import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.favourite.FavouritesLayoutController
 import igrek.songbook.songselection.history.OpenHistoryLayoutController
 import igrek.songbook.songselection.latest.LatestSongsLayoutController
+import igrek.songbook.songselection.latest.TopSongsLayoutController
 import igrek.songbook.songselection.random.RandomSongOpener
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.tree.SongTreeLayoutController
@@ -88,6 +89,7 @@ class NavigationMenuController {
         actionsMap[R.id.nav_missing_song] = { sendMessageService.get().requestMissingSong() }
         actionsMap[R.id.nav_history] = { layoutController.get().showLayout(OpenHistoryLayoutController::class) }
         actionsMap[R.id.nav_latest] = { layoutController.get().showLayout(LatestSongsLayoutController::class) }
+        actionsMap[R.id.nav_top_songs] = { layoutController.get().showLayout(TopSongsLayoutController::class) }
         actionsMap[R.id.nav_last_song] = { songOpener.get().openLastSong() }
         actionsMap[R.id.nav_admin_antechamber] = { layoutController.get().showLayout(AdminSongsLayoutContoller::class) }
     }

@@ -24,6 +24,7 @@ import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.favourite.FavouritesLayoutController
 import igrek.songbook.songselection.history.OpenHistoryLayoutController
 import igrek.songbook.songselection.latest.LatestSongsLayoutController
+import igrek.songbook.songselection.latest.TopSongsLayoutController
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.tree.SongTreeLayoutController
 import javax.inject.Inject
@@ -63,6 +64,9 @@ class LayoutController {
     @Inject
     lateinit var latestSongsLayoutController: Lazy<LatestSongsLayoutController>
     @Inject
+    lateinit var topSongsLayoutController: Lazy<TopSongsLayoutController>
+
+    @Inject
     lateinit var openHistoryLayoutController: Lazy<OpenHistoryLayoutController>
     @Inject
     lateinit var missingSongLayoutController: Lazy<MissingSongLayoutController>
@@ -101,6 +105,7 @@ class LayoutController {
                 FavouritesLayoutController::class to favouritesLayoutController,
                 PlaylistLayoutController::class to playlistLayoutController,
                 LatestSongsLayoutController::class to latestSongsLayoutController,
+                TopSongsLayoutController::class to topSongsLayoutController,
                 OpenHistoryLayoutController::class to openHistoryLayoutController,
                 MissingSongLayoutController::class to missingSongLayoutController,
                 PublishSongLayoutController::class to publishSongLayoutController,

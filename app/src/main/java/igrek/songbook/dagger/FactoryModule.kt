@@ -56,6 +56,7 @@ import igrek.songbook.songselection.favourite.FavouriteSongsService
 import igrek.songbook.songselection.favourite.FavouritesLayoutController
 import igrek.songbook.songselection.history.OpenHistoryLayoutController
 import igrek.songbook.songselection.latest.LatestSongsLayoutController
+import igrek.songbook.songselection.latest.TopSongsLayoutController
 import igrek.songbook.songselection.random.RandomSongOpener
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.tree.ScrollPosBuffer
@@ -302,6 +303,10 @@ open class FactoryModule(private val activity: AppCompatActivity) {
     @Provides
     @Singleton
     fun aLatestSongsLayoutController(): LatestSongsLayoutController = LatestSongsLayoutController()
+
+    @Provides
+    @Singleton
+    fun aTopSongsLayoutController(): TopSongsLayoutController = TopSongsLayoutController()
 
     @Provides
     @Singleton

@@ -4,6 +4,10 @@
         android:id="@+id/nav_group1"
         android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_top_songs"
+            android:icon="@drawable/top"
+            android:title="@string/nav_top_songs" />
+        <item
             android:id="@+id/nav_songs_list"
             android:icon="@drawable/list"
             android:title="@string/nav_categories_list" />

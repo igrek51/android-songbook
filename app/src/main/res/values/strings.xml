@@ -390,4 +390,5 @@
     <string name="song_content_exported">Song content has been exported</string>
     <string name="multichoice_invert">Invert</string>
     <string name="song_languages">Song languages</string>
+    <string name="nav_top_songs">Top songs</string>
 </resources>

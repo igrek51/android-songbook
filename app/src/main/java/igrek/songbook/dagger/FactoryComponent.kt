@@ -68,6 +68,7 @@ import igrek.songbook.songselection.favourite.FavouriteSongsService
 import igrek.songbook.songselection.favourite.FavouritesLayoutController
 import igrek.songbook.songselection.history.OpenHistoryLayoutController
 import igrek.songbook.songselection.latest.LatestSongsLayoutController
+import igrek.songbook.songselection.latest.TopSongsLayoutController
 import igrek.songbook.songselection.random.RandomSongOpener
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.tree.ScrollPosBuffer
@@ -166,5 +167,6 @@ interface FactoryComponent {
     fun inject(there: PreferencesDao)
     fun inject(there: AdService)
     fun inject(there: SongExportFileChooser)
+    fun inject(there: TopSongsLayoutController)
 
 }
