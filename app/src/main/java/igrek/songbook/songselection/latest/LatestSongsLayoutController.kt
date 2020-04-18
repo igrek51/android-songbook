@@ -3,13 +3,14 @@ package igrek.songbook.songselection.latest
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.InflatedLayout
-import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.SongClickListener
@@ -27,14 +28,21 @@ class LatestSongsLayoutController : InflatedLayout(
 
     @Inject
     lateinit var songsRepository: SongsRepository
+
     @Inject
     lateinit var uiResourceService: UiResourceService
+
     @Inject
     lateinit var songContextMenuBuilder: SongContextMenuBuilder
+
     @Inject
     lateinit var uiInfoService: UiInfoService
+
     @Inject
     lateinit var songOpener: SongOpener
+
+    @Inject
+    lateinit var appLanguageService: Lazy<AppLanguageService>
 
     private var itemsListView: SongListView? = null
 
@@ -66,11 +74,16 @@ class LatestSongsLayoutController : InflatedLayout(
     }
 
     private fun updateItemsList() {
+        val acceptedLanguages = appLanguageService.get().selectedSongLanguages
+        val acceptedLangCodes = acceptedLanguages.map { lang -> lang.langCode } + ""
         val latestSongs = songsRepository.publicSongsRepo.songs.get()
-                .filter { song -> song.namespace == SongNamespace.Public }
+                .asSequence()
+                .filter { it.isPublic() }
+                .filter { song -> song.language in acceptedLangCodes }
                 .sortedBy { song -> -song.updateTime }
                 .take(latestSongsCount)
                 .map { song -> SongSearchItem.song(song) }
+                .toList()
         itemsListView!!.setItems(latestSongs)
 
         if (storedScroll != null) {

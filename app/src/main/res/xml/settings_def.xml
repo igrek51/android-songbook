@@ -106,6 +106,14 @@
             app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/settings_songs_filter">
+        <MultiSelectListPreference
+            android:key="filterLanguages"
+            android:title="@string/settings_filter_languages"
+            android:summary="%s"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/settings_sync">
         <Preference
             android:title="@string/settings_sync_save"

@@ -194,6 +194,22 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
         )
 
+        setupMultiListPreference("filterLanguages",
+                appLanguageService.get().languageFilterEntries(),
+                onLoad = {
+                    appLanguageService.get().selectedSongLanguages.map { it.langCode }.toMutableSet()
+                },
+                onSave = { ids: Set<String> ->
+                    appLanguageService.get().setSelectedSongLanguageCodes(ids)
+                },
+                stringConverter = { ids: Set<String>, entriesMap: LinkedHashMap<String, String> ->
+                    if (ids.isEmpty())
+                        uiResourceService.get().resString(R.string.none)
+                    else
+                        ids.map { id -> entriesMap[id].orEmpty() }.sorted().joinToString(separator = ", ")
+                }
+        )
+
         setupSwitchPreference("customSongsGroupCategories",
                 onLoad = { preferencesState.get().customSongsGroupCategories },
                 onSave = { value: Boolean ->

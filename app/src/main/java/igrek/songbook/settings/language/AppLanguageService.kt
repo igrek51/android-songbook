@@ -103,15 +103,12 @@ class AppLanguageService {
 
     fun languageFilterEntries(): LinkedHashMap<String, String> {
         val map = LinkedHashMap<String, String>()
-        for (item in SongLanguage.values()) {
-            if (item == SongLanguage.UNKNOWN) {
-                continue
-            }
-
-            val locale = Locale(item.langCode)
-            val displayName = locale.getDisplayLanguage(locale)
-            map[item.langCode] = displayName
-        }
+        SongLanguage.allKnown()
+                .forEach { lang ->
+                    val locale = Locale(lang.langCode)
+                    val langDisplayName = locale.getDisplayLanguage(locale)
+                    map[lang.langCode] = langDisplayName
+                }
         return map
     }
 
@@ -133,5 +130,11 @@ class AppLanguageService {
             languages.add(lang)
         }
         return languages
+    }
+
+    fun setSelectedSongLanguageCodes(languageCodes: Set<String>) {
+        selectedSongLanguages = SongLanguage.allKnown()
+                .filter { it.langCode in languageCodes }
+                .toSet()
     }
 }
