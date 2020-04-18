@@ -106,30 +106,6 @@
             app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/settings_exclude_filter">
-        <MultiSelectListPreference
-            android:key="excludeFilterLanguages"
-            android:title="@string/settings_exclude_languages"
-            android:summary="%s"
-            app:iconSpaceReserved="false"/>
-        <Preference
-            android:title="@string/settings_toggle_all_languages"
-            android:key="settingsToggleAllLanguages"
-            android:summary=""
-            app:iconSpaceReserved="false"/>
-
-        <MultiSelectListPreference
-            android:key="excludeFilterArtists"
-            android:title="@string/settings_exclude_artists"
-            android:summary="%s"
-            app:iconSpaceReserved="false"/>
-        <Preference
-            android:title="@string/settings_toggle_all_artists"
-            android:key="settingsToggleAllArtists"
-            android:summary=""
-            app:iconSpaceReserved="false"/>
-    </PreferenceCategory>
-
     <PreferenceCategory android:title="@string/settings_sync">
         <Preference
             android:title="@string/settings_sync_save"

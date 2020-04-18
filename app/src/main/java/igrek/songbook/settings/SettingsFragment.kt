@@ -194,49 +194,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 }
         )
 
-        val excludeLanguagesPreference = setupMultiListPreference("excludeFilterLanguages",
-                appLanguageService.get().languageFilterEntries(),
-                onLoad = {
-                    songsRepository.get().exclusionDao.exclusionDb.languages.toMutableSet()
-                },
-                onSave = { ids: Set<String> ->
-                    songsRepository.get().exclusionDao.setExcludedLanguages(ids.toMutableList())
-                },
-                stringConverter = { ids: Set<String>, entriesMap: LinkedHashMap<String, String> ->
-                    if (ids.isEmpty())
-                        uiResourceService.get().resString(R.string.none)
-                    else
-                        ids.map { id -> entriesMap[id].orEmpty() }.sorted().joinToString(separator = ", ")
-                }
-        )
-
-        val excludeArtistsPreference = setupMultiListPreference("excludeFilterArtists",
-                songsRepository.get().exclusionDao.allArtistsFilterEntries,
-                onLoad = {
-                    songsRepository.get().exclusionDao.exclusionDb.artistIds
-                            .map { id -> id.toString() }
-                            .toMutableSet()
-                },
-                onSave = { ids: Set<String> ->
-                    val longIds = ids.map { id -> id.toLong() }.toMutableList()
-                    songsRepository.get().exclusionDao.setExcludedArtists(longIds)
-                },
-                stringConverter = { ids: Set<String>, entriesMap: LinkedHashMap<String, String> ->
-                    if (ids.isEmpty())
-                        uiResourceService.get().resString(R.string.none)
-                    else
-                        ids.map { id -> entriesMap[id].orEmpty() }.sorted().joinToString(separator = ", ")
-                }
-        )
-
-        setupClickPreference("settingsToggleAllLanguages") {
-            toggleAllMultiPreference(excludeLanguagesPreference)
-        }
-
-        setupClickPreference("settingsToggleAllArtists") {
-            toggleAllMultiPreference(excludeArtistsPreference)
-        }
-
         setupSwitchPreference("customSongsGroupCategories",
                 onLoad = { preferencesState.get().customSongsGroupCategories },
                 onSave = { value: Boolean ->

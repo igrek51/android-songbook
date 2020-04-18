@@ -12,7 +12,8 @@ import igrek.songbook.util.lookup.SimpleCache
 class PublicSongsDbBuilder(
         private val versionNumber: Long,
         private val publicSongsDao: PublicSongsDao,
-        private val userDataDao: UserDataDao) {
+        private val userDataDao: UserDataDao,
+) {
 
     fun buildPublic(uiResourceService: UiResourceService): PublicSongsRepository {
         val categories: MutableList<Category> = publicSongsDao.readAllCategories()
@@ -21,7 +22,6 @@ class PublicSongsDbBuilder(
 
         unlockSongs(songs)
         removeLockedSongs(songs)
-        excludeSongs(categories, songs)
         assignSongsToCategories(categories, songs, songCategories)
         pruneEmptyCategories(categories)
 
@@ -40,18 +40,8 @@ class PublicSongsDbBuilder(
         }
     }
 
-    private fun excludeSongs(categories: MutableList<Category>, songs: MutableList<Song>) {
-        userDataDao.exclusionDao!!.setAllArtists(categories)
-
-        val excludedArtistIds = userDataDao.exclusionDao!!.exclusionDb.artistIds
-        categories.removeAll { category -> category.id in excludedArtistIds }
-
-        val excludedLanguages = userDataDao.exclusionDao!!.exclusionDb.languages
-        songs.removeAll { song -> song.language?.let { it in excludedLanguages } ?: false }
-    }
-
     private fun unlockSongs(songs: MutableList<Song>) {
-        val keys = userDataDao.unlockedSongsDao!!.unlockedSongs.keys
+        val keys = userDataDao.unlockedSongsDao.unlockedSongs.keys
         songs.forEach { song ->
             if (song.locked && keys.contains(song.lockPassword)) {
                 song.locked = false

@@ -6,6 +6,7 @@ import dagger.Lazy
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.PreferencesState
 import java.util.*
@@ -24,6 +25,9 @@ class AppLanguageService {
     @Inject
     lateinit var preferencesState: Lazy<PreferencesState>
 
+    @Inject
+    lateinit var userDataDao: Lazy<UserDataDao>
+
     private var appLanguage: AppLanguage
         get() = preferencesState.get().appLanguage
         set(value) {
@@ -32,7 +36,15 @@ class AppLanguageService {
 
     private val logger = LoggerFactory.logger
 
-    var selectedSongLanguages: Set<SongLanguage> = SongLanguage.allKnown()
+    var selectedSongLanguages: Set<SongLanguage>
+        get() {
+            val excludedLanguages = userDataDao.get().exclusionDao.exclusionDb.languages
+            return SongLanguage.allKnown().filter { it.langCode !in excludedLanguages }.toSet()
+        }
+        set(value) {
+            val excluded = (SongLanguage.allKnown() - value).map { it.langCode }.toMutableList()
+            userDataDao.get().exclusionDao.setExcludedLanguages(excluded)
+        }
 
     init {
         DaggerIoc.factoryComponent.inject(this)
