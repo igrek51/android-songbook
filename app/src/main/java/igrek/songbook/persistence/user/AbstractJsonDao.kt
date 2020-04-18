@@ -16,7 +16,10 @@ abstract class AbstractJsonDao<T>(
         val serializer: KSerializer<T>
 ) {
 
-    private val json = Json(JsonConfiguration.Stable)
+    private val json = Json(JsonConfiguration(
+            ignoreUnknownKeys = true,
+            allowStructuredMapKeys = true,
+    ))
     private val logger = LoggerFactory.logger
 
     protected var db: T? = null
