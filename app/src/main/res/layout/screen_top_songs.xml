@@ -11,7 +11,7 @@
         android:id="@+id/titleBarFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="@string/nav_latest" />
+        app:title="@string/nav_top_songs" />
 
     <RelativeLayout
         android:layout_width="match_parent"
