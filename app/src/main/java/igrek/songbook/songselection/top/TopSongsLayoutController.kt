@@ -3,20 +3,24 @@ package igrek.songbook.songselection.top
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.widget.ImageButton
 import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.layout.InflatedLayout
+import igrek.songbook.layout.spinner.MultiPicker
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.language.AppLanguageService
+import igrek.songbook.settings.language.SongLanguage
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.SongClickListener
 import igrek.songbook.songselection.SongListView
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.search.SongSearchItem
+import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.tree.SongTreeItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -45,11 +49,9 @@ class TopSongsLayoutController : InflatedLayout(
     lateinit var appLanguageService: Lazy<AppLanguageService>
 
     private var itemsListView: SongListView? = null
-
     private var storedScroll: ListScrollPosition? = null
-
+    private var languagePicker: MultiPicker<SongLanguage>? = null
     private var subscriptions = mutableListOf<Disposable>()
-
     private val topSongsCount = 300
 
     init {
@@ -63,6 +65,28 @@ class TopSongsLayoutController : InflatedLayout(
         itemsListView!!.init(activity, this)
         updateItemsList()
 
+        layout.findViewById<ImageButton>(R.id.searchSongButton)?.run {
+            setOnClickListener { goToSearchSong() }
+        }
+
+        layout.findViewById<ImageButton>(R.id.languageFilterButton)?.apply {
+            val songLanguageEntries = appLanguageService.get().songLanguageEntries()
+            val selected = appLanguageService.get().selectedSongLanguages
+            val title = uiResourceService.resString(R.string.song_languages)
+            languagePicker = MultiPicker(
+                    activity,
+                    entityNames = songLanguageEntries,
+                    selected = selected,
+                    title = title,
+            ) { selectedLanguages ->
+                if (appLanguageService.get().selectedSongLanguages != selectedLanguages) {
+                    appLanguageService.get().selectedSongLanguages = selectedLanguages.toSet()
+                    updateItemsList()
+                }
+            }
+            setOnClickListener { languagePicker?.showChoiceDialog() }
+        }
+
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
         subscriptions.add(songsRepository.dbChangeSubject
@@ -71,6 +95,10 @@ class TopSongsLayoutController : InflatedLayout(
                     if (isLayoutVisible())
                         updateItemsList()
                 })
+    }
+
+    private fun goToSearchSong() {
+        layoutController.showLayout(SongSearchLayoutController::class)
     }
 
     private fun updateItemsList() {

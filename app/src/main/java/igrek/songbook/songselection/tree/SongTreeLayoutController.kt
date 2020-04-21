@@ -29,7 +29,6 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
     var currentCategory: Category? = null
     private var toolbarTitle: TextView? = null
     private var goBackButton: ImageButton? = null
-    private var searchSongButton: ImageButton? = null
     private var languagePicker: MultiPicker<SongLanguage>? = null
     private var subscriptions = mutableListOf<Disposable>()
 
@@ -43,8 +42,9 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
         goBackButton = layout.findViewById(R.id.goBackButton)
         goBackButton?.setOnClickListener { onBackClicked() }
 
-        searchSongButton = layout.findViewById(R.id.searchSongButton)
-        searchSongButton?.setOnClickListener { goToSearchSong() }
+        layout.findViewById<ImageButton>(R.id.searchSongButton)?.run {
+            setOnClickListener { goToSearchSong() }
+        }
 
         toolbarTitle = layout.findViewById(R.id.toolbarTitle)
 

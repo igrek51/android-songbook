@@ -17,8 +17,10 @@ open class InflatedLayout(
 
     @Inject
     lateinit var layoutController: LayoutController
+
     @Inject
     lateinit var activity: AppCompatActivity
+
     @Inject
     lateinit var navigationMenuController: NavigationMenuController
 
@@ -38,18 +40,17 @@ open class InflatedLayout(
     }
 
     private fun setupNavigationMenu(layout: View) {
-        val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)
-        navMenuButton.setOnClickListener { navigationMenuController.navDrawerShow() }
+        layout.findViewById<ImageButton>(R.id.navMenuButton)?.run {
+            setOnClickListener { navigationMenuController.navDrawerShow() }
+        }
     }
 
     private fun setupToolbar(layout: View) {
-        val toolbar1 = layout.findViewById<Toolbar>(R.id.toolbar1)
-        if (toolbar1 != null) {
-            activity.setSupportActionBar(toolbar1)
-            val actionBar = activity.supportActionBar
-            if (actionBar != null) {
-                actionBar.setDisplayHomeAsUpEnabled(false)
-                actionBar.setDisplayShowHomeEnabled(false)
+        layout.findViewById<Toolbar>(R.id.toolbar1)?.let { toolbar ->
+            activity.setSupportActionBar(toolbar)
+            activity.supportActionBar?.run {
+                setDisplayHomeAsUpEnabled(false)
+                setDisplayShowHomeEnabled(false)
             }
         }
     }

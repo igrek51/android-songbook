@@ -51,45 +51,49 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
     override fun showLayout(layout: View) {
         initSongSelectionLayout(layout)
 
-        searchFilterEdit = layout.findViewById(R.id.searchFilterEdit)
-        searchFilterEdit!!.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {}
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                searchFilterSubject.onNext(s.toString())
+        emptySearchButton = layout.findViewById<Button>(R.id.emptySearchButton)?.apply {
+            setOnClickListener {
+                sendMessageService.get().requestMissingSong()
             }
-        })
-
-        emptySearchButton = layout.findViewById(R.id.emptySearchButton)
-        emptySearchButton!!.setOnClickListener {
-            sendMessageService.get().requestMissingSong()
         }
 
-        if (isFilterSet()) {
-            searchFilterEdit!!.setText(itemNameFilter, TextView.BufferType.EDITABLE)
-        }
-        searchFilterEdit!!.setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus)
-                softKeyboardService.hideSoftKeyboard(searchFilterEdit)
-        }
-        searchFilterEdit!!.requestFocus()
-        Handler(Looper.getMainLooper()).post {
-            softKeyboardService.showSoftKeyboard(searchFilterEdit)
-        }
+        searchFilterEdit = layout.findViewById<EditText>(R.id.searchFilterEdit)?.apply {
+            addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {}
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    searchFilterSubject.onNext(s.toString())
+                }
+            })
 
-        searchFilterEdit!!.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                searchFilterEdit?.clearFocus()
-                softKeyboardService.hideSoftKeyboard(searchFilterEdit)
-                return@setOnEditorActionListener true
+            if (isFilterSet()) {
+                setText(itemNameFilter, TextView.BufferType.EDITABLE)
             }
-            false
+
+            setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus)
+                    softKeyboardService.hideSoftKeyboard(this)
+            }
+            requestFocus()
+            Handler(Looper.getMainLooper()).post {
+                softKeyboardService.showSoftKeyboard(this)
+            }
+
+            setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    clearFocus()
+                    softKeyboardService.hideSoftKeyboard(this)
+                    return@setOnEditorActionListener true
+                }
+                false
+            }
         }
 
-        val searchFilterClearButton: ImageButton = layout.findViewById(R.id.searchFilterClearButton)
-        searchFilterClearButton.setOnClickListener { onClearFilterClicked() }
+        layout.findViewById<ImageButton>(R.id.searchFilterClearButton)?.run {
+            setOnClickListener { onClearFilterClicked() }
+        }
 
-        itemsListView!!.init(activity, this)
+        itemsListView?.init(activity, this)
         updateSongItemsList()
 
         subscriptions.forEach { s -> s.dispose() }
@@ -99,7 +103,7 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
                 .debounce(400, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
-                    setSongFilter(searchFilterEdit!!.text.toString())
+                    setSongFilter(searchFilterEdit?.text?.toString())
                 })
         subscriptions.add(songsRepository.dbChangeSubject
                 .observeOn(AndroidSchedulers.mainThread())
