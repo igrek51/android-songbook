@@ -1,4 +1,4 @@
-package igrek.songbook.songselection.latest
+package igrek.songbook.songselection.top
 
 import android.os.Handler
 import android.os.Looper

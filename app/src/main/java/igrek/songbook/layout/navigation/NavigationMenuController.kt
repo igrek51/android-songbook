@@ -28,9 +28,9 @@ import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.favourite.FavouritesLayoutController
 import igrek.songbook.songselection.history.OpenHistoryLayoutController
 import igrek.songbook.songselection.latest.LatestSongsLayoutController
-import igrek.songbook.songselection.latest.TopSongsLayoutController
 import igrek.songbook.songselection.random.RandomSongOpener
 import igrek.songbook.songselection.search.SongSearchLayoutController
+import igrek.songbook.songselection.top.TopSongsLayoutController
 import igrek.songbook.songselection.tree.SongTreeLayoutController
 import igrek.songbook.system.SoftKeyboardService
 import java.util.*

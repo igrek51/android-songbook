@@ -24,8 +24,8 @@ import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.favourite.FavouritesLayoutController
 import igrek.songbook.songselection.history.OpenHistoryLayoutController
 import igrek.songbook.songselection.latest.LatestSongsLayoutController
-import igrek.songbook.songselection.latest.TopSongsLayoutController
 import igrek.songbook.songselection.search.SongSearchLayoutController
+import igrek.songbook.songselection.top.TopSongsLayoutController
 import igrek.songbook.songselection.tree.SongTreeLayoutController
 import javax.inject.Inject
 import kotlin.reflect.KClass

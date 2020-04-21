@@ -128,6 +128,11 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_privacy">
+        <SwitchPreference
+            android:key="anonymousUsageData"
+            android:title="@string/settings_send_anonymous_usage_data"
+            android:summary="@string/settings_send_anonymous_usage_data_hint"
+            app:iconSpaceReserved="false" />
         <Preference
             android:title="@string/settings_show_privacy_policy"
             android:key="settingsPrivacyPolicy"

@@ -238,6 +238,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
             openPrivacyPolicy()
         }
 
+        setupSwitchPreference("anonymousUsageData",
+                onLoad = { preferencesState.get().anonymousUsageData },
+                onSave = { value: Boolean ->
+                    preferencesState.get().anonymousUsageData = value
+                }
+        )
+
         setupSwitchPreference("keepScreenOn",
                 onLoad = { preferencesState.get().keepScreenOn },
                 onSave = { value: Boolean ->

@@ -391,4 +391,6 @@
     <string name="multichoice_invert">Invert</string>
     <string name="song_languages">Song languages</string>
     <string name="nav_top_songs">Top songs</string>
+    <string name="settings_send_anonymous_usage_data">Send anonymous usage data</string>
+    <string name="settings_send_anonymous_usage_data_hint">Send anonymous statistical usage data to improve Top songs ranking</string>
 </resources>

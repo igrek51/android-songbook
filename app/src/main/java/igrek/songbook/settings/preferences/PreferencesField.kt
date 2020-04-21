@@ -79,6 +79,8 @@ enum class PreferencesField constructor(
 
     KeepScreenOn(true),
 
+    AnonymousUsageData(false),
+
     ;
 
     constructor(defaultValue: String) : this(StringPreferenceType(defaultValue))

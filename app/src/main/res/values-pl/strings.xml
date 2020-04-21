@@ -368,4 +368,6 @@
     <string name="multichoice_invert">Odwróć</string>
     <string name="song_languages">Języki piosenek</string>
     <string name="nav_top_songs">Top lista</string>
+    <string name="settings_send_anonymous_usage_data">Przesyłaj anonimowe dane o użyciu</string>
+    <string name="settings_send_anonymous_usage_data_hint">Przesyłaj anonimowe dane statystyczne o użyciu w celu poprawy rankingu najpopularniejszych piosenek</string>
 </resources>
