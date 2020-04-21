@@ -11,6 +11,7 @@ import igrek.songbook.activity.OptionSelectDispatcher
 import igrek.songbook.admin.AdminService
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.admin.antechamber.AntechamberService
+import igrek.songbook.admin.antechamber.SongRankService
 import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.chords.lyrics.LyricsLoader
 import igrek.songbook.chords.transpose.ChordsTransposerManager
@@ -168,5 +169,6 @@ interface FactoryComponent {
     fun inject(there: AdService)
     fun inject(there: SongExportFileChooser)
     fun inject(there: TopSongsLayoutController)
+    fun inject(there: SongRankService)
 
 }

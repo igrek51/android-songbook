@@ -16,6 +16,7 @@ import igrek.songbook.activity.OptionSelectDispatcher
 import igrek.songbook.admin.AdminService
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.admin.antechamber.AntechamberService
+import igrek.songbook.admin.antechamber.SongRankService
 import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.chords.lyrics.LyricsLoader
 import igrek.songbook.chords.transpose.ChordsTransposerManager
@@ -359,6 +360,10 @@ open class FactoryModule(private val activity: AppCompatActivity) {
     @Provides
     @Singleton
     fun aAdService(): AdService = AdService()
+
+    @Provides
+    @Singleton
+    fun aUpdateRankService(): SongRankService = SongRankService()
 
     /*
 	 * Empty service pattern:

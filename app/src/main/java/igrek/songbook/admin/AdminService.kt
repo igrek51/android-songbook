@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.admin.antechamber.AntechamberService
+import igrek.songbook.admin.antechamber.SongRankService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -34,12 +35,13 @@ class AdminService {
     lateinit var uiResourceService: UiResourceService
     @Inject
     lateinit var antechamberService: AntechamberService
-
     @Inject
     lateinit var activity: Activity
-
     @Inject
     lateinit var softKeyboardService: SoftKeyboardService
+
+    @Inject
+    lateinit var songRankService: SongRankService
 
     var userAuthToken: String
         get() = preferencesState.userAuthToken
@@ -88,13 +90,11 @@ class AdminService {
     }
 
     fun updateRankDialog(song: Song) {
-        val secretTitle = uiResourceService.resString(R.string.action_secret)
         val dlgAlert = AlertDialog.Builder(activity)
-        dlgAlert.setMessage(uiResourceService.resString(R.string.unlock_type_in_secret_key))
-        dlgAlert.setTitle(secretTitle)
+        dlgAlert.setMessage(uiResourceService.resString(R.string.admin_update_rank))
 
         val input = EditText(activity)
-        input.inputType = InputType.TYPE_CLASS_TEXT
+        input.inputType = InputType.TYPE_CLASS_NUMBER
         input.setText(song.rank?.toString().orEmpty())
         dlgAlert.setView(input)
 
@@ -114,6 +114,14 @@ class AdminService {
     }
 
     private fun updateRank(song: Song, rank: Double?) {
-        // TODO push request
+        uiInfoService.showInfoIndefinite(R.string.admin_sending)
+        songRankService.updateRank(song, rank)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    uiInfoService.showInfo(R.string.admin_success)
+                }, { error ->
+                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
+                    uiInfoService.showInfoIndefinite(message)
+                })
     }
 }
