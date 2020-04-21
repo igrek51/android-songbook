@@ -185,7 +185,7 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
             setSongFilter(null)
         } else {
             softKeyboardService.hideSoftKeyboard(searchFilterEdit)
-            layoutController.showLayout(SongTreeLayoutController::class)
+            layoutController.showPreviousLayoutOrQuit()
         }
     }
 
