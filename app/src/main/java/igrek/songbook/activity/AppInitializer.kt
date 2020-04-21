@@ -7,6 +7,7 @@ import igrek.songbook.admin.AdminService
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
+import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.ad.AdService
 import igrek.songbook.persistence.general.SongsUpdater
 import igrek.songbook.persistence.repository.SongsRepository
@@ -14,9 +15,10 @@ import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesState
-import igrek.songbook.songselection.tree.SongTreeLayoutController
+import igrek.songbook.songselection.top.TopSongsLayoutController
 import igrek.songbook.system.WindowManagerService
 import javax.inject.Inject
+import kotlin.reflect.KClass
 
 
 class AppInitializer {
@@ -45,6 +47,7 @@ class AppInitializer {
     lateinit var adService: Lazy<AdService>
 
     private val logger = LoggerFactory.logger
+    private val startingScreen: KClass<out MainLayout> = TopSongsLayoutController::class
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -61,7 +64,7 @@ class AppInitializer {
         songsRepository.get().init()
         layoutController.get().init()
         windowManagerService.get().hideTaskbar()
-        layoutController.get().showLayout(SongTreeLayoutController::class)
+        layoutController.get().showLayout(startingScreen)
         songsUpdater.get().checkUpdateIsAvailable()
         adService.get().initialize()
         adminService.get().init()
