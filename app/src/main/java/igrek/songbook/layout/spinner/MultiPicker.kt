@@ -26,7 +26,7 @@ class MultiPicker<T>(
         builder.setMultiChoiceItems(namesArray, valuesArray, this)
         builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
             dialog.dismiss()
-            onChange.invoke(getSelected())
+            onChange.invoke(selected)
         }
         builder.setNeutralButton(R.string.multichoice_invert) { dialog, _ ->
             invertSelection()

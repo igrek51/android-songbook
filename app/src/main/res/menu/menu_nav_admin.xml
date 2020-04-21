@@ -35,14 +35,14 @@
             android:id="@+id/nav_latest"
             android:icon="@drawable/newest"
             android:title="@string/nav_latest" />
-        <item
-            android:id="@+id/nav_history"
-            android:icon="@drawable/history"
-            android:title="@string/nav_history" />
     </group>
     <group
         android:id="@+id/nav_group2"
         android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_history"
+            android:icon="@drawable/history"
+            android:title="@string/nav_history" />
         <item
             android:id="@+id/nav_last_song"
             android:icon="@drawable/note"

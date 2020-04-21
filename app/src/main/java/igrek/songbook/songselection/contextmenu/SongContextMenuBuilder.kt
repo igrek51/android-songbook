@@ -148,6 +148,11 @@ class SongContextMenuBuilder {
                         executor = { song ->
                             antechamberService.get().deleteAntechamberSongUI(song)
                         }),
+                SongContextAction(R.string.admin_update_rank,
+                        availableCondition = { song -> song.isPublic() && adminService.get().isAdminEnabled() },
+                        executor = { song ->
+                            adminService.get().updateRankDialog(song)
+                        }),
         )
 
         actions.forEach { action ->
