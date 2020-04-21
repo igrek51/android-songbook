@@ -10,6 +10,7 @@ import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import io.reactivex.Observable
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import okhttp3.MediaType
@@ -52,10 +53,8 @@ class SongRankService {
     fun updateRank(song: Song, rank: Double?): Observable<Boolean> {
         song.rank = rank
         logger.info("Updating song rank: $song")
-        val dto = ChordsSongDto(
-                rank = song.rank,
-        )
-        val json = jsonSerializer.stringify(ChordsSongDto.serializer(), dto)
+        val dto = SongRankUpdateDto(rank = song.rank)
+        val json = jsonSerializer.stringify(SongRankUpdateDto.serializer(), dto)
         val request: Request = Request.Builder()
                 .url(updatePublicSongIdUrl(song.id))
                 .put(RequestBody.create(jsonType, json))
@@ -68,3 +67,8 @@ class SongRankService {
     }
 
 }
+
+@Serializable
+data class SongRankUpdateDto(
+        var rank: Double? = null,
+)
