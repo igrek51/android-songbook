@@ -14,8 +14,8 @@ import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.SongClickListener
-import igrek.songbook.songselection.SongListView
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
+import igrek.songbook.songselection.lazy.LazySongListView
 import igrek.songbook.songselection.search.SongSearchItem
 import igrek.songbook.songselection.tree.SongTreeItem
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -44,13 +44,10 @@ class LatestSongsLayoutController : InflatedLayout(
     @Inject
     lateinit var appLanguageService: Lazy<AppLanguageService>
 
-    private var itemsListView: SongListView? = null
-
+    private var itemsListView: LazySongListView? = null
     private var storedScroll: ListScrollPosition? = null
-
     private var subscriptions = mutableListOf<Disposable>()
-
-    private val latestSongsCount = 100
+    private val latestSongsCount = 200
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -59,8 +56,10 @@ class LatestSongsLayoutController : InflatedLayout(
     override fun showLayout(layout: View) {
         super.showLayout(layout)
 
-        itemsListView = layout.findViewById(R.id.itemsList)
-        itemsListView!!.init(activity, this)
+
+        itemsListView = layout.findViewById<LazySongListView>(R.id.itemsList)?.also {
+            it.init(activity, this, songContextMenuBuilder)
+        }
         updateItemsList()
 
         subscriptions.forEach { s -> s.dispose() }
@@ -84,7 +83,7 @@ class LatestSongsLayoutController : InflatedLayout(
                 .take(latestSongsCount)
                 .map { song -> SongSearchItem.song(song) }
                 .toList()
-        itemsListView!!.setItems(latestSongs)
+        itemsListView?.setItems(latestSongs)
 
         if (storedScroll != null) {
             Handler(Looper.getMainLooper()).post {
