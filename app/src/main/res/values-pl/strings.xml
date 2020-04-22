@@ -125,32 +125,32 @@
         \n\n1. Zaznacz akordy w nawiasach kwadratowych, np. \"między [C G# A7 F#maj7] słowami\".
         \n\n2. Mieszaj akordy z tekstem w tej samej linii, umieszczając je tuż przed słowami, gdzie występują, dokładnie wskazując moment zmiany akordu i jego akcentu w tekście, np. \"[C]And no reli[Cmaj7]gion [F]too\". Nie umieszczaj ich w osobnej linii ponad tekstem (wtedy sposób wyświetlania możesz zawsze zmienić w ustawieniach, więc pozwól innym wybrać ich ulubiony sposób wyświetlania). Umieszczanie akordów w tej samej linii jest niezmiernie ważne, bo pozwala to wyświetlać akordy zawsze w poprawnym miejscu, niezależnie od róźnych krojów czcionki i zawijania wyrazów. Nie martw się o Twój ulubiony styl wyświetlania akordów - Guitar Songbook wykona całą tą magię dla Ciebie.
         \n\n3. Jeśli fragment piosenki się powtarza (np. refren), skopiuj go we wszystkie miejsca wystąpień. Kiedy piosenka zachowuje ciągłość, ułatwi to jej późniejsze przewijanie i nie będziesz musiał przewijać piosenki za każdym razem, aby wrócić do akordów refrenu. Nie umieszczaj odnośników lub akapitów w stylu \"Refren\", \"Zwrotka\", \"Tytuł\", \"Solo\", \"Instrumental\". Umieść tylko tekst piosenki z akordami.
-        \n\n4. Upewnij się, że wybrałeś odpowiednią notację dla swoich akordów.
+        \n\n4. Upewnij się, że wybrałeś odpowiednią notację dla swoich akordów (\"Am\" lub \"a\").
         \n\n5. Jeśli piosenka ma trudny rytm z często zmieniającymi się akordami, umieść akordy między poszczególnymi słowami lub nawet w środku wyrazów, aby wskazać sylabę, w której akcentowany jest akord, np. \"[G]Hotel Cali[D]fornia\". W przypadku prostych akordów możesz umieścić akordy na końcu linii: \"Smoke on the water [C G#]\"
-        \n\n6. Możesz użyć kreski "-", aby połączyć szybko zmieniające się akordy: \"D Dsus2-D-Dsus4\" lub użyć nawiasów \"()\", aby wskazać opcjonalność akordów: [C G (G7)].
+        \n\n6. Możesz użyć kreski \"-\", aby połączyć szybko zmieniające się akordy: \"D Dsus2-D-Dsus4\" lub użyć nawiasów \"()\", aby wskazać opcjonalność akordów: [C G (G7)].
         \n\n7. Przed zapisaniem piosenki sprawdź jej poprawność i skonwertuj do standardowego formatu, szczególnie jeśli zamierzasz udostępnić ją publicznie.
         \n
         \nEdytor posiada wiele przydatnych narzędzi:
-        \n- Cofnij - cofnięcie ostatnich zmian
-        \n- Linia - zaznacz całą linię lub następne linie
-        \n- Duplikuj - powiel zaznaczenie
-        \n- Uporządkuj - Sformatuj tekst i akordy do standardowego fromatu
-        \n- Sprawdź - Zweryfikuj poprawność akordów
-        \n- Wykryj akordy - Automatycznie znajdź i oznacz akordy na podstawie wybranej notacji akordów, zachowując ich oryginalną poziomą pozycję (ustawioną spacjami) poprzez usunięcie zbędnych 2 spacji na każde dodane znaczniki \"[ ]\".
-        \n- Transformuj - Otwiera listę pozostałych transformacji
-        \n- Przesuń akordy z górnych linii do pasujących słów - łączy po dwie linie (górną z akordami i dolną z tekstem), przesuwając akordy (wyrównane spacjami) z górnej linii to dolnej, dopasowując akordy do słów, nad którymi się znajdują.
-        \n- Przesuń akordy z góry na koniec linii - łączy po dwie linie (górną z akordami i dolną z tekstem), przesuwając wszystkie akordy na koniec linii za tekstem
-        \n- Konwertuj z innej notacji akordów - Konwertuje wszystkie akordy z innej notacji akordów na notację wybraną dla piosenki
-        \n- Usuń podwójne puste linie - Zamienia podwójne Entery (załamania wierszy) na pojedyncze
-        \n- Zamień Fis -> F# - Zamienia wszystkie nazwy dźwięków kończące się na \"is\" na notację \"#\"
-        \n- Odznacz akordy - Usuwa wszystkie znaczniki akordów: \"[\" i \"]\"
-        \n- Zaznacz akordy (nie zachowując wcięć) - Automatycznie znajduje i zaznacza akordy poprzez otoczenie ich znakami \"[ ]\". Dodanie takich znaków może wpłynąć na poziomą pozycję akordów znajdujących się na końcu.
-        \n- \u276E - przesuwa kursor o jeden znak w lewo
-        \n- \u276F - przesuwa kursor o jeden znak w prawo
-        \n- [ / ] - wstawia pasujący nawias (otwierający lub zamykający)
-        \n- [Akord] - Wstawia parę nawiasów wokół zaznaczonego tekstu
-        \n- [Kopiuj] - Kopiuje zaznaczone akordy
-        \n- [Wklej] - Wkleja skopiowane akordy
+        \n- Cofnij: cofnięcie ostatnich zmian
+        \n- Linia: zaznacz całą linię lub następne linie
+        \n- Duplikuj: powiel zaznaczenie
+        \n- Uporządkuj: Sformatuj tekst i akordy do standardowego fromatu
+        \n- Sprawdź: Zweryfikuj poprawność akordów
+        \n- Wykryj akordy: Automatycznie znajdź i oznacz akordy na podstawie wybranej notacji akordów, zachowując ich oryginalną poziomą pozycję (ustawioną spacjami) poprzez usunięcie zbędnych 2 spacji na każde dodane znaczniki \"[ ]\".
+        \n- Transformuj: Otwiera listę pozostałych transformacji
+        \n- Przesuń akordy z górnych linii do pasujących słów: łączy po dwie linie (górną z akordami i dolną z tekstem), przesuwając akordy (wyrównane spacjami) z górnej linii to dolnej, dopasowując akordy do słów, nad którymi się znajdują.
+        \n- Przesuń akordy z góry na koniec linii: łączy po dwie linie (górną z akordami i dolną z tekstem), przesuwając wszystkie akordy na koniec linii za tekstem
+        \n- Konwertuj z innej notacji akordów: Konwertuje wszystkie akordy z innej notacji akordów na notację wybraną dla piosenki
+        \n- Usuń podwójne puste linie: Zamienia podwójne Entery (załamania wierszy) na pojedyncze
+        \n- Zamień Fis -> F#: Zamienia wszystkie nazwy dźwięków kończące się na \"is\" na notację \"#\"
+        \n- Odznacz akordy: Usuwa wszystkie znaczniki akordów: \"[\" i \"]\"
+        \n- Zaznacz akordy (nie zachowując wcięć): Automatycznie znajduje i zaznacza akordy poprzez otoczenie ich znakami \"[ ]\". Dodanie takich znaków może wpłynąć na poziomą pozycję akordów znajdujących się na końcu.
+        \n- \u276E: przesuwa kursor o jeden znak w lewo
+        \n- \u276F: przesuwa kursor o jeden znak w prawo
+        \n- [ / ]: wstawia pasujący nawias (otwierający lub zamykający)
+        \n- [Akord]: Wstawia parę nawiasów wokół zaznaczonego tekstu
+        \n- [Kopiuj]: Kopiuje zaznaczone akordy
+        \n- [Wklej]: Wkleja skopiowane akordy
     </string>
     <string name="import_song_content_hint">
         Tekst piosenki z [akordami] w tej samej linii
