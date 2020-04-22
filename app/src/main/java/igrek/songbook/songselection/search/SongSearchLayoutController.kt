@@ -14,12 +14,18 @@ import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.contact.SendMessageService
 import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.layout.MainLayout
+import igrek.songbook.info.UiResourceService
+import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.persistence.repository.AllSongsRepository
-import igrek.songbook.songselection.SongSelectionLayoutController
+import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.songpreview.SongOpener
+import igrek.songbook.songselection.SongClickListener
+import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
+import igrek.songbook.songselection.listview.LazySongListView
 import igrek.songbook.songselection.listview.ListScrollPosition
 import igrek.songbook.songselection.tree.SongTreeItem
 import igrek.songbook.songselection.tree.SongTreeLayoutController
+import igrek.songbook.songselection.tree.SongTreeSorter
 import igrek.songbook.system.SoftKeyboardService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -28,8 +34,32 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
-open class SongSearchLayoutController : SongSelectionLayoutController(), MainLayout {
+open class SongSearchLayoutController : InflatedLayout(
+        _layoutResourceId = R.layout.screen_song_search
+), SongClickListener {
 
+    @Inject
+    lateinit var songsRepository: SongsRepository
+
+    @Inject
+    lateinit var uiResourceService: UiResourceService
+
+    @Inject
+    lateinit var songContextMenuBuilder: SongContextMenuBuilder
+
+    @Inject
+    lateinit var songOpener: SongOpener
+
+    @Inject
+    lateinit var softKeyboardService: SoftKeyboardService
+
+    @Inject
+    lateinit var songTreeLayoutController: Lazy<SongTreeLayoutController>
+
+    @Inject
+    lateinit var sendMessageService: Lazy<SendMessageService>
+
+    private var itemsListView: LazySongListView? = null
     private var searchFilterEdit: EditText? = null
     private var emptySearchButton: Button? = null
     private var searchFilterSubject: PublishSubject<String> = PublishSubject.create()
@@ -37,19 +67,13 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
     private var storedScroll: ListScrollPosition? = null
     private var subscriptions = mutableListOf<Disposable>()
 
-    @Inject
-    lateinit var softKeyboardService: SoftKeyboardService
-    @Inject
-    lateinit var songTreeLayoutController: Lazy<SongTreeLayoutController>
-    @Inject
-    lateinit var sendMessageService: Lazy<SendMessageService>
 
     init {
         DaggerIoc.factoryComponent.inject(this)
     }
 
     override fun showLayout(layout: View) {
-        initSongSelectionLayout(layout)
+        super.showLayout(layout)
 
         emptySearchButton = layout.findViewById<Button>(R.id.emptySearchButton)?.apply {
             setOnClickListener {
@@ -93,8 +117,10 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
             setOnClickListener { onClearFilterClicked() }
         }
 
-        itemsListView?.init(activity, this, songContextMenuBuilder)
-        updateSongItemsList()
+        itemsListView = layout.findViewById<LazySongListView>(R.id.itemsList)?.also {
+            it.init(activity, this, songContextMenuBuilder)
+        }
+        updateItemsList()
 
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
@@ -109,16 +135,15 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     if (layoutController.isState(this::class))
-                        updateSongItemsList()
+                        updateItemsList()
                 })
     }
 
-    override fun getLayoutResourceId(): Int {
-        return R.layout.screen_song_search
-    }
+    private fun updateItemsList() {
+        val items: MutableList<SongTreeItem> = getSongItems(songsRepository.allSongsRepo)
+        val sortedItems = SongTreeSorter().sort(items)
+        itemsListView?.setItems(sortedItems)
 
-    override fun updateSongItemsList() {
-        super.updateSongItemsList()
         // restore Scroll Position
         if (storedScroll != null) {
             Handler(Looper.getMainLooper()).post {
@@ -138,10 +163,10 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
             searchFilterEdit?.setText("", TextView.BufferType.EDITABLE)
         // reset scroll
         storedScroll = null
-        updateSongItemsList()
+        updateItemsList()
     }
 
-    override fun getSongItems(songsRepo: AllSongsRepository): MutableList<SongTreeItem> {
+    private fun getSongItems(songsRepo: AllSongsRepository): MutableList<SongTreeItem> {
         if (!isFilterSet()) { // no filter
             return songsRepo.songs.get()
                     .asSequence()
@@ -189,6 +214,10 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
         }
     }
 
+    fun openSongPreview(item: SongTreeItem) {
+        songOpener.openSongPreview(item.song!!)
+    }
+
     override fun onSongItemClick(item: SongTreeItem) {
         // store Scroll Position
         storedScroll = itemsListView?.currentScrollPosition
@@ -201,5 +230,11 @@ open class SongSearchLayoutController : SongSelectionLayoutController(), MainLay
         }
     }
 
-    override fun onLayoutExit() {}
+    override fun onSongItemLongClick(item: SongTreeItem) {
+        if (item.isSong) {
+            songContextMenuBuilder.showSongActions(item.song!!)
+        } else {
+            onSongItemClick(item)
+        }
+    }
 }

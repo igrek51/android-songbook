@@ -24,7 +24,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <igrek.songbook.songselection.listview.SongListView
-            android:id="@+id/filesList"
+            android:id="@+id/itemsList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 

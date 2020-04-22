@@ -14,8 +14,8 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.SongClickListener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
+import igrek.songbook.songselection.listview.LazySongListView
 import igrek.songbook.songselection.listview.ListScrollPosition
-import igrek.songbook.songselection.listview.SongListView
 import igrek.songbook.songselection.search.SongSearchItem
 import igrek.songbook.songselection.tree.SongTreeItem
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -37,7 +37,7 @@ class OpenHistoryLayoutController : InflatedLayout(
     @Inject
     lateinit var songOpener: SongOpener
 
-    private var itemsListView: SongListView? = null
+    private var itemsListView: LazySongListView? = null
     private var storedScroll: ListScrollPosition? = null
     private var subscriptions = mutableListOf<Disposable>()
 
@@ -48,8 +48,9 @@ class OpenHistoryLayoutController : InflatedLayout(
     override fun showLayout(layout: View) {
         super.showLayout(layout)
 
-        itemsListView = layout.findViewById(R.id.itemsList)
-        itemsListView!!.init(activity, this, songContextMenuBuilder)
+        itemsListView = layout.findViewById<LazySongListView>(R.id.itemsList)?.also {
+            it.init(activity, this, songContextMenuBuilder)
+        }
         updateItemsList()
 
         subscriptions.forEach { s -> s.dispose() }
@@ -78,7 +79,7 @@ class OpenHistoryLayoutController : InflatedLayout(
             val song = songsRepository.allSongsRepo.songFinder.find(songIdentifier)
             if (song != null) SongSearchItem.song(song) else null
         }
-        itemsListView!!.setItems(opened)
+        itemsListView?.setItems(opened)
 
         if (storedScroll != null) {
             Handler(Looper.getMainLooper()).post {

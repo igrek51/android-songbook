@@ -55,7 +55,7 @@ abstract class SongSelectionLayoutController : SongClickListener {
             navMenuButton.setOnClickListener { navigationMenuController.navDrawerShow() }
         }
 
-        itemsListView = layout.findViewById(R.id.filesList)
+        itemsListView = layout.findViewById(R.id.itemsList)
     }
 
     open fun updateSongItemsList() {

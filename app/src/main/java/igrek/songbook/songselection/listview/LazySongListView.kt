@@ -71,6 +71,7 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
 
     fun restoreScrollPosition(scrollPosition: ListScrollPosition?) {
         if (scrollPosition != null) {
+            recalculateVisibleItems(scrollPosition.firstVisiblePosition, initialLazyRenderCount)
             setSelection(scrollPosition.firstVisiblePosition)
             smoothScrollBy(scrollPosition.yOffsetPx, 100)
             invalidate()
