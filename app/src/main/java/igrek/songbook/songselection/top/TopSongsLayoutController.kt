@@ -17,8 +17,8 @@ import igrek.songbook.settings.language.SongLanguage
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.SongClickListener
-import igrek.songbook.songselection.SongListView
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
+import igrek.songbook.songselection.lazy.LazySongListView
 import igrek.songbook.songselection.search.SongSearchItem
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.tree.SongTreeItem
@@ -48,11 +48,11 @@ class TopSongsLayoutController : InflatedLayout(
     @Inject
     lateinit var appLanguageService: Lazy<AppLanguageService>
 
-    private var itemsListView: SongListView? = null
+    private var itemsListView: LazySongListView? = null
     private var storedScroll: ListScrollPosition? = null
     private var languagePicker: MultiPicker<SongLanguage>? = null
     private var subscriptions = mutableListOf<Disposable>()
-    private val topSongsCount = 300
+    private val topSongsCount = 500
 
     init {
         DaggerIoc.factoryComponent.inject(this)
@@ -61,8 +61,9 @@ class TopSongsLayoutController : InflatedLayout(
     override fun showLayout(layout: View) {
         super.showLayout(layout)
 
-        itemsListView = layout.findViewById(R.id.itemsList)
-        itemsListView!!.init(activity, this)
+        itemsListView = layout.findViewById<LazySongListView>(R.id.itemsList)?.also {
+            it.init(activity, this, songContextMenuBuilder)
+        }
         updateItemsList()
 
         layout.findViewById<ImageButton>(R.id.searchSongButton)?.run {
@@ -112,7 +113,7 @@ class TopSongsLayoutController : InflatedLayout(
                 .take(topSongsCount)
                 .map { song -> SongSearchItem.song(song) }
                 .toList()
-        itemsListView!!.setItems(latestSongs)
+        itemsListView?.setItems(latestSongs)
 
         if (storedScroll != null) {
             Handler(Looper.getMainLooper()).post {
