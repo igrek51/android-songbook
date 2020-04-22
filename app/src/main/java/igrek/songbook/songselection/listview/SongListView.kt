@@ -1,10 +1,12 @@
-package igrek.songbook.songselection
+package igrek.songbook.songselection.listview
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ListView
+import igrek.songbook.songselection.SongClickListener
+import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.tree.SongTreeItem
 
 class SongListView : ListView, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
@@ -27,12 +29,12 @@ class SongListView : ListView, AdapterView.OnItemClickListener, AdapterView.OnIt
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
-    fun init(context: Context, onClickListener: SongClickListener) {
+    fun init(context: Context, onClickListener: SongClickListener, songContextMenuBuilder: SongContextMenuBuilder) {
         this.onClickListener = onClickListener
         onItemClickListener = this
         onItemLongClickListener = this
         choiceMode = CHOICE_MODE_SINGLE
-        adapter = SongListItemAdapter(context, null)
+        adapter = SongListItemAdapter(context, emptyList(), songContextMenuBuilder)
         setAdapter(adapter)
     }
 

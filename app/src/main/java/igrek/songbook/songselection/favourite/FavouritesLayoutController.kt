@@ -8,8 +8,8 @@ import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.persistence.repository.AllSongsRepository
-import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.SongSelectionLayoutController
+import igrek.songbook.songselection.listview.ListScrollPosition
 import igrek.songbook.songselection.search.SongSearchItem
 import igrek.songbook.songselection.tree.SongTreeItem
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -35,7 +35,7 @@ class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
 
         emptyListLabel = layout.findViewById(R.id.emptyListLabel)
 
-        itemsListView!!.init(activity, this)
+        itemsListView!!.init(activity, this, songContextMenuBuilder)
         updateSongItemsList()
 
         subscriptions.forEach { s -> s.dispose() }

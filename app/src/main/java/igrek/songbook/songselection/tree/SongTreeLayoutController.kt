@@ -48,7 +48,7 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
 
         toolbarTitle = layout.findViewById(R.id.toolbarTitle)
 
-        itemsListView!!.init(activity, this)
+        itemsListView!!.init(activity, this, songContextMenuBuilder)
         updateSongItemsList()
 
         subscriptions.forEach { s -> s.dispose() }

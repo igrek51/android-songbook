@@ -12,10 +12,10 @@ import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.songpreview.SongOpener
-import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.SongClickListener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
-import igrek.songbook.songselection.lazy.LazySongListView
+import igrek.songbook.songselection.listview.LazySongListView
+import igrek.songbook.songselection.listview.ListScrollPosition
 import igrek.songbook.songselection.search.SongSearchItem
 import igrek.songbook.songselection.tree.SongTreeItem
 import io.reactivex.android.schedulers.AndroidSchedulers

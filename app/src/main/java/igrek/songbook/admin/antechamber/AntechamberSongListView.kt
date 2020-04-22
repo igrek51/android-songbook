@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ListView
 import igrek.songbook.persistence.general.model.Song
-import igrek.songbook.songselection.ListScrollPosition
+import igrek.songbook.songselection.listview.ListScrollPosition
 
 class AntechamberSongListView : ListView, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 

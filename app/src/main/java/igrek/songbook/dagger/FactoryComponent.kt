@@ -62,13 +62,12 @@ import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.SongPreview
-import igrek.songbook.songselection.SongListItemAdapter
-import igrek.songbook.songselection.SongListView
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.favourite.FavouriteSongsService
 import igrek.songbook.songselection.favourite.FavouritesLayoutController
 import igrek.songbook.songselection.history.OpenHistoryLayoutController
 import igrek.songbook.songselection.latest.LatestSongsLayoutController
+import igrek.songbook.songselection.listview.SongListView
 import igrek.songbook.songselection.random.RandomSongOpener
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.top.TopSongsLayoutController
@@ -132,7 +131,6 @@ interface FactoryComponent {
     fun inject(there: ChordsEditorLayoutController)
     fun inject(there: ContextMenuBuilder)
     fun inject(there: UserDataDao)
-    fun inject(there: SongListItemAdapter)
     fun inject(there: QuickMenuAutoscroll)
     fun inject(there: UIErrorHandler)
     fun inject(there: SongListView)

@@ -1,4 +1,4 @@
-package igrek.songbook.songselection.lazy
+package igrek.songbook.songselection.listview
 
 import android.content.Context
 import android.util.AttributeSet
@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.AbsListView
 import android.widget.AdapterView
 import android.widget.ListView
-import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.SongClickListener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.tree.SongTreeItem
@@ -15,7 +14,7 @@ import igrek.songbook.util.limitTo
 
 class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, AbsListView.OnScrollListener {
 
-    private var adapter: LazySongListItemAdapter? = null
+    private var adapter: SongListItemAdapter? = null
     private var onClickListener: SongClickListener? = null
     private var allItems: List<SongTreeItem> = emptyList()
     private var renderItemsCount: Int = 0
@@ -43,7 +42,7 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
         onItemClickListener = this
         onItemLongClickListener = this
         choiceMode = CHOICE_MODE_SINGLE
-        adapter = LazySongListItemAdapter(context, emptyList(), songContextMenuBuilder)
+        adapter = SongListItemAdapter(context, emptyList(), songContextMenuBuilder)
         setAdapter(adapter)
         setOnScrollListener(this)
     }

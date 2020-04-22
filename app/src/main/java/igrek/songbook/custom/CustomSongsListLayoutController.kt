@@ -20,8 +20,8 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.custom.CustomCategory
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.songpreview.SongOpener
-import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
+import igrek.songbook.songselection.listview.ListScrollPosition
 import igrek.songbook.songselection.tree.NoParentItemException
 import igrek.songbook.system.locale.InsensitiveNameComparator
 import io.reactivex.android.schedulers.AndroidSchedulers

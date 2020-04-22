@@ -21,8 +21,8 @@ import igrek.songbook.persistence.user.playlist.Playlist
 import igrek.songbook.playlist.list.PlaylistListItem
 import igrek.songbook.playlist.list.PlaylistListView
 import igrek.songbook.songpreview.SongOpener
-import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
+import igrek.songbook.songselection.listview.ListScrollPosition
 import igrek.songbook.songselection.tree.NoParentItemException
 import igrek.songbook.util.ListMover
 import io.reactivex.android.schedulers.AndroidSchedulers

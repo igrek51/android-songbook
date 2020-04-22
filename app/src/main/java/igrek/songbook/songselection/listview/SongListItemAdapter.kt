@@ -1,4 +1,4 @@
-package igrek.songbook.songselection.lazy
+package igrek.songbook.songselection.listview
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.tree.SongTreeItem
 import java.util.*
 
-class LazySongListItemAdapter internal constructor(
+class SongListItemAdapter internal constructor(
         context: Context,
         private var _dataSource: List<SongTreeItem> = emptyList(),
         songContextMenuBuilder: SongContextMenuBuilder,
@@ -43,5 +43,4 @@ class LazySongListItemAdapter internal constructor(
         val item = _dataSource[position]
         return viewFactory.getView(item, parent)
     }
-
 }

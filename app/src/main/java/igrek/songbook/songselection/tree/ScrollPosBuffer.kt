@@ -2,7 +2,7 @@ package igrek.songbook.songselection.tree
 
 import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.persistence.general.model.Category
-import igrek.songbook.songselection.ListScrollPosition
+import igrek.songbook.songselection.listview.ListScrollPosition
 
 class ScrollPosBuffer {
 

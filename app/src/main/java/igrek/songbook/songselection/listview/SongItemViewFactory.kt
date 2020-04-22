@@ -1,4 +1,4 @@
-package igrek.songbook.songselection.lazy
+package igrek.songbook.songselection.listview
 
 import android.view.LayoutInflater
 import android.view.View

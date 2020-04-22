@@ -12,10 +12,10 @@ import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.songpreview.SongOpener
-import igrek.songbook.songselection.ListScrollPosition
 import igrek.songbook.songselection.SongClickListener
-import igrek.songbook.songselection.SongListView
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
+import igrek.songbook.songselection.listview.ListScrollPosition
+import igrek.songbook.songselection.listview.SongListView
 import igrek.songbook.songselection.search.SongSearchItem
 import igrek.songbook.songselection.tree.SongTreeItem
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -49,7 +49,7 @@ class OpenHistoryLayoutController : InflatedLayout(
         super.showLayout(layout)
 
         itemsListView = layout.findViewById(R.id.itemsList)
-        itemsListView!!.init(activity, this)
+        itemsListView!!.init(activity, this, songContextMenuBuilder)
         updateItemsList()
 
         subscriptions.forEach { s -> s.dispose() }

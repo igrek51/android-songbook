@@ -12,7 +12,7 @@ import android.widget.AdapterView
 import android.widget.ListView
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.layout.list.ListItemClickListener
-import igrek.songbook.songselection.ListScrollPosition
+import igrek.songbook.songselection.listview.ListScrollPosition
 
 class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
