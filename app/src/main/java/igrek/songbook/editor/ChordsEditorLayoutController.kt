@@ -113,7 +113,7 @@ class ChordsEditorLayoutController : MainLayout {
         buttonOnClick(R.id.addChordSplitterButton) { transformer?.addChordSplitter() }
         buttonOnClick(R.id.copyChordButton) { transformer?.onCopyChordClick() }
         buttonOnClick(R.id.pasteChordButton) { transformer?.onPasteChordClick() }
-        buttonOnClick(R.id.detectChordsButton) { wrapHistoryContext { transformer?.detectChords() } }
+        buttonOnClick(R.id.detectChordsButton) { wrapHistoryContext { transformer?.detectChords(keepIndentation = true) } }
         buttonOnClick(R.id.undoChordsButton) { undoChange() }
         buttonOnClick(R.id.transformChordsButton) { showTransformMenu() }
         buttonOnClick(R.id.moveLeftButton) { moveCursor(-1) }
@@ -160,7 +160,7 @@ class ChordsEditorLayoutController : MainLayout {
                     wrapHistoryContext { transformer?.unmarkChords() }
                 },
                 ContextMenuBuilder.Action(R.string.chords_editor_detect_chords_keeping_indent) {
-                    wrapHistoryContext { transformer?.detectChords(keepIndentation = true) }
+                    wrapHistoryContext { transformer?.detectChords(keepIndentation = false) }
                 },
         )
         contextMenuBuilder.showContextMenu(R.string.edit_song_transform_chords, actions)

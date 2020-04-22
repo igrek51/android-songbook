@@ -136,7 +136,7 @@
         \n- Duplikuj - powiel zaznaczenie
         \n- Uporządkuj - Sformatuj tekst i akordy do standardowego fromatu
         \n- Sprawdź - Zweryfikuj poprawność akordów
-        \n- Wykryj akordy - Automatycznie znajdź i oznacz akordy na podstawie wybranej notacji akordów
+        \n- Wykryj akordy - Automatycznie znajdź i oznacz akordy na podstawie wybranej notacji akordów, zachowując ich oryginalną poziomą pozycję (ustawioną spacjami) poprzez usunięcie zbędnych 2 spacji na każde dodane znaczniki \"[ ]\".
         \n- Transformuj - Otwiera listę pozostałych transformacji
         \n- Przesuń akordy z górnych linii do pasujących słów - łączy po dwie linie (górną z akordami i dolną z tekstem), przesuwając akordy (wyrównane spacjami) z górnej linii to dolnej, dopasowując akordy do słów, nad którymi się znajdują.
         \n- Przesuń akordy z góry na koniec linii - łączy po dwie linie (górną z akordami i dolną z tekstem), przesuwając wszystkie akordy na koniec linii za tekstem
@@ -144,7 +144,7 @@
         \n- Usuń podwójne puste linie - Zamienia podwójne Entery (załamania wierszy) na pojedyncze
         \n- Zamień Fis -> F# - Zamienia wszystkie nazwy dźwięków kończące się na \"is\" na notację \"#\"
         \n- Odznacz akordy - Usuwa wszystkie znaczniki akordów: \"[\" i \"]\"
-        \n- Wykryj akordy zachowując wcięcia - Automatycznie znajduje i zaznacza akordy, zachowując ich oryginalną poziomą pozycję (ustawioną spacjami) poprzez usunięcie zbędnych 2 spacji na każde dodane znaczniki \"[ ]\".
+        \n- Zaznacz akordy (nie zachowując wcięć) - Automatycznie znajduje i zaznacza akordy poprzez otoczenie ich znakami \"[ ]\". Dodanie takich znaków może wpłynąć na poziomą pozycję akordów znajdujących się na końcu.
         \n- \u276E - przesuwa kursor o jeden znak w lewo
         \n- \u276F - przesuwa kursor o jeden znak w prawo
         \n- [ / ] - wstawia pasujący nawias (otwierający lub zamykający)
@@ -357,7 +357,7 @@
     <string name="chords_editor_duplicate">Duplikuj</string>
     <string name="chords_editor_select_line">Linia</string>
     <string name="chords_editor_unmark_chords">Odznacz akordy</string>
-    <string name="chords_editor_detect_chords_keeping_indent">Wykryj akordy zachowując wcięcia</string>
+    <string name="chords_editor_detect_chords_keeping_indent">Zaznacz akordy (nie zachowując wcięć)</string>
     <string name="settings_chords_editor">Edytor piosenek</string>
     <string name="settings_chords_editor_typeface">Krój czcionki edytora</string>
     <string name="settings_keep_screen_on">Zawsze włączony ekran</string>
