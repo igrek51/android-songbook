@@ -1,11 +1,14 @@
 package igrek.songbook.songselection.listview
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.View
 import android.widget.AbsListView
 import android.widget.AdapterView
 import android.widget.ListView
+import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.songselection.SongClickListener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.tree.SongTreeItem
@@ -63,18 +66,38 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
     fun setItems(items: List<SongTreeItem>) {
         allItems = items
         renderItemsCount = initialLazyRenderCount.limitTo(allItems.size)
-        recalculateVisibleItems(firstVisiblePosition, lastVisiblePosition - firstVisiblePosition)
 
-        showSubItems()
+        val refreshed = recalculateVisibleItems(firstVisiblePosition, lastVisiblePosition - firstVisiblePosition)
+        if (!refreshed)
+            showSubItems()
         invalidate()
     }
 
     fun restoreScrollPosition(scrollPosition: ListScrollPosition?) {
         if (scrollPosition != null) {
-            recalculateVisibleItems(scrollPosition.firstVisiblePosition, initialLazyRenderCount)
-            setSelection(scrollPosition.firstVisiblePosition)
-            smoothScrollBy(scrollPosition.yOffsetPx, 100)
-            invalidate()
+            restoreScrollRepeatedly(scrollPosition, 10)
+        }
+    }
+
+    private fun attemptRestoreScrollPosition(scrollPosition: ListScrollPosition) {
+        recalculateVisibleItems(scrollPosition.firstVisiblePosition, initialLazyRenderCount)
+        setSelection(scrollPosition.firstVisiblePosition)
+//        smoothScrollBy(scrollPosition.yOffsetPx, 100)
+    }
+
+    private fun restoreScrollRepeatedly(scrollPosition: ListScrollPosition, attempts: Int) {
+        attemptRestoreScrollPosition(scrollPosition)
+
+        val current = currentScrollPosition
+        if (current.firstVisiblePosition != scrollPosition.firstVisiblePosition) {
+
+            if (attempts > 1) {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    restoreScrollRepeatedly(scrollPosition, attempts - 1)
+                }, 100)
+            } else {
+                logger.warn("scroll restoring failed")
+            }
         }
     }
 
@@ -83,14 +106,17 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
         adapter?.setDataSource(visibleItems)
     }
 
-    private fun recalculateVisibleItems(firstVisible: Int, visibleCount: Int) {
-        if (firstVisible + visibleCount + lazyRenderPadding >= renderItemsCount) {
-            val newCount = (renderItemsCount + visibleCount + lazyRenderPadding).limitTo(allItems.size)
+    private fun recalculateVisibleItems(firstVisible: Int, visibleCount: Int): Boolean {
+        val lastVisible = firstVisible + visibleCount
+        if (lastVisible + lazyRenderPadding >= renderItemsCount) {
+            val newCount = (lastVisible + 2 * lazyRenderPadding).limitTo(allItems.size)
             if (newCount > renderItemsCount) {
                 renderItemsCount = newCount
                 showSubItems()
+                return true
             }
         }
+        return false
     }
 
     override fun onScroll(

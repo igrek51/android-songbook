@@ -1,7 +1,5 @@
 package igrek.songbook.songselection.history
 
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import igrek.songbook.R
 import igrek.songbook.dagger.DaggerIoc
@@ -82,9 +80,7 @@ class OpenHistoryLayoutController : InflatedLayout(
         itemsListView?.setItems(opened)
 
         if (storedScroll != null) {
-            Handler(Looper.getMainLooper()).post {
-                itemsListView?.restoreScrollPosition(storedScroll)
-            }
+            itemsListView?.restoreScrollPosition(storedScroll)
         }
     }
 

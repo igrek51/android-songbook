@@ -1,7 +1,5 @@
 package igrek.songbook.songselection.top
 
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.ImageButton
 import dagger.Lazy
@@ -116,9 +114,7 @@ class TopSongsLayoutController : InflatedLayout(
         itemsListView?.setItems(latestSongs)
 
         if (storedScroll != null) {
-            Handler(Looper.getMainLooper()).post {
-                itemsListView?.restoreScrollPosition(storedScroll)
-            }
+            itemsListView?.restoreScrollPosition(storedScroll)
         }
     }
 

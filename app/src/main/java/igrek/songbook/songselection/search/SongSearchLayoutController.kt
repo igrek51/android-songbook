@@ -146,9 +146,7 @@ open class SongSearchLayoutController : InflatedLayout(
 
         // restore Scroll Position
         if (storedScroll != null) {
-            Handler(Looper.getMainLooper()).post {
-                itemsListView?.restoreScrollPosition(storedScroll)
-            }
+            itemsListView?.restoreScrollPosition(storedScroll)
         }
 
         emptySearchButton?.visibility = when (itemsListView?.count) {
@@ -161,7 +159,6 @@ open class SongSearchLayoutController : InflatedLayout(
         this.itemNameFilter = itemNameFilter
         if (itemNameFilter == null)
             searchFilterEdit?.setText("", TextView.BufferType.EDITABLE)
-        // reset scroll
         storedScroll = null
         updateItemsList()
     }
