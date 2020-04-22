@@ -190,6 +190,12 @@ class ChordsEditorTransformer(
         return try {
             validateChordsBrackets(text)
             validateChordsNotation(text)
+
+            if (reformatNeeded()) {
+                val errorMessage = uiInfoService.resString(R.string.editor_reformat_error)
+                throw ChordsValidationError(errorMessage)
+            }
+
             null
         } catch (e: ChordsValidationError) {
             var errorMessage = e.errorMessage
@@ -328,29 +334,37 @@ class ChordsEditorTransformer(
                 .replace(Regex(""" +"""), " ")
     }
 
-    fun reformatAndTrim() {
-        transformLines { line ->
-            line.trim()
-                    .replace("\r\n", "\n")
-                    .replace("\r", "\n")
-                    .replace("\t", " ")
-                    .replace("\u00A0", " ")
-                    .replace("\uFFFD", "")
-                    .replace(Regex("""\[+"""), "[")
-                    .replace(Regex("""]+"""), "]")
-                    .replace(Regex("""\[ +"""), "[")
-                    .replace(Regex(""" +]"""), "]")
-                    .replace(Regex("""\[]"""), "")
-                    .replace(Regex(""" +"""), " ") // double+ spaces
-                    .replace(Regex("""] ?\["""), " ") // join adjacent chords
-        }
-        transformLyrics { lyrics ->
-            lyrics.replace("\r\n", "\n")
-                    .replace("\r", "\n")
-                    .replace(Regex("\n\n+"), "\n\n") // max 1 empty line
-                    .replace(Regex("^\n+"), "")
-                    .replace(Regex("\n+$"), "")
-        }
+    fun reformatAndTrimEditor() {
+        transformLyrics(this::reformatAndTrim)
+    }
+
+    private fun reformatNeeded(): Boolean {
+        val original = textEditor.getText()
+        return original != reformatAndTrim(original)
+    }
+
+    fun reformatAndTrim(lyrics: String): String {
+        return lyrics.lines()
+                .joinToString(separator = "\n") { line ->
+                    line.trim()
+                            .replace("\r\n", "\n")
+                            .replace("\r", "\n")
+                            .replace("\t", " ")
+                            .replace("\u00A0", " ")
+                            .replace("\uFFFD", "")
+                            .replace(Regex("""\[+"""), "[")
+                            .replace(Regex("""]+"""), "]")
+                            .replace(Regex("""\[ +"""), "[")
+                            .replace(Regex(""" +]"""), "]")
+                            .replace(Regex("""\[]"""), "")
+                            .replace(Regex(""" +"""), " ") // double+ spaces
+                            .replace(Regex("""] ?\["""), " ") // join adjacent chords
+                }
+                .replace("\r\n", "\n")
+                .replace("\r", "\n")
+                .replace(Regex("\n\n+"), "\n\n") // max 1 empty line
+                .replace(Regex("^\n+"), "")
+                .replace(Regex("\n+$"), "")
     }
 
     fun removeDoubleEmptyLines() {

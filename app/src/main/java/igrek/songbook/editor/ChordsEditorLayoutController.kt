@@ -119,7 +119,7 @@ class ChordsEditorLayoutController : MainLayout {
         buttonOnClick(R.id.moveLeftButton) { moveCursor(-1) }
         buttonOnClick(R.id.moveRightButton) { moveCursor(+1) }
         buttonOnClick(R.id.validateChordsButton) { transformer?.validateChords() }
-        buttonOnClick(R.id.reformatTrimButton) { wrapHistoryContext { transformer?.reformatAndTrim() } }
+        buttonOnClick(R.id.reformatTrimButton) { wrapHistoryContext { transformer?.reformatAndTrimEditor() } }
         buttonOnClick(R.id.duplicateButton) { transformer?.duplicateSelection() }
         buttonOnClick(R.id.selectLineButton) { transformer?.selectNextLine() }
     }

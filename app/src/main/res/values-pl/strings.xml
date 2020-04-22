@@ -244,8 +244,8 @@
     <string name="edit_song_add_chord_splitter">[ / ]</string>
     <string name="no_undo_changes">Brak zmian do cofnięcia</string>
     <string name="edit_song_validate_chords">Sprawdź</string>
-    <string name="chords_are_valid">Akordy poprawne. Wszystko jest git.</string>
-    <string name="chords_invalid">Akordy są niepoprawne: %s</string>
+    <string name="chords_are_valid">Akordy poprawne. Wszystko gra.</string>
+    <string name="chords_invalid">Niepoprawne akordy: %s</string>
     <string name="chords_invalid_missing_closing_bracket">Brak nawiasu domykającego \"]\"</string>
     <string name="chords_invalid_missing_opening_bracket">Brak nawiasu otwierającego \"[\"</string>
     <string name="chords_unknown_chord">Nieznany akord dla wybranej notacji: \"%s\"</string>
@@ -370,4 +370,5 @@
     <string name="nav_top_songs">Top lista</string>
     <string name="settings_send_anonymous_usage_data">Przesyłaj anonimowe dane o użyciu</string>
     <string name="settings_send_anonymous_usage_data_hint">Przesyłaj anonimowe dane statystyczne o użyciu w celu poprawy rankingu najpopularniejszych piosenek</string>
+    <string name="editor_reformat_error">Piosenka powinna zostać \"Uporządkowana\"</string>
 </resources>

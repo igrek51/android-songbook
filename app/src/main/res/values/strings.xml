@@ -248,7 +248,7 @@
     <string name="right_arrow" translatable="false">\u276F</string>
     <string name="no_undo_changes">No changes to undo</string>
     <string name="edit_song_validate_chords">Validate</string>
-    <string name="chords_are_valid">Everything\'s fine.</string>
+    <string name="chords_are_valid">Chords are valid. Everything\'s fine.</string>
     <string name="chords_invalid">Chords invalid: %s</string>
     <string name="chords_invalid_missing_closing_bracket">Missing closing bracket \"]\"</string>
     <string name="chords_invalid_missing_opening_bracket">Missing opening bracket \"[\"</string>
@@ -394,4 +394,5 @@
     <string name="settings_send_anonymous_usage_data">Send anonymous usage data</string>
     <string name="settings_send_anonymous_usage_data_hint">Send anonymous statistical usage data to improve Top songs ranking</string>
     <string name="admin_update_rank" translatable="false">[admin] Update rank</string>
+    <string name="editor_reformat_error">Song can be \"Reformatted\"</string>
 </resources>
