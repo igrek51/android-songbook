@@ -169,22 +169,7 @@ class ChordsEditorLayoutController : MainLayout {
     private fun wrapHistoryContext(action: () -> Unit) {
         history.save(textEditor)
         action.invoke()
-        restoreSelectionFromHistory()
-    }
-
-    private fun restoreSelectionFromHistory() {
-        val lastSelection = history.peekLastSelection()
-        if (lastSelection != null) {
-            var selStart = lastSelection.first
-            var selEnd = lastSelection.second
-            val maxLength = contentEdit!!.text.length
-            if (selStart > maxLength)
-                selStart = maxLength
-            if (selEnd > maxLength)
-                selEnd = maxLength
-            contentEdit?.setSelection(selStart, selEnd)
-            contentEdit?.requestFocus()
-        }
+        history.restoreSelectionFromHistory(textEditor)
     }
 
     private fun moveCursor(delta: Int) {

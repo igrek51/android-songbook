@@ -249,7 +249,7 @@
     <string name="no_undo_changes">No changes to undo</string>
     <string name="edit_song_validate_chords">Validate</string>
     <string name="chords_are_valid">Chords are valid. Everything\'s fine.</string>
-    <string name="chords_invalid">Chords invalid: %s</string>
+    <string name="editor_chords_invalid">Validation error: %s</string>
     <string name="chords_invalid_missing_closing_bracket">Missing closing bracket \"]\"</string>
     <string name="chords_invalid_missing_opening_bracket">Missing opening bracket \"[\"</string>
     <string name="chords_unknown_chord">Unknown chord regarding chosen notation: \"%s\"</string>
@@ -265,10 +265,10 @@
     <string name="transpose_plus_1" translatable="false">+1</string>
     <string name="transpose_plus_5" translatable="false">+5</string>
     <string name="editor_other_chords_detected">I\'ve found chords but related to another notation: \"%s\"</string>
-    <string name="editor_onexit_validation_failed">%s.
+    <string name="editor_onexit_validation_failed">There are validation errors:
+        \n%s
         \n
-        \nMake sure you have chosen right chords notation and verify the chords syntax.
-        Do you want to ignore these errors?</string>
+        \nDo you want to ignore these errors?</string>
     <string name="nav_playlists">Playlists</string>
     <string name="empty_playlists">No playlists. Create your own playlists e.g.:\n\"Learning\",\n\"Campfire songs\",\n\"Concert setlist\",\n\"Fingerstyle\"</string>
     <string name="action_add_to_playlist">Add to playlist</string>
@@ -394,5 +394,5 @@
     <string name="settings_send_anonymous_usage_data">Send anonymous usage data</string>
     <string name="settings_send_anonymous_usage_data_hint">Send anonymous statistical usage data to improve Top songs ranking</string>
     <string name="admin_update_rank" translatable="false">[admin] Update rank</string>
-    <string name="editor_reformat_error">Song can be \"Reformatted\"</string>
+    <string name="editor_reformat_error">Your song is not formatted properly. Use \"Reformat\" option.</string>
 </resources>

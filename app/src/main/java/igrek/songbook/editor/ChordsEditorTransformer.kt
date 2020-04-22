@@ -180,7 +180,7 @@ class ChordsEditorTransformer(
         if (errorMessage == null) {
             uiInfoService.showToast(R.string.chords_are_valid)
         } else {
-            val placeholder = uiInfoService.resString(R.string.chords_invalid)
+            val placeholder = uiInfoService.resString(R.string.editor_chords_invalid)
             uiInfoService.showToast(placeholder.format(errorMessage))
         }
     }

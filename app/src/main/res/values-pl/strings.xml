@@ -245,7 +245,7 @@
     <string name="no_undo_changes">Brak zmian do cofnięcia</string>
     <string name="edit_song_validate_chords">Sprawdź</string>
     <string name="chords_are_valid">Akordy poprawne. Wszystko gra.</string>
-    <string name="chords_invalid">Niepoprawne akordy: %s</string>
+    <string name="editor_chords_invalid">Błąd walidacji: %s</string>
     <string name="chords_invalid_missing_closing_bracket">Brak nawiasu domykającego \"]\"</string>
     <string name="chords_invalid_missing_opening_bracket">Brak nawiasu otwierającego \"[\"</string>
     <string name="chords_unknown_chord">Nieznany akord dla wybranej notacji: \"%s\"</string>
@@ -256,10 +256,10 @@
     <string name="no_new_chords_detected">Brak nowych akordów</string>
     <string name="new_chords_detected">Znalazłem nowe akordy: %s</string>
     <string name="editor_other_chords_detected">Znalazłem nowe akordy, ale z innej notacji: \"%s\"</string>
-    <string name="editor_onexit_validation_failed">%s.
+    <string name="editor_onexit_validation_failed">W piosence znaleziono błędy:
+        \n%s
         \n
-        \nUpewnij się, że wybrałeś odpowiednią notację akordów oraz zweryfikuj poprawność składni.
-        Czy chcesz zignorować te błędy?</string>
+        \nCzy chcesz zignorować te błędy?</string>
     <string name="nav_playlists">Playlisty</string>
     <string name="empty_playlists">Brak playlist. Utwórz własne playlisty, jak np.:\n\"Do nauki\",\n\"Ognisko\",\n\"Setlista na koncert\",\n\"Fingerstyle\"</string>
     <string name="action_add_to_playlist">Dodaj do playlisty</string>
@@ -370,5 +370,5 @@
     <string name="nav_top_songs">Top lista</string>
     <string name="settings_send_anonymous_usage_data">Przesyłaj anonimowe dane o użyciu</string>
     <string name="settings_send_anonymous_usage_data_hint">Przesyłaj anonimowe dane statystyczne o użyciu w celu poprawy rankingu najpopularniejszych piosenek</string>
-    <string name="editor_reformat_error">Piosenka powinna zostać \"Uporządkowana\"</string>
+    <string name="editor_reformat_error">Tekst piosenki niesformatowany. Użyj opcji \"Uporządkuj\"</string>
 </resources>
