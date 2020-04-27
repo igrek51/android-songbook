@@ -138,6 +138,7 @@ dependencies {
     // OkHttp
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'
     // Unit tests
+    testImplementation 'androidx.appcompat:appcompat:1.1.0'
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.22.0'
     testImplementation 'org.assertj:assertj-core:3.9.1'

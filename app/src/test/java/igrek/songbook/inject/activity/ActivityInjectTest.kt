@@ -50,7 +50,7 @@ private class AppFactory(
     val context: LazyInject<Context> = SingletonInject { activity.applicationContext }
     val logger: LazyInject<Logger> = PrototypeInject { LoggerFactory.logger }
 
-    val singletonCounter = PrototypeInject { Counter() }
+    val singletonCounter = SingletonInject { Counter() }
     val prototypeCounter = PrototypeInject { Counter() }
 }
 
@@ -64,7 +64,7 @@ class ServiceRequiringActivity(
     private val logger: Logger by LazyExtractor(logger)
 
     fun doSomethingWithActivity(): Boolean {
-        return !activity.isChild
+        return activity is AppCompatActivity
     }
 }
 
@@ -78,4 +78,6 @@ class Service2(
 
     val singletonCounter by LazyExtractor(singletonCounter)
     val prototypeCounter by LazyExtractor(prototypeCounter)
+
+    private val privateCounter by LazyExtractor(prototypeCounter)
 }
