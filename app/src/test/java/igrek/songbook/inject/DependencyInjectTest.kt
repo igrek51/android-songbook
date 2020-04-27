@@ -2,6 +2,8 @@ package igrek.songbook.inject
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KProperty
 
 
 class CrossDependencyInjectionTest {
@@ -34,10 +36,12 @@ class LazyInject<T : Any>(private val supplier: () -> T) {
 }
 
 class ServiceA(
-        private val serviceB: LazyInject<ServiceB> = AppContext.serviceB,
+        serviceB: LazyInject<ServiceB> = AppContext.serviceB,
 ) {
+    private val serviceB: ServiceB by LazyExtractor(serviceB)
+
     fun show1(): String {
-        return serviceB.get().show2()
+        return serviceB.show2()
     }
 
     fun show3(): String {
@@ -46,9 +50,20 @@ class ServiceA(
 }
 
 class ServiceB(
-        private val serviceA: LazyInject<ServiceA> = AppContext.serviceA,
+        serviceA: LazyInject<ServiceA> = AppContext.serviceA,
 ) {
+    private val serviceA: ServiceA by LazyExtractor(serviceA)
+
     fun show2(): String {
-        return serviceA.get().show3()
+        return serviceA.show3()
+    }
+}
+
+class LazyExtractor<F : Any, O : Any>(
+        private val lazyInject: LazyInject<F>
+) : ReadOnlyProperty<O, F> {
+
+    override fun getValue(thisRef: O, property: KProperty<*>): F {
+        return lazyInject.get()
     }
 }
