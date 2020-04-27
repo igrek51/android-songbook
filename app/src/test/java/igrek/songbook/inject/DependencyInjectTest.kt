@@ -2,43 +2,51 @@ package igrek.songbook.inject
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
 
 
 class CrossDependencyInjectionTest {
     @Test
-    fun test_crossDependcy() {
-        val serviceA = AppContext.serviceA.get()
+    fun test_circularDependcyResolving() {
+        val serviceA = appFactory.serviceA.get()
         assertThat(serviceA.show1()).isEqualTo("show3")
-        val serviceA2 = ServiceA(serviceB = LazyInject { ServiceB() })
+        val serviceA2 = ServiceA(serviceB = SingletonInject { ServiceB() })
         assertThat(serviceA2.show1()).isEqualTo("show3")
     }
-}
 
-object AppContext {
-    val serviceA = LazyInject { ServiceA() }
-    val serviceB = LazyInject { ServiceB() }
-}
+    @Test
+    fun creatingManyFactoryInstances() {
+        assertThat(appFactory.serviceA.get().show4()).isEqualTo("")
 
-class LazyInject<T : Any>(private val supplier: () -> T) {
-    private var cached: T? = null
+        AppContextFactory.createApp("ctx")
+        assertThat(appFactory.serviceA.get().show4()).isEqualTo("ctx")
 
-    fun get(): T {
-        val cachedSnapshot = cached
-        if (cachedSnapshot == null) {
-            val notNull = supplier.invoke()
-            cached = notNull
-            return notNull
-        }
-        return cachedSnapshot
+        AppContextFactory.createApp("brand-new")
+        assertThat(appFactory.serviceA.get().show4()).isEqualTo("brand-new")
     }
+}
+
+private var appFactory: AppFactory = AppFactory("")
+
+private object AppContextFactory {
+    fun createApp(parameterP: String) {
+        appFactory = AppFactory(parameterP)
+    }
+}
+
+private class AppFactory(
+        parameterP: String
+) {
+    val parameterP = SingletonInject { parameterP }
+    val serviceA = SingletonInject { ServiceA() }
+    val serviceB = SingletonInject { ServiceB() }
 }
 
 class ServiceA(
-        serviceB: LazyInject<ServiceB> = AppContext.serviceB,
+        serviceB: LazyInject<ServiceB> = appFactory.serviceB,
+        parameterP: LazyInject<String> = appFactory.parameterP,
 ) {
     private val serviceB: ServiceB by LazyExtractor(serviceB)
+    private val parameterP by LazyExtractor(parameterP)
 
     fun show1(): String {
         return serviceB.show2()
@@ -47,23 +55,18 @@ class ServiceA(
     fun show3(): String {
         return "show3"
     }
+
+    fun show4(): String {
+        return parameterP
+    }
 }
 
 class ServiceB(
-        serviceA: LazyInject<ServiceA> = AppContext.serviceA,
+        serviceA: LazyInject<ServiceA> = appFactory.serviceA,
 ) {
     private val serviceA: ServiceA by LazyExtractor(serviceA)
 
     fun show2(): String {
         return serviceA.show3()
-    }
-}
-
-class LazyExtractor<F : Any, O : Any>(
-        private val lazyInject: LazyInject<F>
-) : ReadOnlyProperty<O, F> {
-
-    override fun getValue(thisRef: O, property: KProperty<*>): F {
-        return lazyInject.get()
     }
 }

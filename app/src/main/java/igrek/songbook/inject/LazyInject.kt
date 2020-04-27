@@ -1,9 +1,13 @@
 package igrek.songbook.inject
 
-class LazyInject<T>(private val supplier: () -> T) {
+interface LazyInject<T> {
+    fun get(): T
+}
+
+class SingletonInject<T>(private val supplier: () -> T) : LazyInject<T> {
     private var cached: T? = null
 
-    fun get(): T {
+    override fun get(): T {
         val cachedSnapshot = cached
         if (cachedSnapshot == null) {
             val notNull = supplier.invoke()
@@ -12,4 +16,8 @@ class LazyInject<T>(private val supplier: () -> T) {
         }
         return cachedSnapshot
     }
+}
+
+class PrototypeInject<T>(private val supplier: () -> T) : LazyInject<T> {
+    override fun get(): T = supplier.invoke()
 }
