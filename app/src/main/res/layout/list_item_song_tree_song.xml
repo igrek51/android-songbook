@@ -5,7 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:descendantFocusability="blocksDescendants">
+    android:clickable="false"
+    android:descendantFocusability="blocksDescendants"
+    android:focusable="false"
+    android:focusableInTouchMode="false">
 
     <ImageView
         android:id="@+id/songImage"
@@ -36,6 +39,8 @@
         android:layout_toStartOf="@+id/itemSongMoreButton"
         android:gravity="start|center_vertical"
         android:text=""
+        android:clickable="false"
+        android:focusable="false"
         android:textSize="16sp"/>
 
 

@@ -15,7 +15,7 @@ class SongItemViewFactory(
         private val songContextMenuBuilder: SongContextMenuBuilder,
 ) {
 
-    fun getView(item: SongTreeItem, parent: ViewGroup): View {
+    fun createView(item: SongTreeItem, parent: ViewGroup): View {
         if (item is SongSearchItem) {
             return createTitleArtistSongView(item, parent)
         }

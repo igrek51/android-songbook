@@ -25,6 +25,8 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
     private val initialLazyRenderCount = 30
     private val lazyRenderPadding = 20
 
+    private var scrollState: Int = OnScrollListener.SCROLL_STATE_IDLE
+
     val currentScrollPosition: ListScrollPosition
         get() {
             var yOffset = 0
@@ -48,6 +50,7 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
         adapter = SongListItemAdapter(context, emptyList(), songContextMenuBuilder)
         setAdapter(adapter)
         setOnScrollListener(this)
+        scrollState = OnScrollListener.SCROLL_STATE_IDLE
     }
 
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
@@ -70,7 +73,6 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
         val refreshed = recalculateVisibleItems(firstVisiblePosition, lastVisiblePosition - firstVisiblePosition)
         if (!refreshed)
             showSubItems()
-        invalidate()
     }
 
     fun restoreScrollPosition(scrollPosition: ListScrollPosition?) {
@@ -122,8 +124,12 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
     override fun onScroll(
             view: AbsListView?, firstVisible: Int, visibleCount: Int, totalCount: Int,
     ) {
-        recalculateVisibleItems(firstVisible, visibleCount)
+        if (scrollState != OnScrollListener.SCROLL_STATE_IDLE) {
+            recalculateVisibleItems(firstVisible, visibleCount)
+        }
     }
 
-    override fun onScrollStateChanged(v: AbsListView?, s: Int) {}
+    override fun onScrollStateChanged(view: AbsListView?, scrollState: Int) {
+        this.scrollState = scrollState
+    }
 }
