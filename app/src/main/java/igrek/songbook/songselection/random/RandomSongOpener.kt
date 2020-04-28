@@ -7,6 +7,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.favourite.FavouriteSongsService
@@ -18,12 +19,14 @@ class RandomSongOpener(
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
         songOpener: LazyInject<SongOpener> = appFactory.songOpener,
         preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+        appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
 ) {
     private val songsRepository by LazyExtractor(songsRepository)
     private val favouriteSongsService by LazyExtractor(favouriteSongsService)
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val songOpener by LazyExtractor(songOpener)
     private val preferencesState by LazyExtractor(preferencesState)
+    private val appLanguageService by LazyExtractor(appLanguageService)
 
     private var fromFavouriteSongsOnly: Boolean
         get() = preferencesState.randomFavouriteSongsOnly
@@ -52,7 +55,10 @@ class RandomSongOpener(
         return if (fromFavouriteSongsOnly) {
             favouriteSongsService.getFavouriteSongs().toList()
         } else {
+            val acceptedLanguages = appLanguageService.selectedSongLanguages
+            val acceptedLangCodes = acceptedLanguages.map { lang -> lang.langCode } + "" + null
             songsRepository.allSongsRepo.songs.get()
+                    .filter { song -> song.language in acceptedLangCodes }
         }
     }
 }

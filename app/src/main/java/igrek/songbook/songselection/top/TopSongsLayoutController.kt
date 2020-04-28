@@ -90,7 +90,7 @@ class TopSongsLayoutController(
 
     private fun updateItemsList() {
         val acceptedLanguages = appLanguageService.selectedSongLanguages
-        val acceptedLangCodes = acceptedLanguages.map { lang -> lang.langCode } + ""
+        val acceptedLangCodes = acceptedLanguages.map { lang -> lang.langCode } + "" + null
         val latestSongs = songsRepository.publicSongsRepo.songs.get()
                 .asSequence()
                 .filter { it.isPublic() }

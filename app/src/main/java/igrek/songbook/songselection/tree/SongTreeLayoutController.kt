@@ -105,7 +105,7 @@ class SongTreeLayoutController(
 
     override fun getSongItems(songsRepo: AllSongsRepository): MutableList<SongTreeItem> {
         val acceptedLanguages = appLanguageService.selectedSongLanguages
-        val acceptedLangCodes = acceptedLanguages.map { lang -> lang.langCode } + ""
+        val acceptedLangCodes = acceptedLanguages.map { lang -> lang.langCode } + "" + null
         return if (isCategorySelected()) {
             // selected category
             currentCategory?.getUnlockedSongs().orEmpty()
