@@ -1,41 +1,37 @@
 package igrek.songbook.songpreview
 
-import dagger.Lazy
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.history.OpenedSong
-import javax.inject.Inject
 
-class SongOpener {
-
-    @Inject
-    lateinit var layoutController: Lazy<LayoutController>
-    @Inject
-    lateinit var songPreviewLayoutController: Lazy<SongPreviewLayoutController>
-    @Inject
-    lateinit var songsRepository: SongsRepository
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
+class SongOpener(
+        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+        songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
+        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+) {
+    private val layoutController by LazyExtractor(layoutController)
+    private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
+    private val songsRepository by LazyExtractor(songsRepository)
+    private val uiInfoService by LazyExtractor(uiInfoService)
 
     fun openSongPreview(song: Song) {
-        songPreviewLayoutController.get().currentSong = song
-        layoutController.get().showLayout(SongPreviewLayoutController::class)
+        songPreviewLayoutController.currentSong = song
+        layoutController.showLayout(SongPreviewLayoutController::class)
         songsRepository.openHistoryDao.registerOpenedSong(song.id, song.isCustom())
     }
 
     fun openLastSong() {
-        if (songPreviewLayoutController.get().currentSong != null) {
-            layoutController.get().showLayout(SongPreviewLayoutController::class)
+        if (songPreviewLayoutController.currentSong != null) {
+            layoutController.showLayout(SongPreviewLayoutController::class)
             return
         }
 

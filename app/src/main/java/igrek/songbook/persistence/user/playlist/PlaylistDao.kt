@@ -1,31 +1,29 @@
 package igrek.songbook.persistence.user.playlist
 
-import android.app.Activity
-import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
 import io.reactivex.subjects.PublishSubject
-import javax.inject.Inject
 
-class PlaylistDao(path: String) : AbstractJsonDao<PlaylistDb>(
+class PlaylistDao(
+        path: String,
+        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+) : AbstractJsonDao<PlaylistDb>(
         path,
         dbName = "playlist",
         schemaVersion = 1,
         clazz = PlaylistDb::class.java,
         serializer = PlaylistDb.serializer()
 ) {
+    private val songsRepository by LazyExtractor(songsRepository)
 
     val playlistDb: PlaylistDb get() = db!!
     val playlistDbSubject = PublishSubject.create<PlaylistDb>()
 
-    @Inject
-    lateinit var songsRepository: SongsRepository
-    @Inject
-    lateinit var activity: Activity
-
     init {
-        DaggerIoc.factoryComponent.inject(this)
         read()
     }
 

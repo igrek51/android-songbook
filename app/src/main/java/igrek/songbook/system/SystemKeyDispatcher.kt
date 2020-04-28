@@ -1,25 +1,21 @@
 package igrek.songbook.system
 
-import dagger.Lazy
-import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
-import javax.inject.Inject
 
-class SystemKeyDispatcher {
-
-    @Inject
-    lateinit var layoutController: Lazy<LayoutController>
-    @Inject
-    lateinit var autoscrollService: Lazy<AutoscrollService>
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
+class SystemKeyDispatcher(
+        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+        autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
+) {
+    private val layoutController by LazyExtractor(layoutController)
+    private val autoscrollService by LazyExtractor(autoscrollService)
 
     fun onKeyBack(): Boolean {
-        layoutController.get().onBackClicked()
+        layoutController.onBackClicked()
         return true
     }
 
@@ -28,14 +24,14 @@ class SystemKeyDispatcher {
     }
 
     fun onVolumeUp(): Boolean {
-        if (!layoutController.get().isState(SongPreviewLayoutController::class))
+        if (!layoutController.isState(SongPreviewLayoutController::class))
             return false
-        return autoscrollService.get().onVolumeUp()
+        return autoscrollService.onVolumeUp()
     }
 
     fun onVolumeDown(): Boolean {
-        if (!layoutController.get().isState(SongPreviewLayoutController::class))
+        if (!layoutController.isState(SongPreviewLayoutController::class))
             return false
-        return autoscrollService.get().onVolumeDown()
+        return autoscrollService.onVolumeDown()
     }
 }

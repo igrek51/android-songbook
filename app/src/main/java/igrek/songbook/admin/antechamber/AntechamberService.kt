@@ -1,16 +1,17 @@
 package igrek.songbook.admin.antechamber
 
-import dagger.Lazy
+
 import igrek.songbook.R
 import igrek.songbook.admin.AdminService
 import igrek.songbook.admin.HttpRequester
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory.logger
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
-import igrek.songbook.persistence.repository.SongsRepository
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.serialization.json.Json
@@ -20,19 +21,15 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
 import java.util.*
-import javax.inject.Inject
 
-
-class AntechamberService {
-
-    @Inject
-    lateinit var songsRepository: SongsRepository
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-    @Inject
-    lateinit var adminService: Lazy<AdminService>
+class AntechamberService(
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        adminService: LazyInject<AdminService> = appFactory.adminService,
+) {
+    private val uiResourceService by LazyExtractor(uiResourceService)
+    private val uiInfoService by LazyExtractor(uiInfoService)
+    private val adminService by LazyExtractor(adminService)
 
     companion object {
         private const val antechamberApiBase = "https://antechamber.chords.igrek.dev/api/v4"
@@ -50,14 +47,10 @@ class AntechamberService {
     private val jsonType = MediaType.parse("application/json; charset=utf-8")
     private val jsonSerializer = Json(JsonConfiguration.Stable)
 
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
-
     fun downloadSongs(): Observable<List<Song>> {
         val request: Request = Request.Builder()
                 .url(allSongsUrl)
-                .addHeader(authTokenHeader, adminService.get().userAuthToken)
+                .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
         return httpRequester.httpRequest(request) { response: Response ->
             val json = response.body()?.string() ?: ""
@@ -73,7 +66,7 @@ class AntechamberService {
         val request: Request = Request.Builder()
                 .url(specificSongUrl(song.id))
                 .put(RequestBody.create(jsonType, json))
-                .addHeader(authTokenHeader, adminService.get().userAuthToken)
+                .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
         return httpRequester.httpRequest(request) { true }
     }
@@ -94,7 +87,7 @@ class AntechamberService {
         val request: Request = Request.Builder()
                 .url(specificSongUrl(song.id))
                 .delete()
-                .addHeader(authTokenHeader, adminService.get().userAuthToken)
+                .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
         return httpRequester.httpRequest(request) { true }
     }
@@ -108,7 +101,7 @@ class AntechamberService {
         val request: Request = Request.Builder()
                 .url(updatePublicSongIdUrl(song.id))
                 .put(RequestBody.create(jsonType, json))
-                .addHeader(authTokenHeader, adminService.get().userAuthToken)
+                .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
         return httpRequester.httpRequest(request) { response: Response ->
             logger.debug("Update response", response.body()?.string())
@@ -124,7 +117,7 @@ class AntechamberService {
         val request: Request = Request.Builder()
                 .url(approveSongUrl)
                 .post(RequestBody.create(jsonType, json))
-                .addHeader(authTokenHeader, adminService.get().userAuthToken)
+                .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
         return httpRequester.httpRequest(request) { response: Response ->
             logger.debug("Approve response", response.body()?.string())

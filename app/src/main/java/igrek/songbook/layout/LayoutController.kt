@@ -3,7 +3,6 @@ package igrek.songbook.layout
 import android.app.Activity
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
@@ -12,10 +11,12 @@ import igrek.songbook.contact.MissingSongLayoutController
 import igrek.songbook.contact.PublishSongLayoutController
 import igrek.songbook.custom.CustomSongsListLayoutController
 import igrek.songbook.custom.EditSongLayoutController
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.editor.ChordsEditorLayoutController
 import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.ad.AdService
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.playlist.PlaylistLayoutController
@@ -27,68 +28,61 @@ import igrek.songbook.songselection.latest.LatestSongsLayoutController
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.top.TopSongsLayoutController
 import igrek.songbook.songselection.tree.SongTreeLayoutController
-import javax.inject.Inject
 import kotlin.reflect.KClass
 
-class LayoutController {
-
-    @Inject
-    lateinit var activity: Activity
-    @Inject
-    lateinit var navigationMenuController: Lazy<NavigationMenuController>
-    @Inject
-    lateinit var activityController: Lazy<ActivityController>
-    @Inject
-    lateinit var adService: Lazy<AdService>
-
-    @Inject
-    lateinit var songTreeLayoutController: Lazy<SongTreeLayoutController>
-    @Inject
-    lateinit var songSearchLayoutController: Lazy<SongSearchLayoutController>
-    @Inject
-    lateinit var songPreviewLayoutController: Lazy<SongPreviewLayoutController>
-    @Inject
-    lateinit var contactLayoutController: Lazy<ContactLayoutController>
-    @Inject
-    lateinit var settingsLayoutController: Lazy<SettingsLayoutController>
-    @Inject
-    lateinit var editSongLayoutController: Lazy<EditSongLayoutController>
-    @Inject
-    lateinit var chordsEditorLayoutController: Lazy<ChordsEditorLayoutController>
-    @Inject
-    lateinit var customSongsListLayoutController: Lazy<CustomSongsListLayoutController>
-    @Inject
-    lateinit var favouritesLayoutController: Lazy<FavouritesLayoutController>
-    @Inject
-    lateinit var playlistLayoutController: Lazy<PlaylistLayoutController>
-    @Inject
-    lateinit var latestSongsLayoutController: Lazy<LatestSongsLayoutController>
-    @Inject
-    lateinit var topSongsLayoutController: Lazy<TopSongsLayoutController>
-
-    @Inject
-    lateinit var openHistoryLayoutController: Lazy<OpenHistoryLayoutController>
-    @Inject
-    lateinit var missingSongLayoutController: Lazy<MissingSongLayoutController>
-    @Inject
-    lateinit var publishSongLayoutController: Lazy<PublishSongLayoutController>
-    @Inject
-    lateinit var adminSongsLayoutContoller: Lazy<AdminSongsLayoutContoller>
+class LayoutController(
+        activity: LazyInject<Activity> = appFactory.activity,
+        navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
+        activityController: LazyInject<ActivityController> = appFactory.activityController,
+        adService: LazyInject<AdService> = appFactory.adService,
+        songTreeLayoutController: LazyInject<SongTreeLayoutController> = appFactory.songTreeLayoutController,
+        songSearchLayoutController: LazyInject<SongSearchLayoutController> = appFactory.songSearchLayoutController,
+        songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
+        contactLayoutController: LazyInject<ContactLayoutController> = appFactory.contactLayoutController,
+        settingsLayoutController: LazyInject<SettingsLayoutController> = appFactory.settingsLayoutController,
+        editSongLayoutController: LazyInject<EditSongLayoutController> = appFactory.editSongLayoutController,
+        chordsEditorLayoutController: LazyInject<ChordsEditorLayoutController> = appFactory.chordsEditorLayoutController,
+        customSongsListLayoutController: LazyInject<CustomSongsListLayoutController> = appFactory.customSongsListLayoutController,
+        favouritesLayoutController: LazyInject<FavouritesLayoutController> = appFactory.favouritesLayoutController,
+        playlistLayoutController: LazyInject<PlaylistLayoutController> = appFactory.playlistLayoutController,
+        latestSongsLayoutController: LazyInject<LatestSongsLayoutController> = appFactory.latestSongsLayoutController,
+        topSongsLayoutController: LazyInject<TopSongsLayoutController> = appFactory.topSongsLayoutController,
+        openHistoryLayoutController: LazyInject<OpenHistoryLayoutController> = appFactory.openHistoryLayoutController,
+        missingSongLayoutController: LazyInject<MissingSongLayoutController> = appFactory.missingSongLayoutController,
+        publishSongLayoutController: LazyInject<PublishSongLayoutController> = appFactory.publishSongLayoutController,
+        adminSongsLayoutContoller: LazyInject<AdminSongsLayoutContoller> = appFactory.adminSongsLayoutContoller,
+) {
+    private val activity by LazyExtractor(activity)
+    private val navigationMenuController by LazyExtractor(navigationMenuController)
+    private val activityController by LazyExtractor(activityController)
+    private val adService by LazyExtractor(adService)
+    private val songTreeLayoutController by LazyExtractor(songTreeLayoutController)
+    private val songSearchLayoutController by LazyExtractor(songSearchLayoutController)
+    private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
+    private val contactLayoutController by LazyExtractor(contactLayoutController)
+    private val settingsLayoutController by LazyExtractor(settingsLayoutController)
+    private val editSongLayoutController by LazyExtractor(editSongLayoutController)
+    private val chordsEditorLayoutController by LazyExtractor(chordsEditorLayoutController)
+    private val customSongsListLayoutController by LazyExtractor(customSongsListLayoutController)
+    private val favouritesLayoutController by LazyExtractor(favouritesLayoutController)
+    private val playlistLayoutController by LazyExtractor(playlistLayoutController)
+    private val latestSongsLayoutController by LazyExtractor(latestSongsLayoutController)
+    private val topSongsLayoutController by LazyExtractor(topSongsLayoutController)
+    private val openHistoryLayoutController by LazyExtractor(openHistoryLayoutController)
+    private val missingSongLayoutController by LazyExtractor(missingSongLayoutController)
+    private val publishSongLayoutController by LazyExtractor(publishSongLayoutController)
+    private val adminSongsLayoutContoller by LazyExtractor(adminSongsLayoutContoller)
 
     private lateinit var mainContentLayout: CoordinatorLayout
     private var currentLayout: MainLayout? = null
     private var layoutHistory: MutableList<MainLayout> = mutableListOf()
-    private var registeredLayouts: Map<KClass<out MainLayout>, Lazy<out MainLayout>> = emptyMap()
+    private var registeredLayouts: Map<KClass<out MainLayout>, MainLayout> = emptyMap()
     private val logger = LoggerFactory.logger
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     fun init() {
         activity.setContentView(R.layout.main_layout)
         mainContentLayout = activity.findViewById(R.id.main_content)
-        navigationMenuController.get().init()
+        navigationMenuController.init()
         registerLayouts()
     }
 
@@ -109,14 +103,13 @@ class LayoutController {
                 OpenHistoryLayoutController::class to openHistoryLayoutController,
                 MissingSongLayoutController::class to missingSongLayoutController,
                 PublishSongLayoutController::class to publishSongLayoutController,
-                AdminSongsLayoutContoller::class to adminSongsLayoutContoller
+                AdminSongsLayoutContoller::class to adminSongsLayoutContoller,
         )
     }
 
     fun showLayout(layoutClass: KClass<out MainLayout>, disableReturn: Boolean = false) {
-        val lazyLayout = registeredLayouts[layoutClass]
+        val layoutController = registeredLayouts[layoutClass]
                 ?: throw IllegalArgumentException("${layoutClass.simpleName} class not registered as layout")
-        val layoutController = lazyLayout.get()
 
         if (disableReturn) {
             // remove current layout from history
@@ -151,7 +144,7 @@ class LayoutController {
     }
 
     private fun postInitLayout(currentLayout: MainLayout) {
-        adService.get().updateAdBanner(currentLayout)
+        adService.updateAdBanner(currentLayout)
     }
 
     fun showPreviousLayoutOrQuit() {
@@ -165,7 +158,7 @@ class LayoutController {
         }
 
         if (layoutHistory.isEmpty()) {
-            activityController.get().quit()
+            activityController.quit()
             return
         }
 
@@ -179,8 +172,8 @@ class LayoutController {
     }
 
     fun onBackClicked() {
-        if (navigationMenuController.get().isDrawerShown()) {
-            navigationMenuController.get().navDrawerHide()
+        if (navigationMenuController.isDrawerShown()) {
+            navigationMenuController.navDrawerHide()
             return
         }
         SafeExecutor {

@@ -6,8 +6,10 @@ import android.widget.ImageButton
 import android.widget.SeekBar
 import android.widget.TextView
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.slider.SliderController
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import io.reactivex.Observable
@@ -16,14 +18,13 @@ import io.reactivex.disposables.Disposable
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
-class QuickMenuAutoscroll {
-
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var autoscrollService: AutoscrollService
+class QuickMenuAutoscroll(
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+        autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
+) {
+    private val uiResourceService by LazyExtractor(uiResourceService)
+    private val autoscrollService by LazyExtractor(autoscrollService)
 
     var isVisible = false
         set(visible) {
@@ -49,15 +50,13 @@ class QuickMenuAutoscroll {
         get() = autoscrollService.isRunning
 
     init {
-        DaggerIoc.factoryComponent.inject(this)
-
-        autoscrollService.scrollStateSubject
+        this.autoscrollService.scrollStateSubject
                 .debounce(200, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     updateView()
                 }
-        autoscrollService.scrollSpeedAdjustmentSubject
+        this.autoscrollService.scrollSpeedAdjustmentSubject
                 .debounce(200, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {

@@ -10,12 +10,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.preference.*
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
-import igrek.songbook.layout.LayoutController
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
-import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.instrument.ChordsInstrument
@@ -32,33 +31,26 @@ import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.util.RetryDelayed
 import java.math.RoundingMode
 import java.text.DecimalFormat
-import javax.inject.Inject
 import kotlin.math.roundToInt
 
-
-class SettingsFragment : PreferenceFragmentCompat() {
-    @Inject
-    lateinit var layoutController: dagger.Lazy<LayoutController>
-    @Inject
-    lateinit var uiInfoService: dagger.Lazy<UiInfoService>
-    @Inject
-    lateinit var uiResourceService: dagger.Lazy<UiResourceService>
-    @Inject
-    lateinit var activity: dagger.Lazy<AppCompatActivity>
-    @Inject
-    lateinit var lyricsThemeService: dagger.Lazy<LyricsThemeService>
-    @Inject
-    lateinit var appLanguageService: dagger.Lazy<AppLanguageService>
-    @Inject
-    lateinit var chordsNotationService: dagger.Lazy<ChordsNotationService>
-    @Inject
-    lateinit var chordsInstrumentService: dagger.Lazy<ChordsInstrumentService>
-    @Inject
-    lateinit var preferencesState: dagger.Lazy<PreferencesState>
-    @Inject
-    lateinit var songsRepository: dagger.Lazy<SongsRepository>
-    @Inject
-    lateinit var googleSyncManager: dagger.Lazy<GoogleSyncManager>
+class SettingsFragment(
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+        lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
+        appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
+        chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
+        chordsInstrumentService: LazyInject<ChordsInstrumentService> = appFactory.chordsInstrumentService,
+        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+        googleSyncManager: LazyInject<GoogleSyncManager> = appFactory.googleSyncManager,
+) : PreferenceFragmentCompat() {
+    private val uiResourceService by LazyExtractor(uiResourceService)
+    private val activity by LazyExtractor(appCompatActivity)
+    private val lyricsThemeService by LazyExtractor(lyricsThemeService)
+    private val appLanguageService by LazyExtractor(appLanguageService)
+    private val chordsNotationService by LazyExtractor(chordsNotationService)
+    private val chordsInstrumentService by LazyExtractor(chordsInstrumentService)
+    private val preferencesState by LazyExtractor(preferencesState)
+    private val googleSyncManager by LazyExtractor(googleSyncManager)
 
     private var decimalFormat1: DecimalFormat = DecimalFormat("#.#")
     private var decimalFormat3: DecimalFormat = DecimalFormat("#.###")
@@ -73,7 +65,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        DaggerIoc.factoryComponent.inject(this)
         setPreferencesFromResource(R.xml.settings_def, rootKey)
         Handler(Looper.getMainLooper()).post {
             lateInit()
@@ -82,155 +73,155 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private fun lateInit() {
         setupListPreference("applicationLanguage",
-                appLanguageService.get().languageStringEntries(),
-                onLoad = { preferencesState.get().appLanguage.langCode },
+                appLanguageService.languageStringEntries(),
+                onLoad = { preferencesState.appLanguage.langCode },
                 onSave = { id: String ->
-                    preferencesState.get().appLanguage = AppLanguage.parseByLangCode(id)
+                    preferencesState.appLanguage = AppLanguage.parseByLangCode(id)
                             ?: AppLanguage.DEFAULT
                 }
         )
 
         setupListPreference("chordsInstrument",
-                chordsInstrumentService.get().instrumentEntries(),
-                onLoad = { preferencesState.get().chordsInstrument.id.toString() },
+                chordsInstrumentService.instrumentEntries(),
+                onLoad = { preferencesState.chordsInstrument.id.toString() },
                 onSave = { id: String ->
-                    preferencesState.get().chordsInstrument = ChordsInstrument.parseById(id.toLong())
+                    preferencesState.chordsInstrument = ChordsInstrument.parseById(id.toLong())
                             ?: ChordsInstrument.default
                 }
         )
 
         setupListPreference("chordsNotation",
-                chordsNotationService.get().chordsNotationEntries(),
-                onLoad = { preferencesState.get().chordsNotation.id.toString() },
+                chordsNotationService.chordsNotationEntries(),
+                onLoad = { preferencesState.chordsNotation.id.toString() },
                 onSave = { id: String ->
-                    preferencesState.get().chordsNotation = ChordsNotation.parseById(id.toLong())
+                    preferencesState.chordsNotation = ChordsNotation.parseById(id.toLong())
                             ?: ChordsNotation.default
                 }
         )
 
         setupListPreference("chordsDisplayStyle",
-                lyricsThemeService.get().displayStyleEntries(),
-                onLoad = { preferencesState.get().chordsDisplayStyle.id.toString() },
+                lyricsThemeService.displayStyleEntries(),
+                onLoad = { preferencesState.chordsDisplayStyle.id.toString() },
                 onSave = { id: String ->
-                    preferencesState.get().chordsDisplayStyle = DisplayStyle.mustParseById(id.toLong())
+                    preferencesState.chordsDisplayStyle = DisplayStyle.mustParseById(id.toLong())
                 }
         )
 
         setupListPreference("fontTypeface",
-                lyricsThemeService.get().fontTypefaceEntries(),
-                onLoad = { preferencesState.get().fontTypeface.id },
+                lyricsThemeService.fontTypefaceEntries(),
+                onLoad = { preferencesState.fontTypeface.id },
                 onSave = { id: String ->
-                    preferencesState.get().fontTypeface = FontTypeface.parseById(id)
+                    preferencesState.fontTypeface = FontTypeface.parseById(id)
                             ?: FontTypeface.default
                 }
         )
 
         setupListPreference("chordsEditorFontTypeface",
-                lyricsThemeService.get().fontTypefaceEntries(),
-                onLoad = { preferencesState.get().chordsEditorFontTypeface.id },
+                lyricsThemeService.fontTypefaceEntries(),
+                onLoad = { preferencesState.chordsEditorFontTypeface.id },
                 onSave = { id: String ->
-                    preferencesState.get().chordsEditorFontTypeface = FontTypeface.parseById(id)
+                    preferencesState.chordsEditorFontTypeface = FontTypeface.parseById(id)
                             ?: FontTypeface.MONOSPACE
                 }
         )
 
         setupListPreference("colorScheme",
-                lyricsThemeService.get().colorSchemeEntries(),
-                onLoad = { preferencesState.get().colorScheme.id.toString() },
+                lyricsThemeService.colorSchemeEntries(),
+                onLoad = { preferencesState.colorScheme.id.toString() },
                 onSave = { id: String ->
-                    preferencesState.get().colorScheme = ColorScheme.parseById(id.toLong())
+                    preferencesState.colorScheme = ColorScheme.parseById(id.toLong())
                             ?: ColorScheme.default
                 }
         )
 
         setupSeekBarPreference("autoscrollInitialPause", min = 0, max = 90000,
-                onLoad = { preferencesState.get().autoscrollInitialPause.toFloat() },
+                onLoad = { preferencesState.autoscrollInitialPause.toFloat() },
                 onSave = { value: Float ->
-                    preferencesState.get().autoscrollInitialPause = value.toLong()
+                    preferencesState.autoscrollInitialPause = value.toLong()
                 },
                 stringConverter = { value: Float ->
-                    uiResourceService.get().resString(R.string.settings_scroll_initial_pause_value, msToS(value).toString())
+                    uiResourceService.resString(R.string.settings_scroll_initial_pause_value, msToS(value).toString())
                 }
         )
 
         setupSeekBarPreference("autoscrollSpeed", min = AutoscrollService.MIN_SPEED, max = AutoscrollService.MAX_SPEED,
-                onLoad = { preferencesState.get().autoscrollSpeed },
+                onLoad = { preferencesState.autoscrollSpeed },
                 onSave = { value: Float ->
-                    preferencesState.get().autoscrollSpeed = value
+                    preferencesState.autoscrollSpeed = value
                 },
                 stringConverter = { value: Float ->
-                    uiResourceService.get().resString(R.string.settings_autoscroll_speed_value, decimal3(value))
+                    uiResourceService.resString(R.string.settings_autoscroll_speed_value, decimal3(value))
                 }
         )
 
         setupSeekBarPreference("fontSize", min = 5, max = 100,
-                onLoad = { preferencesState.get().fontsize },
+                onLoad = { preferencesState.fontsize },
                 onSave = { value: Float ->
-                    preferencesState.get().fontsize = value
+                    preferencesState.fontsize = value
                 },
                 stringConverter = { value: Float ->
-                    uiResourceService.get().resString(R.string.settings_font_size_value, decimal1(value))
+                    uiResourceService.resString(R.string.settings_font_size_value, decimal1(value))
                 }
         )
 
         setupSwitchPreference("autoscrollSpeedAutoAdjustment",
-                onLoad = { preferencesState.get().autoscrollSpeedAutoAdjustment },
+                onLoad = { preferencesState.autoscrollSpeedAutoAdjustment },
                 onSave = { value: Boolean ->
-                    preferencesState.get().autoscrollSpeedAutoAdjustment = value
+                    preferencesState.autoscrollSpeedAutoAdjustment = value
                 }
         )
 
         setupSwitchPreference("autoscrollSpeedVolumeKeys",
-                onLoad = { preferencesState.get().autoscrollSpeedVolumeKeys },
+                onLoad = { preferencesState.autoscrollSpeedVolumeKeys },
                 onSave = { value: Boolean ->
-                    preferencesState.get().autoscrollSpeedVolumeKeys = value
+                    preferencesState.autoscrollSpeedVolumeKeys = value
                 }
         )
 
         setupSwitchPreference("randomFavouriteSongsOnly",
-                onLoad = { preferencesState.get().randomFavouriteSongsOnly },
+                onLoad = { preferencesState.randomFavouriteSongsOnly },
                 onSave = { value: Boolean ->
-                    preferencesState.get().randomFavouriteSongsOnly = value
+                    preferencesState.randomFavouriteSongsOnly = value
                 }
         )
 
         setupMultiListPreference("filterLanguages",
-                appLanguageService.get().languageFilterEntries(),
+                appLanguageService.languageFilterEntries(),
                 onLoad = {
-                    appLanguageService.get().selectedSongLanguages.map { it.langCode }.toMutableSet()
+                    appLanguageService.selectedSongLanguages.map { it.langCode }.toMutableSet()
                 },
                 onSave = { ids: Set<String> ->
-                    appLanguageService.get().setSelectedSongLanguageCodes(ids)
+                    appLanguageService.setSelectedSongLanguageCodes(ids)
                 },
                 stringConverter = { ids: Set<String>, entriesMap: LinkedHashMap<String, String> ->
                     if (ids.isEmpty())
-                        uiResourceService.get().resString(R.string.none)
+                        uiResourceService.resString(R.string.none)
                     else
                         ids.map { id -> entriesMap[id].orEmpty() }.sorted().joinToString(separator = ", ")
                 }
         )
 
         setupSwitchPreference("customSongsGroupCategories",
-                onLoad = { preferencesState.get().customSongsGroupCategories },
+                onLoad = { preferencesState.customSongsGroupCategories },
                 onSave = { value: Boolean ->
-                    preferencesState.get().customSongsGroupCategories = value
+                    preferencesState.customSongsGroupCategories = value
                 }
         )
 
         setupSwitchPreference("restoreTransposition",
-                onLoad = { preferencesState.get().restoreTransposition },
+                onLoad = { preferencesState.restoreTransposition },
                 onSave = { value: Boolean ->
-                    preferencesState.get().restoreTransposition = value
+                    preferencesState.restoreTransposition = value
                 }
         )
 
         setupClickPreference("settingsSyncSave") {
-            googleSyncManager.get().syncSave()
+            googleSyncManager.syncSave()
         }
 
         setupClickPreference("settingsSyncRestore") {
             ConfirmDialogBuilder().confirmAction(R.string.settings_sync_restore_confirm) {
-                googleSyncManager.get().syncRestore()
+                googleSyncManager.syncRestore()
             }
         }
 
@@ -239,16 +230,16 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         setupSwitchPreference("anonymousUsageData",
-                onLoad = { preferencesState.get().anonymousUsageData },
+                onLoad = { preferencesState.anonymousUsageData },
                 onSave = { value: Boolean ->
-                    preferencesState.get().anonymousUsageData = value
+                    preferencesState.anonymousUsageData = value
                 }
         )
 
         setupSwitchPreference("keepScreenOn",
-                onLoad = { preferencesState.get().keepScreenOn },
+                onLoad = { preferencesState.keepScreenOn },
                 onSave = { value: Boolean ->
-                    preferencesState.get().keepScreenOn = value
+                    preferencesState.keepScreenOn = value
                 }
         )
 
@@ -258,7 +249,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private fun openPrivacyPolicy() {
         val uri = Uri.parse("https://docs.google.com/document/d/1_lzknjB5ZfBWwxEeOaaqE3qb_0ghx2HRmqpE5WIdTKQ")
         val i = Intent(Intent.ACTION_VIEW, uri)
-        activity.get().startActivity(i)
+        activity.startActivity(i)
     }
 
     private fun refreshFragment() {

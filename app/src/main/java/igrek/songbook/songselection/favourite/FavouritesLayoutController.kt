@@ -5,7 +5,9 @@ import android.os.Looper
 import android.view.View
 import android.widget.TextView
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.persistence.repository.AllSongsRepository
 import igrek.songbook.songselection.SongSelectionLayoutController
@@ -14,21 +16,16 @@ import igrek.songbook.songselection.search.SongSearchItem
 import igrek.songbook.songselection.tree.SongTreeItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import javax.inject.Inject
 
-class FavouritesLayoutController : SongSelectionLayoutController(), MainLayout {
-
-    @Inject
-    lateinit var favouriteSongsService: FavouriteSongsService
+class FavouritesLayoutController(
+        favouriteSongsService: LazyInject<FavouriteSongsService> = appFactory.favouriteSongsService,
+) : SongSelectionLayoutController(), MainLayout {
+    private val favouriteSongsService by LazyExtractor(favouriteSongsService)
 
     private var storedScroll: ListScrollPosition? = null
     private var emptyListLabel: TextView? = null
 
     private val subscriptions = mutableListOf<Disposable>()
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     override fun showLayout(layout: View) {
         initSongSelectionLayout(layout)

@@ -7,24 +7,21 @@ import android.text.InputType
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.system.SoftKeyboardService
-import javax.inject.Inject
 
-class InputDialogBuilder {
-
-    @Inject
-    lateinit var activity: Activity
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var softKeyboardService: SoftKeyboardService
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
+class InputDialogBuilder(
+        activity: LazyInject<Activity> = appFactory.activity,
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+        softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
+) {
+    private val activity by LazyExtractor(activity)
+    private val uiResourceService by LazyExtractor(uiResourceService)
+    private val softKeyboardService by LazyExtractor(softKeyboardService)
 
     fun input(title: String, initialValue: String?, action: (String) -> Unit) {
         val alertBuilder = AlertDialog.Builder(activity)

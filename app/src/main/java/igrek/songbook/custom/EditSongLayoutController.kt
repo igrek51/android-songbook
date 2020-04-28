@@ -5,12 +5,13 @@ import android.widget.EditText
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import dagger.Lazy
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.editor.ChordsEditorLayoutController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.SafeClickListener
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
@@ -22,35 +23,34 @@ import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.system.SoftKeyboardService
-import javax.inject.Inject
 
 
-class EditSongLayoutController : MainLayout {
-
-    @Inject
-    lateinit var layoutController: LayoutController
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-    @Inject
-    lateinit var activity: AppCompatActivity
-    @Inject
-    lateinit var navigationMenuController: NavigationMenuController
-    @Inject
-    lateinit var customSongService: Lazy<CustomSongService>
-    @Inject
-    lateinit var softKeyboardService: SoftKeyboardService
-    @Inject
-    lateinit var songImportFileChooser: Lazy<SongImportFileChooser>
-    @Inject
-    lateinit var songExportFileChooser: Lazy<SongExportFileChooser>
-    @Inject
-    lateinit var chordsEditorLayoutController: Lazy<ChordsEditorLayoutController>
-    @Inject
-    lateinit var chordsNotationService: ChordsNotationService
-    @Inject
-    lateinit var contextMenuBuilder: ContextMenuBuilder
-    @Inject
-    lateinit var preferencesState: PreferencesState
+class EditSongLayoutController(
+        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+        navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
+        customSongService: LazyInject<CustomSongService> = appFactory.customSongService,
+        softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
+        songImportFileChooser: LazyInject<SongImportFileChooser> = appFactory.songImportFileChooser,
+        songExportFileChooser: LazyInject<SongExportFileChooser> = appFactory.songExportFileChooser,
+        chordsEditorLayoutController: LazyInject<ChordsEditorLayoutController> = appFactory.chordsEditorLayoutController,
+        chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
+        contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
+        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+) : MainLayout {
+    private val layoutController by LazyExtractor(layoutController)
+    private val uiInfoService by LazyExtractor(uiInfoService)
+    private val activity by LazyExtractor(appCompatActivity)
+    private val navigationMenuController by LazyExtractor(navigationMenuController)
+    private val customSongService by LazyExtractor(customSongService)
+    private val softKeyboardService by LazyExtractor(softKeyboardService)
+    private val songImportFileChooser by LazyExtractor(songImportFileChooser)
+    private val songExportFileChooser by LazyExtractor(songExportFileChooser)
+    private val chordsEditorLayoutController by LazyExtractor(chordsEditorLayoutController)
+    private val chordsNotationService by LazyExtractor(chordsNotationService)
+    private val contextMenuBuilder by LazyExtractor(contextMenuBuilder)
+    private val preferencesState by LazyExtractor(preferencesState)
 
     private var currentSong: Song? = null
 
@@ -63,10 +63,6 @@ class EditSongLayoutController : MainLayout {
     private var songContent: String? = null
     private var customCategoryName: String? = null
     private var songChordsNotation: ChordsNotation? = null
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     override fun getLayoutResourceId(): Int {
         return R.layout.screen_custom_song_details
@@ -150,20 +146,20 @@ class EditSongLayoutController : MainLayout {
                 ?: chordsNotationService.chordsNotation
 
         layoutController.showLayout(ChordsEditorLayoutController::class)
-        chordsEditorLayoutController.get().setContent(songContentEdit?.text.toString(), this.songChordsNotation)
+        chordsEditorLayoutController.setContent(songContentEdit?.text.toString(), this.songChordsNotation)
 
-        customSongService.get().showEditorHintsIfNeeded()
+        customSongService.showEditorHintsIfNeeded()
     }
 
     private fun importContentFromFile() {
-        songImportFileChooser.get().showFileChooser()
+        songImportFileChooser.showFileChooser()
     }
 
     private fun exportContentToFile() {
         var songTitle = songTitleEdit?.text?.toString().orEmpty()
         songTitle = songTitle.takeIf { it.toLowerCase().endsWith(".txt") } ?: "$songTitle.txt"
         val songContent = songContentEdit?.text?.toString().orEmpty()
-        songExportFileChooser.get().showFileChooser(songContent, songTitle) {
+        songExportFileChooser.showFileChooser(songContent, songTitle) {
             uiInfoService.showInfo(R.string.song_content_exported)
         }
     }
@@ -193,12 +189,10 @@ class EditSongLayoutController : MainLayout {
 
         if (currentSong == null) {
             // add
-            currentSong = customSongService.get()
-                    .addCustomSong(songTitle, customCategoryName, songContent, chordsNotation)
+            currentSong = customSongService.addCustomSong(songTitle, customCategoryName, songContent, chordsNotation)
         } else {
             // update
-            customSongService.get()
-                    .updateSong(currentSong!!, songTitle, customCategoryName, songContent, chordsNotation)
+            customSongService.updateSong(currentSong!!, songTitle, customCategoryName, songContent, chordsNotation)
         }
 
         uiInfoService.showInfo(R.string.edit_song_has_been_saved)
@@ -212,7 +206,7 @@ class EditSongLayoutController : MainLayout {
                 uiInfoService.showInfo(R.string.edit_song_has_been_removed)
             } else {
                 // remove song from database
-                customSongService.get().removeSong(currentSong!!)
+                customSongService.removeSong(currentSong!!)
             }
             layoutController.showPreviousLayoutOrQuit()
         }

@@ -1,26 +1,23 @@
 package igrek.songbook.playlist
 
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.playlist.Playlist
-import javax.inject.Inject
 
-class PlaylistService {
-
-    @Inject
-    lateinit var songsRepository: SongsRepository
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-    @Inject
-    lateinit var contextMenuBuilder: ContextMenuBuilder
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
+class PlaylistService(
+        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
+) {
+    private val songsRepository by LazyExtractor(songsRepository)
+    private val uiInfoService by LazyExtractor(uiInfoService)
+    private val contextMenuBuilder by LazyExtractor(contextMenuBuilder)
 
     fun showAddSongToPlaylistDialog(song: Song) {
         val playlists = songsRepository.playlistDao.playlistDb.playlists

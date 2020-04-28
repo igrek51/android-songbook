@@ -1,25 +1,23 @@
 package igrek.songbook.system
 
+
 import android.util.DisplayMetrics
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import igrek.songbook.dagger.DaggerIoc
-import javax.inject.Inject
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 
-class WindowManagerService {
-
-    @Inject
-    lateinit var activity: AppCompatActivity
+class WindowManagerService(
+        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+) {
+    private val activity by LazyExtractor(appCompatActivity)
 
     private val dpi: Int
         get() {
             val metrics = activity.resources.displayMetrics
             return metrics.densityDpi
         }
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     fun keepScreenOn(set: Boolean) {
         if (set) {

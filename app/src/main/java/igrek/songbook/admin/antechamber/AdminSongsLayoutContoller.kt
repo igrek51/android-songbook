@@ -1,45 +1,39 @@
 package igrek.songbook.admin.antechamber
 
+
 import android.view.View
 import android.widget.Button
 import igrek.songbook.R
 import igrek.songbook.custom.CustomSongService
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
-import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.songpreview.SongOpener
 import io.reactivex.android.schedulers.AndroidSchedulers
-import javax.inject.Inject
 
-
-class AdminSongsLayoutContoller : InflatedLayout(
+class AdminSongsLayoutContoller(
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+        customSongService: LazyInject<CustomSongService> = appFactory.customSongService,
+        antechamberService: LazyInject<AntechamberService> = appFactory.antechamberService,
+) : InflatedLayout(
         _layoutResourceId = R.layout.screen_admin_songs
 ) {
-
-    @Inject
-    lateinit var songsRepository: SongsRepository
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-    @Inject
-    lateinit var songOpener: SongOpener
-    @Inject
-    lateinit var customSongService: CustomSongService
-    @Inject
-    lateinit var antechamberService: AntechamberService
+    private val uiResourceService by LazyExtractor(uiResourceService)
+    private val uiInfoService by LazyExtractor(uiInfoService)
+    private val songOpener by LazyExtractor(songOpener)
+    private val customSongService by LazyExtractor(customSongService)
+    private val antechamberService by LazyExtractor(antechamberService)
 
     private var itemsListView: AntechamberSongListView? = null
     private var experimentalSongs: MutableList<Song> = mutableListOf()
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)

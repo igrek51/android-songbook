@@ -3,7 +3,7 @@ package igrek.songbook.settings
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
 import igrek.songbook.activity.MainActivity
-import igrek.songbook.dagger.DaggerBreach
+import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.preferences.PreferencesField
 import igrek.songbook.settings.preferences.PreferencesService
@@ -22,7 +22,7 @@ class PreferencesPersistenceTest {
 
     @Test
     fun test_default_values() {
-        val preferencesService = DaggerBreach.factory().aPreferencesService()
+        val preferencesService = appFactory.preferencesService.get()
 
         preferencesService.clear()
 
@@ -38,8 +38,8 @@ class PreferencesPersistenceTest {
 
     @Test
     fun test_saving_reading() {
-        val preferencesService: PreferencesService = DaggerBreach.inject("aPreferencesServiceProvider")
-        val preferencesState: PreferencesState = DaggerBreach.inject("aPreferencesStateProvider")
+        val preferencesService: PreferencesService = appFactory.preferencesService.get()
+        val preferencesState: PreferencesState = appFactory.preferencesState.get()
 
         preferencesService.clear()
 
@@ -72,7 +72,7 @@ class PreferencesPersistenceTest {
 
     @Test
     fun test_mislead_types() {
-        val preferencesService = DaggerBreach.factory().aPreferencesService()
+        val preferencesService = appFactory.preferencesService.get()
         preferencesService.clear()
 
         try {

@@ -4,12 +4,13 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.inject.SingletonInject
 import org.mockito.Mockito
 
 
 class UiInfoServiceMock : UiInfoService(
-        Mockito.mock(AppCompatActivity::class.java),
-        dagger.Lazy<UiResourceService> { Mockito.mock(UiResourceService::class.java) },
+        activity = SingletonInject { Mockito.mock(AppCompatActivity::class.java) },
+        uiResourceService = SingletonInject { Mockito.mock(UiResourceService::class.java) },
 ) {
     override fun showActionInfo(info: String, view: View?, actionName: String?, action: (() -> Unit)?, color: Int?, snackbarLength: Int) {
         print(info)

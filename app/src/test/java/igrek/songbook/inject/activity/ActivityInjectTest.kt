@@ -60,8 +60,8 @@ class ServiceRequiringActivity(
         activity: LazyInject<Activity> = appFactory.activity,
         logger: LazyInject<Logger> = appFactory.logger,
 ) {
-    private val activity: Activity by LazyExtractor(activity)
-    private val logger: Logger by LazyExtractor(logger)
+    private val activity by LazyExtractor(activity)
+    private val logger by LazyExtractor(logger)
 
     fun doSomethingWithActivity(): Boolean {
         return activity is AppCompatActivity

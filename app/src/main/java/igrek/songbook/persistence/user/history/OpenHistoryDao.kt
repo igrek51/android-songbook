@@ -1,33 +1,24 @@
 package igrek.songbook.persistence.user.history
 
-import android.app.Activity
-import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
 import io.reactivex.subjects.PublishSubject
 import java.util.*
-import javax.inject.Inject
 
-class OpenHistoryDao(path: String) : AbstractJsonDao<OpenHistoryDb>(
+class OpenHistoryDao(
+        path: String,
+) : AbstractJsonDao<OpenHistoryDb>(
         path,
         dbName = "history",
         schemaVersion = 1,
         clazz = OpenHistoryDb::class.java,
         serializer = OpenHistoryDb.serializer()
 ) {
-
-    @Inject
-    lateinit var songsRepository: SongsRepository
-    @Inject
-    lateinit var activity: Activity
-
     val historyDb: OpenHistoryDb get() = db!!
     val historyDbSubject = PublishSubject.create<OpenHistoryDb>()
 
     private val openedHistoryLimit = 50
 
     init {
-        DaggerIoc.factoryComponent.inject(this)
         read()
     }
 

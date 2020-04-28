@@ -1,33 +1,30 @@
 package igrek.songbook.songpreview.autoscroll
 
 import android.os.Handler
-import dagger.Lazy
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
-import igrek.songbook.settings.preferences.PreferencesService
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.renderer.SongPreview
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
-class AutoscrollService {
-
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-    @Inject
-    lateinit var songPreviewController: Lazy<SongPreviewLayoutController>
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var preferencesService: PreferencesService
-    @Inject
-    lateinit var preferencesState: PreferencesState
+class AutoscrollService(
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+) {
+    private val uiInfoService by LazyExtractor(uiInfoService)
+    private val songPreviewController by LazyExtractor(songPreviewLayoutController)
+    private val uiResourceService by LazyExtractor(uiResourceService)
+    private val preferencesState by LazyExtractor(preferencesState)
 
     var initialPause: Long // [ms]
         get() = preferencesState.autoscrollInitialPause
@@ -82,10 +79,9 @@ class AutoscrollService {
         get() = state == AutoscrollState.WAITING || state == AutoscrollState.SCROLLING
 
     private val canvas: SongPreview?
-        get() = songPreviewController.get().songPreview
+        get() = songPreviewController.songPreview
 
     init {
-        DaggerIoc.factoryComponent.inject(this)
         reset()
 
         // aggreagate many little scrolls into greater parts (not proper RX method found)

@@ -3,33 +3,26 @@ package igrek.songbook.activity
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
-import dagger.Lazy
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
-import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.system.WindowManagerService
-import javax.inject.Inject
 
-class ActivityController {
-    @Inject
-    lateinit var windowManagerService: Lazy<WindowManagerService>
-    @Inject
-    lateinit var activity: Lazy<Activity>
-    @Inject
-    lateinit var songsRepository: Lazy<SongsRepository>
-    @Inject
-    lateinit var preferencesService: Lazy<PreferencesService>
-
-    @Inject
-    lateinit var userDataDao: Lazy<UserDataDao>
+class ActivityController(
+        windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
+        activity: LazyInject<Activity> = appFactory.activity,
+        preferencesService: LazyInject<PreferencesService> = appFactory.preferencesService,
+        userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
+) {
+    private val windowManagerService by LazyExtractor(windowManagerService)
+    private val activity by LazyExtractor(activity)
+    private val preferencesService by LazyExtractor(preferencesService)
+    private val userDataDao by LazyExtractor(userDataDao)
 
     private val logger = LoggerFactory.logger
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     fun onConfigurationChanged(newConfig: Configuration) {
         // resize event
@@ -49,23 +42,23 @@ class ActivityController {
     }
 
     fun quit() {
-        windowManagerService.get().keepScreenOn(false)
-        activity.get().finish()
+        windowManagerService.keepScreenOn(false)
+        activity.finish()
     }
 
     fun onStart() {
         logger.debug("starting activity...")
-        userDataDao.get().requestSave(false)
+        userDataDao.requestSave(false)
     }
 
     fun onStop() {
         logger.debug("stopping activity...")
-        preferencesService.get().saveAll()
-        userDataDao.get().requestSave(true)
+        preferencesService.saveAll()
+        userDataDao.requestSave(true)
     }
 
     fun onDestroy() {
-        userDataDao.get().saveNow()
+        userDataDao.saveNow()
         logger.info("activity has been destroyed")
     }
 
@@ -73,7 +66,7 @@ class ActivityController {
         val startMain = Intent(Intent.ACTION_MAIN)
         startMain.addCategory(Intent.CATEGORY_HOME)
         startMain.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        activity.get().startActivity(startMain)
+        activity.startActivity(startMain)
     }
 
 }

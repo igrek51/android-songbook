@@ -1,29 +1,29 @@
 package igrek.songbook.persistence.general
 
+
 import android.os.Handler
 import android.os.Looper
-import dagger.Lazy
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.repository.SongsRepository
 import okhttp3.*
 import java.io.*
-import javax.inject.Inject
 
-
-class SongsUpdater {
-
-    @Inject
-    lateinit var okHttpClient: Lazy<OkHttpClient>
-    @Inject
-    lateinit var uiInfoService: Lazy<UiInfoService>
-    @Inject
-    lateinit var songsRepository: Lazy<SongsRepository>
-    @Inject
-    lateinit var localDbService: Lazy<LocalDbService>
+class SongsUpdater(
+        okHttpClient: LazyInject<OkHttpClient> = appFactory.okHttpClient,
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+        localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
+) {
+    private val okHttpClient by LazyExtractor(okHttpClient)
+    private val uiInfoService by LazyExtractor(uiInfoService)
+    private val songsRepository by LazyExtractor(songsRepository)
+    private val localDbService by LazyExtractor(localDbService)
 
     private val logger = LoggerFactory.logger
 
@@ -33,20 +33,16 @@ class SongsUpdater {
         private const val songsDbVersionUrl = "$apiUrl/songs_version"
     }
 
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
-
     fun updateSongsDb() {
-        val songsDbFile: File = localDbService.get().songsDbFile
+        val songsDbFile: File = localDbService.songsDbFile
 
-        uiInfoService.get().showInfoIndefinite(R.string.updating_db_in_progress)
+        uiInfoService.showInfoIndefinite(R.string.updating_db_in_progress)
 
         val request: Request = Request.Builder()
                 .url(songsdbUrl)
                 .build()
 
-        okHttpClient.get().newCall(request).enqueue(object : Callback {
+        okHttpClient.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 onErrorReceived(e.message)
             }
@@ -68,7 +64,7 @@ class SongsUpdater {
                     .url(songsDbVersionUrl)
                     .build()
 
-            okHttpClient.get().newCall(request).enqueue(object : Callback {
+            okHttpClient.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     logger.error(e.message)
                 }
@@ -90,7 +86,7 @@ class SongsUpdater {
             val inputStream: InputStream = response.body()!!.byteStream()
             val input = BufferedInputStream(inputStream)
             try {
-                songsRepository.get().close()
+                songsRepository.close()
                 val output = FileOutputStream(songsDbFile)
                 val data = ByteArray(1024)
                 var total: Long = 0
@@ -106,24 +102,24 @@ class SongsUpdater {
                 output.close()
                 input.close()
             } catch (e: Throwable) {
-                songsRepository.get().reloadSongsDb()
+                songsRepository.reloadSongsDb()
                 throw e
             }
             Handler(Looper.getMainLooper()).post {
                 try {
-                    songsRepository.get().reloadSongsDb()
-                    uiInfoService.get().showInfo(R.string.ui_db_is_uptodate)
+                    songsRepository.reloadSongsDb()
+                    uiInfoService.showInfo(R.string.ui_db_is_uptodate)
                 } catch (t: Throwable) {
                     logger.error("Reloading songs db failed: ${t.message}")
-                    uiInfoService.get().showInfo(R.string.db_update_failed_incompatible)
-                    songsRepository.get().resetGeneralData()
-                    songsRepository.get().reloadSongsDb()
+                    uiInfoService.showInfo(R.string.db_update_failed_incompatible)
+                    songsRepository.resetGeneralData()
+                    songsRepository.reloadSongsDb()
                 }
             }
         } catch (e: Throwable) {
             logger.error("Failed saving new db: ${e.message}")
             Handler(Looper.getMainLooper()).post {
-                uiInfoService.get().showInfoIndefinite(R.string.connection_error)
+                uiInfoService.showInfoIndefinite(R.string.connection_error)
             }
         }
     }
@@ -131,7 +127,7 @@ class SongsUpdater {
     private fun onSongDatabaseVersionReceived(response: Response) {
         try {
             val remoteVersion = response.body()?.string()?.toLong()
-            val localVersion = songsRepository.get().songsDbVersion()
+            val localVersion = songsRepository.songsDbVersion()
 
             logger.debug("DB Update availability check: local: $localVersion, remote: $remoteVersion")
 
@@ -146,14 +142,14 @@ class SongsUpdater {
     private fun onErrorReceived(errorMessage: String?) {
         logger.error("Connection error: $errorMessage")
         Handler(Looper.getMainLooper()).post {
-            uiInfoService.get().showInfoIndefinite(R.string.connection_error)
+            uiInfoService.showInfoIndefinite(R.string.connection_error)
         }
     }
 
     private fun showUpdateIsAvailable() {
         Handler(Looper.getMainLooper()).post {
-            uiInfoService.get().showInfoWithActionIndefinite(R.string.update_is_available, R.string.action_update) {
-                uiInfoService.get().clearSnackBars()
+            uiInfoService.showInfoWithActionIndefinite(R.string.update_is_available, R.string.action_update) {
+                uiInfoService.clearSnackBars()
                 updateSongsDb()
             }
         }

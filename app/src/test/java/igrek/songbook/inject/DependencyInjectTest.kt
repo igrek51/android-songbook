@@ -17,17 +17,17 @@ class CrossDependencyInjectionTest {
     fun creatingManyFactoryInstances() {
         assertThat(appFactory.serviceA.get().show4()).isEqualTo("")
 
-        AppContextFactory.createApp("ctx")
+        TestAppContextFactory.createApp("ctx")
         assertThat(appFactory.serviceA.get().show4()).isEqualTo("ctx")
 
-        AppContextFactory.createApp("brand-new")
+        TestAppContextFactory.createApp("brand-new")
         assertThat(appFactory.serviceA.get().show4()).isEqualTo("brand-new")
     }
 }
 
 private var appFactory: AppFactory = AppFactory("")
 
-private object AppContextFactory {
+private object TestAppContextFactory {
     fun createApp(parameterP: String) {
         appFactory = AppFactory(parameterP)
     }

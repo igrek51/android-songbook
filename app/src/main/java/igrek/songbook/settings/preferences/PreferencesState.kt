@@ -1,19 +1,21 @@
 package igrek.songbook.settings.preferences
 
-import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.instrument.ChordsInstrument
 import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.DisplayStyle
 import igrek.songbook.settings.theme.FontTypeface
-import javax.inject.Inject
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-class PreferencesState {
-    @Inject
-    lateinit var preferencesService: PreferencesService
+class PreferencesState(
+        preferencesService: LazyInject<PreferencesService> = appFactory.preferencesService,
+) {
+    internal val preferencesService by LazyExtractor(preferencesService)
 
     var fontsize: Float by PreferenceDelegate(PreferencesField.Fontsize)
     var appLanguage: AppLanguage by PreferenceDelegate(PreferencesField.AppLanguage)
@@ -35,10 +37,6 @@ class PreferencesState {
     var chordsEditorFontTypeface: FontTypeface by PreferenceDelegate(PreferencesField.ChordsEditorFontTypeface)
     var keepScreenOn: Boolean by PreferenceDelegate(PreferencesField.KeepScreenOn)
     var anonymousUsageData: Boolean by PreferenceDelegate(PreferencesField.AnonymousUsageData)
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
 }
 

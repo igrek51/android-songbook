@@ -1,23 +1,24 @@
 package igrek.songbook.settings.preferences
 
-import igrek.songbook.dagger.DaggerIoc
+
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.user.UserDataDao
-import javax.inject.Inject
 import kotlin.collections.set
 
-
-class PreferencesService {
-    @Inject
-    lateinit var userDataDao: UserDataDao
-    @Inject
-    lateinit var sharedPreferencesService: SharedPreferencesService
+class PreferencesService(
+        userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
+        sharedPreferencesService: LazyInject<SharedPreferencesService> = appFactory.sharedPreferencesService,
+) {
+    private val userDataDao by LazyExtractor(userDataDao)
+    private val sharedPreferencesService by LazyExtractor(sharedPreferencesService)
 
     private val logger = LoggerFactory.logger
     private var entityValues = HashMap<String, Any>()
 
     init {
-        DaggerIoc.factoryComponent.inject(this)
         loadAll()
     }
 
@@ -27,7 +28,7 @@ class PreferencesService {
     }
 
     private fun readEntities(): Map<String, Any> {
-        val primitives = userDataDao.preferencesDao!!.getPrimitiveEntries()
+        val primitives = userDataDao.preferencesDao.getPrimitiveEntries()
         if (!primitives.isNullOrEmpty())
             return primitives2entities(primitives)
 
@@ -70,7 +71,7 @@ class PreferencesService {
 
     fun saveAll() {
         val primitiveValues = entities2primitives(entityValues)
-        userDataDao.preferencesDao!!.setPrimitiveEntries(primitiveValues)
+        userDataDao.preferencesDao.setPrimitiveEntries(primitiveValues)
     }
 
     fun <T> getValue(prefDef: PreferencesField): T {
@@ -101,7 +102,7 @@ class PreferencesService {
     }
 
     fun clear() {
-        userDataDao.preferencesDao?.factoryReset()
+        userDataDao.preferencesDao.factoryReset()
         entityValues.clear()
         saveAll()
         loadAll()

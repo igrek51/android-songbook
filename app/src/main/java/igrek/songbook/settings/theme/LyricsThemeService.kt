@@ -1,20 +1,18 @@
 package igrek.songbook.settings.theme
 
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
-import igrek.songbook.settings.preferences.PreferencesService
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.preferences.PreferencesState
 import java.util.*
-import javax.inject.Inject
 
-class LyricsThemeService {
-
-    @Inject
-    lateinit var preferencesService: PreferencesService
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var preferencesState: PreferencesState
+class LyricsThemeService(
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+) {
+    private val uiResourceService by LazyExtractor(uiResourceService)
+    private val preferencesState by LazyExtractor(preferencesState)
 
     var fontsize: Float
         get() = preferencesState.fontsize
@@ -39,10 +37,6 @@ class LyricsThemeService {
         set(value) {
             preferencesState.chordsDisplayStyle = value
         }
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     fun fontTypefaceEntries(): LinkedHashMap<String, String> {
         val map = LinkedHashMap<String, String>()

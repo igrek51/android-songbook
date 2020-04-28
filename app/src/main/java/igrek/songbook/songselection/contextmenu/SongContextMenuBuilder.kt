@@ -1,16 +1,18 @@
 package igrek.songbook.songselection.contextmenu
 
+
 import android.app.Activity
 import androidx.appcompat.app.AlertDialog
-import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.admin.AdminService
 import igrek.songbook.admin.antechamber.AntechamberService
 import igrek.songbook.contact.PublishSongService
 import igrek.songbook.custom.CustomSongService
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
@@ -20,43 +22,36 @@ import igrek.songbook.songpreview.SongDetailsService
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.favourite.FavouriteSongsService
 import igrek.songbook.util.lookup.SimpleCache
-import javax.inject.Inject
 
-
-class SongContextMenuBuilder {
-
-    @Inject
-    lateinit var activity: Activity
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var favouriteSongsService: FavouriteSongsService
-    @Inject
-    lateinit var customSongService: CustomSongService
-    @Inject
-    lateinit var songsRepository: SongsRepository
-    @Inject
-    lateinit var playlistService: PlaylistService
-    @Inject
-    lateinit var layoutController: Lazy<LayoutController>
-    @Inject
-    lateinit var songPreviewLayoutController: Lazy<SongPreviewLayoutController>
-    @Inject
-    lateinit var songDetailsService: SongDetailsService
-    @Inject
-    lateinit var publishSongService: PublishSongService
-    @Inject
-    lateinit var adminService: Lazy<AdminService>
-
-    @Inject
-    lateinit var antechamberService: Lazy<AntechamberService>
+class SongContextMenuBuilder(
+        activity: LazyInject<Activity> = appFactory.activity,
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+        favouriteSongsService: LazyInject<FavouriteSongsService> = appFactory.favouriteSongsService,
+        customSongService: LazyInject<CustomSongService> = appFactory.customSongService,
+        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+        playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
+        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+        songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
+        songDetailsService: LazyInject<SongDetailsService> = appFactory.songDetailsService,
+        publishSongService: LazyInject<PublishSongService> = appFactory.publishSongService,
+        adminService: LazyInject<AdminService> = appFactory.adminService,
+        antechamberService: LazyInject<AntechamberService> = appFactory.antechamberService,
+) {
+    private val activity by LazyExtractor(activity)
+    private val uiResourceService by LazyExtractor(uiResourceService)
+    private val favouriteSongsService by LazyExtractor(favouriteSongsService)
+    private val customSongService by LazyExtractor(customSongService)
+    private val songsRepository by LazyExtractor(songsRepository)
+    private val playlistService by LazyExtractor(playlistService)
+    private val layoutController by LazyExtractor(layoutController)
+    private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
+    private val songDetailsService by LazyExtractor(songDetailsService)
+    private val publishSongService by LazyExtractor(publishSongService)
+    private val adminService by LazyExtractor(adminService)
+    private val antechamberService by LazyExtractor(antechamberService)
 
     private var allActions: SimpleCache<List<SongContextAction>> =
             SimpleCache { createAllActions() }
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     private fun createAllActions(): List<SongContextAction> {
         val actions = mutableListOf(
@@ -104,9 +99,9 @@ class SongContextMenuBuilder {
                             playlistService.removeFromPlaylist(song)
                         }),
                 SongContextAction(R.string.show_chords_definitions,
-                        availableCondition = { layoutController.get().isState(SongPreviewLayoutController::class) },
+                        availableCondition = { layoutController.isState(SongPreviewLayoutController::class) },
                         executor = {
-                            songPreviewLayoutController.get().showChordsGraphs()
+                            songPreviewLayoutController.showChordsGraphs()
                         }),
                 SongContextAction(R.string.song_details_title,
                         availableCondition = { true },
@@ -124,34 +119,34 @@ class SongContextMenuBuilder {
                             customSongService.exportSong(song)
                         }),
                 SongContextAction(R.string.admin_antechamber_edit_action,
-                        availableCondition = { adminService.get().isAdminEnabled() },
+                        availableCondition = { adminService.isAdminEnabled() },
                         executor = { song ->
                             customSongService.showEditSongScreen(song)
                         }),
                 SongContextAction(R.string.admin_song_content_update_action,
-                        availableCondition = { song -> song.isPublic() && adminService.get().isAdminEnabled() },
+                        availableCondition = { song -> song.isPublic() && adminService.isAdminEnabled() },
                         executor = { song ->
-                            adminService.get().updatePublicSongUi(song)
+                            adminService.updatePublicSongUi(song)
                         }),
                 SongContextAction(R.string.admin_antechamber_update_action,
-                        availableCondition = { song -> song.isAntechamber() && adminService.get().isAdminEnabled() },
+                        availableCondition = { song -> song.isAntechamber() && adminService.isAdminEnabled() },
                         executor = { song ->
-                            antechamberService.get().updateAntechamberSongUI(song)
+                            antechamberService.updateAntechamberSongUI(song)
                         }),
                 SongContextAction(R.string.admin_antechamber_approve_action,
-                        availableCondition = { song -> song.isAntechamber() && adminService.get().isAdminEnabled() },
+                        availableCondition = { song -> song.isAntechamber() && adminService.isAdminEnabled() },
                         executor = { song ->
-                            antechamberService.get().approveAntechamberSongUI(song)
+                            antechamberService.approveAntechamberSongUI(song)
                         }),
                 SongContextAction(R.string.admin_antechamber_delete_action,
-                        availableCondition = { song -> song.isAntechamber() && adminService.get().isAdminEnabled() },
+                        availableCondition = { song -> song.isAntechamber() && adminService.isAdminEnabled() },
                         executor = { song ->
-                            antechamberService.get().deleteAntechamberSongUI(song)
+                            antechamberService.deleteAntechamberSongUI(song)
                         }),
                 SongContextAction(R.string.admin_update_rank,
-                        availableCondition = { song -> song.isPublic() && adminService.get().isAdminEnabled() },
+                        availableCondition = { song -> song.isPublic() && adminService.isAdminEnabled() },
                         executor = { song ->
-                            adminService.get().updateRankDialog(song)
+                            adminService.updateRankDialog(song)
                         }),
         )
 

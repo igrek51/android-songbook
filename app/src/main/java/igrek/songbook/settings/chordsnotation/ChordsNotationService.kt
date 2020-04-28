@@ -1,25 +1,23 @@
 package igrek.songbook.settings.chordsnotation
 
-import android.app.Activity
-import igrek.songbook.dagger.DaggerIoc
+
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory.logger
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesState
 import java.util.*
-import javax.inject.Inject
 
-
-class ChordsNotationService {
-
-    @Inject
-    lateinit var activity: Activity
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var appLanguageService: AppLanguageService
-    @Inject
-    lateinit var preferencesState: PreferencesState
+class ChordsNotationService(
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+        appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
+        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+) {
+    private val uiResourceService by LazyExtractor(uiResourceService)
+    private val appLanguageService by LazyExtractor(appLanguageService)
+    private val preferencesState by LazyExtractor(preferencesState)
 
     var chordsNotation: ChordsNotation
         get() = preferencesState.chordsNotation
@@ -31,10 +29,6 @@ class ChordsNotationService {
             "pl", "de", "da", "sv", "nb", "nn", "is", "et",
             "sr", "hr", "bs", "sl", "sk", "cs", "hu"
     )
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     fun setDefaultChordsNotation() {
         // running for the first time - set german / polish notation if lang pl
@@ -62,7 +56,7 @@ class ChordsNotationService {
     val chordsNotationDisplayNames: LinkedHashMap<ChordsNotation, String> by lazy {
         val map = LinkedHashMap<ChordsNotation, String>()
         for (item in ChordsNotation.values()) {
-            val displayName = uiResourceService.resString(item.displayNameResId)
+            val displayName = this.uiResourceService.resString(item.displayNameResId)
             map[item] = displayName
         }
         map

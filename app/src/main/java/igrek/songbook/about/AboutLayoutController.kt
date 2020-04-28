@@ -7,28 +7,25 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.R
 import igrek.songbook.about.secret.SecretCommandService
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.system.PackageInfoService
-import javax.inject.Inject
 
-class AboutLayoutController {
-
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var activity: AppCompatActivity
-    @Inject
-    lateinit var secretCommandService: SecretCommandService
-    @Inject
-    lateinit var packageInfoService: PackageInfoService
-    @Inject
-    lateinit var songsRepository: SongsRepository
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
+class AboutLayoutController(
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+        secretCommandService: LazyInject<SecretCommandService> = appFactory.secretCommandService,
+        packageInfoService: LazyInject<PackageInfoService> = appFactory.packageInfoService,
+        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+) {
+    private val uiResourceService by LazyExtractor(uiResourceService)
+    private val activity by LazyExtractor(appCompatActivity)
+    private val secretCommandService by LazyExtractor(secretCommandService)
+    private val packageInfoService by LazyExtractor(packageInfoService)
+    private val songsRepository by LazyExtractor(songsRepository)
 
     fun showAbout() {
         val appVersionName = packageInfoService.versionName

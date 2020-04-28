@@ -4,20 +4,20 @@ import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
-import javax.inject.Inject
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 
-class SoftKeyboardService {
-
-    @Inject
-    lateinit var activity: AppCompatActivity
+class SoftKeyboardService(
+        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+) {
+    private val activity by LazyExtractor(appCompatActivity)
 
     private val imm: InputMethodManager?
     private val logger = LoggerFactory.logger
 
     init {
-        DaggerIoc.factoryComponent.inject(this)
         imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
     }
 

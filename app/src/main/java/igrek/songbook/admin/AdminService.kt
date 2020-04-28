@@ -6,42 +6,39 @@ import android.os.Looper
 import android.text.InputType
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
-import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.admin.antechamber.AntechamberService
 import igrek.songbook.admin.antechamber.SongRankService
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.general.model.Song
-import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.system.SoftKeyboardService
 import io.reactivex.android.schedulers.AndroidSchedulers
-import javax.inject.Inject
 
-class AdminService {
-    @Inject
-    lateinit var preferencesService: Lazy<PreferencesService>
-    @Inject
-    lateinit var navigationMenuController: Lazy<NavigationMenuController>
-    @Inject
-    lateinit var preferencesState: PreferencesState
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var antechamberService: AntechamberService
-    @Inject
-    lateinit var activity: Activity
-    @Inject
-    lateinit var softKeyboardService: SoftKeyboardService
-
-    @Inject
-    lateinit var songRankService: SongRankService
+class AdminService(
+        navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
+        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+        antechamberService: LazyInject<AntechamberService> = appFactory.antechamberService,
+        activity: LazyInject<Activity> = appFactory.activity,
+        softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
+        songRankService: LazyInject<SongRankService> = appFactory.songRankService,
+) {
+    private val navigationMenuController by LazyExtractor(navigationMenuController)
+    private val preferencesState by LazyExtractor(preferencesState)
+    private val uiInfoService by LazyExtractor(uiInfoService)
+    private val uiResourceService by LazyExtractor(uiResourceService)
+    private val antechamberService by LazyExtractor(antechamberService)
+    private val activity by LazyExtractor(activity)
+    private val softKeyboardService by LazyExtractor(softKeyboardService)
+    private val songRankService by LazyExtractor(songRankService)
 
     var userAuthToken: String
         get() = preferencesState.userAuthToken
@@ -58,10 +55,6 @@ class AdminService {
         }
     }
 
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
-
     fun init() {
         checkMenuVisibility()
     }
@@ -69,7 +62,7 @@ class AdminService {
     private fun checkMenuVisibility() {
         if (isAdminEnabled()) {
             LoggerFactory.logger.debug("Enabling admin tools")
-            navigationMenuController.get().setAdminMenu()
+            navigationMenuController.setAdminMenu()
         }
     }
 

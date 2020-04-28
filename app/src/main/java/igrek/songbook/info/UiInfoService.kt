@@ -11,6 +11,9 @@ import igrek.songbook.R
 import igrek.songbook.info.errorcheck.SafeClickListener
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -18,9 +21,11 @@ import java.util.*
 
 
 open class UiInfoService(
-        private val activity: Activity,
-        private val uiResourceService: dagger.Lazy<UiResourceService>,
+        activity: LazyInject<Activity> = appFactory.activity,
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
 ) {
+    private val activity by LazyExtractor(activity)
+    private val uiResourceService by LazyExtractor(uiResourceService)
 
     private val infobars = HashMap<View?, Snackbar>()
     private val logger: Logger = LoggerFactory.logger
@@ -73,22 +78,22 @@ open class UiInfoService(
     }
 
     open fun showInfo(info: String) {
-        val dismissName = uiResourceService.get().resString(R.string.action_info_ok)
+        val dismissName = uiResourceService.resString(R.string.action_info_ok)
         showInfo(info, dismissName)
     }
 
     open fun showInfo(infoRes: Int, vararg args: String) {
-        val info = uiResourceService.get().resString(infoRes, *args)
+        val info = uiResourceService.resString(infoRes, *args)
         showInfo(info)
     }
 
     open fun showInfoIndefinite(info: String) {
-        val dismissName = uiResourceService.get().resString(R.string.action_info_ok)
+        val dismissName = uiResourceService.resString(R.string.action_info_ok)
         showActionInfo(info, null, dismissName, null, null, Snackbar.LENGTH_INDEFINITE)
     }
 
     open fun showInfoIndefinite(infoRes: Int, vararg args: String) {
-        val info = uiResourceService.get().resString(infoRes, *args)
+        val info = uiResourceService.resString(infoRes, *args)
         showInfoIndefinite(info)
     }
 
@@ -98,19 +103,19 @@ open class UiInfoService(
     }
 
     open fun showInfoWithAction(info: String, actionNameRes: Int, actionCallback: (() -> Unit)) {
-        val actionName = uiResourceService.get().resString(actionNameRes)
+        val actionName = uiResourceService.resString(actionNameRes)
         showInfoWithAction(info, actionName, actionCallback, Snackbar.LENGTH_LONG)
     }
 
     open fun showInfoWithAction(infoRes: Int, actionNameRes: Int, actionCallback: (() -> Unit)) {
-        val info = uiResourceService.get().resString(infoRes)
-        val actionName = uiResourceService.get().resString(actionNameRes)
+        val info = uiResourceService.resString(infoRes)
+        val actionName = uiResourceService.resString(actionNameRes)
         showInfoWithAction(info, actionName, actionCallback, Snackbar.LENGTH_LONG)
     }
 
     open fun showInfoWithActionIndefinite(infoRes: Int, actionNameRes: Int, actionCallback: (() -> Unit)) {
-        val info = uiResourceService.get().resString(infoRes)
-        val actionName = uiResourceService.get().resString(actionNameRes)
+        val info = uiResourceService.resString(infoRes)
+        val actionName = uiResourceService.resString(actionNameRes)
         showInfoWithAction(info, actionName, actionCallback, Snackbar.LENGTH_INDEFINITE)
     }
 
@@ -122,7 +127,7 @@ open class UiInfoService(
     }
 
     open fun showToast(messageRes: Int) {
-        val message = uiResourceService.get().resString(messageRes)
+        val message = uiResourceService.resString(messageRes)
         showToast(message)
     }
 
@@ -130,14 +135,14 @@ open class UiInfoService(
         val alertBuilder = AlertDialog.Builder(activity)
         alertBuilder.setMessage(message)
         alertBuilder.setTitle(title)
-        alertBuilder.setPositiveButton(uiResourceService.get().resString(R.string.action_info_ok)) { _, _ -> }
+        alertBuilder.setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { _, _ -> }
         alertBuilder.setCancelable(true)
         alertBuilder.create().show()
     }
 
     open fun showTooltip(infoRes: Int) {
-        val message = uiResourceService.get().resString(infoRes)
-        val title = uiResourceService.get().resString(R.string.tooltip)
+        val message = uiResourceService.resString(infoRes)
+        val title = uiResourceService.resString(R.string.tooltip)
         showDialog(title, message)
     }
 
@@ -146,6 +151,6 @@ open class UiInfoService(
     }
 
     open fun resString(resourceId: Int, vararg args: Any?): String =
-            uiResourceService.get().resString(resourceId, *args)
+            uiResourceService.resString(resourceId, *args)
 
 }

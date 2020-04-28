@@ -3,9 +3,10 @@ package igrek.songbook.songpreview.renderer
 import android.content.Context
 import android.view.MotionEvent
 import android.view.View
-import dagger.Lazy
 import igrek.songbook.chords.lyrics.model.LyricsModel
-import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.SongPreviewLayoutController
@@ -15,24 +16,25 @@ import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.canvas.BaseCanvasView
 import igrek.songbook.system.WindowManagerService
 import igrek.songbook.util.lookup.SimpleCache
-import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.hypot
 
-class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListener {
 
-    @Inject
-    lateinit var songPreviewController: Lazy<SongPreviewLayoutController>
-    @Inject
-    lateinit var autoscroll: Lazy<AutoscrollService>
-    @Inject
-    lateinit var quickMenuTranspose: Lazy<QuickMenuTranspose>
-    @Inject
-    lateinit var quickMenuAutoscroll: Lazy<QuickMenuAutoscroll>
-    @Inject
-    lateinit var windowManagerService: WindowManagerService
-    @Inject
-    lateinit var lyricsThemeService: LyricsThemeService
+class SongPreview(
+        context: Context,
+        songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
+        autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
+        quickMenuTranspose: LazyInject<QuickMenuTranspose> = appFactory.quickMenuTranspose,
+        quickMenuAutoscroll: LazyInject<QuickMenuAutoscroll> = appFactory.quickMenuAutoscroll,
+        windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
+        lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
+) : BaseCanvasView(context), View.OnTouchListener {
+    private val songPreviewController by LazyExtractor(songPreviewLayoutController)
+    private val autoscroll by LazyExtractor(autoscrollService)
+    private val quickMenuTranspose by LazyExtractor(quickMenuTranspose)
+    private val quickMenuAutoscroll by LazyExtractor(quickMenuAutoscroll)
+    private val windowManagerService by LazyExtractor(windowManagerService)
+    private val lyricsThemeService by LazyExtractor(lyricsThemeService)
 
     private var lyricsModel: LyricsModel? = null
     var scroll: Float = 0.toFloat()
@@ -45,8 +47,8 @@ class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListe
     private var startTouchX = 0f
     private var startTouchY = 0f
     private var startTouchTime: Long = 0
-    private val bottomMarginCache = SimpleCache { windowManagerService.dp2px(EOF_BOTTOM_RESERVE) }
-    private val scrollWidthCache = SimpleCache { windowManagerService.dp2px(1f) }
+    private val bottomMarginCache = SimpleCache { this.windowManagerService.dp2px(EOF_BOTTOM_RESERVE) }
+    private val scrollWidthCache = SimpleCache { this.windowManagerService.dp2px(1f) }
     private var lastClickTime: Long? = null
 
     companion object {
@@ -88,10 +90,6 @@ class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListe
     val scrollWidth: Float
         get() = scrollWidthCache.get()
 
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
-
     override fun reset() {
         super.reset()
         scroll = 0f
@@ -102,7 +100,7 @@ class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListe
     }
 
     override fun init() {
-        songPreviewController.get().onGraphicsInitializedEvent(w, paint)
+        songPreviewController.onGraphicsInitializedEvent(w, paint)
     }
 
     override fun onRepaint() {
@@ -127,7 +125,7 @@ class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListe
     }
 
     private fun drawQuickMenuOverlay() {
-        if (quickMenuTranspose.get().isVisible) {
+        if (quickMenuTranspose.isVisible) {
             //dimmed background
             setColor(0x000000, 110)
             fillRect(0f, 0f, w.toFloat(), h.toFloat())
@@ -187,18 +185,18 @@ class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListe
         }
         startTouchY = event.getY(pointerIndex!!)
 
-        songPreviewController.get().onFontsizeChangedEvent(fontsizeTmp)
+        songPreviewController.onFontsizeChangedEvent(fontsizeTmp)
     }
 
     fun onClick() {
         val now = System.currentTimeMillis()
-        if (songPreviewController.get().isQuickMenuVisible) {
-            quickMenuTranspose.get().isVisible = false
-            quickMenuAutoscroll.get().isVisible = false
+        if (songPreviewController.isQuickMenuVisible) {
+            quickMenuTranspose.isVisible = false
+            quickMenuAutoscroll.isVisible = false
             repaint()
         } else {
-            if (autoscroll.get().isRunning) {
-                autoscroll.get().onAutoscrollStopUIEvent()
+            if (autoscroll.isRunning) {
+                autoscroll.onAutoscrollStopUIEvent()
                 // reset double click
                 lastClickTime = null
                 return
@@ -213,13 +211,13 @@ class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListe
     }
 
     private fun onDoubleClick() {
-        autoscroll.get().onAutoscrollToggleUIEvent()
+        autoscroll.onAutoscrollToggleUIEvent()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         if (isInitialized) {
-            songPreviewController.get().onPreviewSizeChange(w)
+            songPreviewController.onPreviewSizeChange(w)
         }
     }
 
@@ -281,7 +279,7 @@ class SongPreview(context: Context) : BaseCanvasView(context), View.OnTouchListe
         val linePartScrolled = dy.toFloat() / lineheightPx
         // monitor scroll changes\
         if (abs(linePartScrolled) > 0.01f) {
-            autoscroll.get().canvasScrollSubject.onNext(linePartScrolled)
+            autoscroll.canvasScrollSubject.onNext(linePartScrolled)
         }
     }
 

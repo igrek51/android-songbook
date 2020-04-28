@@ -3,21 +3,18 @@ package igrek.songbook.layout.dialog
 import android.app.Activity
 import androidx.appcompat.app.AlertDialog
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
-import javax.inject.Inject
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 
-class ConfirmDialogBuilder {
-
-    @Inject
-    lateinit var activity: Activity
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
+class ConfirmDialogBuilder(
+        activity: LazyInject<Activity> = appFactory.activity,
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+) {
+    private val activity by LazyExtractor(activity)
+    private val uiResourceService by LazyExtractor(uiResourceService)
 
     fun confirmAction(message: String, action: () -> Unit) {
         val alertBuilder = AlertDialog.Builder(activity)

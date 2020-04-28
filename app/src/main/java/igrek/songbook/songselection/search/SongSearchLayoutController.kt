@@ -10,11 +10,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
-import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.contact.SendMessageService
-import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.info.UiResourceService
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.persistence.repository.AllSongsRepository
 import igrek.songbook.persistence.repository.SongsRepository
@@ -31,33 +31,24 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 
-open class SongSearchLayoutController : InflatedLayout(
+class SongSearchLayoutController(
+        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+        songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
+        songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+        softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
+        songTreeLayoutController: LazyInject<SongTreeLayoutController> = appFactory.songTreeLayoutController,
+        sendMessageService: LazyInject<SendMessageService> = appFactory.sendMessageService,
+) : InflatedLayout(
         _layoutResourceId = R.layout.screen_song_search
 ), SongClickListener {
-
-    @Inject
-    lateinit var songsRepository: SongsRepository
-
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-
-    @Inject
-    lateinit var songContextMenuBuilder: SongContextMenuBuilder
-
-    @Inject
-    lateinit var songOpener: SongOpener
-
-    @Inject
-    lateinit var softKeyboardService: SoftKeyboardService
-
-    @Inject
-    lateinit var songTreeLayoutController: Lazy<SongTreeLayoutController>
-
-    @Inject
-    lateinit var sendMessageService: Lazy<SendMessageService>
+    private val songsRepository by LazyExtractor(songsRepository)
+    private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
+    private val songOpener by LazyExtractor(songOpener)
+    private val softKeyboardService by LazyExtractor(softKeyboardService)
+    private val songTreeLayoutController by LazyExtractor(songTreeLayoutController)
+    private val sendMessageService by LazyExtractor(sendMessageService)
 
     private var itemsListView: LazySongListView? = null
     private var searchFilterEdit: EditText? = null
@@ -67,17 +58,12 @@ open class SongSearchLayoutController : InflatedLayout(
     private var storedScroll: ListScrollPosition? = null
     private var subscriptions = mutableListOf<Disposable>()
 
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
-
     override fun showLayout(layout: View) {
         super.showLayout(layout)
 
         emptySearchButton = layout.findViewById<Button>(R.id.emptySearchButton)?.apply {
             setOnClickListener {
-                sendMessageService.get().requestMissingSong()
+                sendMessageService.requestMissingSong()
             }
         }
 
@@ -222,7 +208,7 @@ open class SongSearchLayoutController : InflatedLayout(
             openSongPreview(item)
         } else {
             // move to selected category
-            songTreeLayoutController.get().currentCategory = item.category
+            songTreeLayoutController.currentCategory = item.category
             layoutController.showLayout(SongTreeLayoutController::class)
         }
     }

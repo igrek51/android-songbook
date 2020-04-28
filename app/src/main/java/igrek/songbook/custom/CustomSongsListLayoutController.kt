@@ -1,18 +1,19 @@
 package igrek.songbook.custom
 
+
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.custom.list.CustomSongListItem
 import igrek.songbook.custom.list.CustomSongListView
-import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.list.ListItemClickListener
 import igrek.songbook.persistence.general.model.Song
@@ -26,32 +27,23 @@ import igrek.songbook.songselection.tree.NoParentItemException
 import igrek.songbook.system.locale.InsensitiveNameComparator
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import javax.inject.Inject
 
-class CustomSongsListLayoutController : InflatedLayout(
+class CustomSongsListLayoutController(
+        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+        songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
+        songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+        customSongService: LazyInject<CustomSongService> = appFactory.customSongService,
+        appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
+) : InflatedLayout(
         _layoutResourceId = R.layout.screen_custom_songs
 ), ListItemClickListener<CustomSongListItem> {
-
-    @Inject
-    lateinit var songsRepository: SongsRepository
-
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-
-    @Inject
-    lateinit var songContextMenuBuilder: SongContextMenuBuilder
-
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-
-    @Inject
-    lateinit var songOpener: SongOpener
-
-    @Inject
-    lateinit var customSongService: Lazy<CustomSongService>
-
-    @Inject
-    lateinit var appLanguageService: Lazy<AppLanguageService>
+    private val songsRepository by LazyExtractor(songsRepository)
+    private val uiResourceService by LazyExtractor(uiResourceService)
+    private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
+    private val songOpener by LazyExtractor(songOpener)
+    private val customSongService by LazyExtractor(customSongService)
+    private val appLanguageService by LazyExtractor(appLanguageService)
 
     private var itemsListView: CustomSongListView? = null
     private var goBackButton: ImageButton? = null
@@ -62,10 +54,6 @@ class CustomSongsListLayoutController : InflatedLayout(
     private var customCategory: CustomCategory? = null
 
     private var subscriptions = mutableListOf<Disposable>()
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
@@ -95,14 +83,14 @@ class CustomSongsListLayoutController : InflatedLayout(
     }
 
     private fun addCustomSong() {
-        customSongService.get().showAddSongScreen()
+        customSongService.showAddSongScreen()
     }
 
     private fun updateItemsList() {
-        val locale = appLanguageService.get().getCurrentLocale()
+        val locale = appLanguageService.getCurrentLocale()
         val categoryNameComparator = InsensitiveNameComparator<CustomCategory>(locale) { category -> category.name }
         val songNameComparator = InsensitiveNameComparator<Song>(locale) { song -> song.displayName() }
-        val groupingEnabled = customSongService.get().customSongsGroupCategories
+        val groupingEnabled = customSongService.customSongsGroupCategories
 
         if (groupingEnabled) {
             itemsListView!!.items = if (customCategory == null) {

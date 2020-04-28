@@ -1,46 +1,40 @@
 package igrek.songbook.contact
 
-import android.app.Activity
 import android.os.Handler
 import android.os.Looper
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.system.PackageInfoService
 import okhttp3.*
 import java.io.IOException
-import javax.inject.Inject
 
-class SendMessageService {
-
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-    @Inject
-    lateinit var activity: Activity
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var okHttpClient: OkHttpClient
-    @Inject
-    lateinit var packageInfoService: PackageInfoService
-    @Inject
-    lateinit var songsRepository: SongsRepository
-    @Inject
-    lateinit var layoutController: dagger.Lazy<LayoutController>
+class SendMessageService(
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+        okHttpClient: LazyInject<OkHttpClient> = appFactory.okHttpClient,
+        packageInfoService: LazyInject<PackageInfoService> = appFactory.packageInfoService,
+        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+) {
+    private val uiInfoService by LazyExtractor(uiInfoService)
+    private val uiResourceService by LazyExtractor(uiResourceService)
+    private val okHttpClient by LazyExtractor(okHttpClient)
+    private val packageInfoService by LazyExtractor(packageInfoService)
+    private val songsRepository by LazyExtractor(songsRepository)
+    private val layoutController by LazyExtractor(layoutController)
 
     private val logger = LoggerFactory.logger
 
     companion object {
         private const val APPLICATION_ID = 1
         private const val url = "https://feedback.igrek.dev/api/v1/send"
-    }
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
     }
 
     fun sendContactMessage(message: String, origin: MessageOrigin,
@@ -104,7 +98,7 @@ class SendMessageService {
     }
 
     fun requestMissingSong() {
-        layoutController.get().showLayout(MissingSongLayoutController::class)
+        layoutController.showLayout(MissingSongLayoutController::class)
     }
 
 }

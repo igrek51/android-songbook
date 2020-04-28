@@ -16,12 +16,13 @@ import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.google.api.services.drive.model.File
 import com.google.api.services.drive.model.FileList
-import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.UserDataDao
@@ -33,25 +34,23 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.FileNotFoundException
 import java.io.IOException
-import javax.inject.Inject
 
-class GoogleSyncManager {
-
-    @Inject
-    lateinit var activity: AppCompatActivity
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-    @Inject
-    lateinit var localDbService: Lazy<LocalDbService>
-    @Inject
-    lateinit var songsRepository: Lazy<SongsRepository>
-    @Inject
-    lateinit var preferencesService: Lazy<PreferencesService>
-    @Inject
-    lateinit var activityController: Lazy<ActivityController>
-
-    @Inject
-    lateinit var userDataDao: Lazy<UserDataDao>
+class GoogleSyncManager(
+        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
+        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+        preferencesService: LazyInject<PreferencesService> = appFactory.preferencesService,
+        activityController: LazyInject<ActivityController> = appFactory.activityController,
+        userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
+) {
+    private val activity by LazyExtractor(appCompatActivity)
+    private val uiInfoService by LazyExtractor(uiInfoService)
+    private val localDbService by LazyExtractor(localDbService)
+    private val songsRepository by LazyExtractor(songsRepository)
+    private val preferencesService by LazyExtractor(preferencesService)
+    private val activityController by LazyExtractor(activityController)
+    private val userDataDao by LazyExtractor(userDataDao)
 
     private val syncFiles = listOf(
             "files/customsongs.1.json",
@@ -71,10 +70,6 @@ class GoogleSyncManager {
         const val REQUEST_CODE_SIGN_IN_SYNC_RESTORE = 11
     }
 
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
-
     fun syncSave() {
         logger.debug("making application data Backup in Google Drive")
         requestSingIn(REQUEST_CODE_SIGN_IN_SYNC_SAVE)
@@ -88,8 +83,8 @@ class GoogleSyncManager {
     private fun syncSaveSignedIn(driveService: Drive) {
         showSyncProgress(0, syncFiles.size + 1)
         GlobalScope.launch(Dispatchers.IO) {
-            userDataDao.get().saveNow()
-            preferencesService.get().saveAll()
+            userDataDao.saveNow()
+            preferencesService.saveAll()
             runCatching {
                 syncFiles.forEachIndexed { index, syncFile ->
                     showSyncProgress(index + 1, syncFiles.size + 1)
@@ -124,8 +119,8 @@ class GoogleSyncManager {
                 uiInfoService.showInfoIndefinite(R.string.settings_sync_restore_error, error.message
                         ?: "")
             }.onSuccess {
-                songsRepository.get().reloadSongsDb()
-                preferencesService.get().reload()
+                songsRepository.reloadSongsDb()
+                preferencesService.reload()
                 if (errors.size == syncFiles.size) {
                     uiInfoService.showInfo(R.string.settings_sync_restore_failed)
                     return@onSuccess
@@ -138,7 +133,7 @@ class GoogleSyncManager {
                     uiInfoService.showInfo(R.string.settings_sync_restore_partial_success)
                 }
                 withContext(Dispatchers.Main) {
-                    activityController.get().quit()
+                    activityController.quit()
                 }
             }
         }
@@ -153,7 +148,7 @@ class GoogleSyncManager {
         logger.debug("backing up file $syncFile")
         val fileId: String = findOrCreateFile(driveService, syncFile)
 
-        val dataDirPath = localDbService.get().appDataDir.absolutePath
+        val dataDirPath = localDbService.appDataDir.absolutePath
         val localFile = java.io.File(dataDirPath, syncFile)
         if (!localFile.exists())
             throw FileNotFoundException("file not found: ${localFile.absoluteFile}")
@@ -169,7 +164,7 @@ class GoogleSyncManager {
         val fileId: String = findDriveFile(driveService, syncFile)
                 ?: throw FileNotFoundException("file not found on Google Drive: $syncFile")
 
-        val dataDirPath = localDbService.get().appDataDir.absolutePath
+        val dataDirPath = localDbService.appDataDir.absolutePath
         val localFile = java.io.File(dataDirPath, syncFile)
 
         driveService.files()

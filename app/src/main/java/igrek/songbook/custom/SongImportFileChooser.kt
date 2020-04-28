@@ -5,40 +5,33 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.OpenableColumns
 import com.google.common.io.CharStreams
-import dagger.Lazy
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.nio.charset.Charset
-import javax.inject.Inject
 
-class SongImportFileChooser {
-
-    @Inject
-    lateinit var activity: Activity
-
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-
-    @Inject
-    lateinit var editSongLayoutController: Lazy<EditSongLayoutController>
+class SongImportFileChooser(
+        activity: LazyInject<Activity> = appFactory.activity,
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+        editSongLayoutController: LazyInject<EditSongLayoutController> = appFactory.editSongLayoutController,
+) {
+    private val activity by LazyExtractor(activity)
+    private val uiInfoService by LazyExtractor(uiInfoService)
+    private val uiResourceService by LazyExtractor(uiResourceService)
+    private val editSongLayoutController by LazyExtractor(editSongLayoutController)
 
     companion object {
         const val FILE_SELECT_CODE = 7
 
         const val FILE_IMPORT_LIMIT_B = 50 * 1024
-    }
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
     }
 
     fun showFileChooser() {
@@ -70,7 +63,7 @@ class SongImportFileChooser {
 
                     val content = convert(inputStream, Charset.forName("UTF-8"))
 
-                    editSongLayoutController.get().setupImportedSong(filename, content)
+                    editSongLayoutController.setupImportedSong(filename, content)
                 }
             }
         }

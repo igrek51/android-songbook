@@ -1,9 +1,12 @@
 package igrek.songbook.mock
 
+import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.inject.SingletonInject
+import org.mockito.Mockito
 
 class UiResourceServiceMock : UiResourceService(
-//        Mockito.mock(AppCompatActivity::class.java),
+        activity = SingletonInject { Mockito.mock(AppCompatActivity::class.java) },
 ) {
 
     override fun resString(resourceId: Int): String {

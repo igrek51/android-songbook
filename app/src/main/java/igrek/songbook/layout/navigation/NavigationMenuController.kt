@@ -6,7 +6,6 @@ import android.os.Looper
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
-import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.about.AboutLayoutController
 import igrek.songbook.about.HelpLayoutController
@@ -15,11 +14,11 @@ import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.contact.ContactLayoutController
 import igrek.songbook.contact.SendMessageService
 import igrek.songbook.custom.CustomSongsListLayoutController
-import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.info.UiInfoService
-import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.general.SongsUpdater
 import igrek.songbook.playlist.PlaylistLayoutController
@@ -34,34 +33,29 @@ import igrek.songbook.songselection.top.TopSongsLayoutController
 import igrek.songbook.songselection.tree.SongTreeLayoutController
 import igrek.songbook.system.SoftKeyboardService
 import java.util.*
-import javax.inject.Inject
 
-class NavigationMenuController {
-
-    @Inject
-    lateinit var activity: Activity
-    @Inject
-    lateinit var uiInfoService: Lazy<UiInfoService>
-    @Inject
-    lateinit var uiResourceService: Lazy<UiResourceService>
-    @Inject
-    lateinit var activityController: Lazy<ActivityController>
-    @Inject
-    lateinit var helpLayoutController: Lazy<HelpLayoutController>
-    @Inject
-    lateinit var aboutLayoutController: Lazy<AboutLayoutController>
-    @Inject
-    lateinit var layoutController: Lazy<LayoutController>
-    @Inject
-    lateinit var songsUpdater: Lazy<SongsUpdater>
-    @Inject
-    lateinit var softKeyboardService: Lazy<SoftKeyboardService>
-    @Inject
-    lateinit var randomSongOpener: Lazy<RandomSongOpener>
-    @Inject
-    lateinit var sendMessageService: Lazy<SendMessageService>
-    @Inject
-    lateinit var songOpener: Lazy<SongOpener>
+class NavigationMenuController(
+        activity: LazyInject<Activity> = appFactory.activity,
+        activityController: LazyInject<ActivityController> = appFactory.activityController,
+        helpLayoutController: LazyInject<HelpLayoutController> = appFactory.helpLayoutController,
+        aboutLayoutController: LazyInject<AboutLayoutController> = appFactory.aboutLayoutController,
+        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+        songsUpdater: LazyInject<SongsUpdater> = appFactory.songsUpdater,
+        softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
+        randomSongOpener: LazyInject<RandomSongOpener> = appFactory.randomSongOpener,
+        sendMessageService: LazyInject<SendMessageService> = appFactory.sendMessageService,
+        songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+) {
+    private val activity by LazyExtractor(activity)
+    private val activityController by LazyExtractor(activityController)
+    private val helpLayoutController by LazyExtractor(helpLayoutController)
+    private val aboutLayoutController by LazyExtractor(aboutLayoutController)
+    private val layoutController by LazyExtractor(layoutController)
+    private val songsUpdater by LazyExtractor(songsUpdater)
+    private val softKeyboardService by LazyExtractor(softKeyboardService)
+    private val randomSongOpener by LazyExtractor(randomSongOpener)
+    private val sendMessageService by LazyExtractor(sendMessageService)
+    private val songOpener by LazyExtractor(songOpener)
 
     private var drawerLayout: DrawerLayout? = null
     private var navigationView: NavigationView? = null
@@ -69,29 +63,28 @@ class NavigationMenuController {
     private val logger = LoggerFactory.logger
 
     init {
-        DaggerIoc.factoryComponent.inject(this)
         initOptionActionsMap()
     }
 
     private fun initOptionActionsMap() {
-        actionsMap[R.id.nav_songs_list] = { layoutController.get().showLayout(SongTreeLayoutController::class) }
-        actionsMap[R.id.nav_search] = { layoutController.get().showLayout(SongSearchLayoutController::class) }
-        actionsMap[R.id.nav_favourites] = { layoutController.get().showLayout(FavouritesLayoutController::class) }
-        actionsMap[R.id.nav_playlists] = { layoutController.get().showLayout(PlaylistLayoutController::class) }
-        actionsMap[R.id.nav_update_db] = { songsUpdater.get().updateSongsDb() }
-        actionsMap[R.id.nav_custom_songs] = { layoutController.get().showLayout(CustomSongsListLayoutController::class) }
-        actionsMap[R.id.nav_random_song] = { randomSongOpener.get().openRandomSong() }
-        actionsMap[R.id.nav_settings] = { layoutController.get().showLayout(SettingsLayoutController::class) }
-        actionsMap[R.id.nav_help] = { helpLayoutController.get().showUIHelp() }
-        actionsMap[R.id.nav_about] = { aboutLayoutController.get().showAbout() }
-        actionsMap[R.id.nav_exit] = { activityController.get().quit() }
-        actionsMap[R.id.nav_contact] = { layoutController.get().showLayout(ContactLayoutController::class) }
-        actionsMap[R.id.nav_missing_song] = { sendMessageService.get().requestMissingSong() }
-        actionsMap[R.id.nav_history] = { layoutController.get().showLayout(OpenHistoryLayoutController::class) }
-        actionsMap[R.id.nav_latest] = { layoutController.get().showLayout(LatestSongsLayoutController::class) }
-        actionsMap[R.id.nav_top_songs] = { layoutController.get().showLayout(TopSongsLayoutController::class) }
-        actionsMap[R.id.nav_last_song] = { songOpener.get().openLastSong() }
-        actionsMap[R.id.nav_admin_antechamber] = { layoutController.get().showLayout(AdminSongsLayoutContoller::class) }
+        actionsMap[R.id.nav_songs_list] = { layoutController.showLayout(SongTreeLayoutController::class) }
+        actionsMap[R.id.nav_search] = { layoutController.showLayout(SongSearchLayoutController::class) }
+        actionsMap[R.id.nav_favourites] = { layoutController.showLayout(FavouritesLayoutController::class) }
+        actionsMap[R.id.nav_playlists] = { layoutController.showLayout(PlaylistLayoutController::class) }
+        actionsMap[R.id.nav_update_db] = { songsUpdater.updateSongsDb() }
+        actionsMap[R.id.nav_custom_songs] = { layoutController.showLayout(CustomSongsListLayoutController::class) }
+        actionsMap[R.id.nav_random_song] = { randomSongOpener.openRandomSong() }
+        actionsMap[R.id.nav_settings] = { layoutController.showLayout(SettingsLayoutController::class) }
+        actionsMap[R.id.nav_help] = { helpLayoutController.showUIHelp() }
+        actionsMap[R.id.nav_about] = { aboutLayoutController.showAbout() }
+        actionsMap[R.id.nav_exit] = { activityController.quit() }
+        actionsMap[R.id.nav_contact] = { layoutController.showLayout(ContactLayoutController::class) }
+        actionsMap[R.id.nav_missing_song] = { sendMessageService.requestMissingSong() }
+        actionsMap[R.id.nav_history] = { layoutController.showLayout(OpenHistoryLayoutController::class) }
+        actionsMap[R.id.nav_latest] = { layoutController.showLayout(LatestSongsLayoutController::class) }
+        actionsMap[R.id.nav_top_songs] = { layoutController.showLayout(TopSongsLayoutController::class) }
+        actionsMap[R.id.nav_last_song] = { songOpener.openLastSong() }
+        actionsMap[R.id.nav_admin_antechamber] = { layoutController.showLayout(AdminSongsLayoutContoller::class) }
     }
 
     fun init() {
@@ -134,7 +127,7 @@ class NavigationMenuController {
 
     fun navDrawerShow() {
         drawerLayout!!.openDrawer(GravityCompat.START)
-        softKeyboardService.get().hideSoftKeyboard()
+        softKeyboardService.hideSoftKeyboard()
     }
 
     fun navDrawerHide() {

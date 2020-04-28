@@ -1,57 +1,47 @@
 package igrek.songbook.activity
 
-import android.app.Activity
-import dagger.Lazy
+
 import igrek.songbook.BuildConfig
 import igrek.songbook.admin.AdminService
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.ad.AdService
 import igrek.songbook.persistence.general.SongsUpdater
 import igrek.songbook.persistence.repository.SongsRepository
-import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songselection.top.TopSongsLayoutController
 import igrek.songbook.system.WindowManagerService
-import javax.inject.Inject
 import kotlin.reflect.KClass
 
-
-class AppInitializer {
-
-    @Inject
-    lateinit var windowManagerService: Lazy<WindowManagerService>
-    @Inject
-    lateinit var activity: Lazy<Activity>
-    @Inject
-    lateinit var layoutController: Lazy<LayoutController>
-    @Inject
-    lateinit var songsUpdater: Lazy<SongsUpdater>
-    @Inject
-    lateinit var appLanguageService: Lazy<AppLanguageService>
-    @Inject
-    lateinit var songsRepository: Lazy<SongsRepository>
-    @Inject
-    lateinit var adminService: Lazy<AdminService>
-    @Inject
-    lateinit var preferencesState: Lazy<PreferencesState>
-    @Inject
-    lateinit var userDataDao: Lazy<UserDataDao>
-    @Inject
-    lateinit var chordsNotationService: Lazy<ChordsNotationService>
-    @Inject
-    lateinit var adService: Lazy<AdService>
+class AppInitializer(
+        windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
+        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+        songsUpdater: LazyInject<SongsUpdater> = appFactory.songsUpdater,
+        appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
+        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+        adminService: LazyInject<AdminService> = appFactory.adminService,
+        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+        chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
+        adService: LazyInject<AdService> = appFactory.adService,
+) {
+    private val windowManagerService by LazyExtractor(windowManagerService)
+    private val layoutController by LazyExtractor(layoutController)
+    private val songsUpdater by LazyExtractor(songsUpdater)
+    private val appLanguageService by LazyExtractor(appLanguageService)
+    private val songsRepository by LazyExtractor(songsRepository)
+    private val adminService by LazyExtractor(adminService)
+    private val preferencesState by LazyExtractor(preferencesState)
+    private val chordsNotationService by LazyExtractor(chordsNotationService)
+    private val adService by LazyExtractor(adService)
 
     private val logger = LoggerFactory.logger
     private val startingScreen: KClass<out MainLayout> = TopSongsLayoutController::class
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     fun init() {
         if (BuildConfig.DEBUG) {
@@ -60,14 +50,14 @@ class AppInitializer {
 
         logger.info("Initializing application...")
 
-        appLanguageService.get().setLocale()
-        songsRepository.get().init()
-        layoutController.get().init()
-        windowManagerService.get().hideTaskbar()
-        layoutController.get().showLayout(startingScreen)
-        songsUpdater.get().checkUpdateIsAvailable()
-        adService.get().initialize()
-        adminService.get().init()
+        appLanguageService.setLocale()
+        songsRepository.init()
+        layoutController.init()
+        windowManagerService.hideTaskbar()
+        layoutController.showLayout(startingScreen)
+        songsUpdater.checkUpdateIsAvailable()
+        adService.initialize()
+        adminService.init()
         if (isRunningFirstTime())
             firstRunInit()
         reportExecution()
@@ -76,20 +66,20 @@ class AppInitializer {
     }
 
     private fun firstRunInit() {
-        chordsNotationService.get().setDefaultChordsNotation()
+        chordsNotationService.setDefaultChordsNotation()
     }
 
     private fun debugInit() {
         // Allow showing the activity even if the device is locked
-        windowManagerService.get().showAppWhenLocked()
+        windowManagerService.showAppWhenLocked()
     }
 
     private fun isRunningFirstTime(): Boolean {
-        return preferencesState.get().appExecutionCount == 0L
+        return preferencesState.appExecutionCount == 0L
     }
 
     private fun reportExecution() {
-        preferencesState.get().appExecutionCount += 1
+        preferencesState.appExecutionCount += 1
     }
 
 }

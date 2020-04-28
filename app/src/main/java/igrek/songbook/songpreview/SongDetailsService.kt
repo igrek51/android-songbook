@@ -3,35 +3,26 @@ package igrek.songbook.songpreview
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
-import igrek.songbook.layout.LayoutController
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
-class SongDetailsService {
-
-    @Inject
-    lateinit var activity: AppCompatActivity
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var layoutController: dagger.Lazy<LayoutController>
-    @Inject
-    lateinit var songContextMenuBuilder: dagger.Lazy<SongContextMenuBuilder>
+class SongDetailsService(
+        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+        songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
+) {
+    private val activity by LazyExtractor(appCompatActivity)
+    private val uiResourceService by LazyExtractor(uiResourceService)
+    private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
 
     private val modificationDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     fun showSongDetails(song: Song) {
         val comment = song.comment
@@ -91,7 +82,7 @@ class SongDetailsService {
     }
 
     private fun showMoreActions(song: Song) {
-        songContextMenuBuilder.get().showSongActions(song)
+        songContextMenuBuilder.showSongActions(song)
     }
 
 }

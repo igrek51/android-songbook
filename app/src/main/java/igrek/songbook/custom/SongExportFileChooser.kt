@@ -4,34 +4,29 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import kotlinx.serialization.toUtf8Bytes
 import java.io.OutputStream
-import javax.inject.Inject
 
-class SongExportFileChooser {
-
-    @Inject
-    lateinit var activity: Activity
-
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-
-    @Inject
-    lateinit var uiResourceService: UiResourceService
+class SongExportFileChooser(
+        activity: LazyInject<Activity> = appFactory.activity,
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+) {
+    private val activity by LazyExtractor(activity)
+    private val uiInfoService by LazyExtractor(uiInfoService)
+    private val uiResourceService by LazyExtractor(uiResourceService)
 
     private var contentToBeSaved: String = ""
     private var onSuccess: (Uri) -> Unit = {}
 
     companion object {
         const val FILE_EXPORT_SELECT_CODE = 8
-    }
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
     }
 
     fun showFileChooser(contentToBeSaved: String, filename: String, onSuccess: (Uri) -> Unit) {

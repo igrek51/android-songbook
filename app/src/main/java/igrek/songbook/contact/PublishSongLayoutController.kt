@@ -5,32 +5,33 @@ import android.widget.Button
 import android.widget.EditText
 import igrek.songbook.R
 import igrek.songbook.admin.antechamber.AntechamberService
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeClickListener
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.system.SoftKeyboardService
 import io.reactivex.android.schedulers.AndroidSchedulers
-import javax.inject.Inject
 
-class PublishSongLayoutController : MainLayout {
-
-    @Inject
-    lateinit var layoutController: LayoutController
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var sendMessageService: SendMessageService
-    @Inject
-    lateinit var softKeyboardService: SoftKeyboardService
-    @Inject
-    lateinit var antechamberService: AntechamberService
+class PublishSongLayoutController(
+        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+        sendMessageService: LazyInject<SendMessageService> = appFactory.sendMessageService,
+        softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
+        antechamberService: LazyInject<AntechamberService> = appFactory.antechamberService,
+) : MainLayout {
+    private val layoutController by LazyExtractor(layoutController)
+    private val uiInfoService by LazyExtractor(uiInfoService)
+    private val uiResourceService by LazyExtractor(uiResourceService)
+    private val sendMessageService by LazyExtractor(sendMessageService)
+    private val softKeyboardService by LazyExtractor(softKeyboardService)
+    private val antechamberService by LazyExtractor(antechamberService)
 
     private var publishSongTitleEdit: EditText? = null
     private var publishSongArtistEdit: EditText? = null
@@ -38,10 +39,6 @@ class PublishSongLayoutController : MainLayout {
     private var contactAuthorEdit: EditText? = null
     private var originalSongId: Long? = null
     private var publishSong: Song? = null
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     override fun showLayout(layout: View) {
         publishSongTitleEdit = layout.findViewById(R.id.publishSongTitleEdit)

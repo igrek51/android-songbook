@@ -14,43 +14,37 @@ import com.google.common.base.Predicate
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import igrek.songbook.R
 import igrek.songbook.admin.AdminService
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.ad.AdService
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.locale.StringSimplifier
-import javax.inject.Inject
 
 
-class SecretCommandService {
-
-    @Inject
-    lateinit var activity: AppCompatActivity
-
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-
-    @Inject
-    lateinit var songsRepository: SongsRepository
-
-    @Inject
-    lateinit var softKeyboardService: SoftKeyboardService
-
-    @Inject
-    lateinit var preferencesService: PreferencesService
-
-    @Inject
-    lateinit var adminService: AdminService
-
-    @Inject
-    lateinit var adService: AdService
+class SecretCommandService(
+        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+        softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
+        preferencesService: LazyInject<PreferencesService> = appFactory.preferencesService,
+        adminService: LazyInject<AdminService> = appFactory.adminService,
+        adService: LazyInject<AdService> = appFactory.adService,
+) {
+    private val activity by LazyExtractor(appCompatActivity)
+    private val uiResourceService by LazyExtractor(uiResourceService)
+    private val uiInfoService by LazyExtractor(uiInfoService)
+    private val songsRepository by LazyExtractor(songsRepository)
+    private val softKeyboardService by LazyExtractor(softKeyboardService)
+    private val preferencesService by LazyExtractor(preferencesService)
+    private val adminService by LazyExtractor(adminService)
+    private val adService by LazyExtractor(adService)
 
     private val logger = LoggerFactory.logger
 
@@ -71,18 +65,18 @@ class SecretCommandService {
                 CommandRule("afcg") { unlockSongs("afcg") },
 
                 CommandRule("reset") {
-                    songsRepository.factoryReset()
-                    preferencesService.clear()
+                    this.songsRepository.factoryReset()
+                    this.preferencesService.clear()
                 },
-                CommandRule("reset config") { preferencesService.clear() },
-                CommandRule("reset db") { songsRepository.factoryReset() },
+                CommandRule("reset config") { this.preferencesService.clear() },
+                CommandRule("reset db") { this.songsRepository.factoryReset() },
                 CommandRule("reset db general") {
-                    songsRepository.resetGeneralData()
-                    songsRepository.reloadSongsDb()
+                    this.songsRepository.resetGeneralData()
+                    this.songsRepository.reloadSongsDb()
                 },
                 CommandRule("reset db user") {
-                    songsRepository.resetUserData()
-                    songsRepository.reloadSongsDb()
+                    this.songsRepository.resetUserData()
+                    this.songsRepository.reloadSongsDb()
                 },
 
                 CommandRule("firebase crashme") {
@@ -98,11 +92,11 @@ class SecretCommandService {
                 CommandRule(Predicate {
                     it?.startsWith("login ") ?: false
                 }) { key: String ->
-                    adminService.login(key)
+                    this.adminService.login(key)
                 },
 
                 CommandRule("ad show") {
-                    adService.enableAds()
+                    this.adService.enableAds()
                 },
 
                 CommandRule(Predicate {
@@ -155,10 +149,6 @@ class SecretCommandService {
         dialog.show()
 
         toast(R.string.easter_egg_discovered)
-    }
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
     }
 
     fun showUnlockAlert() {

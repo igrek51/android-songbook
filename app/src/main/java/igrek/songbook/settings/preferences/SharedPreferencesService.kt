@@ -1,18 +1,20 @@
 package igrek.songbook.settings.preferences
 
+
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import java.util.*
-import javax.inject.Inject
 import kotlin.collections.set
 
-
-class SharedPreferencesService {
-    @Inject
-    lateinit var sharedPreferences: SharedPreferences
+class SharedPreferencesService(
+        sharedPreferences: LazyInject<SharedPreferences> = appFactory.sharedPreferences,
+) {
+    private val sharedPreferences by LazyExtractor(sharedPreferences)
 
     private val logger = LoggerFactory.logger
     private val propertyValues = HashMap<String, Any>()
@@ -21,10 +23,6 @@ class SharedPreferencesService {
         private const val sharedPreferencesName = "SongBook-UserPreferences"
 
         val sharedPreferencesCreator: (activity: AppCompatActivity) -> SharedPreferences = { activity -> activity.applicationContext.getSharedPreferences(sharedPreferencesName, Context.MODE_PRIVATE) }
-    }
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
     }
 
     fun getEntities(): Map<String, Any> {

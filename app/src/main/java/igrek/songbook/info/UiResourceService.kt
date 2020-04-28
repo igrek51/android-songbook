@@ -4,10 +4,14 @@ import android.app.Activity
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 
 open class UiResourceService(
-        private val activity: Activity,
+        activity: LazyInject<Activity> = appFactory.activity,
 ) {
+    private val activity: Activity by LazyExtractor(activity)
 
     open fun resString(resourceId: Int): String {
         return activity.resources.getString(resourceId)

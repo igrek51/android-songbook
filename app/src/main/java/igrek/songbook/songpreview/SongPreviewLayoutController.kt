@@ -15,12 +15,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import dagger.Lazy
 import igrek.songbook.R
 import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.chords.lyrics.LyricsLoader
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.navigation.NavigationMenuController
@@ -40,45 +41,43 @@ import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.WindowManagerService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
-class SongPreviewLayoutController : MainLayout {
-
-    @Inject
-    lateinit var lyricsLoader: Lazy<LyricsLoader>
-    @Inject
-    lateinit var lyricsThemeService: Lazy<LyricsThemeService>
-    @Inject
-    lateinit var layoutController: Lazy<LayoutController>
-    @Inject
-    lateinit var windowManagerService: Lazy<WindowManagerService>
-    @Inject
-    lateinit var navigationMenuController: Lazy<NavigationMenuController>
-    @Inject
-    lateinit var activity: AppCompatActivity
-    @Inject
-    lateinit var quickMenuTranspose: Lazy<QuickMenuTranspose>
-    @Inject
-    lateinit var quickMenuAutoscroll: Lazy<QuickMenuAutoscroll>
-    @Inject
-    lateinit var autoscrollService: Lazy<AutoscrollService>
-    @Inject
-    lateinit var softKeyboardService: Lazy<SoftKeyboardService>
-    @Inject
-    lateinit var songDetailsService: Lazy<SongDetailsService>
-    @Inject
-    lateinit var uiInfoService: Lazy<UiInfoService>
-    @Inject
-    lateinit var favouriteSongsService: Lazy<FavouriteSongsService>
-    @Inject
-    lateinit var songContextMenuBuilder: Lazy<SongContextMenuBuilder>
-    @Inject
-    lateinit var songsRepository: Lazy<SongsRepository>
-    @Inject
-    lateinit var chordsDiagramsService: Lazy<ChordsDiagramsService>
-
-    @Inject
-    lateinit var preferencesState: Lazy<PreferencesState>
+class SongPreviewLayoutController(
+        lyricsLoader: LazyInject<LyricsLoader> = appFactory.lyricsLoader,
+        lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
+        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+        windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
+        navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
+        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+        quickMenuTranspose: LazyInject<QuickMenuTranspose> = appFactory.quickMenuTranspose,
+        quickMenuAutoscroll: LazyInject<QuickMenuAutoscroll> = appFactory.quickMenuAutoscroll,
+        autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
+        softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
+        songDetailsService: LazyInject<SongDetailsService> = appFactory.songDetailsService,
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        favouriteSongsService: LazyInject<FavouriteSongsService> = appFactory.favouriteSongsService,
+        songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
+        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+        chordsDiagramsService: LazyInject<ChordsDiagramsService> = appFactory.chordsDiagramsService,
+        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+) : MainLayout {
+    private val lyricsLoader by LazyExtractor(lyricsLoader)
+    private val lyricsThemeService by LazyExtractor(lyricsThemeService)
+    private val layoutController by LazyExtractor(layoutController)
+    private val windowManagerService by LazyExtractor(windowManagerService)
+    private val navigationMenuController by LazyExtractor(navigationMenuController)
+    private val activity by LazyExtractor(appCompatActivity)
+    private val quickMenuTranspose by LazyExtractor(quickMenuTranspose)
+    private val quickMenuAutoscroll by LazyExtractor(quickMenuAutoscroll)
+    private val autoscrollService by LazyExtractor(autoscrollService)
+    private val softKeyboardService by LazyExtractor(softKeyboardService)
+    private val songDetailsService by LazyExtractor(songDetailsService)
+    private val uiInfoService by LazyExtractor(uiInfoService)
+    private val favouriteSongsService by LazyExtractor(favouriteSongsService)
+    private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
+    private val songsRepository by LazyExtractor(songsRepository)
+    private val chordsDiagramsService by LazyExtractor(chordsDiagramsService)
+    private val preferencesState by LazyExtractor(preferencesState)
 
     var songPreview: SongPreview? = null
         private set
@@ -94,11 +93,9 @@ class SongPreviewLayoutController : MainLayout {
     private var setFavouriteButton: ImageButton? = null
 
     val isQuickMenuVisible: Boolean
-        get() = quickMenuTranspose.get().isVisible || quickMenuAutoscroll.get().isVisible
+        get() = quickMenuTranspose.isVisible || quickMenuAutoscroll.isVisible
 
     init {
-        DaggerIoc.factoryComponent.inject(this)
-
         autoscrollService.get().scrollStateSubject
                 .debounce(100, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -113,10 +110,10 @@ class SongPreviewLayoutController : MainLayout {
     }
 
     override fun showLayout(layout: View) {
-        if (preferencesState.get().keepScreenOn)
-            windowManagerService.get().keepScreenOn(true)
+        if (preferencesState.keepScreenOn)
+            windowManagerService.keepScreenOn(true)
 
-        softKeyboardService.get().hideSoftKeyboard()
+        softKeyboardService.hideSoftKeyboard()
 
         // Toolbar
         val toolbar1 = layout.findViewById<Toolbar>(R.id.toolbar1)
@@ -128,7 +125,7 @@ class SongPreviewLayoutController : MainLayout {
         }
         // navigation menu button
         val navMenuButton = layout.findViewById<ImageButton>(R.id.navMenuButton)
-        navMenuButton.setOnClickListener { navigationMenuController.get().navDrawerShow() }
+        navMenuButton.setOnClickListener { navigationMenuController.navDrawerShow() }
 
         appBarLayout = layout.findViewById(R.id.appBarLayout)
 
@@ -146,14 +143,14 @@ class SongPreviewLayoutController : MainLayout {
         val quickMenuTransposeView = inflater.inflate(R.layout.component_quick_menu_transpose, null)
         quickMenuTransposeView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         quickMenuContainer.addView(quickMenuTransposeView)
-        quickMenuTranspose.get().setQuickMenuView(quickMenuTransposeView)
-        quickMenuTranspose.get().isVisible = false
+        quickMenuTranspose.setQuickMenuView(quickMenuTransposeView)
+        quickMenuTranspose.isVisible = false
         // autoscroll panel
         val quickMenuAutoscrollView = inflater.inflate(R.layout.component_quick_menu_autoscroll, null)
         quickMenuAutoscrollView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         quickMenuContainer.addView(quickMenuAutoscrollView)
-        quickMenuAutoscroll.get().setQuickMenuView(quickMenuAutoscrollView)
-        quickMenuAutoscroll.get().isVisible = false
+        quickMenuAutoscroll.setQuickMenuView(quickMenuAutoscrollView)
+        quickMenuAutoscroll.isVisible = false
 
         // overlaying RecyclerView
         overlayRecyclerView = activity.findViewById(R.id.overlayRecyclerView)
@@ -196,7 +193,7 @@ class SongPreviewLayoutController : MainLayout {
         chordsHelpButton.setOnClickListener { showChordsGraphs() }
 
         val songInfoButton = layout.findViewById<ImageButton>(R.id.songInfoButton)
-        songInfoButton.setOnClickListener { songDetailsService.get().showSongDetails(currentSong!!) }
+        songInfoButton.setOnClickListener { songDetailsService.showSongDetails(currentSong!!) }
 
         val fullscreenButton = layout.findViewById<ImageButton>(R.id.fullscreenButton)
         fullscreenButton.setOnClickListener { setFullscreen(true) }
@@ -210,7 +207,7 @@ class SongPreviewLayoutController : MainLayout {
     }
 
     private fun showMoreActions() {
-        songContextMenuBuilder.get().showSongActions(currentSong!!)
+        songContextMenuBuilder.showSongActions(currentSong!!)
     }
 
     override fun getLayoutResourceId(): Int {
@@ -222,12 +219,12 @@ class SongPreviewLayoutController : MainLayout {
             // load file and parse it
             val fileContent = it.content.orEmpty()
             val srcNotation = it.chordsNotation ?: ChordsNotation.default
-            val transposed = songsRepository.get().transposeDao.getSongTransposition(it.songIdentifier())
+            val transposed = songsRepository.transposeDao.getSongTransposition(it.songIdentifier())
             // initialize - first file loading
-            lyricsLoader.get().load(fileContent, w, paint, transposed, srcNotation)
+            lyricsLoader.load(fileContent, w, paint, transposed, srcNotation)
 
-            songPreview?.setFontSizes(lyricsThemeService.get().fontsize)
-            songPreview?.setCRDModel(lyricsLoader.get().lyricsModel)
+            songPreview?.setFontSizes(lyricsThemeService.fontsize)
+            songPreview?.setCRDModel(lyricsLoader.lyricsModel)
             resetOverlayScroll()
         }
     }
@@ -239,18 +236,18 @@ class SongPreviewLayoutController : MainLayout {
     }
 
     fun onLyricsModelUpdated() {
-        songPreview!!.setCRDModel(lyricsLoader.get().lyricsModel)
+        songPreview!!.setCRDModel(lyricsLoader.lyricsModel)
         resetOverlayScroll()
         highlightPanelButtons()
     }
 
     private fun highlightPanelButtons() {
-        if (quickMenuTranspose.get().isFeatureActive) {
+        if (quickMenuTranspose.isFeatureActive) {
             highlightButton(transposeButton!!)
         } else {
             unhighlightButton(transposeButton!!)
         }
-        if (quickMenuAutoscroll.get().isFeatureActive) {
+        if (quickMenuAutoscroll.isFeatureActive) {
             highlightButton(autoscrollButton!!)
         } else {
             unhighlightButton(autoscrollButton!!)
@@ -258,39 +255,39 @@ class SongPreviewLayoutController : MainLayout {
     }
 
     fun onFontsizeChangedEvent(fontsize: Float) {
-        lyricsThemeService.get().fontsize = fontsize
+        lyricsThemeService.fontsize = fontsize
         // parse without reading a whole file again
-        lyricsLoader.get().reparse()
+        lyricsLoader.reparse()
         onLyricsModelUpdated()
     }
 
     private fun toggleTransposePanel() {
-        quickMenuAutoscroll.get().isVisible = false
-        quickMenuTranspose.get().isVisible = !quickMenuTranspose.get().isVisible
+        quickMenuAutoscroll.isVisible = false
+        quickMenuTranspose.isVisible = !quickMenuTranspose.isVisible
         songPreview!!.repaint()
     }
 
     private fun toggleAutoscrollPanel() {
-        quickMenuTranspose.get().isVisible = false
-        quickMenuAutoscroll.get().isVisible = !quickMenuAutoscroll.get().isVisible
+        quickMenuTranspose.isVisible = false
+        quickMenuAutoscroll.isVisible = !quickMenuAutoscroll.isVisible
         songPreview!!.repaint()
     }
 
     private fun goToBeginning() {
         resetOverlayScroll()
-        if (songPreview!!.scroll == 0f && !autoscrollService.get().isRunning) {
-            uiInfoService.get().showInfo(R.string.scroll_at_the_beginning_already)
+        if (songPreview!!.scroll == 0f && !autoscrollService.isRunning) {
+            uiInfoService.showInfo(R.string.scroll_at_the_beginning_already)
         }
         songPreview!!.goToBeginning()
-        if (autoscrollService.get().isRunning) {
+        if (autoscrollService.isRunning) {
             // restart autoscrolling
-            autoscrollService.get().start()
+            autoscrollService.start()
         }
     }
 
     private fun setFullscreen(fullscreen: Boolean) {
         this.fullscreen = fullscreen
-        windowManagerService.get().setFullscreen(fullscreen)
+        windowManagerService.setFullscreen(fullscreen)
 
         if (fullscreen) {
             appBarLayout!!.visibility = View.GONE
@@ -303,25 +300,25 @@ class SongPreviewLayoutController : MainLayout {
 
     override fun onBackClicked() {
         when {
-            quickMenuTranspose.get().isVisible -> {
-                quickMenuTranspose.get().isVisible = false
+            quickMenuTranspose.isVisible -> {
+                quickMenuTranspose.isVisible = false
                 songPreview!!.repaint()
             }
-            quickMenuAutoscroll.get().isVisible -> quickMenuAutoscroll.get().isVisible = false
+            quickMenuAutoscroll.isVisible -> quickMenuAutoscroll.isVisible = false
             fullscreen -> setFullscreen(false)
-            else -> layoutController.get().showPreviousLayoutOrQuit()
+            else -> layoutController.showPreviousLayoutOrQuit()
         }
     }
 
     override fun onLayoutExit() {
-        autoscrollService.get().stop()
-        windowManagerService.get().keepScreenOn(false)
+        autoscrollService.stop()
+        windowManagerService.keepScreenOn(false)
         if (fullscreen)
             setFullscreen(false)
     }
 
     fun onPreviewSizeChange(w: Int) {
-        lyricsLoader.get().onPreviewSizeChange(w, songPreview!!.paint)
+        lyricsLoader.onPreviewSizeChange(w, songPreview!!.paint)
         onLyricsModelUpdated()
     }
 
@@ -335,15 +332,15 @@ class SongPreviewLayoutController : MainLayout {
     }
 
     private fun toggleSongFavourite() {
-        if (!favouriteSongsService.get().isSongFavourite(currentSong!!)) {
-            favouriteSongsService.get().setSongFavourite(currentSong!!)
+        if (!favouriteSongsService.isSongFavourite(currentSong!!)) {
+            favouriteSongsService.setSongFavourite(currentSong!!)
         } else {
-            favouriteSongsService.get().unsetSongFavourite(currentSong!!)
+            favouriteSongsService.unsetSongFavourite(currentSong!!)
         }
     }
 
     private fun updateFavouriteButton() {
-        if (favouriteSongsService.get().isSongFavourite(currentSong!!)) {
+        if (favouriteSongsService.isSongFavourite(currentSong!!)) {
             setFavouriteButton!!.setImageResource(R.drawable.star_filled)
         } else {
             setFavouriteButton!!.setImageResource(R.drawable.star_border)
@@ -351,8 +348,8 @@ class SongPreviewLayoutController : MainLayout {
     }
 
     fun showChordsGraphs() {
-        val crdModel = lyricsLoader.get().lyricsModel ?: return
-        chordsDiagramsService.get().showLyricsChordsMenu(crdModel)
+        val crdModel = lyricsLoader.lyricsModel ?: return
+        chordsDiagramsService.showLyricsChordsMenu(crdModel)
     }
 
 }

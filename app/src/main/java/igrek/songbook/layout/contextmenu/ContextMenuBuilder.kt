@@ -2,21 +2,18 @@ package igrek.songbook.layout.contextmenu
 
 import android.app.Activity
 import androidx.appcompat.app.AlertDialog
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
-import javax.inject.Inject
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 
-class ContextMenuBuilder {
-
-    @Inject
-    lateinit var activity: Activity
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
+class ContextMenuBuilder(
+        activity: LazyInject<Activity> = appFactory.activity,
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+) {
+    private val activity by LazyExtractor(activity)
+    private val uiResourceService by LazyExtractor(uiResourceService)
 
     fun showContextMenu(titleResId: Int, actions: List<Action>) {
         val actionNames = actions.map { action -> actionName(action) }.toTypedArray()
@@ -56,9 +53,11 @@ class ContextMenuBuilder {
         return action.name!!
     }
 
-    data class Action(var name: String?,
-                      val nameResId: Int?,
-                      val executor: () -> Unit) {
+    data class Action(
+            var name: String?,
+            val nameResId: Int?,
+            val executor: () -> Unit,
+    ) {
 
         constructor(name: String, executor: () -> Unit) : this(name, null, executor)
 

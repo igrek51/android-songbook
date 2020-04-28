@@ -1,34 +1,35 @@
 package igrek.songbook.persistence.user.custom
 
 import android.app.Activity
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.WrapContextError
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
 import igrek.songbook.persistence.user.migrate.Migration037CustomSongs
-import javax.inject.Inject
 
-class CustomSongsDao(path: String) : AbstractJsonDao<CustomSongsDb>(
+class CustomSongsDao(
+        path: String,
+        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+        activity: LazyInject<Activity> = appFactory.activity,
+) : AbstractJsonDao<CustomSongsDb>(
         path,
         dbName = "customsongs",
         schemaVersion = 1,
         clazz = CustomSongsDb::class.java,
         serializer = CustomSongsDb.serializer()
 ) {
+    private val songsRepository by LazyExtractor(songsRepository)
+    private val activity by LazyExtractor(activity)
 
     val customSongs: CustomSongsDb get() = db!!
     var customCategories = listOf<CustomCategory>()
 
-    @Inject
-    lateinit var songsRepository: SongsRepository
-    @Inject
-    lateinit var activity: Activity
-
     init {
-        DaggerIoc.factoryComponent.inject(this)
         read()
     }
 

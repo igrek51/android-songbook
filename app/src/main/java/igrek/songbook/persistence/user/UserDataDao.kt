@@ -1,8 +1,10 @@
 package igrek.songbook.persistence.user
 
-import dagger.Lazy
-import igrek.songbook.dagger.DaggerIoc
+
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.user.custom.CustomSongsDao
 import igrek.songbook.persistence.user.exclusion.ExclusionDao
@@ -15,17 +17,13 @@ import igrek.songbook.persistence.user.unlocked.UnlockedSongsDao
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-
-@Singleton
-class UserDataDao {
-
-    @Inject
-    lateinit var localDbService: Lazy<LocalDbService>
+class UserDataDao(
+        localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
+) {
+    internal val localDbService by LazyExtractor(localDbService)
 
     var unlockedSongsDao: UnlockedSongsDao by LazyDaoLoader { path -> UnlockedSongsDao(path) }
     var favouriteSongsDao: FavouriteSongsDao by LazyDaoLoader { path -> FavouriteSongsDao(path) }
@@ -40,8 +38,6 @@ class UserDataDao {
     private val logger = LoggerFactory.logger
 
     init {
-        DaggerIoc.factoryComponent.inject(this)
-
         saveRequestSubject
                 .debounce(1500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -52,7 +48,7 @@ class UserDataDao {
     }
 
     fun reload() {
-        val path = localDbService.get().songDbDir.absolutePath
+        val path = localDbService.songDbDir.absolutePath
 
         unlockedSongsDao = UnlockedSongsDao(path)
         favouriteSongsDao = FavouriteSongsDao(path)
@@ -112,7 +108,7 @@ class LazyDaoLoader<T : AbstractJsonDao<out Any>>(
         if (loadedVal != null)
             return loadedVal
 
-        val path = thisRef.localDbService.get().songDbDir.absolutePath
+        val path = thisRef.localDbService.songDbDir.absolutePath
         val loadedNN = loader.invoke(path)
         loaded = loadedNN
         return loadedNN

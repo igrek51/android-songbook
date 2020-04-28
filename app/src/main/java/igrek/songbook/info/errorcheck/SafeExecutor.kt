@@ -1,20 +1,21 @@
 package igrek.songbook.info.errorcheck
 
 
-import dagger.Lazy
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
-import javax.inject.Inject
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 
-class SafeExecutor(action: () -> Unit) {
-
-    @Inject
-    lateinit var uiInfoService: Lazy<UiInfoService>
-    @Inject
-    lateinit var uiResourceService: Lazy<UiResourceService>
+class SafeExecutor(
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+        action: () -> Unit,
+) {
+    private val uiInfoService by LazyExtractor(uiInfoService)
+    private val uiResourceService by LazyExtractor(uiResourceService)
 
     init {
         execute(action)
@@ -25,12 +26,11 @@ class SafeExecutor(action: () -> Unit) {
             action.invoke()
         } catch (t: Throwable) {
             LoggerFactory.logger.error(t)
-            DaggerIoc.factoryComponent.inject(this)
             val err: String? = when {
                 t.message != null -> t.message
                 else -> t::class.simpleName
             }
-            uiInfoService.get().showInfo(uiResourceService.get().resString(R.string.error_occurred, err))
+            uiInfoService.showInfo(uiResourceService.resString(R.string.error_occurred, err))
         }
     }
 

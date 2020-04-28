@@ -3,9 +3,10 @@ package igrek.songbook.songselection.tree
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import dagger.Lazy
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.spinner.MultiPicker
 import igrek.songbook.persistence.general.model.Category
@@ -16,25 +17,19 @@ import igrek.songbook.songselection.SongSelectionLayoutController
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import javax.inject.Inject
 
-open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayout {
-
-    @Inject
-    lateinit var scrollPosBuffer: Lazy<ScrollPosBuffer>
-
-    @Inject
-    lateinit var appLanguageService: Lazy<AppLanguageService>
+class SongTreeLayoutController(
+        scrollPosBuffer: LazyInject<ScrollPosBuffer> = appFactory.scrollPosBuffer,
+        appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
+) : SongSelectionLayoutController(), MainLayout {
+    private val scrollPosBuffer by LazyExtractor(scrollPosBuffer)
+    private val appLanguageService by LazyExtractor(appLanguageService)
 
     var currentCategory: Category? = null
     private var toolbarTitle: TextView? = null
     private var goBackButton: ImageButton? = null
     private var languagePicker: MultiPicker<SongLanguage>? = null
     private var subscriptions = mutableListOf<Disposable>()
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     override fun showLayout(layout: View) {
         initSongSelectionLayout(layout)
@@ -61,8 +56,8 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
                 })
 
         layout.findViewById<ImageButton>(R.id.languageFilterButton)?.apply {
-            val songLanguageEntries = appLanguageService.get().songLanguageEntries()
-            val selected = appLanguageService.get().selectedSongLanguages
+            val songLanguageEntries = appLanguageService.songLanguageEntries()
+            val selected = appLanguageService.selectedSongLanguages
             val title = uiResourceService.resString(R.string.song_languages)
             languagePicker = MultiPicker(
                     activity,
@@ -70,8 +65,8 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
                     selected = selected,
                     title = title,
             ) { selectedLanguages ->
-                if (appLanguageService.get().selectedSongLanguages != selectedLanguages) {
-                    appLanguageService.get().selectedSongLanguages = selectedLanguages.toSet()
+                if (appLanguageService.selectedSongLanguages != selectedLanguages) {
+                    appLanguageService.selectedSongLanguages = selectedLanguages.toSet()
                     updateSongItemsList()
                 }
             }
@@ -109,7 +104,7 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
     }
 
     override fun getSongItems(songsRepo: AllSongsRepository): MutableList<SongTreeItem> {
-        val acceptedLanguages = appLanguageService.get().selectedSongLanguages
+        val acceptedLanguages = appLanguageService.selectedSongLanguages
         val acceptedLangCodes = acceptedLanguages.map { lang -> lang.langCode } + ""
         return if (isCategorySelected()) {
             // selected category
@@ -152,12 +147,12 @@ open class SongTreeLayoutController : SongSelectionLayoutController(), MainLayou
     }
 
     private fun storeScrollPosition() {
-        scrollPosBuffer.get().storeScrollPosition(currentCategory, itemsListView?.currentScrollPosition)
+        scrollPosBuffer.storeScrollPosition(currentCategory, itemsListView?.currentScrollPosition)
     }
 
     private fun restoreScrollPosition(category: Category?) {
-        if (scrollPosBuffer.get().hasScrollPositionStored(category)) {
-            itemsListView?.restoreScrollPosition(scrollPosBuffer.get().restoreScrollPosition(category))
+        if (scrollPosBuffer.hasScrollPositionStored(category)) {
+            itemsListView?.restoreScrollPosition(scrollPosBuffer.restoreScrollPosition(category))
         }
     }
 

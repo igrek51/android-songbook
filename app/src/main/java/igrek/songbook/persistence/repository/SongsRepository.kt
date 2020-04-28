@@ -1,9 +1,10 @@
 package igrek.songbook.persistence.repository
 
-import dagger.Lazy
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.general.dao.PublicSongsDao
 import igrek.songbook.persistence.general.model.Category
@@ -20,18 +21,15 @@ import igrek.songbook.persistence.user.transpose.TransposeDao
 import igrek.songbook.persistence.user.unlocked.UnlockedSongsDao
 import igrek.songbook.util.lookup.SimpleCache
 import io.reactivex.subjects.PublishSubject
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class SongsRepository {
-
-    @Inject
-    lateinit var localDbService: Lazy<LocalDbService>
-    @Inject
-    lateinit var userDataDao: Lazy<UserDataDao>
-    @Inject
-    lateinit var uiResourceService: Lazy<UiResourceService>
+class SongsRepository(
+        localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
+        userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+) {
+    private val localDbService by LazyExtractor(localDbService)
+    private val userDataDao by LazyExtractor(userDataDao)
+    private val uiResourceService by LazyExtractor(uiResourceService)
 
     private val logger = LoggerFactory.logger
 
@@ -52,17 +50,13 @@ class SongsRepository {
     var allSongsRepo: AllSongsRepository = AllSongsRepository(publicSongsRepo, customSongsRepo)
     private var publicSongsDao: PublicSongsDao? = null
 
-    val unlockedSongsDao: UnlockedSongsDao get() = userDataDao.get().unlockedSongsDao
-    val favouriteSongsDao: FavouriteSongsDao get() = userDataDao.get().favouriteSongsDao
-    val customSongsDao: CustomSongsDao get() = userDataDao.get().customSongsDao
-    val playlistDao: PlaylistDao get() = userDataDao.get().playlistDao
-    val openHistoryDao: OpenHistoryDao get() = userDataDao.get().openHistoryDao
-    val exclusionDao: ExclusionDao get() = userDataDao.get().exclusionDao
-    val transposeDao: TransposeDao get() = userDataDao.get().transposeDao
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
+    val unlockedSongsDao: UnlockedSongsDao get() = userDataDao.unlockedSongsDao
+    val favouriteSongsDao: FavouriteSongsDao get() = userDataDao.favouriteSongsDao
+    val customSongsDao: CustomSongsDao get() = userDataDao.customSongsDao
+    val playlistDao: PlaylistDao get() = userDataDao.playlistDao
+    val openHistoryDao: OpenHistoryDao get() = userDataDao.openHistoryDao
+    val exclusionDao: ExclusionDao get() = userDataDao.exclusionDao
+    val transposeDao: TransposeDao get() = userDataDao.transposeDao
 
     fun init() {
         try {
@@ -75,7 +69,7 @@ class SongsRepository {
     @Synchronized
     fun close() {
         publicSongsDao?.close()
-        userDataDao.get().save()
+        userDataDao.save()
     }
 
     @Synchronized
@@ -89,18 +83,18 @@ class SongsRepository {
         }
 
         try {
-            userDataDao.get().reload()
+            userDataDao.reload()
         } catch (t: Throwable) {
             logger.error("failed to load user data", t)
             resetUserData()
-            userDataDao.get().reload()
+            userDataDao.reload()
         }
 
-        val publicDbBuilder = PublicSongsDbBuilder(versionNumber, publicSongsDao!!, userDataDao.get())
-        val customDbBuilder = CustomSongsDbBuilder(userDataDao.get())
+        val publicDbBuilder = PublicSongsDbBuilder(versionNumber, publicSongsDao!!, userDataDao)
+        val customDbBuilder = CustomSongsDbBuilder(userDataDao)
 
-        publicSongsRepo = publicDbBuilder.buildPublic(uiResourceService.get())
-        customSongsRepo = customDbBuilder.buildCustom(uiResourceService.get())
+        publicSongsRepo = publicDbBuilder.buildPublic(uiResourceService)
+        customSongsRepo = customDbBuilder.buildCustom(uiResourceService)
         allSongsRepo = AllSongsRepository(publicSongsRepo, customSongsRepo)
 
         dbChangeSubject.onNext(true)
@@ -109,22 +103,22 @@ class SongsRepository {
     @Synchronized
     fun reloadCustomSongsDb() {
         try {
-            userDataDao.get().reload()
+            userDataDao.reload()
         } catch (t: Throwable) {
             logger.error("failed to load user data", t)
             resetUserData()
-            userDataDao.get().reload()
+            userDataDao.reload()
         }
 
-        val customDbBuilder = CustomSongsDbBuilder(userDataDao.get())
-        customSongsRepo = customDbBuilder.buildCustom(uiResourceService.get())
+        val customDbBuilder = CustomSongsDbBuilder(userDataDao)
+        customSongsRepo = customDbBuilder.buildCustom(uiResourceService)
         allSongsRepo.invalidate()
         dbChangeSubject.onNext(true)
     }
 
     private fun loadPublicData(): Long {
-        localDbService.get().ensureLocalDbExists()
-        val dbFile = localDbService.get().songsDbFile
+        localDbService.ensureLocalDbExists()
+        val dbFile = localDbService.songsDbFile
         publicSongsDao = PublicSongsDao(dbFile)
         val versionNumber = publicSongsDao?.readDbVersionNumber()
                 ?: throw RuntimeException("invalid local songs database format")
@@ -143,12 +137,12 @@ class SongsRepository {
     fun resetGeneralData() {
         logger.warn("resetting general data...")
         publicSongsDao?.close()
-        localDbService.get().factoryReset()
+        localDbService.factoryReset()
     }
 
     fun resetUserData() {
         logger.warn("resetting user data...")
-        userDataDao.get().factoryReset()
+        userDataDao.factoryReset()
     }
 
     @Synchronized
@@ -157,7 +151,7 @@ class SongsRepository {
     }
 
     fun reloadUserData() {
-        userDataDao.get().save()
+        userDataDao.save()
         reloadCustomSongsDb()
     }
 

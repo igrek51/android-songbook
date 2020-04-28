@@ -5,30 +5,24 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.navigation.NavigationMenuController
-import javax.inject.Inject
 
 open class InflatedLayout(
-        private val _layoutResourceId: Int
+        private val _layoutResourceId: Int,
+        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+        navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
 ) : MainLayout {
-
-    @Inject
-    lateinit var layoutController: LayoutController
-
-    @Inject
-    lateinit var activity: AppCompatActivity
-
-    @Inject
-    lateinit var navigationMenuController: NavigationMenuController
+    protected val layoutController by LazyExtractor(layoutController)
+    protected val activity by LazyExtractor(appCompatActivity)
+    protected val navigationMenuController by LazyExtractor(navigationMenuController)
 
     protected val logger: Logger = LoggerFactory.logger
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     override fun getLayoutResourceId(): Int {
         return _layoutResourceId

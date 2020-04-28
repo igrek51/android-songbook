@@ -1,32 +1,29 @@
 package igrek.songbook.chords.lyrics
 
 import android.graphics.Paint
-import dagger.Lazy
 import igrek.songbook.chords.lyrics.model.LyricsModel
 import igrek.songbook.chords.transpose.ChordsTransposerManager
-import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.system.WindowManagerService
-import javax.inject.Inject
 
-class LyricsLoader {
-
-    @Inject
-    lateinit var chordsTransposerManager: Lazy<ChordsTransposerManager>
-    @Inject
-    lateinit var autoscrollService: Lazy<AutoscrollService>
-    @Inject
-    lateinit var lyricsThemeService: LyricsThemeService
-    @Inject
-    lateinit var windowManagerService: WindowManagerService
-    @Inject
-    lateinit var preferencesService: PreferencesService
-    @Inject
-    lateinit var preferencesState: PreferencesState
+class LyricsLoader(
+        chordsTransposerManager: LazyInject<ChordsTransposerManager> = appFactory.chordsTransposerManager,
+        autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
+        lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
+        windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
+        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+) {
+    private val chordsTransposerManager by LazyExtractor(chordsTransposerManager)
+    private val autoscrollService by LazyExtractor(autoscrollService)
+    private val lyricsThemeService by LazyExtractor(lyricsThemeService)
+    private val windowManagerService by LazyExtractor(windowManagerService)
+    private val preferencesState by LazyExtractor(preferencesState)
 
     var lyricsModel: LyricsModel? = null
         private set
@@ -40,19 +37,15 @@ class LyricsLoader {
             preferencesState.restoreTransposition = value
         }
 
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
-
     fun load(fileContent: String, screenW: Int?, paint: Paint?, initialTransposed: Int, srcNotation: ChordsNotation) {
-        chordsTransposerManager.get().run {
+        chordsTransposerManager.run {
             val transposed = when {
                 restoreTransposition -> initialTransposed
                 else -> 0
             }
             reset(transposed, srcNotation)
         }
-        autoscrollService.get().reset()
+        autoscrollService.reset()
 
         originalFileContent = fileContent
 
@@ -75,8 +68,7 @@ class LyricsLoader {
     }
 
     private fun parseAndTranspose(originalFileContent: String) {
-        val transposedContent = chordsTransposerManager.get()
-                .transposeContent(originalFileContent)
+        val transposedContent = chordsTransposerManager.transposeContent(originalFileContent)
         val realFontsize = windowManagerService.dp2px(lyricsThemeService.fontsize)
         val screenWRelative = screenW.toFloat() / realFontsize
         val typeface = lyricsThemeService.fontTypeface.typeface

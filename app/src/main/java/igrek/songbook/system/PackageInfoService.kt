@@ -3,14 +3,15 @@ package igrek.songbook.system
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
-import javax.inject.Inject
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 
-class PackageInfoService {
-
-    @Inject
-    lateinit var activity: AppCompatActivity
+class PackageInfoService(
+        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+) {
+    private val activity by LazyExtractor(appCompatActivity)
 
     private val logger = LoggerFactory.logger
     var versionName: String? = null
@@ -19,8 +20,6 @@ class PackageInfoService {
         private set
 
     init {
-        DaggerIoc.factoryComponent.inject(this)
-
         try {
             val pInfo = activity.packageManager
                     .getPackageInfo(activity.packageName, 0)
@@ -33,6 +32,5 @@ class PackageInfoService {
         } catch (e: PackageManager.NameNotFoundException) {
             logger.error(e)
         }
-
     }
 }

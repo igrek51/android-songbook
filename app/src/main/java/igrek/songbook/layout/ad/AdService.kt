@@ -6,34 +6,32 @@ import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.AdRequest.*
-import dagger.Lazy
 import igrek.songbook.BuildConfig
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.editor.ChordsEditorLayoutController
 import igrek.songbook.info.logger.LoggerFactory.logger
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
-class AdService {
-
-    @Inject
-    lateinit var activity: AppCompatActivity
-
-    @Inject
-    lateinit var preferencesState: Lazy<PreferencesState>
+class AdService(
+        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+) {
+    private val activity by LazyExtractor(appCompatActivity)
+    private val preferencesState by LazyExtractor(preferencesState)
 
     private var testingMode = BuildConfig.DEBUG
     private val requestAdViewSubject = PublishSubject.create<Boolean>()
     private val hideAdsOnDebug = true
 
     init {
-        DaggerIoc.factoryComponent.inject(this)
         requestAdViewSubject
                 .throttleFirst(60, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -147,14 +145,14 @@ class AdService {
     }
 
     fun enableAds() {
-        preferencesState.get().adsStatus = 0
+        preferencesState.adsStatus = 0
     }
 
     fun disableAds() {
-        preferencesState.get().adsStatus = 1
+        preferencesState.adsStatus = 1
     }
 
     private fun areAdsDisabled(): Boolean {
-        return preferencesState.get().adsStatus == 1L
+        return preferencesState.adsStatus == 1L
     }
 }

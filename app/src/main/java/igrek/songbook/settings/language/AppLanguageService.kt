@@ -1,54 +1,46 @@
 package igrek.songbook.settings.language
 
+
 import android.app.Activity
 import android.os.Build
-import dagger.Lazy
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.user.UserDataDao
-import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.PreferencesState
 import java.util.*
-import javax.inject.Inject
 import kotlin.collections.LinkedHashMap
 
-
-class AppLanguageService {
-
-    @Inject
-    lateinit var activity: Activity
-    @Inject
-    lateinit var preferencesService: Lazy<PreferencesService>
-    @Inject
-    lateinit var uiResourceService: Lazy<UiResourceService>
-    @Inject
-    lateinit var preferencesState: Lazy<PreferencesState>
-
-    @Inject
-    lateinit var userDataDao: Lazy<UserDataDao>
+class AppLanguageService(
+        activity: LazyInject<Activity> = appFactory.activity,
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+        userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
+) {
+    private val activity by LazyExtractor(activity)
+    private val uiResourceService by LazyExtractor(uiResourceService)
+    private val preferencesState by LazyExtractor(preferencesState)
+    private val userDataDao by LazyExtractor(userDataDao)
 
     private var appLanguage: AppLanguage
-        get() = preferencesState.get().appLanguage
+        get() = preferencesState.appLanguage
         set(value) {
-            preferencesState.get().appLanguage = value
+            preferencesState.appLanguage = value
         }
 
     private val logger = LoggerFactory.logger
 
     var selectedSongLanguages: Set<SongLanguage>
         get() {
-            val excludedLanguages = userDataDao.get().exclusionDao.exclusionDb.languages
+            val excludedLanguages = userDataDao.exclusionDao.exclusionDb.languages
             return SongLanguage.allKnown().filter { it.langCode !in excludedLanguages }.toSet()
         }
         set(value) {
             val excluded = (SongLanguage.allKnown() - value).map { it.langCode }.toMutableList()
-            userDataDao.get().exclusionDao.setExcludedLanguages(excluded)
+            userDataDao.exclusionDao.setExcludedLanguages(excluded)
         }
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     /**
      * forces locale settings
@@ -95,7 +87,7 @@ class AppLanguageService {
     fun languageStringEntries(): LinkedHashMap<String, String> {
         val map = LinkedHashMap<String, String>()
         for (item in AppLanguage.values()) {
-            val displayName = uiResourceService.get().resString(item.displayNameResId)
+            val displayName = uiResourceService.resString(item.displayNameResId)
             map[item.langCode] = displayName
         }
         return map

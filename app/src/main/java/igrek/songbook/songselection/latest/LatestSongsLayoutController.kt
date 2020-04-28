@@ -1,11 +1,11 @@
 package igrek.songbook.songselection.latest
 
+
 import android.view.View
-import dagger.Lazy
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.info.UiInfoService
-import igrek.songbook.info.UiResourceService
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.language.AppLanguageService
@@ -18,38 +18,24 @@ import igrek.songbook.songselection.search.SongSearchItem
 import igrek.songbook.songselection.tree.SongTreeItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import javax.inject.Inject
 
-class LatestSongsLayoutController : InflatedLayout(
+class LatestSongsLayoutController(
+        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+        songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
+        songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+        appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
+) : InflatedLayout(
         _layoutResourceId = R.layout.screen_latest_songs
 ), SongClickListener {
-
-    @Inject
-    lateinit var songsRepository: SongsRepository
-
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-
-    @Inject
-    lateinit var songContextMenuBuilder: SongContextMenuBuilder
-
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-
-    @Inject
-    lateinit var songOpener: SongOpener
-
-    @Inject
-    lateinit var appLanguageService: Lazy<AppLanguageService>
+    private val songsRepository by LazyExtractor(songsRepository)
+    private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
+    private val songOpener by LazyExtractor(songOpener)
+    private val appLanguageService by LazyExtractor(appLanguageService)
 
     private var itemsListView: LazySongListView? = null
     private var storedScroll: ListScrollPosition? = null
     private var subscriptions = mutableListOf<Disposable>()
     private val latestSongsCount = 200
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
@@ -71,7 +57,7 @@ class LatestSongsLayoutController : InflatedLayout(
     }
 
     private fun updateItemsList() {
-        val acceptedLanguages = appLanguageService.get().selectedSongLanguages
+        val acceptedLanguages = appLanguageService.selectedSongLanguages
         val acceptedLangCodes = acceptedLanguages.map { lang -> lang.langCode } + ""
         val latestSongs = songsRepository.publicSongsRepo.songs.get()
                 .asSequence()

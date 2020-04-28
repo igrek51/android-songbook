@@ -4,10 +4,9 @@ import android.app.Activity
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
 import igrek.songbook.activity.MainActivity
-import igrek.songbook.dagger.DaggerAndroidTestComponent
-import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.dagger.FactoryModule
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.inject.AppContextFactory
+import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.preferences.PreferencesService
 import org.junit.Before
@@ -15,7 +14,6 @@ import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import javax.inject.Inject
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -31,21 +29,19 @@ class WIPFeatureTest {
     @JvmField
     var rule = ActivityTestRule(MainActivity::class.java)
 
-    @Inject
     lateinit var activity: Activity
-    @Inject
     lateinit var preferencesService: PreferencesService
-    @Inject
     lateinit var songsRepository: SongsRepository
 
     @Before
-    fun setUpDagger() {
-        val activity = rule.activity
-        val component = DaggerAndroidTestComponent.builder()
-                .factoryModule(FactoryModule(activity))
-                .build()
-        DaggerIoc.factoryComponent = component
-        component.inject(this)
+    fun setUpDependencies() {
+        val ruleActivity = rule.activity
+        AppContextFactory.createAppContext(ruleActivity)
+
+        activity = appFactory.activity.get()
+        preferencesService = appFactory.preferencesService.get()
+        songsRepository = appFactory.songsRepository.get()
+
         logger.warn("====== Running Android Instrumentation Test: WIPFeatureTest ======")
     }
 

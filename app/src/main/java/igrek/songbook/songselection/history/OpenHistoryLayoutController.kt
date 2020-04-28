@@ -2,9 +2,9 @@ package igrek.songbook.songselection.history
 
 import android.view.View
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.info.UiInfoService
-import igrek.songbook.info.UiResourceService
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
@@ -18,30 +18,22 @@ import igrek.songbook.songselection.search.SongSearchItem
 import igrek.songbook.songselection.tree.SongTreeItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import javax.inject.Inject
 
-class OpenHistoryLayoutController : InflatedLayout(
+class OpenHistoryLayoutController(
+        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+        songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
+        songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+) : InflatedLayout(
         _layoutResourceId = R.layout.screen_open_history
 ), SongClickListener {
-
-    @Inject
-    lateinit var songsRepository: SongsRepository
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var songContextMenuBuilder: SongContextMenuBuilder
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-    @Inject
-    lateinit var songOpener: SongOpener
+    private val songsRepository by LazyExtractor(songsRepository)
+    private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
+    private val songOpener by LazyExtractor(songOpener)
 
     private var itemsListView: LazySongListView? = null
     private var storedScroll: ListScrollPosition? = null
     private var subscriptions = mutableListOf<Disposable>()
 
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)

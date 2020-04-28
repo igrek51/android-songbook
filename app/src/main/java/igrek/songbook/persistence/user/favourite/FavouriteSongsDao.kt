@@ -1,8 +1,10 @@
 package igrek.songbook.persistence.user.favourite
 
 import android.app.Activity
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.WrapContextError
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
@@ -11,35 +13,33 @@ import igrek.songbook.persistence.user.AbstractJsonDao
 import igrek.songbook.persistence.user.migrate.Migration037Favourites
 import igrek.songbook.util.lookup.SimpleCache
 import io.reactivex.android.schedulers.AndroidSchedulers
-import javax.inject.Inject
 
-class FavouriteSongsDao(path: String) : AbstractJsonDao<FavouriteSongsDb>(
+class FavouriteSongsDao(
+        path: String,
+        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+        activity: LazyInject<Activity> = appFactory.activity,
+) : AbstractJsonDao<FavouriteSongsDb>(
         path,
         dbName = "favourites",
         schemaVersion = 1,
         clazz = FavouriteSongsDb::class.java,
         serializer = FavouriteSongsDb.serializer()
 ) {
-
-    @Inject
-    lateinit var songsRepository: SongsRepository
-    @Inject
-    lateinit var activity: Activity
+    private val songsRepository by LazyExtractor(songsRepository)
+    private val activity by LazyExtractor(activity)
 
     private val favouriteSongs: FavouriteSongsDb get() = db!!
 
     private var favouritesCache: SimpleCache<HashSet<Song>> =
             SimpleCache {
-                val favouriteSongs = songsRepository.allSongsRepo.songs.get().filter { song ->
+                val favouriteSongs = this.songsRepository.allSongsRepo.songs.get().filter { song ->
                     FavouriteSong(song.id, song.isCustom()) in favouriteSongs.favourites
                 }
                 HashSet(favouriteSongs)
             }
 
     init {
-        DaggerIoc.factoryComponent.inject(this)
-
-        songsRepository.dbChangeSubject
+        this.songsRepository.dbChangeSubject
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     favouritesCache.invalidate()

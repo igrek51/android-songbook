@@ -2,22 +2,22 @@ package igrek.songbook.persistence
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import dagger.Lazy
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.system.PermissionService
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import javax.inject.Inject
 
-class LocalDbService {
-
-    @Inject
-    lateinit var activity: Activity
-    @Inject
-    lateinit var permissionService: Lazy<PermissionService>
+class LocalDbService(
+        activity: LazyInject<Activity> = appFactory.activity,
+        permissionService: LazyInject<PermissionService> = appFactory.permissionService,
+) {
+    private val activity by LazyExtractor(activity)
+    private val permissionService by LazyExtractor(permissionService)
 
     private val logger = LoggerFactory.logger
 
@@ -36,7 +36,7 @@ class LocalDbService {
             if (dir != null && dir.isDirectory)
                 return dir
 
-            if (permissionService.get().isStoragePermissionGranted) {
+            if (permissionService.isStoragePermissionGranted) {
                 dir = activity.getExternalFilesDir("data")
                 if (dir != null && dir.isDirectory)
                     return dir
@@ -53,10 +53,6 @@ class LocalDbService {
 
     val songsDbFile: File
         get() = File(songDbDir, currentSongsDbFilename)
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     fun ensureLocalDbExists() {
         val dbFile = songsDbFile

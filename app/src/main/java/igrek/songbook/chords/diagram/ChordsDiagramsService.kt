@@ -1,5 +1,6 @@
 package igrek.songbook.chords.diagram
 
+
 import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
@@ -9,37 +10,33 @@ import igrek.songbook.R
 import igrek.songbook.chords.converter.ChordsConverter
 import igrek.songbook.chords.detector.UniqueChordsFinder
 import igrek.songbook.chords.lyrics.model.LyricsModel
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.instrument.ChordsInstrument
 import igrek.songbook.settings.instrument.ChordsInstrumentService
-import javax.inject.Inject
 
-
-class ChordsDiagramsService {
-
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var contextMenuBuilder: ContextMenuBuilder
-    @Inject
-    lateinit var activity: Activity
-    @Inject
-    lateinit var chordsInstrumentService: ChordsInstrumentService
-    @Inject
-    lateinit var chordsNotationService: ChordsNotationService
+class ChordsDiagramsService(
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+        contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
+        activity: LazyInject<Activity> = appFactory.activity,
+        chordsInstrumentService: LazyInject<ChordsInstrumentService> = appFactory.chordsInstrumentService,
+        chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
+) {
+    private val uiInfoService by LazyExtractor(uiInfoService)
+    private val uiResourceService by LazyExtractor(uiResourceService)
+    private val contextMenuBuilder by LazyExtractor(contextMenuBuilder)
+    private val activity by LazyExtractor(activity)
+    private val chordsInstrumentService by LazyExtractor(chordsInstrumentService)
+    private val chordsNotationService by LazyExtractor(chordsNotationService)
 
     private var toEnglishConverter = ChordsConverter(ChordsNotation.default, ChordsNotation.ENGLISH)
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     private fun findUniqueChords(crdModel: LyricsModel): Set<String> {
         val chordsFinder = UniqueChordsFinder(chordsInstrumentService.instrument)

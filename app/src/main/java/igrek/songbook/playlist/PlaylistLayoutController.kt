@@ -1,14 +1,17 @@
 package igrek.songbook.playlist
 
+
 import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
@@ -27,25 +30,23 @@ import igrek.songbook.songselection.tree.NoParentItemException
 import igrek.songbook.util.ListMover
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import javax.inject.Inject
 
-
-class PlaylistLayoutController : InflatedLayout(
+class PlaylistLayoutController(
+        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+        songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
+        contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+) : InflatedLayout(
         _layoutResourceId = R.layout.screen_playlists
 ), ListItemClickListener<PlaylistListItem> {
-
-    @Inject
-    lateinit var songsRepository: SongsRepository
-    @Inject
-    lateinit var uiResourceService: UiResourceService
-    @Inject
-    lateinit var songContextMenuBuilder: SongContextMenuBuilder
-    @Inject
-    lateinit var contextMenuBuilder: ContextMenuBuilder
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-    @Inject
-    lateinit var songOpener: SongOpener
+    private val songsRepository by LazyExtractor(songsRepository)
+    private val uiResourceService by LazyExtractor(uiResourceService)
+    private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
+    private val contextMenuBuilder by LazyExtractor(contextMenuBuilder)
+    private val uiInfoService by LazyExtractor(uiInfoService)
+    private val songOpener by LazyExtractor(songOpener)
 
     private var itemsListView: PlaylistListView? = null
     private var addPlaylistButton: ImageButton? = null
@@ -57,10 +58,6 @@ class PlaylistLayoutController : InflatedLayout(
 
     private var storedScroll: ListScrollPosition? = null
     private var subscriptions = mutableListOf<Disposable>()
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)

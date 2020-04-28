@@ -1,44 +1,35 @@
 package igrek.songbook.songselection.random
 
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
-import igrek.songbook.layout.LayoutController
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
-import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.favourite.FavouriteSongsService
 import java.util.*
-import javax.inject.Inject
 
-class RandomSongOpener {
-
-    @Inject
-    lateinit var songsRepository: SongsRepository
-    @Inject
-    lateinit var layoutController: LayoutController
-    @Inject
-    lateinit var preferencesService: PreferencesService
-    @Inject
-    lateinit var favouriteSongsService: FavouriteSongsService
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-    @Inject
-    lateinit var songOpener: SongOpener
-    @Inject
-    lateinit var preferencesState: PreferencesState
+class RandomSongOpener(
+        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+        favouriteSongsService: LazyInject<FavouriteSongsService> = appFactory.favouriteSongsService,
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+) {
+    private val songsRepository by LazyExtractor(songsRepository)
+    private val favouriteSongsService by LazyExtractor(favouriteSongsService)
+    private val uiInfoService by LazyExtractor(uiInfoService)
+    private val songOpener by LazyExtractor(songOpener)
+    private val preferencesState by LazyExtractor(preferencesState)
 
     private var fromFavouriteSongsOnly: Boolean
         get() = preferencesState.randomFavouriteSongsOnly
         set(value) {
             preferencesState.randomFavouriteSongsOnly = value
         }
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     fun openRandomSong() {
         val randomSong = getRandomSong()

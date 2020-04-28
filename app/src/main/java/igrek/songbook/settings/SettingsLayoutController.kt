@@ -3,21 +3,18 @@ package igrek.songbook.settings
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.MainLayout
-import javax.inject.Inject
 
-class SettingsLayoutController : MainLayout {
-
-    @Inject
-    lateinit var layoutController: LayoutController
-    @Inject
-    lateinit var activity: AppCompatActivity
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
+class SettingsLayoutController(
+        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+) : MainLayout {
+    private val layoutController by LazyExtractor(layoutController)
+    private val activity by LazyExtractor(appCompatActivity)
 
     override fun showLayout(layout: View) {
         activity.supportFragmentManager

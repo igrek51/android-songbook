@@ -1,9 +1,10 @@
 package igrek.songbook.custom
 
-import dagger.Lazy
 import igrek.songbook.R
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.UiInfoService
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongNamespace
@@ -11,28 +12,23 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.custom.CustomSong
 import igrek.songbook.persistence.user.custom.CustomSongMapper
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.PreferencesState
 import java.util.*
-import javax.inject.Inject
 
-class CustomSongService {
-
-    @Inject
-    lateinit var uiInfoService: UiInfoService
-    @Inject
-    lateinit var songsRepository: SongsRepository
-    @Inject
-    lateinit var layoutController: LayoutController
-    @Inject
-    lateinit var editSongLayoutController: Lazy<EditSongLayoutController>
-    @Inject
-    lateinit var preferencesService: PreferencesService
-    @Inject
-    lateinit var preferencesState: PreferencesState
-
-    @Inject
-    lateinit var songExportFileChooser: Lazy<SongExportFileChooser>
+class CustomSongService(
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+        editSongLayoutController: LazyInject<EditSongLayoutController> = appFactory.editSongLayoutController,
+        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+        songExportFileChooser: LazyInject<SongExportFileChooser> = appFactory.songExportFileChooser,
+) {
+    private val uiInfoService by LazyExtractor(uiInfoService)
+    private val songsRepository by LazyExtractor(songsRepository)
+    private val layoutController by LazyExtractor(layoutController)
+    private val editSongLayoutController by LazyExtractor(editSongLayoutController)
+    private val preferencesState by LazyExtractor(preferencesState)
+    private val songExportFileChooser by LazyExtractor(songExportFileChooser)
 
     var customSongsGroupCategories: Boolean
         get() = preferencesState.customSongsGroupCategories
@@ -40,17 +36,13 @@ class CustomSongService {
             preferencesState.customSongsGroupCategories = value
         }
 
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
-
     fun showAddSongScreen() {
-        editSongLayoutController.get().setCurrentSong(null)
+        editSongLayoutController.setCurrentSong(null)
         layoutController.showLayout(EditSongLayoutController::class)
     }
 
     fun showEditSongScreen(song: Song) {
-        editSongLayoutController.get().setCurrentSong(song)
+        editSongLayoutController.setCurrentSong(song)
         layoutController.showLayout(EditSongLayoutController::class)
     }
 
@@ -58,7 +50,7 @@ class CustomSongService {
         var songTitle = song.title
         songTitle = songTitle.takeIf { it.toLowerCase().endsWith(".txt") } ?: "$songTitle.txt"
         val songContent = song.content.orEmpty()
-        songExportFileChooser.get().showFileChooser(songContent, songTitle) {
+        songExportFileChooser.showFileChooser(songContent, songTitle) {
             uiInfoService.showInfo(R.string.song_content_exported)
         }
     }

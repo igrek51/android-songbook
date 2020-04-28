@@ -5,21 +5,18 @@ import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.ActivityCompat
-import igrek.songbook.dagger.DaggerIoc
 import igrek.songbook.info.logger.LoggerFactory
-import javax.inject.Inject
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 
-class PermissionService {
+class PermissionService(
+        activity: LazyInject<Activity> = appFactory.activity,
+) {
+    private val activity by LazyExtractor(activity)
 
     private val logger = LoggerFactory.logger
 
-    @Inject
-    lateinit var activity: Activity
-
-    // Permission is granted
-    // Permission is revoked
-    //permission is automatically granted on sdk<23 upon installation
-    // Permission is granted
     val isStoragePermissionGranted: Boolean
         get() {
             return if (Build.VERSION.SDK_INT >= 23) {
@@ -30,13 +27,9 @@ class PermissionService {
                     false
                 }
             } else {
-                true
+                true //permission is automatically granted on sdk<23 upon installation
             }
         }
-
-    init {
-        DaggerIoc.factoryComponent.inject(this)
-    }
 
     private fun onPermissionGranted(permission: String) {
         logger.info("permission $permission has been granted")

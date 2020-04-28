@@ -1,29 +1,19 @@
 package igrek.songbook.persistence.user.preferences
 
-import android.app.Activity
-import igrek.songbook.dagger.DaggerIoc
-import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
-import javax.inject.Inject
 
-class PreferencesDao(path: String) : AbstractJsonDao<PreferencesDb>(
+class PreferencesDao(
+        path: String,
+) : AbstractJsonDao<PreferencesDb>(
         path,
         dbName = "preferences",
         schemaVersion = 1,
         clazz = PreferencesDb::class.java,
         serializer = PreferencesDb.serializer()
 ) {
-
     private val preferencesDb: PreferencesDb get() = db!!
 
-    @Inject
-    lateinit var songsRepository: SongsRepository
-
-    @Inject
-    lateinit var activity: Activity
-
     init {
-        DaggerIoc.factoryComponent.inject(this)
         read()
     }
 
