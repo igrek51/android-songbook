@@ -42,7 +42,7 @@ class TopSongsLayoutController(
     private var storedScroll: ListScrollPosition? = null
     private var languagePicker: MultiPicker<SongLanguage>? = null
     private var subscriptions = mutableListOf<Disposable>()
-    private val topSongsCount = 500
+    private val topSongsCount = 300
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
@@ -95,6 +95,7 @@ class TopSongsLayoutController(
                 .asSequence()
                 .filter { it.isPublic() }
                 .filter { song -> song.language in acceptedLangCodes }
+                .filter { song -> song.rank != null }
                 .sortedWith(compareBy({ -(it.rank ?: 0.0) }, { -it.updateTime }))
                 .take(topSongsCount)
                 .map { song -> SongSearchItem.song(song) }
