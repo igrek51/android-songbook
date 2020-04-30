@@ -149,8 +149,8 @@
         \n- \u276F: przesuwa kursor o jeden znak w prawo
         \n- [ / ]: wstawia pasujący nawias (otwierający lub zamykający)
         \n- [Akord]: Wstawia parę nawiasów wokół zaznaczonego tekstu
-        \n- [Kopiuj]: Kopiuje zaznaczone akordy
-        \n- [Wklej]: Wkleja skopiowane akordy
+        \n- Kopiuj: Kopiuje zaznaczony tekst
+        \n- Wklej: Wkleja skopiowany tekst
     </string>
     <string name="import_song_content_hint">
         Tekst piosenki z [akordami] w tej samej linii
@@ -228,13 +228,13 @@
     <string name="action_rate_app">Oceń</string>
     <string name="edit_song_open_in_editor">Otwórz w edytorze</string>
     <string name="tooltip">Wskazówka</string>
-    <string name="edit_song_copy_chord">[Kopiuj]</string>
-    <string name="edit_song_paste_chord">[Wklej]</string>
+    <string name="edit_song_copy">Kopiuj</string>
+    <string name="edit_song_paste">Wklej</string>
     <string name="edit_song_detect_chords">Wykryj akordy</string>
     <string name="edit_song_transform_chords">Transformuj</string>
-    <string name="paste_chord_empty">Brak akordów do wklejenia</string>
-    <string name="chords_copied">Akordy skopiowane: %s</string>
-    <string name="no_chords_selected">Brak zaznaczonych akordów</string>
+    <string name="paste_empty">Brak tekstu do wklejenia</string>
+    <string name="selected_text_copied">Zaznaczenie skopiowane: %s</string>
+    <string name="no_text_selected">Brak zaznaczenia</string>
     <string name="edit_song_chords_notation">Notacja akordów piosenki:</string>
     <string name="edit_song_undo">Cofnij</string>
     <string name="chords_editor_reformat_trim">Uporządkuj</string>

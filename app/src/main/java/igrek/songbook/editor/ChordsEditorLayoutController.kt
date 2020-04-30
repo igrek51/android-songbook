@@ -107,8 +107,8 @@ class ChordsEditorLayoutController(
 
         buttonOnClick(R.id.addChordButton) { transformer?.onWrapChordClick() }
         buttonOnClick(R.id.addChordSplitterButton) { transformer?.addChordSplitter() }
-        buttonOnClick(R.id.copyChordButton) { transformer?.onCopyChordClick() }
-        buttonOnClick(R.id.pasteChordButton) { transformer?.onPasteChordClick() }
+        buttonOnClick(R.id.copyButton) { transformer?.onCopyClick() }
+        buttonOnClick(R.id.pasteButton) { transformer?.onPasteClick() }
         buttonOnClick(R.id.detectChordsButton) { wrapHistoryContext { transformer?.detectChords(keepIndentation = true) } }
         buttonOnClick(R.id.undoChordsButton) { undoChange() }
         buttonOnClick(R.id.transformChordsButton) { showTransformMenu() }

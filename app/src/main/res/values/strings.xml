@@ -149,8 +149,8 @@
         \n- \u276F: move cursor by one character right
         \n- [ / ]: insert suitable bracket (either opening or closing one)
         \n- [Mark]: Mark selection with chord brackets pair
-        \n- [Copy]: Copy selected chords
-        \n- [Paste]: Paste copied chords
+        \n- Copy: Copy selection
+        \n- Paste: Paste copied text
     </string>
     <string name="import_song_content_hint">
         Song lyrics with [chords] in the same line
@@ -230,13 +230,13 @@
     <string name="action_rate_app">Rate App</string>
     <string name="edit_song_open_in_editor">Open in Song Editor</string>
     <string name="tooltip">Hint</string>
-    <string name="edit_song_copy_chord">[Copy]</string>
-    <string name="edit_song_paste_chord">[Paste]</string>
+    <string name="edit_song_copy">Copy</string>
+    <string name="edit_song_paste">Paste</string>
     <string name="edit_song_detect_chords">Detect chords</string>
     <string name="edit_song_transform_chords">Transform</string>
-    <string name="paste_chord_empty">No chords to paste</string>
-    <string name="chords_copied">Chords copied: %s</string>
-    <string name="no_chords_selected">No selected chords</string>
+    <string name="paste_empty">No text to paste</string>
+    <string name="selected_text_copied">Selection copied: %s</string>
+    <string name="no_text_selected">No text selected</string>
     <string name="edit_song_chords_notation">Song chords notation:</string>
     <string name="edit_song_undo">Undo</string>
     <string name="chords_editor_reformat_trim">Reformat</string>

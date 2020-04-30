@@ -118,14 +118,6 @@
                     android:text="@string/chords_editor_select_line" />
 
                 <Button
-                    android:id="@+id/duplicateButton"
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start|center_vertical"
-                    android:text="@string/chords_editor_duplicate" />
-
-                <Button
                     android:id="@+id/reformatTrimButton"
                     style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
@@ -182,20 +174,28 @@
                     android:text="@string/edit_song_add_chord" />
 
                 <Button
-                    android:id="@+id/copyChordButton"
+                    android:id="@+id/copyButton"
                     style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
-                    android:text="@string/edit_song_copy_chord" />
+                    android:text="@string/edit_song_copy" />
 
                 <Button
-                    android:id="@+id/pasteChordButton"
+                    android:id="@+id/pasteButton"
                     style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
-                    android:text="@string/edit_song_paste_chord" />
+                    android:text="@string/edit_song_paste" />
+
+                <Button
+                    android:id="@+id/duplicateButton"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:text="@string/chords_editor_duplicate" />
 
                 <Button
                     android:id="@+id/transformChordsButton"

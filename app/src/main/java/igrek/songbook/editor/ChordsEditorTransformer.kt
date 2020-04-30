@@ -14,7 +14,7 @@ class ChordsEditorTransformer(
         private val uiInfoService: UiInfoService,
         private val textEditor: ITextEditor,
 ) {
-    private var clipboardChords: String? = null
+    private var clipboard: String? = null
 
     private fun transformLyrics(transformer: (String) -> String) {
         textEditor.getText()
@@ -206,28 +206,24 @@ class ChordsEditorTransformer(
     }
 
 
-    fun onCopyChordClick() {
+    fun onCopyClick() {
         val edited = textEditor.getText()
         val (selStart, selEnd) = textEditor.getSelection()
 
-        var selection = edited.substring(selStart, selEnd).trim()
-        if (selection.startsWith("["))
-            selection = selection.drop(1)
-        if (selection.endsWith("]"))
-            selection = selection.dropLast(1)
-        clipboardChords = selection.trim()
+        val selection = edited.substring(selStart, selEnd).trim()
+        clipboard = selection
 
-        if (clipboardChords.isNullOrEmpty()) {
-            uiInfoService.showToast(R.string.no_chords_selected)
+        if (clipboard.isNullOrEmpty()) {
+            uiInfoService.showToast(R.string.no_text_selected)
         } else {
-            uiInfoService.showToast(uiInfoService.resString(R.string.chords_copied, clipboardChords))
+            uiInfoService.showToast(uiInfoService.resString(R.string.selected_text_copied, clipboard))
         }
     }
 
-    fun onPasteChordClick() {
+    fun onPasteClick() {
         history.save(textEditor)
-        if (clipboardChords.isNullOrEmpty()) {
-            uiInfoService.showToast(R.string.paste_chord_empty)
+        if (clipboard.isNullOrEmpty()) {
+            uiInfoService.showToast(R.string.paste_empty)
             return
         }
 
@@ -235,9 +231,10 @@ class ChordsEditorTransformer(
         var (selStart, selEnd) = textEditor.getSelection()
         val before = edited.take(selStart)
         val after = edited.drop(selEnd)
+        val toPaste = clipboard.orEmpty()
 
-        edited = "$before[$clipboardChords]$after"
-        selEnd = selStart + 2 + clipboardChords!!.length
+        edited = "$before$toPaste$after"
+        selEnd = selStart + toPaste.length
 
         setContentWithSelection(edited, selStart, selEnd)
     }
