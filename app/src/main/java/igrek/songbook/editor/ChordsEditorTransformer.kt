@@ -210,7 +210,7 @@ class ChordsEditorTransformer(
         val edited = textEditor.getText()
         val (selStart, selEnd) = textEditor.getSelection()
 
-        val selection = edited.substring(selStart, selEnd).trim()
+        val selection = edited.substring(selStart, selEnd)
         clipboard = selection
 
         if (clipboard.isNullOrEmpty()) {
@@ -235,6 +235,7 @@ class ChordsEditorTransformer(
 
         edited = "$before$toPaste$after"
         selEnd = selStart + toPaste.length
+        selStart = selEnd
 
         setContentWithSelection(edited, selStart, selEnd)
     }
