@@ -130,8 +130,9 @@ class SongPreviewLayoutController(
         appBarLayout = layout.findViewById(R.id.appBarLayout)
 
         // create songPreview
-        songPreview = SongPreview(activity)
-        songPreview!!.reset()
+        songPreview = SongPreview(activity).apply {
+            reset()
+        }
         val songPreviewContainer = layout.findViewById<ViewGroup>(R.id.songPreviewContainer)
         songPreviewContainer.addView(songPreview)
 
@@ -153,61 +154,80 @@ class SongPreviewLayoutController(
         quickMenuAutoscroll.isVisible = false
 
         // overlaying RecyclerView
-        overlayRecyclerView = activity.findViewById(R.id.overlayRecyclerView)
-        overlayRecyclerView!!.setHasFixedSize(true) // improve performance
-        overlayRecyclerView!!.layoutManager = LinearLayoutManager(activity)
-        overlayAdapter = OverlayRecyclerAdapter(songPreview!!)
-        overlayRecyclerView!!.adapter = overlayAdapter
-        overlayRecyclerView!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {}
-
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                songPreview!!.scrollByPx(dy.toFloat())
-                songPreview!!.onManuallyScrolled(dy)
+        overlayRecyclerView = activity.findViewById<RecyclerView>(R.id.overlayRecyclerView).apply {
+            setHasFixedSize(true) // improve performance
+            layoutManager = LinearLayoutManager(activity)
+            songPreview?.let { songPreview ->
+                overlayAdapter = OverlayRecyclerAdapter(songPreview)
             }
-        })
-        overlayRecyclerView!!.isVerticalScrollBarEnabled = false
-        overlayRecyclerView!!.overScrollMode = OVER_SCROLL_ALWAYS
-        overlayRecyclerView!!.setOnClickListener { songPreview!!.onClick() }
-        overlayRecyclerView!!.setOnTouchListener(songPreview)
+            adapter = overlayAdapter
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {}
+
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    songPreview?.run {
+                        scrollByPx(dy.toFloat())
+                        onManuallyScrolled(dy)
+                    }
+                }
+            })
+            isVerticalScrollBarEnabled = false
+            overScrollMode = OVER_SCROLL_ALWAYS
+            setOnClickListener { songPreview?.onClick() }
+            setOnTouchListener(songPreview)
+        }
         resetOverlayScroll()
 
-        songTitleLabel = layout.findViewById(R.id.songTitleLabel)
-        val title = currentSong!!.displayName()
-        songTitleLabel!!.text = title
+        songTitleLabel = layout.findViewById<TextView>(R.id.songTitleLabel)?.apply {
+            text = currentSong?.displayName().orEmpty()
+        }
 
         val goBackButton = layout.findViewById<ImageButton>(R.id.goBackButton)
         goBackButton.setOnClickListener { onBackClicked() }
 
-        transposeButton = layout.findViewById(R.id.transposeButton)
-        transposeButton!!.setOnClickListener { toggleTransposePanel() }
+        transposeButton = layout.findViewById<ImageButton>(R.id.transposeButton)?.apply {
+            setOnClickListener { toggleTransposePanel() }
+        }
 
-        autoscrollButton = layout.findViewById(R.id.autoscrollButton)
-        autoscrollButton!!.setOnClickListener { toggleAutoscrollPanel() }
+        autoscrollButton = layout.findViewById<ImageButton>(R.id.autoscrollButton)?.apply {
+            setOnClickListener { toggleAutoscrollPanel() }
+        }
 
-        setFavouriteButton = layout.findViewById(R.id.setFavouriteButton)
-        setFavouriteButton!!.setOnClickListener { toggleSongFavourite() }
+        setFavouriteButton = layout.findViewById<ImageButton>(R.id.setFavouriteButton)?.apply {
+            setOnClickListener { toggleSongFavourite() }
+        }
         updateFavouriteButton()
 
-        val chordsHelpButton = layout.findViewById<ImageButton>(R.id.chordsHelpButton)
-        chordsHelpButton.setOnClickListener { showChordsGraphs() }
+        layout.findViewById<ImageButton>(R.id.chordsHelpButton)?.run {
+            setOnClickListener { showChordsGraphs() }
+        }
 
-        val songInfoButton = layout.findViewById<ImageButton>(R.id.songInfoButton)
-        songInfoButton.setOnClickListener { songDetailsService.showSongDetails(currentSong!!) }
+        layout.findViewById<ImageButton>(R.id.songInfoButton)?.run {
+            setOnClickListener {
+                currentSong?.let {
+                    songDetailsService.showSongDetails(it)
+                }
+            }
+        }
 
-        val fullscreenButton = layout.findViewById<ImageButton>(R.id.fullscreenButton)
-        fullscreenButton.setOnClickListener { setFullscreen(true) }
+        layout.findViewById<ImageButton>(R.id.fullscreenButton)?.run {
+            setOnClickListener { setFullscreen(true) }
+        }
 
-        val moreActionsButton = layout.findViewById<ImageButton>(R.id.moreActionsButton)
-        moreActionsButton.setOnClickListener { showMoreActions() }
+        layout.findViewById<ImageButton>(R.id.moreActionsButton)?.run {
+            setOnClickListener { showMoreActions() }
+        }
 
-        disableFullscreenButton = layout.findViewById(R.id.disableFullscreenButton)
-        disableFullscreenButton!!.setOnClickListener { setFullscreen(false) }
+        disableFullscreenButton = layout.findViewById<FloatingActionButton>(R.id.disableFullscreenButton)?.apply {
+            setOnClickListener { setFullscreen(false) }
+        }
         setFullscreen(false)
     }
 
     private fun showMoreActions() {
-        songContextMenuBuilder.showSongActions(currentSong!!)
+        currentSong?.let {
+            songContextMenuBuilder.showSongActions(it)
+        }
     }
 
     override fun getLayoutResourceId(): Int {
@@ -236,21 +256,25 @@ class SongPreviewLayoutController(
     }
 
     fun onLyricsModelUpdated() {
-        songPreview!!.setCRDModel(lyricsLoader.lyricsModel)
+        songPreview?.setCRDModel(lyricsLoader.lyricsModel)
         resetOverlayScroll()
         highlightPanelButtons()
     }
 
     private fun highlightPanelButtons() {
-        if (quickMenuTranspose.isFeatureActive) {
-            highlightButton(transposeButton!!)
-        } else {
-            unhighlightButton(transposeButton!!)
+        transposeButton?.let { transposeButton ->
+            if (quickMenuTranspose.isFeatureActive) {
+                highlightButton(transposeButton)
+            } else {
+                unhighlightButton(transposeButton)
+            }
         }
-        if (quickMenuAutoscroll.isFeatureActive) {
-            highlightButton(autoscrollButton!!)
-        } else {
-            unhighlightButton(autoscrollButton!!)
+        autoscrollButton?.let { autoscrollButton ->
+            if (quickMenuAutoscroll.isFeatureActive) {
+                highlightButton(autoscrollButton)
+            } else {
+                unhighlightButton(autoscrollButton)
+            }
         }
     }
 
@@ -264,21 +288,21 @@ class SongPreviewLayoutController(
     private fun toggleTransposePanel() {
         quickMenuAutoscroll.isVisible = false
         quickMenuTranspose.isVisible = !quickMenuTranspose.isVisible
-        songPreview!!.repaint()
+        songPreview?.repaint()
     }
 
     private fun toggleAutoscrollPanel() {
         quickMenuTranspose.isVisible = false
         quickMenuAutoscroll.isVisible = !quickMenuAutoscroll.isVisible
-        songPreview!!.repaint()
+        songPreview?.repaint()
     }
 
     private fun goToBeginning() {
         resetOverlayScroll()
-        if (songPreview!!.scroll == 0f && !autoscrollService.isRunning) {
+        if (songPreview?.scroll ?: 0f == 0f && !autoscrollService.isRunning) {
             uiInfoService.showInfo(R.string.scroll_at_the_beginning_already)
         }
-        songPreview!!.goToBeginning()
+        songPreview?.goToBeginning()
         if (autoscrollService.isRunning) {
             // restart autoscrolling
             autoscrollService.start()
@@ -290,11 +314,11 @@ class SongPreviewLayoutController(
         windowManagerService.setFullscreen(fullscreen)
 
         if (fullscreen) {
-            appBarLayout!!.visibility = View.GONE
-            disableFullscreenButton!!.show()
+            appBarLayout?.visibility = View.GONE
+            disableFullscreenButton?.show()
         } else {
-            appBarLayout!!.visibility = View.VISIBLE
-            disableFullscreenButton!!.hide()
+            appBarLayout?.visibility = View.VISIBLE
+            disableFullscreenButton?.hide()
         }
     }
 
@@ -302,7 +326,7 @@ class SongPreviewLayoutController(
         when {
             quickMenuTranspose.isVisible -> {
                 quickMenuTranspose.isVisible = false
-                songPreview!!.repaint()
+                songPreview?.repaint()
             }
             quickMenuAutoscroll.isVisible -> quickMenuAutoscroll.isVisible = false
             fullscreen -> setFullscreen(false)
@@ -318,7 +342,7 @@ class SongPreviewLayoutController(
     }
 
     fun onPreviewSizeChange(w: Int) {
-        lyricsLoader.onPreviewSizeChange(w, songPreview!!.paint)
+        lyricsLoader.onPreviewSizeChange(w, songPreview?.paint)
         onLyricsModelUpdated()
     }
 
@@ -332,18 +356,22 @@ class SongPreviewLayoutController(
     }
 
     private fun toggleSongFavourite() {
-        if (!favouriteSongsService.isSongFavourite(currentSong!!)) {
-            favouriteSongsService.setSongFavourite(currentSong!!)
-        } else {
-            favouriteSongsService.unsetSongFavourite(currentSong!!)
+        currentSong?.let { currentSong ->
+            if (!favouriteSongsService.isSongFavourite(currentSong)) {
+                favouriteSongsService.setSongFavourite(currentSong)
+            } else {
+                favouriteSongsService.unsetSongFavourite(currentSong)
+            }
         }
     }
 
     private fun updateFavouriteButton() {
-        if (favouriteSongsService.isSongFavourite(currentSong!!)) {
-            setFavouriteButton!!.setImageResource(R.drawable.star_filled)
-        } else {
-            setFavouriteButton!!.setImageResource(R.drawable.star_border)
+        currentSong?.let { currentSong ->
+            if (favouriteSongsService.isSongFavourite(currentSong)) {
+                setFavouriteButton?.setImageResource(R.drawable.star_filled)
+            } else {
+                setFavouriteButton?.setImageResource(R.drawable.star_border)
+            }
         }
     }
 
