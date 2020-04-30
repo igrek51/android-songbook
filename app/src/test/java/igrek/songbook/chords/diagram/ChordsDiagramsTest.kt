@@ -128,4 +128,10 @@ class ChordsDiagramsTest {
                 """.trimIndent())
     }
 
+    @Test
+    fun containsAliasChords() {
+        assertThat(allGuitarChordsDiagrams.keys).contains("Bb7")
+        assertThat(allGuitarChordsDiagrams.keys).contains("A#7")
+    }
+
 }
