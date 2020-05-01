@@ -451,5 +451,11 @@ class ChordsEditorTransformer(
         return if (this > max) max else this
     }
 
+    fun removeBracketsContent() {
+        transformLyrics { lyrics ->
+            lyrics.replace(Regex("""\[(.|\n)+?]"""), "")
+        }
+    }
+
 }
 

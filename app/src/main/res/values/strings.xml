@@ -145,6 +145,7 @@
         \n- Replace Fis -> F#: Replace all sound names ending with \"is\" to \"#\"
         \n- Unmark chords: Drop all chord marks: \"[\" and \"]\"
         \n- Mark chords (not preserving indentation): Find and mark chords automatically by surrounding them with \"[ ]\". Note that horizontal position of chords may be changed afterall.
+        \n- Remove everything inside brackets: Remove text inside square brackets \"[ ]\" and the brackets themselves.
         \n- \u276E: move cursor by one character left
         \n- \u276F: move cursor by one character right
         \n- [ / ]: insert suitable bracket (either opening or closing one)
@@ -395,4 +396,5 @@
     <string name="settings_send_anonymous_usage_data_hint">Send anonymous statistical usage data to improve Top songs ranking</string>
     <string name="admin_update_rank" translatable="false">[admin] Update rank</string>
     <string name="editor_reformat_error">Your song is not formatted properly. Use \"Reformat\" option.</string>
+    <string name="chords_editor_remove_bracket_content">Remove everything inside brackets</string>
 </resources>
