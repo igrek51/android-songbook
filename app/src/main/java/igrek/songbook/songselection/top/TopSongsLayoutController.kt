@@ -42,7 +42,7 @@ class TopSongsLayoutController(
     private var storedScroll: ListScrollPosition? = null
     private var languagePicker: MultiPicker<SongLanguage>? = null
     private var subscriptions = mutableListOf<Disposable>()
-    private val topSongsCount = 300
+    private val topSongsCount = 500
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
