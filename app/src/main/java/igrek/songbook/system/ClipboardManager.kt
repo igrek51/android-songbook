@@ -9,7 +9,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 
 
-class ClipboardManager(
+open class ClipboardManager(
         activity: LazyInject<Activity> = appFactory.activity,
 ) {
     private val activity by LazyExtractor(activity)

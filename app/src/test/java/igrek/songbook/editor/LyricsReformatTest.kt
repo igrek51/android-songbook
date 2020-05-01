@@ -2,6 +2,7 @@ package igrek.songbook.editor
 
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.inject.SingletonInject
+import igrek.songbook.mock.ClipboardManagerMock
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import org.assertj.core.api.Assertions
 import org.junit.Test
@@ -14,6 +15,7 @@ class LyricsReformatTest {
             chordsNotation = ChordsNotation.GERMAN,
             textEditor = EmptyTextEditor(),
             uiInfoService = SingletonInject { Mockito.mock(UiInfoService::class.java) },
+            clipboardManager = SingletonInject { ClipboardManagerMock() },
     )
 
     @Test

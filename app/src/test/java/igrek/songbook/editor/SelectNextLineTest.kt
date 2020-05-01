@@ -1,6 +1,7 @@
 package igrek.songbook.editor
 
 import igrek.songbook.inject.SingletonInject
+import igrek.songbook.mock.ClipboardManagerMock
 import igrek.songbook.mock.UiInfoServiceMock
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import org.assertj.core.api.Assertions.assertThat
@@ -17,6 +18,7 @@ class SelectNextLineTest {
             chordsNotation = ChordsNotation.GERMAN,
             textEditor = textEditor,
             uiInfoService = SingletonInject { UiInfoServiceMock() },
+            clipboardManager = SingletonInject { ClipboardManagerMock() },
     )
 
     @Test
