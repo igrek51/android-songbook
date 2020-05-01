@@ -5,15 +5,23 @@ import igrek.songbook.chords.converter.ChordsConverter
 import igrek.songbook.chords.detector.ChordsDetector
 import igrek.songbook.chords.syntax.ChordNameProvider
 import igrek.songbook.info.UiInfoService
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.settings.chordsnotation.ChordsNotation
+import igrek.songbook.system.ClipboardManager
 
 class ChordsEditorTransformer(
         private var history: LyricsEditorHistory,
         private val chordsNotation: ChordsNotation?,
-        private val uiInfoService: UiInfoService,
         private val textEditor: ITextEditor,
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        clipboardManager: LazyInject<ClipboardManager> = appFactory.clipboardManager,
 ) {
+    private val uiInfoService by LazyExtractor(uiInfoService)
+    private val clipboardManager by LazyExtractor(clipboardManager)
+
     private var clipboard: String? = null
 
     private fun transformLyrics(transformer: (String) -> String) {
@@ -212,6 +220,7 @@ class ChordsEditorTransformer(
 
         val selection = edited.substring(selStart, selEnd)
         clipboard = selection
+        clipboardManager.copyToSystemClipboard(selection)
 
         if (clipboard.isNullOrEmpty()) {
             uiInfoService.showToast(R.string.no_text_selected)
@@ -222,7 +231,10 @@ class ChordsEditorTransformer(
 
     fun onPasteClick() {
         history.save(textEditor)
-        if (clipboard.isNullOrEmpty()) {
+
+        val systemClipboard = clipboardManager.getFromSystemClipboard()
+        val toPaste = if (!systemClipboard.isNullOrEmpty()) systemClipboard else clipboard
+        if (toPaste.isNullOrEmpty()) {
             uiInfoService.showToast(R.string.paste_empty)
             return
         }
@@ -231,7 +243,6 @@ class ChordsEditorTransformer(
         var (selStart, selEnd) = textEditor.getSelection()
         val before = edited.take(selStart)
         val after = edited.drop(selEnd)
-        val toPaste = clipboard.orEmpty()
 
         edited = "$before$toPaste$after"
         selEnd = selStart + toPaste.length

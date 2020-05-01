@@ -1,5 +1,6 @@
 package igrek.songbook.editor
 
+import igrek.songbook.inject.SingletonInject
 import igrek.songbook.mock.UiInfoServiceMock
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import org.assertj.core.api.Assertions.assertThat
@@ -14,8 +15,8 @@ class ChordsMarkingTest {
     private val transformer = ChordsEditorTransformer(
             history = Mockito.mock(LyricsEditorHistory::class.java),
             chordsNotation = ChordsNotation.GERMAN,
-            uiInfoService = UiInfoServiceMock(),
             textEditor = textEditor,
+            uiInfoService = SingletonInject { UiInfoServiceMock() },
     )
 
     @Test

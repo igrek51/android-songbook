@@ -141,4 +141,5 @@ class AppFactory(
     val sharedPreferencesService = SingletonInject { SharedPreferencesService() }
     val adService = SingletonInject { AdService() }
     val songRankService = SingletonInject { SongRankService() }
+    val clipboardManager = SingletonInject { ClipboardManager() }
 }
