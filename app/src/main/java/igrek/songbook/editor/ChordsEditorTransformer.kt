@@ -69,7 +69,7 @@ class ChordsEditorTransformer(
                 .let { textEditor.setText(it) }
     }
 
-    fun setContentWithSelection(edited: String, selStart: Int, selEnd: Int) {
+    private fun setContentWithSelection(edited: String, selStart: Int, selEnd: Int) {
         textEditor.setText(edited)
         textEditor.setSelection(selStart, selEnd)
     }

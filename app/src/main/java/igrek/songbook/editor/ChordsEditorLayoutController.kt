@@ -52,7 +52,8 @@ class ChordsEditorLayoutController(
 
     private var contentEdit: EditText? = null
     private var layout: View? = null
-    private var chordsNotation: ChordsNotation? = null
+    var chordsNotation: ChordsNotation? = null
+    var loadContent: String? = null
     private var history = LyricsEditorHistory()
     private var transformer: ChordsEditorTransformer? = null
     private var textEditor: ITextEditor = EmptyTextEditor()
@@ -100,7 +101,6 @@ class ChordsEditorLayoutController(
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 }
             })
-            softKeyboardService.showSoftKeyboard(it)
             configureTypeface(it)
             transformer = ChordsEditorTransformer(history, chordsNotation, textEditor)
         }
@@ -118,6 +118,13 @@ class ChordsEditorLayoutController(
         buttonOnClick(R.id.reformatTrimButton) { wrapHistoryContext { transformer?.reformatAndTrimEditor() } }
         buttonOnClick(R.id.duplicateButton) { transformer?.duplicateSelection() }
         buttonOnClick(R.id.selectLineButton) { transformer?.selectNextLine() }
+
+        loadContent?.let {
+            textEditor.setText(it)
+        }
+        history.reset(textEditor)
+        softKeyboardService.showSoftKeyboard(contentEdit)
+        contentEdit?.setSelection(0, 0)
     }
 
     private fun configureTypeface(edit: EditText) {
@@ -203,14 +210,6 @@ class ChordsEditorLayoutController(
             return
         }
         returnNewContent()
-    }
-
-    fun setContent(content: String, chordsNotation: ChordsNotation?) {
-        this.chordsNotation = chordsNotation
-        transformer?.setContentWithSelection(content, 0, 0)
-        history.reset(textEditor)
-        softKeyboardService.showSoftKeyboard(contentEdit)
-        contentEdit?.setSelection(0, 0)
     }
 
     private fun returnNewContent() {

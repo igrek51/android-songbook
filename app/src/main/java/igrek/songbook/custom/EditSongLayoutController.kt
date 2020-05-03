@@ -145,8 +145,9 @@ class EditSongLayoutController(
         this.songChordsNotation = chordsNotationSpinner?.selectedNotation
                 ?: chordsNotationService.chordsNotation
 
+        chordsEditorLayoutController.chordsNotation = this.songChordsNotation
+        chordsEditorLayoutController.loadContent = songContentEdit?.text.toString()
         layoutController.showLayout(ChordsEditorLayoutController::class)
-        chordsEditorLayoutController.setContent(songContentEdit?.text.toString(), this.songChordsNotation)
 
         customSongService.showEditorHintsIfNeeded()
     }
