@@ -373,4 +373,5 @@
     <string name="settings_send_anonymous_usage_data_hint">Przesyłaj anonimowe dane statystyczne o użyciu w celu poprawy rankingu najpopularniejszych piosenek</string>
     <string name="editor_reformat_error">Tekst piosenki niesformatowany. Użyj opcji \"Uporządkuj\"</string>
     <string name="chords_editor_remove_bracket_content">Usuń nawiasy kwadratowe z zawartością</string>
+    <string name="chords_editor_detect_and_move_chords_to_words"><![CDATA[Wykryj akordy i przesuń z górnych linii do pasujących słów]]></string>
 </resources>

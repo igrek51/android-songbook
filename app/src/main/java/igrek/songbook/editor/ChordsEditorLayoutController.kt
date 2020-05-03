@@ -165,6 +165,9 @@ class ChordsEditorLayoutController(
                 ContextMenuBuilder.Action(R.string.chords_editor_remove_bracket_content) {
                     wrapHistoryContext { transformer?.removeBracketsContent() }
                 },
+                ContextMenuBuilder.Action(R.string.chords_editor_detect_and_move_chords_to_words) {
+                    wrapHistoryContext { transformer?.detectAndMoveChordsAboveToInline() }
+                },
                 ContextMenuBuilder.Action(R.string.chords_editor_detect_chords_keeping_indent) {
                     wrapHistoryContext { transformer?.detectChords(keepIndentation = false) }
                 },

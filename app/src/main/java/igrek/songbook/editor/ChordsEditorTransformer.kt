@@ -328,6 +328,21 @@ class ChordsEditorTransformer(
         }
     }
 
+    private fun transformDetectAndMoveChordsAboveToInline(lyrics: String): String {
+        val chordsMarker = ChordsMarker(ChordsDetector(chordsNotation))
+        return transformDoubleLines(lyrics) { first: String, second: String ->
+            if (first.isNotBlank() && second.isNotBlank() && !first.hasChords() && !second.hasChords()) {
+                val firstRecogized = chordsMarker.detectAndMarkChords(first, keepIndentation = true)
+                if (firstRecogized.hasOnlyChords()) {
+                    val chords = ChordSegmentDetector().detectUnmarkedChords(first)
+                    val joined = ChordSegmentApplier().applyChords(second, chords)
+                    return@transformDoubleLines listOf(joined)
+                }
+            }
+            null
+        }
+    }
+
     private fun String.hasChords(): Boolean {
         return "[" in this && "]" in this
     }
@@ -455,6 +470,10 @@ class ChordsEditorTransformer(
         transformLyrics { lyrics ->
             lyrics.replace(Regex("""\[(.|\n)+?]"""), "")
         }
+    }
+
+    fun detectAndMoveChordsAboveToInline() {
+        transformLyrics(this::transformDetectAndMoveChordsAboveToInline)
     }
 
 }

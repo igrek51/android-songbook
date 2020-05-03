@@ -397,4 +397,5 @@
     <string name="admin_update_rank" translatable="false">[admin] Update rank</string>
     <string name="editor_reformat_error">Your song is not formatted properly. Use \"Reformat\" option.</string>
     <string name="chords_editor_remove_bracket_content">Remove everything inside brackets</string>
+    <string name="chords_editor_detect_and_move_chords_to_words"><![CDATA[Detect chords & move from upper line to matching words]]></string>
 </resources>
