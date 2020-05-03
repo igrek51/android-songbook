@@ -17,6 +17,14 @@ open class TypefaceLengthMapper(
         charLengths[char] = length
     }
 
+    fun has(type: LyricsTextType, char: Char): Boolean {
+        val charLengths: HashMap<Char, Float> = when (type) {
+            LyricsTextType.CHORDS -> boldCharLengths
+            else -> normalCharLengths
+        }
+        return char in charLengths
+    }
+
     open fun charWidth(type: LyricsTextType, char: Char): Float {
         val charLengths: HashMap<Char, Float> = when (type) {
             LyricsTextType.CHORDS -> boldCharLengths

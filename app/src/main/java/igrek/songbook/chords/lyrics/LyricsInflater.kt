@@ -1,11 +1,13 @@
 package igrek.songbook.chords.lyrics
 
 import android.graphics.Paint
+import android.graphics.Rect
 import android.graphics.Typeface
 import igrek.songbook.chords.lyrics.model.LyricsFragment
 import igrek.songbook.chords.lyrics.model.LyricsModel
 import igrek.songbook.chords.lyrics.model.LyricsTextType
 import igrek.songbook.chords.lyrics.model.lineWrapperChar
+import igrek.songbook.info.logger.LoggerFactory.logger
 
 class LyricsInflater(
         fontFamily: Typeface,
@@ -50,10 +52,33 @@ class LyricsInflater(
         val widths = FloatArray(text.length)
         paint.getTextWidths(text, widths)
         widths.forEachIndexed { index, width ->
-            lengthMapper.put(type, text[index], width / fontsize)
+            val char = text[index]
+            if (!lengthMapper.has(type, char)) {
+                if (width <= 0f) { // workaround for fucked up android library
+                    val widthSingle = calculateCharWidthFallback(char, paint)
+                    if (widthSingle > 0f) {
+                        lengthMapper.put(type, char, widthSingle / fontsize)
+                    }
+                } else {
+                    lengthMapper.put(type, char, width / fontsize)
+                }
+            }
         }
 
         return widths.sum() / fontsize
+    }
+
+    private fun calculateCharWidthFallback(char: Char, paint: Paint): Float {
+        val widthsSingle = FloatArray(1)
+        paint.getTextWidths(char.toString(), widthsSingle)
+        val widthSingle = widthsSingle[0]
+        if (widthSingle > 0f)
+            return widthSingle
+
+        logger.warn("character width still zero: \"$char\"")
+        val bounds = Rect()
+        paint.getTextBounds(char.toString(), 0, 1, bounds)
+        return bounds.width().toFloat()
     }
 
     private fun inflateFragment(fragment: LyricsFragment): Float {
