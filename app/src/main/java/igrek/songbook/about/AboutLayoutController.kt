@@ -57,7 +57,9 @@ class AboutLayoutController(
                     .setTextColor(uiResourceService.getColor(R.color.unlockAction))
         }
 
-        alertDialog.show()
+        if (!activity.isFinishing) {
+            alertDialog.show()
+        }
     }
 
     private fun openInGoogleStore() {

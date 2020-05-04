@@ -78,7 +78,9 @@ class SongDetailsService(
             alertBuilder.setNegativeButton(negativeActionName) { _, _ -> negativeAction.run() }
 
         val alertDialog = alertBuilder.create()
-        alertDialog.show()
+        if (!activity.isFinishing) {
+            alertDialog.show()
+        }
     }
 
     private fun showMoreActions(song: Song) {
