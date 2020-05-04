@@ -1,7 +1,6 @@
 package igrek.songbook.activity
 
 
-import igrek.songbook.BuildConfig
 import igrek.songbook.admin.AdminService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
@@ -44,9 +43,9 @@ class AppInitializer(
     private val startingScreen: KClass<out MainLayout> = TopSongsLayoutController::class
 
     fun init() {
-        if (BuildConfig.DEBUG) {
-            debugInit()
-        }
+//        if (BuildConfig.DEBUG) {
+//            debugInit()
+//        }
 
         logger.info("Initializing application...")
 

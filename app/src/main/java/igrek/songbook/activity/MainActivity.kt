@@ -33,27 +33,39 @@ open class MainActivity(
         songExportFileChooser: LazyInject<SongExportFileChooser> = appFactory.songExportFileChooser,
         googleSyncManager: LazyInject<GoogleSyncManager> = appFactory.googleSyncManager,
 ) : AppCompatActivity() {
-    private val appInitializer by LazyExtractor(appInitializer)
-    private val activityController by LazyExtractor(activityController)
-    private val optionSelectDispatcher by LazyExtractor(optionSelectDispatcher)
-    private val systemKeyDispatcher by LazyExtractor(systemKeyDispatcher)
-    private val permissionService by LazyExtractor(permissionService)
-    private val songImportFileChooser by LazyExtractor(songImportFileChooser)
-    private val songExportFileChooser by LazyExtractor(songExportFileChooser)
-    private val googleSyncManager by LazyExtractor(googleSyncManager)
+    private var appInitializer by LazyExtractor(appInitializer)
+    private var activityController by LazyExtractor(activityController)
+    private var optionSelectDispatcher by LazyExtractor(optionSelectDispatcher)
+    private var systemKeyDispatcher by LazyExtractor(systemKeyDispatcher)
+    private var permissionService by LazyExtractor(permissionService)
+    private var songImportFileChooser by LazyExtractor(songImportFileChooser)
+    private var songExportFileChooser by LazyExtractor(songExportFileChooser)
+    private var googleSyncManager by LazyExtractor(googleSyncManager)
 
     private val logger: Logger = LoggerFactory.logger
 
     override fun onCreate(savedInstanceState: Bundle?) {
         try {
-            logger.info("Initializing Dependencies container...")
+            logger.info("Creating Dependencies container...")
             AppContextFactory.createAppContext(this)
+            recreateFields() // Workaround for reusing finished activities by Android
             super.onCreate(savedInstanceState)
             appInitializer.init()
         } catch (t: Throwable) {
             logger.fatal(t)
             throw t
         }
+    }
+
+    private fun recreateFields() {
+        appInitializer = appFactory.appInitializer.get()
+        activityController = appFactory.activityController.get()
+        optionSelectDispatcher = appFactory.optionSelectDispatcher.get()
+        systemKeyDispatcher = appFactory.systemKeyDispatcher.get()
+        permissionService = appFactory.permissionService.get()
+        songImportFileChooser = appFactory.songImportFileChooser.get()
+        songExportFileChooser = appFactory.songExportFileChooser.get()
+        googleSyncManager = appFactory.googleSyncManager.get()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

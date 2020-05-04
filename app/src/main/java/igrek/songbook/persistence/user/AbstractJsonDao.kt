@@ -20,7 +20,7 @@ abstract class AbstractJsonDao<T>(
             ignoreUnknownKeys = true,
             allowStructuredMapKeys = true,
     ))
-    private val logger = LoggerFactory.logger
+    protected val logger = LoggerFactory.logger
 
     protected var db: T? = null
 
@@ -75,9 +75,10 @@ abstract class AbstractJsonDao<T>(
         db = readDb()
     }
 
-    fun save() {
-        if (db != null)
-            saveDb(db!!)
+    open fun save() {
+        db?.let {
+            saveDb(it)
+        }
     }
 
     private fun saveDb(db: T) {

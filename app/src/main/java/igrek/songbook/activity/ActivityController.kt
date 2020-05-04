@@ -58,6 +58,7 @@ class ActivityController(
     }
 
     fun onDestroy() {
+        preferencesService.saveAll()
         userDataDao.saveNow()
         logger.info("activity has been destroyed")
     }
