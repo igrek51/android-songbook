@@ -102,18 +102,18 @@ class SongsUpdater(
                 output.close()
                 input.close()
             } catch (e: Throwable) {
-                songsRepository.reloadSongsDb()
+                songsRepository.saveDataReloadAllSongs()
                 throw e
             }
             Handler(Looper.getMainLooper()).post {
                 try {
-                    songsRepository.reloadSongsDb()
+                    songsRepository.saveDataReloadAllSongs()
                     uiInfoService.showInfo(R.string.ui_db_is_uptodate)
                 } catch (t: Throwable) {
                     logger.error("Reloading songs db failed: ${t.message}")
                     uiInfoService.showInfo(R.string.db_update_failed_incompatible)
                     songsRepository.resetGeneralData()
-                    songsRepository.reloadSongsDb()
+                    songsRepository.saveDataReloadAllSongs()
                 }
             }
         } catch (e: Throwable) {

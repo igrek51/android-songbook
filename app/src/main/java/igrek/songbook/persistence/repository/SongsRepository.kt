@@ -91,12 +91,12 @@ class SongsRepository(
         }
 
         val publicDbBuilder = PublicSongsDbBuilder(versionNumber, publicSongsDao!!, userDataDao)
-        val customDbBuilder = CustomSongsDbBuilder(userDataDao)
-
         publicSongsRepo = publicDbBuilder.buildPublic(uiResourceService)
-        customSongsRepo = customDbBuilder.buildCustom(uiResourceService)
-        allSongsRepo = AllSongsRepository(publicSongsRepo, customSongsRepo)
 
+        val customDbBuilder = CustomSongsDbBuilder(userDataDao)
+        customSongsRepo = customDbBuilder.buildCustom(uiResourceService)
+
+        allSongsRepo = AllSongsRepository(publicSongsRepo, customSongsRepo)
         dbChangeSubject.onNext(true)
     }
 
@@ -112,6 +112,7 @@ class SongsRepository(
 
         val customDbBuilder = CustomSongsDbBuilder(userDataDao)
         customSongsRepo = customDbBuilder.buildCustom(uiResourceService)
+
         allSongsRepo.invalidate()
         dbChangeSubject.onNext(true)
     }
@@ -150,9 +151,14 @@ class SongsRepository(
         return publicSongsDao?.readDbVersionNumber()
     }
 
-    fun reloadUserData() {
+    fun saveAndReloadUserData() {
         userDataDao.save()
         reloadCustomSongsDb()
+    }
+
+    fun saveDataReloadAllSongs() {
+        userDataDao.save()
+        reloadSongsDb()
     }
 
 }

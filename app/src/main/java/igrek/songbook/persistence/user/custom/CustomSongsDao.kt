@@ -54,7 +54,7 @@ class CustomSongsDao(
 
         olds.add(newSong)
         customSongs.songs = olds
-        songsRepository.reloadUserData()
+        songsRepository.saveAndReloadUserData()
         val customModelSong = songsRepository.customSongsRepo.songFinder.find(SongIdentifier(newSong.id, SongNamespace.Custom))
         return customModelSong!!
     }
@@ -73,7 +73,7 @@ class CustomSongsDao(
         songsRepository.openHistoryDao.removeUsage(newSong.id, true)
         songsRepository.transposeDao.removeUsage(newSong.id, true)
 
-        songsRepository.reloadUserData()
+        songsRepository.saveAndReloadUserData()
     }
 
 }

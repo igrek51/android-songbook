@@ -36,8 +36,7 @@ class UnlockedSongsDao(
         val keys = unlockedSongs.keys
         if (key !in keys)
             keys.add(key)
-        save()
-        songsRepository.reloadSongsDb()
+        songsRepository.saveDataReloadAllSongs()
     }
 
 }
