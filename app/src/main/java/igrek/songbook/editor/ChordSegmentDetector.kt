@@ -12,13 +12,15 @@ class ChordSegmentDetector {
         return segments
     }
 
-    fun detectUnmarkedChords(line: String): List<ChordSegment> {
+    fun detectChordsUnaligned(line: String): List<ChordSegment> {
         val segments = mutableListOf<ChordSegment>()
-        line.replace(Regex("""([^\s]+)""")) { matchResult ->
-            val start = matchResult.range.first
+        var offset = 0
+        line.replace(Regex("""\[(.*?)]""")) { matchResult ->
+            val start = matchResult.range.first - offset
             val chord = matchResult.groupValues[1]
             segments.add(ChordSegment(chord, start))
-            chord
+            offset += 2
+            "[$chord]"
         }
         return segments
     }

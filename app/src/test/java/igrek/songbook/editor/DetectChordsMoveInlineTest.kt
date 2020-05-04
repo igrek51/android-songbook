@@ -29,15 +29,14 @@ class DetectChordsMoveInlineTest {
             [a]
             already marked
             a
-            already marked [a]
+            already chords [a]
             """.trimIndent())
         transformer.detectAndMoveChordsAboveToInline()
         assertThat(textEditor.getText()).isEqualTo("""
             [F]word [Cmaj7]workk [Dsus4]work ins[a]ide-[B]a-[C]word
+            [a]already marked
             [a]
-            already marked
-            a
-            already marked [a]
+            already chords [a]
             """.trimIndent())
     }
 
@@ -50,6 +49,38 @@ class DetectChordsMoveInlineTest {
         transformer.detectAndMoveChordsAboveToInline()
         assertThat(textEditor.getText()).isEqualTo("""
             [F]This [Cmaj7]is the [Dsus4]world  [G]world
+            """.trimIndent())
+    }
+
+    @Test
+    fun doubledLinesWithChords() {
+        textEditor.setText("""
+            e D a
+            e D a
+            [e D a] [e D a]
+            [e D a]
+            """.trimIndent())
+        transformer.detectAndMoveChordsAboveToInline()
+        assertThat(textEditor.getText()).isEqualTo("""
+            [e] [D] [a]
+            [e] [D] [a]
+            [e D a] [e D a]
+            [e D a]
+            """.trimIndent())
+    }
+
+    @Test
+    fun markedAndUnmarked() {
+        textEditor.setText("""
+            F    Cmaj7 Dsus4
+            word workk work
+            [a] [h]  [C]
+            alr ady  marked
+            """.trimIndent())
+        transformer.detectAndMoveChordsAboveToInline()
+        assertThat(textEditor.getText()).isEqualTo("""
+            [F]word [Cmaj7]workk [Dsus4]work
+            [a]alr [h]ady  [C]marked
             """.trimIndent())
     }
 
