@@ -138,6 +138,11 @@ class SongContextMenuBuilder(
                         executor = { song ->
                             antechamberService.approveAntechamberSongUI(song)
                         }),
+                SongContextAction(R.string.admin_antechamber_approve_action,
+                        availableCondition = { song -> song.isCustom() && adminService.isAdminEnabled() },
+                        executor = { song ->
+                            antechamberService.approveCustomSongUI(song)
+                        }),
                 SongContextAction(R.string.admin_antechamber_delete_action,
                         availableCondition = { song -> song.isAntechamber() && adminService.isAdminEnabled() },
                         executor = { song ->

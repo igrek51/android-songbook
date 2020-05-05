@@ -109,7 +109,7 @@ class AntechamberService(
         }
     }
 
-    fun approveAntechamberSong(song: Song): Observable<Boolean> {
+    private fun approveAntechamberSong(song: Song): Observable<Boolean> {
         logger.info("Approving antechamber song: $song")
         val dto = ChordsSongDto.fromModel(song)
         dto.id = null
@@ -138,6 +138,22 @@ class AntechamberService(
     }
 
     fun approveAntechamberSongUI(song: Song) {
+        val message1 = uiResourceService.resString(R.string.admin_antechamber_confirm_approve, song.toString())
+        ConfirmDialogBuilder().confirmAction(message1) {
+            uiInfoService.showInfoIndefinite(R.string.admin_sending)
+            approveAntechamberSong(song)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        uiInfoService.showInfo(R.string.admin_success)
+                        deleteAntechamberSongUI(song)
+                    }, { error ->
+                        val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
+                        uiInfoService.showInfoIndefinite(message)
+                    })
+        }
+    }
+
+    fun approveCustomSongUI(song: Song) {
         val message1 = uiResourceService.resString(R.string.admin_antechamber_confirm_approve, song.toString())
         ConfirmDialogBuilder().confirmAction(message1) {
             uiInfoService.showInfoIndefinite(R.string.admin_sending)

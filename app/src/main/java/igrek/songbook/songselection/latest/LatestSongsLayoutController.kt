@@ -2,11 +2,13 @@ package igrek.songbook.songselection.latest
 
 
 import android.view.View
+import android.widget.ImageButton
 import igrek.songbook.R
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
+import igrek.songbook.persistence.general.SongsUpdater
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.songpreview.SongOpener
@@ -24,6 +26,7 @@ class LatestSongsLayoutController(
         songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
         songOpener: LazyInject<SongOpener> = appFactory.songOpener,
         appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
+        songsUpdater: LazyInject<SongsUpdater> = appFactory.songsUpdater,
 ) : InflatedLayout(
         _layoutResourceId = R.layout.screen_latest_songs
 ), SongClickListener {
@@ -31,6 +34,7 @@ class LatestSongsLayoutController(
     private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
     private val songOpener by LazyExtractor(songOpener)
     private val appLanguageService by LazyExtractor(appLanguageService)
+    private val songsUpdater by LazyExtractor(songsUpdater)
 
     private var itemsListView: LazySongListView? = null
     private var storedScroll: ListScrollPosition? = null
@@ -40,11 +44,16 @@ class LatestSongsLayoutController(
     override fun showLayout(layout: View) {
         super.showLayout(layout)
 
-
         itemsListView = layout.findViewById<LazySongListView>(R.id.itemsList)?.also {
             it.init(activity, this, songContextMenuBuilder)
         }
         updateItemsList()
+
+        layout.findViewById<ImageButton>(R.id.updateLatestSongs)?.let {
+            it.setOnClickListener {
+                songsUpdater.updateSongsDb()
+            }
+        }
 
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
