@@ -17,7 +17,6 @@ import igrek.songbook.admin.antechamber.SongRankService
 import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.chords.lyrics.LyricsLoader
 import igrek.songbook.chords.transpose.ChordsTransposerManager
-import igrek.songbook.contact.*
 import igrek.songbook.custom.*
 import igrek.songbook.editor.ChordsEditorLayoutController
 import igrek.songbook.info.UiInfoService
@@ -34,6 +33,7 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.playlist.PlaylistLayoutController
 import igrek.songbook.playlist.PlaylistService
+import igrek.songbook.send.*
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.instrument.ChordsInstrumentService

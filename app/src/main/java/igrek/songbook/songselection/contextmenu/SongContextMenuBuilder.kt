@@ -6,7 +6,6 @@ import androidx.appcompat.app.AlertDialog
 import igrek.songbook.R
 import igrek.songbook.admin.AdminService
 import igrek.songbook.admin.antechamber.AntechamberService
-import igrek.songbook.contact.PublishSongService
 import igrek.songbook.custom.CustomSongService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
@@ -18,6 +17,7 @@ import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.playlist.PlaylistService
+import igrek.songbook.send.PublishSongService
 import igrek.songbook.songpreview.SongDetailsService
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.favourite.FavouriteSongsService

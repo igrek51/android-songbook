@@ -6,9 +6,6 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
-import igrek.songbook.contact.ContactLayoutController
-import igrek.songbook.contact.MissingSongLayoutController
-import igrek.songbook.contact.PublishSongLayoutController
 import igrek.songbook.custom.CustomSongsListLayoutController
 import igrek.songbook.custom.EditSongLayoutController
 import igrek.songbook.editor.ChordsEditorLayoutController
@@ -20,6 +17,9 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.ad.AdService
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.playlist.PlaylistLayoutController
+import igrek.songbook.send.ContactLayoutController
+import igrek.songbook.send.MissingSongLayoutController
+import igrek.songbook.send.PublishSongLayoutController
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.favourite.FavouritesLayoutController

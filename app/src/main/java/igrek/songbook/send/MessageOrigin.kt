@@ -1,4 +1,4 @@
-package igrek.songbook.contact
+package igrek.songbook.send
 
 enum class MessageOrigin(val id: Long) {
 

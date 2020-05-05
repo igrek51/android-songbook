@@ -1,4 +1,4 @@
-package igrek.songbook.contact
+package igrek.songbook.send
 
 import android.view.View
 import android.widget.Button
@@ -15,7 +15,7 @@ import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.system.SoftKeyboardService
 
-class ContactLayoutController(
+class MissingSongLayoutController(
         layoutController: LazyInject<LayoutController> = appFactory.layoutController,
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
         uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
@@ -28,23 +28,18 @@ class ContactLayoutController(
     private val sendMessageService by LazyExtractor(sendMessageService)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
 
-    private var contactSubjectEdit: EditText? = null
-    private var contactMessageEdit: EditText? = null
-    private var contactAuthorEdit: EditText? = null
+    private var missingSongMessageEdit: EditText? = null
 
     override fun showLayout(layout: View) {
-        contactSubjectEdit = layout.findViewById(R.id.contactSubjectEdit)
-        contactMessageEdit = layout.findViewById(R.id.contactMessageEdit)
-        contactAuthorEdit = layout.findViewById(R.id.contactAuthorEdit)
+        missingSongMessageEdit = layout.findViewById(R.id.missingSongMessageEdit)
 
-        val contactSendButton = layout.findViewById<Button>(R.id.contactSendButton)
-        contactSendButton.setOnClickListener(SafeClickListener {
-            sendContactMessage()
+        layout.findViewById<Button>(R.id.contactSendButton)?.setOnClickListener(SafeClickListener {
+            sendMessage()
         })
     }
 
     override fun getLayoutResourceId(): Int {
-        return R.layout.screen_contact
+        return R.layout.screen_contact_missing_song
     }
 
     override fun onBackClicked() {
@@ -55,17 +50,25 @@ class ContactLayoutController(
         softKeyboardService.hideSoftKeyboard()
     }
 
-    private fun sendContactMessage() {
-        val message = contactMessageEdit!!.text.toString()
-        val author = contactAuthorEdit!!.text.toString()
-        val subject = contactSubjectEdit!!.text.toString()
-        if (message.isEmpty()) {
-            uiInfoService.showToast(uiResourceService.resString(R.string.contact_message_field_empty))
+    private fun sendMessage() {
+        val message = missingSongMessageEdit?.text?.toString()
+
+        if (message.isNullOrBlank()) {
+            uiInfoService.showToast(uiResourceService.resString(R.string.fill_in_all_fields))
             return
         }
+
+        if (!message.matches(Regex(".+-.+"))) {
+            uiInfoService.showToast(uiResourceService.resString(R.string.missing_song_title_invalid_format))
+            return
+        }
+
+        val subject = uiResourceService.resString(R.string.contact_subject_missing_song)
+
         ConfirmDialogBuilder().confirmAction(R.string.confirm_send_contact) {
-            sendMessageService.sendContactMessage(message, origin = MessageOrigin.CONTACT_MESSAGE,
-                    author = author, subject = subject)
+            sendMessageService.sendContactMessage(message, origin = MessageOrigin.MISSING_SONG,
+                    subject = subject)
         }
     }
+
 }

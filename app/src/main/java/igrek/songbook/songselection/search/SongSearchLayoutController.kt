@@ -11,13 +11,13 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import igrek.songbook.R
-import igrek.songbook.contact.SendMessageService
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.persistence.repository.AllSongsRepository
 import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.send.SendMessageService
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.SongClickListener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder

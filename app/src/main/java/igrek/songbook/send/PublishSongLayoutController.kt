@@ -1,4 +1,4 @@
-package igrek.songbook.contact
+package igrek.songbook.send
 
 import android.view.View
 import android.widget.Button
@@ -45,6 +45,8 @@ class PublishSongLayoutController(
         publishSongArtistEdit = layout.findViewById(R.id.publishSongArtistEdit)
         publishSongContentEdit = layout.findViewById(R.id.publishSongContentEdit)
         contactAuthorEdit = layout.findViewById(R.id.contactAuthorEdit)
+
+        publishSongContentEdit?.isEnabled = false
 
         layout.findViewById<Button>(R.id.contactSendButton)?.setOnClickListener(SafeClickListener {
             sendMessage()

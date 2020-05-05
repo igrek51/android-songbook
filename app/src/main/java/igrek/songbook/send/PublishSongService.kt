@@ -1,4 +1,4 @@
-package igrek.songbook.contact
+package igrek.songbook.send
 
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
@@ -40,6 +40,10 @@ class PublishSongService(
                     return
                 }
             }
+        }
+
+        if (song.language == null) {
+            song.language = SongLanguageDetector().detectLanguageCode(song.content.orEmpty())
         }
 
         layoutController.showLayout(PublishSongLayoutController::class)

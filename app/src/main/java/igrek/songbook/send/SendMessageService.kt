@@ -1,4 +1,4 @@
-package igrek.songbook.contact
+package igrek.songbook.send
 
 import android.os.Handler
 import android.os.Looper
