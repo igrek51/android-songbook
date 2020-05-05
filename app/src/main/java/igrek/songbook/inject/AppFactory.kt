@@ -9,6 +9,7 @@ import igrek.songbook.about.HelpLayoutController
 import igrek.songbook.about.secret.SecretCommandService
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.activity.AppInitializer
+import igrek.songbook.activity.MainActivityData
 import igrek.songbook.activity.OptionSelectDispatcher
 import igrek.songbook.admin.AdminService
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
@@ -74,6 +75,7 @@ class AppFactory(
     val sharedPreferences: LazyInject<SharedPreferences> = PrototypeInject { SharedPreferencesService.sharedPreferencesCreator(activity) }
 
     /* Services */
+    val activityData = SingletonInject { MainActivityData() }
     val activityController = SingletonInject { ActivityController() }
     val appInitializer = SingletonInject { AppInitializer() }
     val optionSelectDispatcher = SingletonInject { OptionSelectDispatcher() }

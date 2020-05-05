@@ -18,29 +18,13 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.sync.GoogleSyncManager
-import igrek.songbook.system.PermissionService
-import igrek.songbook.system.SystemKeyDispatcher
 import igrek.songbook.util.RetryDelayed
 
 
 open class MainActivity(
-        appInitializer: LazyInject<AppInitializer> = appFactory.appInitializer,
-        activityController: LazyInject<ActivityController> = appFactory.activityController,
-        optionSelectDispatcher: LazyInject<OptionSelectDispatcher> = appFactory.optionSelectDispatcher,
-        systemKeyDispatcher: LazyInject<SystemKeyDispatcher> = appFactory.systemKeyDispatcher,
-        permissionService: LazyInject<PermissionService> = appFactory.permissionService,
-        songImportFileChooser: LazyInject<SongImportFileChooser> = appFactory.songImportFileChooser,
-        songExportFileChooser: LazyInject<SongExportFileChooser> = appFactory.songExportFileChooser,
-        googleSyncManager: LazyInject<GoogleSyncManager> = appFactory.googleSyncManager,
+        mainActivityData: LazyInject<MainActivityData> = appFactory.activityData,
 ) : AppCompatActivity() {
-    private var appInitializer by LazyExtractor(appInitializer)
-    private var activityController by LazyExtractor(activityController)
-    private var optionSelectDispatcher by LazyExtractor(optionSelectDispatcher)
-    private var systemKeyDispatcher by LazyExtractor(systemKeyDispatcher)
-    private var permissionService by LazyExtractor(permissionService)
-    private var songImportFileChooser by LazyExtractor(songImportFileChooser)
-    private var songExportFileChooser by LazyExtractor(songExportFileChooser)
-    private var googleSyncManager by LazyExtractor(googleSyncManager)
+    private var activityData by LazyExtractor(mainActivityData)
 
     private val logger: Logger = LoggerFactory.logger
 
@@ -50,7 +34,7 @@ open class MainActivity(
             AppContextFactory.createAppContext(this)
             recreateFields() // Workaround for reusing finished activities by Android
             super.onCreate(savedInstanceState)
-            appInitializer.init()
+            activityData.appInitializer.init()
         } catch (t: Throwable) {
             logger.fatal(t)
             throw t
@@ -58,60 +42,53 @@ open class MainActivity(
     }
 
     private fun recreateFields() {
-        appInitializer = appFactory.appInitializer.get()
-        activityController = appFactory.activityController.get()
-        optionSelectDispatcher = appFactory.optionSelectDispatcher.get()
-        systemKeyDispatcher = appFactory.systemKeyDispatcher.get()
-        permissionService = appFactory.permissionService.get()
-        songImportFileChooser = appFactory.songImportFileChooser.get()
-        songExportFileChooser = appFactory.songExportFileChooser.get()
-        googleSyncManager = appFactory.googleSyncManager.get()
+        activityData = appFactory.activityData.get()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        activityController.onConfigurationChanged(newConfig)
+        activityData.activityController.onConfigurationChanged(newConfig)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        activityController.onDestroy()
+        activityData.activityController.onDestroy()
     }
 
     override fun onStart() {
         super.onStart()
         Handler(Looper.getMainLooper()).post {
             RetryDelayed(10, 500, UninitializedPropertyAccessException::class.java) {
-                activityController.onStart()
+                activityData.activityController.onStart()
             }
         }
     }
 
     override fun onStop() {
         super.onStop()
-        activityController.onStop()
+        activityData.activityController.onStop()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return optionSelectDispatcher.optionsSelect(item.itemId) || super.onOptionsItemSelected(item)
+        return activityData.optionSelectDispatcher.optionsSelect(item.itemId) || super.onOptionsItemSelected(item)
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         when (keyCode) {
             KeyEvent.KEYCODE_BACK -> {
-                if (systemKeyDispatcher.onKeyBack())
+                if (activityData.systemKeyDispatcher.onKeyBack())
                     return true
             }
             KeyEvent.KEYCODE_MENU -> {
-                if (systemKeyDispatcher.onKeyMenu())
+                if (activityData.systemKeyDispatcher.onKeyMenu())
                     return true
             }
             KeyEvent.KEYCODE_VOLUME_UP -> {
-                if (systemKeyDispatcher.onVolumeUp())
+                if (activityData.systemKeyDispatcher.onVolumeUp())
                     return true
             }
             KeyEvent.KEYCODE_VOLUME_DOWN -> {
-                if (systemKeyDispatcher.onVolumeDown())
+                if (activityData.systemKeyDispatcher.onVolumeDown())
                     return true
             }
         }
@@ -124,22 +101,22 @@ open class MainActivity(
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        permissionService.onRequestPermissionsResult(permissions, grantResults)
+        activityData.permissionService.onRequestPermissionsResult(permissions, grantResults)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             SongImportFileChooser.FILE_SELECT_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
-                    songImportFileChooser.onFileSelect(data?.data)
+                    activityData.songImportFileChooser.onFileSelect(data?.data)
                 }
             SongExportFileChooser.FILE_EXPORT_SELECT_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
-                    songExportFileChooser.onFileSelect(data?.data)
+                    activityData.songExportFileChooser.onFileSelect(data?.data)
                 }
             GoogleSyncManager.REQUEST_CODE_SIGN_IN_SYNC_SAVE,
             GoogleSyncManager.REQUEST_CODE_SIGN_IN_SYNC_RESTORE ->
-                googleSyncManager.handleSignInResult(data, this, requestCode, resultCode)
+                activityData.googleSyncManager.handleSignInResult(data, this, requestCode, resultCode)
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
