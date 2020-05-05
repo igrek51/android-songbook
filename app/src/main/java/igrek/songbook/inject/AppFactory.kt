@@ -11,10 +11,11 @@ import igrek.songbook.activity.ActivityController
 import igrek.songbook.activity.AppInitializer
 import igrek.songbook.activity.MainActivityData
 import igrek.songbook.activity.OptionSelectDispatcher
+import igrek.songbook.admin.AdminCategoryManager
 import igrek.songbook.admin.AdminService
+import igrek.songbook.admin.SongRankService
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.admin.antechamber.AntechamberService
-import igrek.songbook.admin.antechamber.SongRankService
 import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.chords.lyrics.LyricsLoader
 import igrek.songbook.chords.transpose.ChordsTransposerManager
@@ -144,4 +145,5 @@ class AppFactory(
     val adService = SingletonInject { AdService() }
     val songRankService = SingletonInject { SongRankService() }
     val clipboardManager = SingletonInject { ClipboardManager() }
+    val adminCategoryManager = SingletonInject { AdminCategoryManager() }
 }

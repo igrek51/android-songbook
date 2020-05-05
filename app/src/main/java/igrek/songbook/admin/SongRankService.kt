@@ -1,8 +1,6 @@
-package igrek.songbook.admin.antechamber
+package igrek.songbook.admin
 
 
-import igrek.songbook.admin.AdminService
-import igrek.songbook.admin.HttpRequester
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -25,7 +23,7 @@ class SongRankService(
     companion object {
         private const val chordsApiBase = "https://chords.igrek.dev/api/v5"
 
-        private val updatePublicSongIdUrl = { id: Long -> "${chordsApiBase}/songs/$id" }
+        private val updatePublicSongIdUrl = { id: Long -> "$chordsApiBase/songs/$id" }
 
         private const val authTokenHeader = "X-Auth-Token"
     }

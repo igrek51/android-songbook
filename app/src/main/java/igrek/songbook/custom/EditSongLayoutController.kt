@@ -6,6 +6,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import igrek.songbook.R
+import igrek.songbook.admin.AdminService
 import igrek.songbook.editor.ChordsEditorLayoutController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.SafeClickListener
@@ -37,6 +38,7 @@ class EditSongLayoutController(
         contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
         preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
         songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+        adminService: LazyInject<AdminService> = appFactory.adminService,
 ) : InflatedLayout(
         _layoutResourceId = R.layout.screen_custom_song_details
 ) {
@@ -50,6 +52,7 @@ class EditSongLayoutController(
     private val contextMenuBuilder by LazyExtractor(contextMenuBuilder)
     private val preferencesState by LazyExtractor(preferencesState)
     private val songsRepository by LazyExtractor(songsRepository)
+    private val adminService by LazyExtractor(adminService)
 
     private var songTitleEdit: EditText? = null
     private var songContentEdit: EditText? = null
@@ -129,7 +132,7 @@ class EditSongLayoutController(
     }
 
     private fun showMoreActions() {
-        contextMenuBuilder.showContextMenu(listOf(
+        val actions = mutableListOf(
                 ContextMenuBuilder.Action(R.string.edit_song_open_in_editor) {
                     openInChordsEditor()
                 },
@@ -144,8 +147,14 @@ class EditSongLayoutController(
                 },
                 ContextMenuBuilder.Action(R.string.edit_song_remove) {
                     removeSong()
-                }
-        ))
+                },
+        )
+        if (adminService.isAdminEnabled()) {
+            actions += ContextMenuBuilder.Action(R.string.admin_create_category) {
+                adminService.createCategoryDialog()
+            }
+        }
+        contextMenuBuilder.showContextMenu(actions)
     }
 
     private fun openInChordsEditor() {

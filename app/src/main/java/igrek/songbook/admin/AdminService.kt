@@ -8,7 +8,6 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import igrek.songbook.R
 import igrek.songbook.admin.antechamber.AntechamberService
-import igrek.songbook.admin.antechamber.SongRankService
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
@@ -30,6 +29,7 @@ class AdminService(
         activity: LazyInject<Activity> = appFactory.activity,
         softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
         songRankService: LazyInject<SongRankService> = appFactory.songRankService,
+        adminCategoryManager: LazyInject<AdminCategoryManager> = appFactory.adminCategoryManager,
 ) {
     private val navigationMenuController by LazyExtractor(navigationMenuController)
     private val preferencesState by LazyExtractor(preferencesState)
@@ -39,6 +39,7 @@ class AdminService(
     private val activity by LazyExtractor(activity)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
     private val songRankService by LazyExtractor(songRankService)
+    private val adminCategoryManager by LazyExtractor(adminCategoryManager)
 
     var userAuthToken: String
         get() = preferencesState.userAuthToken
@@ -91,7 +92,7 @@ class AdminService(
         input.setText(song.rank?.toString().orEmpty())
         dlgAlert.setView(input)
 
-        val actionCheck = uiResourceService.resString(R.string.action_check_secret)
+        val actionCheck = uiResourceService.resString(R.string.action_info_ok)
         dlgAlert.setPositiveButton(actionCheck) { _, _ ->
             val newRank = input.text.toString().toDouble()
             updateRank(song, newRank)
@@ -106,9 +107,45 @@ class AdminService(
         }
     }
 
+    fun createCategoryDialog() {
+        val dlgAlert = AlertDialog.Builder(activity)
+        dlgAlert.setMessage(uiResourceService.resString(R.string.admin_update_rank))
+
+        val input = EditText(activity).apply {
+            inputType = InputType.TYPE_CLASS_NUMBER
+        }
+        dlgAlert.setView(input)
+
+        val actionCheck = uiResourceService.resString(R.string.action_info_ok)
+        dlgAlert.setPositiveButton(actionCheck) { _, _ ->
+            val categoryName = input.text.toString()
+            createCategory(categoryName)
+        }
+        dlgAlert.setNegativeButton(uiResourceService.resString(R.string.action_cancel)) { _, _ -> }
+        dlgAlert.setCancelable(true)
+        dlgAlert.create().show()
+
+        input.requestFocus()
+        Handler(Looper.getMainLooper()).post {
+            softKeyboardService.showSoftKeyboard(input)
+        }
+    }
+
     private fun updateRank(song: Song, rank: Double?) {
         uiInfoService.showInfoIndefinite(R.string.admin_sending)
         songRankService.updateRank(song, rank)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    uiInfoService.showInfo(R.string.admin_success)
+                }, { error ->
+                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
+                    uiInfoService.showInfoIndefinite(message)
+                })
+    }
+
+    private fun createCategory(categoryName: String) {
+        uiInfoService.showInfoIndefinite(R.string.admin_sending)
+        adminCategoryManager.createCategory(categoryName)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     uiInfoService.showInfo(R.string.admin_success)
