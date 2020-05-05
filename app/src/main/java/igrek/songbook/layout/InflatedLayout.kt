@@ -20,7 +20,7 @@ open class InflatedLayout(
 ) : MainLayout {
     protected val layoutController by LazyExtractor(layoutController)
     protected val activity by LazyExtractor(appCompatActivity)
-    protected val navigationMenuController by LazyExtractor(navigationMenuController)
+    private val navigationMenuController by LazyExtractor(navigationMenuController)
 
     protected val logger: Logger = LoggerFactory.logger
 

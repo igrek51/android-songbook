@@ -1,10 +1,10 @@
 package igrek.songbook.custom
 
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ImageButton
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import igrek.songbook.R
 import igrek.songbook.editor.ChordsEditorLayoutController
 import igrek.songbook.info.UiInfoService
@@ -12,24 +12,22 @@ import igrek.songbook.info.errorcheck.SafeClickListener
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import igrek.songbook.layout.LayoutController
-import igrek.songbook.layout.MainLayout
+import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
-import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.layout.spinner.ChordNotationSpinner
 import igrek.songbook.persistence.general.model.Song
+import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.system.SoftKeyboardService
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 
 
 class EditSongLayoutController(
-        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
-        navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
         customSongService: LazyInject<CustomSongService> = appFactory.customSongService,
         softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
         songImportFileChooser: LazyInject<SongImportFileChooser> = appFactory.songImportFileChooser,
@@ -38,11 +36,11 @@ class EditSongLayoutController(
         chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
         contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
         preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
-) : MainLayout {
-    private val layoutController by LazyExtractor(layoutController)
+        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+) : InflatedLayout(
+        _layoutResourceId = R.layout.screen_custom_song_details
+) {
     private val uiInfoService by LazyExtractor(uiInfoService)
-    private val activity by LazyExtractor(appCompatActivity)
-    private val navigationMenuController by LazyExtractor(navigationMenuController)
     private val customSongService by LazyExtractor(customSongService)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
     private val songImportFileChooser by LazyExtractor(songImportFileChooser)
@@ -51,33 +49,22 @@ class EditSongLayoutController(
     private val chordsNotationService by LazyExtractor(chordsNotationService)
     private val contextMenuBuilder by LazyExtractor(contextMenuBuilder)
     private val preferencesState by LazyExtractor(preferencesState)
-
-    private var currentSong: Song? = null
+    private val songsRepository by LazyExtractor(songsRepository)
 
     private var songTitleEdit: EditText? = null
     private var songContentEdit: EditText? = null
-    private var customCategoryNameEdit: EditText? = null
+    private var customCategoryNameEdit: AppCompatAutoCompleteTextView? = null
     private var chordsNotationSpinner: ChordNotationSpinner? = null
 
+    private var currentSong: Song? = null
     private var songTitle: String? = null
     private var songContent: String? = null
     private var customCategoryName: String? = null
     private var songChordsNotation: ChordsNotation? = null
-
-    override fun getLayoutResourceId(): Int {
-        return R.layout.screen_custom_song_details
-    }
+    private var subscriptions = mutableListOf<Disposable>()
 
     override fun showLayout(layout: View) {
-        val toolbar1 = layout.findViewById<Toolbar>(R.id.toolbar1)
-        activity.setSupportActionBar(toolbar1)
-        activity.supportActionBar?.run {
-            this.setDisplayHomeAsUpEnabled(false)
-            this.setDisplayShowHomeEnabled(false)
-        }
-        layout.findViewById<ImageButton>(R.id.navMenuButton).setOnClickListener {
-            navigationMenuController.navDrawerShow()
-        }
+        super.showLayout(layout)
 
         layout.findViewById<ImageButton>(R.id.goBackButton)?.setOnClickListener {
             onBackClicked()
@@ -104,9 +91,11 @@ class EditSongLayoutController(
             it.setText(songTitle.orEmpty())
         }
 
-        customCategoryNameEdit = layout.findViewById<EditText>(R.id.customCategoryNameEdit)?.also {
-            it.setText(customCategoryName.orEmpty())
+        customCategoryNameEdit = layout.findViewById<AppCompatAutoCompleteTextView>(R.id.customCategoryNameEdit)?.apply {
+            setText(customCategoryName.orEmpty())
+            threshold = 1
         }
+        updateCategoryAutocompleter()
 
         chordsNotationSpinner = ChordNotationSpinner(
                 spinnerId = R.id.songChordNotationSpinner,
@@ -116,6 +105,27 @@ class EditSongLayoutController(
         ).also {
             it.selectedNotation = songChordsNotation ?: preferencesState.chordsNotation
         }
+
+        subscriptions.forEach { s -> s.dispose() }
+        subscriptions.clear()
+        subscriptions.add(songsRepository.dbChangeSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    if (isLayoutVisible())
+                        updateCategoryAutocompleter()
+                })
+    }
+
+    private fun updateCategoryAutocompleter() {
+        val categoryNames = getAllCategoryNames().toTypedArray()
+        val adapter = ArrayAdapter(activity, android.R.layout.simple_dropdown_item_1line, categoryNames)
+        customCategoryNameEdit?.setAdapter(adapter)
+    }
+
+    private fun getAllCategoryNames(): List<String> {
+        return songsRepository.allSongsRepo.publicCategories.get()
+                .mapNotNull { it.displayName }
+                .sorted()
     }
 
     private fun showMoreActions() {

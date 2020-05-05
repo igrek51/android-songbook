@@ -148,7 +148,7 @@
                 android:text="@string/edit_song_category_name_label"
                 android:textSize="18sp"/>
 
-            <EditText
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:id="@+id/customCategoryNameEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
