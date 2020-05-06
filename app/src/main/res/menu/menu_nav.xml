@@ -10,15 +10,23 @@
         <item
             android:id="@+id/nav_songs_list"
             android:icon="@drawable/list"
-            android:title="@string/nav_categories_list"/>
+            android:title="@string/nav_categories_list" />
         <item
             android:id="@+id/nav_search"
             android:icon="@drawable/search"
-            android:title="@string/nav_search_song"/>
+            android:title="@string/nav_search_song" />
+        <item
+            android:id="@+id/nav_latest"
+            android:icon="@drawable/newest"
+            android:title="@string/nav_latest" />
+    </group>
+    <group
+        android:id="@+id/nav_group2"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_playlists"
             android:icon="@drawable/playlist"
-            android:title="@string/nav_playlists"/>
+            android:title="@string/nav_playlists" />
         <item
             android:id="@+id/nav_custom_songs"
             android:icon="@drawable/edit"
@@ -26,43 +34,39 @@
         <item
             android:id="@+id/nav_favourites"
             android:icon="@drawable/star_filled"
-            android:title="@string/nav_favourites_song"/>
-        <item
-            android:id="@+id/nav_latest"
-            android:icon="@drawable/newest"
-            android:title="@string/nav_latest"/>
-    </group>
-    <group
-        android:id="@+id/nav_group2"
-        android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_history"
-            android:icon="@drawable/history"
-            android:title="@string/nav_history" />
-        <item
-            android:id="@+id/nav_last_song"
-            android:icon="@drawable/note"
-            android:title="@string/nav_last_song" />
-        <item
-            android:id="@+id/nav_update_db"
-            android:icon="@drawable/sync"
-            android:title="@string/nav_update_songs"/>
-        <item
-            android:id="@+id/nav_random_song"
-            android:icon="@drawable/random"
-            android:title="@string/nav_random_song"/>
+            android:title="@string/nav_favourites_song" />
     </group>
     <group
         android:id="@+id/nav_group3"
         android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_last_song"
+            android:icon="@drawable/note"
+            android:title="@string/nav_last_song" />
+        <item
+            android:id="@+id/nav_history"
+            android:icon="@drawable/history"
+            android:title="@string/nav_history" />
+        <item
+            android:id="@+id/nav_random_song"
+            android:icon="@drawable/random"
+            android:title="@string/nav_random_song" />
+        <item
+            android:id="@+id/nav_update_db"
+            android:icon="@drawable/sync"
+            android:title="@string/nav_update_songs" />
+    </group>
+    <group
+        android:id="@+id/nav_group4"
+        android:checkableBehavior="single">
+        <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/settings"
-            android:title="@string/nav_settings"/>
+            android:title="@string/nav_settings" />
         <item
             android:id="@+id/nav_contact"
             android:icon="@drawable/send"
-            android:title="@string/nav_contact"/>
+            android:title="@string/nav_contact" />
         <item
             android:id="@+id/nav_missing_song"
             android:icon="@drawable/add"
@@ -70,14 +74,14 @@
         <item
             android:id="@+id/nav_help"
             android:icon="@drawable/help"
-            android:title="@string/nav_help"/>
+            android:title="@string/nav_help" />
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/info"
-            android:title="@string/nav_about"/>
+            android:title="@string/nav_about" />
         <item
             android:id="@+id/nav_exit"
             android:icon="@drawable/close"
-            android:title="@string/nav_exit"/>
+            android:title="@string/nav_exit" />
     </group>
 </menu>
