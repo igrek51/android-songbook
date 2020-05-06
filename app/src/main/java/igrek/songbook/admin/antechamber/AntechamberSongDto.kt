@@ -1,5 +1,6 @@
 package igrek.songbook.admin.antechamber
 
+import igrek.songbook.persistence.general.model.CategoryType
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.general.model.SongStatus
@@ -24,7 +25,8 @@ data class AntechamberSongDto(
         var initial_delay: Double? = null,
         var chords_notation: Long? = null,
         var original_song_id: Long? = null,
-        var status: Long? = null
+        var status: Long? = null,
+        var categories: List<Long>? = null,
 ) {
     fun toModel(): Song = Song(
             id = id!!,
@@ -45,7 +47,7 @@ data class AntechamberSongDto(
             initialDelay = initial_delay,
             chordsNotation = ChordsNotation.parseById(chords_notation),
             originalSongId = original_song_id,
-            namespace = SongNamespace.Antechamber
+            namespace = SongNamespace.Antechamber,
     )
 
     companion object {
@@ -61,7 +63,8 @@ data class AntechamberSongDto(
                 language = song.language,
                 chords_notation = (song.chordsNotation ?: ChordsNotation.default).id,
                 original_song_id = song.originalSongId,
-                status = song.status.id
+                status = song.status.id,
+                categories = song.categories.filter { it.type == CategoryType.ARTIST }.map { it.id },
         )
     }
 }

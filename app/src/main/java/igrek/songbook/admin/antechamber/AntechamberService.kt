@@ -60,7 +60,7 @@ class AntechamberService(
         }
     }
 
-    fun updateAntechamberSong(song: Song): Observable<Boolean> {
+    private fun updateAntechamberSong(song: Song): Observable<Boolean> {
         val antechamberSongDto = AntechamberSongDto.fromModel(song)
         val json = jsonSerializer.stringify(AntechamberSongDto.serializer(), antechamberSongDto)
         val request: Request = Request.Builder()

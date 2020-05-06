@@ -37,7 +37,7 @@ class AdminCategoryManager(
         val json = jsonSerializer.stringify(CreateCategoryDto.serializer(), dto)
         val request: Request = Request.Builder()
                 .url(createCategoryUrl)
-                .put(RequestBody.create(jsonType, json))
+                .post(RequestBody.create(jsonType, json))
                 .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
         return httpRequester.httpRequest(request) { response: Response ->
