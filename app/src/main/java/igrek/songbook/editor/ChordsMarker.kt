@@ -11,6 +11,9 @@ class ChordsMarker(
 
     fun detectAndMarkChords(lyrics: String, keepIndentation: Boolean = false): String {
         return lyrics.lines().joinToString(separator = "\n") { line ->
+            if ('[' in line || ']' in line) {
+                return@joinToString line
+            }
             // inverted chords match - find expressions which are not chords
             var line2 = "]$line["
             line2 = line2.replace(Regex("""](.*?)\[""")) { matchResult ->

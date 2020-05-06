@@ -26,6 +26,7 @@ class ChordsMarkingTest {
         textEditor.setText("""
             F    G
             word work Csus4 D
+            a is a e
             a is a [e]
             """.trimIndent())
         transformer.detectChords()
@@ -33,6 +34,7 @@ class ChordsMarkingTest {
             [F]    [G]
             word work [Csus4] [D]
             a is [a] [e]
+            a is a [e]
             """.trimIndent())
     }
 

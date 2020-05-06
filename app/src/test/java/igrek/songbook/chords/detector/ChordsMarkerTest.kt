@@ -57,4 +57,11 @@ class ChordsMarkerTest {
         assertThat(chordsMarker.detectAndMarkChords("jasna dupa a Cmaj7")).isEqualTo("jasna dupa [a] [Cmaj7]")
     }
 
+    @Test
+    fun skipMarkingWhenAlreadyChords() {
+        val detector = ChordsDetector(ChordsNotation.GERMAN)
+        val chordsMarker = ChordsMarker(detector)
+        assertThat(chordsMarker.detectAndMarkChords("A word word a [Cmaj7]")).isEqualTo("A word word a [Cmaj7]")
+    }
+
 }
