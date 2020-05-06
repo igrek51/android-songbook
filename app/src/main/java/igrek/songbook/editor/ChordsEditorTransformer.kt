@@ -390,14 +390,10 @@ class ChordsEditorTransformer(
                             .replace(Regex(""" {2} +"""), "  ") // max double spaces
                             .replace(Regex("""] ?\["""), " ") // join adjacent chords
                 }
-                .replace(Regex("""(\S)\[(.*?)]([\S\s]|$)""")) { matchResult ->
-                    // pad chords at the end of word
+                .replace(Regex("""(\S)\[([^\[\]]*?)](\s|$)""")) { matchResult ->
+                    // pad chords at the end of word: word[C]
                     val groups = matchResult.groupValues
-                    if (groups[3].isEmpty() || groups[3].isBlank()) { // exclude chord inside word
-                        "${groups[1]} [${groups[2]}]${groups[3]}"
-                    } else {
-                        groups[0]
-                    }
+                    "${groups[1]} [${groups[2]}]${groups[3]}"
                 }
                 .replaceWords(Regex("""  +"""), " ") // max 1 space in words
                 .replace("\r\n", "\n")
@@ -416,6 +412,15 @@ class ChordsEditorTransformer(
 
     fun removeDoubleEmptyLines() {
         transformLyrics(this::transformRemoveDoubleEmptyLines)
+    }
+
+    fun alignMisplacedChords() {
+        transformLyrics { lyrics ->
+            lyrics.replace(Regex("""(\w+)\[([^\[\]]+?)](\w+)""")) { matchResult ->
+                val groups = matchResult.groupValues
+                "[${groups[2]}]${groups[1]}${groups[3]}"
+            }
+        }
     }
 
     fun transformRemoveDoubleEmptyLines(lyrics: String): String {

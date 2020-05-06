@@ -146,6 +146,7 @@
         \n- Odznacz akordy: Usuwa wszystkie znaczniki akordów: \"[\" i \"]\"
         \n- Zaznacz akordy (nie zachowując wcięć): Automatycznie znajduje i zaznacza akordy poprzez otoczenie ich znakami \"[ ]\". Dodanie takich znaków może wpłynąć na poziomą pozycję akordów znajdujących się na końcu.
         \n- Usuń nawiasy kwadratowe z zawartością: Usuwa tekst wewnątrz nawiasów kwadratowych \"[ ]\" wraz z nawiasami.
+        \n- Wyrównaj przesunięte akordy: Przesuwa akordy umieszczone nieprawidłowo w środku słowa (np. \"w[C]ord\") na początek słowa.
         \n- \u276E: przesuwa kursor o jeden znak w lewo
         \n- \u276F: przesuwa kursor o jeden znak w prawo
         \n- [ / ]: wstawia pasujący nawias (otwierający lub zamykający)
@@ -374,4 +375,5 @@
     <string name="editor_reformat_error">Tekst piosenki niesformatowany. Użyj opcji \"Uporządkuj\"</string>
     <string name="chords_editor_remove_bracket_content">Usuń nawiasy kwadratowe z zawartością</string>
     <string name="chords_editor_detect_and_move_chords_to_words"><![CDATA[Wykryj akordy i przesuń z górnych linii do pasujących słów]]></string>
+    <string name="chords_editor_align_misplaced_chords">Wyrównaj przesunięte akordy</string>
 </resources>

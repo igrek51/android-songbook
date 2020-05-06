@@ -146,6 +146,7 @@
         \n- Unmark chords: Drop all chord marks: \"[\" and \"]\"
         \n- Mark chords (not preserving indentation): Find and mark chords automatically by surrounding them with \"[ ]\". Note that horizontal position of chords may be changed afterall.
         \n- Remove everything inside brackets: Remove text inside square brackets \"[ ]\" and the brackets themselves.
+        \n- Align misplaced chords: Moves chords placed wrongly inside word (e.g. \"w[C]ord\") to the beginning of the word.
         \n- \u276E: move cursor by one character left
         \n- \u276F: move cursor by one character right
         \n- [ / ]: insert suitable bracket (either opening or closing one)
@@ -399,4 +400,5 @@
     <string name="chords_editor_remove_bracket_content">Remove everything inside brackets</string>
     <string name="chords_editor_detect_and_move_chords_to_words"><![CDATA[Detect chords & move from upper line to matching words]]></string>
     <string name="admin_create_category" translatable="false">[admin] Create category</string>
+    <string name="chords_editor_align_misplaced_chords">Align misplaced chords</string>
 </resources>
