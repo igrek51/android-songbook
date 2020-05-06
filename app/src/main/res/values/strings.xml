@@ -271,7 +271,7 @@
         \n
         \nDo you want to ignore these errors?</string>
     <string name="nav_playlists">Playlists</string>
-    <string name="empty_playlists">No playlists. Create your own playlists e.g.:\n\"Learning\",\n\"Campfire songs\",\n\"Concert setlist\",\n\"Fingerstyle\"</string>
+    <string name="empty_playlists">No playlists. Create your own playlists e.g.:\n\"Training\",\n\"Campfire songs\",\n\"Concert setlist\",\n\"Fingerstyle\"</string>
     <string name="action_add_to_playlist">Add to playlist</string>
     <string name="no_playlists_to_add">No playlists found. Create a new playlist first.</string>
     <string name="choose_playlist">Choose a playlist</string>

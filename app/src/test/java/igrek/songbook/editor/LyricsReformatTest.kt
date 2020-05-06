@@ -28,6 +28,43 @@ class LyricsReformatTest {
         foo [a F C] bar
         """.trimIndent()
         Assertions.assertThat(transformed).isEqualTo(expected)
+        Assertions.assertThat(expected).isEqualTo(expected)
+    }
+
+    @Test
+    fun lastChordsPadding() {
+        val lyrics = """
+        bar[a]
+        foo[C] bar[a]
+        [B]in-[F]words [G]
+        end[a]
+        """.trimIndent()
+        val transformed = transformer.reformatAndTrim(lyrics)
+        val expected = """
+        bar [a]
+        foo [C] bar [a]
+        [B]in-[F]words [G]
+        end [a]
+        """.trimIndent()
+        Assertions.assertThat(transformed).isEqualTo(expected)
+        Assertions.assertThat(expected).isEqualTo(expected)
+    }
+
+    @Test
+    fun doubleSpaceInChords() {
+        val lyrics = """
+        [a F  C G]
+        [a F   C G]
+        words  words
+        """.trimIndent()
+        val transformed = transformer.reformatAndTrim(lyrics)
+        val expected = """
+        [a F  C G]
+        [a F  C G]
+        words words
+        """.trimIndent()
+        Assertions.assertThat(transformed).isEqualTo(expected)
+        Assertions.assertThat(expected).isEqualTo(expected)
     }
 
 }

@@ -386,14 +386,31 @@ class ChordsEditorTransformer(
                             .replace(Regex("""\[ +"""), "[")
                             .replace(Regex(""" +]"""), "]")
                             .replace(Regex("""\[]"""), "")
-                            .replace(Regex(""" +"""), " ") // double+ spaces
+                            .replace(Regex(""" {2} +"""), "  ") // max double spaces
                             .replace(Regex("""] ?\["""), " ") // join adjacent chords
                 }
+                .replace(Regex("""(\S)\[(.*?)]([\S\s]|$)""")) { matchResult ->
+                    // pad chords at the end of word
+                    val groups = matchResult.groupValues
+                    if (groups[3].isEmpty() || groups[3].isBlank()) { // exclude chord inside word
+                        "${groups[1]} [${groups[2]}]${groups[3]}"
+                    } else {
+                        groups[0]
+                    }
+                }
+                .replaceWords(Regex("""  +"""), " ") // max 1 space in words
                 .replace("\r\n", "\n")
                 .replace("\r", "\n")
                 .replace(Regex("\n\n+"), "\n\n") // max 1 empty line
                 .replace(Regex("^\n+"), "")
                 .replace(Regex("\n+$"), "")
+    }
+
+    private fun String.replaceWords(regex: Regex, replacement: String): String {
+        return "]$this[".replace(Regex("""]([\S\s]*?)\[""")) { matchResult ->
+            val inside = matchResult.groupValues[1]
+            "]" + inside.replace(regex, replacement) + "["
+        }.drop(1).dropLast(1)
     }
 
     fun removeDoubleEmptyLines() {
