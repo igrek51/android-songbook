@@ -1,5 +1,6 @@
 package igrek.songbook.admin.antechamber
 
+import igrek.songbook.persistence.general.model.CategoryType
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import kotlinx.serialization.Serializable
@@ -8,7 +9,7 @@ import kotlinx.serialization.Serializable
 data class ChordsSongDto(
         var id: Long? = null,
         var title: String? = null,
-        var categories: List<String>? = null,
+        var categories: List<Long>? = null,
         var content: String? = null,
         var version_number: Long? = null,
         var create_time: Long? = null,
@@ -32,7 +33,7 @@ data class ChordsSongDto(
         fun fromModel(song: Song): ChordsSongDto = ChordsSongDto(
                 id = song.id,
                 title = song.title,
-                categories = emptyList(),
+                categories = song.categories.filter { it.type == CategoryType.ARTIST }.map { it.id },
                 content = song.content,
                 version_number = song.versionNumber,
                 create_time = song.createTime,
