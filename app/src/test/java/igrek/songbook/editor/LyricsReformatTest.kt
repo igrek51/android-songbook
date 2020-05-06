@@ -28,7 +28,7 @@ class LyricsReformatTest {
         foo [a F C] bar
         """.trimIndent()
         Assertions.assertThat(transformed).isEqualTo(expected)
-        Assertions.assertThat(expected).isEqualTo(expected)
+        Assertions.assertThat(transformer.reformatAndTrim(expected)).isEqualTo(expected)
     }
 
     @Test
@@ -47,7 +47,7 @@ class LyricsReformatTest {
         end [a]
         """.trimIndent()
         Assertions.assertThat(transformed).isEqualTo(expected)
-        Assertions.assertThat(expected).isEqualTo(expected)
+        Assertions.assertThat(transformer.reformatAndTrim(expected)).isEqualTo(expected)
     }
 
     @Test
@@ -64,7 +64,7 @@ class LyricsReformatTest {
         words words
         """.trimIndent()
         Assertions.assertThat(transformed).isEqualTo(expected)
-        Assertions.assertThat(expected).isEqualTo(expected)
+        Assertions.assertThat(transformer.reformatAndTrim(expected)).isEqualTo(expected)
     }
 
 }
