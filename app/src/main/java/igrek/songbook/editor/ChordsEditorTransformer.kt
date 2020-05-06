@@ -381,6 +381,7 @@ class ChordsEditorTransformer(
                             .replace("\t", " ")
                             .replace("\u00A0", " ")
                             .replace("\uFFFD", "")
+                            .replace("|", " ")
                             .replace(Regex("""\[+"""), "[")
                             .replace(Regex("""]+"""), "]")
                             .replace(Regex("""\[ +"""), "[")
