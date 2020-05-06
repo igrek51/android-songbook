@@ -72,6 +72,33 @@ class SongContextMenuBuilder(
                         executor = { song ->
                             publishSongService.publishSong(song)
                         }),
+                SongContextAction(R.string.action_add_to_playlist,
+                        availableCondition = { true },
+                        executor = { song ->
+                            playlistService.showAddSongToPlaylistDialog(song)
+                        }),
+                SongContextAction(R.string.action_remove_from_playlist,
+                        availableCondition = { song ->
+                            songsRepository.playlistDao.isSongOnAnyPlaylist(song)
+                        },
+                        executor = { song ->
+                            playlistService.removeFromPlaylist(song)
+                        }),
+                SongContextAction(R.string.action_song_copy,
+                        availableCondition = { song -> !song.isCustom() },
+                        executor = { song ->
+                            customSongService.copySongAsCustom(song)
+                        }),
+                SongContextAction(R.string.export_content_to_file,
+                        availableCondition = { song -> song.isCustom() },
+                        executor = { song ->
+                            customSongService.exportSong(song)
+                        }),
+                SongContextAction(R.string.song_details_title,
+                        availableCondition = { true },
+                        executor = { song ->
+                            songDetailsService.showSongDetails(song)
+                        }),
                 SongContextAction(R.string.action_song_set_favourite,
                         availableCondition = { song ->
                             !favouriteSongsService.isSongFavourite(song)
@@ -86,37 +113,10 @@ class SongContextMenuBuilder(
                         executor = { song ->
                             favouriteSongsService.unsetSongFavourite(song)
                         }),
-                SongContextAction(R.string.action_add_to_playlist,
-                        availableCondition = { true },
-                        executor = { song ->
-                            playlistService.showAddSongToPlaylistDialog(song)
-                        }),
-                SongContextAction(R.string.action_remove_from_playlist,
-                        availableCondition = { song ->
-                            songsRepository.playlistDao.isSongOnAnyPlaylist(song)
-                        },
-                        executor = { song ->
-                            playlistService.removeFromPlaylist(song)
-                        }),
                 SongContextAction(R.string.show_chords_definitions,
                         availableCondition = { layoutController.isState(SongPreviewLayoutController::class) },
                         executor = {
                             songPreviewLayoutController.showChordsGraphs()
-                        }),
-                SongContextAction(R.string.song_details_title,
-                        availableCondition = { true },
-                        executor = { song ->
-                            songDetailsService.showSongDetails(song)
-                        }),
-                SongContextAction(R.string.action_song_copy,
-                        availableCondition = { song -> !song.isCustom() },
-                        executor = { song ->
-                            customSongService.copySongAsCustom(song)
-                        }),
-                SongContextAction(R.string.export_content_to_file,
-                        availableCondition = { song -> song.isCustom() },
-                        executor = { song ->
-                            customSongService.exportSong(song)
                         }),
                 SongContextAction(R.string.admin_antechamber_edit_action,
                         availableCondition = { adminService.isAdminEnabled() },
