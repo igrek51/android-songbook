@@ -109,10 +109,10 @@ class AdminService(
 
     fun createCategoryDialog() {
         val dlgAlert = AlertDialog.Builder(activity)
-        dlgAlert.setMessage(uiResourceService.resString(R.string.admin_update_rank))
+        dlgAlert.setMessage(uiResourceService.resString(R.string.admin_create_category))
 
         val input = EditText(activity).apply {
-            inputType = InputType.TYPE_CLASS_NUMBER
+            inputType = InputType.TYPE_CLASS_TEXT
         }
         dlgAlert.setView(input)
 

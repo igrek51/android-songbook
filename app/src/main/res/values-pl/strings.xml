@@ -207,7 +207,7 @@
     <string name="song_action_more">Więcej</string>
     <string name="song_copied_as_custom">Piosenka została skopiowana do \"Moich piosenek\".</string>
     <string name="song_action_choose">Wybierz akcję</string>
-    <string name="action_song_publish">Udostępnij publicznie</string>
+    <string name="action_song_publish">Opublikuj</string>
     <string name="settings_song_preview">Wygląd podglądu piosenki</string>
     <string name="settings_color_scheme">Schemat kolorów</string>
     <string name="settings_fontsize">Rozmiar czcionki</string>

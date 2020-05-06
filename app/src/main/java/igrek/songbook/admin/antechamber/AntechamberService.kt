@@ -29,11 +29,13 @@ class AntechamberService(
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
         adminService: LazyInject<AdminService> = appFactory.adminService,
         songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+        adminSongsLayoutContoller: LazyInject<AdminSongsLayoutContoller> = appFactory.adminSongsLayoutContoller,
 ) {
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val adminService by LazyExtractor(adminService)
     private val songsRepository by LazyExtractor(songsRepository)
+    private val adminSongsLayoutContoller by LazyExtractor(adminSongsLayoutContoller)
 
     companion object {
         private const val antechamberApiBase = "https://antechamber.chords.igrek.dev/api/v4"
@@ -148,22 +150,6 @@ class AntechamberService(
                 })
     }
 
-    fun approveAntechamberSongUI(song: Song) {
-        val message1 = uiResourceService.resString(R.string.admin_antechamber_confirm_approve, song.toString())
-        ConfirmDialogBuilder().confirmAction(message1) {
-            uiInfoService.showInfoIndefinite(R.string.admin_sending)
-            approveAntechamberSong(song)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        uiInfoService.showInfo(R.string.admin_success)
-                        deleteAntechamberSongUI(song)
-                    }, { error ->
-                        val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
-                        uiInfoService.showInfoIndefinite(message)
-                    })
-        }
-    }
-
     fun approveCustomSongUI(song: Song) {
         val message1 = uiResourceService.resString(R.string.admin_antechamber_confirm_approve, song.toString())
         ConfirmDialogBuilder().confirmAction(message1) {
@@ -179,6 +165,23 @@ class AntechamberService(
         }
     }
 
+    fun approveAntechamberSongUI(song: Song) {
+        val message1 = uiResourceService.resString(R.string.admin_antechamber_confirm_approve, song.toString())
+        ConfirmDialogBuilder().confirmAction(message1) {
+            uiInfoService.showInfoIndefinite(R.string.admin_sending)
+            approveAntechamberSong(song)
+                    .flatMap { deleteAntechamberSong(song) }
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        uiInfoService.showInfo(R.string.admin_success)
+                        adminSongsLayoutContoller.fetchRequestSubject.onNext(true)
+                    }, { error ->
+                        val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
+                        uiInfoService.showInfoIndefinite(message)
+                    })
+        }
+    }
+
     fun deleteAntechamberSongUI(song: Song) {
         val message1 = uiResourceService.resString(R.string.admin_antechamber_confirm_delete, song.toString())
         ConfirmDialogBuilder().confirmAction(message1) {
@@ -187,6 +190,7 @@ class AntechamberService(
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         uiInfoService.showInfo(R.string.admin_success)
+                        adminSongsLayoutContoller.fetchRequestSubject.onNext(true)
                     }, { error ->
                         val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
                         uiInfoService.showInfoIndefinite(message)

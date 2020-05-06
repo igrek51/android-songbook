@@ -209,7 +209,7 @@
     <string name="song_action_more">More</string>
     <string name="song_copied_as_custom">Song has been copied to \"My songs\".</string>
     <string name="song_action_choose">Choose an action</string>
-    <string name="action_song_publish">Share to public</string>
+    <string name="action_song_publish">Publish</string>
     <string name="settings_song_preview">Song preview appearance</string>
     <string name="settings_color_scheme">Color Scheme</string>
     <string name="settings_fontsize">Font size</string>
@@ -321,7 +321,7 @@
     <string name="publish_song_title_field">Song title</string>
     <string name="publish_song_artist_field">Artist / Category name</string>
     <string name="publish_song_content_field">Song with chords</string>
-    <string name="missing_song_description">Here you can propose adding a new song to database, if you feel that some song is missing. It would be great if you\'d like to send your song with chords as well (using \"Share to public\" action on custom songs). Write your song in a manner \"Artist - Title\".</string>
+    <string name="missing_song_description">Here you can propose adding a new song to database, if you feel that some song is missing. It would be great if you\'d like to send your song with chords as well (using \"Publish\" action on custom songs). Write your song in a manner \"Artist - Title\".</string>
     <string name="missing_song_titles">Artist - Title</string>
     <string name="missing_song_title_invalid_format">Invalid format. Try: \"Artist - Title\"</string>
     <string name="dialog_warning">Warning</string>

@@ -16,6 +16,8 @@ import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.songpreview.SongOpener
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.subjects.PublishSubject
 
 class AdminSongsLayoutContoller(
         uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
@@ -35,6 +37,9 @@ class AdminSongsLayoutContoller(
     private var itemsListView: AntechamberSongListView? = null
     private var experimentalSongs: MutableList<Song> = mutableListOf()
 
+    private var subscriptions = mutableListOf<Disposable>()
+    var fetchRequestSubject: PublishSubject<Boolean> = PublishSubject.create()
+
     override fun showLayout(layout: View) {
         super.showLayout(layout)
 
@@ -48,6 +53,15 @@ class AdminSongsLayoutContoller(
         layout.findViewById<Button>(R.id.updateButton).setOnClickListener {
             downloadSongs()
         }
+
+        subscriptions.forEach { s -> s.dispose() }
+        subscriptions.clear()
+        subscriptions.add(fetchRequestSubject
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap { antechamberService.downloadSongs() }
+                .subscribe { downloadedSongs ->
+                    experimentalSongs = downloadedSongs.toMutableList()
+                })
     }
 
     private fun updateItemsList() {
