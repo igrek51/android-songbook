@@ -29,20 +29,13 @@ class SongDetailsService(
         val preferredKey = song.preferredKey
         val metre = song.metre
         val songTitle = song.title
-        val category = song.displayCategories()
+        val categories = song.displayCategories()
         val songVersion = song.versionNumber.toString()
         val modificationDate = getLastModificationDate(song)
+        val path = buildSongPath(song)
 
         val messageLines = mutableListOf<String>()
-        when (song.namespace) {
-            SongNamespace.Public -> R.string.song_details_namespace_public
-            SongNamespace.Custom -> R.string.song_details_namespace_custom
-            else -> null
-        }?.let {
-            messageLines.add(uiResourceService.resString(it))
-        }
-
-        messageLines.add(uiResourceService.resString(R.string.song_details, songTitle, category, songVersion, modificationDate))
+        messageLines.add(uiResourceService.resString(R.string.song_details, path, songTitle, categories, songVersion, modificationDate))
         if (!preferredKey.isNullOrEmpty())
             messageLines.add(uiResourceService.resString(R.string.song_details_preferred_key, preferredKey))
         if (!metre.isNullOrEmpty())
@@ -57,6 +50,24 @@ class SongDetailsService(
 
         val message = messageLines.joinToString(separator = "\n")
         showDialogWithActions(dialogTitle, message, moreActionName, moreAction, null, null)
+    }
+
+    private fun buildSongPath(song: Song): String {
+        val namespaceId = when (song.namespace) {
+            SongNamespace.Public -> R.string.song_details_namespace_public
+            SongNamespace.Custom -> R.string.song_details_namespace_custom
+            SongNamespace.Antechamber -> R.string.song_details_namespace_antechamber
+        }
+        val namespaceName = uiResourceService.resString(namespaceId)
+
+        var displayCategories = song.displayCategories()
+        if (displayCategories.isEmpty()) {
+            displayCategories = song.customCategoryName.orEmpty()
+        }
+
+        return listOf(namespaceName, displayCategories, song.title)
+                .filter { it.isNotEmpty() }
+                .joinToString(" / ")
     }
 
     private fun getLastModificationDate(song: Song): String {

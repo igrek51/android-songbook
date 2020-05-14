@@ -15,7 +15,7 @@
         android:layout_gravity="start|center_vertical"
         android:layout_marginLeft="2dp"
         android:layout_marginStart="2dp"
-        android:background="@drawable/note"
+        android:background="@drawable/edit"
         android:clickable="false"
         android:focusable="false"
         android:scaleType="fitCenter"/>

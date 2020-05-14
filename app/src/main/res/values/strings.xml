@@ -95,8 +95,9 @@
     <string name="settings_autoscroll_speed_value">%s line / s</string>
     <string name="song_details_title">Song details</string>
     <string name="song_details" formatted="false">
-        Title: %s
-        \nCategory: %s
+        %s
+        \nTitle: %s
+        \nCategories: %s
         \nSong version: %s
         \nLast modification: %s
     </string>
@@ -344,8 +345,9 @@
     <string name="confirm_unsaved_save">Save</string>
     <string name="confirm_discard_changes">Discard</string>
     <string name="confirm_unsaved_changes_title">Unsaved changes</string>
-    <string name="song_details_namespace_custom">Custom song</string>
-    <string name="song_details_namespace_public">Public song</string>
+    <string name="song_details_namespace_custom">Custom songs</string>
+    <string name="song_details_namespace_public">Public songs</string>
+    <string name="song_details_namespace_antechamber" translatable="false">Antechamber</string>
     <string name="nav_last_song">Last song</string>
     <string name="no_last_song">You haven\'t open any song yet.</string>
     <string name="song_copied_edit_it">Edit</string>

@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import igrek.songbook.R
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
@@ -53,7 +54,13 @@ class SongItemViewFactory(
         val itemView = inflater.inflate(R.layout.list_item_song_tree_song, parent, false)
         val itemSongTitleLabel = itemView.findViewById<TextView>(R.id.itemSongTitleLabel)
 
-        itemSongTitleLabel.text = item.song!!.displayName()
+        itemSongTitleLabel.text = item.song?.displayName().orEmpty()
+
+        if (item.song?.isCustom() == true) {
+            itemView.findViewById<ImageView>(R.id.songImage)?.run {
+                this.setBackgroundResource(R.drawable.edit)
+            }
+        }
 
         val itemSongEditButton = itemView.findViewById<ImageButton>(R.id.itemSongMoreButton)
         itemSongEditButton.setOnClickListener { songContextMenuBuilder.showSongActions(item.song!!) }

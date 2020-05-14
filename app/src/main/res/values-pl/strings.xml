@@ -95,8 +95,9 @@
     <string name="settings_autoscroll_speed_value">%s linii / s</string>
     <string name="song_details_title">Szczegóły piosenki</string>
     <string name="song_details" formatted="false">
-        Tytuł: %s
-        \nKategoria: %s
+        %s
+        \nTytuł: %s
+        \nKategorie: %s
         \nWersja piosenki: %s
         \nOstatnia modyfikacja: %s
     </string>
@@ -322,8 +323,8 @@
     <string name="confirm_unsaved_save">Zapisz</string>
     <string name="confirm_discard_changes">Porzuć</string>
     <string name="confirm_unsaved_changes_title">Niezapisane zmiany</string>
-    <string name="song_details_namespace_custom">Moja piosenka</string>
-    <string name="song_details_namespace_public">Publiczna piosenka</string>
+    <string name="song_details_namespace_custom">Moje piosenki</string>
+    <string name="song_details_namespace_public">Publiczne piosenki</string>
     <string name="nav_last_song">Ostatnia piosenka</string>
     <string name="no_last_song">Nie otworzyłeś jeszcze żadnej piosenki.</string>
     <string name="song_copied_edit_it">Edytuj</string>

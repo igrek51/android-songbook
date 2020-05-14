@@ -47,7 +47,12 @@ data class Song(
     }
 
     fun displayCategories(): String {
-        return categories.joinToString(", ") { c -> c.displayName ?: "" }
+        val publicCategories = categories
+                .filter { it.type == CategoryType.ARTIST }
+                .joinToString(", ") { c -> c.displayName ?: "" }
+        if (publicCategories.isNotEmpty())
+            return publicCategories
+        return customCategoryName.orEmpty()
     }
 
     fun displayName(): String {
