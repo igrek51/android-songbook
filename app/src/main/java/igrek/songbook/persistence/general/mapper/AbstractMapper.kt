@@ -62,7 +62,7 @@ abstract class AbstractMapper<T> {
 
     protected fun getTimestampColumn(cursor: Cursor, name: String): Long {
         // get datetime, convert to long timestamp
-        val stringValue = cursor.getString(cursor.getColumnIndexOrThrow(name))
+        val stringValue = cursor.getString(cursor.getColumnIndexOrThrow(name)) ?: return 0
         return try {
             val date = iso8601Format.parse(stringValue)
             date.time

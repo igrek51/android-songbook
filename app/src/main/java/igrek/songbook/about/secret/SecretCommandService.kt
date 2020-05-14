@@ -11,11 +11,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.common.base.Predicate
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import igrek.songbook.R
 import igrek.songbook.admin.AdminService
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.info.logger.CrashlyticsLogger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -86,7 +86,7 @@ class SecretCommandService(
                 CommandRule("firebase error") {
                     logger.error(IllegalArgumentException("real reason"))
                     logger.error("error log")
-                    FirebaseCrashlytics.getInstance().sendUnsentReports()
+                    CrashlyticsLogger().sendCrashlytics()
                 },
 
                 CommandRule(Predicate {
