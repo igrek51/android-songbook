@@ -46,7 +46,7 @@ class ChordsTransposerManager(
     }
 
     fun transposeContent(fileContent: String): String {
-        return chordsTransposer!!.transposeLyrics(fileContent, transposedBy)
+        return chordsTransposer?.transposeLyrics(fileContent, transposedBy) ?: fileContent
     }
 
     fun onTransposeEvent(semitones: Int) {

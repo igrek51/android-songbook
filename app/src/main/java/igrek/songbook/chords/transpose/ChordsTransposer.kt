@@ -9,7 +9,7 @@ import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
 class ChordsTransposer(
-        private val fromNotation: ChordsNotation,
+        fromNotation: ChordsNotation,
         private val toNotation: ChordsNotation
 ) {
 
