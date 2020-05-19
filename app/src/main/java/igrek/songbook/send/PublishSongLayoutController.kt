@@ -7,6 +7,7 @@ import igrek.songbook.R
 import igrek.songbook.admin.antechamber.AntechamberService
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.info.analytics.AnalyticsLogger
 import igrek.songbook.info.errorcheck.SafeClickListener
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -101,6 +102,7 @@ class PublishSongLayoutController(
                     .subscribe({
                         uiInfoService.showInfo(R.string.antechamber_new_song_sent)
                     }, {})
+            publishSong?.let { AnalyticsLogger().logEventSongPublished(it) }
         }
     }
 

@@ -6,6 +6,7 @@ import android.widget.EditText
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.info.analytics.AnalyticsLogger
 import igrek.songbook.info.errorcheck.SafeClickListener
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -66,6 +67,7 @@ class ContactLayoutController(
         ConfirmDialogBuilder().confirmAction(R.string.confirm_send_contact) {
             sendMessageService.sendContactMessage(message, origin = MessageOrigin.CONTACT_MESSAGE,
                     author = author, subject = subject)
+            AnalyticsLogger().logEventContactMessageSent()
         }
     }
 }

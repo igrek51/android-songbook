@@ -2,6 +2,7 @@ package igrek.songbook.songselection.favourite
 
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
+import igrek.songbook.info.analytics.AnalyticsLogger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -30,6 +31,7 @@ class FavouriteSongsService(
         songsRepository.favouriteSongsDao.setSongFavourite(song)
         uiInfoService.showInfo(R.string.favourite_song_has_been_set)
         updateFavouriteSongSubject.onNext(song)
+        AnalyticsLogger().logEventSongFavourited(song)
     }
 
     fun unsetSongFavourite(song: Song) {

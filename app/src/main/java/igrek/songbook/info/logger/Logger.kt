@@ -2,6 +2,7 @@ package igrek.songbook.info.logger
 
 import android.util.Log
 import igrek.songbook.BuildConfig
+import igrek.songbook.info.analytics.CrashlyticsLogger
 
 open class Logger internal constructor() {
 

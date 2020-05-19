@@ -1,4 +1,4 @@
-package igrek.songbook.info.logger
+package igrek.songbook.info.analytics
 
 import android.app.Activity
 import android.provider.Settings
