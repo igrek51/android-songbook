@@ -1,6 +1,7 @@
 package igrek.songbook.info.logger
 
 import android.util.Log
+import igrek.songbook.BuildConfig
 
 open class Logger internal constructor() {
 
@@ -78,7 +79,8 @@ open class Logger internal constructor() {
                 else -> printDebug(consoleMessage)
             }
 
-            if (level.moreOrEqualImportant(LogLevel.INFO)) {
+            if (level.moreOrEqualImportant(LogLevel.INFO) ||
+                    (BuildConfig.DEBUG && level.moreOrEqualImportant(LogLevel.DEBUG))) {
                 CrashlyticsLogger().logCrashlytics(consoleMessage)
             }
         }
