@@ -20,6 +20,8 @@ import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.instrument.ChordsInstrument
 import igrek.songbook.settings.instrument.ChordsInstrumentService
+import igrek.songbook.settings.preferences.PreferencesState
+import java.util.*
 
 class ChordsDiagramsService(
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
@@ -28,6 +30,7 @@ class ChordsDiagramsService(
         activity: LazyInject<Activity> = appFactory.activity,
         chordsInstrumentService: LazyInject<ChordsInstrumentService> = appFactory.chordsInstrumentService,
         chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
+        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val uiResourceService by LazyExtractor(uiResourceService)
@@ -35,6 +38,7 @@ class ChordsDiagramsService(
     private val activity by LazyExtractor(activity)
     private val chordsInstrumentService by LazyExtractor(chordsInstrumentService)
     private val chordsNotationService by LazyExtractor(chordsNotationService)
+    private val preferencesState by LazyExtractor(preferencesState)
 
     private var toEnglishConverter = ChordsConverter(ChordsNotation.default, ChordsNotation.ENGLISH)
 
@@ -45,7 +49,7 @@ class ChordsDiagramsService(
 
     private fun chordGraphs(chord: String): String {
         val instrument = chordsInstrumentService.instrument
-        val diagramBuilder = ChordDiagramBuilder(instrument)
+        val diagramBuilder = ChordDiagramBuilder(instrument, preferencesState.chordDiagramStyle)
         val (engChord: String, errors) = toEnglishConverter.convertChordsGroup(chord)
         if (errors.isNotEmpty()) {
             throw RuntimeException("unrecognized chord: $errors")
@@ -108,6 +112,15 @@ class ChordsDiagramsService(
         alertBuilder.setView(diagramView)
 
         alertBuilder.create().show()
+    }
+
+    fun chordDiagramStyleEntries(): LinkedHashMap<String, String> {
+        val map = LinkedHashMap<String, String>()
+        for (item in ChordDiagramStyle.values()) {
+            val displayName = uiResourceService.resString(item.nameResId)
+            map[item.id.toString()] = displayName
+        }
+        return map
     }
 
 }

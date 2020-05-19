@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.preference.*
 import igrek.songbook.R
+import igrek.songbook.chords.diagram.ChordDiagramStyle
+import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -42,6 +44,7 @@ class SettingsFragment(
         chordsInstrumentService: LazyInject<ChordsInstrumentService> = appFactory.chordsInstrumentService,
         preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
         googleSyncManager: LazyInject<GoogleSyncManager> = appFactory.googleSyncManager,
+        chordsDiagramsService: LazyInject<ChordsDiagramsService> = appFactory.chordsDiagramsService,
 ) : PreferenceFragmentCompat() {
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val activity by LazyExtractor(appCompatActivity)
@@ -51,6 +54,7 @@ class SettingsFragment(
     private val chordsInstrumentService by LazyExtractor(chordsInstrumentService)
     private val preferencesState by LazyExtractor(preferencesState)
     private val googleSyncManager by LazyExtractor(googleSyncManager)
+    private val chordsDiagramsService by LazyExtractor(chordsDiagramsService)
 
     private var decimalFormat1: DecimalFormat = DecimalFormat("#.#")
     private var decimalFormat3: DecimalFormat = DecimalFormat("#.###")
@@ -87,6 +91,14 @@ class SettingsFragment(
                 onSave = { id: String ->
                     preferencesState.chordsInstrument = ChordsInstrument.parseById(id.toLong())
                             ?: ChordsInstrument.default
+                }
+        )
+
+        setupListPreference("chordDiagramStyle",
+                chordsDiagramsService.chordDiagramStyleEntries(),
+                onLoad = { preferencesState.chordDiagramStyle.id.toString() },
+                onSave = { id: String ->
+                    preferencesState.chordDiagramStyle = ChordDiagramStyle.mustParseById(id.toLong())
                 }
         )
 

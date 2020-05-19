@@ -377,4 +377,7 @@
     <string name="chords_editor_remove_bracket_content">Usuń nawiasy kwadratowe z zawartością</string>
     <string name="chords_editor_detect_and_move_chords_to_words"><![CDATA[Wykryj akordy i przesuń z górnych linii do pasujących słów]]></string>
     <string name="chords_editor_align_misplaced_chords">Wyrównaj przesunięte akordy</string>
+    <string name="chord_diagram_style_horizontal">Poziome</string>
+    <string name="chord_diagram_style_vertical">Pionowe</string>
+    <string name="settings_chord_digram_style">Układ Diagramów Akordów</string>
 </resources>

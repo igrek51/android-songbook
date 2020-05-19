@@ -1,11 +1,12 @@
 package igrek.songbook.chords.diagram
 
+import igrek.songbook.settings.instrument.ChordsInstrument
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
-class ChordsDiagramsTest {
+class HorizontalChordsDiagramsTest {
 
-    private val builder = ChordDiagramBuilder()
+    private val builder = ChordDiagramBuilder(ChordsInstrument.GUITAR, ChordDiagramStyle.Horizontal)
 
     @Test
     fun test_build_C_dur() {
@@ -126,12 +127,6 @@ class ChordsDiagramsTest {
                 A x|--|--|--|--|--|--|
                 E x|--|--|--|--|--|--|
                 """.trimIndent())
-    }
-
-    @Test
-    fun containsAliasChords() {
-        assertThat(allGuitarChordsDiagrams.keys).contains("Bb7")
-        assertThat(allGuitarChordsDiagrams.keys).contains("A#7")
     }
 
 }

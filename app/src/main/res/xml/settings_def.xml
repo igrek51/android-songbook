@@ -26,6 +26,11 @@
             android:title="@string/settings_chords_instrument"
             android:summary="%s"
             app:iconSpaceReserved="false"/>
+        <ListPreference
+            android:key="chordDiagramStyle"
+            android:title="@string/settings_chord_digram_style"
+            android:summary="%s"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_song_preview">

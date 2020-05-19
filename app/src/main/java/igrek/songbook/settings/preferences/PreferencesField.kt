@@ -68,18 +68,24 @@ enum class PreferencesField constructor(
     ChordsDisplayStyle(GenericLongIdPreferenceType(
             defaultValue = DisplayStyle.default,
             serializer = DisplayStyle::id,
-            deserializer = DisplayStyle.Companion::parseById
+            deserializer = DisplayStyle.Companion::parseById,
     )),
 
     ChordsEditorFontTypeface(GenericStringIdPreferenceType(
             defaultValue = FontTypeface.MONOSPACE,
             serializer = FontTypeface::id,
-            deserializer = FontTypeface.Companion::parseById
+            deserializer = FontTypeface.Companion::parseById,
     )),
 
     KeepScreenOn(true),
 
     AnonymousUsageData(false),
+
+    ChordDiagramStyle(GenericLongIdPreferenceType(
+            defaultValue = igrek.songbook.chords.diagram.ChordDiagramStyle.default,
+            serializer = igrek.songbook.chords.diagram.ChordDiagramStyle::id,
+            deserializer = igrek.songbook.chords.diagram.ChordDiagramStyle.Companion::parseById,
+    )),
 
     ;
 

@@ -1,5 +1,6 @@
 package igrek.songbook.settings.preferences
 
+import igrek.songbook.chords.diagram.ChordDiagramStyle
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -37,6 +38,7 @@ class PreferencesState(
     var chordsEditorFontTypeface: FontTypeface by PreferenceDelegate(PreferencesField.ChordsEditorFontTypeface)
     var keepScreenOn: Boolean by PreferenceDelegate(PreferencesField.KeepScreenOn)
     var anonymousUsageData: Boolean by PreferenceDelegate(PreferencesField.AnonymousUsageData)
+    var chordDiagramStyle: ChordDiagramStyle by PreferenceDelegate(PreferencesField.ChordDiagramStyle)
 
 }
 

@@ -6,15 +6,32 @@ import org.junit.Test
 
 class MandolinDiagramTest {
 
-    private val builder = ChordDiagramBuilder(ChordsInstrument.MANDOLIN)
+    private val horizontalBuilder = ChordDiagramBuilder(ChordsInstrument.MANDOLIN, ChordDiagramStyle.Horizontal)
+    private val verticalBuilder = ChordDiagramBuilder(ChordsInstrument.MANDOLIN, ChordDiagramStyle.Vertical)
 
     @Test
-    fun test_build_mandolin_chord() {
-        assertThat(builder.buildDiagram("x,3,2,0")).isEqualTo("""
+    fun buildHorizontalDiagram() {
+        assertThat(horizontalBuilder.buildDiagram("x,3,2,0")).isEqualTo("""
                 E 0|-|-|-|
                 A  |-|2|-|
                 D  |-|-|3|
                 G x|-|-|-|
+                """.trimIndent())
+    }
+
+
+    @Test
+    fun buildVerticalDiagram() {
+        assertThat(verticalBuilder.buildDiagram("x,3,2,0")).isEqualTo("""
+                G D A E
+                x     0
+                -------
+                | | | |
+                -------
+                | | 2 |
+                -------
+                | 3 | |
+                -------
                 """.trimIndent())
     }
 

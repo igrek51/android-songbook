@@ -403,4 +403,7 @@
     <string name="chords_editor_detect_and_move_chords_to_words"><![CDATA[Detect chords & move from upper line to matching words]]></string>
     <string name="admin_create_category" translatable="false">[admin] Create category</string>
     <string name="chords_editor_align_misplaced_chords">Align misplaced chords</string>
+    <string name="chord_diagram_style_horizontal">Horizontal</string>
+    <string name="chord_diagram_style_vertical">Vertical</string>
+    <string name="settings_chord_digram_style">Chord Diagrams layout</string>
 </resources>

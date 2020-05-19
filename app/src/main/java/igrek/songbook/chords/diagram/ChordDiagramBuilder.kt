@@ -4,7 +4,10 @@ import igrek.songbook.settings.instrument.ChordsInstrument
 import kotlin.math.max
 
 
-class ChordDiagramBuilder(private val instrument: ChordsInstrument = ChordsInstrument.default) {
+class ChordDiagramBuilder(
+        private val instrument: ChordsInstrument = ChordsInstrument.default,
+        private val chordDiagramStyle: ChordDiagramStyle = ChordDiagramStyle.Horizontal,
+) {
 
     private val minimumFretsShown = 3
     private val stringsNames = mapOf(
@@ -41,8 +44,8 @@ class ChordDiagramBuilder(private val instrument: ChordsInstrument = ChordsInstr
         val fretSign = if (showEllipsis) "…" else " "
         val hiddenFrets = if (showEllipsis) minFinger - 1 else 0
 
-        val displayFrets: List<DisplayFret> = stringsNames.getValue(instrument).map { stringName ->
-            DisplayFret(
+        val displayStringFrets: List<DisplayStringFret> = stringsNames.getValue(instrument).map { stringName ->
+            DisplayStringFret(
                     stringName = stringName,
                     fretSign = fretSign,
                     fretsShown = fretsShown,
@@ -51,7 +54,7 @@ class ChordDiagramBuilder(private val instrument: ChordsInstrument = ChordsInstr
         }.toMutableList()
 
         frets.reversed().forEachIndexed { index, fretValue ->
-            val displayFret = displayFrets[index]
+            val displayFret = displayStringFrets[index]
             when (fretValue) {
                 -1 -> displayFret.fretSign = "x"
                 0 -> displayFret.fretSign = "0"
@@ -62,31 +65,24 @@ class ChordDiagramBuilder(private val instrument: ChordsInstrument = ChordsInstr
             }
         }
 
-        return displayFrets.joinToString(separator = "\n") { it.display() }
-    }
-
-
-    data class DisplayFret(
-            val stringName: String,
-            var fretSign: String = " ",
-            val fretsShown: Int,
-            val digitsCount: Int = 1,
-            var fingerPosition: Int? = null,
-            var fingerValue: Int? = null
-    ) {
-        fun display(): String {
-            var output = "$stringName $fretSign"
-            for (i in 0 until fretsShown) {
-                output += "|"
-                if (i == fingerPosition) {
-                    output += fingerValue
-                    if (fingerValue!! < 10 && digitsCount == 2) // 2 digit number
-                        output += "-"
-                } else {
-                    output += "-".repeat(digitsCount)
-                }
-            }
-            return "$output|"
+        val renderer = when (chordDiagramStyle) {
+            ChordDiagramStyle.Horizontal -> HorizontalDiagramRenderer()
+            ChordDiagramStyle.Vertical -> VerticalDiagramRenderer()
         }
+        return renderer.render(displayStringFrets)
     }
+
 }
+
+interface DiagramRenderer {
+    fun render(frets: List<DisplayStringFret>): String
+}
+
+data class DisplayStringFret(
+        val stringName: String,
+        var fretSign: String = " ",
+        val fretsShown: Int,
+        val digitsCount: Int = 1,
+        var fingerPosition: Int? = null,
+        var fingerValue: Int? = null
+)
