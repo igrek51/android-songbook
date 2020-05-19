@@ -377,8 +377,7 @@ class SongPreviewLayoutController(
     }
 
     fun showChordsGraphs() {
-        val crdModel = lyricsLoader.lyricsModel ?: return
-        chordsDiagramsService.showLyricsChordsMenu(crdModel)
+        chordsDiagramsService.showLyricsChordsMenu(lyricsLoader.lyricsModel)
     }
 
 }

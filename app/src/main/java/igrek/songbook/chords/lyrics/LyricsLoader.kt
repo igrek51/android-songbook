@@ -25,7 +25,7 @@ class LyricsLoader(
     private val windowManagerService by LazyExtractor(windowManagerService)
     private val preferencesState by LazyExtractor(preferencesState)
 
-    var lyricsModel: LyricsModel? = null
+    var lyricsModel: LyricsModel = LyricsModel()
         private set
     private var screenW = 0
     private var paint: Paint? = null
@@ -68,6 +68,11 @@ class LyricsLoader(
     }
 
     private fun parseAndTranspose(originalFileContent: String) {
+        if (originalFileContent.isEmpty()) {
+            lyricsModel = LyricsModel()
+            return
+        }
+
         val transposedContent = chordsTransposerManager.transposeContent(originalFileContent)
         val realFontsize = windowManagerService.dp2px(lyricsThemeService.fontsize)
         val screenWRelative = screenW.toFloat() / realFontsize
