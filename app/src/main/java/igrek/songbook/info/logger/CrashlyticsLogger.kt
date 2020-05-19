@@ -26,9 +26,9 @@ class CrashlyticsLogger(
     }
 
     fun sendCrashlytics() {
-        val deviceId = Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID)
-        crashlytics.setUserId(deviceId)
         try {
+            val deviceId = Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID)
+            crashlytics.setUserId(deviceId)
             setCustomKeys()
         } catch (t: Throwable) {
         }
