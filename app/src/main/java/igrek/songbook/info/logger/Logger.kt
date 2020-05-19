@@ -81,7 +81,11 @@ open class Logger internal constructor() {
 
             if (level.moreOrEqualImportant(LogLevel.INFO) ||
                     (BuildConfig.DEBUG && level.moreOrEqualImportant(LogLevel.DEBUG))) {
-                CrashlyticsLogger().logCrashlytics(consoleMessage)
+                try {
+                    CrashlyticsLogger().logCrashlytics(consoleMessage)
+                } catch (e: NoSuchMethodError) {
+                } catch (e: NoClassDefFoundError) {
+                }
             }
         }
     }
