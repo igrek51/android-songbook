@@ -405,5 +405,8 @@
     <string name="chords_editor_align_misplaced_chords">Align misplaced chords</string>
     <string name="chord_diagram_style_horizontal">Horizontal</string>
     <string name="chord_diagram_style_vertical">Vertical</string>
-    <string name="settings_chord_digram_style">Chord Diagrams layout</string>
+    <string name="settings_chord_digram_style">Chord diagrams (visualisation) layout</string>
+    <string name="action_find_chord">Find</string>
+    <string name="chord_diagram_find_chord">Find diagrams for given chord</string>
+    <string name="chord_diagram_not_found">Diagram not found for given chord</string>
 </resources>

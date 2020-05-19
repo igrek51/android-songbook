@@ -379,5 +379,8 @@
     <string name="chords_editor_align_misplaced_chords">Wyrównaj przesunięte akordy</string>
     <string name="chord_diagram_style_horizontal">Poziome</string>
     <string name="chord_diagram_style_vertical">Pionowe</string>
-    <string name="settings_chord_digram_style">Układ Diagramów Akordów</string>
+    <string name="settings_chord_digram_style">Układ diagramów (wizualizacji) akordów</string>
+    <string name="action_find_chord">Znajdź</string>
+    <string name="chord_diagram_find_chord">Znajdź diagramy dla akordu</string>
+    <string name="chord_diagram_not_found">Nie znaleziono diagramu dla podanego akordu</string>
 </resources>
