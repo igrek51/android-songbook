@@ -3,7 +3,7 @@
     <string name="nav_categories_list">Kategorie</string>
     <string name="nav_search_song">Szukaj</string>
     <string name="nav_favourites_song">Ulubione</string>
-    <string name="nav_update_songs">Aktualizuj</string>
+    <string name="nav_update_songs">Aktualizuj piosenki</string>
     <string name="nav_custom_song">Moje piosenki</string>
     <string name="nav_random_song">Losowa piosenka</string>
     <string name="nav_settings">Ustawienia</string>
@@ -381,6 +381,7 @@
     <string name="chord_diagram_style_vertical">Pionowe</string>
     <string name="settings_chord_digram_style">Układ diagramów (wizualizacji) akordów</string>
     <string name="action_find_chord">Znajdź</string>
-    <string name="chord_diagram_find_chord">Znajdź diagramy dla akordu</string>
-    <string name="chord_diagram_not_found">Nie znaleziono diagramu dla podanego akordu</string>
+    <string name="chord_diagram_find_chord">Podaj nazwę akordu</string>
+    <string name="chord_diagram_not_found">Nie znaleziono diagramów dla podanej nazwy akordu</string>
+    <string name="nav_chord_diagram">Diagramy akordów</string>
 </resources>

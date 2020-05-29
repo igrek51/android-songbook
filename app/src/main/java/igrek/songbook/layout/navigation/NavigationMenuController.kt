@@ -11,6 +11,7 @@ import igrek.songbook.about.AboutLayoutController
 import igrek.songbook.about.HelpLayoutController
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
+import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.custom.CustomSongsListLayoutController
 import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.info.logger.LoggerFactory
@@ -45,6 +46,7 @@ class NavigationMenuController(
         randomSongOpener: LazyInject<RandomSongOpener> = appFactory.randomSongOpener,
         sendMessageService: LazyInject<SendMessageService> = appFactory.sendMessageService,
         songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+        chordsDiagramsService: LazyInject<ChordsDiagramsService> = appFactory.chordsDiagramsService,
 ) {
     private val activity by LazyExtractor(activity)
     private val activityController by LazyExtractor(activityController)
@@ -56,6 +58,7 @@ class NavigationMenuController(
     private val randomSongOpener by LazyExtractor(randomSongOpener)
     private val sendMessageService by LazyExtractor(sendMessageService)
     private val songOpener by LazyExtractor(songOpener)
+    private val chordsDiagramsService by LazyExtractor(chordsDiagramsService)
 
     private var drawerLayout: DrawerLayout? = null
     private var navigationView: NavigationView? = null
@@ -85,6 +88,7 @@ class NavigationMenuController(
         actionsMap[R.id.nav_top_songs] = { layoutController.showLayout(TopSongsLayoutController::class) }
         actionsMap[R.id.nav_last_song] = { songOpener.openLastSong() }
         actionsMap[R.id.nav_admin_antechamber] = { layoutController.showLayout(AdminSongsLayoutContoller::class) }
+        actionsMap[R.id.nav_chord_diagram] = { chordsDiagramsService.showFindChordByNameMenu() }
     }
 
     fun init() {

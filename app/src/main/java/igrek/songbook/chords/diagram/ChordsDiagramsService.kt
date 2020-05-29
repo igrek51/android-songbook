@@ -114,7 +114,7 @@ class ChordsDiagramsService(
             }
         }
         alertBuilder.setNegativeButton(uiResourceService.resString(R.string.action_find_chord)) { _, _ ->
-            showFindChordsMenu()
+            showFindChordByNameMenu()
         }
 
         val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -126,7 +126,9 @@ class ChordsDiagramsService(
         alertBuilder.create().show()
     }
 
-    private fun showFindChordsMenu() {
+    fun showFindChordByNameMenu() {
+        toEnglishConverter = ChordsConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH)
+
         val dlgAlert = AlertDialog.Builder(activity)
         dlgAlert.setTitle(uiResourceService.resString(R.string.chord_diagram_find_chord))
 
@@ -147,10 +149,19 @@ class ChordsDiagramsService(
         }
     }
 
-    private fun tryToFindChordDiagram(chordName: String) {
-        val chordName = chordName.trim()
-        val (_, errors) = toEnglishConverter.convertChordsGroup(chordName)
+    private fun tryToFindChordDiagram(_chordName: String) {
+        val chordName = _chordName.trim()
+        if (chordName.isBlank()) {
+            uiInfoService.showInfo(uiResourceService.resString(R.string.chord_diagram_not_found))
+            return
+        }
+        val (engChord, errors) = toEnglishConverter.convertChordsGroup(chordName)
         if (errors.isNotEmpty()) {
+            uiInfoService.showInfo(uiResourceService.resString(R.string.chord_diagram_not_found))
+            return
+        }
+        val chordDiagramCodes = getChordDiagrams(chordsInstrumentService.instrument)
+        if (engChord !in chordDiagramCodes) {
             uiInfoService.showInfo(uiResourceService.resString(R.string.chord_diagram_not_found))
             return
         }

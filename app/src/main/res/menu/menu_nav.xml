@@ -55,6 +55,10 @@
             android:id="@+id/nav_update_db"
             android:icon="@drawable/sync"
             android:title="@string/nav_update_songs" />
+        <item
+            android:id="@+id/nav_chord_diagram"
+            android:icon="@drawable/grid"
+            android:title="@string/nav_chord_diagram" />
     </group>
     <group
         android:id="@+id/nav_group4"

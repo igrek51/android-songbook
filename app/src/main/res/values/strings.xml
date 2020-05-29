@@ -5,7 +5,7 @@
     <string name="nav_categories_list">Categories</string>
     <string name="nav_search_song">Search</string>
     <string name="nav_favourites_song">Favourites</string>
-    <string name="nav_update_songs">Update</string>
+    <string name="nav_update_songs">Update songs</string>
     <string name="nav_custom_song">My songs</string>
     <string name="nav_random_song">Random song</string>
     <string name="nav_settings">Settings</string>
@@ -407,6 +407,7 @@
     <string name="chord_diagram_style_vertical">Vertical</string>
     <string name="settings_chord_digram_style">Chord diagrams (visualisation) layout</string>
     <string name="action_find_chord">Find</string>
-    <string name="chord_diagram_find_chord">Find diagrams for given chord</string>
-    <string name="chord_diagram_not_found">Diagram not found for given chord</string>
+    <string name="chord_diagram_find_chord">Enter chord name</string>
+    <string name="chord_diagram_not_found">Diagrams not found for given chord name</string>
+    <string name="nav_chord_diagram">Chord diagrams</string>
 </resources>
