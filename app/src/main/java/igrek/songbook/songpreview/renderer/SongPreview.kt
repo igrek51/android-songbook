@@ -3,6 +3,8 @@ package igrek.songbook.songpreview.renderer
 import android.content.Context
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.OvershootInterpolator
+import androidx.recyclerview.widget.RecyclerView
 import igrek.songbook.chords.lyrics.model.LyricsModel
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -50,6 +52,9 @@ class SongPreview(
     private val bottomMarginCache = SimpleCache { this.windowManagerService.dp2px(EOF_BOTTOM_RESERVE) }
     private val scrollWidthCache = SimpleCache { this.windowManagerService.dp2px(1f) }
     private var lastClickTime: Long? = null
+    private var recyclerScrollState = RecyclerView.SCROLL_STATE_IDLE
+    var overlayScrollResetter: () -> Unit = {}
+    var overlayRecyclerView: RecyclerView? = null
 
     companion object {
         const val EOF_BOTTOM_RESERVE = 60f // padding bottom [dp]
@@ -253,19 +258,66 @@ class SongPreview(
         return scrollByPx(lineheightPart * lineheightPx)
     }
 
+    fun changedRecyclerScrollState(recyclerScrollState: Int) {
+        this.recyclerScrollState = recyclerScrollState
+        scrollByPx(0f)
+    }
+
     fun scrollByPx(px: Float): Boolean {
-        scroll += px
-        var scrollable = true
-        val maxScroll = maxScroll
-        // cut off
-        if (scroll < 0) {
-            scroll = 0f
-            scrollable = false
+        val maxAbroad = lineheightPx * 6
+        val stopRunawayScrollingMargin = lineheightPx * 5
+        when {
+            scroll < 0 -> {
+                val exceeds = -scroll
+                when {
+                    px < 0 && recyclerScrollState == RecyclerView.SCROLL_STATE_DRAGGING -> {
+                        if (exceeds < maxAbroad) {
+                            scroll += px * (1f - 1f / maxAbroad * exceeds)
+                        }
+                    }
+                    px < 0 && recyclerScrollState == RecyclerView.SCROLL_STATE_SETTLING -> {
+                        if (exceeds > stopRunawayScrollingMargin) {
+                            overlayScrollResetter()
+                        }
+                        scroll += px * (1f - 1f / maxAbroad * exceeds)
+                    }
+                    recyclerScrollState == RecyclerView.SCROLL_STATE_IDLE -> {
+                        overlayRecyclerView?.smoothScrollBy(0, exceeds.toInt(), OvershootInterpolator(), 200)
+                    }
+                    else -> scroll += px
+                }
+            }
+
+            scroll > maxScroll -> {
+                val exceeds = scroll - maxScroll
+                when {
+                    px > 0 && recyclerScrollState == RecyclerView.SCROLL_STATE_DRAGGING -> {
+                        if (exceeds < maxAbroad) {
+                            scroll += px * (1f - 1f / maxAbroad * exceeds)
+                        }
+                    }
+                    px > 0 && recyclerScrollState == RecyclerView.SCROLL_STATE_SETTLING -> {
+                        if (exceeds > stopRunawayScrollingMargin) {
+                            overlayScrollResetter()
+                        }
+                        scroll += px * (1f - 1f / maxAbroad * exceeds)
+                    }
+                    recyclerScrollState == RecyclerView.SCROLL_STATE_IDLE -> {
+                        overlayRecyclerView?.smoothScrollBy(0, -exceeds.toInt(), OvershootInterpolator(), 200)
+                    }
+                    else -> scroll += px
+                }
+            }
+
+            else -> scroll += px
         }
-        if (scroll > maxScroll) {
-            scroll = maxScroll
-            scrollable = false
+
+        val scrollable = when {
+            scroll < 0 -> false
+            scroll > maxScroll -> false
+            else -> true
         }
+
         repaint()
         return scrollable
     }

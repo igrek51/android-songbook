@@ -137,7 +137,6 @@ class SongPreviewLayoutController(
         val songPreviewContainer = layout.findViewById<ViewGroup>(R.id.songPreviewContainer)
         songPreviewContainer.addView(songPreview)
 
-        // TODO lazy load quick menu panels - load on use only
         // create quick menu panels
         val quickMenuContainer = layout.findViewById<FrameLayout>(R.id.quickMenuContainer)
         val inflater = activity.layoutInflater
@@ -160,10 +159,14 @@ class SongPreviewLayoutController(
             layoutManager = LinearLayoutManager(activity)
             songPreview?.let { songPreview ->
                 overlayAdapter = OverlayRecyclerAdapter(songPreview)
+                songPreview.overlayScrollResetter = { resetOverlayScroll() }
+                songPreview.overlayRecyclerView = this
             }
             adapter = overlayAdapter
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {}
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    songPreview?.changedRecyclerScrollState(newState)
+                }
 
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     songPreview?.run {
@@ -251,7 +254,7 @@ class SongPreviewLayoutController(
     }
 
     private fun resetOverlayScroll() {
-        // refresh
+        // recenter
         overlayRecyclerView?.layoutManager?.scrollToPosition(1)
         overlayRecyclerView?.scrollToPosition(1)
     }

@@ -215,7 +215,9 @@ class AutoscrollService(
     private fun onAutoscrollRemainingWaitTimeEvent(ms: Long) {
         val seconds = ((ms + 500) / 1000).toString()
         val info = uiResourceService.resString(R.string.autoscroll_starts_in, seconds)
-        uiInfoService.showInfoWithAction(info, R.string.action_start_now_autoscroll) { this.skipInitialPause() }
+        uiInfoService.showInfoWithAction(info, R.string.action_start_now_autoscroll) {
+            this.skipInitialPause()
+        }
     }
 
     private fun skipInitialPause() {
@@ -226,7 +228,7 @@ class AutoscrollService(
 
     private fun onAutoscrollStartUIEvent() {
         if (!isRunning && canvas != null) {
-            if (canvas!!.canScrollDown()) {
+            if (canvas?.canScrollDown() == true) {
                 start()
                 uiInfoService.showInfoWithAction(R.string.autoscroll_started, R.string.action_stop_autoscroll) { this.stop() }
             } else {
