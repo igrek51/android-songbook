@@ -102,20 +102,12 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/undoChordsButton"
+                    android:id="@+id/transformChordsButton"
                     style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
-                    android:text="@string/edit_song_undo" />
-
-                <Button
-                    android:id="@+id/selectLineButton"
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start|center_vertical"
-                    android:text="@string/chords_editor_select_line" />
+                    android:text="@string/edit_song_transform_chords" />
 
                 <Button
                     android:id="@+id/reformatTrimButton"
@@ -142,36 +134,12 @@
                     android:text="@string/edit_song_detect_chords" />
 
                 <Button
-                    android:id="@+id/moveLeftButton"
+                    android:id="@+id/selectLineButton"
                     style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
-                    android:text="@string/left_arrow" />
-
-                <Button
-                    android:id="@+id/moveRightButton"
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start|center_vertical"
-                    android:text="@string/right_arrow" />
-
-                <Button
-                    android:id="@+id/addChordSplitterButton"
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start|center_vertical"
-                    android:text="@string/edit_song_add_chord_splitter" />
-
-                <Button
-                    android:id="@+id/addChordButton"
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start|center_vertical"
-                    android:text="@string/edit_song_add_chord" />
+                    android:text="@string/chords_editor_select_line" />
 
                 <Button
                     android:id="@+id/copyButton"
@@ -198,12 +166,44 @@
                     android:text="@string/chords_editor_duplicate" />
 
                 <Button
-                    android:id="@+id/transformChordsButton"
+                    android:id="@+id/undoChordsButton"
                     style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start|center_vertical"
-                    android:text="@string/edit_song_transform_chords" />
+                    android:text="@string/edit_song_undo" />
+
+                <Button
+                    android:id="@+id/addChordSplitterButton"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:text="@string/edit_song_add_chord_splitter" />
+
+                <Button
+                    android:id="@+id/addChordButton"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:text="@string/edit_song_add_chord" />
+
+                <Button
+                    android:id="@+id/moveLeftButton"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:text="@string/left_arrow" />
+
+                <Button
+                    android:id="@+id/moveRightButton"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start|center_vertical"
+                    android:text="@string/right_arrow" />
 
             </LinearLayout>
         </HorizontalScrollView>
