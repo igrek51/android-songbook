@@ -11,7 +11,7 @@ enum class ChordDiagramStyle(val id: Long, val nameResId: Int) {
     ;
 
     companion object {
-        val default = Horizontal
+        val default = Vertical
 
         fun parseById(id: Long): ChordDiagramStyle? {
             return values().firstOrNull { v -> v.id == id }
