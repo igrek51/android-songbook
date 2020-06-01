@@ -9,17 +9,19 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.general.model.Song
+import igrek.songbook.settings.preferences.PreferencesState
 
 class AnalyticsLogger(
         activity: LazyInject<Activity> = appFactory.activity,
+        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
     private val activity by LazyExtractor(activity)
+    private val preferencesState by LazyExtractor(preferencesState)
 
     private val firebaseAnalytics = Firebase.analytics
 
     fun logEventContactMessageSent() {
-        logEvent("x_contact_message_sent", mapOf(
-        ))
+        logEvent("x_contact_message_sent", emptyMap())
     }
 
     fun logEventSongPublished(song: Song) {
@@ -68,6 +70,9 @@ class AnalyticsLogger(
     }
 
     private fun logEvent(eventName: String, values: Map<String, String?>) {
+        if (!preferencesState.anonymousUsageData)
+            return
+
         val bundle = Bundle()
         values.forEach { (key, value) ->
             if (value != null) {

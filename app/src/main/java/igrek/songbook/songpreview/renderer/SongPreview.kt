@@ -267,6 +267,7 @@ class SongPreview(
         val maxAbroad = lineheightPx * 6
         val stopRunawayScrollingMargin = lineheightPx * 5
         val boundaryHisteresis = 0.5f
+        val minSettlingScrollPx = 0.035f
         when {
             scroll < 0 -> {
                 val exceeds = -scroll
@@ -281,7 +282,7 @@ class SongPreview(
                         }
                     }
                     px < 0 && recyclerScrollState == RecyclerView.SCROLL_STATE_SETTLING -> {
-                        if (exceeds > stopRunawayScrollingMargin) {
+                        if (exceeds > stopRunawayScrollingMargin || -px / lineheightPx < minSettlingScrollPx) {
                             overlayScrollResetter()
                             overlayRecyclerView?.smoothScrollBy(0, exceeds.toInt(), OvershootInterpolator(), 200)
                         } else {

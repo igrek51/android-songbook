@@ -13,7 +13,7 @@
     <color name="colorFloatingButton">#2d3b94</color>
     <color name="colorFloatingButtonClicked">#162060</color>
 
-    <color name="activePanelButton">#8cd5ff</color>
+    <color name="activePanelButton">#03A9F4</color>
 
     <color name="navMenuText">#ffffff</color>
     <color name="navMenuIconTint">#ffffff</color>
