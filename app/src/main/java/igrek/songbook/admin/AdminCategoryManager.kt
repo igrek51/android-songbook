@@ -5,7 +5,7 @@ import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import io.reactivex.Observable
+import kotlinx.coroutines.Deferred
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
@@ -31,7 +31,7 @@ class AdminCategoryManager(
     private val jsonType = MediaType.parse("application/json; charset=utf-8")
     private val jsonSerializer = Json(JsonConfiguration.Stable)
 
-    fun createCategory(categoryName: String): Observable<Boolean> {
+    fun createCategory(categoryName: String): Deferred<Result<Unit>> {
         logger.info("Creating category: $categoryName")
         val dto = CreateCategoryDto(name = categoryName)
         val json = jsonSerializer.stringify(CreateCategoryDto.serializer(), dto)
@@ -40,9 +40,8 @@ class AdminCategoryManager(
                 .post(RequestBody.create(jsonType, json))
                 .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
-        return httpRequester.httpRequest(request) { response: Response ->
+        return httpRequester.httpRequestAsync(request) { response: Response ->
             logger.debug("Add category response", response.body()?.string())
-            true
         }
     }
 }

@@ -9,6 +9,7 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.analytics.AnalyticsLogger
 import igrek.songbook.info.errorcheck.SafeClickListener
+import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -17,7 +18,9 @@ import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.system.SoftKeyboardService
-import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class PublishSongLayoutController(
         layoutController: LazyInject<LayoutController> = appFactory.layoutController,
@@ -97,12 +100,19 @@ class PublishSongLayoutController(
             sendMessageService.sendContactMessage(message = content, origin = MessageOrigin.SONG_PUBLISH,
                     category = category, title = title, author = author, subject = subject,
                     originalSongId = originalSongId)
-            antechamberService.createAntechamberSong(publishSong!!)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
+
+            publishSong?.let { publishSong ->
+                GlobalScope.launch(Dispatchers.Main) {
+                    val result = antechamberService.createAntechamberSong(publishSong).await()
+                    result.fold(onSuccess = {
                         uiInfoService.showInfo(R.string.antechamber_new_song_sent)
-                    }, {})
-            publishSong?.let { AnalyticsLogger().logEventSongPublished(it) }
+                    }, onFailure = { e ->
+                        logger.error(e)
+                    })
+                }
+
+                AnalyticsLogger().logEventSongPublished(publishSong)
+            }
         }
     }
 

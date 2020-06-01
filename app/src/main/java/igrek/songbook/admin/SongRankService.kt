@@ -6,7 +6,7 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.general.model.Song
-import io.reactivex.Observable
+import kotlinx.coroutines.Deferred
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
@@ -32,7 +32,7 @@ class SongRankService(
     private val jsonType = MediaType.parse("application/json; charset=utf-8")
     private val jsonSerializer = Json(JsonConfiguration.Stable)
 
-    fun updateRank(song: Song, rank: Double?): Observable<Boolean> {
+    fun updateRank(song: Song, rank: Double?): Deferred<Result<Unit>> {
         song.rank = rank
         logger.info("Updating song rank: $song")
         val dto = SongRankUpdateDto(rank = song.rank)
@@ -42,9 +42,8 @@ class SongRankService(
                 .put(RequestBody.create(jsonType, json))
                 .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
-        return httpRequester.httpRequest(request) { response: Response ->
+        return httpRequester.httpRequestAsync(request) { response: Response ->
             logger.debug("Update rank response", response.body()?.string())
-            true
         }
     }
 

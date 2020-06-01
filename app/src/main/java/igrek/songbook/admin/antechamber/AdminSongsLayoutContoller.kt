@@ -18,6 +18,10 @@ import igrek.songbook.songpreview.SongOpener
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class AdminSongsLayoutContoller(
         uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
@@ -58,9 +62,15 @@ class AdminSongsLayoutContoller(
         subscriptions.clear()
         subscriptions.add(fetchRequestSubject
                 .observeOn(AndroidSchedulers.mainThread())
-                .flatMap { antechamberService.downloadSongs() }
-                .subscribe { downloadedSongs ->
-                    experimentalSongs = downloadedSongs.toMutableList()
+                .subscribe {
+                    GlobalScope.launch(Dispatchers.Main) {
+                        val result = antechamberService.downloadSongs().await()
+                        result.fold(onSuccess = { downloadedSongs ->
+                            experimentalSongs = downloadedSongs.toMutableList()
+                        }, onFailure = { e ->
+                            logger.error(e)
+                        })
+                    }
                 })
     }
 
@@ -70,16 +80,19 @@ class AdminSongsLayoutContoller(
 
     private fun downloadSongs() {
         uiInfoService.showInfoIndefinite(R.string.admin_downloading_antechamber)
-        antechamberService.downloadSongs()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ downloadedSongs ->
+        runBlocking {
+            GlobalScope.launch(Dispatchers.Main) {
+                val result = antechamberService.downloadSongs().await()
+                result.fold(onSuccess = { downloadedSongs ->
                     experimentalSongs = downloadedSongs.toMutableList()
                     uiInfoService.showInfo(R.string.admin_downloaded_antechamber)
                     updateItemsList()
-                }, { error ->
-                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
+                }, onFailure = { e ->
+                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, e.message)
                     uiInfoService.showInfoIndefinite(message)
                 })
+            }
+        }
     }
 
     private fun onSongClick(song: Song) {
@@ -98,16 +111,17 @@ class AdminSongsLayoutContoller(
         val message1 = uiResourceService.resString(R.string.admin_antechamber_confirm_delete, song.toString())
         ConfirmDialogBuilder().confirmAction(message1) {
             uiInfoService.showInfoIndefinite(R.string.admin_sending)
-            antechamberService.deleteAntechamberSong(song)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        experimentalSongs.remove(song)
-                        uiInfoService.showInfo(R.string.admin_success)
-                        updateItemsList()
-                    }, { error ->
-                        val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
-                        uiInfoService.showInfoIndefinite(message)
-                    })
+            GlobalScope.launch(Dispatchers.Main) {
+                val result = antechamberService.deleteAntechamberSong(song).await()
+                result.fold(onSuccess = {
+                    experimentalSongs.remove(song)
+                    uiInfoService.showInfo(R.string.admin_success)
+                    updateItemsList()
+                }, onFailure = { e ->
+                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, e.message)
+                    uiInfoService.showInfoIndefinite(message)
+                })
+            }
         }
     }
 

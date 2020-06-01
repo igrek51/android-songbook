@@ -14,8 +14,10 @@ import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Category
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import okhttp3.MediaType
@@ -53,12 +55,12 @@ class AntechamberService(
     private val jsonType = MediaType.parse("application/json; charset=utf-8")
     private val jsonSerializer = Json(JsonConfiguration.Stable)
 
-    fun downloadSongs(): Observable<List<Song>> {
+    fun downloadSongs(): Deferred<Result<List<Song>>> {
         val request: Request = Request.Builder()
                 .url(allSongsUrl)
                 .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
-        return httpRequester.httpRequest(request) { response: Response ->
+        return httpRequester.httpRequestAsync(request) { response: Response ->
             val json = response.body()?.string() ?: ""
             val allDtos: AllAntechamberSongsDto = jsonSerializer.parse(AllAntechamberSongsDto.serializer(), json)
             val antechamberSongs: List<Song> = allDtos.toModel()
@@ -66,7 +68,7 @@ class AntechamberService(
         }
     }
 
-    private fun updateAntechamberSong(song: Song): Observable<Boolean> {
+    private fun updateAntechamberSong(song: Song): Deferred<Result<Unit>> {
         val antechamberSongDto = AntechamberSongDto.fromModel(song)
         val json = jsonSerializer.stringify(AntechamberSongDto.serializer(), antechamberSongDto)
         val request: Request = Request.Builder()
@@ -74,10 +76,10 @@ class AntechamberService(
                 .put(RequestBody.create(jsonType, json))
                 .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
-        return httpRequester.httpRequest(request) { true }
+        return httpRequester.httpRequestAsync(request) { }
     }
 
-    fun createAntechamberSong(song: Song): Observable<Boolean> {
+    fun createAntechamberSong(song: Song): Deferred<Result<Unit>> {
         logger.info("Sending new antechamber song")
         val antechamberSongDto = AntechamberSongDto.fromModel(song)
         antechamberSongDto.id = null
@@ -86,19 +88,19 @@ class AntechamberService(
                 .url(allSongsUrl)
                 .post(RequestBody.create(jsonType, json))
                 .build()
-        return httpRequester.httpRequest(request) { true }
+        return httpRequester.httpRequestAsync(request) { }
     }
 
-    fun deleteAntechamberSong(song: Song): Observable<Boolean> {
+    fun deleteAntechamberSong(song: Song): Deferred<Result<Unit>> {
         val request: Request = Request.Builder()
                 .url(specificSongUrl(song.id))
                 .delete()
                 .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
-        return httpRequester.httpRequest(request) { true }
+        return httpRequester.httpRequestAsync(request) { }
     }
 
-    fun updatePublicSong(song: Song): Observable<Boolean> {
+    fun updatePublicSong(song: Song): Deferred<Result<Unit>> {
         logger.info("Updating public song: $song")
         song.versionNumber++
         song.updateTime = Date().time
@@ -109,13 +111,12 @@ class AntechamberService(
                 .put(RequestBody.create(jsonType, json))
                 .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
-        return httpRequester.httpRequest(request) { response: Response ->
+        return httpRequester.httpRequestAsync(request) { response: Response ->
             logger.debug("Update response", response.body()?.string())
-            true
         }
     }
 
-    private fun approveAntechamberSong(song: Song): Observable<Boolean> {
+    private fun approveAntechamberSong(song: Song): Deferred<Result<Unit>> {
         logger.info("Approving antechamber song: $song")
         val dto = ChordsSongDto.fromModel(song)
         dto.id = null
@@ -127,9 +128,8 @@ class AntechamberService(
                 .post(RequestBody.create(jsonType, json))
                 .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
-        return httpRequester.httpRequest(request) { response: Response ->
+        return httpRequester.httpRequestAsync(request) { response: Response ->
             logger.debug("Approve response", response.body()?.string())
-            true
         }
     }
 
@@ -140,28 +140,34 @@ class AntechamberService(
 
     fun updateAntechamberSongUI(song: Song) {
         uiInfoService.showInfoIndefinite(R.string.admin_sending)
-        updateAntechamberSong(song)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    uiInfoService.showInfo(R.string.admin_success)
-                }, { error ->
-                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
-                    uiInfoService.showInfoIndefinite(message)
-                })
+
+        val deferred = updateAntechamberSong(song)
+        GlobalScope.launch(Dispatchers.Main) {
+            val result = deferred.await()
+            result.fold(onSuccess = {
+                uiInfoService.showInfo(R.string.admin_success)
+            }, onFailure = { e ->
+                val message = uiResourceService.resString(R.string.admin_communication_breakdown, e.message)
+                uiInfoService.showInfoIndefinite(message)
+            })
+        }
     }
 
     fun approveCustomSongUI(song: Song) {
         val message1 = uiResourceService.resString(R.string.admin_antechamber_confirm_approve, song.toString())
         ConfirmDialogBuilder().confirmAction(message1) {
             uiInfoService.showInfoIndefinite(R.string.admin_sending)
-            approveAntechamberSong(song)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        uiInfoService.showInfo(R.string.admin_success)
-                    }, { error ->
-                        val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
-                        uiInfoService.showInfoIndefinite(message)
-                    })
+
+            val deferred = approveAntechamberSong(song)
+            GlobalScope.launch(Dispatchers.Main) {
+                val result = deferred.await()
+                result.fold(onSuccess = {
+                    uiInfoService.showInfo(R.string.admin_success)
+                }, onFailure = { e ->
+                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, e.message)
+                    uiInfoService.showInfoIndefinite(message)
+                })
+            }
         }
     }
 
@@ -169,16 +175,18 @@ class AntechamberService(
         val message1 = uiResourceService.resString(R.string.admin_antechamber_confirm_approve, song.toString())
         ConfirmDialogBuilder().confirmAction(message1) {
             uiInfoService.showInfoIndefinite(R.string.admin_sending)
-            approveAntechamberSong(song)
-                    .flatMap { deleteAntechamberSong(song) }
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        uiInfoService.showInfo(R.string.admin_success)
-                        adminSongsLayoutContoller.fetchRequestSubject.onNext(true)
-                    }, { error ->
-                        val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
-                        uiInfoService.showInfoIndefinite(message)
-                    })
+
+            GlobalScope.launch(Dispatchers.Main) {
+                val result = approveAntechamberSong(song).await()
+                result.map { deleteAntechamberSong(song).await() }
+                result.fold(onSuccess = {
+                    uiInfoService.showInfo(R.string.admin_success)
+                    adminSongsLayoutContoller.fetchRequestSubject.onNext(true)
+                }, onFailure = { e ->
+                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, e.message)
+                    uiInfoService.showInfoIndefinite(message)
+                })
+            }
         }
     }
 
@@ -186,15 +194,17 @@ class AntechamberService(
         val message1 = uiResourceService.resString(R.string.admin_antechamber_confirm_delete, song.toString())
         ConfirmDialogBuilder().confirmAction(message1) {
             uiInfoService.showInfoIndefinite(R.string.admin_sending)
-            deleteAntechamberSong(song)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        uiInfoService.showInfo(R.string.admin_success)
-                        adminSongsLayoutContoller.fetchRequestSubject.onNext(true)
-                    }, { error ->
-                        val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
-                        uiInfoService.showInfoIndefinite(message)
-                    })
+
+            GlobalScope.launch(Dispatchers.Main) {
+                val result = deleteAntechamberSong(song).await()
+                result.fold(onSuccess = {
+                    uiInfoService.showInfo(R.string.admin_success)
+                    adminSongsLayoutContoller.fetchRequestSubject.onNext(true)
+                }, onFailure = { e ->
+                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, e.message)
+                    uiInfoService.showInfoIndefinite(message)
+                })
+            }
         }
     }
 

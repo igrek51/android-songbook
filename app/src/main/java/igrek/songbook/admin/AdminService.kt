@@ -18,7 +18,9 @@ import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.system.SoftKeyboardService
-import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class AdminService(
         navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
@@ -73,14 +75,17 @@ class AdminService(
 
     fun updatePublicSongUi(song: Song) {
         uiInfoService.showInfoIndefinite(R.string.admin_sending)
-        antechamberService.updatePublicSong(song)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    uiInfoService.showInfo(R.string.admin_success)
-                }, { error ->
-                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
-                    uiInfoService.showInfoIndefinite(message)
-                })
+
+        val deferred = antechamberService.updatePublicSong(song)
+        GlobalScope.launch(Dispatchers.Main) {
+            val result = deferred.await()
+            result.fold(onSuccess = {
+                uiInfoService.showInfo(R.string.admin_success)
+            }, onFailure = { e ->
+                val message = uiResourceService.resString(R.string.admin_communication_breakdown, e.message)
+                uiInfoService.showInfoIndefinite(message)
+            })
+        }
     }
 
     fun updateRankDialog(song: Song) {
@@ -133,25 +138,31 @@ class AdminService(
 
     private fun updateRank(song: Song, rank: Double?) {
         uiInfoService.showInfoIndefinite(R.string.admin_sending)
-        songRankService.updateRank(song, rank)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    uiInfoService.showInfo(R.string.admin_success)
-                }, { error ->
-                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
-                    uiInfoService.showInfoIndefinite(message)
-                })
+
+        val deferred = songRankService.updateRank(song, rank)
+        GlobalScope.launch(Dispatchers.Main) {
+            val result = deferred.await()
+            result.fold(onSuccess = {
+                uiInfoService.showInfo(R.string.admin_success)
+            }, onFailure = { e ->
+                val message = uiResourceService.resString(R.string.admin_communication_breakdown, e.message)
+                uiInfoService.showInfoIndefinite(message)
+            })
+        }
     }
 
     private fun createCategory(categoryName: String) {
         uiInfoService.showInfoIndefinite(R.string.admin_sending)
-        adminCategoryManager.createCategory(categoryName)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    uiInfoService.showInfo(R.string.admin_success)
-                }, { error ->
-                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, error.message)
-                    uiInfoService.showInfoIndefinite(message)
-                })
+
+        val deferred = adminCategoryManager.createCategory(categoryName)
+        GlobalScope.launch(Dispatchers.Main) {
+            val result = deferred.await()
+            result.fold(onSuccess = {
+                uiInfoService.showInfo(R.string.admin_success)
+            }, onFailure = { e ->
+                val message = uiResourceService.resString(R.string.admin_communication_breakdown, e.message)
+                uiInfoService.showInfoIndefinite(message)
+            })
+        }
     }
 }
