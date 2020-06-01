@@ -1,6 +1,7 @@
 package igrek.songbook.activity
 
 
+import igrek.songbook.BuildConfig
 import igrek.songbook.admin.AdminService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
@@ -41,11 +42,12 @@ class AppInitializer(
 
     private val logger = LoggerFactory.logger
     private val startingScreen: KClass<out MainLayout> = TopSongsLayoutController::class
+    private val debugInitEnabled = false
 
     fun init() {
-//        if (BuildConfig.DEBUG) {
-//            debugInit()
-//        }
+        if (debugInitEnabled && BuildConfig.DEBUG) {
+            debugInit()
+        }
 
         logger.info("Initializing application...")
 
@@ -55,7 +57,10 @@ class AppInitializer(
         windowManagerService.hideTaskbar()
         layoutController.showLayout(startingScreen)
         songsUpdater.checkUpdateIsAvailable()
+
         adService.initialize()
+        appLanguageService.setLocale() // fix locale after admob init
+
         adminService.init()
         if (isRunningFirstTime())
             firstRunInit()
