@@ -216,8 +216,13 @@ class GoogleSyncManager(
         val client = GoogleSignIn.getClient(activity, signInOptions)
 
         client.signOut().addOnCompleteListener {
+            val signInIntent = client.signInIntent
+            if (signInIntent.action == null) {
+                logger.warn("Google SignInt intent action is null")
+                signInIntent.action = "com.google.android.gms.auth.GOOGLE_SIGN_IN"
+            }
             // The result of the sign-in Intent is handled in onActivityResult.
-            activity.startActivityForResult(client.signInIntent, requestCode)
+            activity.startActivityForResult(signInIntent, requestCode)
         }
     }
 
