@@ -277,7 +277,7 @@ class SettingsFragment(
             if (Build.VERSION.SDK_INT >= 26) {
                 ft.setReorderingAllowed(false)
             }
-            ft.detach(this).attach(this).commit()
+            ft.detach(this).attach(this).commitAllowingStateLoss()
         }
     }
 
