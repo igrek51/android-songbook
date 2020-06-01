@@ -39,6 +39,7 @@ class PreferencesState(
     var keepScreenOn: Boolean by PreferenceDelegate(PreferencesField.KeepScreenOn)
     var anonymousUsageData: Boolean by PreferenceDelegate(PreferencesField.AnonymousUsageData)
     var chordDiagramStyle: ChordDiagramStyle by PreferenceDelegate(PreferencesField.ChordDiagramStyle)
+    var updateDbOnStartup: Boolean by PreferenceDelegate(PreferencesField.UpdateDbOnStartup)
 
 }
 

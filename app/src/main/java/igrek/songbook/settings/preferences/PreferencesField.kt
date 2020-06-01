@@ -87,6 +87,8 @@ enum class PreferencesField constructor(
             deserializer = igrek.songbook.chords.diagram.ChordDiagramStyle.Companion::parseById,
     )),
 
+    UpdateDbOnStartup(true),
+
     ;
 
     constructor(defaultValue: String) : this(StringPreferenceType(defaultValue))

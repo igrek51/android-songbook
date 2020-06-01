@@ -280,7 +280,7 @@
     <string name="empty_playlist_songs">Brak piosenek na playliście</string>
     <string name="nav_latest">Najnowsze piosenki</string>
     <string name="nav_history">Historia</string>
-    <string name="settings_songs_filter">Filtrowanie piosenek</string>
+    <string name="settings_songs_db">Baza piosenek</string>
     <string name="settings_exclude_artists">Ukryj wybrane kategorie</string>
     <string name="settings_toggle_all_languages">Zaznacz / Odznacz wszystkie języki</string>
     <string name="settings_toggle_all_artists">Zaznacz / Odznacz wszystkie kategorie</string>
@@ -384,4 +384,6 @@
     <string name="chord_diagram_find_chord">Podaj nazwę akordu</string>
     <string name="chord_diagram_not_found">Nie znaleziono diagramów dla podanej nazwy akordu</string>
     <string name="nav_chord_diagram">Diagramy akordów</string>
+    <string name="settings_update_db_on_startup">Aktualizuj piosenki przy starcie</string>
+    <string name="settings_update_db_on_startup_hint">Automatycznie pobieraj najnowsze piosenki</string>
 </resources>

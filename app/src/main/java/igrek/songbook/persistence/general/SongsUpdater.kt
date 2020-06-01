@@ -11,6 +11,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.settings.preferences.PreferencesState
 import okhttp3.*
 import java.io.*
 
@@ -19,11 +20,13 @@ class SongsUpdater(
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
         songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
         localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
+        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
     private val okHttpClient by LazyExtractor(okHttpClient)
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val songsRepository by LazyExtractor(songsRepository)
     private val localDbService by LazyExtractor(localDbService)
+    private val preferencesState by LazyExtractor(preferencesState)
 
     private val logger = LoggerFactory.logger
 
@@ -132,7 +135,11 @@ class SongsUpdater(
             logger.debug("DB Update availability check: local: $localVersion, remote: $remoteVersion")
 
             if (localVersion != null && remoteVersion != null && localVersion < remoteVersion) {
-                showUpdateIsAvailable()
+                if (preferencesState.updateDbOnStartup) {
+                    updateSongsDb()
+                } else {
+                    showUpdateIsAvailable()
+                }
             }
         } catch (e: Throwable) {
             logger.error(e)

@@ -289,7 +289,7 @@
     <string name="empty_playlist_songs">No songs on this playlist</string>
     <string name="nav_latest">Latest songs</string>
     <string name="nav_history">History</string>
-    <string name="settings_songs_filter">Songs filtering</string>
+    <string name="settings_songs_db">Songs database</string>
     <string name="settings_exclude_artists">Hide particular categories</string>
     <string name="settings_toggle_all_languages">Toggle all languages</string>
     <string name="settings_toggle_all_artists">Toggle all categories</string>
@@ -410,4 +410,6 @@
     <string name="chord_diagram_find_chord">Enter chord name</string>
     <string name="chord_diagram_not_found">Diagrams not found for given chord name</string>
     <string name="nav_chord_diagram">Chord diagrams</string>
+    <string name="settings_update_db_on_startup">Update songs on startup</string>
+    <string name="settings_update_db_on_startup_hint">Download latest songs automatically</string>
 </resources>

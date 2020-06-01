@@ -111,7 +111,12 @@
             app:iconSpaceReserved="false"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/settings_songs_filter">
+    <PreferenceCategory android:title="@string/settings_songs_db">
+        <SwitchPreference
+            android:key="updateDbOnStartup"
+            android:title="@string/settings_update_db_on_startup"
+            android:summary="@string/settings_update_db_on_startup_hint"
+            app:iconSpaceReserved="false" />
         <MultiSelectListPreference
             android:key="filterLanguages"
             android:title="@string/settings_filter_languages"
