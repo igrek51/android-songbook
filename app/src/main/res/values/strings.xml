@@ -412,4 +412,5 @@
     <string name="nav_chord_diagram">Chord diagrams</string>
     <string name="settings_update_db_on_startup">Update songs on startup</string>
     <string name="settings_update_db_on_startup_hint">Download latest songs automatically</string>
+    <string name="ui_db_has_been_updated">Songs database has been updated.</string>
 </resources>

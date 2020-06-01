@@ -51,7 +51,7 @@ class LatestSongsLayoutController(
 
         layout.findViewById<ImageButton>(R.id.updateLatestSongs)?.let {
             it.setOnClickListener {
-                songsUpdater.updateSongsDb()
+                songsUpdater.updateSongsDb(forced = true)
             }
         }
 

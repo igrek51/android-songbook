@@ -74,7 +74,7 @@ class NavigationMenuController(
         actionsMap[R.id.nav_search] = { layoutController.showLayout(SongSearchLayoutController::class) }
         actionsMap[R.id.nav_favourites] = { layoutController.showLayout(FavouritesLayoutController::class) }
         actionsMap[R.id.nav_playlists] = { layoutController.showLayout(PlaylistLayoutController::class) }
-        actionsMap[R.id.nav_update_db] = { songsUpdater.updateSongsDb() }
+        actionsMap[R.id.nav_update_db] = { songsUpdater.updateSongsDb(forced = true) }
         actionsMap[R.id.nav_custom_songs] = { layoutController.showLayout(CustomSongsListLayoutController::class) }
         actionsMap[R.id.nav_random_song] = { randomSongOpener.openRandomSong() }
         actionsMap[R.id.nav_settings] = { layoutController.showLayout(SettingsLayoutController::class) }

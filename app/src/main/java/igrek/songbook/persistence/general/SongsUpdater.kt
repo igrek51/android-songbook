@@ -36,7 +36,7 @@ class SongsUpdater(
         private const val songsDbVersionUrl = "$apiUrl/songs_version"
     }
 
-    fun updateSongsDb() {
+    fun updateSongsDb(forced: Boolean) {
         val songsDbFile: File = localDbService.songsDbFile
 
         uiInfoService.showInfoIndefinite(R.string.updating_db_in_progress)
@@ -55,7 +55,7 @@ class SongsUpdater(
                 if (!response.isSuccessful) {
                     onErrorReceived("Unexpected code: $response")
                 } else {
-                    onSongDatabaseReceived(response, songsDbFile)
+                    onSongDatabaseReceived(response, songsDbFile, forced)
                 }
             }
         })
@@ -84,7 +84,7 @@ class SongsUpdater(
         }
     }
 
-    private fun onSongDatabaseReceived(response: Response, songsDbFile: File) {
+    private fun onSongDatabaseReceived(response: Response, songsDbFile: File, forcedUpdate: Boolean) {
         try {
             val inputStream: InputStream = response.body()!!.byteStream()
             val input = BufferedInputStream(inputStream)
@@ -111,7 +111,11 @@ class SongsUpdater(
             Handler(Looper.getMainLooper()).post {
                 try {
                     songsRepository.saveDataReloadAllSongs()
-                    uiInfoService.showInfo(R.string.ui_db_is_uptodate)
+                    if (forcedUpdate) {
+                        uiInfoService.showInfo(R.string.ui_db_is_uptodate)
+                    } else {
+                        uiInfoService.showInfo(R.string.ui_db_has_been_updated)
+                    }
                 } catch (t: Throwable) {
                     logger.error("Reloading songs db failed: ${t.message}")
                     uiInfoService.showInfo(R.string.db_update_failed_incompatible)
@@ -136,7 +140,7 @@ class SongsUpdater(
 
             if (localVersion != null && remoteVersion != null && localVersion < remoteVersion) {
                 if (preferencesState.updateDbOnStartup) {
-                    updateSongsDb()
+                    updateSongsDb(forced = false)
                 } else {
                     showUpdateIsAvailable()
                 }
@@ -157,7 +161,7 @@ class SongsUpdater(
         Handler(Looper.getMainLooper()).post {
             uiInfoService.showInfoWithActionIndefinite(R.string.update_is_available, R.string.action_update) {
                 uiInfoService.clearSnackBars()
-                updateSongsDb()
+                updateSongsDb(forced = false)
             }
         }
     }
