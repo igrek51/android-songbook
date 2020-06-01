@@ -266,10 +266,15 @@ class SongPreview(
     fun scrollByPx(px: Float): Boolean {
         val maxAbroad = lineheightPx * 6
         val stopRunawayScrollingMargin = lineheightPx * 5
+        val boundaryHisteresis = 0.5f
         when {
             scroll < 0 -> {
                 val exceeds = -scroll
                 when {
+                    autoscroll.isRunning -> {
+                        scroll = 0f
+                    }
+
                     px < 0 && recyclerScrollState == RecyclerView.SCROLL_STATE_DRAGGING -> {
                         if (exceeds < maxAbroad) {
                             scroll += px * (1f - 1f / maxAbroad * exceeds)
@@ -278,11 +283,14 @@ class SongPreview(
                     px < 0 && recyclerScrollState == RecyclerView.SCROLL_STATE_SETTLING -> {
                         if (exceeds > stopRunawayScrollingMargin) {
                             overlayScrollResetter()
+                            overlayRecyclerView?.smoothScrollBy(0, exceeds.toInt(), OvershootInterpolator(), 200)
+                        } else {
+                            scroll += px * (1f - 1f / maxAbroad * exceeds)
                         }
-                        scroll += px * (1f - 1f / maxAbroad * exceeds)
                     }
                     recyclerScrollState == RecyclerView.SCROLL_STATE_IDLE -> {
-                        overlayRecyclerView?.smoothScrollBy(0, exceeds.toInt(), OvershootInterpolator(), 200)
+                        if (scroll < -boundaryHisteresis)
+                            overlayRecyclerView?.smoothScrollBy(0, exceeds.toInt(), OvershootInterpolator(), 200)
                     }
                     else -> scroll += px
                 }
@@ -299,11 +307,14 @@ class SongPreview(
                     px > 0 && recyclerScrollState == RecyclerView.SCROLL_STATE_SETTLING -> {
                         if (exceeds > stopRunawayScrollingMargin) {
                             overlayScrollResetter()
+                            overlayRecyclerView?.smoothScrollBy(0, -exceeds.toInt(), OvershootInterpolator(), 200)
+                        } else {
+                            scroll += px * (1f - 1f / maxAbroad * exceeds)
                         }
-                        scroll += px * (1f - 1f / maxAbroad * exceeds)
                     }
                     recyclerScrollState == RecyclerView.SCROLL_STATE_IDLE -> {
-                        overlayRecyclerView?.smoothScrollBy(0, -exceeds.toInt(), OvershootInterpolator(), 200)
+                        if (scroll > maxScroll + boundaryHisteresis)
+                            overlayRecyclerView?.smoothScrollBy(0, -exceeds.toInt(), OvershootInterpolator(), 200)
                     }
                     else -> scroll += px
                 }
@@ -313,7 +324,11 @@ class SongPreview(
         }
 
         val scrollable = when {
-            scroll < 0 -> false
+            scroll < 0 -> {
+                if (autoscroll.isRunning)
+                    scroll = 0f
+                false
+            }
             scroll > maxScroll -> false
             else -> true
         }
