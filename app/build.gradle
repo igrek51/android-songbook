@@ -52,9 +52,11 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.sign
+            buildConfigField "java.util.Date", "BUILD_DATE", "new java.util.Date(" + System.currentTimeMillis() + "L)"
         }
         debug {
             minifyEnabled false
+            buildConfigField "java.util.Date", "BUILD_DATE", "new java.util.Date(" + System.currentTimeMillis() + "L)"
         }
     }
     packagingOptions {

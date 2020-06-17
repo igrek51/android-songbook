@@ -51,7 +51,7 @@
     </string>
     <string name="ui_about_content" formatted="false">
         Guitar Songbook
-        \nApplication version: %s (%s)
+        \nApplication version: %s (%s %s)
         \nSongs database version: v%s
         \n
         \nAUTHOR:

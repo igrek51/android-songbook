@@ -9,6 +9,8 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.language.AppLanguageService
+import java.text.SimpleDateFormat
+import java.util.*
 
 class CrashlyticsLogger(
         activity: LazyInject<Activity> = appFactory.activity,
@@ -40,5 +42,11 @@ class CrashlyticsLogger(
         val dbVersionNumber = songsRepository.publicSongsRepo.versionNumber.toString()
         crashlytics.setCustomKey("dbVersion", dbVersionNumber)
         crashlytics.setCustomKey("buildConfig", if (BuildConfig.DEBUG) "debug" else "release") // build config
+        crashlytics.setCustomKey("buildDate", BuildConfig.BUILD_DATE.formatYYYMMDD())
+    }
+
+    private fun Date.formatYYYMMDD(): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        return dateFormat.format(this)
     }
 }

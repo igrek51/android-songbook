@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import igrek.songbook.BuildConfig
 import igrek.songbook.R
 import igrek.songbook.about.secret.SecretCommandService
 import igrek.songbook.info.UiResourceService
@@ -13,6 +14,8 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.system.PackageInfoService
+import java.text.SimpleDateFormat
+import java.util.*
 
 class AboutLayoutController(
         uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
@@ -29,10 +32,11 @@ class AboutLayoutController(
 
     fun showAbout() {
         val appVersionName = packageInfoService.versionName
+        val buildDate = BuildConfig.BUILD_DATE.formatYYYMMDD()
         val appVersionCode = packageInfoService.versionCode.toString()
         val dbVersionNumber = songsRepository.publicSongsRepo.versionNumber.toString()
         val title = uiResourceService.resString(R.string.nav_about)
-        val message = uiResourceService.resString(R.string.ui_about_content, appVersionName, appVersionCode, dbVersionNumber)
+        val message = uiResourceService.resString(R.string.ui_about_content, appVersionName, appVersionCode, buildDate, dbVersionNumber)
 
         showDialogWithActions(title, message)
     }
@@ -74,7 +78,11 @@ class AboutLayoutController(
             activity.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + activity
                     .packageName)))
         }
+    }
 
+    private fun Date.formatYYYMMDD(): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        return dateFormat.format(this)
     }
 
 }
