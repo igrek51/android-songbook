@@ -33,7 +33,7 @@ class AdService(
 
     init {
         requestAdViewSubject
-                .throttleFirst(60, TimeUnit.SECONDS)
+                .throttleFirst(120, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     requestAdRefresh()
