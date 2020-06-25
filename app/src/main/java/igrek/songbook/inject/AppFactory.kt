@@ -45,6 +45,7 @@ import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.preferences.SharedPreferencesService
 import igrek.songbook.settings.sync.GoogleSyncManager
 import igrek.songbook.settings.theme.LyricsThemeService
+import igrek.songbook.share.ScreenShareLayoutController
 import igrek.songbook.songpreview.SongDetailsService
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController
@@ -146,4 +147,5 @@ class AppFactory(
     val songRankService = SingletonInject { SongRankService() }
     val clipboardManager = SingletonInject { ClipboardManager() }
     val adminCategoryManager = SingletonInject { AdminCategoryManager() }
+    val shareViewLayoutController = SingletonInject { ScreenShareLayoutController() }
 }

@@ -21,6 +21,7 @@ import igrek.songbook.send.ContactLayoutController
 import igrek.songbook.send.MissingSongLayoutController
 import igrek.songbook.send.PublishSongLayoutController
 import igrek.songbook.settings.SettingsLayoutController
+import igrek.songbook.share.ScreenShareLayoutController
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.favourite.FavouritesLayoutController
 import igrek.songbook.songselection.history.OpenHistoryLayoutController
@@ -51,6 +52,7 @@ class LayoutController(
         missingSongLayoutController: LazyInject<MissingSongLayoutController> = appFactory.missingSongLayoutController,
         publishSongLayoutController: LazyInject<PublishSongLayoutController> = appFactory.publishSongLayoutController,
         adminSongsLayoutContoller: LazyInject<AdminSongsLayoutContoller> = appFactory.adminSongsLayoutContoller,
+        screenShareLayoutController: LazyInject<ScreenShareLayoutController> = appFactory.shareViewLayoutController,
 ) {
     private val activity by LazyExtractor(activity)
     private val navigationMenuController by LazyExtractor(navigationMenuController)
@@ -72,6 +74,7 @@ class LayoutController(
     private val missingSongLayoutController by LazyExtractor(missingSongLayoutController)
     private val publishSongLayoutController by LazyExtractor(publishSongLayoutController)
     private val adminSongsLayoutContoller by LazyExtractor(adminSongsLayoutContoller)
+    private val shareViewLayoutController by LazyExtractor(screenShareLayoutController)
 
     private lateinit var mainContentLayout: CoordinatorLayout
     private var currentLayout: MainLayout? = null
@@ -104,6 +107,7 @@ class LayoutController(
                 MissingSongLayoutController::class to missingSongLayoutController,
                 PublishSongLayoutController::class to publishSongLayoutController,
                 AdminSongsLayoutContoller::class to adminSongsLayoutContoller,
+                ScreenShareLayoutController::class to shareViewLayoutController,
         )
     }
 

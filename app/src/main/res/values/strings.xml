@@ -413,4 +413,5 @@
     <string name="settings_update_db_on_startup">Update songs on startup</string>
     <string name="settings_update_db_on_startup_hint">Download latest songs automatically</string>
     <string name="ui_db_has_been_updated">Songs database has been updated.</string>
+    <string name="nav_screen_share">Screen Share</string>
 </resources>

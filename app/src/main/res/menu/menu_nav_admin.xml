@@ -63,6 +63,10 @@
             android:id="@+id/nav_chord_diagram"
             android:icon="@drawable/grid"
             android:title="@string/nav_chord_diagram" />
+        <item
+            android:id="@+id/nav_screen_share"
+            android:icon="@drawable/sync"
+            android:title="@string/nav_screen_share" />
     </group>
     <group
         android:id="@+id/nav_group4"
