@@ -14,11 +14,21 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.ActivityCompat
 import igrek.songbook.info.logger.LoggerFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.*
 
 
 class BluetoothService(private val activity: Activity) {
+
+    companion object {
+        private val BT_MODULE_UUID = UUID.fromString("eb5d5f8c-8a33-465d-aaec-3c2e36cb5490")
+
+        private const val REQUEST_ENABLE_BT = 20
+    }
+
     var bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     private var mBluetoothSocketStream // bluetooth background worker thread to send and receive data
             : BluetoothSocketStream? = null
@@ -34,55 +44,45 @@ class BluetoothService(private val activity: Activity) {
         if (!bluetoothAdapter.isEnabled) {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             activity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
-            LoggerFactory.logger.debug("Bluetooth enabled")
             LoggerFactory.logger.debug("Bluetooth turned on")
         } else {
             LoggerFactory.logger.debug("Bluetooth is already on")
         }
     }
 
-    //	@Override
-    fun onActivityResult(requestCode: Int, resultCode: Int, Data: Intent?) {
-        if (requestCode == REQUEST_ENABLE_BT) {
-            if (resultCode == Activity.RESULT_OK) {
-                LoggerFactory.logger.debug("Enabled")
-            } else {
-                LoggerFactory.logger.debug("Disabled")
-            }
-        }
-    }
-
-    fun bluetoothOff() {
-        bluetoothAdapter.disable() // turn off
-        LoggerFactory.logger.debug("Bluetooth disabled")
-    }
-
     fun discover() {
-        // Check if the device is already discovering
         if (bluetoothAdapter.isDiscovering) {
-            bluetoothAdapter.cancelDiscovery()
-            LoggerFactory.logger.debug("Discovery stopped")
+            LoggerFactory.logger.debug("Discovery already started")
+        }
+
+        if (bluetoothAdapter.isEnabled) {
+            LoggerFactory.logger.debug("Starting discovery")
+            bluetoothAdapter.startDiscovery()
+            activity.registerReceiver(blReceiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
+            activity.registerReceiver(blReceiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED))
+            activity.registerReceiver(blReceiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
         } else {
-            if (bluetoothAdapter.isEnabled) {
-                bluetoothAdapter.startDiscovery()
-                LoggerFactory.logger.debug("Discovery started")
-                activity.registerReceiver(blReceiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
-            } else {
-                LoggerFactory.logger.debug("Bluetooth not on")
-            }
+            LoggerFactory.logger.debug("Bluetooth not on")
         }
     }
 
-    val blReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+    private val blReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            val action = intent.action
-            if (BluetoothDevice.ACTION_FOUND == action) {
-                val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-                // add the name to the list
-                LoggerFactory.logger.debug("""new device discovered
-    ${device.name}
-    ${device.address}
-    """.trimIndent())
+            when (intent.action) {
+                BluetoothDevice.ACTION_FOUND -> {
+                    val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+                    // add the name to the list
+                    LoggerFactory.logger.debug("""new device discovered
+                        ${device.name}
+                        ${device.address}
+                        """.trimIndent())
+                }
+                BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
+                    LoggerFactory.logger.debug("Discovery started")
+                }
+                BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
+                    LoggerFactory.logger.debug("Discovery finished")
+                }
             }
         }
     }
@@ -100,81 +100,70 @@ class BluetoothService(private val activity: Activity) {
     }
 
     fun connect() {
+        bluetoothAdapter.cancelDiscovery()
+
         val address = "14:DD:A9:66:6C:61"
         LoggerFactory.logger.debug("Connecting")
 
-        object : Thread() {
-            override fun run() {
-                val mBTSocket: BluetoothSocket
+        GlobalScope.launch(Dispatchers.IO) {
+            val mBTSocket: BluetoothSocket
 
-                val device = bluetoothAdapter.getRemoteDevice(address)
-                try {
-                    mBTSocket = createBluetoothSocket(device)
-                } catch (e: IOException) {
-                    LoggerFactory.logger.error("Socket creation failed", e)
-                    return
-                }
-                LoggerFactory.logger.debug("socket created")
-                // Establish the Bluetooth socket connection.
-                try {
-                    mBTSocket.connect()
-                    LoggerFactory.logger.debug("socket connected")
-                } catch (e: IOException) {
-                    try {
-                        LoggerFactory.logger.error("socket connection failed", e)
-                        mBTSocket.close()
-                        return
-                    } catch (e2: IOException) {
-                        //insert code to deal with this
-                        LoggerFactory.logger.debug("Socket closing failed")
-                    }
-                }
-                mBluetoothSocketStream = BluetoothSocketStream(mBTSocket)
-                mBluetoothSocketStream?.start()
+            val device = bluetoothAdapter.getRemoteDevice(address)
+            try {
+                mBTSocket = createBluetoothSocket(device)
+            } catch (e: IOException) {
+                LoggerFactory.logger.error("Socket creation failed", e)
+                return@launch
             }
-        }.start()
+            LoggerFactory.logger.debug("socket created")
+
+            try {
+                mBTSocket.connect()
+                LoggerFactory.logger.debug("socket connected")
+            } catch (e: IOException) {
+                try {
+                    LoggerFactory.logger.error("socket connection failed", e)
+                    mBTSocket.close()
+                    return@launch
+                } catch (e2: IOException) {
+                    //insert code to deal with this
+                    LoggerFactory.logger.debug("Socket closing failed")
+                }
+            }
+            mBluetoothSocketStream = BluetoothSocketStream(mBTSocket)
+            mBluetoothSocketStream?.start()
+        }
     }
 
     fun send() {
         mBluetoothSocketStream?.write("Hello dupa!")
     }
 
-    inner class BluetoothClassicServer(uuid: UUID?, mBTAdapter: BluetoothAdapter) : Thread() {
-        private var serverSocket: BluetoothServerSocket? = null
+    inner class BluetoothListenServer(private val uuid: UUID?, private val bluetoothAdapter: BluetoothAdapter) : Thread() {
         override fun run() {
+            val serverSocket: BluetoothServerSocket = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord("Songbook", uuid)
             var socket: BluetoothSocket? = null
             while (true) {
                 var macAddress: String?
                 try {
-                    LoggerFactory.logger.debug("Bluetooth Classic server is listening for a client")
+                    LoggerFactory.logger.debug("Bluetooth server is listening for a client")
                     // This will block until there is a connection
-                    socket = serverSocket!!.accept()
+                    socket = serverSocket.accept()
+
                     LoggerFactory.logger.debug("socket accepted")
                     macAddress = socket.remoteDevice.address
                     LoggerFactory.logger.debug("accepted $macAddress")
                     mBluetoothSocketStream = BluetoothSocketStream(socket)
                     mBluetoothSocketStream?.start()
                 } catch (connectException: IOException) {
-                    LoggerFactory.logger.error("Failed to start a Bluetooth Classic connection as a server", connectException)
-                    try {
-                        socket?.close()
-                    } catch (closeException: IOException) {
-                        LoggerFactory.logger.error("Failed to close a Bluetooth Classic connection as a server", closeException)
-                    }
+                    LoggerFactory.logger.error("Failed to start a Bluetooth connection as a server", connectException)
+                    socket?.close()
+                    break
                 }
-            }
-        }
-
-        init {
-            try {
-                serverSocket = mBTAdapter.listenUsingInsecureRfcommWithServiceRecord("Songbook", uuid)
-            } catch (e: IOException) {
-                LoggerFactory.logger.error("Failed to set up Bluetooth Classic connection as a server", e)
             }
         }
     }
 
-    @Throws(IOException::class)
     private fun createBluetoothSocket(device: BluetoothDevice): BluetoothSocket {
         return try {
             device.createInsecureRfcommSocketToServiceRecord(BT_MODULE_UUID)
@@ -185,14 +174,8 @@ class BluetoothService(private val activity: Activity) {
     }
 
     fun listen() {
+        bluetoothAdapter.cancelDiscovery()
         LoggerFactory.logger.debug("starting BT server...")
-        BluetoothClassicServer(BT_MODULE_UUID, bluetoothAdapter).start()
-    }
-
-    companion object {
-        private val BT_MODULE_UUID = UUID.fromString("eb5d5f8c-8a33-465d-aaec-3c2e36cb5490") // "random" unique identifier
-
-        // #defines for identifying shared types between calling functions
-        private const val REQUEST_ENABLE_BT = 1 // used to identify adding bluetooth names
+        BluetoothListenServer(BT_MODULE_UUID, bluetoothAdapter).start()
     }
 }
