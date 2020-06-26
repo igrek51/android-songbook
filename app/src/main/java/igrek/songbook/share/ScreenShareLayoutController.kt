@@ -6,7 +6,6 @@ import igrek.songbook.R
 import igrek.songbook.layout.InflatedLayout
 
 class ScreenShareLayoutController(
-
 ) : InflatedLayout(
         _layoutResourceId = R.layout.screen_screen_share
 ) {
@@ -16,32 +15,15 @@ class ScreenShareLayoutController(
     override fun showLayout(layout: View) {
         super.showLayout(layout)
 
-        layout.findViewById<Button>(R.id.onButton)?.setOnClickListener {
+        layout.findViewById<Button>(R.id.hostNewRoomButton)?.setOnClickListener {
             btService.bluetoothOn()
         }
 
-        layout.findViewById<Button>(R.id.discoverableButton)?.setOnClickListener {
-            btService.makeDiscoverable()
-        }
-
-        layout.findViewById<Button>(R.id.discoverButton)?.setOnClickListener {
-            btService.discover()
-        }
-
-        layout.findViewById<Button>(R.id.listButton)?.setOnClickListener {
-            btService.listPairedDevices()
-        }
-
-        layout.findViewById<Button>(R.id.listenButton)?.setOnClickListener {
-            btService.listen()
-        }
-
-        layout.findViewById<Button>(R.id.connectButton)?.setOnClickListener {
-            btService.connectToAll()
-        }
-
-        layout.findViewById<Button>(R.id.sendButton)?.setOnClickListener {
-            btService.send()
+        layout.findViewById<JoinRoomListView>(R.id.itemsListView)?.also {
+            it.onClickCallback = { item ->
+                logger.debug("click: ${item.name}")
+            }
+            it.items = listOf(JoinRoom("dupa"), JoinRoom("two"))
         }
     }
 

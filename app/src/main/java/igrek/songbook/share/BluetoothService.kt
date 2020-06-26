@@ -29,12 +29,18 @@ class BluetoothService(private val activity: Activity) {
         private const val REQUEST_ENABLE_BT = 20
     }
 
-    var bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+    private var bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
     private var mBluetoothSocketStream // bluetooth background worker thread to send and receive data
             : BluetoothSocketStream? = null
     private val discoveredDevices: HashMap<String, BluetoothDevice> = hashMapOf()
 
+    fun deviceName(): String {
+        return bluetoothAdapter.name.orEmpty()
+    }
+
     fun bluetoothOn() {
+        LoggerFactory.logger.debug("device name: ${this.deviceName()}")
+
         // Ask for location permission if not already allowed
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
