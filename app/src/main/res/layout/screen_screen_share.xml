@@ -36,6 +36,13 @@
                 android:text="list" />
 
             <Button
+                android:id="@+id/discoverableButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="make discoverable" />
+
+            <Button
                 android:id="@+id/discoverButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

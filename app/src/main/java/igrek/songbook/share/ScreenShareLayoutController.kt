@@ -20,6 +20,10 @@ class ScreenShareLayoutController(
             btService.bluetoothOn()
         }
 
+        layout.findViewById<Button>(R.id.discoverableButton)?.setOnClickListener {
+            btService.makeDiscoverable()
+        }
+
         layout.findViewById<Button>(R.id.discoverButton)?.setOnClickListener {
             btService.discover()
         }
@@ -33,7 +37,7 @@ class ScreenShareLayoutController(
         }
 
         layout.findViewById<Button>(R.id.connectButton)?.setOnClickListener {
-            btService.connect()
+            btService.connectToAll()
         }
 
         layout.findViewById<Button>(R.id.sendButton)?.setOnClickListener {
