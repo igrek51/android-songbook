@@ -1,5 +1,6 @@
 package igrek.songbook.share
 
-data class JoinRoom(
+data class Room(
         val name: String,
+        val hostAddress: String? = null,
 )

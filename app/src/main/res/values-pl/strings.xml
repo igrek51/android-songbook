@@ -390,4 +390,7 @@
     <string name="screen_share_your_name">Twoje imię:</string>
     <string name="screen_share_host_new_room">Stwórz nowy pokój</string>
     <string name="screen_share_join_room">Dołącz do pokoju:</string>
+    <string name="screen_share_rescan_rooms">Rescan Rooms</string>
+    <string name="screen_share_scanning_devices">Scanning devices...</string>
+    <string name="error_communication_breakdown">Communication breakdown: %s</string>
 </resources>

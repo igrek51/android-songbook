@@ -1,7 +1,5 @@
 package igrek.songbook.share
 
-import android.Manifest
-import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothServerSocket
@@ -10,21 +8,25 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
-import android.os.Build
-import androidx.core.app.ActivityCompat
+import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.info.logger.LoggerFactory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
+import igrek.songbook.util.waitUntil
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
 import java.io.IOException
 import java.util.*
 
 
-class BluetoothService(private val activity: Activity) {
+class BluetoothService(
+        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+) {
+    private val activity by LazyExtractor(appCompatActivity)
 
     companion object {
-        private val BT_MODULE_UUID = UUID.fromString("eb5d5f8c-8a33-465d-aaec-3c2e36cb5490")
+        private val BT_APP_UUID = UUID.fromString("eb5d5f8c-8a33-465d-aaec-3c2e36cb5490")
 
         private const val REQUEST_ENABLE_BT = 20
     }
@@ -34,27 +36,80 @@ class BluetoothService(private val activity: Activity) {
             : BluetoothSocketStream? = null
     private val discoveredDevices: HashMap<String, BluetoothDevice> = hashMapOf()
 
+    private var roomChannel: Channel<Room> = Channel()
+
     fun deviceName(): String {
         return bluetoothAdapter.name.orEmpty()
     }
 
-    fun bluetoothOn() {
-        LoggerFactory.logger.debug("device name: ${this.deviceName()}")
+    fun rescanRooms(): Deferred<Result<Channel<Room>>> {
+        return GlobalScope.async {
+            return@async runCatching {
+                ensureBluetoothEnabled()
 
-        // Ask for location permission if not already allowed
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1)
+                roomChannel.close()
+                roomChannel = Channel()
+
+                bluetoothAdapter.cancelDiscovery()
+                bluetoothAdapter.startDiscovery()
+
+                activity.registerReceiver(discoveryReceiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
+                activity.registerReceiver(discoveryReceiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED))
+                activity.registerReceiver(discoveryReceiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
+
+                return@runCatching roomChannel
             }
         }
+    }
 
-        if (!bluetoothAdapter.isEnabled) {
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            activity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
-            LoggerFactory.logger.debug("Bluetooth turned on")
-        } else {
-            LoggerFactory.logger.debug("Bluetooth is already on")
+    fun rescanRoomsSync() {
+        bluetoothAdapter.startDiscovery()
+
+        activity.registerReceiver(discoveryReceiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
+        activity.registerReceiver(discoveryReceiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED))
+        activity.registerReceiver(discoveryReceiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
+    }
+
+    private val discoveryReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            when (intent.action) {
+                BluetoothDevice.ACTION_FOUND -> {
+                    val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+                    // add the name to the list
+                    LoggerFactory.logger.debug("""new device discovered
+                        ${device.name}
+                        ${device.address}
+                        """.trimIndent())
+                    discoveredDevices[device.address] = device
+
+                    GlobalScope.launch {
+                        roomChannel.send(Room(name = device.name, hostAddress = device.address))
+                    }
+                }
+                BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
+                    LoggerFactory.logger.debug("Discovery started")
+                }
+                BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
+                    roomChannel.close()
+                    LoggerFactory.logger.debug("Discovery finished")
+                }
+            }
         }
+    }
+
+    fun ensureBluetoothEnabled() {
+        if (bluetoothAdapter.isEnabled) {
+            return
+        }
+
+        val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+        activity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+
+        val turnOnResult = waitUntil(retries = 20, delayMs = 250) {
+            bluetoothAdapter.isEnabled
+        }
+        if (!turnOnResult)
+            throw RuntimeException("Bluetooth not accessible")
     }
 
     fun discover() {
@@ -74,27 +129,7 @@ class BluetoothService(private val activity: Activity) {
         }
     }
 
-    private val discoveryReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            when (intent.action) {
-                BluetoothDevice.ACTION_FOUND -> {
-                    val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-                    // add the name to the list
-                    LoggerFactory.logger.debug("""new device discovered
-                        ${device.name}
-                        ${device.address}
-                        """.trimIndent())
-                    discoveredDevices[device.address] = device
-                }
-                BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
-                    LoggerFactory.logger.debug("Discovery started")
-                }
-                BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
-                    LoggerFactory.logger.debug("Discovery finished")
-                }
-            }
-        }
-    }
+
 
     fun listPairedDevices() {
         val mPairedDevices = bluetoothAdapter.bondedDevices
@@ -185,17 +220,17 @@ class BluetoothService(private val activity: Activity) {
 
     private fun createBluetoothSocket(device: BluetoothDevice): BluetoothSocket {
         return try {
-            device.createInsecureRfcommSocketToServiceRecord(BT_MODULE_UUID)
+            device.createInsecureRfcommSocketToServiceRecord(BT_APP_UUID)
         } catch (e: Exception) {
             LoggerFactory.logger.error("Could not create Insecure RFComm Connection", e)
-            device.createRfcommSocketToServiceRecord(BT_MODULE_UUID)
+            device.createRfcommSocketToServiceRecord(BT_APP_UUID)
         }
     }
 
     fun listen() {
         bluetoothAdapter.cancelDiscovery()
         LoggerFactory.logger.debug("starting BT server...")
-        BluetoothListenServer(BT_MODULE_UUID, bluetoothAdapter).start()
+        BluetoothListenServer(BT_APP_UUID, bluetoothAdapter).start()
     }
 
     fun makeDiscoverable() {
