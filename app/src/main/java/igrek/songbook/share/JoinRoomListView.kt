@@ -23,7 +23,7 @@ class JoinRoomListView(
     constructor(context: Context, attrs: AttributeSet) : this(context, attrs, android.R.attr.listViewStyle)
 
     override fun buildView(view: View, item: Room) {
-        view.findViewById<TextView>(R.id.itemLabel)?.text = item.name
+        view.findViewById<TextView>(R.id.itemLabel)?.text = "${item.name} (${item.hostAddress})"
     }
 
     override fun onClick(item: Room) {

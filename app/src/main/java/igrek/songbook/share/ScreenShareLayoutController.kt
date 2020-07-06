@@ -39,36 +39,39 @@ class ScreenShareLayoutController(
         }
 
         layout.findViewById<Button>(R.id.hostNewRoomButton)?.setOnClickListener {
-//           TODO bluetoothService.bluetoothOn()
+            bluetoothService.hostServer()
+            bluetoothService.makeDiscoverable()
         }
 
         joinRoomListView = layout.findViewById<JoinRoomListView>(R.id.itemsListView)?.also {
             it.onClickCallback = { item ->
                 logger.debug("click: ${item.name}")
             }
-            it.items = listOf(Room("dupa"), Room("two"))
+        }
+
+        layout.findViewById<Button>(R.id.scanRoomsButtton)?.setOnClickListener {
+            scanRooms()
         }
     }
 
     private fun showMoreActions() {
         ContextMenuBuilder().showContextMenu(mutableListOf(
-                ContextMenuBuilder.Action(R.string.screen_share_rescan_rooms) {
-                    rescanRooms()
+                ContextMenuBuilder.Action(R.string.screen_share_scan_rooms) {
+                    scanRooms()
                 },
         ))
     }
 
-    private fun rescanRooms() {
+    private fun scanRooms() {
         joinRoomListView?.items = emptyList()
         uiInfoService.showInfoIndefinite(R.string.screen_share_scanning_devices)
 
         GlobalScope.launch(Dispatchers.Main) {
-            bluetoothService.rescanRooms().await().fold(onSuccess = { roomCh ->
+            bluetoothService.scanRooms().await().fold(onSuccess = { roomCh ->
                 for (room in roomCh) {
-                    uiInfoService.showInfo("new room: $room")
                     joinRoomListView?.items = joinRoomListView?.items.orEmpty() + room
                 }
-                uiInfoService.showInfo("channel closed")
+                uiInfoService.showInfo("scanning completed")
             }, onFailure = { e ->
                 uiInfoService.showInfoIndefinite(R.string.error_communication_breakdown, e.message.orEmpty())
                 logger.error(e)

@@ -1,6 +1,7 @@
 package igrek.songbook.info
 
 import android.app.Activity
+import android.content.res.Resources.NotFoundException
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
@@ -14,7 +15,11 @@ open class UiResourceService(
     private val activity: Activity by LazyExtractor(activity)
 
     open fun resString(resourceId: Int): String {
-        return activity.resources.getString(resourceId)
+        return try {
+            activity.resources.getString(resourceId) ?: ""
+        } catch (e: NotFoundException) {
+            ""
+        }
     }
 
     open fun resString(resourceId: Int, vararg args: Any?): String {
