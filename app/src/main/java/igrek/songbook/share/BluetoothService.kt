@@ -1,5 +1,6 @@
 package igrek.songbook.share
 
+import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothServerSocket
@@ -8,7 +9,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -16,6 +20,7 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.util.waitUntil
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ClosedSendChannelException
 import java.io.IOException
 import java.util.*
 
@@ -26,7 +31,7 @@ class BluetoothService(
     private val activity by LazyExtractor(appCompatActivity)
 
     companion object {
-        private val BT_APP_UUID = UUID.fromString("eb5d5f8c-8a33-465d-aaec-3c2e36cb5490")
+        private val BT_APP_UUID = UUID.fromString("eb5d5f8c-8a33-465d-5151-3c2e36cb5490")
 
         private const val REQUEST_ENABLE_BT = 20
     }
@@ -62,14 +67,6 @@ class BluetoothService(
         }
     }
 
-    fun rescanRoomsSync() {
-        bluetoothAdapter.startDiscovery()
-
-        activity.registerReceiver(discoveryReceiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
-        activity.registerReceiver(discoveryReceiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED))
-        activity.registerReceiver(discoveryReceiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
-    }
-
     private val discoveryReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
@@ -83,7 +80,10 @@ class BluetoothService(
                     discoveredDevices[device.address] = device
 
                     GlobalScope.launch {
-                        roomChannel.send(Room(name = device.name, hostAddress = device.address))
+                        try {
+                            roomChannel.send(Room(name = device.name, hostAddress = device.address))
+                        } catch (e: ClosedSendChannelException) {
+                        }
                     }
                 }
                 BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
@@ -98,6 +98,13 @@ class BluetoothService(
     }
 
     fun ensureBluetoothEnabled() {
+        // Coarse Location permission required to discover devices
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1)
+            }
+        }
+
         if (bluetoothAdapter.isEnabled) {
             return
         }
@@ -109,7 +116,7 @@ class BluetoothService(
             bluetoothAdapter.isEnabled
         }
         if (!turnOnResult)
-            throw RuntimeException("Bluetooth not accessible")
+            throw RuntimeException("Bluetooth not accessible. Try again.")
     }
 
     fun discover() {
@@ -128,7 +135,6 @@ class BluetoothService(
             LoggerFactory.logger.debug("Bluetooth not on")
         }
     }
-
 
 
     fun listPairedDevices() {

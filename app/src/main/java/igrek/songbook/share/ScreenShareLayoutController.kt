@@ -12,6 +12,9 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class ScreenShareLayoutController(
         bluetoothService: LazyInject<BluetoothService> = appFactory.bluetoothService,
@@ -59,21 +62,18 @@ class ScreenShareLayoutController(
         joinRoomListView?.items = emptyList()
         uiInfoService.showInfoIndefinite(R.string.screen_share_scanning_devices)
 
-        bluetoothService.rescanRoomsSync()
-
-//        GlobalScope.launch(Dispatchers.Main) {
-//            val result = bluetoothService.rescanRooms().await()
-//            result.fold(onSuccess = { roomCh ->
-//                for(room in roomCh) {
-//                    uiInfoService.showInfo("new room: $room")
-//                    joinRoomListView?.items = joinRoomListView?.items.orEmpty() + room
-//                }
-//                uiInfoService.showInfo("channel closed")
-//            }, onFailure = { e ->
-//                uiInfoService.showInfoIndefinite(R.string.error_communication_breakdown, e.message.orEmpty())
-//                logger.error(e)
-//            })
-//        }
+        GlobalScope.launch(Dispatchers.Main) {
+            bluetoothService.rescanRooms().await().fold(onSuccess = { roomCh ->
+                for (room in roomCh) {
+                    uiInfoService.showInfo("new room: $room")
+                    joinRoomListView?.items = joinRoomListView?.items.orEmpty() + room
+                }
+                uiInfoService.showInfo("channel closed")
+            }, onFailure = { e ->
+                uiInfoService.showInfoIndefinite(R.string.error_communication_breakdown, e.message.orEmpty())
+                logger.error(e)
+            })
+        }
     }
 
 }
