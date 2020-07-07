@@ -1,9 +1,8 @@
-package igrek.songbook.share
+package igrek.songbook.room
 
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -19,12 +18,12 @@ import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import igrek.songbook.room.HostRoomServer.Companion.BT_APP_UUID
 import igrek.songbook.util.waitUntil
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedSendChannelException
 import java.io.IOException
-import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 
@@ -34,37 +33,39 @@ class BluetoothService(
     private val activity by LazyExtractor(appCompatActivity)
 
     companion object {
-        private val BT_APP_UUID = UUID.fromString("eb5d5f8c-8a33-465d-5151-3c2e36cb5490")
-
         private const val REQUEST_ENABLE_BT = 20
     }
 
     private var bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-    private var mBluetoothSocketStream: BluetoothSocketStream? = null
+    private var mRoomStream: RoomStream? = null
 
     private val discoveredRoomDevices: ConcurrentHashMap<String, BluetoothDevice> = ConcurrentHashMap()
     private var discoveryJobs: MutableList<Job> = mutableListOf()
-    private var roomChannel: Channel<Room> = Channel()
+    private var roomsChannel: Channel<Room> = Channel()
+
+    private var hostRoomServer: HostRoomServer? = null
 
     fun deviceName(): String {
         return bluetoothAdapter.name.orEmpty()
     }
 
-    fun scanRooms(): Deferred<Result<Channel<Room>>> = GlobalScope.async {
-        return@async runCatching {
-            ensureBluetoothEnabled()
+    fun scanRooms(): Deferred<Result<Channel<Room>>> {
+        return GlobalScope.async {
+            return@async runCatching {
+                ensureBluetoothEnabled()
 
-            roomChannel.close()
-            roomChannel = Channel(8)
-            discoveredRoomDevices.clear()
-            discoveryJobs.clear()
+                roomsChannel.close()
+                roomsChannel = Channel(8)
+                discoveredRoomDevices.clear()
+                discoveryJobs.clear()
 
-            launch {
-                startDiscovery()
-                // scanPairedDevices()
+                launch {
+                    startDiscovery()
+                    // scanPairedDevices()
+                }
+
+                return@runCatching roomsChannel
             }
-
-            return@runCatching roomChannel
         }
     }
 
@@ -90,10 +91,10 @@ class BluetoothService(
                     onDeviceDiscovered(intent)
                 }
                 BluetoothAdapter.ACTION_DISCOVERY_STARTED -> {
-                    logger.debug("Discovery started")
+                    logger.debug("BT Discovery started")
                 }
                 BluetoothAdapter.ACTION_DISCOVERY_FINISHED -> {
-                    logger.debug("Discovery finished")
+                    logger.debug("BT Discovery finished")
                     onDiscoveryFinished()
                 }
             }
@@ -105,7 +106,7 @@ class BluetoothService(
             for (job in discoveryJobs) {
                 job.join()
             }
-            roomChannel.close()
+            roomsChannel.close()
         }
     }
 
@@ -121,7 +122,7 @@ class BluetoothService(
                 return@launch
 
             try {
-                scanDeviceSocket(device.address)
+                detectDeviceSocket(device.address)
             } catch (e: Throwable) {
                 logger.warn("device ${device.address} room is unavailable: ${e.message}")
                 return@launch
@@ -129,7 +130,7 @@ class BluetoothService(
 
             discoveredRoomDevices[device.address] = device
             try {
-                roomChannel.send(Room(
+                roomsChannel.send(Room(
                         name = device.name.orEmpty(),
                         hostAddress = device.address,
                 ))
@@ -139,20 +140,20 @@ class BluetoothService(
         discoveryJobs.add(job)
     }
 
-    private fun scanDeviceSocket(address: String) {
+    private fun detectDeviceSocket(address: String) {
         val device = bluetoothAdapter.getRemoteDevice(address)
-        logger.debug("Connecting to ${device.name} ($address)")
+        logger.debug("Detecting socket on ${device.name} ($address)")
 
         val socket: BluetoothSocket = try {
-            device.createInsecureRfcommSocketToServiceRecord(BT_APP_UUID)
+            device.createInsecureRfcommSocketToServiceRecord(HostRoomServer.BT_APP_UUID)
         } catch (e: Exception) {
             logger.warn("Could not create Insecure RFComm Connection", e)
-            device.createRfcommSocketToServiceRecord(BT_APP_UUID)
+            device.createRfcommSocketToServiceRecord(HostRoomServer.BT_APP_UUID)
         }
 
         socket.connect()
 
-        logger.debug("room found on ${device.name} ($address)")
+        logger.debug("Room found on ${device.name} ($address)")
 
         socket.close()
     }
@@ -177,21 +178,24 @@ class BluetoothService(
             throw LocalizedError(R.string.error_bluetooth_not_enabled)
     }
 
-    fun connectToAll() {
-        logger.debug("Connecting to all ${discoveredRoomDevices.size} devices")
-        discoveredRoomDevices.forEach { (macAddress, device) ->
-            connect(macAddress)
+    fun hostRoom(password: String): Deferred<Result<Unit>> {
+        ensureBluetoothEnabled()
+        bluetoothAdapter.cancelDiscovery()
+        makeDiscoverable()
+        hostRoomServer = HostRoomServer(bluetoothAdapter, password).apply {
+            start()
         }
+        return hostRoomServer!!.isInitialized()
     }
 
-    private fun connect(macAddress: String) {
+    fun connectToRoom(room: Room) {
         bluetoothAdapter.cancelDiscovery()
 
         GlobalScope.launch(Dispatchers.IO) {
             val mBTSocket: BluetoothSocket
 
-            val device = bluetoothAdapter.getRemoteDevice(macAddress)
-            logger.debug("Connecting to $macAddress - ${device.name}")
+            val device = bluetoothAdapter.getRemoteDevice(room.hostAddress)
+            logger.debug("Connecting to ${room.hostAddress} - ${device.name}")
             try {
                 mBTSocket = createBluetoothSocket(device)
             } catch (e: IOException) {
@@ -213,43 +217,16 @@ class BluetoothService(
                     logger.debug("Socket closing failed")
                 }
             }
-            mBluetoothSocketStream = BluetoothSocketStream(mBTSocket)
-            mBluetoothSocketStream?.start()
+            mRoomStream = RoomStream(mBTSocket)
+            mRoomStream?.start()
+
+            mRoomStream?.write("Hello dupa!")
         }
     }
 
     fun send() {
         logger.debug("Sending datagram")
-        mBluetoothSocketStream?.write("Hello dupa!")
-    }
-
-    inner class BluetoothListenServer(private val uuid: UUID?, private val bluetoothAdapter: BluetoothAdapter) : Thread() {
-        override fun run() {
-            val serverSocket: BluetoothServerSocket = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord("Songbook", uuid)
-            var socket: BluetoothSocket? = null
-            while (true) {
-                var macAddress: String?
-                try {
-                    logger.debug("Bluetooth server is listening for a client")
-                    try {
-                        // This will block until there is a connection
-                        socket = serverSocket.accept()
-                    } catch (connectException: IOException) {
-                        logger.error("Failed to accept Bluetooth connection", connectException)
-                        break
-                    }
-
-                    logger.debug("socket accepted")
-                    macAddress = socket.remoteDevice.address
-                    logger.debug("accepted $macAddress")
-                    mBluetoothSocketStream = BluetoothSocketStream(socket)
-                    mBluetoothSocketStream?.start()
-                } catch (connectException: IOException) {
-                    logger.error("Failed to start a Bluetooth connection as a server", connectException)
-                    socket?.close()
-                }
-            }
-        }
+        mRoomStream?.write("Hello dupa!")
     }
 
     private fun createBluetoothSocket(device: BluetoothDevice): BluetoothSocket {
@@ -261,21 +238,16 @@ class BluetoothService(
         }
     }
 
-    fun hostServer() {
-        bluetoothAdapter.cancelDiscovery()
-        logger.debug("starting BT server...")
-        BluetoothListenServer(BT_APP_UUID, bluetoothAdapter).start()
-    }
-
     fun makeDiscoverable() {
         if (bluetoothAdapter.scanMode == BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
-            logger.warn("already discoverable")
+            logger.debug("already discoverable")
             return
         }
-        logger.warn("asking for discoverability")
+        logger.debug("asking for discoverability")
         val discoverableIntent: Intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
             putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300)
         }
         activity.startActivity(discoverableIntent)
     }
+
 }

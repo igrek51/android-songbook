@@ -1,4 +1,4 @@
-package igrek.songbook.share
+package igrek.songbook.room
 
 import android.view.View
 import android.widget.Button
@@ -12,6 +12,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
+import igrek.songbook.layout.dialog.InputDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -39,18 +40,32 @@ class ScreenShareLayoutController(
         }
 
         layout.findViewById<Button>(R.id.hostNewRoomButton)?.setOnClickListener {
-            bluetoothService.hostServer()
-            bluetoothService.makeDiscoverable()
+            hostRoom()
         }
 
         joinRoomListView = layout.findViewById<JoinRoomListView>(R.id.itemsListView)?.also {
-            it.onClickCallback = { item ->
-                logger.debug("click: ${item.name}")
+            it.onClickCallback = { room ->
+                logger.debug("connecting: ${room.name}")
+                bluetoothService.connectToRoom(room)
             }
         }
 
         layout.findViewById<Button>(R.id.scanRoomsButtton)?.setOnClickListener {
             scanRooms()
+        }
+    }
+
+    private fun hostRoom() {
+        InputDialogBuilder().input(R.string.screen_share_set_room_password, null) { password ->
+            GlobalScope.launch {
+                bluetoothService.hostRoom(password).await().fold(onSuccess = {
+                    uiInfoService.showInfo("room created")
+                }, onFailure = { e ->
+                    logger.error(e)
+                    uiInfoService.showInfoIndefinite(R.string.error_communication_breakdown, e.message.orEmpty())
+                })
+
+            }
         }
     }
 
@@ -73,8 +88,8 @@ class ScreenShareLayoutController(
                 }
                 uiInfoService.showInfo("scanning completed")
             }, onFailure = { e ->
-                uiInfoService.showInfoIndefinite(R.string.error_communication_breakdown, e.message.orEmpty())
                 logger.error(e)
+                uiInfoService.showInfoIndefinite(R.string.error_communication_breakdown, e.message.orEmpty())
             })
         }
     }

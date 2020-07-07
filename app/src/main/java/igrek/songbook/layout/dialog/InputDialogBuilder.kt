@@ -44,6 +44,7 @@ class InputDialogBuilder(
             alertBuilder.create().show()
         }
 
+        input.requestFocus()
         Handler(Looper.getMainLooper()).post {
             softKeyboardService.showSoftKeyboard(input)
         }

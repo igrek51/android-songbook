@@ -1,4 +1,4 @@
-package igrek.songbook.share
+package igrek.songbook.room
 
 data class Room(
         val name: String,

@@ -35,6 +35,8 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.playlist.PlaylistLayoutController
 import igrek.songbook.playlist.PlaylistService
+import igrek.songbook.room.BluetoothService
+import igrek.songbook.room.ScreenShareLayoutController
 import igrek.songbook.send.*
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
@@ -45,8 +47,6 @@ import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.preferences.SharedPreferencesService
 import igrek.songbook.settings.sync.GoogleSyncManager
 import igrek.songbook.settings.theme.LyricsThemeService
-import igrek.songbook.share.BluetoothService
-import igrek.songbook.share.ScreenShareLayoutController
 import igrek.songbook.songpreview.SongDetailsService
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController

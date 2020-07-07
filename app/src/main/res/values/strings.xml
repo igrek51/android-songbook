@@ -13,6 +13,7 @@
     <string name="nav_about">About</string>
     <string name="nav_contact">Contact</string>
     <string name="nav_help">Help</string>
+    <string name="nav_screen_share">Screen Share</string>
     <string name="ui_help_content">
         SONG SELECTION:
         \nYou can choose a song from a categories tree or search it by title or artist (by any word from name, uppercase doesn\'t matter).
@@ -413,7 +414,6 @@
     <string name="settings_update_db_on_startup">Update songs on startup</string>
     <string name="settings_update_db_on_startup_hint">Download latest songs automatically</string>
     <string name="ui_db_has_been_updated">Songs database has been updated.</string>
-    <string name="nav_screen_share">Screen Share</string>
     <string name="screen_share_your_name">Your name:</string>
     <string name="screen_share_host_new_room">Host new room</string>
     <string name="screen_share_join_room">Join available rooms:</string>
@@ -421,4 +421,5 @@
     <string name="screen_share_scanning_devices">Scanning devices...</string>
     <string name="error_communication_breakdown">Communication breakdown: %s</string>
     <string name="error_bluetooth_not_enabled">Bluetooth is not accessible. Try again.</string>
+    <string name="screen_share_set_room_password">Room password (empty - no password)</string>
 </resources>

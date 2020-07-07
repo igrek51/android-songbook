@@ -11,6 +11,7 @@
     <string name="nav_about">O aplikacji</string>
     <string name="nav_contact">Kontakt</string>
     <string name="nav_help">Pomoc</string>
+    <string name="nav_screen_share">Udostępnianie ekranu</string>
     <string name="ui_help_content">
         WYBÓR PIOSENKI:
         \nMożesz wybrać piosenkę z drzewa kategorii lub wyszukać ją po tytule lub nazwie artysty (po dowolnym słowie z nazwy, wielkość liter i polskie znaki nie mają znaczenia).
@@ -390,8 +391,9 @@
     <string name="screen_share_your_name">Twoje imię:</string>
     <string name="screen_share_host_new_room">Stwórz nowy pokój</string>
     <string name="screen_share_join_room">Dołącz do pokoju:</string>
-    <string name="screen_share_scan_rooms">Rescan Rooms</string>
-    <string name="screen_share_scanning_devices">Scanning devices...</string>
+    <string name="screen_share_scan_rooms">Skanuj pokoje</string>
+    <string name="screen_share_scanning_devices">Skanowanie urządzeń...</string>
     <string name="error_communication_breakdown">Communication breakdown: %s</string>
-    <string name="error_bluetooth_not_enabled">Bluetooth is not accessible. Try again.</string>
+    <string name="error_bluetooth_not_enabled">Bluetooth niedostępny. Spróbuj ponownie.</string>
+    <string name="screen_share_set_room_password">Hasło do pokoju (puste - brak hasła)</string>
 </resources>
