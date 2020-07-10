@@ -1,5 +1,7 @@
 package igrek.songbook.room
 
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -17,11 +19,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class ScreenShareLayoutController(
+class RoomListLayoutController(
         bluetoothService: LazyInject<BluetoothService> = appFactory.bluetoothService,
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
 ) : InflatedLayout(
-        _layoutResourceId = R.layout.screen_screen_share
+        _layoutResourceId = R.layout.screen_rooms_list
 ) {
     private val bluetoothService by LazyExtractor(bluetoothService)
     private val uiInfoService by LazyExtractor(uiInfoService)
@@ -47,6 +49,9 @@ class ScreenShareLayoutController(
             it.onClickCallback = { room ->
                 logger.debug("connecting: ${room.name}")
                 bluetoothService.connectToRoom(room)
+                Handler(Looper.getMainLooper()).post {
+                    layoutController.showLayout(RoomLobbyLayoutController::class)
+                }
             }
         }
 
@@ -60,6 +65,7 @@ class ScreenShareLayoutController(
             GlobalScope.launch {
                 bluetoothService.hostRoom(password).await().fold(onSuccess = {
                     uiInfoService.showInfo("room created")
+                    layoutController.showLayout(RoomLobbyLayoutController::class)
                 }, onFailure = { e ->
                     logger.error(e)
                     uiInfoService.showInfoIndefinite(R.string.error_communication_breakdown, e.message.orEmpty())

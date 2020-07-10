@@ -17,7 +17,8 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.ad.AdService
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.playlist.PlaylistLayoutController
-import igrek.songbook.room.ScreenShareLayoutController
+import igrek.songbook.room.RoomLobbyLayoutController
+import igrek.songbook.room.RoomListLayoutController
 import igrek.songbook.send.ContactLayoutController
 import igrek.songbook.send.MissingSongLayoutController
 import igrek.songbook.send.PublishSongLayoutController
@@ -29,6 +30,7 @@ import igrek.songbook.songselection.latest.LatestSongsLayoutController
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.top.TopSongsLayoutController
 import igrek.songbook.songselection.tree.SongTreeLayoutController
+import kotlinx.coroutines.*
 import kotlin.reflect.KClass
 
 class LayoutController(
@@ -52,7 +54,8 @@ class LayoutController(
         missingSongLayoutController: LazyInject<MissingSongLayoutController> = appFactory.missingSongLayoutController,
         publishSongLayoutController: LazyInject<PublishSongLayoutController> = appFactory.publishSongLayoutController,
         adminSongsLayoutContoller: LazyInject<AdminSongsLayoutContoller> = appFactory.adminSongsLayoutContoller,
-        screenShareLayoutController: LazyInject<ScreenShareLayoutController> = appFactory.shareViewLayoutController,
+        roomListLayoutController: LazyInject<RoomListLayoutController> = appFactory.shareViewLayoutController,
+        roomLobbyLayoutController: LazyInject<RoomLobbyLayoutController> = appFactory.roomLobbyLayoutController,
 ) {
     private val activity by LazyExtractor(activity)
     private val navigationMenuController by LazyExtractor(navigationMenuController)
@@ -74,7 +77,8 @@ class LayoutController(
     private val missingSongLayoutController by LazyExtractor(missingSongLayoutController)
     private val publishSongLayoutController by LazyExtractor(publishSongLayoutController)
     private val adminSongsLayoutContoller by LazyExtractor(adminSongsLayoutContoller)
-    private val shareViewLayoutController by LazyExtractor(screenShareLayoutController)
+    private val shareViewLayoutController by LazyExtractor(roomListLayoutController)
+    private val roomLobbyLayoutController by LazyExtractor(roomLobbyLayoutController)
 
     private lateinit var mainContentLayout: CoordinatorLayout
     private var currentLayout: MainLayout? = null
@@ -107,7 +111,8 @@ class LayoutController(
                 MissingSongLayoutController::class to missingSongLayoutController,
                 PublishSongLayoutController::class to publishSongLayoutController,
                 AdminSongsLayoutContoller::class to adminSongsLayoutContoller,
-                ScreenShareLayoutController::class to shareViewLayoutController,
+                RoomListLayoutController::class to shareViewLayoutController,
+                RoomLobbyLayoutController::class to roomLobbyLayoutController,
         )
     }
 
@@ -130,6 +135,7 @@ class LayoutController(
         }
 
         logger.debug("Showing layout ${layoutClass.simpleName} [${layoutHistory.size} in history]")
+
         showMainLayout(layoutController)
     }
 

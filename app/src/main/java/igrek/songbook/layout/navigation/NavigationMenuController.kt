@@ -21,7 +21,7 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.general.SongsUpdater
 import igrek.songbook.playlist.PlaylistLayoutController
-import igrek.songbook.room.ScreenShareLayoutController
+import igrek.songbook.room.RoomListLayoutController
 import igrek.songbook.send.ContactLayoutController
 import igrek.songbook.send.SendMessageService
 import igrek.songbook.settings.SettingsLayoutController
@@ -90,7 +90,7 @@ class NavigationMenuController(
         actionsMap[R.id.nav_last_song] = { songOpener.openLastSong() }
         actionsMap[R.id.nav_admin_antechamber] = { layoutController.showLayout(AdminSongsLayoutContoller::class) }
         actionsMap[R.id.nav_chord_diagram] = { chordsDiagramsService.showFindChordByNameMenu() }
-        actionsMap[R.id.nav_screen_share] = { layoutController.showLayout(ScreenShareLayoutController::class) }
+        actionsMap[R.id.nav_screen_share] = { layoutController.showLayout(RoomListLayoutController::class) }
     }
 
     fun init() {

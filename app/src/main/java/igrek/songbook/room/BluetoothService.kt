@@ -213,7 +213,6 @@ class BluetoothService(
                     mBTSocket.close()
                     return@launch
                 } catch (e2: IOException) {
-                    //insert code to deal with this
                     logger.debug("Socket closing failed")
                 }
             }
