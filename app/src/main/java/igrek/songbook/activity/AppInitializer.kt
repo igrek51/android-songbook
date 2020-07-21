@@ -17,6 +17,7 @@ import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songselection.top.TopSongsLayoutController
 import igrek.songbook.system.WindowManagerService
+import kotlinx.coroutines.*
 import kotlin.reflect.KClass
 
 class AppInitializer(
@@ -51,22 +52,30 @@ class AppInitializer(
 
         logger.info("Initializing application...")
 
-        appLanguageService.setLocale()
-        songsRepository.init()
-        layoutController.init()
-        windowManagerService.hideTaskbar()
-        layoutController.showLayout(startingScreen)
-        songsUpdater.checkUpdateIsAvailable()
+        runBlocking {
+            GlobalScope.launch {
+                withContext(Dispatchers.Main) {
+                    appLanguageService.setLocale()
+                    songsRepository.init()
+                    layoutController.init()
+                    windowManagerService.hideTaskbar()
+                }
 
-        adService.initialize()
-        appLanguageService.setLocale() // fix locale after admob init
+                layoutController.showLayout(startingScreen).await()
 
-        adminService.init()
-        if (isRunningFirstTime())
-            firstRunInit()
-        reportExecution()
+                songsUpdater.checkUpdateIsAvailable()
 
-        logger.info("Application has been initialized.")
+                adService.initialize()
+                appLanguageService.setLocale() // fix locale after admob init
+
+                adminService.init()
+                if (isRunningFirstTime())
+                    firstRunInit()
+                reportExecution()
+
+                logger.info("Application has been initialized.")
+            }
+        }
     }
 
     private fun firstRunInit() {

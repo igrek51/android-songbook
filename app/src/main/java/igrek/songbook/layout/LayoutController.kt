@@ -17,8 +17,8 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.ad.AdService
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.playlist.PlaylistLayoutController
-import igrek.songbook.room.RoomLobbyLayoutController
 import igrek.songbook.room.RoomListLayoutController
+import igrek.songbook.room.RoomLobbyLayoutController
 import igrek.songbook.send.ContactLayoutController
 import igrek.songbook.send.MissingSongLayoutController
 import igrek.songbook.send.PublishSongLayoutController
@@ -30,7 +30,10 @@ import igrek.songbook.songselection.latest.LatestSongsLayoutController
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.top.TopSongsLayoutController
 import igrek.songbook.songselection.tree.SongTreeLayoutController
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlin.reflect.KClass
 
 class LayoutController(
@@ -116,7 +119,7 @@ class LayoutController(
         )
     }
 
-    fun showLayout(layoutClass: KClass<out MainLayout>, disableReturn: Boolean = false) {
+    fun showLayout(layoutClass: KClass<out MainLayout>, disableReturn: Boolean = false): Deferred<Unit> {
         val layoutController = registeredLayouts[layoutClass]
                 ?: throw IllegalArgumentException("${layoutClass.simpleName} class not registered as layout")
 
@@ -136,7 +139,9 @@ class LayoutController(
 
         logger.debug("Showing layout ${layoutClass.simpleName} [${layoutHistory.size} in history]")
 
-        showMainLayout(layoutController)
+        return GlobalScope.async(Dispatchers.Main) {
+            showMainLayout(layoutController)
+        }
     }
 
     private fun showMainLayout(mainLayout: MainLayout) {

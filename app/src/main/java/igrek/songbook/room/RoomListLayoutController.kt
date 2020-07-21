@@ -1,7 +1,5 @@
 package igrek.songbook.room
 
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -49,7 +47,7 @@ class RoomListLayoutController(
             it.onClickCallback = { room ->
                 logger.debug("connecting: ${room.name}")
                 bluetoothService.connectToRoom(room)
-                Handler(Looper.getMainLooper()).post {
+                GlobalScope.launch(Dispatchers.Main) {
                     layoutController.showLayout(RoomLobbyLayoutController::class)
                 }
             }
@@ -65,7 +63,9 @@ class RoomListLayoutController(
             GlobalScope.launch {
                 bluetoothService.hostRoom(password).await().fold(onSuccess = {
                     uiInfoService.showInfo("room created")
-                    layoutController.showLayout(RoomLobbyLayoutController::class)
+                    GlobalScope.launch(Dispatchers.Main) {
+                        layoutController.showLayout(RoomLobbyLayoutController::class)
+                    }
                 }, onFailure = { e ->
                     logger.error(e)
                     uiInfoService.showInfoIndefinite(R.string.error_communication_breakdown, e.message.orEmpty())

@@ -11,6 +11,7 @@ import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
+import kotlinx.coroutines.runBlocking
 
 class PublishSongService(
         layoutController: LazyInject<LayoutController> = appFactory.layoutController,
@@ -46,7 +47,9 @@ class PublishSongService(
             song.language = SongLanguageDetector().detectLanguageCode(song.content.orEmpty())
         }
 
-        layoutController.showLayout(PublishSongLayoutController::class)
+        runBlocking {
+            layoutController.showLayout(PublishSongLayoutController::class).await()
+        }
         publishSongLayoutController.prepareFields(song)
     }
 
