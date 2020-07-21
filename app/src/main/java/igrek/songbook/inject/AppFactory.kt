@@ -36,8 +36,9 @@ import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.playlist.PlaylistLayoutController
 import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.room.BluetoothService
-import igrek.songbook.room.RoomLobbyLayoutController
 import igrek.songbook.room.RoomListLayoutController
+import igrek.songbook.room.RoomLobby
+import igrek.songbook.room.RoomLobbyLayoutController
 import igrek.songbook.send.*
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
@@ -152,4 +153,5 @@ class AppFactory(
     val shareViewLayoutController = SingletonInject { RoomListLayoutController() }
     val roomLobbyLayoutController = SingletonInject { RoomLobbyLayoutController() }
     val bluetoothService = SingletonInject { BluetoothService() }
+    val roomLobby = SingletonInject { RoomLobby() }
 }

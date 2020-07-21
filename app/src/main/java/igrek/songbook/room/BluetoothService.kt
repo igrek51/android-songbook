@@ -36,14 +36,12 @@ class BluetoothService(
         private const val REQUEST_ENABLE_BT = 20
     }
 
-    private var bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-    private var mRoomStream: RoomStream? = null
+    var bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+    private var clientPeerStream: RoomPeerStream? = null
 
     private val discoveredRoomDevices: ConcurrentHashMap<String, BluetoothDevice> = ConcurrentHashMap()
     private var discoveryJobs: MutableList<Job> = mutableListOf()
     private var roomsChannel: Channel<Room> = Channel()
-
-    private var hostRoomServer: HostRoomServer? = null
 
     fun deviceName(): String {
         return bluetoothAdapter.name.orEmpty()
@@ -158,7 +156,7 @@ class BluetoothService(
         socket.close()
     }
 
-    private fun ensureBluetoothEnabled() {
+    fun ensureBluetoothEnabled() {
         // Coarse Location permission required to discover devices
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -178,54 +176,32 @@ class BluetoothService(
             throw LocalizedError(R.string.error_bluetooth_not_enabled)
     }
 
-    fun hostRoom(password: String): Deferred<Result<Unit>> {
-        ensureBluetoothEnabled()
-        bluetoothAdapter.cancelDiscovery()
-        makeDiscoverable()
-        hostRoomServer = HostRoomServer(bluetoothAdapter, password).apply {
-            start()
-        }
-        return hostRoomServer!!.isInitialized()
-    }
-
-    fun connectToRoom(room: Room) {
+    fun connectToRoomSocket(room: Room): Deferred<Result<BluetoothSocket>> {
         bluetoothAdapter.cancelDiscovery()
 
-        GlobalScope.launch(Dispatchers.IO) {
-            val mBTSocket: BluetoothSocket
+        return GlobalScope.async(Dispatchers.IO) {
+            runCatching {
+                val btSocket: BluetoothSocket
 
-            val device = bluetoothAdapter.getRemoteDevice(room.hostAddress)
-            logger.debug("Connecting to ${room.hostAddress} - ${device.name}")
-            try {
-                mBTSocket = createBluetoothSocket(device)
-            } catch (e: IOException) {
-                logger.error("Socket creation failed to ${device.name}", e)
-                return@launch
-            }
-            logger.debug("socket created to ${device.name}")
-
-            try {
-                mBTSocket.connect()
-                logger.debug("socket connected to ${device.name}")
-            } catch (e: IOException) {
+                val device = bluetoothAdapter.getRemoteDevice(room.hostAddress)
+                logger.debug("Connecting to ${room.hostAddress} - ${device.name}")
                 try {
-                    logger.error("socket connection failed to ${device.name}", e)
-                    mBTSocket.close()
-                    return@launch
-                } catch (e2: IOException) {
-                    logger.debug("Socket closing failed")
+                    btSocket = createBluetoothSocket(device)
+                } catch (e: IOException) {
+                    throw RuntimeException("Socket creation failed to ${device.name}", e)
                 }
+                logger.debug("socket created to ${device.name}")
+
+                try {
+                    btSocket.connect()
+                    logger.debug("socket connected to ${device.name}")
+                } catch (e: IOException) {
+                    btSocket.close()
+                    throw RuntimeException("socket connection failed to ${device.name}", e)
+                }
+                btSocket
             }
-            mRoomStream = RoomStream(mBTSocket)
-            mRoomStream?.start()
-
-            mRoomStream?.write("Hello dupa!")
         }
-    }
-
-    fun send() {
-        logger.debug("Sending datagram")
-        mRoomStream?.write("Hello dupa!")
     }
 
     private fun createBluetoothSocket(device: BluetoothDevice): BluetoothSocket {
@@ -235,6 +211,10 @@ class BluetoothService(
             logger.error("Could not create Insecure RFComm Connection", e)
             device.createRfcommSocketToServiceRecord(BT_APP_UUID)
         }
+    }
+
+    fun cancelDiscovery() {
+        bluetoothAdapter.cancelDiscovery()
     }
 
     fun makeDiscoverable() {

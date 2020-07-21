@@ -48,7 +48,7 @@ class PublishSongService(
         }
 
         runBlocking {
-            layoutController.showLayout(PublishSongLayoutController::class).await()
+            layoutController.showLayout(PublishSongLayoutController::class).join()
         }
         publishSongLayoutController.prepareFields(song)
     }

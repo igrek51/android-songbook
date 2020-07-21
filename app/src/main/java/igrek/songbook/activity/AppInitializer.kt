@@ -59,19 +59,19 @@ class AppInitializer(
                     songsRepository.init()
                     layoutController.init()
                     windowManagerService.hideTaskbar()
+
+                    layoutController.showLayout(startingScreen).join()
+
+                    songsUpdater.checkUpdateIsAvailable()
+
+                    adService.initialize()
+                    appLanguageService.setLocale() // fix locale after admob init
+
+                    adminService.init()
+                    if (isRunningFirstTime())
+                        firstRunInit()
+                    reportExecution()
                 }
-
-                layoutController.showLayout(startingScreen).await()
-
-                songsUpdater.checkUpdateIsAvailable()
-
-                adService.initialize()
-                appLanguageService.setLocale() // fix locale after admob init
-
-                adminService.init()
-                if (isRunningFirstTime())
-                    firstRunInit()
-                reportExecution()
 
                 logger.info("Application has been initialized.")
             }

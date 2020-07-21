@@ -1,16 +1,19 @@
 package igrek.songbook.room
 
 import android.bluetooth.BluetoothSocket
-import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.info.logger.LoggerFactory.logger
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 
-class RoomStream(
+class RoomPeerStream(
         private val remoteSocket: BluetoothSocket,
+        val receivedMsgCh: Channel<String>,
 ) : Thread() {
     private var inStream: InputStream = remoteSocket.inputStream
     private var outStream: OutputStream = remoteSocket.outputStream
@@ -36,7 +39,7 @@ class RoomStream(
 
                     val str = String(buffer, 0, bytes)
                     inBuffer.append(str)
-                    LoggerFactory.logger.debug("received $bytes bytes: $str")
+                    logger.debug("received $bytes bytes: $str")
 
                     findCompleteMessage()
                 }
@@ -48,6 +51,7 @@ class RoomStream(
     }
 
     fun write(input: String) {
+        logger.debug("sending: $input")
         try {
             outStream.write(input.toByteArray())
             outStream.write(0)
@@ -80,5 +84,9 @@ class RoomStream(
 
     private fun processMessage(message: String) {
         logger.debug("processed message: $message (${message.length})")
+        GlobalScope.launch {
+            receivedMsgCh.send(message)
+        }
     }
+
 }

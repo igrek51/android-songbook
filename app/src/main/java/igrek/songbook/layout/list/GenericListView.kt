@@ -55,4 +55,8 @@ abstract class GenericListView<T>(
             onClick(item)
         return true
     }
+
+    fun add(element: T) {
+        items = items + element
+    }
 }

@@ -20,11 +20,13 @@ import kotlinx.coroutines.launch
 class RoomListLayoutController(
         bluetoothService: LazyInject<BluetoothService> = appFactory.bluetoothService,
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
 ) : InflatedLayout(
         _layoutResourceId = R.layout.screen_rooms_list
 ) {
     private val bluetoothService by LazyExtractor(bluetoothService)
     private val uiInfoService by LazyExtractor(uiInfoService)
+    private val roomLobby by LazyExtractor(roomLobby)
 
     private var joinRoomListView: JoinRoomListView? = null
 
@@ -46,10 +48,14 @@ class RoomListLayoutController(
         joinRoomListView = layout.findViewById<JoinRoomListView>(R.id.itemsListView)?.also {
             it.onClickCallback = { room ->
                 logger.debug("connecting: ${room.name}")
-                bluetoothService.connectToRoom(room)
-                GlobalScope.launch(Dispatchers.Main) {
-                    layoutController.showLayout(RoomLobbyLayoutController::class)
-                }
+                roomLobby.joinRoom(room).fold(onSuccess = {
+                    GlobalScope.launch(Dispatchers.Main) {
+                        layoutController.showLayout(RoomLobbyLayoutController::class)
+                    }
+                }, onFailure = { e ->
+                    logger.error(e)
+                    uiInfoService.showInfoIndefinite(R.string.error_communication_breakdown, e.message.orEmpty())
+                })
             }
         }
 
@@ -61,7 +67,7 @@ class RoomListLayoutController(
     private fun hostRoom() {
         InputDialogBuilder().input(R.string.screen_share_set_room_password, null) { password ->
             GlobalScope.launch {
-                bluetoothService.hostRoom(password).await().fold(onSuccess = {
+                roomLobby.hostRoom(password).await().fold(onSuccess = {
                     uiInfoService.showInfo("room created")
                     GlobalScope.launch(Dispatchers.Main) {
                         layoutController.showLayout(RoomLobbyLayoutController::class)
@@ -90,7 +96,7 @@ class RoomListLayoutController(
         GlobalScope.launch(Dispatchers.Main) {
             bluetoothService.scanRooms().await().fold(onSuccess = { roomCh ->
                 for (room in roomCh) {
-                    joinRoomListView?.items = joinRoomListView?.items.orEmpty() + room
+                    joinRoomListView?.add(room)
                 }
                 uiInfoService.showInfo("scanning completed")
             }, onFailure = { e ->

@@ -7,22 +7,19 @@ import igrek.songbook.info.logger.LoggerFactory.logger
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ClosedReceiveChannelException
-import kotlinx.coroutines.channels.receiveOrNull
-import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.channels.*
+import kotlinx.coroutines.launch
 import java.io.IOException
 import java.util.*
 
 class HostRoomServer(
         private val bluetoothAdapter: BluetoothAdapter,
-        private var hostRoomPassword: String = "",
+        private val newClientChannel: SendChannel<RoomPeerStream>,
 ) : Thread() {
 
     val initChannel = Channel<Result<Unit>>(1)
     val closeChannel = Channel<Result<Unit>>(1)
     private var serverSocket: BluetoothServerSocket? = null
-    private var clientStreams: MutableList<RoomStream> = mutableListOf()
 
     companion object {
         val BT_APP_UUID: UUID = UUID.fromString("eb5d5f8c-8a33-465d-5151-3c2e36cb5490")
@@ -52,10 +49,13 @@ class HostRoomServer(
                     val macAddress = socket.remoteDevice.address
                     logger.debug("socket accepted for $macAddress")
 
-                    val clientStream = RoomStream(socket).apply {
+                    val receivedClientMsgCh = Channel<String>(Channel.UNLIMITED)
+                    val clientStream = RoomPeerStream(socket, receivedClientMsgCh).apply {
                         start()
                     }
-                    clientStreams.add(clientStream)
+                    GlobalScope.launch {
+                        newClientChannel.send(clientStream)
+                    }
 
                 } catch (connectException: IOException) {
                     logger.error("Failed to start a Bluetooth connection as a server", connectException)
@@ -80,10 +80,7 @@ class HostRoomServer(
         }
     }
 
-    fun hasPasswordSet(): Boolean = hostRoomPassword.isNotEmpty()
-
     fun close() {
-        clientStreams.forEach { it.close() }
         serverSocket?.close()
     }
 }

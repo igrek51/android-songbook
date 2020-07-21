@@ -12,22 +12,19 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
-import igrek.songbook.layout.dialog.InputDialogBuilder
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.util.*
 
 class RoomLobbyLayoutController(
-        bluetoothService: LazyInject<BluetoothService> = appFactory.bluetoothService,
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
 ) : InflatedLayout(
         _layoutResourceId = R.layout.screen_room_lobby
 ) {
-    private val bluetoothService by LazyExtractor(bluetoothService)
     private val uiInfoService by LazyExtractor(uiInfoService)
+    private val roomLobby by LazyExtractor(roomLobby)
 
     private var chatListView: RoomChatListView? = null
+    private var chatMessageEdit: EditText? = null
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
@@ -42,10 +39,19 @@ class RoomLobbyLayoutController(
             }
             it.items = listOf(
                     ChatMessage("igrek51", "elo mordo", Date()),
-                    ChatMessage("snsv", "no elo", Date()),
             )
         }
 
+        chatMessageEdit = layout.findViewById(R.id.chatMessageEdit)
+
+        layout.findViewById<Button>(R.id.chatSendButton)?.setOnClickListener(SafeClickListener {
+            logger.debug("clicked send")
+            roomLobby.sendMessage(chatMessageEdit?.text?.toString().orEmpty())
+        })
+
+        roomLobby.newMessageListener = { chatMessage: ChatMessage ->
+            chatListView?.add(chatMessage)
+        }
     }
 
     private fun showMoreActions() {

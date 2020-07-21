@@ -30,10 +30,10 @@ import igrek.songbook.songselection.latest.LatestSongsLayoutController
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.top.TopSongsLayoutController
 import igrek.songbook.songselection.tree.SongTreeLayoutController
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
 class LayoutController(
@@ -119,7 +119,7 @@ class LayoutController(
         )
     }
 
-    fun showLayout(layoutClass: KClass<out MainLayout>, disableReturn: Boolean = false): Deferred<Unit> {
+    fun showLayout(layoutClass: KClass<out MainLayout>, disableReturn: Boolean = false): Job {
         val layoutController = registeredLayouts[layoutClass]
                 ?: throw IllegalArgumentException("${layoutClass.simpleName} class not registered as layout")
 
@@ -139,7 +139,7 @@ class LayoutController(
 
         logger.debug("Showing layout ${layoutClass.simpleName} [${layoutHistory.size} in history]")
 
-        return GlobalScope.async(Dispatchers.Main) {
+        return GlobalScope.launch(Dispatchers.Main) {
             showMainLayout(layoutController)
         }
     }
