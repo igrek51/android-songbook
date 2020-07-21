@@ -7,25 +7,22 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 
-class RoomPeerStream(
+class PeerStream(
         private val remoteSocket: BluetoothSocket,
         val receivedMsgCh: Channel<String>,
 ) : Thread() {
     private var inStream: InputStream = remoteSocket.inputStream
     private var outStream: OutputStream = remoteSocket.outputStream
     private var inBuffer = StringBuffer()
-
-    companion object {
-        const val GTR_VERSION = 1
-    }
+    private val writeMutex = Mutex()
 
     override fun run() {
-        // Keep listening to the InputStream until an exception occurs
-        logger.debug("ConnectedThread running")
         while (remoteSocket.isConnected) {
             try {
                 var bytes = inStream.available()
@@ -39,7 +36,6 @@ class RoomPeerStream(
 
                     val str = String(buffer, 0, bytes)
                     inBuffer.append(str)
-                    logger.debug("received $bytes bytes: $str")
 
                     findCompleteMessage()
                 }
@@ -48,14 +44,20 @@ class RoomPeerStream(
                 break
             }
         }
+        close()
     }
 
     fun write(input: String) {
-        logger.debug("sending: $input")
+        if (!isAlive)
+            throw RuntimeException("peer disconnected")
         try {
-            outStream.write(input.toByteArray())
-            outStream.write(0)
-            outStream.flush()
+            runBlocking {
+                writeMutex.withLock {
+                    outStream.write(input.toByteArray())
+                    outStream.write(0)
+                    outStream.flush()
+                }
+            }
         } catch (e: IOException) {
             logger.error(e)
         }
@@ -69,7 +71,7 @@ class RoomPeerStream(
         }
     }
 
-    fun findCompleteMessage() {
+    private fun findCompleteMessage() {
         val firstZero = inBuffer.indexOf(0.toChar())
         if (firstZero == -1)
             return
@@ -87,6 +89,14 @@ class RoomPeerStream(
         GlobalScope.launch {
             receivedMsgCh.send(message)
         }
+    }
+
+    fun remoteAddress(): String {
+        return remoteSocket.remoteDevice.address
+    }
+
+    fun remoteName(): String {
+        return remoteSocket.remoteDevice.name
     }
 
 }

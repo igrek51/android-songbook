@@ -1,6 +1,6 @@
 package igrek.songbook.room
 
-enum class RoomPeer {
+enum class RoomStatus {
 
     Disconnected,
 

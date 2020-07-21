@@ -18,7 +18,7 @@ import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import igrek.songbook.room.HostRoomServer.Companion.BT_APP_UUID
+import igrek.songbook.room.protocol.GtrProtocol.Companion.BT_APP_UUID
 import igrek.songbook.util.waitUntil
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -37,39 +37,31 @@ class BluetoothService(
     }
 
     var bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-    private var clientPeerStream: RoomPeerStream? = null
 
     private val discoveredRoomDevices: ConcurrentHashMap<String, BluetoothDevice> = ConcurrentHashMap()
+    private var discoveredRoomsChannel: Channel<Room> = Channel()
     private var discoveryJobs: MutableList<Job> = mutableListOf()
-    private var roomsChannel: Channel<Room> = Channel()
 
     fun deviceName(): String {
         return bluetoothAdapter.name.orEmpty()
     }
 
-    fun scanRooms(): Deferred<Result<Channel<Room>>> {
+    fun scanRoomsAsync(): Deferred<Result<Channel<Room>>> {
         return GlobalScope.async {
             return@async runCatching {
                 ensureBluetoothEnabled()
 
-                roomsChannel.close()
-                roomsChannel = Channel(8)
+                discoveredRoomsChannel.close()
+                discoveredRoomsChannel = Channel(16)
                 discoveredRoomDevices.clear()
                 discoveryJobs.clear()
 
                 launch {
                     startDiscovery()
-                    // scanPairedDevices()
                 }
 
-                return@runCatching roomsChannel
+                return@runCatching discoveredRoomsChannel
             }
-        }
-    }
-
-    private fun scanPairedDevices() {
-        bluetoothAdapter.bondedDevices.forEach { pairedDevice ->
-            detectRoomOnDevice(pairedDevice)
         }
     }
 
@@ -104,7 +96,7 @@ class BluetoothService(
             for (job in discoveryJobs) {
                 job.join()
             }
-            roomsChannel.close()
+            discoveredRoomsChannel.close()
         }
     }
 
@@ -128,10 +120,11 @@ class BluetoothService(
 
             discoveredRoomDevices[device.address] = device
             try {
-                roomsChannel.send(Room(
+                val room = Room(
                         name = device.name.orEmpty(),
                         hostAddress = device.address,
-                ))
+                )
+                discoveredRoomsChannel.send(room)
             } catch (e: ClosedSendChannelException) {
             }
         }
@@ -143,10 +136,10 @@ class BluetoothService(
         logger.debug("Detecting socket on ${device.name} ($address)")
 
         val socket: BluetoothSocket = try {
-            device.createInsecureRfcommSocketToServiceRecord(HostRoomServer.BT_APP_UUID)
+            device.createInsecureRfcommSocketToServiceRecord(BT_APP_UUID)
         } catch (e: Exception) {
             logger.warn("Could not create Insecure RFComm Connection", e)
-            device.createRfcommSocketToServiceRecord(HostRoomServer.BT_APP_UUID)
+            device.createRfcommSocketToServiceRecord(BT_APP_UUID)
         }
 
         socket.connect()
@@ -176,7 +169,7 @@ class BluetoothService(
             throw LocalizedError(R.string.error_bluetooth_not_enabled)
     }
 
-    fun connectToRoomSocket(room: Room): Deferred<Result<BluetoothSocket>> {
+    fun connectToRoomSocketAsync(room: Room): Deferred<Result<BluetoothSocket>> {
         bluetoothAdapter.cancelDiscovery()
 
         return GlobalScope.async(Dispatchers.IO) {

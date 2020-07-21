@@ -4,26 +4,22 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import igrek.songbook.info.logger.LoggerFactory.logger
+import igrek.songbook.room.protocol.GtrProtocol.Companion.BT_APP_UUID
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.*
 import kotlinx.coroutines.launch
 import java.io.IOException
-import java.util.*
 
-class HostRoomServer(
+class NewClientListener(
         private val bluetoothAdapter: BluetoothAdapter,
-        private val newClientChannel: SendChannel<RoomPeerStream>,
+        private val newClientChannel: SendChannel<PeerStream>,
 ) : Thread() {
 
     val initChannel = Channel<Result<Unit>>(1)
     val closeChannel = Channel<Result<Unit>>(1)
     private var serverSocket: BluetoothServerSocket? = null
-
-    companion object {
-        val BT_APP_UUID: UUID = UUID.fromString("eb5d5f8c-8a33-465d-5151-3c2e36cb5490")
-    }
 
     override fun run() {
         logger.debug("hosting BT room...")
@@ -50,7 +46,7 @@ class HostRoomServer(
                     logger.debug("socket accepted for $macAddress")
 
                     val receivedClientMsgCh = Channel<String>(Channel.UNLIMITED)
-                    val clientStream = RoomPeerStream(socket, receivedClientMsgCh).apply {
+                    val clientStream = PeerStream(socket, receivedClientMsgCh).apply {
                         start()
                     }
                     GlobalScope.launch {

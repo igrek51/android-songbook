@@ -94,7 +94,7 @@ class RoomListLayoutController(
         uiInfoService.showInfoIndefinite(R.string.screen_share_scanning_devices)
 
         GlobalScope.launch(Dispatchers.Main) {
-            bluetoothService.scanRooms().await().fold(onSuccess = { roomCh ->
+            bluetoothService.scanRoomsAsync().await().fold(onSuccess = { roomCh ->
                 for (room in roomCh) {
                     joinRoomListView?.add(room)
                 }
