@@ -73,7 +73,7 @@ class RoomListLayoutController(
                 roomLobby.hostRoom(username, password).await().fold(onSuccess = {
                     uiInfoService.showInfo("room created")
                     GlobalScope.launch(Dispatchers.Main) {
-                        layoutController.showLayout(RoomLobbyLayoutController::class)
+                        layoutController.showLayout(RoomLobbyLayoutController::class).join()
                     }
                 }, onFailure = { e ->
                     logger.error(e)

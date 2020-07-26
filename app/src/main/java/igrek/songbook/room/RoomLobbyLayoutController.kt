@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.TextView
 import igrek.songbook.R
 import igrek.songbook.info.errorcheck.SafeClickListener
 import igrek.songbook.inject.LazyExtractor
@@ -21,6 +22,7 @@ class RoomLobbyLayoutController(
 
     private var chatListView: RoomChatListView? = null
     private var chatMessageEdit: EditText? = null
+    private var membersTextView: TextView? = null
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
@@ -43,15 +45,25 @@ class RoomLobbyLayoutController(
             chatMessageEdit?.setText("")
         })
 
-        roomLobby.newMessageListener = { chatMessage: ChatMessage ->
+        roomLobby.newChatMessageCallback = { chatMessage: ChatMessage ->
             chatListView?.add(chatMessage)
         }
+
+        membersTextView = layout.findViewById(R.id.membersTextView)
+        updateUsernames(roomLobby.usernames)
+        roomLobby.updateUsersCallback = ::updateUsernames
+    }
+
+    private fun updateUsernames(usernames: List<String>) {
+        val usernamesStr = usernames.joinToString("\n") { "- $it" }
+        membersTextView?.text = "Members:\n$usernamesStr"
     }
 
     private fun showMoreActions() {
         ContextMenuBuilder().showContextMenu(mutableListOf(
                 ContextMenuBuilder.Action(R.string.room_close_room) {
-
+                    roomLobby.close()
+                    layoutController.showLayout(RoomListLayoutController::class)
                 },
         ))
     }

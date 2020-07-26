@@ -418,7 +418,7 @@
     <string name="screen_share_host_new_room">Host new room</string>
     <string name="screen_share_join_room">Join available rooms:</string>
     <string name="screen_share_scan_rooms">Scan Rooms</string>
-    <string name="screen_share_scanning_devices">Scanning devices...</string>
+    <string name="screen_share_scanning_devices">Scanning all devices in proximity…</string>
     <string name="error_communication_breakdown">Communication breakdown: %s</string>
     <string name="error_bluetooth_not_enabled">Bluetooth is not accessible. Try again.</string>
     <string name="screen_share_set_room_password">Room password (empty - no password)</string>

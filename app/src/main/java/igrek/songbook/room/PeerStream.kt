@@ -30,7 +30,7 @@ class PeerStream(
                     delay(100L) //pause and wait for rest of data.
                 }
                 if (bytes != 0) {
-                    val buffer = ByteArray(1024)
+                    val buffer = ByteArray(2048)
                     bytes = inStream.available() // how many bytes are ready to be read?
                     bytes = inStream.read(buffer, 0, bytes) // record how many bytes we actually read
 
@@ -50,16 +50,16 @@ class PeerStream(
     fun write(input: String) {
         if (!isAlive)
             throw RuntimeException("peer disconnected")
-        try {
-            runBlocking {
-                writeMutex.withLock {
+        runBlocking {
+            writeMutex.withLock {
+                try {
                     outStream.write(input.toByteArray())
                     outStream.write(0)
                     outStream.flush()
+                } catch (e: IOException) {
+                    logger.error(e)
                 }
             }
-        } catch (e: IOException) {
-            logger.error(e)
         }
     }
 

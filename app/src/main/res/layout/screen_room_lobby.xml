@@ -94,11 +94,12 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/membersTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:gravity="bottom"
-                android:text="Members:\n- You"
+                android:text="Members:"
                 android:textSize="18sp" />
 
             <TextView

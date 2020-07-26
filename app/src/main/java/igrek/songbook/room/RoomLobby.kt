@@ -5,9 +5,7 @@ import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import igrek.songbook.room.protocol.ChatMessageMsg
-import igrek.songbook.room.protocol.GtrMsg
-import igrek.songbook.room.protocol.GtrParser
+import igrek.songbook.room.protocol.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import java.util.*
@@ -18,8 +16,9 @@ class RoomLobby(
     private val bluetoothService by LazyExtractor(bluetoothService)
 
     private var roomStatus: RoomStatus = RoomStatus.Disconnected
-    private var username: String = ""
     private var roomPassword: String = ""
+    private var username: String = ""
+    var usernames: List<String> = emptyList()
 
     private var masterStream: PeerStream? = null
     private val masterMessagesChannel = Channel<String>(Channel.UNLIMITED)
@@ -28,7 +27,8 @@ class RoomLobby(
     private var newSlaveListener: NewClientListener? = null
     private val newSlaveChannel = Channel<PeerStream>(Channel.UNLIMITED)
 
-    var newMessageListener: (ChatMessage) -> Unit = {}
+    var newChatMessageCallback: (ChatMessage) -> Unit = {}
+    var updateUsersCallback: (List<String>) -> Unit = {}
 
     init {
         // new slave connections
@@ -40,7 +40,7 @@ class RoomLobby(
                 launch {
                     for (message in clientStream.receivedMsgCh) {
                         logger.debug("received message from client")
-                        onReceivedFromClient(message, clientStream)
+                        onMasterReceived(message, clientStream)
                     }
                     logger.debug("client channel closed")
                 }
@@ -51,7 +51,7 @@ class RoomLobby(
         GlobalScope.launch {
             for (message in masterMessagesChannel) {
                 logger.debug("received message from host")
-                onReceivedFromMaster(message)
+                onClientReceived(message)
             }
         }
     }
@@ -68,8 +68,9 @@ class RoomLobby(
         bluetoothService.ensureBluetoothEnabled()
         bluetoothService.cancelDiscovery()
         bluetoothService.makeDiscoverable()
-        this.username = username
         this.roomPassword = password
+        this.username = username
+        this.usernames = listOf(username)
         newSlaveListener = NewClientListener(bluetoothService.bluetoothAdapter, newSlaveChannel).apply {
             start()
         }
@@ -86,6 +87,7 @@ class RoomLobby(
                     start()
                 }
                 roomStatus = RoomStatus.Slave
+                sendToMaster(HelloMsg(username))
             }.map { Unit }
         }
     }
@@ -98,7 +100,7 @@ class RoomLobby(
     fun sendToMaster(msg: GtrMsg) {
         when (roomStatus) {
             RoomStatus.Master -> {
-                onReceivedFromClient(msg.toString(), null)
+                onMasterReceived(msg.toString(), null)
             }
             RoomStatus.Slave -> {
                 val strMsg = msg.toString()
@@ -114,17 +116,18 @@ class RoomLobby(
         when (roomStatus) {
             RoomStatus.Master -> {
                 sendToSlaves(msg)
-                onReceivedFromMaster(msg.toString())
+                onClientReceived(msg.toString())
             }
             else -> {
             }
         }
     }
 
-    private fun sendToSlaves(msg: GtrMsg) {
+    fun sendToSlaves(msg: GtrMsg) {
         when (roomStatus) {
             RoomStatus.Master -> {
                 val strMsg = msg.toString()
+                logger.debug("sending to ${slaveStreams.size} slaves: $strMsg")
                 slaveStreams.forEach { clientPeerStream ->
                     // TODO disconnect in case of error
                     clientPeerStream.write(strMsg)
@@ -136,15 +139,21 @@ class RoomLobby(
     }
 
     // receive as Master
-    fun onReceivedFromClient(strMsg: String, clientStream: PeerStream?) {
+    fun onMasterReceived(strMsg: String, clientStream: PeerStream?) {
         val gtrMsg: GtrMsg = GtrParser().parse(strMsg)
         when (gtrMsg) {
             is ChatMessageMsg -> sendToClients(ChatMessageMsg(gtrMsg.author, Date().time, gtrMsg.message))
+            is HelloMsg -> broadcastUsers(gtrMsg.username)
         }
     }
 
+    private fun broadcastUsers(newUser: String) {
+        usernames = usernames + newUser
+        sendToSlaves(RoomUsersMsg(usernames))
+    }
+
     // receive as Slave or Master client
-    fun onReceivedFromMaster(strMsg: String) {
+    fun onClientReceived(strMsg: String) {
         val gtrMsg: GtrMsg = GtrParser().parse(strMsg)
         when (gtrMsg) {
             is ChatMessageMsg -> {
@@ -152,7 +161,13 @@ class RoomLobby(
                 cal.timeInMillis = gtrMsg.timestampMs // in milliseconds
                 val chatMessage = ChatMessage(gtrMsg.author, gtrMsg.message, cal.time)
                 GlobalScope.launch(Dispatchers.Main) {
-                    newMessageListener(chatMessage)
+                    newChatMessageCallback(chatMessage)
+                }
+            }
+            is RoomUsersMsg -> {
+                this.usernames = gtrMsg.usernames
+                GlobalScope.launch(Dispatchers.Main) {
+                    updateUsersCallback(usernames)
                 }
             }
         }
