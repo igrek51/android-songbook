@@ -12,6 +12,7 @@ class HelloMsg(val username: String) : GtrMsg("HELLO")
 class RoomUsersMsg(val usernames: List<String>) : GtrMsg("USERS")
 object HeartbeatRequestMsg : GtrMsg("RUOK")
 object HeartbeatResponseMsg : GtrMsg("IMOK")
+object DisconnectMsg : GtrMsg("BYE")
 
 class GtrProtocol {
     companion object {
@@ -55,6 +56,7 @@ class GtrParser {
             "CHAT" -> parseChatMessage(rest)
             "HELLO" -> HelloMsg(rest)
             "USERS" -> parseRoomUsers(rest)
+            DisconnectMsg.code -> DisconnectMsg
             HeartbeatRequestMsg.code -> HeartbeatRequestMsg
             HeartbeatResponseMsg.code -> HeartbeatResponseMsg
             else -> throw GtrParseError("unknown command")

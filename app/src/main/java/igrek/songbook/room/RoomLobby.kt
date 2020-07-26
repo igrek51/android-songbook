@@ -8,6 +8,8 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.room.protocol.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.util.*
 
 class RoomLobby(
@@ -15,67 +17,81 @@ class RoomLobby(
 ) {
     private val bluetoothService by LazyExtractor(bluetoothService)
 
-    private var roomStatus: RoomStatus = RoomStatus.Disconnected
+    private var peerStatus: PeerStatus = PeerStatus.Disconnected
     private var roomPassword: String = ""
     private var username: String = ""
-    var usernames: List<String> = emptyList()
+    private var clients: MutableList<PeerClient> = mutableListOf()
+    val usernames: List<String> get() = this.clients.map { it.username }
 
     private var masterStream: PeerStream? = null
     private val masterMessagesChannel = Channel<String>(Channel.UNLIMITED)
-
     private var slaveStreams: MutableList<PeerStream> = mutableListOf()
-    private var newSlaveListener: NewClientListener? = null
+    private var newSlaveListener: NewSlaveListener? = null
     private val newSlaveChannel = Channel<PeerStream>(Channel.UNLIMITED)
+    private val writeMutex = Mutex()
 
     var newChatMessageCallback: (ChatMessage) -> Unit = {}
     var updateUsersCallback: (List<String>) -> Unit = {}
 
     init {
         // new slave connections
-        GlobalScope.launch {
+        GlobalScope.launch(Dispatchers.IO) {
             for (clientStream: PeerStream in newSlaveChannel) {
-                logger.debug("new client connected")
-                slaveStreams.add(clientStream)
-                // messages from slave client
-                launch {
-                    for (message in clientStream.receivedMsgCh) {
-                        logger.debug("received message from client")
-                        onMasterReceived(message, clientStream)
-                    }
-                    logger.debug("client channel closed")
-                }
+                logger.debug("new slave connected")
+                watchNewSlave(clientStream)
             }
         }
 
-        // messages from master
-        GlobalScope.launch {
+        // messages from master to client
+        GlobalScope.launch(Dispatchers.IO) {
             for (message in masterMessagesChannel) {
-                logger.debug("received message from host")
-                onClientReceived(message)
+                launch(Dispatchers.IO) {
+                    onClientReceived(message)
+                }
             }
+        }
+    }
+
+    private fun watchNewSlave(clientStream: PeerStream) {
+        slaveStreams.add(clientStream)
+        // messages from slave client
+        GlobalScope.launch(Dispatchers.IO) {
+            for (message in clientStream.receivedMsgCh) {
+                onMasterReceived(message, clientStream)
+            }
+            logger.debug("slave channel closed")
+        }
+        GlobalScope.launch(Dispatchers.IO) {
+            clientStream.disconnectedCh.receive()
+            onSlaveDisconnect(clientStream)
+            logger.debug("slave disconnected: ${clientStream.remoteName()}")
         }
     }
 
     fun close() {
-        roomStatus = RoomStatus.Disconnected
+        peerStatus = PeerStatus.Disconnected
         masterStream?.close()
         slaveStreams.forEach { it.close() }
-        newSlaveListener?.takeIf { it.isAlive }?.interrupt()
-        newSlaveListener?.takeIf { it.isAlive }?.close()
+        newSlaveListener?.close()
+
+        roomPassword = ""
+        clients = mutableListOf()
     }
 
     fun hostRoom(username: String, password: String): Deferred<Result<Unit>> {
+        makeDiscoverable()
+        this.roomPassword = password
+        this.username = username
+        this.clients = mutableListOf(PeerClient(username, null, PeerStatus.Master))
+        newSlaveListener = NewSlaveListener(bluetoothService.bluetoothAdapter, newSlaveChannel)
+        peerStatus = PeerStatus.Master
+        return newSlaveListener!!.isInitialized()
+    }
+
+    fun makeDiscoverable() {
         bluetoothService.ensureBluetoothEnabled()
         bluetoothService.cancelDiscovery()
         bluetoothService.makeDiscoverable()
-        this.roomPassword = password
-        this.username = username
-        this.usernames = listOf(username)
-        newSlaveListener = NewClientListener(bluetoothService.bluetoothAdapter, newSlaveChannel).apply {
-            start()
-        }
-        roomStatus = RoomStatus.Master
-        return newSlaveListener!!.isInitialized()
     }
 
     fun joinRoom(username: String, room: Room): Result<Unit> {
@@ -83,10 +99,13 @@ class RoomLobby(
         return runBlocking {
             val result = bluetoothService.connectToRoomSocketAsync(room).await()
             return@runBlocking result.onSuccess { btSocket: BluetoothSocket ->
-                masterStream = PeerStream(btSocket, masterMessagesChannel).apply {
-                    start()
+                logger.debug("joined to room socket")
+                masterStream = PeerStream(btSocket, masterMessagesChannel)
+                peerStatus = PeerStatus.Slave
+                GlobalScope.launch {
+                    masterStream?.disconnectedCh?.receive()
+                    onMasterDisconnect()
                 }
-                roomStatus = RoomStatus.Slave
                 sendToMaster(HelloMsg(username))
             }.map { Unit }
         }
@@ -94,16 +113,19 @@ class RoomLobby(
 
     fun sendChatMessage(message: String) {
         logger.debug("Sending chat message")
-        sendToMaster(ChatMessageMsg(username, 0, message))
+        GlobalScope.launch {
+            sendToMaster(ChatMessageMsg(username, 0, message))
+        }
     }
 
-    fun sendToMaster(msg: GtrMsg) {
-        when (roomStatus) {
-            RoomStatus.Master -> {
+    suspend fun sendToMaster(msg: GtrMsg) {
+        when (peerStatus) {
+            PeerStatus.Master -> {
                 onMasterReceived(msg.toString(), null)
             }
-            RoomStatus.Slave -> {
+            PeerStatus.Slave -> {
                 val strMsg = msg.toString()
+                logger.debug("sending to master: $strMsg")
                 masterStream?.write(strMsg)
             }
             else -> {
@@ -111,10 +133,10 @@ class RoomLobby(
         }
     }
 
-    fun sendToClients(msg: GtrMsg) {
+    suspend fun sendToClients(msg: GtrMsg) {
         // From Master
-        when (roomStatus) {
-            RoomStatus.Master -> {
+        when (peerStatus) {
+            PeerStatus.Master -> {
                 sendToSlaves(msg)
                 onClientReceived(msg.toString())
             }
@@ -123,14 +145,20 @@ class RoomLobby(
         }
     }
 
-    fun sendToSlaves(msg: GtrMsg) {
-        when (roomStatus) {
-            RoomStatus.Master -> {
+    suspend fun sendToSlaves(msg: GtrMsg) {
+        when (peerStatus) {
+            PeerStatus.Master -> {
                 val strMsg = msg.toString()
-                logger.debug("sending to ${slaveStreams.size} slaves: $strMsg")
-                slaveStreams.forEach { clientPeerStream ->
-                    // TODO disconnect in case of error
-                    clientPeerStream.write(strMsg)
+                val activeSlaveStreams = clients.filter { it.status == PeerStatus.Slave && it.stream != null }
+                        .map { it.stream!! }
+                logger.debug("sending to ${activeSlaveStreams.size} slaves: $strMsg")
+                activeSlaveStreams.forEach { stream ->
+                    try {
+                        stream.write(strMsg)
+                    } catch (e: Exception) {
+                        logger.error("sending to disconnected peer", e)
+                        stream.close()
+                    }
                 }
             }
             else -> {
@@ -138,22 +166,30 @@ class RoomLobby(
         }
     }
 
-    // receive as Master
-    fun onMasterReceived(strMsg: String, clientStream: PeerStream?) {
-        val gtrMsg: GtrMsg = GtrParser().parse(strMsg)
-        when (gtrMsg) {
-            is ChatMessageMsg -> sendToClients(ChatMessageMsg(gtrMsg.author, Date().time, gtrMsg.message))
-            is HelloMsg -> broadcastUsers(gtrMsg.username)
+    private suspend fun addNewSlave(newUsername: String, clientStream: PeerStream?) {
+        writeMutex.withLock {
+            clients.add(PeerClient(newUsername, clientStream, PeerStatus.Slave))
+        }
+        sendToSlaves(RoomUsersMsg(clients.map { it.username }))
+        GlobalScope.launch(Dispatchers.Main) {
+            updateUsersCallback(usernames)
         }
     }
 
-    private fun broadcastUsers(newUser: String) {
-        usernames = usernames + newUser
-        sendToSlaves(RoomUsersMsg(usernames))
+    // receive as Master
+    suspend fun onMasterReceived(strMsg: String, clientStream: PeerStream?) {
+        val clientName = if (clientStream == null) "itself" else "slave ${clientStream.remoteName()}"
+        logger.debug("received message from $clientName: $strMsg")
+        val gtrMsg: GtrMsg = GtrParser().parse(strMsg)
+        when (gtrMsg) {
+            is ChatMessageMsg -> sendToClients(ChatMessageMsg(gtrMsg.author, Date().time, gtrMsg.message))
+            is HelloMsg -> addNewSlave(gtrMsg.username, clientStream)
+        }
     }
 
     // receive as Slave or Master client
-    fun onClientReceived(strMsg: String) {
+    suspend fun onClientReceived(strMsg: String) {
+        logger.debug("received message from master: $strMsg")
         val gtrMsg: GtrMsg = GtrParser().parse(strMsg)
         when (gtrMsg) {
             is ChatMessageMsg -> {
@@ -165,12 +201,28 @@ class RoomLobby(
                 }
             }
             is RoomUsersMsg -> {
-                this.usernames = gtrMsg.usernames
+                val clients = gtrMsg.usernames.mapIndexed { index, it ->
+                    PeerClient(it, null, status = if (index == 0) PeerStatus.Master else PeerStatus.Slave)
+                }.toMutableList()
+                writeMutex.withLock {
+                    this.clients = clients
+                }
                 GlobalScope.launch(Dispatchers.Main) {
                     updateUsersCallback(usernames)
                 }
             }
         }
+    }
+
+    private suspend fun onSlaveDisconnect(clientStream: PeerStream) {
+        writeMutex.withLock {
+            clients.removeAll { it.stream == clientStream }
+        }
+        sendToSlaves(RoomUsersMsg(clients.map { it.username }))
+    }
+
+    private suspend fun onMasterDisconnect() {
+
     }
 
 }

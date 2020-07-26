@@ -56,7 +56,7 @@ class BluetoothService(
                 discoveredRoomDevices.clear()
                 discoveryJobs.clear()
 
-                launch {
+                GlobalScope.launch {
                     startDiscovery()
                 }
 
@@ -177,13 +177,12 @@ class BluetoothService(
                 val btSocket: BluetoothSocket
 
                 val device = bluetoothAdapter.getRemoteDevice(room.hostAddress)
-                logger.debug("Connecting to ${room.hostAddress} - ${device.name}")
+                logger.debug("Connecting to room socket ${device.name} (${room.hostAddress})")
                 try {
                     btSocket = createBluetoothSocket(device)
                 } catch (e: IOException) {
                     throw RuntimeException("Socket creation failed to ${device.name}", e)
                 }
-                logger.debug("socket created to ${device.name}")
 
                 try {
                     btSocket.connect()

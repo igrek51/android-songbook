@@ -5,23 +5,28 @@ import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.room.protocol.GtrProtocol.Companion.BT_APP_UUID
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.*
-import kotlinx.coroutines.launch
 import java.io.IOException
 
-class NewClientListener(
+class NewSlaveListener(
         private val bluetoothAdapter: BluetoothAdapter,
-        private val newClientChannel: SendChannel<PeerStream>,
-) : Thread() {
+        private val newSlaveChannel: SendChannel<PeerStream>,
+) {
 
-    val initChannel = Channel<Result<Unit>>(1)
-    val closeChannel = Channel<Result<Unit>>(1)
+    private val initChannel = Channel<Result<Unit>>(1)
     private var serverSocket: BluetoothServerSocket? = null
+    private val looperJob: Job
+    private val looperScope: CoroutineScope = CoroutineScope(CoroutineName("launchMe"))
+    private var open = true
 
-    override fun run() {
+    init {
+        looperJob = looperScope.launch {
+            run()
+        }
+    }
+
+    suspend fun run() {
         logger.debug("hosting BT room...")
 
         try {
@@ -46,11 +51,9 @@ class NewClientListener(
                     logger.debug("socket accepted for $macAddress")
 
                     val receivedClientMsgCh = Channel<String>(Channel.UNLIMITED)
-                    val clientStream = PeerStream(socket, receivedClientMsgCh).apply {
-                        start()
-                    }
-                    GlobalScope.launch {
-                        newClientChannel.send(clientStream)
+                    val clientStream = PeerStream(socket, receivedClientMsgCh)
+                    looperScope.launch {
+                        newSlaveChannel.send(clientStream)
                     }
 
                 } catch (connectException: IOException) {
@@ -61,12 +64,11 @@ class NewClientListener(
 
         } catch (e: Throwable) {
             logger.error("Server socket error", e)
-            closeChannel.sendBlocking(Result.failure(e))
         }
-        closeChannel.sendBlocking(Result.success(Unit))
 
-        closeChannel.close()
-        initChannel.close()
+        GlobalScope.launch(Dispatchers.IO) {
+            close()
+        }
     }
 
     fun isInitialized(): Deferred<Result<Unit>> {
@@ -77,6 +79,16 @@ class NewClientListener(
     }
 
     fun close() {
+        if (!open)
+            return
+        open = false
+
+        if (looperJob.isActive) {
+            looperScope.cancel()
+            looperJob.cancel()
+        }
+
         serverSocket?.close()
+        initChannel.close()
     }
 }

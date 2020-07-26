@@ -48,9 +48,10 @@ class RoomListLayoutController(
 
         joinRoomListView = layout.findViewById<JoinRoomListView>(R.id.itemsListView)?.also {
             it.onClickCallback = { room ->
-                logger.debug("connecting: ${room.name}")
+                logger.debug("joining to room on ${room.name}")
                 val username = myNameEditText?.text?.toString().orEmpty()
                 roomLobby.joinRoom(username, room).fold(onSuccess = {
+                    uiInfoService.showInfo("Joined to room")
                     GlobalScope.launch(Dispatchers.Main) {
                         layoutController.showLayout(RoomLobbyLayoutController::class)
                     }

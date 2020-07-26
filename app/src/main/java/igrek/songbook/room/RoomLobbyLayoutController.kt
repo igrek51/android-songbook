@@ -65,6 +65,9 @@ class RoomLobbyLayoutController(
                     roomLobby.close()
                     layoutController.showLayout(RoomListLayoutController::class)
                 },
+                ContextMenuBuilder.Action(R.string.room_make_discoverable) {
+                    roomLobby.makeDiscoverable()
+                },
         ))
     }
 
