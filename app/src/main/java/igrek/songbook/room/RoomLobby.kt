@@ -94,11 +94,11 @@ class RoomLobby(
         bluetoothService.makeDiscoverable()
     }
 
-    fun joinRoom(username: String, room: Room): Result<Unit> {
+    fun joinRoom(username: String, room: Room): Deferred<Result<Unit>> {
         this.username = username
-        return runBlocking {
+        return GlobalScope.async {
             val result = bluetoothService.connectToRoomSocketAsync(room).await()
-            return@runBlocking result.onSuccess { btSocket: BluetoothSocket ->
+            return@async result.onSuccess { btSocket: BluetoothSocket ->
                 logger.debug("joined to room socket")
                 masterStream = PeerStream(btSocket, masterMessagesChannel)
                 peerStatus = PeerStatus.Slave

@@ -17,7 +17,10 @@ import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songselection.top.TopSongsLayoutController
 import igrek.songbook.system.WindowManagerService
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.reflect.KClass
 
 class AppInitializer(
@@ -52,29 +55,27 @@ class AppInitializer(
 
         logger.info("Initializing application...")
 
-        runBlocking {
-            GlobalScope.launch {
-                withContext(Dispatchers.Main) {
-                    appLanguageService.setLocale()
-                    songsRepository.init()
-                    layoutController.init()
-                    windowManagerService.hideTaskbar()
+        GlobalScope.launch {
+            withContext(Dispatchers.Main) {
+                appLanguageService.setLocale()
+                songsRepository.init()
+                layoutController.init()
+                windowManagerService.hideTaskbar()
 
-                    layoutController.showLayout(startingScreen).join()
+                layoutController.showLayout(startingScreen).join()
 
-                    songsUpdater.checkUpdateIsAvailable()
+                songsUpdater.checkUpdateIsAvailable()
 
-                    adService.initialize()
-                    appLanguageService.setLocale() // fix locale after admob init
+                adService.initialize()
+                appLanguageService.setLocale() // fix locale after admob init
 
-                    adminService.init()
-                    if (isRunningFirstTime())
-                        firstRunInit()
-                    reportExecution()
-                }
-
-                logger.info("Application has been initialized.")
+                adminService.init()
+                if (isRunningFirstTime())
+                    firstRunInit()
+                reportExecution()
             }
+
+            logger.info("Application has been initialized.")
         }
     }
 

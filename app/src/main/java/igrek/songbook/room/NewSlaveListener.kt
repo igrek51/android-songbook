@@ -17,7 +17,7 @@ class NewSlaveListener(
     private val initChannel = Channel<Result<Unit>>(1)
     private var serverSocket: BluetoothServerSocket? = null
     private val looperJob: Job
-    private val looperScope: CoroutineScope = CoroutineScope(CoroutineName("launchMe"))
+    private val looperScope: CoroutineScope = CoroutineScope(CoroutineName("newSlaveListener"))
     private var open = true
 
     init {

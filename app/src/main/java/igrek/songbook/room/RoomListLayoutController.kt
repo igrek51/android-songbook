@@ -48,22 +48,28 @@ class RoomListLayoutController(
 
         joinRoomListView = layout.findViewById<JoinRoomListView>(R.id.itemsListView)?.also {
             it.onClickCallback = { room ->
-                logger.debug("joining to room on ${room.name}")
-                val username = myNameEditText?.text?.toString().orEmpty()
-                roomLobby.joinRoom(username, room).fold(onSuccess = {
-                    uiInfoService.showInfo("Joined to room")
-                    GlobalScope.launch(Dispatchers.Main) {
-                        layoutController.showLayout(RoomLobbyLayoutController::class)
-                    }
-                }, onFailure = { e ->
-                    logger.error(e)
-                    uiInfoService.showInfoIndefinite(R.string.error_communication_breakdown, e.message.orEmpty())
-                })
+                joinRoom(room)
             }
         }
 
         layout.findViewById<Button>(R.id.scanRoomsButtton)?.setOnClickListener {
             scanRooms()
+        }
+    }
+
+    private fun joinRoom(room: Room) {
+        GlobalScope.launch {
+            uiInfoService.showInfo("Joining room on ${room.name}...")
+            val username = myNameEditText?.text?.toString().orEmpty()
+            roomLobby.joinRoom(username, room).await().fold(onSuccess = {
+                uiInfoService.showInfo("Joined to room")
+                GlobalScope.launch(Dispatchers.Main) {
+                    layoutController.showLayout(RoomLobbyLayoutController::class)
+                }
+            }, onFailure = { e ->
+                logger.error(e)
+                uiInfoService.showInfoIndefinite(R.string.error_communication_breakdown, e.message.orEmpty())
+            })
         }
     }
 
