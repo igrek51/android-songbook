@@ -399,5 +399,5 @@
     <string name="room_lobby">Room Lobby</string>
     <string name="room_chat_send">Wyślij</string>
     <string name="room_close_room">Zamknij pokój</string>
-    <string name="room_make_discoverable">Pozwól odnaleźć pokój</string>
+    <string name="room_make_discoverable">Ustaw pokój widoczny</string>
 </resources>

@@ -79,14 +79,11 @@ class RoomListLayoutController(
                 val username = myNameEditText?.text?.toString().orEmpty()
                 roomLobby.hostRoom(username, password).await().fold(onSuccess = {
                     uiInfoService.showInfo("room created")
-                    GlobalScope.launch(Dispatchers.Main) {
-                        layoutController.showLayout(RoomLobbyLayoutController::class).join()
-                    }
+                    layoutController.showLayout(RoomLobbyLayoutController::class)
                 }, onFailure = { e ->
                     logger.error(e)
                     uiInfoService.showInfoIndefinite(R.string.error_communication_breakdown, e.message.orEmpty())
                 })
-
             }
         }
     }

@@ -32,6 +32,7 @@ class RoomLobby(
 
     var newChatMessageCallback: (ChatMessage) -> Unit = {}
     var updateUsersCallback: (List<String>) -> Unit = {}
+    var onDisconnectCallback: () -> Unit = {}
 
     init {
         // new slave connections
@@ -72,6 +73,7 @@ class RoomLobby(
         peerStatus = PeerStatus.Disconnected
         masterStream?.close()
         slaveStreams.forEach { it.close() }
+        slaveStreams.clear()
         newSlaveListener?.close()
 
         roomPassword = ""
@@ -145,7 +147,7 @@ class RoomLobby(
         }
     }
 
-    suspend fun sendToSlaves(msg: GtrMsg) {
+    fun sendToSlaves(msg: GtrMsg) {
         when (peerStatus) {
             PeerStatus.Master -> {
                 val strMsg = msg.toString()
@@ -214,15 +216,16 @@ class RoomLobby(
         }
     }
 
-    private suspend fun onSlaveDisconnect(clientStream: PeerStream) {
+    private suspend fun onSlaveDisconnect(slaveStream: PeerStream) {
         writeMutex.withLock {
-            clients.removeAll { it.stream == clientStream }
+            slaveStreams = slaveStreams.filterNot { it == slaveStream }.toMutableList()
+            clients = clients.filterNot { it.stream == slaveStream }.toMutableList()
         }
         sendToSlaves(RoomUsersMsg(clients.map { it.username }))
     }
 
-    private suspend fun onMasterDisconnect() {
-
+    private fun onMasterDisconnect() {
+        onDisconnectCallback()
     }
 
 }

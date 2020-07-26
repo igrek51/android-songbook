@@ -6,6 +6,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import igrek.songbook.R
+import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.SafeClickListener
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -15,10 +16,12 @@ import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 
 class RoomLobbyLayoutController(
         roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
 ) : InflatedLayout(
         _layoutResourceId = R.layout.screen_room_lobby
 ) {
     private val roomLobby by LazyExtractor(roomLobby)
+    private val uiInfoService by LazyExtractor(uiInfoService)
 
     private var chatListView: RoomChatListView? = null
     private var chatMessageEdit: EditText? = null
@@ -52,6 +55,15 @@ class RoomLobbyLayoutController(
         membersTextView = layout.findViewById(R.id.membersTextView)
         updateUsernames(roomLobby.usernames)
         roomLobby.updateUsersCallback = ::updateUsernames
+
+        roomLobby.onDisconnectCallback = ::onDisconnected
+    }
+
+    private fun onDisconnected() {
+        uiInfoService.showInfo("dropped from host")
+        if (isLayoutVisible()) {
+            layoutController.showLayout(RoomListLayoutController::class)
+        }
     }
 
     private fun updateUsernames(usernames: List<String>) {

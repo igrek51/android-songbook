@@ -51,14 +51,12 @@ class BluetoothService(
             return@async runCatching {
                 ensureBluetoothEnabled()
 
+                discoveryJobs.forEach { it.cancel() }
+                discoveryJobs.clear()
+                startDiscovery()
                 discoveredRoomsChannel.close()
                 discoveredRoomsChannel = Channel(16)
                 discoveredRoomDevices.clear()
-                discoveryJobs.clear()
-
-                GlobalScope.launch {
-                    startDiscovery()
-                }
 
                 return@runCatching discoveredRoomsChannel
             }
@@ -66,7 +64,9 @@ class BluetoothService(
     }
 
     private fun startDiscovery() {
-        bluetoothAdapter.cancelDiscovery()
+        if (bluetoothAdapter.isDiscovering) {
+            bluetoothAdapter.cancelDiscovery()
+        }
         bluetoothAdapter.startDiscovery()
 
         activity.registerReceiver(discoveryReceiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
