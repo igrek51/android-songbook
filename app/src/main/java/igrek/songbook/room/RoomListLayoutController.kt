@@ -29,6 +29,7 @@ class RoomListLayoutController(
     private val roomLobby by LazyExtractor(roomLobby)
 
     private var joinRoomListView: JoinRoomListView? = null
+    private var myNameEditText: EditText? = null
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
@@ -37,7 +38,7 @@ class RoomListLayoutController(
             showMoreActions()
         })
 
-        layout.findViewById<EditText>(R.id.myNameEditText)?.also {
+        myNameEditText = layout.findViewById<EditText>(R.id.myNameEditText)?.also {
             it.setText(bluetoothService.deviceName())
         }
 
@@ -48,7 +49,8 @@ class RoomListLayoutController(
         joinRoomListView = layout.findViewById<JoinRoomListView>(R.id.itemsListView)?.also {
             it.onClickCallback = { room ->
                 logger.debug("connecting: ${room.name}")
-                roomLobby.joinRoom(room).fold(onSuccess = {
+                val username = myNameEditText?.text?.toString().orEmpty()
+                roomLobby.joinRoom(username, room).fold(onSuccess = {
                     GlobalScope.launch(Dispatchers.Main) {
                         layoutController.showLayout(RoomLobbyLayoutController::class)
                     }
@@ -67,7 +69,8 @@ class RoomListLayoutController(
     private fun hostRoom() {
         InputDialogBuilder().input(R.string.screen_share_set_room_password, null) { password ->
             GlobalScope.launch {
-                roomLobby.hostRoom(password).await().fold(onSuccess = {
+                val username = myNameEditText?.text?.toString().orEmpty()
+                roomLobby.hostRoom(username, password).await().fold(onSuccess = {
                     uiInfoService.showInfo("room created")
                     GlobalScope.launch(Dispatchers.Main) {
                         layoutController.showLayout(RoomLobbyLayoutController::class)

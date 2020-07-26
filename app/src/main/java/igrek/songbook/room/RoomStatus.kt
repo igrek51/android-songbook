@@ -4,9 +4,9 @@ enum class RoomStatus {
 
     Disconnected,
 
-    Host,
+    Master,
 
-    Client,
+    Slave,
 
     ;
 }

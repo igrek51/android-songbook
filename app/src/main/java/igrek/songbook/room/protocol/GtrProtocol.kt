@@ -7,7 +7,7 @@ sealed class GtrMsg {
     override fun toString(): String = GtrFormatter().format(this)
 }
 
-class ChatMessageMsg(val message: String, val author: String) : GtrMsg()
+class ChatMessageMsg(val author: String, val timestampMs: Long, val message: String) : GtrMsg()
 object HeartbeatRequest : GtrMsg()
 object HeartbeatResponse : GtrMsg()
 
@@ -50,12 +50,19 @@ class GtrParser {
     }
 
     private fun parseChatMessage(msg: String): GtrMsg {
-        val bound = msg.indexOf('|')
+        var bound = msg.indexOf('|')
         if (bound == -1)
             throw GtrParseError("delimiter not found")
         val author = msg.take(bound)
-        val message = msg.drop(bound + 1)
-        return ChatMessageMsg(message, author)
+        val rest = msg.drop(bound + 1)
+
+        bound = rest.indexOf('|')
+        if (bound == -1)
+            throw GtrParseError("second delimiter not found")
+        val timestamp = rest.take(bound).toLong()
+        val message = rest.drop(bound + 1)
+
+        return ChatMessageMsg(author, timestamp, message)
     }
 }
 
@@ -66,7 +73,7 @@ class GtrFormatter {
 
     fun formatGTR(msg: GtrMsg): String {
         return when (msg) {
-            is ChatMessageMsg -> "MSG|${msg.author}|${msg.message}"
+            is ChatMessageMsg -> "MSG|${msg.author}|${msg.timestampMs}|${msg.message}"
             else -> throw GtrParseError("unsupported msg type")
         }
     }
