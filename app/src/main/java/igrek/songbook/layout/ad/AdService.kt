@@ -41,7 +41,11 @@ class AdService(
     }
 
     fun initialize() {
-        MobileAds.initialize(activity) {}
+        try {
+            MobileAds.initialize(activity) {}
+        } catch (t: Throwable) {
+            logger.error("AdMob initialization failed", t)
+        }
     }
 
     private fun setTagForChildDirectedTreatment() {
