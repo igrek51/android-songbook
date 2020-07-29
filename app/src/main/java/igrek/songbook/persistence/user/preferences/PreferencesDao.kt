@@ -50,14 +50,14 @@ class PreferencesDao(
     }
 
     private fun buildEntryValue(name: String, value: Any): PreferenceEntry {
-        val value = when (value) {
+        val entryValue = when (value) {
             is String -> PreferenceValue(stringValue = value)
             is Long -> PreferenceValue(longValue = value)
             is Float -> PreferenceValue(floatValue = value)
             is Boolean -> PreferenceValue(booleanValue = value)
             else -> throw IllegalArgumentException("cant set preference $name with unknown type value $value, ${value::class.simpleName}")
         }
-        return PreferenceEntry(name = name, value = value)
+        return PreferenceEntry(name = name, value = entryValue)
     }
 
 }

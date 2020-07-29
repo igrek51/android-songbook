@@ -4,7 +4,6 @@ import igrek.songbook.info.logger.LoggerFactory
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
 import java.io.File
 import java.io.FileNotFoundException
 
@@ -16,10 +15,12 @@ abstract class AbstractJsonDao<T>(
         val serializer: KSerializer<T>
 ) {
 
-    private val json = Json(JsonConfiguration(
-            ignoreUnknownKeys = true,
-            allowStructuredMapKeys = true,
-    ))
+    private val json = Json {
+        ignoreUnknownKeys = true
+        allowStructuredMapKeys = true
+        prettyPrint = false
+        useArrayPolymorphism = false
+    }
     protected val logger = LoggerFactory.logger
 
     protected var db: T? = null
@@ -67,7 +68,7 @@ abstract class AbstractJsonDao<T>(
             throw FileNotFoundException("file not found: ${file.absoluteFile}")
 
         val content = file.readText(Charsets.UTF_8)
-        val parsed = json.parse(serializer, content)
+        val parsed = json.decodeFromString(serializer, content)
         return parsed
     }
 
@@ -86,8 +87,8 @@ abstract class AbstractJsonDao<T>(
     }
 
     private fun saveToFile(dbName: String, schemaVersion: Int, obj: T) {
-        json.toJson(serializer, obj)
-        val content = json.stringify(serializer, obj)
+        json.encodeToJsonElement(serializer, obj)
+        val content = json.encodeToString(serializer, obj)
         val filename = buildFilename(dbName, schemaVersion)
         val file = File(path, filename)
         file.writeText(content, Charsets.UTF_8)

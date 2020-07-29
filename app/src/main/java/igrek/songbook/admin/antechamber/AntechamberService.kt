@@ -19,7 +19,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
 import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -53,7 +52,14 @@ class AntechamberService(
 
     private val httpRequester = HttpRequester()
     private val jsonType = MediaType.parse("application/json; charset=utf-8")
-    private val jsonSerializer = Json(JsonConfiguration.Stable)
+    private val jsonSerializer = Json {
+        encodeDefaults = true
+        ignoreUnknownKeys = false
+        isLenient = false
+        allowStructuredMapKeys = true
+        prettyPrint = false
+        useArrayPolymorphism = false
+    }
 
     fun downloadSongs(): Deferred<Result<List<Song>>> {
         val request: Request = Request.Builder()
@@ -62,7 +68,7 @@ class AntechamberService(
                 .build()
         return httpRequester.httpRequestAsync(request) { response: Response ->
             val json = response.body()?.string() ?: ""
-            val allDtos: AllAntechamberSongsDto = jsonSerializer.parse(AllAntechamberSongsDto.serializer(), json)
+            val allDtos: AllAntechamberSongsDto = jsonSerializer.decodeFromString(AllAntechamberSongsDto.serializer(), json)
             val antechamberSongs: List<Song> = allDtos.toModel()
             antechamberSongs
         }
@@ -70,7 +76,7 @@ class AntechamberService(
 
     private fun updateAntechamberSong(song: Song): Deferred<Result<Unit>> {
         val antechamberSongDto = AntechamberSongDto.fromModel(song)
-        val json = jsonSerializer.stringify(AntechamberSongDto.serializer(), antechamberSongDto)
+        val json = jsonSerializer.encodeToString(AntechamberSongDto.serializer(), antechamberSongDto)
         val request: Request = Request.Builder()
                 .url(specificSongUrl(song.id))
                 .put(RequestBody.create(jsonType, json))
@@ -83,7 +89,7 @@ class AntechamberService(
         logger.info("Sending new antechamber song")
         val antechamberSongDto = AntechamberSongDto.fromModel(song)
         antechamberSongDto.id = null
-        val json = jsonSerializer.stringify(AntechamberSongDto.serializer(), antechamberSongDto)
+        val json = jsonSerializer.encodeToString(AntechamberSongDto.serializer(), antechamberSongDto)
         val request: Request = Request.Builder()
                 .url(allSongsUrl)
                 .post(RequestBody.create(jsonType, json))
@@ -105,7 +111,7 @@ class AntechamberService(
         song.versionNumber++
         song.updateTime = Date().time
         val dto = ChordsSongDto.fromModel(song)
-        val json = jsonSerializer.stringify(ChordsSongDto.serializer(), dto)
+        val json = jsonSerializer.encodeToString(ChordsSongDto.serializer(), dto)
         val request: Request = Request.Builder()
                 .url(updatePublicSongIdUrl(song.id))
                 .put(RequestBody.create(jsonType, json))
@@ -122,7 +128,7 @@ class AntechamberService(
         dto.id = null
         val categoryId = song.customCategoryName?.let { findCategoryByName(it) }?.id
         dto.categories = categoryId?.let { listOf(it) } ?: emptyList()
-        val json = jsonSerializer.stringify(ChordsSongDto.serializer(), dto)
+        val json = jsonSerializer.encodeToString(ChordsSongDto.serializer(), dto)
         val request: Request = Request.Builder()
                 .url(approveSongUrl)
                 .post(RequestBody.create(jsonType, json))

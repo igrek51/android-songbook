@@ -8,7 +8,6 @@ import igrek.songbook.inject.appFactory
 import kotlinx.coroutines.Deferred
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
 import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -29,12 +28,19 @@ class AdminCategoryManager(
 
     private val httpRequester = HttpRequester()
     private val jsonType = MediaType.parse("application/json; charset=utf-8")
-    private val jsonSerializer = Json(JsonConfiguration.Stable)
+    private val jsonSerializer = Json {
+        encodeDefaults = true
+        ignoreUnknownKeys = false
+        isLenient = false
+        allowStructuredMapKeys = true
+        prettyPrint = false
+        useArrayPolymorphism = false
+    }
 
     fun createCategory(categoryName: String): Deferred<Result<Unit>> {
         logger.info("Creating category: $categoryName")
         val dto = CreateCategoryDto(name = categoryName)
-        val json = jsonSerializer.stringify(CreateCategoryDto.serializer(), dto)
+        val json = jsonSerializer.encodeToString(CreateCategoryDto.serializer(), dto)
         val request: Request = Request.Builder()
                 .url(createCategoryUrl)
                 .post(RequestBody.create(jsonType, json))

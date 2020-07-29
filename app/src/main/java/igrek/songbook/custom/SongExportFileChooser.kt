@@ -10,7 +10,6 @@ import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import kotlinx.serialization.toUtf8Bytes
 import java.io.OutputStream
 
 class SongExportFileChooser(
@@ -52,7 +51,7 @@ class SongExportFileChooser(
         SafeExecutor {
             if (selectedUri != null) {
                 activity.contentResolver.openOutputStream(selectedUri)?.use { outputStream: OutputStream ->
-                    outputStream.write(contentToBeSaved.toUtf8Bytes())
+                    outputStream.write(contentToBeSaved.toByteArray())
                     onSuccess.invoke(selectedUri)
                 }
             }

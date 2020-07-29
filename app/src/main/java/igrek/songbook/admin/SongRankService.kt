@@ -9,7 +9,6 @@ import igrek.songbook.persistence.general.model.Song
 import kotlinx.coroutines.Deferred
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
 import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -30,13 +29,20 @@ class SongRankService(
 
     private val httpRequester = HttpRequester()
     private val jsonType = MediaType.parse("application/json; charset=utf-8")
-    private val jsonSerializer = Json(JsonConfiguration.Stable)
+    private val jsonSerializer = Json {
+        encodeDefaults = true
+        ignoreUnknownKeys = false
+        isLenient = false
+        allowStructuredMapKeys = true
+        prettyPrint = false
+        useArrayPolymorphism = false
+    }
 
     fun updateRank(song: Song, rank: Double?): Deferred<Result<Unit>> {
         song.rank = rank
         logger.info("Updating song rank: $song")
         val dto = SongRankUpdateDto(rank = song.rank)
-        val json = jsonSerializer.stringify(SongRankUpdateDto.serializer(), dto)
+        val json = jsonSerializer.encodeToString(SongRankUpdateDto.serializer(), dto)
         val request: Request = Request.Builder()
                 .url(updatePublicSongIdUrl(song.id))
                 .put(RequestBody.create(jsonType, json))
