@@ -17,7 +17,7 @@ open class ClipboardManager(
     fun copyToSystemClipboard(text: String) {
         val clipboard = activity.getSystemService(Activity.CLIPBOARD_SERVICE) as ClipboardManager
         val clip = ClipData.newPlainText("Copied Text", text)
-        clipboard.primaryClip = clip
+        clipboard.setPrimaryClip(clip)
     }
 
     fun getFromSystemClipboard(): String? {
