@@ -3,7 +3,6 @@ package igrek.songbook.kotlin
 import kotlinx.coroutines.*
 import org.junit.Ignore
 import org.junit.Test
-import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.coroutines.CoroutineContext
 
@@ -13,10 +12,6 @@ class CoroutinesTest {
     fun testRunBlockingDeadlock() {
         val context: CoroutineContext = CoroutineName("launchMe")
         val scope = CoroutineScope(context)
-        GlobalScope.launch {
-            delay(1000)
-            throw TimeoutException("time's up")
-        }
 
         println("entering runBlocking 1")
         runBlocking {

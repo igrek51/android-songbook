@@ -21,7 +21,6 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class AdminSongsLayoutContoller(
         uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
@@ -80,18 +79,16 @@ class AdminSongsLayoutContoller(
 
     private fun downloadSongs() {
         uiInfoService.showInfoIndefinite(R.string.admin_downloading_antechamber)
-        runBlocking {
-            GlobalScope.launch(Dispatchers.Main) {
-                val result = antechamberService.downloadSongs().await()
-                result.fold(onSuccess = { downloadedSongs ->
-                    experimentalSongs = downloadedSongs.toMutableList()
-                    uiInfoService.showInfo(R.string.admin_downloaded_antechamber)
-                    updateItemsList()
-                }, onFailure = { e ->
-                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, e.message)
-                    uiInfoService.showInfoIndefinite(message)
-                })
-            }
+        GlobalScope.launch(Dispatchers.Main) {
+            val result = antechamberService.downloadSongs().await()
+            result.fold(onSuccess = { downloadedSongs ->
+                experimentalSongs = downloadedSongs.toMutableList()
+                uiInfoService.showInfo(R.string.admin_downloaded_antechamber)
+                updateItemsList()
+            }, onFailure = { e ->
+                val message = uiResourceService.resString(R.string.admin_communication_breakdown, e.message)
+                uiInfoService.showInfoIndefinite(message)
+            })
         }
     }
 

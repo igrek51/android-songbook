@@ -69,7 +69,20 @@ class RoomLobby(
         }
     }
 
-    fun close() {
+    suspend fun close() {
+        try {
+            when (peerStatus) {
+                PeerStatus.Master -> {
+                    sendToSlaves(DisconnectMsg)
+                }
+                PeerStatus.Slave -> {
+                    sendToMaster(DisconnectMsg)
+                }
+            }
+        } catch (t: Throwable) {
+            logger.error("sending close message", t)
+        }
+
         peerStatus = PeerStatus.Disconnected
         masterStream?.close()
         slaveStreams.forEach { it.close() }
@@ -179,13 +192,14 @@ class RoomLobby(
     }
 
     // receive as Master
-    suspend fun onMasterReceived(strMsg: String, clientStream: PeerStream?) {
-        val clientName = if (clientStream == null) "itself" else "slave ${clientStream.remoteName()}"
+    suspend fun onMasterReceived(strMsg: String, slaveStream: PeerStream?) {
+        val clientName = if (slaveStream == null) "itself" else "slave ${slaveStream.remoteName()}"
         logger.debug("received message from $clientName: $strMsg")
         val gtrMsg: GtrMsg = GtrParser().parse(strMsg)
         when (gtrMsg) {
             is ChatMessageMsg -> sendToClients(ChatMessageMsg(gtrMsg.author, Date().time, gtrMsg.message))
-            is HelloMsg -> addNewSlave(gtrMsg.username, clientStream)
+            is HelloMsg -> addNewSlave(gtrMsg.username, slaveStream)
+            is DisconnectMsg -> slaveStream?.let { onSlaveDisconnect(slaveStream) }
         }
     }
 
@@ -213,18 +227,24 @@ class RoomLobby(
                     updateUsersCallback(usernames)
                 }
             }
+            is DisconnectMsg -> onMasterDisconnect()
         }
     }
 
     private suspend fun onSlaveDisconnect(slaveStream: PeerStream) {
+        logger.debug("slave dropped")
         writeMutex.withLock {
             slaveStreams = slaveStreams.filterNot { it == slaveStream }.toMutableList()
             clients = clients.filterNot { it.stream == slaveStream }.toMutableList()
         }
         sendToSlaves(RoomUsersMsg(clients.map { it.username }))
+        GlobalScope.launch(Dispatchers.Main) {
+            updateUsersCallback(usernames)
+        }
     }
 
     private fun onMasterDisconnect() {
+        logger.debug("master dropped")
         onDisconnectCallback()
     }
 

@@ -13,6 +13,8 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class RoomLobbyLayoutController(
         roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
@@ -74,8 +76,10 @@ class RoomLobbyLayoutController(
     private fun showMoreActions() {
         ContextMenuBuilder().showContextMenu(mutableListOf(
                 ContextMenuBuilder.Action(R.string.room_close_room) {
-                    roomLobby.close()
-                    layoutController.showLayout(RoomListLayoutController::class)
+                    GlobalScope.launch {
+                        roomLobby.close()
+                        layoutController.showLayout(RoomListLayoutController::class)
+                    }
                 },
                 ContextMenuBuilder.Action(R.string.room_make_discoverable) {
                     roomLobby.makeDiscoverable()
