@@ -135,6 +135,8 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
     // OkHttp
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'
+    // JWT
+    implementation 'com.auth0.android:jwtdecode:2.0.0'
     // Unit tests
     testImplementation 'androidx.appcompat:appcompat:1.1.0'
     testImplementation 'junit:junit:4.13'

@@ -7,12 +7,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.BuildConfig
 import igrek.songbook.R
-import igrek.songbook.about.secret.SecretCommandService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.secret.SecretCommandService
 import igrek.songbook.system.PackageInfoService
 import java.text.SimpleDateFormat
 import java.util.*

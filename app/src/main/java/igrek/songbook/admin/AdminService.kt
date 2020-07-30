@@ -49,13 +49,10 @@ class AdminService(
             preferencesState.userAuthToken = value
         }
 
-    fun login(key: String) {
-        val match = Regex("login (.*)").matchEntire(key)
-        match?.let {
-            userAuthToken = it.groupValues[1]
-            LoggerFactory.logger.debug("Admin token entered: [$userAuthToken]")
-            checkMenuVisibility()
-        }
+    fun loginAdmin(authKey: String) {
+        userAuthToken = authKey
+        LoggerFactory.logger.debug("Admin token entered: [$userAuthToken]")
+        checkMenuVisibility()
     }
 
     fun init() {

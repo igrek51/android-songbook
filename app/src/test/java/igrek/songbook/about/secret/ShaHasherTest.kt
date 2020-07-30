@@ -1,5 +1,6 @@
 package igrek.songbook.about.secret
 
+import igrek.songbook.secret.ShaHasher
 import org.junit.Test
 import kotlin.test.assertEquals
 

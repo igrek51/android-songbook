@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.about.AboutLayoutController
 import igrek.songbook.about.HelpLayoutController
-import igrek.songbook.about.secret.SecretCommandService
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.activity.AppInitializer
 import igrek.songbook.activity.MainActivityData
@@ -39,6 +38,7 @@ import igrek.songbook.room.BluetoothService
 import igrek.songbook.room.RoomListLayoutController
 import igrek.songbook.room.RoomLobby
 import igrek.songbook.room.RoomLobbyLayoutController
+import igrek.songbook.secret.SecretCommandService
 import igrek.songbook.send.*
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.settings.chordsnotation.ChordsNotationService

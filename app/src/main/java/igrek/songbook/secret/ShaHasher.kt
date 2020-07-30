@@ -1,4 +1,4 @@
-package igrek.songbook.about.secret
+package igrek.songbook.secret
 
 import java.security.MessageDigest
 
