@@ -426,4 +426,5 @@
     <string name="room_chat_send">Send message</string>
     <string name="room_close_room">Close room</string>
     <string name="room_make_discoverable">Make discoverable</string>
+    <string name="room_open_current_song">Open current song</string>
 </resources>

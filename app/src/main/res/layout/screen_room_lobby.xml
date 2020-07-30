@@ -103,6 +103,22 @@
                 android:textSize="18sp" />
 
             <TextView
+                android:id="@+id/selectedSongTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:gravity="bottom"
+                android:text="Current song: waiting..."
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/openSelectedSongButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/room_open_current_song" />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"

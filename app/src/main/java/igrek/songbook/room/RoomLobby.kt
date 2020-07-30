@@ -17,7 +17,8 @@ class RoomLobby(
 ) {
     private val bluetoothService by LazyExtractor(bluetoothService)
 
-    private var peerStatus: PeerStatus = PeerStatus.Disconnected
+    var peerStatus: PeerStatus = PeerStatus.Disconnected
+        private set
     private var roomPassword: String = ""
     private var username: String = ""
     private var clients: MutableList<PeerClient> = mutableListOf()
@@ -133,7 +134,7 @@ class RoomLobby(
         }
     }
 
-    suspend fun sendToMaster(msg: GtrMsg) {
+    private suspend fun sendToMaster(msg: GtrMsg) {
         when (peerStatus) {
             PeerStatus.Master -> {
                 onMasterReceived(msg.toString(), null)
@@ -148,7 +149,7 @@ class RoomLobby(
         }
     }
 
-    suspend fun sendToClients(msg: GtrMsg) {
+    private suspend fun sendToClients(msg: GtrMsg) {
         // From Master
         when (peerStatus) {
             PeerStatus.Master -> {
@@ -160,7 +161,7 @@ class RoomLobby(
         }
     }
 
-    fun sendToSlaves(msg: GtrMsg) {
+    private fun sendToSlaves(msg: GtrMsg) {
         when (peerStatus) {
             PeerStatus.Master -> {
                 val strMsg = msg.toString()

@@ -22,7 +22,7 @@ class RoomListLayoutController(
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
         roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
 ) : InflatedLayout(
-        _layoutResourceId = R.layout.screen_rooms_list
+        _layoutResourceId = R.layout.screen_room_list
 ) {
     private val bluetoothService by LazyExtractor(bluetoothService)
     private val uiInfoService by LazyExtractor(uiInfoService)
@@ -33,6 +33,13 @@ class RoomListLayoutController(
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
+
+        if (roomLobby.peerStatus != PeerStatus.Disconnected) {
+            GlobalScope.launch(Dispatchers.Main) {
+                layoutController.showLayout(RoomLobbyLayoutController::class)
+            }
+            return
+        }
 
         layout.findViewById<ImageButton>(R.id.moreActionsButton)?.setOnClickListener(SafeClickListener {
             showMoreActions()
