@@ -5,6 +5,7 @@ import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.room.protocol.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -23,6 +24,8 @@ class RoomLobby(
     private var username: String = ""
     private var clients: MutableList<PeerClient> = mutableListOf()
     val usernames: List<String> get() = this.clients.map { it.username }
+    var currentSongId: SongIdentifier? = null
+        private set
 
     private var masterStream: PeerStream? = null
     private val masterMessagesChannel = Channel<String>(Channel.UNLIMITED)
@@ -34,6 +37,7 @@ class RoomLobby(
     var newChatMessageCallback: (ChatMessage) -> Unit = {}
     var updateUsersCallback: (List<String>) -> Unit = {}
     var onDisconnectCallback: () -> Unit = {}
+    var onSelectedSongChange: (songId: SongIdentifier) -> Unit = {}
 
     init {
         // new slave connections
@@ -92,6 +96,7 @@ class RoomLobby(
 
         roomPassword = ""
         clients = mutableListOf()
+        currentSongId = null
     }
 
     fun hostRoom(username: String, password: String): Deferred<Result<Unit>> {
@@ -229,6 +234,10 @@ class RoomLobby(
                 }
             }
             is DisconnectMsg -> onMasterDisconnect()
+            is SelectSongMsg -> GlobalScope.launch {
+                currentSongId = gtrMsg.songId
+                onSelectedSongChange(gtrMsg.songId)
+            }
         }
     }
 
@@ -247,6 +256,16 @@ class RoomLobby(
     private fun onMasterDisconnect() {
         logger.debug("master dropped")
         onDisconnectCallback()
+    }
+
+    fun reportSongSelected(songIdentifier: SongIdentifier) {
+        if (peerStatus != PeerStatus.Master)
+            return
+
+        currentSongId = songIdentifier
+        GlobalScope.launch {
+            sendToSlaves(SelectSongMsg(songIdentifier))
+        }
     }
 
 }

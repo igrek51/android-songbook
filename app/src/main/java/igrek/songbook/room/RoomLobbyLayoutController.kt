@@ -13,21 +13,26 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
+import igrek.songbook.persistence.general.model.SongIdentifier
+import igrek.songbook.songpreview.SongOpener
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class RoomLobbyLayoutController(
         roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        songOpener: LazyInject<SongOpener> = appFactory.songOpener,
 ) : InflatedLayout(
         _layoutResourceId = R.layout.screen_room_lobby
 ) {
     private val roomLobby by LazyExtractor(roomLobby)
     private val uiInfoService by LazyExtractor(uiInfoService)
+    private val songOpener by LazyExtractor(songOpener)
 
     private var chatListView: RoomChatListView? = null
     private var chatMessageEdit: EditText? = null
     private var membersTextView: TextView? = null
+    private var selectedSongTextView: TextView? = null
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
@@ -50,15 +55,25 @@ class RoomLobbyLayoutController(
             chatMessageEdit?.setText("")
         })
 
+        layout.findViewById<Button>(R.id.openSelectedSongButton)?.setOnClickListener(SafeClickListener {
+            GlobalScope.launch {
+                roomLobby.currentSongId?.let { currentSongId ->
+                    songOpener.openSongIdentifier(currentSongId)
+                }
+            }
+        })
+
         roomLobby.newChatMessageCallback = { chatMessage: ChatMessage ->
             chatListView?.add(chatMessage)
         }
 
         membersTextView = layout.findViewById(R.id.membersTextView)
+        selectedSongTextView = layout.findViewById(R.id.membersTextView)
         updateUsernames(roomLobby.usernames)
         roomLobby.updateUsersCallback = ::updateUsernames
 
         roomLobby.onDisconnectCallback = ::onDisconnected
+        roomLobby.onSelectedSongChange = ::onSelectedSongChange
     }
 
     private fun onDisconnected() {
@@ -85,6 +100,17 @@ class RoomLobbyLayoutController(
                     roomLobby.makeDiscoverable()
                 },
         ))
+    }
+
+    private fun onSelectedSongChange(songId: SongIdentifier) {
+        GlobalScope.launch {
+            if (isLayoutVisible()) {
+                val result = songOpener.openSongIdentifier(songId)
+                if (!result) {
+                    logger.error("cant find selected song locally: $songId")
+                }
+            }
+        }
     }
 
 }

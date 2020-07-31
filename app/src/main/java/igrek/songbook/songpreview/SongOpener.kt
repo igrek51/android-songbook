@@ -12,23 +12,35 @@ import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.history.OpenedSong
+import igrek.songbook.room.RoomLobby
 
 class SongOpener(
         layoutController: LazyInject<LayoutController> = appFactory.layoutController,
         songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
         songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+        roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
 ) {
     private val layoutController by LazyExtractor(layoutController)
     private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
     private val songsRepository by LazyExtractor(songsRepository)
     private val uiInfoService by LazyExtractor(uiInfoService)
+    private val roomLobby by LazyExtractor(roomLobby)
 
     fun openSongPreview(song: Song) {
         songPreviewLayoutController.currentSong = song
         layoutController.showLayout(SongPreviewLayoutController::class)
         songsRepository.openHistoryDao.registerOpenedSong(song.id, song.isCustom())
+        roomLobby.reportSongSelected(song.songIdentifier())
         AnalyticsLogger().logEventSongOpened(song)
+    }
+
+    fun openSongIdentifier(songIdentifier: SongIdentifier): Boolean {
+        songsRepository.allSongsRepo.songFinder.find(songIdentifier)?.let { song ->
+            openSongPreview(song)
+            return true
+        }
+        return false
     }
 
     fun openLastSong() {
@@ -44,11 +56,8 @@ class SongOpener(
                 else -> SongNamespace.Public
             }
             val songIdentifier = SongIdentifier(openedSong.songId, namespace)
-            val song: Song? = songsRepository.allSongsRepo.songFinder.find(songIdentifier)
-            if (song != null) {
-                openSongPreview(song)
+            if (openSongIdentifier(songIdentifier))
                 return
-            }
         }
 
         uiInfoService.showInfo(R.string.no_last_song)

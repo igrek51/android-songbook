@@ -16,6 +16,7 @@ import igrek.songbook.layout.dialog.InputDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RoomListLayoutController(
         bluetoothService: LazyInject<BluetoothService> = appFactory.bluetoothService,
@@ -107,10 +108,12 @@ class RoomListLayoutController(
         joinRoomListView?.items = emptyList()
         uiInfoService.showInfoIndefinite(R.string.screen_share_scanning_devices)
 
-        GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch(Dispatchers.IO) {
             bluetoothService.scanRoomsAsync().await().fold(onSuccess = { roomCh ->
                 for (room in roomCh) {
-                    joinRoomListView?.add(room)
+                    withContext(Dispatchers.Main) {
+                        joinRoomListView?.add(room)
+                    }
                 }
                 uiInfoService.showInfo("scanning completed")
             }, onFailure = { e ->
