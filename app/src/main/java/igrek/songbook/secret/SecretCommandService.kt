@@ -22,7 +22,9 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.ad.AdService
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.preferences.PreferencesService
+import igrek.songbook.system.PermissionService
 import igrek.songbook.system.SoftKeyboardService
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.BufferedReader
@@ -37,6 +39,7 @@ class SecretCommandService(
         preferencesService: LazyInject<PreferencesService> = appFactory.preferencesService,
         adminService: LazyInject<AdminService> = appFactory.adminService,
         adService: LazyInject<AdService> = appFactory.adService,
+        permissionService: LazyInject<PermissionService> = appFactory.permissionService,
 ) {
     private val activity by LazyExtractor(appCompatActivity)
     private val uiResourceService by LazyExtractor(uiResourceService)
@@ -46,6 +49,7 @@ class SecretCommandService(
     private val preferencesService by LazyExtractor(preferencesService)
     private val adminService by LazyExtractor(adminService)
     private val adService by LazyExtractor(adService)
+    private val permissionService by LazyExtractor(permissionService)
 
     private val logger = LoggerFactory.logger
 
@@ -85,6 +89,9 @@ class SecretCommandService(
                 },
 
                 ExactKeyRule("ad show") { this.adService.enableAds() },
+                ExactKeyRule("grant permission files") {
+                    this.permissionService.isStoragePermissionGranted
+                },
 
                 SubCommandRule("login") { key: String ->
                     this.adminService.loginAdmin(key)
@@ -96,12 +103,12 @@ class SecretCommandService(
 
                 SubCommandRule("hush", ::hashedCommand),
                 SubCommandRule("shell") { shellCommand(it, showStdout = false) },
-                SubCommandRule("shell-out") { shellCommand(it, showStdout = true) },
+                SubCommandRule("shellout") { shellCommand(it, showStdout = true) },
                 SubCommandRule("unlock", ::unlockSongs),
         )
     }
 
-    private val encodedSecretRegex = Regex("""-----BEGIN-SONGBOOK-KEY-----([\S\s]+?)-----END-SONGBOOK-KEY-----""")
+    private val encodedSecretRegex = Regex("""---SONGBOOK-KEY---([\S\s]+?)---SONGBOOK-KEY---""")
 
     private fun decodeSecretKeys(key: String) {
         val match = encodedSecretRegex.matchEntire(key.trim())
@@ -232,14 +239,16 @@ class SecretCommandService(
     }
 
     private fun showDialog(title: String, stdout: String) {
-        val alertBuilder = AlertDialog.Builder(activity)
-                .setMessage(stdout)
-                .setTitle(title)
-                .setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { _, _ -> }
-                .setCancelable(true)
-        val alertDialog = alertBuilder.create()
-        if (!activity.isFinishing) {
-            alertDialog.show()
+        GlobalScope.launch(Dispatchers.Main) {
+            val alertBuilder = AlertDialog.Builder(activity)
+                    .setMessage(stdout)
+                    .setTitle(title)
+                    .setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { _, _ -> }
+                    .setCancelable(true)
+            val alertDialog = alertBuilder.create()
+            if (!activity.isFinishing) {
+                alertDialog.show()
+            }
         }
     }
 
