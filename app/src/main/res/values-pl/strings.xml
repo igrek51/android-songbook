@@ -107,7 +107,7 @@
     <string name="song_details_metre">Metrum: %s</string>
     <string name="easter_egg_discovered">Gratulacje!
         \nOdnalazłeś Sekretny Krowi Poziom :)</string>
-    <string name="error_occurred">Aw snap! Wystąpił błąd: %s</string>
+    <string name="error_occurred">Aw snap! Błąd: %s</string>
     <string name="unlock_type_in_secret_key">Podaj sekretne hasło:</string>
     <string name="contact_message_field_empty">Pole wiadomości nie może być puste.</string>
     <string name="contact_sending">Wysyłanie…</string>

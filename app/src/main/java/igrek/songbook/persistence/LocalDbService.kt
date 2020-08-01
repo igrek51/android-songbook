@@ -24,7 +24,7 @@ class LocalDbService(
     private val currentSchemaVersion = 2
     private val currentSongsDbFilename = "songs.$currentSchemaVersion.sqlite"
 
-    val songDbDir: File
+    val appFilesDir: File
         @SuppressLint("SdCardPath")
         get() {
             /*
@@ -48,11 +48,11 @@ class LocalDbService(
     val appDataDir: File
         @SuppressLint("SdCardPath")
         get() {
-            return songDbDir.parentFile
+            return appFilesDir.parentFile
         }
 
     val songsDbFile: File
-        get() = File(songDbDir, currentSongsDbFilename)
+        get() = File(appFilesDir, currentSongsDbFilename)
 
     fun ensureLocalDbExists() {
         val dbFile = songsDbFile

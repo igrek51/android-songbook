@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.auth0.android.jwt.JWT
 import igrek.songbook.R
+import igrek.songbook.activity.ActivityController
 import igrek.songbook.admin.AdminService
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -20,6 +21,7 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.ad.AdService
+import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.system.PermissionService
@@ -28,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.BufferedReader
+import java.io.File
 
 
 class SecretCommandService(
@@ -40,6 +43,8 @@ class SecretCommandService(
         adminService: LazyInject<AdminService> = appFactory.adminService,
         adService: LazyInject<AdService> = appFactory.adService,
         permissionService: LazyInject<PermissionService> = appFactory.permissionService,
+        localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
+        activityController: LazyInject<ActivityController> = appFactory.activityController,
 ) {
     private val activity by LazyExtractor(appCompatActivity)
     private val uiResourceService by LazyExtractor(uiResourceService)
@@ -50,6 +55,8 @@ class SecretCommandService(
     private val adminService by LazyExtractor(adminService)
     private val adService by LazyExtractor(adService)
     private val permissionService by LazyExtractor(permissionService)
+    private val localDbService by LazyExtractor(localDbService)
+    private val activityController by LazyExtractor(activityController)
 
     private val logger = LoggerFactory.logger
 
@@ -75,6 +82,9 @@ class SecretCommandService(
                 },
                 ExactKeyRule("reset db user") {
                     this.songsRepository.resetUserData()
+                    this.songsRepository.reloadSongsDb()
+                },
+                ExactKeyRule("reload db user") {
                     this.songsRepository.reloadSongsDb()
                 },
 
@@ -105,7 +115,45 @@ class SecretCommandService(
                 SubCommandRule("shell") { shellCommand(it, showStdout = false) },
                 SubCommandRule("shellout") { shellCommand(it, showStdout = true) },
                 SubCommandRule("unlock", ::unlockSongs),
+                SubCommandRule("backup local", ::backupDataFiles),
+                SubCommandRule("restore local", ::restoreDataFiles),
+                SubCommandRule("exit now") {
+                    GlobalScope.launch(Dispatchers.Main) {
+                        toast("exiting...")
+                        this@SecretCommandService.activityController.quit()
+                    }
+                },
         )
+    }
+
+    private fun backupDataFiles(cmd: String) {
+        runCatching {
+            val parts = cmd.split(" ", limit = 2)
+            check(parts.size == 2) { "insufficient sections" }
+            val dataDirPath = localDbService.appFilesDir.absolutePath
+            val localSrcFile = File(dataDirPath, parts[0])
+            val localDstFile = File(parts[1])
+            localSrcFile.copyTo(localDstFile)
+            toast("File copied from $localSrcFile to $localDstFile")
+        }.onFailure { t ->
+            val message = t.message.orEmpty() + "\nType: ${t::class.simpleName}"
+            showDialog("Error", message)
+        }
+    }
+
+    private fun restoreDataFiles(cmd: String) {
+        runCatching {
+            val parts = cmd.split(" ", limit = 2)
+            check(parts.size == 2) { "insufficient sections" }
+            val dataDirPath = localDbService.appFilesDir.absolutePath
+            val localSrcFile = File(parts[0])
+            val localDstFile = File(dataDirPath, parts[1])
+            localSrcFile.copyTo(localDstFile, overwrite = true)
+            toast("File copied from $localSrcFile to $localDstFile")
+        }.onFailure { t ->
+            val message = t.message.orEmpty() + "\nType: ${t::class.simpleName}"
+            showDialog("Error", message)
+        }
     }
 
     private val encodedSecretRegex = Regex("""---SONGBOOK-KEY---([\S\s]+?)---SONGBOOK-KEY---""")
@@ -124,10 +172,20 @@ class SecretCommandService(
         logger.debug("decoding secret key: $skey")
         try {
             val jwt = JWT(skey)
-            if ("cmd" in jwt.claims) {
-                jwt.claims["cmd"]?.asString()?.let { command ->
-                    logger.debug("JWT decoded: $command")
-                    checkActivationRules(command)
+            when {
+                "cmd" in jwt.claims -> {
+                    jwt.claims["cmd"]?.asString()?.let { cmd ->
+                        logger.debug("JWT decoded cmd: $cmd")
+                        checkActivationRules(cmd)
+                    }
+                }
+                "cmds" in jwt.claims -> {
+                    jwt.claims["cmds"]?.asList(String::class.java)?.let { cmds ->
+                        logger.debug("JWT decoded cmds: $cmds")
+                        cmds.forEach { cmd ->
+                            checkActivationRules(cmd)
+                        }
+                    }
                 }
             }
         } catch (t: Throwable) {
@@ -167,8 +225,10 @@ class SecretCommandService(
     private fun commandAttempt(key: String) {
         logger.info("secret command entered: $key")
 
-        if (!checkActivationRules(key)) {
-            toast(R.string.unlock_key_invalid)
+        GlobalScope.launch {
+            if (!checkActivationRules(key)) {
+                toast(R.string.unlock_key_invalid)
+            }
         }
 
         softKeyboardService.hideSoftKeyboard()
@@ -198,43 +258,41 @@ class SecretCommandService(
 
     private fun shellCommand(cmd: String, showStdout: Boolean = false) {
         logger.debug("Running shell command: $cmd")
-        GlobalScope.launch {
-            try {
-                val execute: Process = Runtime.getRuntime().exec(cmd)
-                execute.waitFor()
-                val retCode = execute.exitValue()
+        try {
+            val execute: Process = Runtime.getRuntime().exec(cmd)
+            execute.waitFor()
+            val retCode = execute.exitValue()
 
-                val stdout = BufferedReader(execute.inputStream.reader()).use {
-                    val content = it.readText()
-                    content
-                }
-                val stderr = BufferedReader(execute.errorStream.reader()).use {
-                    val content = it.readText()
-                    content
-                }
-                logger.debug("command stdout: $stdout")
-                logger.debug("command stderr: $stderr")
-
-                when (showStdout) {
-                    true -> {
-                        if (retCode == 0) {
-                            showDialog("Command successful", "$stdout\n$stderr")
-                        } else {
-                            showDialog("Command failed", "$stdout\n$stderr\nerror code: $retCode")
-                        }
-                    }
-                    false -> {
-                        if (retCode == 0) {
-                            toast("Command successful")
-                        } else {
-                            toast("Command failed ($retCode)")
-                        }
-                    }
-                }
-            } catch (t: Throwable) {
-                toast("command error: ${t.message}")
-                logger.error("command error", t)
+            val stdout = BufferedReader(execute.inputStream.reader()).use {
+                val content = it.readText()
+                content
             }
+            val stderr = BufferedReader(execute.errorStream.reader()).use {
+                val content = it.readText()
+                content
+            }
+            logger.debug("command stdout: $stdout")
+            logger.debug("command stderr: $stderr")
+
+            when (showStdout) {
+                true -> {
+                    if (retCode == 0) {
+                        showDialog("Command successful", "$stdout\n$stderr")
+                    } else {
+                        showDialog("Command failed", "$stdout\n$stderr\nerror code: $retCode")
+                    }
+                }
+                false -> {
+                    if (retCode == 0) {
+                        toast("Command successful")
+                    } else {
+                        toast("Command failed ($retCode)")
+                    }
+                }
+            }
+        } catch (t: Throwable) {
+            toast("command error: ${t.message}")
+            logger.error("command error", t)
         }
     }
 
@@ -258,24 +316,26 @@ class SecretCommandService(
     }
 
     private fun showCowSuperPowers() {
-        val alertBuilder = AlertDialog.Builder(activity)
-        alertBuilder.setTitle("Moooo!")
-        alertBuilder.setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { _, _ -> }
-        alertBuilder.setCancelable(true)
-        val dialog: AlertDialog = alertBuilder.create()
+        GlobalScope.launch(Dispatchers.Main) {
+            val alertBuilder = AlertDialog.Builder(activity)
+            alertBuilder.setTitle("Moooo!")
+            alertBuilder.setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { _, _ -> }
+            alertBuilder.setCancelable(true)
+            val dialog: AlertDialog = alertBuilder.create()
 
-        val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val itemView = inflater.inflate(R.layout.component_alert_monospace, null, false)
-        val contentTextView = itemView.findViewById(R.id.contentTextView) as TextView
-        contentTextView.text = EA5T3R_M00
-        contentTextView.isVerticalScrollBarEnabled = true
-        dialog.setView(itemView)
+            val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val itemView = inflater.inflate(R.layout.component_alert_monospace, null, false)
+            val contentTextView = itemView.findViewById(R.id.contentTextView) as TextView
+            contentTextView.text = EA5T3R_M00
+            contentTextView.isVerticalScrollBarEnabled = true
+            dialog.setView(itemView)
 
-        if (!activity.isFinishing) {
-            dialog.show()
+            if (!activity.isFinishing) {
+                dialog.show()
+            }
+
+            toast(R.string.easter_egg_discovered)
         }
-
-        toast(R.string.easter_egg_discovered)
     }
 
     private fun toast(message: String) {

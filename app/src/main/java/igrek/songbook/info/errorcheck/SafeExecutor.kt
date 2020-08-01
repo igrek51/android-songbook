@@ -30,7 +30,7 @@ class SafeExecutor(
                 t.message != null -> t.message
                 else -> t::class.simpleName
             }
-            uiInfoService.showInfo(uiResourceService.resString(R.string.error_occurred, err))
+            uiInfoService.showInfoIndefinite(uiResourceService.resString(R.string.error_occurred, err))
         }
     }
 

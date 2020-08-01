@@ -48,7 +48,7 @@ class UserDataDao(
     }
 
     fun reload() {
-        val path = localDbService.songDbDir.absolutePath
+        val path = localDbService.appFilesDir.absolutePath
 
         unlockedSongsDao = UnlockedSongsDao(path)
         favouriteSongsDao = FavouriteSongsDao(path)
@@ -108,7 +108,7 @@ class LazyDaoLoader<T : AbstractJsonDao<out Any>>(
         if (loadedVal != null)
             return loadedVal
 
-        val path = thisRef.localDbService.songDbDir.absolutePath
+        val path = thisRef.localDbService.appFilesDir.absolutePath
         val loadedNN = loader.invoke(path)
         loaded = loadedNN
         return loadedNN
