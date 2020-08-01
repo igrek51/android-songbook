@@ -41,9 +41,8 @@ class NewSlaveListener(
                 throw e
             }
 
+            logger.debug("listening for Bluetooth connections")
             while (true) {
-                logger.debug("listening for Bluetooth connections")
-
                 val socket: BluetoothSocket = serverSocket!!.accept() // This will block until there is a connection
 
                 try {

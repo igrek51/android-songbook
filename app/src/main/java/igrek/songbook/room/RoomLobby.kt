@@ -22,8 +22,8 @@ class RoomLobby(
         private set
     private var roomPassword: String = ""
     private var username: String = ""
-    private var clients: MutableList<PeerClient> = mutableListOf()
-    val usernames: List<String> get() = this.clients.map { it.username }
+    var clients: MutableList<PeerClient> = mutableListOf()
+        private set
     var currentSongId: SongIdentifier? = null
         private set
 
@@ -35,7 +35,7 @@ class RoomLobby(
     private val writeMutex = Mutex()
 
     var newChatMessageCallback: (ChatMessage) -> Unit = {}
-    var updateUsersCallback: (List<String>) -> Unit = {}
+    var updateMembersCallback: (List<PeerClient>) -> Unit = {}
     var onDisconnectCallback: () -> Unit = {}
     var onSelectedSongChange: (songId: SongIdentifier) -> Unit = {}
 
@@ -193,7 +193,7 @@ class RoomLobby(
         }
         sendToSlaves(RoomUsersMsg(clients.map { it.username }))
         GlobalScope.launch(Dispatchers.Main) {
-            updateUsersCallback(usernames)
+            updateMembersCallback(clients.toList())
         }
     }
 
@@ -230,7 +230,7 @@ class RoomLobby(
                     this.clients = clients
                 }
                 GlobalScope.launch(Dispatchers.Main) {
-                    updateUsersCallback(usernames)
+                    updateMembersCallback(clients.toList())
                 }
             }
             is DisconnectMsg -> onMasterDisconnect()
@@ -249,7 +249,7 @@ class RoomLobby(
         }
         sendToSlaves(RoomUsersMsg(clients.map { it.username }))
         GlobalScope.launch(Dispatchers.Main) {
-            updateUsersCallback(usernames)
+            updateMembersCallback(clients.toList())
         }
     }
 

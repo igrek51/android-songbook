@@ -162,7 +162,7 @@ open class Logger internal constructor() {
          */
         @Synchronized
         private fun incrementTagKey(): Int {
-            lastTagKey = (lastTagKey + 1) % 5
+            lastTagKey = (lastTagKey + 1) % 4
             return lastTagKey
         }
 

@@ -27,7 +27,9 @@ class ConfirmDialogBuilder(
             }
         }
         alertBuilder.setCancelable(true)
-        alertBuilder.create().show()
+        if (!activity.isFinishing) {
+            alertBuilder.create().show()
+        }
     }
 
     fun confirmAction(messageResId: Int, action: () -> Unit) {
@@ -62,7 +64,9 @@ class ConfirmDialogBuilder(
             }
         }
         alertBuilder.setCancelable(true)
-        alertBuilder.create().show()
+        if (!activity.isFinishing) {
+            alertBuilder.create().show()
+        }
     }
 
 }

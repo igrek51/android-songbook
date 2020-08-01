@@ -31,6 +31,7 @@ class RoomListLayoutController(
 
     private var joinRoomListView: JoinRoomListView? = null
     private var myNameEditText: EditText? = null
+    private var showScanningCompleted = true
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
@@ -66,6 +67,7 @@ class RoomListLayoutController(
     }
 
     private fun joinRoom(room: Room) {
+        showScanningCompleted = false
         GlobalScope.launch {
             uiInfoService.showInfo("Joining room on ${room.name}...")
             val username = myNameEditText?.text?.toString().orEmpty()
@@ -107,6 +109,7 @@ class RoomListLayoutController(
     private fun scanRooms() {
         joinRoomListView?.items = emptyList()
         uiInfoService.showInfoIndefinite(R.string.screen_share_scanning_devices)
+        showScanningCompleted = true
 
         GlobalScope.launch(Dispatchers.IO) {
             bluetoothService.scanRoomsAsync().await().fold(onSuccess = { roomCh ->
@@ -115,7 +118,8 @@ class RoomListLayoutController(
                         joinRoomListView?.add(room)
                     }
                 }
-                uiInfoService.showInfo("scanning completed")
+                if (showScanningCompleted)
+                    uiInfoService.showInfo("scanning completed")
             }, onFailure = { e ->
                 logger.error(e)
                 uiInfoService.showInfoIndefinite(R.string.error_communication_breakdown, e.message.orEmpty())

@@ -13,8 +13,10 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
+import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.songpreview.SongOpener
+import igrek.songbook.songpreview.SongPreviewLayoutController
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -69,8 +71,8 @@ class RoomLobbyLayoutController(
 
         membersTextView = layout.findViewById(R.id.membersTextView)
         selectedSongTextView = layout.findViewById(R.id.membersTextView)
-        updateUsernames(roomLobby.usernames)
-        roomLobby.updateUsersCallback = ::updateUsernames
+        updateMembers(roomLobby.clients)
+        roomLobby.updateMembersCallback = ::updateMembers
 
         roomLobby.onDisconnectCallback = ::onDisconnected
         roomLobby.onSelectedSongChange = ::onSelectedSongChange
@@ -83,17 +85,24 @@ class RoomLobbyLayoutController(
         }
     }
 
-    private fun updateUsernames(usernames: List<String>) {
-        val usernamesStr = usernames.joinToString("\n") { "- $it" }
-        membersTextView?.text = "Members:\n$usernamesStr"
+    private fun updateMembers(members: List<PeerClient>) {
+        val membersStr = members.map { it.displayMember() }.joinToString("\n") { "- $it" }
+        membersTextView?.text = "Members:\n$membersStr"
+    }
+
+    private fun PeerClient.displayMember(): String {
+        val role = when (this.status) {
+            PeerStatus.Master -> " (Host)"
+            else -> ""
+        }
+        return this.username + role
     }
 
     private fun showMoreActions() {
         ContextMenuBuilder().showContextMenu(mutableListOf(
                 ContextMenuBuilder.Action(R.string.room_close_room) {
                     GlobalScope.launch {
-                        roomLobby.close()
-                        layoutController.showLayout(RoomListLayoutController::class)
+                        closeAndReturn()
                     }
                 },
                 ContextMenuBuilder.Action(R.string.room_make_discoverable) {
@@ -103,8 +112,8 @@ class RoomLobbyLayoutController(
     }
 
     private fun onSelectedSongChange(songId: SongIdentifier) {
-        GlobalScope.launch {
-            if (isLayoutVisible()) {
+        if (isLayoutVisible() || layoutController.isState(SongPreviewLayoutController::class)) {
+            GlobalScope.launch {
                 val result = songOpener.openSongIdentifier(songId)
                 if (!result) {
                     logger.error("cant find selected song locally: $songId")
@@ -113,4 +122,21 @@ class RoomLobbyLayoutController(
         }
     }
 
+    override fun onBackClicked() {
+        when (roomLobby.peerStatus) {
+            PeerStatus.Master, PeerStatus.Slave -> {
+                ConfirmDialogBuilder().confirmAction("You are about to leave lobby. Do you really want to disconnect?") {
+                    GlobalScope.launch {
+                        closeAndReturn()
+                    }
+                }
+            }
+            PeerStatus.Disconnected -> super.onBackClicked()
+        }
+    }
+
+    private suspend fun closeAndReturn() {
+        roomLobby.close()
+        layoutController.showLayout(RoomListLayoutController::class, disableReturn = true)
+    }
 }
