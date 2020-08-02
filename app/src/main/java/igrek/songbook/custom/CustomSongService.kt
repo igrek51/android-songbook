@@ -21,14 +21,14 @@ class CustomSongService(
         layoutController: LazyInject<LayoutController> = appFactory.layoutController,
         editSongLayoutController: LazyInject<EditSongLayoutController> = appFactory.editSongLayoutController,
         preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
-        songExportFileChooser: LazyInject<SongExportFileChooser> = appFactory.songExportFileChooser,
+        exportFileChooser: LazyInject<ExportFileChooser> = appFactory.songExportFileChooser,
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val songsRepository by LazyExtractor(songsRepository)
     private val layoutController by LazyExtractor(layoutController)
     private val editSongLayoutController by LazyExtractor(editSongLayoutController)
     private val preferencesState by LazyExtractor(preferencesState)
-    private val songExportFileChooser by LazyExtractor(songExportFileChooser)
+    private val songExportFileChooser by LazyExtractor(exportFileChooser)
 
     var customSongsGroupCategories: Boolean
         get() = preferencesState.customSongsGroupCategories

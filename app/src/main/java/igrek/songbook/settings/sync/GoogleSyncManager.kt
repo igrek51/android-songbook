@@ -18,6 +18,7 @@ import com.google.api.services.drive.model.File
 import com.google.api.services.drive.model.FileList
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
+import igrek.songbook.activity.ActivityResultDispatcher
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
@@ -43,6 +44,7 @@ class GoogleSyncManager(
         preferencesService: LazyInject<PreferencesService> = appFactory.preferencesService,
         activityController: LazyInject<ActivityController> = appFactory.activityController,
         userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
+        activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,
 ) {
     private val activity by LazyExtractor(appCompatActivity)
     private val uiInfoService by LazyExtractor(uiInfoService)
@@ -51,6 +53,7 @@ class GoogleSyncManager(
     private val preferencesService by LazyExtractor(preferencesService)
     private val activityController by LazyExtractor(activityController)
     private val userDataDao by LazyExtractor(userDataDao)
+    private val activityResultDispatcher by LazyExtractor(activityResultDispatcher)
 
     private val syncFiles = listOf(
             "files/customsongs.1.json",
@@ -65,19 +68,14 @@ class GoogleSyncManager(
 
     private val logger = LoggerFactory.logger
 
-    companion object {
-        const val REQUEST_CODE_SIGN_IN_SYNC_SAVE = 10
-        const val REQUEST_CODE_SIGN_IN_SYNC_RESTORE = 11
-    }
-
     fun syncSave() {
         logger.debug("making application data Backup in Google Drive")
-        requestSingIn(REQUEST_CODE_SIGN_IN_SYNC_SAVE)
+        requestSingIn(::syncSaveSignedIn)
     }
 
     fun syncRestore() {
         logger.debug("restoring application data from Google Drive")
-        requestSingIn(REQUEST_CODE_SIGN_IN_SYNC_RESTORE)
+        requestSingIn(::syncRestoreSignedIn)
     }
 
     private fun syncSaveSignedIn(driveService: Drive) {
@@ -190,7 +188,7 @@ class GoogleSyncManager(
         if (namedFiles.size == 1) {
             return namedFiles[0].id
         } else if (namedFiles.size > 1) {
-            val latestFile = namedFiles.maxBy { file -> file.modifiedTime.value }!!
+            val latestFile = namedFiles.maxByOrNull { file -> file.modifiedTime.value }!!
             logger.warn("found ${namedFiles.size} files named $filename on Drive - getting latest ${latestFile.modifiedTime.value}")
             return latestFile.id
         }
@@ -207,7 +205,7 @@ class GoogleSyncManager(
         return googleFile.id
     }
 
-    private fun requestSingIn(requestCode: Int) {
+    private fun requestSingIn(onSignIn: (driveService: Drive) -> Unit) {
         logger.debug("requesting Google Sign In")
         val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -222,7 +220,9 @@ class GoogleSyncManager(
                 signInIntent.action = "com.google.android.gms.auth.GOOGLE_SIGN_IN"
             }
             // The result of the sign-in Intent is handled in onActivityResult.
-            activity.startActivityForResult(signInIntent, requestCode)
+            activityResultDispatcher.startActivityForResult(signInIntent) { resultCode: Int, data: Intent? ->
+                handleSignInResult(data, resultCode, onSignIn)
+            }
         }
     }
 
@@ -237,17 +237,17 @@ class GoogleSyncManager(
         }
     }
 
-    fun handleSignInResult(result: Intent?, activity: AppCompatActivity?, requestCode: Int, resultCode: Int) {
-        if (resultCode != Activity.RESULT_OK || result == null) {
-            logger.warn("Sign in request failed: result code=$resultCode, result=$result, extras=${result?.extras}")
-            result?.extras?.keySet()?.forEach { key ->
-                logger.warn("key=$key, value=${result.extras?.get(key)}")
+    private fun handleSignInResult(resultData: Intent?, resultCode: Int, onSignIn: (driveService: Drive) -> Unit) {
+        if (resultCode != Activity.RESULT_OK || resultData == null) {
+            logger.warn("Sign in request failed: result code=$resultCode, result=$resultData, extras=${resultData?.extras}")
+            resultData?.extras?.keySet()?.forEach { key ->
+                logger.warn("key=$key, value=${resultData.extras?.get(key)}")
             }
             uiInfoService.showToast(R.string.operation_cancelled)
             return
         }
 
-        GoogleSignIn.getSignedInAccountFromIntent(result).addOnSuccessListener { googleAccount: GoogleSignInAccount ->
+        GoogleSignIn.getSignedInAccountFromIntent(resultData).addOnSuccessListener { googleAccount: GoogleSignInAccount ->
             logger.debug("Signed in as ${googleAccount.email}")
             // Use the authenticated account to sign in to the Drive service.
             val credential = GoogleAccountCredential.usingOAuth2(activity, setOf(DriveScopes.DRIVE_APPDATA))
@@ -256,10 +256,7 @@ class GoogleSyncManager(
                     .setApplicationName("igrek.songbook")
                     .build()
 
-            when (requestCode) {
-                REQUEST_CODE_SIGN_IN_SYNC_SAVE -> syncSaveSignedIn(googleDriveService)
-                REQUEST_CODE_SIGN_IN_SYNC_RESTORE -> syncRestoreSignedIn(googleDriveService)
-            }
+            onSignIn(googleDriveService)
         }.addOnFailureListener { exception: Exception? ->
             uiInfoService.showInfoIndefinite(R.string.error_unable_to_sing_in_google)
             logger.error("Unable to sign in to Google account", exception!!)

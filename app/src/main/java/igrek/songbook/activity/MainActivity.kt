@@ -1,6 +1,5 @@
 package igrek.songbook.activity
 
-import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
@@ -9,15 +8,12 @@ import android.os.Looper
 import android.view.KeyEvent
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import igrek.songbook.custom.SongExportFileChooser
-import igrek.songbook.custom.SongImportFileChooser
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.AppContextFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import igrek.songbook.settings.sync.GoogleSyncManager
 import igrek.songbook.util.RetryDelayed
 
 
@@ -105,19 +101,7 @@ open class MainActivity(
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when (requestCode) {
-            SongImportFileChooser.FILE_SELECT_CODE ->
-                if (resultCode == Activity.RESULT_OK) {
-                    activityData.songImportFileChooser.onFileSelect(data?.data)
-                }
-            SongExportFileChooser.FILE_EXPORT_SELECT_CODE ->
-                if (resultCode == Activity.RESULT_OK) {
-                    activityData.songExportFileChooser.onFileSelect(data?.data)
-                }
-            GoogleSyncManager.REQUEST_CODE_SIGN_IN_SYNC_SAVE,
-            GoogleSyncManager.REQUEST_CODE_SIGN_IN_SYNC_RESTORE ->
-                activityData.googleSyncManager.handleSignInResult(data, this, requestCode, resultCode)
-        }
+        activityData.activityResultDispatcher.onActivityResult(requestCode, resultCode, data)
         super.onActivityResult(requestCode, resultCode, data)
     }
 

@@ -18,34 +18,32 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.nio.charset.Charset
 
-class SongImportFileChooser(
+class ImportFileChooser(
         activity: LazyInject<Activity> = appFactory.activity,
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
         uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        editSongLayoutController: LazyInject<EditSongLayoutController> = appFactory.editSongLayoutController,
         activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,
 ) {
     private val activity by LazyExtractor(activity)
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val uiResourceService by LazyExtractor(uiResourceService)
-    private val editSongLayoutController by LazyExtractor(editSongLayoutController)
     private val activityResultDispatcher by LazyExtractor(activityResultDispatcher)
 
     companion object {
-        const val FILE_IMPORT_LIMIT_B = 50 * 1024
+        const val FILE_IMPORT_LIMIT_B = 10 * 1024 * 1024
     }
 
-    fun showFileChooser() {
+    fun importFile(onLoad: (content: String, filename: String) -> Unit) {
         SafeExecutor {
             val intent = Intent(Intent.ACTION_GET_CONTENT)
             intent.type = "*/*"
             intent.addCategory(Intent.CATEGORY_OPENABLE)
 
             try {
-                val title = uiResourceService.resString(R.string.select_file_to_import)
+                val title = uiResourceService.resString(R.string.select_file_to_open)
                 activityResultDispatcher.startActivityForResult(Intent.createChooser(intent, title)) { resultCode: Int, data: Intent? ->
                     if (resultCode == Activity.RESULT_OK) {
-                        onFileSelect(data?.data)
+                        onFileSelect(data?.data, onLoad)
                     }
                 }
             } catch (ex: android.content.ActivityNotFoundException) {
@@ -54,7 +52,7 @@ class SongImportFileChooser(
         }
     }
 
-    private fun onFileSelect(selectedUri: Uri?) {
+    private fun onFileSelect(selectedUri: Uri?, onLoad: (content: String, filename: String) -> Unit) {
         SafeExecutor {
             if (selectedUri != null) {
                 activity.contentResolver.openInputStream(selectedUri)?.use { inputStream: InputStream ->
@@ -67,8 +65,7 @@ class SongImportFileChooser(
                     }
 
                     val content = convert(inputStream, Charset.forName("UTF-8"))
-
-                    editSongLayoutController.setupImportedSong(filename, content)
+                    onLoad(content, filename)
                 }
             }
         }

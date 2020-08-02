@@ -99,25 +99,30 @@ class SecretCommandService(
                 },
 
                 ExactKeyRule("ad show") { this.adService.enableAds() },
+
                 ExactKeyRule("grant permission files") {
                     this.permissionService.isStoragePermissionGranted
                 },
+
+                CommandRule({ it.trim().matches(encodedSecretRegex) }) {
+                    decodeSecretKeys(it)
+                },
+
+                SubCommandRule("hush", ::hashedCommand),
+
+                SubCommandRule("shell") { shellCommand(it, showStdout = false) },
+                SubCommandRule("shellout") { shellCommand(it, showStdout = true) },
+
+                SubCommandRule("unlock", ::unlockSongs),
+
+                SubCommandRule("backup export local", ::backupDataFiles),
+                SubCommandRule("backup import local", ::restoreDataFiles),
 
                 SubCommandRule("login") { key: String ->
                     this.adminService.loginAdmin(key)
                 },
 
-                CommandRule({
-                    it.trim().matches(encodedSecretRegex)
-                }) { decodeSecretKeys(it) },
-
-                SubCommandRule("hush", ::hashedCommand),
-                SubCommandRule("shell") { shellCommand(it, showStdout = false) },
-                SubCommandRule("shellout") { shellCommand(it, showStdout = true) },
-                SubCommandRule("unlock", ::unlockSongs),
-                SubCommandRule("backup local", ::backupDataFiles),
-                SubCommandRule("restore local", ::restoreDataFiles),
-                SubCommandRule("exit now") {
+                ExactKeyRule("exit now") {
                     GlobalScope.launch(Dispatchers.Main) {
                         toast("exiting...")
                         this@SecretCommandService.activityController.quit()

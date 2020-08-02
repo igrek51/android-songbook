@@ -427,4 +427,10 @@
     <string name="room_close_room">Close room</string>
     <string name="room_make_discoverable">Make discoverable</string>
     <string name="room_open_current_song">Open current song</string>
+    <string name="edit_song_export_all_custom_songs">Export all songs</string>
+    <string name="edit_song_import_custom_songs">Import multiple songs</string>
+    <string name="custom_songs_exported">All custom songs exported</string>
+    <string name="select_file_to_open">Select file to open</string>
+    <string name="custom_songs_imported">%s new custom songs have been imported</string>
+    <string name="custom_songs_mass_import_hint">Importing multiple custom songs is supposed to load many songs from a particular file type. Existing songs will not be overwritten. If you\'d rather like to import just one song from a text file, use option \"Import from file\" when creating new song. Do you want to continue importing multiple custom songs?</string>
 </resources>

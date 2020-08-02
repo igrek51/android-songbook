@@ -67,23 +67,48 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginStart="20dp"
                 android:text="@string/nav_custom_song"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
-            <ImageButton
-                android:id="@+id/addCustomSongButton"
-                android:layout_width="48dp"
+            <LinearLayout
+                android:layout_width="96dp"
                 android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_gravity="end|center_vertical"
-                android:layout_marginEnd="0dp"
-                android:layout_marginRight="0dp"
-                android:adjustViewBounds="true"
-                android:background="?android:selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="8dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/add"/>
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/addCustomSongButton"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginRight="0dp"
+                    android:adjustViewBounds="true"
+                    android:background="?android:selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="8dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/add" />
+
+                <ImageButton
+                    android:id="@+id/moreActionsButton"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginRight="0dp"
+                    android:adjustViewBounds="true"
+                    android:background="?android:selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="8dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/more" />
+
+            </LinearLayout>
 
         </androidx.appcompat.widget.Toolbar>
 

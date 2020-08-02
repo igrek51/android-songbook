@@ -46,8 +46,8 @@ class CustomSongsDao(
     }
 
     fun saveCustomSong(newSong: CustomSong): Song {
-        val olds = customSongs.songs.filter {
-            song -> song.id != newSong.id
+        val olds = customSongs.songs.filter { song ->
+            song.id != newSong.id
         }.toMutableList()
         if (newSong.id == 0L)
             newSong.id = nextId(olds)
@@ -59,8 +59,22 @@ class CustomSongsDao(
         return customModelSong!!
     }
 
+    fun addNewCustomSongs(newSongs: List<CustomSong>): Int {
+        var added = 0
+        newSongs.forEach { newSong ->
+            if (!customSongs.songs.any { it.title == newSong.title && it.categoryName == newSong.categoryName }) {
+                newSong.id = nextId(customSongs.songs)
+                customSongs.songs.add(newSong)
+                added++
+            }
+        }
+
+        songsRepository.saveAndReloadUserData()
+        return added
+    }
+
     private fun nextId(songs: MutableList<CustomSong>): Long {
-        return (songs.map { song -> song.id }.max() ?: 0) + 1
+        return (songs.map { song -> song.id }.maxOrNull() ?: 0) + 1
     }
 
     fun removeCustomSong(newSong: CustomSong) {

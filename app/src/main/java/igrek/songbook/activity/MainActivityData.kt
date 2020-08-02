@@ -1,12 +1,9 @@
 package igrek.songbook.activity
 
 import androidx.appcompat.app.AppCompatActivity
-import igrek.songbook.custom.SongExportFileChooser
-import igrek.songbook.custom.SongImportFileChooser
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import igrek.songbook.settings.sync.GoogleSyncManager
 import igrek.songbook.system.PermissionService
 import igrek.songbook.system.SystemKeyDispatcher
 
@@ -20,16 +17,12 @@ class MainActivityData(
         optionSelectDispatcher: LazyInject<OptionSelectDispatcher> = appFactory.optionSelectDispatcher,
         systemKeyDispatcher: LazyInject<SystemKeyDispatcher> = appFactory.systemKeyDispatcher,
         permissionService: LazyInject<PermissionService> = appFactory.permissionService,
-        songImportFileChooser: LazyInject<SongImportFileChooser> = appFactory.songImportFileChooser,
-        songExportFileChooser: LazyInject<SongExportFileChooser> = appFactory.songExportFileChooser,
-        googleSyncManager: LazyInject<GoogleSyncManager> = appFactory.googleSyncManager,
+        activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,
 ) : AppCompatActivity() {
-    var appInitializer by LazyExtractor(appInitializer)
-    var activityController by LazyExtractor(activityController)
-    var optionSelectDispatcher by LazyExtractor(optionSelectDispatcher)
-    var systemKeyDispatcher by LazyExtractor(systemKeyDispatcher)
-    var permissionService by LazyExtractor(permissionService)
-    var songImportFileChooser by LazyExtractor(songImportFileChooser)
-    var songExportFileChooser by LazyExtractor(songExportFileChooser)
-    var googleSyncManager by LazyExtractor(googleSyncManager)
+    val appInitializer by LazyExtractor(appInitializer)
+    val activityController by LazyExtractor(activityController)
+    val optionSelectDispatcher by LazyExtractor(optionSelectDispatcher)
+    val systemKeyDispatcher by LazyExtractor(systemKeyDispatcher)
+    val permissionService by LazyExtractor(permissionService)
+    val activityResultDispatcher by LazyExtractor(activityResultDispatcher)
 }

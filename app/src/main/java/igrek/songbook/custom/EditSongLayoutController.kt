@@ -32,7 +32,7 @@ class EditSongLayoutController(
         customSongService: LazyInject<CustomSongService> = appFactory.customSongService,
         softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
         songImportFileChooser: LazyInject<SongImportFileChooser> = appFactory.songImportFileChooser,
-        songExportFileChooser: LazyInject<SongExportFileChooser> = appFactory.songExportFileChooser,
+        exportFileChooser: LazyInject<ExportFileChooser> = appFactory.songExportFileChooser,
         chordsEditorLayoutController: LazyInject<ChordsEditorLayoutController> = appFactory.chordsEditorLayoutController,
         chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
         contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
@@ -46,7 +46,7 @@ class EditSongLayoutController(
     private val customSongService by LazyExtractor(customSongService)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
     private val songImportFileChooser by LazyExtractor(songImportFileChooser)
-    private val songExportFileChooser by LazyExtractor(songExportFileChooser)
+    private val songExportFileChooser by LazyExtractor(exportFileChooser)
     private val chordsEditorLayoutController by LazyExtractor(chordsEditorLayoutController)
     private val chordsNotationService by LazyExtractor(chordsNotationService)
     private val contextMenuBuilder by LazyExtractor(contextMenuBuilder)

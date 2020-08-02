@@ -400,5 +400,11 @@
     <string name="room_chat_send">Wyślij</string>
     <string name="room_close_room">Zamknij pokój</string>
     <string name="room_make_discoverable">Ustaw pokój widoczny</string>
-    <string name="room_open_current_song">Open current song</string>
+    <string name="room_open_current_song">Otwórz obecną piosenkę</string>
+    <string name="edit_song_export_all_custom_songs">Wyeksportuj wszystkie piosenki</string>
+    <string name="edit_song_import_custom_songs">Importuj wiele piosenek</string>
+    <string name="custom_songs_exported">Wyeksportowano własne piosenki.</string>
+    <string name="select_file_to_open">Wybierz plik do otwarcia</string>
+    <string name="custom_songs_imported">Zaimportowano %s nowych własnych piosenek.</string>
+    <string name="custom_songs_mass_import_hint">Importowanie wielu piosenek polega na wczytaniu wielu własnych piosenek z jednego pliku określonego typu. Istniejące piosenki nie zostaną nadpisane. Jeśli chcesz zaimportować tylko jedną piosenkę, użyj opcji użyj opcji "Importuj z pliku" podczas tworzenia nowej piosenki. Czy chcesz kontynuować import wielu piosenek?</string>
 </resources>
