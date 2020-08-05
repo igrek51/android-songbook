@@ -411,4 +411,9 @@
     <string name="error_occurred">Wystąpił błąd</string>
     <string name="command_successful">Polecenie wykonane</string>
     <string name="command_failed">Błąd polecenia</string>
+    <string name="room_joining_room">Dołączanie do pokoju %s…</string>
+    <string name="room_joined_to_room">Dołączono do pokoju</string>
+    <string name="room_room_created">Pokój utworzony</string>
+    <string name="room_scanning_completed">Skanowanie zakończone</string>
+    <string name="room_dropped_from_host">Odłączono z pokoju</string>
 </resources>

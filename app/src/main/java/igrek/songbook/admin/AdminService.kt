@@ -10,6 +10,7 @@ import igrek.songbook.R
 import igrek.songbook.admin.antechamber.AntechamberService
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -71,7 +72,7 @@ class AdminService(
     }
 
     fun updatePublicSongUi(song: Song) {
-        uiInfoService.showInfoIndefinite(R.string.admin_sending)
+        uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
 
         val deferred = antechamberService.updatePublicSong(song)
         GlobalScope.launch(Dispatchers.Main) {
@@ -79,8 +80,7 @@ class AdminService(
             result.fold(onSuccess = {
                 uiInfoService.showInfo(R.string.admin_success)
             }, onFailure = { e ->
-                val message = uiResourceService.resString(R.string.admin_communication_breakdown, e.message)
-                uiInfoService.showInfoIndefinite(message)
+                UiErrorHandler.handleError(e, R.string.admin_communication_breakdown)
             })
         }
     }
@@ -134,7 +134,7 @@ class AdminService(
     }
 
     private fun updateRank(song: Song, rank: Double?) {
-        uiInfoService.showInfoIndefinite(R.string.admin_sending)
+        uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
 
         val deferred = songRankService.updateRank(song, rank)
         GlobalScope.launch(Dispatchers.Main) {
@@ -142,14 +142,13 @@ class AdminService(
             result.fold(onSuccess = {
                 uiInfoService.showInfo(R.string.admin_success)
             }, onFailure = { e ->
-                val message = uiResourceService.resString(R.string.admin_communication_breakdown, e.message)
-                uiInfoService.showInfoIndefinite(message)
+                UiErrorHandler.handleError(e, R.string.admin_communication_breakdown)
             })
         }
     }
 
     private fun createCategory(categoryName: String) {
-        uiInfoService.showInfoIndefinite(R.string.admin_sending)
+        uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
 
         val deferred = adminCategoryManager.createCategory(categoryName)
         GlobalScope.launch(Dispatchers.Main) {
@@ -157,8 +156,7 @@ class AdminService(
             result.fold(onSuccess = {
                 uiInfoService.showInfo(R.string.admin_success)
             }, onFailure = { e ->
-                val message = uiResourceService.resString(R.string.admin_communication_breakdown, e.message)
-                uiInfoService.showInfoIndefinite(message)
+                UiErrorHandler.handleError(e, R.string.admin_communication_breakdown)
             })
         }
     }

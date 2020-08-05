@@ -79,7 +79,7 @@ class RoomLobbyLayoutController(
     }
 
     private fun onDisconnected() {
-        uiInfoService.showInfo("dropped from host")
+        uiInfoService.showInfo(R.string.room_dropped_from_host)
         if (isLayoutVisible()) {
             layoutController.showLayout(RoomListLayoutController::class)
         }

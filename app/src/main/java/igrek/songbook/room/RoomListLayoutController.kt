@@ -7,6 +7,7 @@ import android.widget.ImageButton
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.SafeClickListener
+import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -69,16 +70,15 @@ class RoomListLayoutController(
     private fun joinRoom(room: Room) {
         showScanningCompleted = false
         GlobalScope.launch {
-            uiInfoService.showInfo("Joining room on ${room.name}...")
+            uiInfoService.showInfo(R.string.room_joining_room, room.name)
             val username = myNameEditText?.text?.toString().orEmpty()
             roomLobby.joinRoom(username, room).await().fold(onSuccess = {
-                uiInfoService.showInfo("Joined to room")
+                uiInfoService.showInfo(R.string.room_joined_to_room)
                 GlobalScope.launch(Dispatchers.Main) {
                     layoutController.showLayout(RoomLobbyLayoutController::class)
                 }
             }, onFailure = { e ->
-                logger.error(e)
-                uiInfoService.showInfoIndefinite(R.string.error_communication_breakdown, e.message.orEmpty())
+                UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
             })
         }
     }
@@ -88,11 +88,10 @@ class RoomListLayoutController(
             GlobalScope.launch {
                 val username = myNameEditText?.text?.toString().orEmpty()
                 roomLobby.hostRoom(username, password).await().fold(onSuccess = {
-                    uiInfoService.showInfo("room created")
+                    uiInfoService.showInfo(R.string.room_room_created)
                     layoutController.showLayout(RoomLobbyLayoutController::class)
                 }, onFailure = { e ->
-                    logger.error(e)
-                    uiInfoService.showInfoIndefinite(R.string.error_communication_breakdown, e.message.orEmpty())
+                    UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
                 })
             }
         }
@@ -108,7 +107,7 @@ class RoomListLayoutController(
 
     private fun scanRooms() {
         joinRoomListView?.items = emptyList()
-        uiInfoService.showInfoIndefinite(R.string.screen_share_scanning_devices)
+        uiInfoService.showInfo(R.string.screen_share_scanning_devices, indefinite = true)
         showScanningCompleted = true
 
         GlobalScope.launch(Dispatchers.IO) {
@@ -119,10 +118,9 @@ class RoomListLayoutController(
                     }
                 }
                 if (showScanningCompleted)
-                    uiInfoService.showInfo("scanning completed")
+                    uiInfoService.showInfo(R.string.room_scanning_completed)
             }, onFailure = { e ->
-                logger.error(e)
-                uiInfoService.showInfoIndefinite(R.string.error_communication_breakdown, e.message.orEmpty())
+                UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
             })
         }
     }

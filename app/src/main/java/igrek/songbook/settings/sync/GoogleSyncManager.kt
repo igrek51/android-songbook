@@ -90,8 +90,7 @@ class GoogleSyncManager(
                 }
             }.onFailure { error ->
                 logger.error(error)
-                uiInfoService.showInfoIndefinite(R.string.settings_sync_save_error, error.message
-                        ?: "")
+                uiInfoService.showInfo(R.string.settings_sync_save_error, error.message.orEmpty(), indefinite = true)
             }.onSuccess {
                 uiInfoService.showInfo(R.string.settings_sync_save_success)
             }
@@ -114,8 +113,7 @@ class GoogleSyncManager(
                 }
             }.onFailure { error ->
                 logger.error(error)
-                uiInfoService.showInfoIndefinite(R.string.settings_sync_restore_error, error.message
-                        ?: "")
+                uiInfoService.showInfo(R.string.settings_sync_restore_error, error.message.orEmpty(), indefinite = true)
             }.onSuccess {
                 songsRepository.reloadSongsDb()
                 preferencesService.reload()
@@ -139,7 +137,7 @@ class GoogleSyncManager(
 
     private fun showSyncProgress(current: Int, count: Int) {
         val percent = current * 100 / count
-        uiInfoService.showInfoIndefinite(R.string.settings_sync_in_progress, percent.toString())
+        uiInfoService.showInfo(R.string.settings_sync_in_progress, percent.toString(), indefinite = true)
     }
 
     private fun backupFile(driveService: Drive, syncFile: String) {
@@ -258,7 +256,7 @@ class GoogleSyncManager(
 
             onSignIn(googleDriveService)
         }.addOnFailureListener { exception: Exception? ->
-            uiInfoService.showInfoIndefinite(R.string.error_unable_to_sing_in_google)
+            uiInfoService.showInfo(R.string.error_unable_to_sing_in_google, indefinite = true)
             logger.error("Unable to sign in to Google account", exception!!)
         }
     }

@@ -6,6 +6,7 @@ import igrek.songbook.admin.AdminService
 import igrek.songbook.admin.HttpRequester
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -145,7 +146,7 @@ class AntechamberService(
     }
 
     fun updateAntechamberSongUI(song: Song) {
-        uiInfoService.showInfoIndefinite(R.string.admin_sending)
+        uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
 
         val deferred = updateAntechamberSong(song)
         GlobalScope.launch(Dispatchers.Main) {
@@ -153,8 +154,7 @@ class AntechamberService(
             result.fold(onSuccess = {
                 uiInfoService.showInfo(R.string.admin_success)
             }, onFailure = { e ->
-                val message = uiResourceService.resString(R.string.admin_communication_breakdown, e.message)
-                uiInfoService.showInfoIndefinite(message)
+                UiErrorHandler.handleError(e, R.string.admin_communication_breakdown)
             })
         }
     }
@@ -162,7 +162,7 @@ class AntechamberService(
     fun approveCustomSongUI(song: Song) {
         val message1 = uiResourceService.resString(R.string.admin_antechamber_confirm_approve, song.toString())
         ConfirmDialogBuilder().confirmAction(message1) {
-            uiInfoService.showInfoIndefinite(R.string.admin_sending)
+            uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
 
             val deferred = approveAntechamberSong(song)
             GlobalScope.launch(Dispatchers.Main) {
@@ -170,8 +170,7 @@ class AntechamberService(
                 result.fold(onSuccess = {
                     uiInfoService.showInfo(R.string.admin_success)
                 }, onFailure = { e ->
-                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, e.message)
-                    uiInfoService.showInfoIndefinite(message)
+                    UiErrorHandler.handleError(e, R.string.admin_communication_breakdown)
                 })
             }
         }
@@ -180,7 +179,7 @@ class AntechamberService(
     fun approveAntechamberSongUI(song: Song) {
         val message1 = uiResourceService.resString(R.string.admin_antechamber_confirm_approve, song.toString())
         ConfirmDialogBuilder().confirmAction(message1) {
-            uiInfoService.showInfoIndefinite(R.string.admin_sending)
+            uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
 
             GlobalScope.launch(Dispatchers.Main) {
                 val result = approveAntechamberSong(song).await()
@@ -189,8 +188,7 @@ class AntechamberService(
                     uiInfoService.showInfo(R.string.admin_success)
                     adminSongsLayoutContoller.fetchRequestSubject.onNext(true)
                 }, onFailure = { e ->
-                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, e.message)
-                    uiInfoService.showInfoIndefinite(message)
+                    UiErrorHandler.handleError(e, R.string.admin_communication_breakdown)
                 })
             }
         }
@@ -199,7 +197,7 @@ class AntechamberService(
     fun deleteAntechamberSongUI(song: Song) {
         val message1 = uiResourceService.resString(R.string.admin_antechamber_confirm_delete, song.toString())
         ConfirmDialogBuilder().confirmAction(message1) {
-            uiInfoService.showInfoIndefinite(R.string.admin_sending)
+            uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
 
             GlobalScope.launch(Dispatchers.Main) {
                 val result = deleteAntechamberSong(song).await()
@@ -207,8 +205,7 @@ class AntechamberService(
                     uiInfoService.showInfo(R.string.admin_success)
                     adminSongsLayoutContoller.fetchRequestSubject.onNext(true)
                 }, onFailure = { e ->
-                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, e.message)
-                    uiInfoService.showInfoIndefinite(message)
+                    UiErrorHandler.handleError(e, R.string.admin_communication_breakdown)
                 })
             }
         }

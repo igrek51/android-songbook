@@ -159,17 +159,17 @@ class ChordsDiagramsService(
     private fun tryToFindChordDiagram(_chordName: String) {
         val chordName = _chordName.trim()
         if (chordName.isBlank()) {
-            uiInfoService.showInfo(uiResourceService.resString(R.string.chord_diagram_not_found))
+            uiInfoService.showInfo(R.string.chord_diagram_not_found)
             return
         }
         val (engChord, errors) = toEnglishConverter.convertChordsGroup(chordName)
         if (errors.isNotEmpty()) {
-            uiInfoService.showInfo(uiResourceService.resString(R.string.chord_diagram_not_found))
+            uiInfoService.showInfo(R.string.chord_diagram_not_found)
             return
         }
         val chordDiagramCodes = getChordDiagrams(chordsInstrumentService.instrument)
         if (engChord !in chordDiagramCodes) {
-            uiInfoService.showInfo(uiResourceService.resString(R.string.chord_diagram_not_found))
+            uiInfoService.showInfo(R.string.chord_diagram_not_found)
             return
         }
         showChordDefinition(chordName, emptySet())

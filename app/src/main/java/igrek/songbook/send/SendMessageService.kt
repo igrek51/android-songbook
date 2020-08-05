@@ -44,7 +44,7 @@ class SendMessageService(
                            title: String? = null,
                            originalSongId: Long? = null
     ) {
-        uiInfoService.showInfoIndefinite(uiResourceService.resString(R.string.contact_sending))
+        uiInfoService.showInfo(R.string.contact_sending, indefinite = true)
 
         val appVersionName = packageInfoService.versionName
         val appVersionCode = packageInfoService.versionCode.toString()
@@ -94,7 +94,9 @@ class SendMessageService(
 
     private fun onErrorReceived(errorMessage: String?) {
         logger.error("Contact message sending error: $errorMessage")
-        Handler(Looper.getMainLooper()).post { uiInfoService.showInfoIndefinite(R.string.contact_error_sending) }
+        Handler(Looper.getMainLooper()).post {
+            uiInfoService.showInfo(R.string.contact_error_sending, indefinite = true)
+        }
     }
 
     fun requestMissingSong() {

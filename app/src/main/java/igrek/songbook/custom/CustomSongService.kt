@@ -115,9 +115,8 @@ class CustomSongService(
 
         val newModelSong = songsRepository.customSongsDao.saveCustomSong(newSong)
 
-        uiInfoService.showInfoWithAction(
-                R.string.song_copied_as_custom,
-                R.string.song_copied_edit_it) {
+        uiInfoService.showInfoAction(R.string.song_copied_as_custom,
+                actionResId = R.string.song_copied_edit_it) {
             showEditSongScreen(newModelSong)
         }
         return newSong

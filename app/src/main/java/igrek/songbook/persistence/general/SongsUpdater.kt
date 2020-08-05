@@ -39,7 +39,7 @@ class SongsUpdater(
     fun updateSongsDb(forced: Boolean) {
         val songsDbFile: File = localDbService.songsDbFile
 
-        uiInfoService.showInfoIndefinite(R.string.updating_db_in_progress)
+        uiInfoService.showInfo(R.string.updating_db_in_progress, indefinite = true)
 
         val request: Request = Request.Builder()
                 .url(songsdbUrl)
@@ -126,7 +126,7 @@ class SongsUpdater(
         } catch (e: Throwable) {
             logger.error("Failed saving new db: ${e.message}")
             Handler(Looper.getMainLooper()).post {
-                uiInfoService.showInfoIndefinite(R.string.connection_error)
+                uiInfoService.showInfo(R.string.connection_error, indefinite = true)
             }
         }
     }
@@ -153,13 +153,13 @@ class SongsUpdater(
     private fun onErrorReceived(errorMessage: String?) {
         logger.error("Connection error: $errorMessage")
         Handler(Looper.getMainLooper()).post {
-            uiInfoService.showInfoIndefinite(R.string.connection_error)
+            uiInfoService.showInfo(R.string.connection_error, indefinite = true)
         }
     }
 
     private fun showUpdateIsAvailable() {
         Handler(Looper.getMainLooper()).post {
-            uiInfoService.showInfoWithActionIndefinite(R.string.update_is_available, R.string.action_update) {
+            uiInfoService.showInfoAction(R.string.update_is_available, indefinite = true, actionResId = R.string.action_update) {
                 uiInfoService.clearSnackBars()
                 updateSongsDb(forced = false)
             }

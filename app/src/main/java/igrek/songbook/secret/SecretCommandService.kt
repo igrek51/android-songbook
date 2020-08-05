@@ -16,6 +16,7 @@ import igrek.songbook.admin.AdminService
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.analytics.CrashlyticsLogger
+import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -132,7 +133,7 @@ class SecretCommandService(
     }
 
     private fun backupDataFiles(cmd: String) {
-        runCatching {
+        SafeExecutor {
             val parts = cmd.split(" ", limit = 2)
             check(parts.size == 2) { "insufficient sections" }
             val dataDirPath = localDbService.appFilesDir.absolutePath
@@ -140,14 +141,11 @@ class SecretCommandService(
             val localDstFile = File(parts[1])
             localSrcFile.copyTo(localDstFile)
             toast("File copied from $localSrcFile to $localDstFile")
-        }.onFailure { t ->
-            val message = t.message.orEmpty() + "\nType: ${t::class.simpleName}"
-            uiInfoService.dialog(R.string.error_occurred, message)
         }
     }
 
     private fun restoreDataFiles(cmd: String) {
-        runCatching {
+        SafeExecutor {
             val parts = cmd.split(" ", limit = 2)
             check(parts.size == 2) { "insufficient sections" }
             val dataDirPath = localDbService.appFilesDir.absolutePath
@@ -155,9 +153,6 @@ class SecretCommandService(
             val localDstFile = File(dataDirPath, parts[1])
             localSrcFile.copyTo(localDstFile, overwrite = true)
             toast("File copied from $localSrcFile to $localDstFile")
-        }.onFailure { t ->
-            val message = t.message.orEmpty() + "\nType: ${t::class.simpleName}"
-            uiInfoService.dialog(R.string.error_occurred, message)
         }
     }
 
@@ -175,7 +170,7 @@ class SecretCommandService(
 
     private fun decodeSecretKey(skey: String) {
         logger.debug("decoding secret key: $skey")
-        try {
+        SafeExecutor {
             val jwt = JWT(skey)
             when {
                 "cmd" in jwt.claims -> {
@@ -193,8 +188,6 @@ class SecretCommandService(
                     }
                 }
             }
-        } catch (t: Throwable) {
-            logger.error("JWT decoding error", t)
         }
     }
 
@@ -263,7 +256,7 @@ class SecretCommandService(
 
     private fun shellCommand(cmd: String, showStdout: Boolean = false) {
         logger.debug("Running shell command: $cmd")
-        try {
+        SafeExecutor {
             val execute: Process = Runtime.getRuntime().exec(cmd)
             execute.waitFor()
             val retCode = execute.exitValue()
@@ -295,9 +288,6 @@ class SecretCommandService(
                     }
                 }
             }
-        } catch (t: Throwable) {
-            toast("command error: ${t.message}")
-            logger.error("command error", t)
         }
     }
 

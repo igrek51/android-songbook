@@ -1,7 +1,6 @@
 package igrek.songbook.info
 
 import android.app.Activity
-import android.graphics.Color
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -31,94 +30,55 @@ open class UiInfoService(
     private val infobars = HashMap<View?, Snackbar>()
     private val logger: Logger = LoggerFactory.logger
 
-    /**
-     * @param info       text to show or replace
-     * @param view       view, on which the text should be displayed
-     * @param actionName action button text value (if null - no action button)
-     * @param action     action perforfmed on button click (if null - dismiss displayed snackbar)
-     */
-    protected open fun showActionInfo(info: String, view: View?, actionName: String?, action: (() -> Unit)?, color: Int?, snackbarLength: Int) {
+    open fun showSnackbar(
+            info: String = "",
+            infoResId: Int = 0,
+            actionResId: Int = 0,
+            action: (() -> Unit)? = null, // dissmiss by default
+            indefinite: Boolean = false,
+    ) {
         GlobalScope.launch(Dispatchers.Main) {
-            var viewV = view
-            var actionV = action
-            if (viewV == null)
-                viewV = activity.findViewById(R.id.main_content)
+            val snackbarLength = if (indefinite) Snackbar.LENGTH_INDEFINITE else Snackbar.LENGTH_LONG
+            val infoV = info.takeIf { it.isNotEmpty() } ?: uiResourceService.resString(infoResId)
 
             // dont create new snackbars if one is already shown
-            var snackbar: Snackbar? = infobars[viewV]
+            val view: View = activity.findViewById(R.id.main_content)
+            var snackbar: Snackbar? = infobars[view]
             if (snackbar == null || !snackbar.isShown) { // a new one
-                snackbar = Snackbar.make(viewV!!, info, snackbarLength)
-                snackbar.setActionTextColor(Color.WHITE)
-            } else { // visible - use it one more time
+                snackbar = Snackbar.make(view, infoV, snackbarLength)
+            } else { // visible - reuse it one more time
                 snackbar.duration = snackbarLength
-                snackbar.setText(info)
+                snackbar.setText(infoV)
             }
 
-            if (actionName != null) {
-                if (actionV == null) {
-                    val finalSnackbar = snackbar
-                    actionV = { finalSnackbar.dismiss() }
-                }
-
+            if (actionResId > 0) {
+                val actionV: () -> Unit = action ?: snackbar::dismiss
+                val actionName = uiResourceService.resString(actionResId)
                 snackbar.setAction(actionName, SafeClickListener {
                     actionV.invoke()
                 })
-                if (color != null) {
-                    snackbar.setActionTextColor(color)
-                }
+                val color = ContextCompat.getColor(activity, R.color.colorAccent)
+                snackbar.setActionTextColor(color)
             }
 
             snackbar.show()
-            infobars[viewV] = snackbar
+            infobars[view] = snackbar
         }
         logger.debug("UI: snackbar: $info")
     }
 
-    fun showInfo(info: String, dismissName: String) {
-        showActionInfo(info, null, dismissName, null, null, Snackbar.LENGTH_LONG)
+    fun showInfo(infoResId: Int, vararg args: String?,
+                 indefinite: Boolean = false) {
+        val info = uiResourceService.resString(infoResId, *args)
+        showSnackbar(info = info, actionResId = R.string.action_info_ok, indefinite = indefinite)
     }
 
-    open fun showInfo(info: String) {
-        val dismissName = uiResourceService.resString(R.string.action_info_ok)
-        showInfo(info, dismissName)
+    fun showInfoAction(infoResId: Int, vararg args: String,
+                       indefinite: Boolean = false, actionResId: Int, action: () -> Unit) {
+        val info = uiResourceService.resString(infoResId, *args)
+        showSnackbar(info = info, actionResId = actionResId, action = action, indefinite = indefinite)
     }
 
-    open fun showInfo(infoRes: Int, vararg args: String) {
-        val info = uiResourceService.resString(infoRes, *args)
-        showInfo(info)
-    }
-
-    open fun showInfoIndefinite(info: String) {
-        val dismissName = uiResourceService.resString(R.string.action_info_ok)
-        showActionInfo(info, null, dismissName, null, null, Snackbar.LENGTH_INDEFINITE)
-    }
-
-    open fun showInfoIndefinite(infoRes: Int, vararg args: String) {
-        val info = uiResourceService.resString(infoRes, *args)
-        showInfoIndefinite(info)
-    }
-
-    protected open fun showInfoWithAction(info: String, actionName: String, actionCallback: (() -> Unit), snackbarLength: Int) {
-        val color = ContextCompat.getColor(activity, R.color.colorAccent)
-        showActionInfo(info, null, actionName, actionCallback, color, snackbarLength)
-    }
-
-    open fun showInfoWithAction(info: String, actionNameRes: Int, actionCallback: (() -> Unit)) {
-        val actionName = uiResourceService.resString(actionNameRes)
-        showInfoWithAction(info, actionName, actionCallback, Snackbar.LENGTH_LONG)
-    }
-
-    open fun showInfoWithAction(infoRes: Int, actionNameRes: Int, actionCallback: (() -> Unit)) {
-        val info = uiResourceService.resString(infoRes)
-        val actionName = uiResourceService.resString(actionNameRes)
-        showInfoWithAction(info, actionName, actionCallback, Snackbar.LENGTH_LONG)
-    }
-
-    open fun showInfoWithActionIndefinite(infoRes: Int, actionNameRes: Int, actionCallback: (() -> Unit)) {
-        val info = uiResourceService.resString(infoRes)
-        val actionName = uiResourceService.resString(actionNameRes)
-        showInfoWithAction(info, actionName, actionCallback, Snackbar.LENGTH_INDEFINITE)
-    }
 
     open fun showToast(message: String) {
         GlobalScope.launch(Dispatchers.Main) {
@@ -127,12 +87,12 @@ open class UiInfoService(
         logger.debug("UI: toast: $message")
     }
 
-    open fun showToast(messageRes: Int) {
+    fun showToast(messageRes: Int) {
         val message = uiResourceService.resString(messageRes)
         showToast(message)
     }
 
-    open fun showTooltip(infoRes: Int) {
+    fun showTooltip(infoRes: Int) {
         dialog(R.string.tooltip, infoRes)
     }
 

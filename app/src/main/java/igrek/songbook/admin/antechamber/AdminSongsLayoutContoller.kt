@@ -79,7 +79,7 @@ class AdminSongsLayoutContoller(
     }
 
     private fun downloadSongs() {
-        uiInfoService.showInfoIndefinite(R.string.admin_downloading_antechamber)
+        uiInfoService.showInfo(R.string.admin_downloading_antechamber, indefinite = true)
         GlobalScope.launch(Dispatchers.Main) {
             val result = antechamberService.downloadSongs().await()
             result.fold(onSuccess = { downloadedSongs ->
@@ -87,8 +87,7 @@ class AdminSongsLayoutContoller(
                 uiInfoService.showInfo(R.string.admin_downloaded_antechamber)
                 updateItemsList()
             }, onFailure = { e ->
-                val message = uiResourceService.resString(R.string.admin_communication_breakdown, e.message)
-                uiInfoService.showInfoIndefinite(message)
+                UiErrorHandler.handleError(e, R.string.admin_communication_breakdown)
             })
         }
     }
@@ -108,7 +107,7 @@ class AdminSongsLayoutContoller(
     private fun deleteAntechamberSongUI(song: Song) {
         val message1 = uiResourceService.resString(R.string.admin_antechamber_confirm_delete, song.toString())
         ConfirmDialogBuilder().confirmAction(message1) {
-            uiInfoService.showInfoIndefinite(R.string.admin_sending)
+            uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
             GlobalScope.launch(Dispatchers.Main) {
                 val result = antechamberService.deleteAntechamberSong(song).await()
                 result.fold(onSuccess = {
@@ -116,8 +115,7 @@ class AdminSongsLayoutContoller(
                     uiInfoService.showInfo(R.string.admin_success)
                     updateItemsList()
                 }, onFailure = { e ->
-                    val message = uiResourceService.resString(R.string.admin_communication_breakdown, e.message)
-                    uiInfoService.showInfoIndefinite(message)
+                    UiErrorHandler.handleError(e, R.string.admin_communication_breakdown)
                 })
             }
         }

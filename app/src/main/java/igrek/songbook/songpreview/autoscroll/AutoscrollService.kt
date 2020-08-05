@@ -215,8 +215,7 @@ class AutoscrollService(
 
     private fun onAutoscrollRemainingWaitTimeEvent(ms: Long) {
         val seconds = ((ms + 500) / 1000).toString()
-        val info = uiResourceService.resString(R.string.autoscroll_starts_in, seconds)
-        uiInfoService.showInfoWithAction(info, R.string.action_start_now_autoscroll) {
+        uiInfoService.showInfoAction(R.string.autoscroll_starts_in, seconds, actionResId = R.string.action_start_now_autoscroll) {
             this.skipInitialPause()
         }
     }
@@ -231,19 +230,19 @@ class AutoscrollService(
         if (!isRunning && canvas != null) {
             if (canvas?.canScrollDown() == true) {
                 start()
-                uiInfoService.showInfoWithAction(R.string.autoscroll_started, R.string.action_stop_autoscroll) { this.stop() }
+                uiInfoService.showInfoAction(R.string.autoscroll_started, actionResId = R.string.action_stop_autoscroll) { this.stop() }
             } else {
-                uiInfoService.showInfo(uiResourceService.resString(R.string.end_of_song_autoscroll_stopped))
+                uiInfoService.showInfo(R.string.end_of_song_autoscroll_stopped)
             }
         }
     }
 
     private fun onAutoscrollStartedEvent() {
-        uiInfoService.showInfoWithAction(R.string.autoscroll_started, R.string.action_stop_autoscroll) { this.stop() }
+        uiInfoService.showInfoAction(R.string.autoscroll_started, actionResId = R.string.action_stop_autoscroll) { this.stop() }
     }
 
     private fun onAutoscrollEndedEvent() {
-        uiInfoService.showInfo(uiResourceService.resString(R.string.end_of_song_autoscroll_stopped))
+        uiInfoService.showInfo(R.string.end_of_song_autoscroll_stopped)
     }
 
     fun onAutoscrollStopUIEvent() {

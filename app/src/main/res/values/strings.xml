@@ -437,4 +437,9 @@
     <string name="error_occurred">Error occurred</string>
     <string name="command_successful">Command successful</string>
     <string name="command_failed">Command failed</string>
+    <string name="room_joining_room">Joining room on %s…</string>
+    <string name="room_joined_to_room">Joined to room</string>
+    <string name="room_room_created">Room created</string>
+    <string name="room_scanning_completed">Scanning completed</string>
+    <string name="room_dropped_from_host">Dropped from host</string>
 </resources>

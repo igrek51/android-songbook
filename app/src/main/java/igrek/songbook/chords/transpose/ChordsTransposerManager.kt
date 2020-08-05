@@ -54,12 +54,11 @@ class ChordsTransposerManager(
 
         songPreviewController.onLyricsModelUpdated()
 
-        val info = uiResourceService.resString(R.string.transposed_by_semitones, transposedByDisplayName)
-
         if (isTransposed) {
-            userInfo.showInfoWithAction(info, R.string.action_transposition_reset) { this.onTransposeResetEvent() }
+            userInfo.showInfoAction(R.string.transposed_by_semitones, transposedByDisplayName,
+                    actionResId = R.string.action_transposition_reset) { this.onTransposeResetEvent() }
         } else {
-            userInfo.showInfo(info)
+            userInfo.showInfo(R.string.transposed_by_semitones, transposedByDisplayName)
         }
 
         quickMenuTranspose.onTransposedEvent()
