@@ -12,6 +12,7 @@ import igrek.songbook.custom.list.CustomSongListItem
 import igrek.songbook.custom.list.CustomSongListView
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -92,10 +93,10 @@ class CustomSongsListLayoutController(
         subscriptions.clear()
         subscriptions.add(songsRepository.dbChangeSubject
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+                .subscribe({
                     if (isLayoutVisible())
                         updateItemsList()
-                })
+                }, UiErrorHandler::handleError))
     }
 
     private fun showMoreActions() {

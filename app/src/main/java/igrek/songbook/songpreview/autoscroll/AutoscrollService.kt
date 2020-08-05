@@ -4,6 +4,7 @@ import android.os.Handler
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -87,19 +88,19 @@ class AutoscrollService(
         // aggreagate many little scrolls into greater parts (not proper RX method found)
         canvasScrollSubject
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { linePartScrolled ->
+                .subscribe({ linePartScrolled ->
                     scrolledBuffer += linePartScrolled!!
                     aggregatedScrollSubject.onNext(scrolledBuffer)
-                }
+                }, UiErrorHandler::handleError)
 
         aggregatedScrollSubject
                 .throttleLast(300, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+                .subscribe({
                     if (canvas != null)
                         onCanvasScrollEvent(scrolledBuffer, canvas?.scroll ?: 0f)
                     scrolledBuffer = 0f
-                }
+                }, UiErrorHandler::handleError)
     }
 
     fun reset() {

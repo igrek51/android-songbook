@@ -10,6 +10,7 @@ import igrek.songbook.admin.AdminService
 import igrek.songbook.editor.ChordsEditorLayoutController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.SafeClickListener
+import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -113,10 +114,10 @@ class EditSongLayoutController(
         subscriptions.clear()
         subscriptions.add(songsRepository.dbChangeSubject
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+                .subscribe({
                     if (isLayoutVisible())
                         updateCategoryAutocompleter()
-                })
+                }, UiErrorHandler::handleError))
     }
 
     private fun updateCategoryAutocompleter() {

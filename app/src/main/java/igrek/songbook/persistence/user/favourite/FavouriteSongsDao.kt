@@ -1,6 +1,7 @@
 package igrek.songbook.persistence.user.favourite
 
 import android.app.Activity
+import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.WrapContextError
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -41,9 +42,9 @@ class FavouriteSongsDao(
     init {
         this.songsRepository.dbChangeSubject
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+                .subscribe({
                     favouritesCache.invalidate()
-                }
+                }, UiErrorHandler::handleError)
 
         read()
     }

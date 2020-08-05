@@ -19,7 +19,7 @@ import igrek.songbook.R
 import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.chords.lyrics.LyricsLoader
 import igrek.songbook.info.UiInfoService
-import igrek.songbook.info.errorcheck.UIErrorHandler
+import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -102,12 +102,12 @@ class SongPreviewLayoutController(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     highlightPanelButtons()
-                }, { t -> UIErrorHandler.showError(t) })
+                }, UiErrorHandler::handleError)
         favouriteSongsService.get().updateFavouriteSongSubject
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     updateFavouriteButton()
-                }, { t -> UIErrorHandler.showError(t) })
+                }, UiErrorHandler::handleError)
     }
 
     override fun showLayout(layout: View) {

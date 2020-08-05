@@ -9,6 +9,7 @@ import com.google.android.gms.ads.AdRequest.*
 import igrek.songbook.BuildConfig
 import igrek.songbook.R
 import igrek.songbook.editor.ChordsEditorLayoutController
+import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -35,9 +36,9 @@ class AdService(
         requestAdViewSubject
                 .throttleFirst(120, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+                .subscribe({
                     requestAdRefresh()
-                }
+                }, UiErrorHandler::handleError)
     }
 
     fun initialize() {

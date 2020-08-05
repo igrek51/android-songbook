@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.ImageButton
 import igrek.songbook.R
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -78,10 +79,10 @@ class TopSongsLayoutController(
         subscriptions.clear()
         subscriptions.add(songsRepository.dbChangeSubject
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+                .subscribe({
                     if (isLayoutVisible())
                         updateItemsList()
-                })
+                }, UiErrorHandler::handleError))
     }
 
     private fun goToSearchSong() {

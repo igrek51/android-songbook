@@ -1,6 +1,7 @@
 package igrek.songbook.persistence.user
 
 
+import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -41,10 +42,10 @@ class UserDataDao(
         saveRequestSubject
                 .throttleLast(2, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { toSave ->
+                .subscribe({ toSave ->
                     if (toSave)
                         save()
-                }
+                }, UiErrorHandler::handleError)
     }
 
     fun reload() {

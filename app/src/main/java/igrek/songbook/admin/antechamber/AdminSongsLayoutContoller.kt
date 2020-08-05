@@ -7,6 +7,7 @@ import igrek.songbook.R
 import igrek.songbook.custom.CustomSongService
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -61,7 +62,7 @@ class AdminSongsLayoutContoller(
         subscriptions.clear()
         subscriptions.add(fetchRequestSubject
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+                .subscribe({
                     GlobalScope.launch(Dispatchers.Main) {
                         val result = antechamberService.downloadSongs().await()
                         result.fold(onSuccess = { downloadedSongs ->
@@ -70,7 +71,7 @@ class AdminSongsLayoutContoller(
                             logger.error(e)
                         })
                     }
-                })
+                }, UiErrorHandler::handleError))
     }
 
     private fun updateItemsList() {

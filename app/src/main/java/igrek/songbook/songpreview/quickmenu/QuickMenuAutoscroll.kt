@@ -7,6 +7,8 @@ import android.widget.SeekBar
 import android.widget.TextView
 import igrek.songbook.R
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.info.errorcheck.UiErrorHandler
+import igrek.songbook.info.errorcheck.UiErrorHandler.Companion.handleError
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -53,15 +55,15 @@ class QuickMenuAutoscroll(
         this.autoscrollService.scrollStateSubject
                 .debounce(200, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+                .subscribe({
                     updateView()
-                }
+                }, UiErrorHandler::handleError)
         this.autoscrollService.scrollSpeedAdjustmentSubject
                 .debounce(200, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+                .subscribe({
                     updateView()
-                }
+                }, UiErrorHandler::handleError)
     }
 
     fun setQuickMenuView(quickMenuView: View) {
@@ -112,9 +114,9 @@ class QuickMenuAutoscroll(
                         autoscrollSpeedSlider!!.valueSubject)
                         .debounce(200, TimeUnit.MILLISECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe {
+                        .subscribe({
                             saveSettings()
-                        })
+                        }, UiErrorHandler::handleError))
     }
 
     private fun addInitialPause(diff: Float) {

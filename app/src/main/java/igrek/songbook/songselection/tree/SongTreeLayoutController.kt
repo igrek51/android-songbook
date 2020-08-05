@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import igrek.songbook.R
+import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -50,10 +51,10 @@ class SongTreeLayoutController(
         subscriptions.clear()
         subscriptions.add(songsRepository.dbChangeSubject
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+                .subscribe({
                     if (layoutController.isState(this::class))
                         updateSongItemsList()
-                })
+                }, UiErrorHandler::handleError))
 
         layout.findViewById<ImageButton>(R.id.languageFilterButton)?.apply {
             val songLanguageEntries = appLanguageService.songLanguageEntries()

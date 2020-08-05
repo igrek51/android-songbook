@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import igrek.songbook.R
+import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -114,15 +115,15 @@ class SongSearchLayoutController(
         subscriptions.add(searchFilterSubject
                 .debounce(400, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+                .subscribe({
                     setSongFilter(searchFilterEdit?.text?.toString())
-                })
+                }, UiErrorHandler::handleError))
         subscriptions.add(songsRepository.dbChangeSubject
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
+                .subscribe({
                     if (layoutController.isState(this::class))
                         updateItemsList()
-                })
+                }, UiErrorHandler::handleError))
     }
 
     private fun updateItemsList() {
