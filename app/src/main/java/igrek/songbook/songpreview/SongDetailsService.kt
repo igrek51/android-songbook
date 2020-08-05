@@ -1,8 +1,7 @@
 package igrek.songbook.songpreview
 
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.R
+import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -14,13 +13,13 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class SongDetailsService(
-        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
         uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
         songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
 ) {
-    private val activity by LazyExtractor(appCompatActivity)
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
+    private val uiInfoService by LazyExtractor(uiInfoService)
 
     private val modificationDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
 
@@ -43,13 +42,13 @@ class SongDetailsService(
         if (!comment.isNullOrEmpty())
             messageLines.add(uiResourceService.resString(R.string.song_details_comment, comment))
 
-        val dialogTitle = uiResourceService.resString(R.string.song_details_title)
-
-        val moreActionName = uiResourceService.resString(R.string.song_action_more)
-        val moreAction = Runnable { showMoreActions(song) }
-
         val message = messageLines.joinToString(separator = "\n")
-        showDialogWithActions(dialogTitle, message, moreActionName, moreAction, null, null)
+        uiInfoService.dialogThreeChoices(
+                titleResId = R.string.song_details_title,
+                message = message,
+                positiveButton = R.string.action_info_ok, positiveAction = {},
+                neutralButton = R.string.song_action_more, neutralAction = { showMoreActions(song) },
+        )
     }
 
     private fun buildSongPath(song: Song): String {
@@ -75,23 +74,6 @@ class SongDetailsService(
         val cal = Calendar.getInstance()
         cal.timeInMillis = time
         return modificationDateFormat.format(cal.time)
-    }
-
-    private fun showDialogWithActions(title: String, message: String, neutralActionName: String?, neutralAction: Runnable?, negativeActionName: String?, negativeAction: Runnable?) {
-        val alertBuilder = AlertDialog.Builder(activity)
-                .setMessage(message)
-                .setTitle(title)
-                .setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { _, _ -> }
-                .setCancelable(true)
-        if (neutralAction != null)
-            alertBuilder.setNeutralButton(neutralActionName) { _, _ -> neutralAction.run() }
-        if (negativeAction != null)
-            alertBuilder.setNegativeButton(negativeActionName) { _, _ -> negativeAction.run() }
-
-        val alertDialog = alertBuilder.create()
-        if (!activity.isFinishing) {
-            alertDialog.show()
-        }
     }
 
     private fun showMoreActions(song: Song) {

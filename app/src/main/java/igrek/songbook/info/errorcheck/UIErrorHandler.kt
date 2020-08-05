@@ -21,7 +21,7 @@ class UIErrorHandler private constructor(
 
     private fun handleError(t: Throwable) {
         logger.error(t)
-        uiInfoService.showInfo(uiResourceService.resString(R.string.error_occurred, t.message))
+        uiInfoService.showInfo(uiResourceService.resString(R.string.error_occurred_s, t.message))
     }
 
     companion object {

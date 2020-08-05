@@ -13,6 +13,9 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.system.SoftKeyboardService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class InputDialogBuilder(
         activity: LazyInject<Activity> = appFactory.activity,
@@ -24,29 +27,31 @@ class InputDialogBuilder(
     private val softKeyboardService by LazyExtractor(softKeyboardService)
 
     fun input(title: String, initialValue: String?, action: (String) -> Unit) {
-        val alertBuilder = AlertDialog.Builder(activity)
-        alertBuilder.setTitle(title)
+        GlobalScope.launch(Dispatchers.Main) {
+            val alertBuilder = AlertDialog.Builder(activity)
+            alertBuilder.setTitle(title)
 
-        val input = EditText(activity)
-        input.inputType = InputType.TYPE_CLASS_TEXT
-        if (initialValue != null)
-            input.setText(initialValue)
-        alertBuilder.setView(input)
+            val input = EditText(activity)
+            input.inputType = InputType.TYPE_CLASS_TEXT
+            if (initialValue != null)
+                input.setText(initialValue)
+            alertBuilder.setView(input)
 
-        alertBuilder.setNegativeButton(uiResourceService.resString(R.string.action_cancel)) { _, _ -> }
-        alertBuilder.setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { _, _ ->
-            SafeExecutor {
-                action.invoke(input.text.toString())
+            alertBuilder.setNegativeButton(uiResourceService.resString(R.string.action_cancel)) { _, _ -> }
+            alertBuilder.setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { _, _ ->
+                SafeExecutor {
+                    action.invoke(input.text.toString())
+                }
             }
-        }
-        alertBuilder.setCancelable(true)
-        if (!activity.isFinishing) {
-            alertBuilder.create().show()
-        }
+            alertBuilder.setCancelable(true)
+            if (!activity.isFinishing) {
+                alertBuilder.create().show()
+            }
 
-        input.requestFocus()
-        Handler(Looper.getMainLooper()).post {
-            softKeyboardService.showSoftKeyboard(input)
+            input.requestFocus()
+            Handler(Looper.getMainLooper()).post {
+                softKeyboardService.showSoftKeyboard(input)
+            }
         }
     }
 

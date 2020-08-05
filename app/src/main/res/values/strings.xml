@@ -107,7 +107,7 @@
     <string name="song_details_metre">Metre: %s</string>
     <string name="easter_egg_discovered">Congratulations!
         \nYou have found a Secret Cow Level :)</string>
-    <string name="error_occurred">Aw snap! Error: %s</string>
+    <string name="error_occurred_s">Error: %s</string>
     <string name="unlock_type_in_secret_key">Type in a secret key:</string>
     <string name="contact_message_field_empty">Message field can\'t be empty.</string>
     <string name="contact_sending">Sending…</string>
@@ -433,4 +433,8 @@
     <string name="select_file_to_open">Select file to open</string>
     <string name="custom_songs_imported">%s new custom songs have been imported</string>
     <string name="custom_songs_mass_import_hint">Importing multiple custom songs is supposed to load many songs from a particular file type. Existing songs will not be overwritten. If you\'d rather like to import just one song from a text file, use option \"Import from file\" when creating new song. Do you want to continue importing multiple custom songs?</string>
+    <string name="error_details">Details</string>
+    <string name="error_occurred">Error occurred</string>
+    <string name="command_successful">Command successful</string>
+    <string name="command_failed">Command failed</string>
 </resources>

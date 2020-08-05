@@ -107,7 +107,7 @@
     <string name="song_details_metre">Metrum: %s</string>
     <string name="easter_egg_discovered">Gratulacje!
         \nOdnalazłeś Sekretny Krowi Poziom :)</string>
-    <string name="error_occurred">Aw snap! Błąd: %s</string>
+    <string name="error_occurred_s">Błąd: %s</string>
     <string name="unlock_type_in_secret_key">Podaj sekretne hasło:</string>
     <string name="contact_message_field_empty">Pole wiadomości nie może być puste.</string>
     <string name="contact_sending">Wysyłanie…</string>
@@ -407,4 +407,8 @@
     <string name="select_file_to_open">Wybierz plik do otwarcia</string>
     <string name="custom_songs_imported">Zaimportowano %s nowych własnych piosenek.</string>
     <string name="custom_songs_mass_import_hint">Importowanie wielu piosenek polega na wczytaniu wielu własnych piosenek z jednego pliku określonego typu. Istniejące piosenki nie zostaną nadpisane. Jeśli chcesz zaimportować tylko jedną piosenkę, użyj raczej opcji "Importuj z pliku" podczas tworzenia nowej piosenki. Czy chcesz kontynuować import wielu piosenek?</string>
+    <string name="error_details">Szczegóły</string>
+    <string name="error_occurred">Wystąpił błąd</string>
+    <string name="command_successful">Polecenie wykonane</string>
+    <string name="command_failed">Błąd polecenia</string>
 </resources>

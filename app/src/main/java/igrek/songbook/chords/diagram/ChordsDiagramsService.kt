@@ -26,6 +26,9 @@ import igrek.songbook.settings.instrument.ChordsInstrument
 import igrek.songbook.settings.instrument.ChordsInstrumentService
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.system.SoftKeyboardService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 class ChordsDiagramsService(
@@ -98,32 +101,36 @@ class ChordsDiagramsService(
     }
 
     private fun showChordDefinition(chord: String, uniqueChords: Set<String>) {
-        val message = chordGraphs(chord)
-        val instrument = chordsInstrumentService.instrument
-        val instrumentName = uiResourceService.resString(instrument.displayNameResId)
-        val title = uiResourceService.resString(R.string.chord_diagrams_versions, chord, instrumentName)
+        GlobalScope.launch(Dispatchers.Main) {
+            val message = chordGraphs(chord)
+            val instrument = chordsInstrumentService.instrument
+            val instrumentName = uiResourceService.resString(instrument.displayNameResId)
+            val title = uiResourceService.resString(R.string.chord_diagrams_versions, chord, instrumentName)
 
-        val alertBuilder = AlertDialog.Builder(activity)
-        alertBuilder.setTitle(title)
-        alertBuilder.setCancelable(true)
+            val alertBuilder = AlertDialog.Builder(activity)
+            alertBuilder.setTitle(title)
+            alertBuilder.setCancelable(true)
 
-        alertBuilder.setPositiveButton(uiResourceService.resString(R.string.action_close)) { _, _ -> }
-        if (uniqueChords.isNotEmpty()) {
-            alertBuilder.setNeutralButton(uiResourceService.resString(R.string.action_back)) { _, _ ->
-                showUniqueChordsMenu(uniqueChords)
+            alertBuilder.setPositiveButton(uiResourceService.resString(R.string.action_close)) { _, _ -> }
+            if (uniqueChords.isNotEmpty()) {
+                alertBuilder.setNeutralButton(uiResourceService.resString(R.string.action_back)) { _, _ ->
+                    showUniqueChordsMenu(uniqueChords)
+                }
+            }
+            alertBuilder.setNegativeButton(uiResourceService.resString(R.string.action_find_chord)) { _, _ ->
+                showFindChordByNameMenu()
+            }
+
+            val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val diagramView = inflater.inflate(R.layout.component_chord_diagrams, null, false)
+            val diagramContent = diagramView.findViewById<TextView>(R.id.chordDiagramContent)
+            diagramContent.text = message
+            alertBuilder.setView(diagramView)
+
+            if (!activity.isFinishing) {
+                alertBuilder.create().show()
             }
         }
-        alertBuilder.setNegativeButton(uiResourceService.resString(R.string.action_find_chord)) { _, _ ->
-            showFindChordByNameMenu()
-        }
-
-        val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val diagramView = inflater.inflate(R.layout.component_chord_diagrams, null, false)
-        val diagramContent = diagramView.findViewById<TextView>(R.id.chordDiagramContent)
-        diagramContent.text = message
-        alertBuilder.setView(diagramView)
-
-        alertBuilder.create().show()
     }
 
     fun showFindChordByNameMenu() {

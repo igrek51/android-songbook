@@ -56,10 +56,6 @@ class UiInfoServiceMock : UiInfoService(
         print(messageRes)
     }
 
-    override fun showDialog(title: String, message: String) {
-        print(title)
-    }
-
     override fun showTooltip(infoRes: Int) {
         print(infoRes)
     }

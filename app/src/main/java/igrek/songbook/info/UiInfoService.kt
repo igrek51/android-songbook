@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import igrek.songbook.R
 import igrek.songbook.info.errorcheck.SafeClickListener
+import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
@@ -131,19 +132,8 @@ open class UiInfoService(
         showToast(message)
     }
 
-    open fun showDialog(title: String, message: String) {
-        val alertBuilder = AlertDialog.Builder(activity)
-        alertBuilder.setMessage(message)
-        alertBuilder.setTitle(title)
-        alertBuilder.setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { _, _ -> }
-        alertBuilder.setCancelable(true)
-        alertBuilder.create().show()
-    }
-
     open fun showTooltip(infoRes: Int) {
-        val message = uiResourceService.resString(infoRes)
-        val title = uiResourceService.resString(R.string.tooltip)
-        showDialog(title, message)
+        dialog(R.string.tooltip, infoRes)
     }
 
     fun clearSnackBars() {
@@ -152,5 +142,71 @@ open class UiInfoService(
 
     open fun resString(resourceId: Int, vararg args: Any?): String =
             uiResourceService.resString(resourceId, *args)
+
+    fun dialog(titleResId: Int, message: String) {
+        dialogThreeChoices(
+                titleResId = titleResId,
+                message = message,
+                positiveButton = R.string.action_info_ok, positiveAction = {},
+        )
+    }
+
+    fun dialog(titleResId: Int, messageResId: Int) {
+        dialogThreeChoices(
+                titleResId = titleResId,
+                messageResId = messageResId,
+                positiveButton = R.string.action_info_ok, positiveAction = {},
+        )
+    }
+
+    fun dialogThreeChoices(
+            titleResId: Int = 0, title: String = "",
+            messageResId: Int = 0, message: String = "",
+            positiveButton: Int = 0, positiveAction: () -> Unit = {},
+            negativeButton: Int = 0, negativeAction: () -> Unit = {},
+            neutralButton: Int = 0, neutralAction: () -> Unit = {},
+            postProcessor: (AlertDialog) -> Unit = {},
+    ) {
+        GlobalScope.launch(Dispatchers.Main) {
+            val alertBuilder = AlertDialog.Builder(activity)
+
+            alertBuilder.setMessage(when {
+                messageResId > 0 -> uiResourceService.resString(messageResId)
+                else -> message
+            })
+            alertBuilder.setTitle(when {
+                titleResId > 0 -> uiResourceService.resString(titleResId)
+                else -> title
+            })
+
+            if (positiveButton > 0) {
+                alertBuilder.setPositiveButton(uiResourceService.resString(positiveButton)) { _, _ ->
+                    SafeExecutor {
+                        positiveAction.invoke()
+                    }
+                }
+            }
+            if (negativeButton > 0) {
+                alertBuilder.setNegativeButton(uiResourceService.resString(negativeButton)) { _, _ ->
+                    SafeExecutor {
+                        negativeAction.invoke()
+                    }
+                }
+            }
+            if (neutralButton > 0) {
+                alertBuilder.setNeutralButton(uiResourceService.resString(neutralButton)) { _, _ ->
+                    SafeExecutor {
+                        neutralAction.invoke()
+                    }
+                }
+            }
+            alertBuilder.setCancelable(true)
+            val alertDialog = alertBuilder.create()
+            postProcessor.invoke(alertDialog)
+            if (!activity.isFinishing) {
+                alertDialog.show()
+            }
+        }
+    }
 
 }

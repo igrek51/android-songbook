@@ -26,12 +26,19 @@ class SafeExecutor(
             action.invoke()
         } catch (t: Throwable) {
             LoggerFactory.logger.error(t)
-            val err: String? = when {
+            val err: String = when {
                 t.message != null -> t.message
                 else -> t::class.simpleName
+            }.orEmpty()
+            val message = uiResourceService.resString(R.string.error_occurred_s, err)
+            uiInfoService.showInfoWithAction(message, R.string.error_details) {
+                showDetails(err)
             }
-            uiInfoService.showInfoIndefinite(uiResourceService.resString(R.string.error_occurred, err))
         }
+    }
+
+    private fun showDetails(message: String) {
+        uiInfoService.dialog(titleResId = R.string.error_occurred, message = message)
     }
 
 }

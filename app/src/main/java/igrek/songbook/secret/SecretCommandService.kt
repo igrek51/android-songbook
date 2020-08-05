@@ -142,7 +142,7 @@ class SecretCommandService(
             toast("File copied from $localSrcFile to $localDstFile")
         }.onFailure { t ->
             val message = t.message.orEmpty() + "\nType: ${t::class.simpleName}"
-            showDialog("Error", message)
+            uiInfoService.dialog(R.string.error_occurred, message)
         }
     }
 
@@ -157,7 +157,7 @@ class SecretCommandService(
             toast("File copied from $localSrcFile to $localDstFile")
         }.onFailure { t ->
             val message = t.message.orEmpty() + "\nType: ${t::class.simpleName}"
-            showDialog("Error", message)
+            uiInfoService.dialog(R.string.error_occurred, message)
         }
     }
 
@@ -282,9 +282,9 @@ class SecretCommandService(
             when (showStdout) {
                 true -> {
                     if (retCode == 0) {
-                        showDialog("Command successful", "$stdout\n$stderr")
+                        uiInfoService.dialog(R.string.command_successful, "$stdout\n$stderr")
                     } else {
-                        showDialog("Command failed", "$stdout\n$stderr\nerror code: $retCode")
+                        uiInfoService.dialog(R.string.command_failed, "$stdout\n$stderr\nerror code: $retCode")
                     }
                 }
                 false -> {
@@ -298,20 +298,6 @@ class SecretCommandService(
         } catch (t: Throwable) {
             toast("command error: ${t.message}")
             logger.error("command error", t)
-        }
-    }
-
-    private fun showDialog(title: String, stdout: String) {
-        GlobalScope.launch(Dispatchers.Main) {
-            val alertBuilder = AlertDialog.Builder(activity)
-                    .setMessage(stdout)
-                    .setTitle(title)
-                    .setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { _, _ -> }
-                    .setCancelable(true)
-            val alertDialog = alertBuilder.create()
-            if (!activity.isFinishing) {
-                alertDialog.show()
-            }
         }
     }
 

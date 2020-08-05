@@ -7,6 +7,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.BuildConfig
 import igrek.songbook.R
+import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -23,12 +24,14 @@ class AboutLayoutController(
         secretCommandService: LazyInject<SecretCommandService> = appFactory.secretCommandService,
         packageInfoService: LazyInject<PackageInfoService> = appFactory.packageInfoService,
         songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
 ) {
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val activity by LazyExtractor(appCompatActivity)
     private val secretCommandService by LazyExtractor(secretCommandService)
     private val packageInfoService by LazyExtractor(packageInfoService)
     private val songsRepository by LazyExtractor(songsRepository)
+    private val uiInfoService by LazyExtractor(uiInfoService)
 
     fun showAbout() {
         val appVersionName = packageInfoService.versionName
@@ -42,28 +45,21 @@ class AboutLayoutController(
     }
 
     private fun showDialogWithActions(title: String, message: String) {
-        val unlockActionName = uiResourceService.resString(R.string.action_secret)
-        val unlockAction = Runnable { secretCommandService.showUnlockAlert() }
-        val rateActionName = uiResourceService.resString(R.string.action_rate_app)
-        val rateAction = Runnable { this.openInGoogleStore() }
-
-        val alertBuilder = AlertDialog.Builder(activity)
-        alertBuilder.setMessage(message)
-        alertBuilder.setTitle(title)
-        alertBuilder.setNeutralButton(unlockActionName) { _, _ -> unlockAction.run() }
-        alertBuilder.setNegativeButton(rateActionName) { _, _ -> rateAction.run() }
-        alertBuilder.setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { _, _ -> }
-        alertBuilder.setCancelable(true)
-        val alertDialog = alertBuilder.create()
         // set button almost hidden by setting color
-        alertDialog.setOnShowListener {
-            alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL)
-                    .setTextColor(uiResourceService.getColor(R.color.unlockAction))
+        val postProcessor = { alertDialog: AlertDialog ->
+            alertDialog.setOnShowListener {
+                alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL)
+                        .setTextColor(uiResourceService.getColor(R.color.unlockAction))
+            }
         }
-
-        if (!activity.isFinishing) {
-            alertDialog.show()
-        }
+        uiInfoService.dialogThreeChoices(
+                title = title,
+                message = message,
+                positiveButton = R.string.action_info_ok, positiveAction = {},
+                negativeButton = R.string.action_rate_app, negativeAction = { this.openInGoogleStore() },
+                neutralButton = R.string.action_secret, neutralAction = { secretCommandService.showUnlockAlert() },
+                postProcessor = postProcessor,
+        )
     }
 
     private fun openInGoogleStore() {
