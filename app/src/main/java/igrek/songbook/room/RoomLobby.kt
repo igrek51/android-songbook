@@ -1,6 +1,7 @@
 package igrek.songbook.room
 
 import android.bluetooth.BluetoothSocket
+import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -78,10 +79,12 @@ class RoomLobby(
         try {
             when (peerStatus) {
                 PeerStatus.Master -> {
-                    sendToSlaves(DisconnectMsg)
+                    sendToSlaves(DisconnectMsg())
                 }
                 PeerStatus.Slave -> {
-                    sendToMaster(DisconnectMsg)
+                    sendToMaster(DisconnectMsg())
+                }
+                else -> {
                 }
             }
         } catch (t: Throwable) {
@@ -100,13 +103,17 @@ class RoomLobby(
     }
 
     fun hostRoom(username: String, password: String): Deferred<Result<Unit>> {
-        makeDiscoverable()
-        this.roomPassword = password
-        this.username = username
-        this.clients = mutableListOf(PeerClient(username, null, PeerStatus.Master))
-        newSlaveListener = NewSlaveListener(bluetoothService.bluetoothAdapter, newSlaveChannel)
-        peerStatus = PeerStatus.Master
-        return newSlaveListener!!.isInitialized()
+        return try {
+            makeDiscoverable()
+            this.roomPassword = password
+            this.username = username
+            this.clients = mutableListOf(PeerClient(username, null, PeerStatus.Master))
+            newSlaveListener = NewSlaveListener(bluetoothService.bluetoothAdapter, newSlaveChannel)
+            peerStatus = PeerStatus.Master
+            newSlaveListener!!.isInitialized()
+        } catch (t: Throwable) {
+            GlobalScope.async { Result.failure(t) }
+        }
     }
 
     fun makeDiscoverable() {
@@ -198,46 +205,52 @@ class RoomLobby(
     }
 
     // receive as Master
-    suspend fun onMasterReceived(strMsg: String, slaveStream: PeerStream?) {
-        val clientName = if (slaveStream == null) "itself" else "slave ${slaveStream.remoteName()}"
-        logger.debug("received message from $clientName: $strMsg")
-        val gtrMsg: GtrMsg = GtrParser().parse(strMsg)
-        when (gtrMsg) {
-            is ChatMessageMsg -> sendToClients(ChatMessageMsg(gtrMsg.author, Date().time, gtrMsg.message))
-            is HelloMsg -> addNewSlave(gtrMsg.username, slaveStream)
-            is DisconnectMsg -> slaveStream?.let { onSlaveDisconnect(slaveStream) }
+    private suspend fun onMasterReceived(strMsg: String, slaveStream: PeerStream?) {
+        try {
+            val clientName = if (slaveStream == null) "itself" else "slave ${slaveStream.remoteName()}"
+            logger.debug("received message from $clientName: $strMsg")
+            when (val gtrMsg: GtrMsg = GtrParser().parse(strMsg)) {
+                is ChatMessageMsg -> sendToClients(ChatMessageMsg(gtrMsg.author, Date().time, gtrMsg.message))
+                is HelloMsg -> addNewSlave(gtrMsg.username, slaveStream)
+                is DisconnectMsg -> slaveStream?.let { onSlaveDisconnect(slaveStream) }
+            }
+        } catch (t: Throwable) {
+            UiErrorHandler().handleError(t)
         }
     }
 
     // receive as Slave or Master client
-    suspend fun onClientReceived(strMsg: String) {
-        logger.debug("received message from master: $strMsg")
-        val gtrMsg: GtrMsg = GtrParser().parse(strMsg)
-        when (gtrMsg) {
-            is ChatMessageMsg -> {
-                val cal = Calendar.getInstance()
-                cal.timeInMillis = gtrMsg.timestampMs // in milliseconds
-                val chatMessage = ChatMessage(gtrMsg.author, gtrMsg.message, cal.time)
-                GlobalScope.launch(Dispatchers.Main) {
-                    newChatMessageCallback(chatMessage)
+    private suspend fun onClientReceived(strMsg: String) {
+        try {
+            logger.debug("received message from master: $strMsg")
+            when (val gtrMsg: GtrMsg = GtrParser().parse(strMsg)) {
+                is ChatMessageMsg -> {
+                    val cal = Calendar.getInstance()
+                    cal.timeInMillis = gtrMsg.timestampMs // in milliseconds
+                    val chatMessage = ChatMessage(gtrMsg.author, gtrMsg.message, cal.time)
+                    GlobalScope.launch(Dispatchers.Main) {
+                        newChatMessageCallback(chatMessage)
+                    }
+                }
+                is RoomUsersMsg -> {
+                    val clients = gtrMsg.usernames.mapIndexed { index, it ->
+                        PeerClient(it, null, status = if (index == 0) PeerStatus.Master else PeerStatus.Slave)
+                    }.toMutableList()
+                    writeMutex.withLock {
+                        this.clients = clients
+                    }
+                    GlobalScope.launch(Dispatchers.Main) {
+                        updateMembersCallback(clients.toList())
+                    }
+                }
+                is DisconnectMsg -> onMasterDisconnect()
+                is SelectSongMsg -> GlobalScope.launch {
+                    currentSongId = gtrMsg.songId
+                    onSelectedSongChange(gtrMsg.songId)
                 }
             }
-            is RoomUsersMsg -> {
-                val clients = gtrMsg.usernames.mapIndexed { index, it ->
-                    PeerClient(it, null, status = if (index == 0) PeerStatus.Master else PeerStatus.Slave)
-                }.toMutableList()
-                writeMutex.withLock {
-                    this.clients = clients
-                }
-                GlobalScope.launch(Dispatchers.Main) {
-                    updateMembersCallback(clients.toList())
-                }
-            }
-            is DisconnectMsg -> onMasterDisconnect()
-            is SelectSongMsg -> GlobalScope.launch {
-                currentSongId = gtrMsg.songId
-                onSelectedSongChange(gtrMsg.songId)
-            }
+        } catch (t: Throwable) {
+            UiErrorHandler().handleError(t)
         }
     }
 

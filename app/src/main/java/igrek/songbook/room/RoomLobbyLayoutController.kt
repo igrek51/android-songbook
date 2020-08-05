@@ -106,7 +106,9 @@ class RoomLobbyLayoutController(
                     }
                 },
                 ContextMenuBuilder.Action(R.string.room_make_discoverable) {
-                    roomLobby.makeDiscoverable()
+                    GlobalScope.launch {
+                        roomLobby.makeDiscoverable()
+                    }
                 },
         ))
     }

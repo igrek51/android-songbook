@@ -3,7 +3,6 @@ package igrek.songbook.info.errorcheck
 
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
-import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -12,10 +11,8 @@ import igrek.songbook.inject.appFactory
 
 class UiErrorHandler(
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
-    private val uiResourceService by LazyExtractor(uiResourceService)
 
     fun handleError(t: Throwable, contextResId: Int = R.string.error_occurred_s) {
         LoggerFactory.logger.error(t)
@@ -23,8 +20,13 @@ class UiErrorHandler(
             t.message != null -> t.message
             else -> t::class.simpleName
         }.orEmpty()
-        uiInfoService.showInfoAction(contextResId, err, indefinite = true, actionResId = R.string.error_details) {
-            showDetails(t)
+
+        if (t is LocalizedError) {
+            uiInfoService.showInfo(t.messageRes, indefinite = true)
+        } else {
+            uiInfoService.showInfoAction(contextResId, err, indefinite = true, actionResId = R.string.error_details) {
+                showDetails(t)
+            }
         }
     }
 

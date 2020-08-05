@@ -415,5 +415,5 @@
     <string name="room_joined_to_room">Dołączono do pokoju</string>
     <string name="room_room_created">Pokój utworzony</string>
     <string name="room_scanning_completed">Skanowanie zakończone</string>
-    <string name="room_dropped_from_host">Odłączono z pokoju</string>
+    <string name="room_dropped_from_host">Opuszczono pokój</string>
 </resources>

@@ -1,21 +1,31 @@
 package igrek.songbook.room.protocol
 
-import igrek.songbook.persistence.general.model.SongIdentifier
-import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.room.protocol.GtrProtocol.Companion.VERSION
 import java.util.*
+import kotlin.reflect.KClass
 
-sealed class GtrMsg(val code: String) {
+open class GtrMsg() {
     override fun toString(): String = GtrFormatter().format(this)
 }
 
-class HelloMsg(val username: String) : GtrMsg("HELLO")
-object DisconnectMsg : GtrMsg("BYE")
-class RoomUsersMsg(val usernames: List<String>) : GtrMsg("USERS")
-class ChatMessageMsg(val author: String, val timestampMs: Long, val message: String) : GtrMsg("CHAT")
-class SelectSongMsg(val songId: SongIdentifier) : GtrMsg("SELECT_SONG")
-object HeartbeatRequestMsg : GtrMsg("RUOK")
-object HeartbeatResponseMsg : GtrMsg("IMOK")
+
+internal class MsgSpec<T : GtrMsg>(
+        val code: String,
+        val clazz: KClass<T>,
+        val partsFormatter: ((msg: T) -> List<String>)? = null,
+        val partsParser: (parts: List<String>) -> T,
+        val requiredParts: Int = 0,
+) {
+    fun formatGTR(msg: GtrMsg): String {
+        val datapart = when (partsFormatter) {
+            null -> ""
+            else -> partsFormatter.invoke(msg as T).joinToString("|")
+        }
+        return "$code|$datapart"
+    }
+}
+
+internal fun Boolean.toGtrString(): String = if (this) "1" else "0"
 
 class GtrProtocol {
     companion object {
@@ -27,33 +37,6 @@ class GtrProtocol {
 class GtrParseError(message: String) : RuntimeException(message)
 
 class GtrParser {
-    private fun parseCommand(msg: String): GtrMsg {
-        val bound = msg.indexOf('|')
-        if (bound == -1)
-            throw GtrParseError("code delimiter not found")
-        val code = msg.take(bound)
-        val rest = msg.drop(bound + 1)
-
-        return when (code) {
-            "CHAT" -> parseChatMessage(rest)
-            "HELLO" -> HelloMsg(rest)
-            "USERS" -> parseRoomUsers(rest)
-            DisconnectMsg.code -> DisconnectMsg
-            "SELECT_SONG" -> parseSelectSong(rest)
-            HeartbeatRequestMsg.code -> HeartbeatRequestMsg
-            HeartbeatResponseMsg.code -> HeartbeatResponseMsg
-            else -> throw GtrParseError("unknown command")
-        }
-    }
-
-    private fun parseSelectSong(msg: String): SelectSongMsg {
-        val parts = msg.split('|', limit = 2)
-        check(parts.size == 2) { "invalid section size" }
-        val namespace = SongNamespace.parseById(parts[0].toLong())
-        val songId = SongIdentifier(songId = parts[1].toLong(), namespace = namespace)
-        return SelectSongMsg(songId)
-    }
-
     fun parse(msg: String): GtrMsg {
         try {
             return when {
@@ -75,16 +58,29 @@ class GtrParser {
         }
     }
 
-    private fun parseChatMessage(msg: String): ChatMessageMsg {
-        val parts = msg.split('|', limit = 3)
-        check(parts.size == 3) { "invalid section size" }
-        val timestamp = parts[1].toLong()
-        return ChatMessageMsg(parts[0], timestamp, parts[2])
+    private fun parseCommand(msg: String): GtrMsg {
+        val bound = msg.indexOf('|')
+        if (bound == -1)
+            throw GtrParseError("code delimiter not found")
+        val code = msg.take(bound)
+        val rest = msg.drop(bound + 1)
+
+        val msgSpec = findMsgSpec(code) ?: throw GtrParseError("unknown command")
+
+        val parts = when {
+            msgSpec.requiredParts > 0 -> {
+                val parts = rest.split('|', limit = msgSpec.requiredParts)
+                check(parts.size == msgSpec.requiredParts) { "invalid datagram parts" }
+                parts
+            }
+            else -> rest.split('|')
+        }
+
+        return msgSpec.partsParser.invoke(parts)
     }
 
-    private fun parseRoomUsers(msg: String): RoomUsersMsg {
-        val parts = msg.split('|')
-        return RoomUsersMsg(parts)
+    private fun findMsgSpec(code: String): MsgSpec<out GtrMsg>? {
+        return msgSpecs.find { it.code == code }
     }
 }
 
@@ -94,13 +90,11 @@ class GtrFormatter {
     }
 
     private fun formatGTR(msg: GtrMsg): String {
-        val datapart = when (msg) {
-            is ChatMessageMsg -> "${msg.author}|${msg.timestampMs}|${msg.message}"
-            is RoomUsersMsg -> msg.usernames.joinToString(separator = "|")
-            is HelloMsg -> msg.username
-            is SelectSongMsg -> "${msg.songId.namespace.id}|${msg.songId.songId}"
-            else -> ""
-        }
-        return msg.code + "|" + datapart
+        val msgSpec = findMsgSpec(msg)
+        return msgSpec.formatGTR(msg)
+    }
+
+    private fun findMsgSpec(msg: GtrMsg): MsgSpec<out GtrMsg> {
+        return msgSpecs.first { it.clazz.isInstance(msg) }
     }
 }
