@@ -12,7 +12,6 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
-import igrek.songbook.persistence.general.model.Category
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import kotlinx.coroutines.Deferred
@@ -127,8 +126,7 @@ class AntechamberService(
         logger.info("Approving antechamber song: $song")
         val dto = ChordsSongDto.fromModel(song)
         dto.id = null
-        val categoryId = song.customCategoryName?.let { findCategoryByName(it) }?.id
-        dto.categories = categoryId?.let { listOf(it) } ?: emptyList()
+        dto.categories = song.customCategoryName?.let { listOf(it) } ?: emptyList()
         val json = jsonSerializer.encodeToString(ChordsSongDto.serializer(), dto)
         val request: Request = Request.Builder()
                 .url(approveSongUrl)
@@ -138,11 +136,6 @@ class AntechamberService(
         return httpRequester.httpRequestAsync(request) { response: Response ->
             logger.debug("Approve response", response.body()?.string())
         }
-    }
-
-    private fun findCategoryByName(name: String): Category? {
-        return songsRepository.allSongsRepo.publicCategories.get()
-                .find { it.displayName == name }
     }
 
     fun updateAntechamberSongUI(song: Song) {

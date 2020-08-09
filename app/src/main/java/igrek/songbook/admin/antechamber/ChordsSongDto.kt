@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 data class ChordsSongDto(
         var id: Long? = null,
         var title: String? = null,
-        var categories: List<Long>? = null,
+        var categories: List<String>? = null,
         var content: String? = null,
         var version_number: Long? = null,
         var create_time: Long? = null,
@@ -33,7 +33,7 @@ data class ChordsSongDto(
         fun fromModel(song: Song): ChordsSongDto = ChordsSongDto(
                 id = song.id,
                 title = song.title,
-                categories = song.categories.filter { it.type == CategoryType.ARTIST }.map { it.id },
+                categories = song.categories.filter { it.type == CategoryType.ARTIST }.mapNotNull { it.name },
                 content = song.content,
                 version_number = song.versionNumber,
                 create_time = song.createTime,
