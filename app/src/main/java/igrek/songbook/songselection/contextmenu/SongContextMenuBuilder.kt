@@ -118,6 +118,11 @@ class SongContextMenuBuilder(
                         executor = {
                             songPreviewLayoutController.showChordsGraphs()
                         }),
+                SongContextAction(R.string.song_show_fullscreen,
+                        availableCondition = { layoutController.isState(SongPreviewLayoutController::class) },
+                        executor = {
+                            songPreviewLayoutController.toggleFullscreen()
+                        }),
                 SongContextAction(R.string.admin_antechamber_edit_action,
                         availableCondition = { adminService.isAdminEnabled() },
                         executor = { song ->

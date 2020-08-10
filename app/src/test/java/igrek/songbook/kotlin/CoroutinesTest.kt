@@ -67,4 +67,20 @@ class CoroutinesTest {
         println("exited runblocking 1")
     }
 
+    @Test
+    fun exceptionInSuspendFunction() {
+        runBlocking {
+            try {
+                attempt()
+            } catch (t: RuntimeException) {
+                println("caught")
+            }
+        }
+    }
+
+    private suspend fun attempt() {
+        delay(1)
+        throw RuntimeException("fatality")
+    }
+
 }

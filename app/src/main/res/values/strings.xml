@@ -442,4 +442,5 @@
     <string name="room_room_created">Room created</string>
     <string name="room_scanning_completed">Scanning completed</string>
     <string name="room_dropped_from_host">Dropped from host</string>
+    <string name="song_show_fullscreen">Fullscreen</string>
 </resources>

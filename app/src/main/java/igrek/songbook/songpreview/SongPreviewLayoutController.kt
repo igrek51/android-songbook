@@ -186,9 +186,6 @@ class SongPreviewLayoutController(
             text = currentSong?.displayName().orEmpty()
         }
 
-        val goBackButton = layout.findViewById<ImageButton>(R.id.goBackButton)
-        goBackButton.setOnClickListener { onBackClicked() }
-
         transposeButton = layout.findViewById<ImageButton>(R.id.transposeButton)?.apply {
             setOnClickListener { toggleTransposePanel() }
         }
@@ -212,10 +209,6 @@ class SongPreviewLayoutController(
                     songDetailsService.showSongDetails(it)
                 }
             }
-        }
-
-        layout.findViewById<ImageButton>(R.id.fullscreenButton)?.run {
-            setOnClickListener { setFullscreen(true) }
         }
 
         layout.findViewById<ImageButton>(R.id.moreActionsButton)?.run {
@@ -311,6 +304,10 @@ class SongPreviewLayoutController(
             // restart autoscrolling
             autoscrollService.start()
         }
+    }
+
+    fun toggleFullscreen() {
+        setFullscreen(!this.fullscreen)
     }
 
     private fun setFullscreen(fullscreen: Boolean) {
