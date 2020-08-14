@@ -34,6 +34,9 @@ import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.top.TopSongsLayoutController
 import igrek.songbook.songselection.tree.SongTreeLayoutController
 import igrek.songbook.system.SoftKeyboardService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 class NavigationMenuController(
@@ -98,28 +101,31 @@ class NavigationMenuController(
         navigationView = activity.findViewById(R.id.nav_view)
 
         navigationView!!.setNavigationItemSelectedListener { menuItem ->
-            // set item as selected to persist highlight
-            menuItem.isChecked = true
-            drawerLayout!!.closeDrawers()
-            val id = menuItem.itemId
-            if (actionsMap.containsKey(id)) {
-                val action = actionsMap[id]
-                // postpone action - smoother navigation hide
-                Handler(Looper.getMainLooper()).post {
-                    SafeExecutor {
-                        action!!.invoke()
+            GlobalScope.launch(Dispatchers.Main) {
+                // set item as selected to persist highlight
+                menuItem.isChecked = true
+                drawerLayout!!.closeDrawers()
+                val id = menuItem.itemId
+                if (actionsMap.containsKey(id)) {
+                    val action = actionsMap[id]
+                    // postpone action - smoother navigation hide
+                    Handler(Looper.getMainLooper()).post {
+                        SafeExecutor {
+                            action!!.invoke()
+                        }
                     }
+                } else {
+                    logger.warn("unknown navigation item has been selected.")
                 }
-            } else {
-                logger.warn("unknown navigation item has been selected.")
+
+                Handler(Looper.getMainLooper()).postDelayed({
+                    // unhighlight all menu items
+                    if (navigationView != null) {
+                        for (id1 in 0 until navigationView!!.menu.size())
+                            navigationView!!.menu.getItem(id1).isChecked = false
+                    }
+                }, 500)
             }
-            Handler().postDelayed({
-                // unhighlight all menu items
-                if (navigationView != null) {
-                    for (id1 in 0 until navigationView!!.menu.size())
-                        navigationView!!.menu.getItem(id1).isChecked = false
-                }
-            }, 500)
             true
         }
     }

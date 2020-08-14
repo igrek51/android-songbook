@@ -3,6 +3,10 @@ package igrek.songbook.layout
 import android.app.Activity
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.transition.Fade
+import androidx.transition.Scene
+import androidx.transition.Transition
+import androidx.transition.TransitionManager
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
@@ -35,6 +39,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
+
 
 class LayoutController(
         activity: LazyInject<Activity> = appFactory.activity,
@@ -148,11 +153,17 @@ class LayoutController(
         currentLayout?.onLayoutExit()
         currentLayout = mainLayout
 
+        val transition: Transition = Fade()
+        transition.duration = 200
+
         val inflater = activity.layoutInflater
         val properLayoutView = inflater.inflate(mainLayout.getLayoutResourceId(), null)
         properLayoutView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+
         mainContentLayout.removeAllViews()
         mainContentLayout.addView(properLayoutView)
+
+        TransitionManager.go(Scene(mainContentLayout, properLayoutView), transition)
 
         mainLayout.showLayout(properLayoutView)
         postInitLayout(mainLayout)
