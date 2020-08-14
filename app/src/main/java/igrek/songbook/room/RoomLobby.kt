@@ -59,6 +59,8 @@ class RoomLobby(
         }
     }
 
+    fun isActive(): Boolean = peerStatus != PeerStatus.Disconnected
+
     private fun watchNewSlave(clientStream: PeerStream) {
         slaveStreams.add(clientStream)
         // messages from slave client

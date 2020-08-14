@@ -3,7 +3,7 @@ package igrek.songbook.songpreview
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.view.View
-import android.view.View.OVER_SCROLL_ALWAYS
+import android.view.View.*
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageButton
@@ -28,6 +28,8 @@ import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.room.RoomListLayoutController
+import igrek.songbook.room.RoomLobby
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.theme.LyricsThemeService
@@ -61,6 +63,7 @@ class SongPreviewLayoutController(
         songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
         chordsDiagramsService: LazyInject<ChordsDiagramsService> = appFactory.chordsDiagramsService,
         preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+        roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
 ) : MainLayout {
     private val lyricsLoader by LazyExtractor(lyricsLoader)
     private val lyricsThemeService by LazyExtractor(lyricsThemeService)
@@ -79,6 +82,7 @@ class SongPreviewLayoutController(
     private val songsRepository by LazyExtractor(songsRepository)
     private val chordsDiagramsService by LazyExtractor(chordsDiagramsService)
     private val preferencesState by LazyExtractor(preferencesState)
+    private val roomLobby by LazyExtractor(roomLobby)
 
     var songPreview: SongPreview? = null
         private set
@@ -92,6 +96,7 @@ class SongPreviewLayoutController(
     private var transposeButton: ImageButton? = null
     private var autoscrollButton: ImageButton? = null
     private var setFavouriteButton: ImageButton? = null
+    private var screenShareButton: ImageButton? = null
 
     val isQuickMenuVisible: Boolean
         get() = quickMenuTranspose.isVisible || quickMenuAutoscroll.isVisible
@@ -214,6 +219,13 @@ class SongPreviewLayoutController(
         layout.findViewById<ImageButton>(R.id.moreActionsButton)?.run {
             setOnClickListener { showMoreActions() }
         }
+
+        screenShareButton = layout.findViewById<ImageButton>(R.id.screenShareButton)?.apply {
+            setOnClickListener {
+                layoutController.showLayout(RoomListLayoutController::class)
+            }
+        }
+        updateScreenShareButton()
 
         disableFullscreenButton = layout.findViewById<FloatingActionButton>(R.id.disableFullscreenButton)?.apply {
             setOnClickListener { setFullscreen(false) }
@@ -372,6 +384,17 @@ class SongPreviewLayoutController(
                 setFavouriteButton?.setImageResource(R.drawable.star_filled)
             } else {
                 setFavouriteButton?.setImageResource(R.drawable.star_border)
+            }
+        }
+    }
+
+    private fun updateScreenShareButton() {
+        screenShareButton?.let { screenShareButton ->
+            if (roomLobby.isActive()) {
+                screenShareButton.visibility = VISIBLE
+                highlightButton(screenShareButton)
+            } else {
+                screenShareButton.visibility = GONE
             }
         }
     }

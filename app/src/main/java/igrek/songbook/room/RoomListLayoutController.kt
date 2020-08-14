@@ -37,9 +37,9 @@ class RoomListLayoutController(
     override fun showLayout(layout: View) {
         super.showLayout(layout)
 
-        if (roomLobby.peerStatus != PeerStatus.Disconnected) {
+        if (roomLobby.isActive()) {
             GlobalScope.launch(Dispatchers.Main) {
-                layoutController.showLayout(RoomLobbyLayoutController::class)
+                layoutController.showLayout(RoomLobbyLayoutController::class, disableReturn = true)
             }
             return
         }
