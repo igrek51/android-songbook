@@ -160,10 +160,14 @@ class LayoutController(
         val properLayoutView = inflater.inflate(mainLayout.getLayoutResourceId(), null)
         properLayoutView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
+        val firstTimeView = mainContentLayout.childCount == 0
+
         mainContentLayout.removeAllViews()
         mainContentLayout.addView(properLayoutView)
 
-        TransitionManager.go(Scene(mainContentLayout, properLayoutView), transition)
+        if (!firstTimeView) {
+            TransitionManager.go(Scene(mainContentLayout, properLayoutView), transition)
+        }
 
         mainLayout.showLayout(properLayoutView)
         postInitLayout(mainLayout)
