@@ -418,4 +418,6 @@
     <string name="room_dropped_from_host">Opuszczono pokój</string>
     <string name="song_show_fullscreen">Pełny ekran</string>
     <string name="room_members">Uczestnicy:\n%s</string>
+    <string name="screen_share_enter_room_password">Podaj hasło:</string>
+    <string name="room_wrong_password">Nieprawidłowe hasło</string>
 </resources>

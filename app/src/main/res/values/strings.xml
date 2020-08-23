@@ -444,4 +444,6 @@
     <string name="room_dropped_from_host">Dropped from host</string>
     <string name="song_show_fullscreen">Fullscreen</string>
     <string name="room_members">Members:\n%s</string>
+    <string name="screen_share_enter_room_password">Enter room password:</string>
+    <string name="room_wrong_password">Wrong password</string>
 </resources>

@@ -58,28 +58,12 @@ class RoomListLayoutController(
 
         joinRoomListView = layout.findViewById<JoinRoomListView>(R.id.itemsListView)?.also {
             it.onClickCallback = { room ->
-                joinRoom(room)
+                joinRoomKnock(room)
             }
         }
 
         layout.findViewById<Button>(R.id.scanRoomsButtton)?.setOnClickListener {
             scanRooms()
-        }
-    }
-
-    private fun joinRoom(room: Room) {
-        showScanningCompleted = false
-        GlobalScope.launch {
-            uiInfoService.showInfo(R.string.room_joining_room, room.name)
-            val username = myNameEditText?.text?.toString().orEmpty()
-            roomLobby.joinRoomKnockAsync(username, room).await().fold(onSuccess = {
-                uiInfoService.showInfo(R.string.room_joined_to_room)
-                GlobalScope.launch(Dispatchers.Main) {
-                    layoutController.showLayout(RoomLobbyLayoutController::class)
-                }
-            }, onFailure = { e ->
-                UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
-            })
         }
     }
 
@@ -94,6 +78,45 @@ class RoomListLayoutController(
                     UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
                 })
             }
+        }
+    }
+
+    private fun joinRoomKnock(room: Room) {
+        showScanningCompleted = false
+        roomLobby.onRoomLobbyIntroduced = ::onRoomLobbyIntroduced
+        GlobalScope.launch {
+            uiInfoService.showInfo(R.string.room_joining_room, room.name)
+            val username = myNameEditText?.text?.toString().orEmpty()
+            roomLobby.joinRoomKnockAsync(username, room).await().fold(onSuccess = {
+
+            }, onFailure = { e ->
+                UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
+            })
+        }
+    }
+
+    private fun onRoomLobbyIntroduced(roomName: String, withPassword: Boolean) {
+        val username = myNameEditText?.text?.toString().orEmpty()
+        roomLobby.onRoomWelcomed = ::onRoomWelcomed
+        if (withPassword) {
+            InputDialogBuilder().input(R.string.screen_share_enter_room_password, null) { password ->
+                roomLobby.enterRoom(username, password)
+            }
+        } else {
+            uiInfoService.showInfo(R.string.room_joining_room, roomName)
+            roomLobby.enterRoom(username, "")
+        }
+    }
+
+    private fun onRoomWelcomed(valid: Boolean) {
+        if (!valid) {
+            uiInfoService.showInfo(R.string.room_wrong_password)
+            return
+        }
+
+        uiInfoService.showInfo(R.string.room_joined_to_room)
+        GlobalScope.launch(Dispatchers.Main) {
+            layoutController.showLayout(RoomLobbyLayoutController::class)
         }
     }
 

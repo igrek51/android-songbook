@@ -27,20 +27,22 @@ class RoomLobby(
     var currentSongId: SongIdentifier? = null
         private set
 
-    var newChatMessageCallback: (ChatMessage) -> Unit = {}
     var updateMembersCallback: (List<PeerClient>) -> Unit = {}
+    var newChatMessageCallback: (ChatMessage) -> Unit = {}
+    var onSelectedSongChange: (songId: SongIdentifier) -> Unit = {}
+    var onRoomLobbyIntroduced: (roomName: String, withPassword: Boolean) -> Unit = { _, _ -> }
+    var onRoomWelcomed: (valid: Boolean) -> Unit = {}
     var onDroppedCallback: () -> Unit
         get() = controller.onDroppedFromMaster
         set(value) {
             controller.onDroppedFromMaster = value
         }
-    var onSelectedSongChange: (songId: SongIdentifier) -> Unit = {}
 
     init {
-        controller.onClientsChange = ::onClientsChange
         controller.onMasterMsgReceived = ::onMasterMsgReceived
         controller.onClientMsgReceived = ::onClientMsgReceived
         controller.onJoinRoomKnocked = ::onJoinRoomKnocked
+        controller.onClientsChange = ::onClientsChange
     }
 
     fun isActive(): Boolean = controller.isActive()
@@ -59,8 +61,17 @@ class RoomLobby(
         return controller.hostRoomAsync(username)
     }
 
+    fun joinRoomKnockAsync(username: String, room: Room): Deferred<Result<Unit>> {
+        this.username = username
+        return controller.joinRoomKnockAsync(room)
+    }
+
     private fun onJoinRoomKnocked() {
         controller.sendToMaster(HelloMsg())
+    }
+
+    fun enterRoom(username: String, password: String) {
+        controller.sendToMaster(LoginMsg(username, password))
     }
 
     private fun onClientsChange(clients: List<PeerClient>) {
@@ -70,38 +81,64 @@ class RoomLobby(
         }
     }
 
-    fun joinRoomKnockAsync(username: String, room: Room): Deferred<Result<Unit>> {
-        this.username = username
-        return controller.joinRoomKnockAsync(room)
-    }
-
     fun sendChatMessage(message: String) {
         logger.debug("Sending chat message")
         controller.sendToMaster(ChatMessageMsg(username, 0, message))
     }
 
+    fun reportSongSelected(songIdentifier: SongIdentifier) {
+        if (peerStatus == PeerStatus.Master) {
+            currentSongId = songIdentifier
+            controller.sendToSlaves(SelectSongMsg(songIdentifier))
+        }
+    }
+
     // receive as Master
-    private suspend fun onMasterMsgReceived(gtrMsg: GtrMsg, slaveStream: PeerStream?) {
-        when (gtrMsg) {
-            is ChatMessageMsg -> controller.sendToClients(ChatMessageMsg(gtrMsg.author, Date().time, gtrMsg.message))
-            is LoginMsg -> controller.addNewSlave(gtrMsg.username, slaveStream)
+    private suspend fun onMasterMsgReceived(msg: GtrMsg, slaveStream: PeerStream?) {
+        when (msg) {
+            is HelloMsg -> {
+                if (slaveStream != null)
+                    controller.sendToSlave(slaveStream, WhosThereMsg(username, roomPassword.isNotEmpty()))
+            }
+            is LoginMsg -> {
+                if (slaveStream != null)
+                    verifyLoggingUser(msg.username, msg.password, slaveStream)
+            }
+            is ChatMessageMsg -> controller.sendToClients(ChatMessageMsg(msg.author, Date().time, msg.message))
             is DisconnectMsg -> slaveStream?.let { controller.onSlaveDisconnect(slaveStream) }
         }
     }
 
+    private suspend fun verifyLoggingUser(username: String, givenPassword: String, slaveStream: PeerStream) {
+        if (givenPassword != roomPassword) {
+            logger.warn("User attempted to login to room with invalid password")
+            controller.sendToSlave(slaveStream, WelcomeMsg(false))
+            return
+        }
+
+        controller.sendToSlave(slaveStream, WelcomeMsg(true))
+        controller.addNewSlave(username, slaveStream)
+    }
+
     // receive as Slave or Master client
-    private suspend fun onClientMsgReceived(gtrMsg: GtrMsg) {
-        when (gtrMsg) {
+    private suspend fun onClientMsgReceived(msg: GtrMsg) {
+        when (msg) {
+            is WhosThereMsg -> {
+                GlobalScope.launch(Dispatchers.Main) {
+                    onRoomLobbyIntroduced(msg.roomName, msg.withPassword)
+                }
+            }
             is ChatMessageMsg -> {
-                val cal = Calendar.getInstance()
-                cal.timeInMillis = gtrMsg.timestampMs // in milliseconds
-                val chatMessage = ChatMessage(gtrMsg.author, gtrMsg.message, cal.time)
+                val chatMessage = ChatMessage(msg.author, msg.message, msg.timestampMs.timestampMsToDate())
                 GlobalScope.launch(Dispatchers.Main) {
                     newChatMessageCallback(chatMessage)
                 }
             }
+            is WelcomeMsg -> {
+                onRoomWelcomed(msg.valid)
+            }
             is RoomUsersMsg -> {
-                val clients = gtrMsg.usernames.mapIndexed { index, it ->
+                val clients = msg.usernames.mapIndexed { index, it ->
                     PeerClient(it, null, status = if (index == 0) PeerStatus.Master else PeerStatus.Slave)
                 }.toMutableList()
                 controller.setClients(clients)
@@ -111,18 +148,16 @@ class RoomLobby(
             }
             is DisconnectMsg -> controller.onMasterDisconnect()
             is SelectSongMsg -> GlobalScope.launch {
-                currentSongId = gtrMsg.songId
-                onSelectedSongChange(gtrMsg.songId)
+                currentSongId = msg.songId
+                onSelectedSongChange(msg.songId)
             }
         }
     }
 
-    fun reportSongSelected(songIdentifier: SongIdentifier) {
-        if (peerStatus != PeerStatus.Master)
-            return
+}
 
-        currentSongId = songIdentifier
-        controller.sendToSlaves(SelectSongMsg(songIdentifier))
-    }
-
+private fun Long.timestampMsToDate(): Date {
+    val cal = Calendar.getInstance()
+    cal.timeInMillis = this // in milliseconds
+    return cal.time
 }

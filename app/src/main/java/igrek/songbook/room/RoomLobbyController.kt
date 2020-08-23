@@ -26,10 +26,10 @@ class RoomLobbyController(
     private val newSlaveChannel = Channel<PeerStream>(Channel.UNLIMITED)
     private val writeMutex = Mutex()
 
-    var onClientsChange: (List<PeerClient>) -> Unit = {}
     var onMasterMsgReceived: suspend (gtrMsg: GtrMsg, slaveStream: PeerStream?) -> Unit = { _, _ -> }
     var onClientMsgReceived: suspend (gtrMsg: GtrMsg) -> Unit = {}
     var onJoinRoomKnocked: () -> Unit = {}
+    var onClientsChange: (List<PeerClient>) -> Unit = {}
     var onDroppedFromMaster: () -> Unit = {}
 
     init {
@@ -182,6 +182,25 @@ class RoomLobbyController(
         }
     }
 
+    fun sendToSlave(stream: PeerStream, msg: GtrMsg) {
+        GlobalScope.launch {
+            when (peerStatus) {
+                PeerStatus.Master -> {
+                    val strMsg = msg.toString()
+                    LoggerFactory.logger.debug("sending to ${stream.remoteName()} (${stream.remoteAddress()}) slave: $strMsg")
+                    try {
+                        stream.write(strMsg)
+                    } catch (e: Exception) {
+                        LoggerFactory.logger.error("sending to disconnected peer", e)
+                        stream.close()
+                    }
+                }
+                else -> {
+                }
+            }
+        }
+    }
+
     suspend fun addNewSlave(newUsername: String, clientStream: PeerStream?) {
         writeMutex.withLock {
             clients.add(PeerClient(newUsername, clientStream, PeerStatus.Slave))
@@ -224,6 +243,7 @@ class RoomLobbyController(
     fun onMasterDisconnect() {
         LoggerFactory.logger.debug("master dropped")
         onDroppedFromMaster()
+        close()
     }
 
     suspend fun setClients(clients: MutableList<PeerClient>) {
