@@ -42,6 +42,9 @@ class InputDialogBuilder(
                 SafeExecutor {
                     action.invoke(input.text.toString())
                 }
+                Handler(Looper.getMainLooper()).post {
+                    softKeyboardService.hideSoftKeyboard()
+                }
             }
             alertBuilder.setCancelable(true)
             if (!activity.isFinishing) {

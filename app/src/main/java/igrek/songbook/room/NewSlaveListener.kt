@@ -19,6 +19,7 @@ class NewSlaveListener(
     private val looperJob: Job
     private val looperScope: CoroutineScope = CoroutineScope(CoroutineName("newSlaveListener"))
     private var open = true
+    private val openSockets = mutableListOf<BluetoothSocket>()
 
     init {
         looperJob = looperScope.launch {
@@ -54,6 +55,7 @@ class NewSlaveListener(
                     looperScope.launch {
                         newSlaveChannel.send(clientStream)
                     }
+                    openSockets.add(socket)
 
                 } catch (connectException: IOException) {
                     logger.error("Failed to start a Bluetooth connection as a server", connectException)
@@ -81,6 +83,12 @@ class NewSlaveListener(
         if (!open)
             return
         open = false
+
+        openSockets.forEach { socket ->
+            if (socket.isConnected)
+                socket.close()
+        }
+        openSockets.clear()
 
         if (looperJob.isActive) {
             looperScope.cancel()

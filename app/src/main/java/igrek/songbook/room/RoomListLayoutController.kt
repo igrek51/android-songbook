@@ -97,7 +97,8 @@ class RoomListLayoutController(
 
     private fun onRoomLobbyIntroduced(roomName: String, withPassword: Boolean) {
         val username = myNameEditText?.text?.toString().orEmpty()
-        roomLobby.onRoomWelcomed = ::onRoomWelcomed
+        roomLobby.onRoomWrongPassword = ::onRoomWrongPassword
+        roomLobby.onRoomWelcomedSuccessfully = ::onRoomWelcomedSuccessfully
         if (withPassword) {
             InputDialogBuilder().input(R.string.screen_share_enter_room_password, null) { password ->
                 roomLobby.enterRoom(username, password)
@@ -108,12 +109,11 @@ class RoomListLayoutController(
         }
     }
 
-    private fun onRoomWelcomed(valid: Boolean) {
-        if (!valid) {
-            uiInfoService.showInfo(R.string.room_wrong_password)
-            return
-        }
+    private fun onRoomWrongPassword() {
+        uiInfoService.showInfo(R.string.room_wrong_password)
+    }
 
+    private fun onRoomWelcomedSuccessfully() {
         uiInfoService.showInfo(R.string.room_joined_to_room)
         GlobalScope.launch(Dispatchers.Main) {
             layoutController.showLayout(RoomLobbyLayoutController::class)

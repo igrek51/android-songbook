@@ -97,6 +97,7 @@ class RoomLobbyController(
         return try {
             makeDiscoverable()
             this.clients = mutableListOf(PeerClient(username, null, PeerStatus.Master))
+            newSlaveListener?.close()
             newSlaveListener = NewSlaveListener(bluetoothService.bluetoothAdapter, newSlaveChannel)
             peerStatus = PeerStatus.Master
             newSlaveListener!!.isInitialized()
@@ -112,6 +113,7 @@ class RoomLobbyController(
     }
 
     fun joinRoomKnockAsync(room: Room): Deferred<Result<Unit>> {
+        newSlaveListener?.close()
         return GlobalScope.async {
             val result = bluetoothService.connectToRoomSocketAsync(room).await()
             return@async result.onSuccess { btSocket: BluetoothSocket ->

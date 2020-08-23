@@ -31,7 +31,8 @@ class RoomLobby(
     var newChatMessageCallback: (ChatMessage) -> Unit = {}
     var onSelectedSongChange: (songId: SongIdentifier) -> Unit = {}
     var onRoomLobbyIntroduced: (roomName: String, withPassword: Boolean) -> Unit = { _, _ -> }
-    var onRoomWelcomed: (valid: Boolean) -> Unit = {}
+    var onRoomWrongPassword: () -> Unit = {}
+    var onRoomWelcomedSuccessfully: () -> Unit = {}
     var onDroppedCallback: () -> Unit
         get() = controller.onDroppedFromMaster
         set(value) {
@@ -111,7 +112,7 @@ class RoomLobby(
 
     private suspend fun verifyLoggingUser(username: String, givenPassword: String, slaveStream: PeerStream) {
         if (givenPassword != roomPassword) {
-            logger.warn("User attempted to login to room with invalid password")
+            logger.warn("User $username attempted to login to room with invalid password: $givenPassword")
             controller.sendToSlave(slaveStream, WelcomeMsg(false))
             return
         }
@@ -135,7 +136,12 @@ class RoomLobby(
                 }
             }
             is WelcomeMsg -> {
-                onRoomWelcomed(msg.valid)
+                if (msg.valid) {
+                    onRoomWelcomedSuccessfully()
+                } else {
+                    onRoomWrongPassword()
+                    close()
+                }
             }
             is RoomUsersMsg -> {
                 val clients = msg.usernames.mapIndexed { index, it ->
