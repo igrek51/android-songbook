@@ -1,17 +1,15 @@
 package igrek.songbook.room
 
-import android.bluetooth.BluetoothSocket
-import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.room.protocol.*
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 class RoomLobby(
@@ -19,258 +17,104 @@ class RoomLobby(
 ) {
     private val bluetoothService by LazyExtractor(bluetoothService)
 
-    var peerStatus: PeerStatus = PeerStatus.Disconnected
-        private set
+    private val controller = RoomLobbyController(this.bluetoothService)
+
+    val peerStatus: PeerStatus get() = controller.peerStatus
+    val clients: MutableList<PeerClient> get() = controller.clients
+
     private var roomPassword: String = ""
     private var username: String = ""
-    var clients: MutableList<PeerClient> = mutableListOf()
-        private set
     var currentSongId: SongIdentifier? = null
         private set
 
-    private var masterStream: PeerStream? = null
-    private val masterMessagesChannel = Channel<String>(Channel.UNLIMITED)
-    private var slaveStreams: MutableList<PeerStream> = mutableListOf()
-    private var newSlaveListener: NewSlaveListener? = null
-    private val newSlaveChannel = Channel<PeerStream>(Channel.UNLIMITED)
-    private val writeMutex = Mutex()
-
     var newChatMessageCallback: (ChatMessage) -> Unit = {}
     var updateMembersCallback: (List<PeerClient>) -> Unit = {}
-    var onDisconnectCallback: () -> Unit = {}
+    var onDroppedCallback: () -> Unit
+        get() = controller.onDroppedFromMaster
+        set(value) {
+            controller.onDroppedFromMaster = value
+        }
     var onSelectedSongChange: (songId: SongIdentifier) -> Unit = {}
 
     init {
-        // new slave connections
-        GlobalScope.launch(Dispatchers.IO) {
-            for (clientStream: PeerStream in newSlaveChannel) {
-                logger.debug("new slave connected")
-                watchNewSlave(clientStream)
-            }
-        }
-
-        // messages from master to client
-        GlobalScope.launch(Dispatchers.IO) {
-            for (message in masterMessagesChannel) {
-                launch(Dispatchers.IO) {
-                    onClientReceived(message)
-                }
-            }
-        }
+        controller.onClientsChange = ::onClientsChange
+        controller.onMasterMsgReceived = ::onMasterMsgReceived
+        controller.onClientMsgReceived = ::onClientMsgReceived
+        controller.onJoinRoomKnocked = ::onJoinRoomKnocked
     }
 
-    fun isActive(): Boolean = peerStatus != PeerStatus.Disconnected
+    fun isActive(): Boolean = controller.isActive()
 
-    private fun watchNewSlave(clientStream: PeerStream) {
-        slaveStreams.add(clientStream)
-        // messages from slave client
-        GlobalScope.launch(Dispatchers.IO) {
-            for (message in clientStream.receivedMsgCh) {
-                onMasterReceived(message, clientStream)
-            }
-            logger.debug("slave channel closed")
-        }
-        GlobalScope.launch(Dispatchers.IO) {
-            clientStream.disconnectedCh.receive()
-            onSlaveDisconnect(clientStream)
-            logger.debug("slave disconnected: ${clientStream.remoteName()}")
-        }
-    }
+    fun makeDiscoverable() = controller.makeDiscoverable()
 
-    suspend fun close() {
-        try {
-            when (peerStatus) {
-                PeerStatus.Master -> {
-                    sendToSlaves(DisconnectMsg())
-                }
-                PeerStatus.Slave -> {
-                    sendToMaster(DisconnectMsg())
-                }
-                else -> {
-                }
-            }
-        } catch (t: Throwable) {
-            logger.error("sending close message", t)
-        }
-
-        peerStatus = PeerStatus.Disconnected
-        masterStream?.close()
-        slaveStreams.forEach { it.close() }
-        slaveStreams.clear()
-        newSlaveListener?.close()
-
+    fun close() {
+        controller.close()
         roomPassword = ""
-        clients = mutableListOf()
         currentSongId = null
     }
 
-    fun hostRoom(username: String, password: String): Deferred<Result<Unit>> {
-        return try {
-            makeDiscoverable()
-            this.roomPassword = password
-            this.username = username
-            this.clients = mutableListOf(PeerClient(username, null, PeerStatus.Master))
-            newSlaveListener = NewSlaveListener(bluetoothService.bluetoothAdapter, newSlaveChannel)
-            peerStatus = PeerStatus.Master
-            newSlaveListener!!.isInitialized()
-        } catch (t: Throwable) {
-            GlobalScope.async { Result.failure(t) }
-        }
-    }
-
-    fun makeDiscoverable() {
-        bluetoothService.ensureBluetoothEnabled()
-        bluetoothService.cancelDiscovery()
-        bluetoothService.makeDiscoverable()
-    }
-
-    fun joinRoom(username: String, room: Room): Deferred<Result<Unit>> {
+    fun hostRoomAsync(username: String, password: String): Deferred<Result<Unit>> {
+        this.roomPassword = password
         this.username = username
-        return GlobalScope.async {
-            val result = bluetoothService.connectToRoomSocketAsync(room).await()
-            return@async result.onSuccess { btSocket: BluetoothSocket ->
-                logger.debug("joined to room socket")
-                masterStream = PeerStream(btSocket, masterMessagesChannel)
-                peerStatus = PeerStatus.Slave
-                GlobalScope.launch {
-                    masterStream?.disconnectedCh?.receive()
-                    onMasterDisconnect()
-                }
-                sendToMaster(HelloMsg(username))
-            }.map { Unit }
+        return controller.hostRoomAsync(username)
+    }
+
+    private fun onJoinRoomKnocked() {
+        controller.sendToMaster(HelloMsg())
+    }
+
+    private fun onClientsChange(clients: List<PeerClient>) {
+        controller.sendToSlaves(RoomUsersMsg(clients.map { it.username }))
+        GlobalScope.launch(Dispatchers.Main) {
+            updateMembersCallback(clients.toList())
         }
+    }
+
+    fun joinRoomKnockAsync(username: String, room: Room): Deferred<Result<Unit>> {
+        this.username = username
+        return controller.joinRoomKnockAsync(room)
     }
 
     fun sendChatMessage(message: String) {
         logger.debug("Sending chat message")
-        GlobalScope.launch {
-            sendToMaster(ChatMessageMsg(username, 0, message))
-        }
-    }
-
-    private suspend fun sendToMaster(msg: GtrMsg) {
-        when (peerStatus) {
-            PeerStatus.Master -> {
-                onMasterReceived(msg.toString(), null)
-            }
-            PeerStatus.Slave -> {
-                val strMsg = msg.toString()
-                logger.debug("sending to master: $strMsg")
-                masterStream?.write(strMsg)
-            }
-            else -> {
-            }
-        }
-    }
-
-    private suspend fun sendToClients(msg: GtrMsg) {
-        // From Master
-        when (peerStatus) {
-            PeerStatus.Master -> {
-                sendToSlaves(msg)
-                onClientReceived(msg.toString())
-            }
-            else -> {
-            }
-        }
-    }
-
-    private fun sendToSlaves(msg: GtrMsg) {
-        when (peerStatus) {
-            PeerStatus.Master -> {
-                val strMsg = msg.toString()
-                val activeSlaveStreams = clients.filter { it.status == PeerStatus.Slave && it.stream != null }
-                        .map { it.stream!! }
-                logger.debug("sending to ${activeSlaveStreams.size} slaves: $strMsg")
-                activeSlaveStreams.forEach { stream ->
-                    try {
-                        stream.write(strMsg)
-                    } catch (e: Exception) {
-                        logger.error("sending to disconnected peer", e)
-                        stream.close()
-                    }
-                }
-            }
-            else -> {
-            }
-        }
-    }
-
-    private suspend fun addNewSlave(newUsername: String, clientStream: PeerStream?) {
-        writeMutex.withLock {
-            clients.add(PeerClient(newUsername, clientStream, PeerStatus.Slave))
-        }
-        sendToSlaves(RoomUsersMsg(clients.map { it.username }))
-        GlobalScope.launch(Dispatchers.Main) {
-            updateMembersCallback(clients.toList())
-        }
+        controller.sendToMaster(ChatMessageMsg(username, 0, message))
     }
 
     // receive as Master
-    private suspend fun onMasterReceived(strMsg: String, slaveStream: PeerStream?) {
-        try {
-            val clientName = if (slaveStream == null) "itself" else "slave ${slaveStream.remoteName()}"
-            logger.debug("received message from $clientName: $strMsg")
-            when (val gtrMsg: GtrMsg = GtrParser().parse(strMsg)) {
-                is ChatMessageMsg -> sendToClients(ChatMessageMsg(gtrMsg.author, Date().time, gtrMsg.message))
-                is HelloMsg -> addNewSlave(gtrMsg.username, slaveStream)
-                is DisconnectMsg -> slaveStream?.let { onSlaveDisconnect(slaveStream) }
-            }
-        } catch (t: Throwable) {
-            UiErrorHandler().handleError(t)
+    private suspend fun onMasterMsgReceived(gtrMsg: GtrMsg, slaveStream: PeerStream?) {
+        when (gtrMsg) {
+            is ChatMessageMsg -> controller.sendToClients(ChatMessageMsg(gtrMsg.author, Date().time, gtrMsg.message))
+            is LoginMsg -> controller.addNewSlave(gtrMsg.username, slaveStream)
+            is DisconnectMsg -> slaveStream?.let { controller.onSlaveDisconnect(slaveStream) }
         }
     }
 
     // receive as Slave or Master client
-    private suspend fun onClientReceived(strMsg: String) {
-        try {
-            logger.debug("received message from master: $strMsg")
-            when (val gtrMsg: GtrMsg = GtrParser().parse(strMsg)) {
-                is ChatMessageMsg -> {
-                    val cal = Calendar.getInstance()
-                    cal.timeInMillis = gtrMsg.timestampMs // in milliseconds
-                    val chatMessage = ChatMessage(gtrMsg.author, gtrMsg.message, cal.time)
-                    GlobalScope.launch(Dispatchers.Main) {
-                        newChatMessageCallback(chatMessage)
-                    }
-                }
-                is RoomUsersMsg -> {
-                    val clients = gtrMsg.usernames.mapIndexed { index, it ->
-                        PeerClient(it, null, status = if (index == 0) PeerStatus.Master else PeerStatus.Slave)
-                    }.toMutableList()
-                    writeMutex.withLock {
-                        this.clients = clients
-                    }
-                    GlobalScope.launch(Dispatchers.Main) {
-                        updateMembersCallback(clients.toList())
-                    }
-                }
-                is DisconnectMsg -> onMasterDisconnect()
-                is SelectSongMsg -> GlobalScope.launch {
-                    currentSongId = gtrMsg.songId
-                    onSelectedSongChange(gtrMsg.songId)
+    private suspend fun onClientMsgReceived(gtrMsg: GtrMsg) {
+        when (gtrMsg) {
+            is ChatMessageMsg -> {
+                val cal = Calendar.getInstance()
+                cal.timeInMillis = gtrMsg.timestampMs // in milliseconds
+                val chatMessage = ChatMessage(gtrMsg.author, gtrMsg.message, cal.time)
+                GlobalScope.launch(Dispatchers.Main) {
+                    newChatMessageCallback(chatMessage)
                 }
             }
-        } catch (t: Throwable) {
-            UiErrorHandler().handleError(t)
+            is RoomUsersMsg -> {
+                val clients = gtrMsg.usernames.mapIndexed { index, it ->
+                    PeerClient(it, null, status = if (index == 0) PeerStatus.Master else PeerStatus.Slave)
+                }.toMutableList()
+                controller.setClients(clients)
+                GlobalScope.launch(Dispatchers.Main) {
+                    updateMembersCallback(clients.toList())
+                }
+            }
+            is DisconnectMsg -> controller.onMasterDisconnect()
+            is SelectSongMsg -> GlobalScope.launch {
+                currentSongId = gtrMsg.songId
+                onSelectedSongChange(gtrMsg.songId)
+            }
         }
-    }
-
-    private suspend fun onSlaveDisconnect(slaveStream: PeerStream) {
-        logger.debug("slave dropped")
-        writeMutex.withLock {
-            slaveStreams = slaveStreams.filterNot { it == slaveStream }.toMutableList()
-            clients = clients.filterNot { it.stream == slaveStream }.toMutableList()
-        }
-        sendToSlaves(RoomUsersMsg(clients.map { it.username }))
-        GlobalScope.launch(Dispatchers.Main) {
-            updateMembersCallback(clients.toList())
-        }
-    }
-
-    private fun onMasterDisconnect() {
-        logger.debug("master dropped")
-        onDisconnectCallback()
     }
 
     fun reportSongSelected(songIdentifier: SongIdentifier) {
@@ -278,9 +122,7 @@ class RoomLobby(
             return
 
         currentSongId = songIdentifier
-        GlobalScope.launch {
-            sendToSlaves(SelectSongMsg(songIdentifier))
-        }
+        controller.sendToSlaves(SelectSongMsg(songIdentifier))
     }
 
 }

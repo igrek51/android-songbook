@@ -8,7 +8,6 @@ open class GtrMsg() {
     override fun toString(): String = GtrFormatter().format(this)
 }
 
-
 internal class MsgSpec<T : GtrMsg>(
         val code: String,
         val clazz: KClass<T>,

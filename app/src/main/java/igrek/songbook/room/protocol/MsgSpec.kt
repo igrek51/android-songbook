@@ -4,8 +4,8 @@ import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
 
 
-class HelloMsg(val username: String) : GtrMsg()
-class RoomBouncerMsg(val roomName: String, val withPassword: Boolean) : GtrMsg()
+class HelloMsg : GtrMsg()
+class WhosThereMsg(val roomName: String, val withPassword: Boolean) : GtrMsg()
 class LoginMsg(val username: String, val password: String) : GtrMsg()
 class WelcomeMsg(val valid: Boolean) : GtrMsg()
 class RoomUsersMsg(val usernames: List<String>) : GtrMsg()
@@ -17,16 +17,14 @@ class HeartbeatResponseMsg : GtrMsg()
 
 internal val msgSpecs = listOf(
         MsgSpec("HI", HelloMsg::class,
-                partsFormatter = { listOf(it.username) },
-                requiredParts = 1,
-                partsParser = { parts ->
-                    HelloMsg(parts[0])
+                partsParser = {
+                    HelloMsg()
                 }),
-        MsgSpec("BOUNCER", RoomBouncerMsg::class,
+        MsgSpec("WHOSTHERE", WhosThereMsg::class,
                 partsFormatter = { listOf(it.roomName, it.withPassword.toGtrString()) },
                 requiredParts = 2,
                 partsParser = { parts ->
-                    RoomBouncerMsg(parts[0], parts[1] == "1")
+                    WhosThereMsg(parts[0], parts[1] == "1")
                 }),
         MsgSpec("LOGIN", LoginMsg::class,
                 partsFormatter = { listOf(it.username, it.password) },

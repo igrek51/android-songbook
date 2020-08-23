@@ -70,15 +70,15 @@ class RoomLobbyLayoutController(
         }
 
         membersTextView = layout.findViewById(R.id.membersTextView)
-        selectedSongTextView = layout.findViewById(R.id.membersTextView)
+        selectedSongTextView = layout.findViewById(R.id.selectedSongTextView)
         updateMembers(roomLobby.clients)
         roomLobby.updateMembersCallback = ::updateMembers
 
-        roomLobby.onDisconnectCallback = ::onDisconnected
+        roomLobby.onDroppedCallback = ::onDropped
         roomLobby.onSelectedSongChange = ::onSelectedSongChange
     }
 
-    private fun onDisconnected() {
+    private fun onDropped() {
         uiInfoService.showInfo(R.string.room_dropped_from_host)
         if (isLayoutVisible()) {
             layoutController.showLayout(RoomListLayoutController::class)
@@ -87,7 +87,7 @@ class RoomLobbyLayoutController(
 
     private fun updateMembers(members: List<PeerClient>) {
         val membersStr = members.map { it.displayMember() }.joinToString("\n") { "- $it" }
-        membersTextView?.text = "Members:\n$membersStr"
+        membersTextView?.text = uiInfoService.resString(R.string.room_members, membersStr)
     }
 
     private fun PeerClient.displayMember(): String {
@@ -137,7 +137,7 @@ class RoomLobbyLayoutController(
         }
     }
 
-    private suspend fun closeAndReturn() {
+    private fun closeAndReturn() {
         roomLobby.close()
         layoutController.showLayout(RoomListLayoutController::class, disableReturn = true)
     }

@@ -72,7 +72,7 @@ class RoomListLayoutController(
         GlobalScope.launch {
             uiInfoService.showInfo(R.string.room_joining_room, room.name)
             val username = myNameEditText?.text?.toString().orEmpty()
-            roomLobby.joinRoom(username, room).await().fold(onSuccess = {
+            roomLobby.joinRoomKnockAsync(username, room).await().fold(onSuccess = {
                 uiInfoService.showInfo(R.string.room_joined_to_room)
                 GlobalScope.launch(Dispatchers.Main) {
                     layoutController.showLayout(RoomLobbyLayoutController::class)
@@ -87,7 +87,7 @@ class RoomListLayoutController(
         InputDialogBuilder().input(R.string.screen_share_set_room_password, null) { password ->
             GlobalScope.launch {
                 val username = myNameEditText?.text?.toString().orEmpty()
-                roomLobby.hostRoom(username, password).await().fold(onSuccess = {
+                roomLobby.hostRoomAsync(username, password).await().fold(onSuccess = {
                     uiInfoService.showInfo(R.string.room_room_created)
                     layoutController.showLayout(RoomLobbyLayoutController::class)
                 }, onFailure = { e ->
