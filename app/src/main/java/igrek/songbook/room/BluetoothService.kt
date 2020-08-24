@@ -41,6 +41,7 @@ class BluetoothService(
     private val discoveredRoomDevices: ConcurrentHashMap<String, BluetoothDevice> = ConcurrentHashMap()
     private var discoveredRoomsChannel: Channel<Room> = Channel()
     private var discoveryJobs: MutableList<Job> = mutableListOf()
+    private val reusableSockets: MutableMap<String, BluetoothSocket> = mutableMapOf()
 
     fun deviceName(): String {
         return bluetoothAdapter.name.orEmpty()
@@ -134,18 +135,9 @@ class BluetoothService(
         val device = bluetoothAdapter.getRemoteDevice(address)
         logger.debug("Detecting BT socket on ${device.name} ($address)")
 
-        val socket: BluetoothSocket = try {
-            device.createInsecureRfcommSocketToServiceRecord(BT_APP_UUID)
-        } catch (e: Exception) {
-            logger.warn("Could not create Insecure RFComm Connection", e)
-            device.createRfcommSocketToServiceRecord(BT_APP_UUID)
-        }
-
-        socket.connect()
+        reuseBluetoothSocket(address)
 
         logger.debug("Room found on ${device.name} ($address)")
-
-        socket.close()
     }
 
     fun ensureBluetoothEnabled() {
@@ -173,26 +165,40 @@ class BluetoothService(
 
         return GlobalScope.async(Dispatchers.IO) {
             runCatching {
-                val btSocket: BluetoothSocket
-
-                val device = bluetoothAdapter.getRemoteDevice(room.hostAddress)
-                logger.debug("Connecting to room socket ${device.name} (${room.hostAddress})")
-                try {
-                    btSocket = createBluetoothSocket(device)
-                } catch (e: IOException) {
-                    throw RuntimeException("Socket creation failed to ${device.name}", e)
-                }
-
-                try {
-                    btSocket.connect()
-                    logger.debug("socket connected to ${device.name}")
-                } catch (e: IOException) {
-                    btSocket.close()
-                    throw RuntimeException("socket connection failed to ${device.name}", e)
-                }
-                btSocket
+                reuseBluetoothSocket(room.hostAddress.orEmpty())
             }
         }
+    }
+
+    private fun reuseBluetoothSocket(btAddress: String): BluetoothSocket {
+        val reusable = reusableSockets[btAddress]
+        if (reusable != null && reusable.isConnected) {
+            logger.debug("reusing open socket on $btAddress")
+            return reusable
+        }
+        val newSocket = connectBluetoothSocket(btAddress)
+        reusableSockets[btAddress] = newSocket
+        return newSocket
+    }
+
+    private fun connectBluetoothSocket(btAddress: String?): BluetoothSocket {
+        val btSocket: BluetoothSocket
+        val device = bluetoothAdapter.getRemoteDevice(btAddress)
+        logger.debug("Connecting to room socket ${device.name} (${btAddress})")
+        try {
+            btSocket = createBluetoothSocket(device)
+        } catch (e: IOException) {
+            throw RuntimeException("Socket creation failed to ${device.name}", e)
+        }
+
+        try {
+            btSocket.connect()
+            logger.debug("socket connected to ${device.name}")
+        } catch (e: IOException) {
+            btSocket.close()
+            throw RuntimeException("socket connection failed to ${device.name}", e)
+        }
+        return btSocket
     }
 
     private fun createBluetoothSocket(device: BluetoothDevice): BluetoothSocket {
