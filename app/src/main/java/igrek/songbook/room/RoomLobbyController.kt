@@ -246,9 +246,11 @@ class RoomLobbyController(
     }
 
     suspend fun onMasterDisconnect() {
-        LoggerFactory.logger.debug("master dropped")
-        onDroppedFromMaster()
-        close()
+        if (peerStatus != PeerStatus.Disconnected) {
+            LoggerFactory.logger.debug("master dropped")
+            onDroppedFromMaster()
+            close()
+        }
     }
 
     suspend fun setClients(clients: MutableList<PeerClient>) {
