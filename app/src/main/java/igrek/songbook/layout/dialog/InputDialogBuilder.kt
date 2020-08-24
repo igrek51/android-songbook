@@ -39,11 +39,12 @@ class InputDialogBuilder(
 
             alertBuilder.setNegativeButton(uiResourceService.resString(R.string.action_cancel)) { _, _ -> }
             alertBuilder.setPositiveButton(uiResourceService.resString(R.string.action_info_ok)) { _, _ ->
-                SafeExecutor {
-                    action.invoke(input.text.toString())
-                }
+                softKeyboardService.hideSoftKeyboard(input)
                 Handler(Looper.getMainLooper()).post {
                     softKeyboardService.hideSoftKeyboard()
+                }
+                SafeExecutor {
+                    action.invoke(input.text.toString())
                 }
             }
             alertBuilder.setCancelable(true)

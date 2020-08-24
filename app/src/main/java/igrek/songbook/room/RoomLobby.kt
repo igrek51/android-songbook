@@ -50,8 +50,8 @@ class RoomLobby(
 
     fun makeDiscoverable() = controller.makeDiscoverable()
 
-    suspend fun close() {
-        controller.close()
+    suspend fun close(broadcast: Boolean = true) {
+        controller.close(broadcast)
         roomPassword = ""
         currentSongId = null
     }
@@ -113,7 +113,8 @@ class RoomLobby(
     private suspend fun verifyLoggingUser(username: String, givenPassword: String, slaveStream: PeerStream) {
         if (givenPassword != roomPassword) {
             logger.warn("User $username attempted to login to room with invalid password: $givenPassword")
-            controller.sendToSlave(slaveStream, WelcomeMsg(false))
+            controller.sendToSlave(slaveStream, WelcomeMsg(false)).join()
+            slaveStream.let { controller.onSlaveDisconnect(slaveStream) }
             return
         }
 
@@ -129,18 +130,12 @@ class RoomLobby(
                     onRoomLobbyIntroduced(msg.roomName, msg.withPassword)
                 }
             }
-            is ChatMessageMsg -> {
-                val chatMessage = ChatMessage(msg.author, msg.message, msg.timestampMs.timestampMsToDate())
-                GlobalScope.launch(Dispatchers.Main) {
-                    newChatMessageCallback(chatMessage)
-                }
-            }
             is WelcomeMsg -> {
                 if (msg.valid) {
                     onRoomWelcomedSuccessfully()
                 } else {
                     onRoomWrongPassword()
-                    close()
+                    close(broadcast = false)
                 }
             }
             is RoomUsersMsg -> {
@@ -150,6 +145,12 @@ class RoomLobby(
                 controller.setClients(clients)
                 GlobalScope.launch(Dispatchers.Main) {
                     updateMembersCallback(clients.toList())
+                }
+            }
+            is ChatMessageMsg -> {
+                val chatMessage = ChatMessage(msg.author, msg.message, msg.timestampMs.timestampMsToDate())
+                GlobalScope.launch(Dispatchers.Main) {
+                    newChatMessageCallback(chatMessage)
                 }
             }
             is DisconnectMsg -> controller.onMasterDisconnect()

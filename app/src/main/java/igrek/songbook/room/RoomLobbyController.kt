@@ -69,20 +69,22 @@ class RoomLobbyController(
         }
     }
 
-    suspend fun close() {
-        try {
-            when (peerStatus) {
-                PeerStatus.Master -> {
-                    sendToSlaves(DisconnectMsg()).join()
+    suspend fun close(broadcast: Boolean = true) {
+        if (broadcast) {
+            try {
+                when (peerStatus) {
+                    PeerStatus.Master -> {
+                        sendToSlaves(DisconnectMsg()).join()
+                    }
+                    PeerStatus.Slave -> {
+                        sendToMaster(DisconnectMsg()).join()
+                    }
+                    else -> {
+                    }
                 }
-                PeerStatus.Slave -> {
-                    sendToMaster(DisconnectMsg()).join()
-                }
-                else -> {
-                }
+            } catch (t: Throwable) {
+                LoggerFactory.logger.error("sending close message", t)
             }
-        } catch (t: Throwable) {
-            LoggerFactory.logger.error("sending close message", t)
         }
 
         peerStatus = PeerStatus.Disconnected
@@ -184,8 +186,8 @@ class RoomLobbyController(
         }
     }
 
-    fun sendToSlave(stream: PeerStream, msg: GtrMsg) {
-        GlobalScope.launch {
+    fun sendToSlave(stream: PeerStream, msg: GtrMsg): Job {
+        return GlobalScope.launch {
             when (peerStatus) {
                 PeerStatus.Master -> {
                     val strMsg = msg.toString()
@@ -235,6 +237,7 @@ class RoomLobbyController(
 
     suspend fun onSlaveDisconnect(slaveStream: PeerStream) {
         LoggerFactory.logger.debug("slave dropped")
+        slaveStream.close()
         writeMutex.withLock {
             slaveStreams = slaveStreams.filterNot { it == slaveStream }.toMutableList()
             clients = clients.filterNot { it.stream == slaveStream }.toMutableList()
