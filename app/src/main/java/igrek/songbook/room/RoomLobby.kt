@@ -50,7 +50,7 @@ class RoomLobby(
 
     fun makeDiscoverable() = controller.makeDiscoverable()
 
-    fun close() {
+    suspend fun close() {
         controller.close()
         roomPassword = ""
         currentSongId = null

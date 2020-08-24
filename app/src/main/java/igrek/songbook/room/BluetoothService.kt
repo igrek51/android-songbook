@@ -102,7 +102,6 @@ class BluetoothService(
 
     private fun onDeviceDiscovered(intent: Intent) {
         val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-        logger.debug("BT device discovered: ${device.name} (${device.address})")
         detectRoomOnDevice(device)
     }
 
@@ -133,7 +132,7 @@ class BluetoothService(
 
     private fun detectDeviceSocket(address: String) {
         val device = bluetoothAdapter.getRemoteDevice(address)
-        logger.debug("Detecting socket on ${device.name} ($address)")
+        logger.debug("Detecting BT socket on ${device.name} ($address)")
 
         val socket: BluetoothSocket = try {
             device.createInsecureRfcommSocketToServiceRecord(BT_APP_UUID)

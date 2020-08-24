@@ -84,16 +84,16 @@ class NewSlaveListener(
             return
         open = false
 
+        if (looperJob.isActive) {
+            looperScope.cancel()
+            looperJob.cancel()
+        }
+
         openSockets.forEach { socket ->
             if (socket.isConnected)
                 socket.close()
         }
         openSockets.clear()
-
-        if (looperJob.isActive) {
-            looperScope.cancel()
-            looperJob.cancel()
-        }
 
         serverSocket?.close()
         initChannel.close()

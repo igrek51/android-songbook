@@ -69,14 +69,14 @@ class RoomLobbyController(
         }
     }
 
-    fun close() {
+    suspend fun close() {
         try {
             when (peerStatus) {
                 PeerStatus.Master -> {
-                    sendToSlaves(DisconnectMsg())
+                    sendToSlaves(DisconnectMsg()).join()
                 }
                 PeerStatus.Slave -> {
-                    sendToMaster(DisconnectMsg())
+                    sendToMaster(DisconnectMsg()).join()
                 }
                 else -> {
                 }
@@ -130,8 +130,8 @@ class RoomLobbyController(
         }
     }
 
-    fun sendToMaster(msg: GtrMsg) {
-        GlobalScope.launch {
+    fun sendToMaster(msg: GtrMsg): Job {
+        return GlobalScope.launch {
             when (peerStatus) {
                 PeerStatus.Master -> {
                     onMasterReceived(msg.toString(), null)
@@ -147,8 +147,8 @@ class RoomLobbyController(
         }
     }
 
-    fun sendToClients(msg: GtrMsg) {
-        GlobalScope.launch {
+    fun sendToClients(msg: GtrMsg): Job {
+        return GlobalScope.launch {
             // From Master
             when (peerStatus) {
                 PeerStatus.Master -> {
@@ -161,8 +161,8 @@ class RoomLobbyController(
         }
     }
 
-    fun sendToSlaves(msg: GtrMsg) {
-        GlobalScope.launch {
+    fun sendToSlaves(msg: GtrMsg): Job {
+        return GlobalScope.launch {
             when (peerStatus) {
                 PeerStatus.Master -> {
                     val strMsg = msg.toString()
@@ -242,7 +242,7 @@ class RoomLobbyController(
         onClientsChange(clients)
     }
 
-    fun onMasterDisconnect() {
+    suspend fun onMasterDisconnect() {
         LoggerFactory.logger.debug("master dropped")
         onDroppedFromMaster()
         close()

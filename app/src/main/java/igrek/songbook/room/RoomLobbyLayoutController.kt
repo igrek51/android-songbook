@@ -137,7 +137,7 @@ class RoomLobbyLayoutController(
         }
     }
 
-    private fun closeAndReturn() {
+    private suspend fun closeAndReturn() {
         roomLobby.close()
         layoutController.showLayout(RoomListLayoutController::class, disableReturn = true)
     }
