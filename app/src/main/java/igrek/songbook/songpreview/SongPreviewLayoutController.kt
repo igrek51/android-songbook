@@ -159,7 +159,7 @@ class SongPreviewLayoutController(
         quickMenuAutoscroll.isVisible = false
 
         // overlaying RecyclerView
-        overlayRecyclerView = activity.findViewById<RecyclerView>(R.id.overlayRecyclerView).apply {
+        overlayRecyclerView = activity.findViewById<RecyclerView>(R.id.overlayRecyclerView)?.apply {
             setHasFixedSize(true) // improve performance
             layoutManager = LinearLayoutManager(activity)
             songPreview?.let { songPreview ->
