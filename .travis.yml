@@ -22,7 +22,7 @@ android:
     - ".+"
 
 git:
-  depth: false
+  depth: 50
 
 before_script:
   # Create and start emulator
