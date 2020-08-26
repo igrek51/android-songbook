@@ -98,6 +98,14 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:gravity="bottom"
+                android:text="@string/screen_share_feature_hint"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:gravity="bottom"
                 android:text="@string/screen_share_your_name"
                 android:textSize="18sp" />
 
