@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:gravity="bottom"
-                android:text="Members:"
+                android:text="@string/room_members"
                 android:textSize="18sp" />
 
             <TextView
@@ -108,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:gravity="bottom"
-                android:text="Current song: waiting..."
+                android:text="@string/room_current_song"
                 android:textSize="18sp" />
 
             <Button
@@ -123,7 +123,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:gravity="bottom"
-                android:text="Chat:"
+                android:text="@string/room_chat"
                 android:textSize="18sp" />
 
             <LinearLayout

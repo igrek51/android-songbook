@@ -138,7 +138,9 @@ class RoomListLayoutController(
                 GlobalScope.launch(Dispatchers.Main) {
                     for (progress in progressCh) {
                         if (showScanning)
-                            uiInfoService.showInfo(R.string.room_scanning_progress, "${progress.done.get()}/${progress.all.get()}")
+                            uiInfoService.showInfo(R.string.room_scanning_progress,
+                                    "${progress.done.get()}/${progress.all.get()}",
+                                    indefinite = true)
                     }
                 }
 

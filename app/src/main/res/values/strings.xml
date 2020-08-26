@@ -450,4 +450,7 @@
     <string name="room_confirm_leave_lobby">You are about to leave lobby. Do you really want to disconnect?</string>
     <string name="room_scanning_progress">Scanning all devices in proximity… %s</string>
     <string name="screen_share_feature_hint">Screen Sharing allows you to display the same songs on many devices using Bluetooth. Create a room so that your friends could join it. Then every song you choose will be displayed on devices connected to your room.</string>
+    <string name="room_current_song">Current song: %s</string>
+    <string name="room_current_song_waiting">waiting for the song choice…</string>
+    <string name="room_chat">Chat:</string>
 </resources>
