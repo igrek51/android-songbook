@@ -422,4 +422,5 @@
     <string name="room_wrong_password">Nieprawidłowe hasło</string>
     <string name="room_host">Host</string>
     <string name="room_confirm_leave_lobby">Opuszczasz grupę, Czy na pewno chcesz się odłączyć?</string>
+    <string name="room_scanning_progress">Skanowanie urządzeń w pobliżu… %s</string>
 </resources>

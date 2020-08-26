@@ -40,6 +40,8 @@ class BluetoothService(
 
     private val discoveredRoomDevices: ConcurrentHashMap<String, BluetoothDevice> = ConcurrentHashMap()
     private var discoveredRoomsChannel: Channel<Room> = Channel()
+    private var discoveryProgressChannel: Channel<DiscoveryProgress> = Channel()
+    private var discoveryProgress = DiscoveryProgress()
     private var discoveryJobs: MutableList<Job> = mutableListOf()
     private val reusableSockets: MutableMap<String, BluetoothSocket> = mutableMapOf()
 
@@ -47,7 +49,7 @@ class BluetoothService(
         return bluetoothAdapter.name.orEmpty()
     }
 
-    fun scanRoomsAsync(): Deferred<Result<Channel<Room>>> {
+    fun scanRoomsAsync(): Deferred<Result<Pair<Channel<Room>, Channel<DiscoveryProgress>>>> {
         return GlobalScope.async {
             return@async runCatching {
                 ensureBluetoothEnabled()
@@ -58,8 +60,11 @@ class BluetoothService(
                 discoveredRoomsChannel.close()
                 discoveredRoomsChannel = Channel(16)
                 discoveredRoomDevices.clear()
+                discoveryProgressChannel.close()
+                discoveryProgressChannel = Channel(Channel.UNLIMITED)
+                discoveryProgress = DiscoveryProgress()
 
-                return@runCatching discoveredRoomsChannel
+                return@runCatching discoveredRoomsChannel to discoveryProgressChannel
             }
         }
     }
@@ -108,6 +113,12 @@ class BluetoothService(
 
     private fun detectRoomOnDevice(device: BluetoothDevice) {
         val job = GlobalScope.launch(Dispatchers.IO) {
+            discoveryProgress.all.incrementAndGet()
+            try {
+                discoveryProgressChannel.send(discoveryProgress)
+            } catch (e: ClosedSendChannelException) {
+            }
+
             if (discoveredRoomDevices.containsKey(device.address))
                 return@launch
 
@@ -125,6 +136,12 @@ class BluetoothService(
                         hostAddress = device.address,
                 )
                 discoveredRoomsChannel.send(room)
+            } catch (e: ClosedSendChannelException) {
+            }
+
+            discoveryProgress.done.incrementAndGet()
+            try {
+                discoveryProgressChannel.send(discoveryProgress)
             } catch (e: ClosedSendChannelException) {
             }
         }
@@ -212,6 +229,7 @@ class BluetoothService(
 
     fun cancelDiscovery() {
         bluetoothAdapter.cancelDiscovery()
+        discoveryProgressChannel.close()
     }
 
     fun makeDiscoverable() {

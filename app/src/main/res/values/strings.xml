@@ -448,4 +448,5 @@
     <string name="room_wrong_password">Wrong password</string>
     <string name="room_host">Host</string>
     <string name="room_confirm_leave_lobby">You are about to leave lobby. Do you really want to disconnect?</string>
+    <string name="room_scanning_progress">Scanning all devices in proximity… %s</string>
 </resources>

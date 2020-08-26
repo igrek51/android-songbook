@@ -32,7 +32,7 @@ class RoomListLayoutController(
 
     private var joinRoomListView: JoinRoomListView? = null
     private var myNameEditText: EditText? = null
-    private var showScanningCompleted = true
+    private var showScanning = true
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
@@ -82,7 +82,7 @@ class RoomListLayoutController(
     }
 
     private fun joinRoomKnock(room: Room) {
-        showScanningCompleted = false
+        showScanning = false
         roomLobby.onRoomLobbyIntroduced = ::onRoomLobbyIntroduced
         GlobalScope.launch {
             uiInfoService.showInfo(R.string.room_joining_room, room.name)
@@ -131,16 +131,23 @@ class RoomListLayoutController(
     private fun scanRooms() {
         joinRoomListView?.items = emptyList()
         uiInfoService.showInfo(R.string.screen_share_scanning_devices, indefinite = true)
-        showScanningCompleted = true
+        showScanning = true
 
         GlobalScope.launch(Dispatchers.IO) {
-            bluetoothService.scanRoomsAsync().await().fold(onSuccess = { roomCh ->
+            bluetoothService.scanRoomsAsync().await().fold(onSuccess = { (roomCh, progressCh) ->
+                GlobalScope.launch(Dispatchers.Main) {
+                    for (progress in progressCh) {
+                        if (showScanning)
+                            uiInfoService.showInfo(R.string.room_scanning_progress, "${progress.done.get()}/${progress.all.get()}")
+                    }
+                }
+
                 for (room in roomCh) {
                     withContext(Dispatchers.Main) {
                         joinRoomListView?.add(room)
                     }
                 }
-                if (showScanningCompleted)
+                if (showScanning)
                     uiInfoService.showInfo(R.string.room_scanning_completed)
             }, onFailure = { e ->
                 UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
