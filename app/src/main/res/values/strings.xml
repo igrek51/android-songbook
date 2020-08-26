@@ -446,4 +446,6 @@
     <string name="room_members">Members:\n%s</string>
     <string name="screen_share_enter_room_password">Enter room password:</string>
     <string name="room_wrong_password">Wrong password</string>
+    <string name="room_host">Host</string>
+    <string name="room_confirm_leave_lobby">You are about to leave lobby. Do you really want to disconnect?</string>
 </resources>

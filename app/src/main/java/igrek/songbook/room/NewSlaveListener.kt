@@ -72,7 +72,7 @@ class NewSlaveListener(
         }
     }
 
-    fun isInitialized(): Deferred<Result<Unit>> {
+    fun isInitializedAsync(): Deferred<Result<Unit>> {
         return GlobalScope.async {
             initChannel.receiveOrNull()
                     ?: Result.failure(ClosedReceiveChannelException("init channel closed"))

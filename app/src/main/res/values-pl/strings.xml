@@ -396,7 +396,7 @@
     <string name="error_communication_breakdown">Communication breakdown: %s</string>
     <string name="error_bluetooth_not_enabled">Bluetooth niedostępny. Spróbuj ponownie.</string>
     <string name="screen_share_set_room_password">Hasło do pokoju (puste - brak hasła)</string>
-    <string name="room_lobby">Room Lobby</string>
+    <string name="room_lobby">Lobby pokoju</string>
     <string name="room_chat_send">Wyślij</string>
     <string name="room_close_room">Zamknij pokój</string>
     <string name="room_make_discoverable">Ustaw pokój widoczny</string>
@@ -420,4 +420,6 @@
     <string name="room_members">Uczestnicy:\n%s</string>
     <string name="screen_share_enter_room_password">Podaj hasło:</string>
     <string name="room_wrong_password">Nieprawidłowe hasło</string>
+    <string name="room_host">Host</string>
+    <string name="room_confirm_leave_lobby">Opuszczasz grupę, Czy na pewno chcesz się odłączyć?</string>
 </resources>

@@ -44,9 +44,7 @@ class RoomLobbyLayoutController(
         })
 
         chatListView = layout.findViewById<RoomChatListView>(R.id.itemsListView)?.also {
-            it.onClickCallback = { message ->
-                logger.debug("click: $message")
-            }
+            it.onClickCallback = {}
             it.items = listOf()
         }
 
@@ -91,8 +89,9 @@ class RoomLobbyLayoutController(
     }
 
     private fun PeerClient.displayMember(): String {
+        val hostname = uiInfoService.resString(R.string.room_host)
         val role = when (this.status) {
-            PeerStatus.Master -> " (Host)"
+            PeerStatus.Master -> " ($hostname)"
             else -> ""
         }
         return this.username + role
@@ -127,7 +126,7 @@ class RoomLobbyLayoutController(
     override fun onBackClicked() {
         when (roomLobby.peerStatus) {
             PeerStatus.Master, PeerStatus.Slave -> {
-                ConfirmDialogBuilder().confirmAction("You are about to leave lobby. Do you really want to disconnect?") {
+                ConfirmDialogBuilder().confirmAction(R.string.room_confirm_leave_lobby) {
                     GlobalScope.launch {
                         closeAndReturn()
                     }

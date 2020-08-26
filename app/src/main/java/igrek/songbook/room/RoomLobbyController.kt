@@ -102,7 +102,7 @@ class RoomLobbyController(
             newSlaveListener?.close()
             newSlaveListener = NewSlaveListener(bluetoothService.bluetoothAdapter, newSlaveChannel)
             peerStatus = PeerStatus.Master
-            newSlaveListener!!.isInitialized()
+            newSlaveListener!!.isInitializedAsync()
         } catch (t: Throwable) {
             GlobalScope.async { Result.failure(t) }
         }

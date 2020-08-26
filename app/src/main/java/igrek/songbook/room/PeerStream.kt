@@ -28,7 +28,7 @@ class PeerStream(
         }
     }
 
-    suspend fun receiveLooper() {
+    private suspend fun receiveLooper() {
         while (remoteSocket.isConnected) {
             try {
                 delay(100L) //pause and wait for rest of data.
