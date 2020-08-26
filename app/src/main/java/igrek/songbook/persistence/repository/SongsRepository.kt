@@ -77,7 +77,7 @@ class SongsRepository(
         val versionNumber = try {
             loadPublicData()
         } catch (t: Throwable) {
-            logger.error("failed to load general data", t)
+            logger.error("failed to load version from general data", t)
             resetGeneralData()
             loadPublicData()
         }
@@ -90,8 +90,16 @@ class SongsRepository(
             userDataDao.reload()
         }
 
-        val publicDbBuilder = PublicSongsDbBuilder(versionNumber, publicSongsDao!!, userDataDao)
-        publicSongsRepo = publicDbBuilder.buildPublic(uiResourceService)
+        publicSongsRepo = try {
+            val publicDbBuilder = PublicSongsDbBuilder(versionNumber, publicSongsDao!!, userDataDao)
+            publicDbBuilder.buildPublic(uiResourceService)
+        } catch (t: Throwable) {
+            logger.error("failed to load general data", t)
+            resetGeneralData()
+            loadPublicData()
+            val publicDbBuilder = PublicSongsDbBuilder(versionNumber, publicSongsDao!!, userDataDao)
+            publicDbBuilder.buildPublic(uiResourceService)
+        }
 
         val customDbBuilder = CustomSongsDbBuilder(userDataDao)
         customSongsRepo = customDbBuilder.buildCustom(uiResourceService)
