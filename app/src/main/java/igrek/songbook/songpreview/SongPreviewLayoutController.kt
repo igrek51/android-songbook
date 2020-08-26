@@ -362,10 +362,12 @@ class SongPreviewLayoutController(
     private fun highlightButton(button: ImageButton) {
         val color = ContextCompat.getColor(activity, R.color.activePanelButton)
         button.setColorFilter(color, PorterDuff.Mode.SRC_IN)
+        button.setBackgroundColor(ContextCompat.getColor(activity, R.color.colorPrimaryDark))
     }
 
     private fun unhighlightButton(button: ImageButton) {
         button.clearColorFilter()
+        button.setBackgroundColor(ContextCompat.getColor(activity, R.color.colorPrimary))
     }
 
     private fun toggleSongFavourite() {
