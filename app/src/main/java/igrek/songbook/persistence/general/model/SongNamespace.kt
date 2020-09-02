@@ -8,6 +8,8 @@ enum class SongNamespace(val id: Long) {
 
     Antechamber(3),
 
+    Ephemeral(4),
+
     ;
 
     companion object {

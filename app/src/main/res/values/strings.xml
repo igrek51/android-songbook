@@ -453,4 +453,6 @@
     <string name="room_current_song">Current song: %s</string>
     <string name="room_current_song_waiting">waiting for the song choice…</string>
     <string name="room_chat">Chat:</string>
+    <string name="room_downloading_song">Fetching song…</string>
+    <string name="song_details_namespace_temporary">Temporary songs</string>
 </resources>

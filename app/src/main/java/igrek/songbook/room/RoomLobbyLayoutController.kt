@@ -14,12 +14,17 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
+import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongIdentifier
+import igrek.songbook.persistence.general.model.SongNamespace
+import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.*
 
 class RoomLobbyLayoutController(
         roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
@@ -81,6 +86,7 @@ class RoomLobbyLayoutController(
 
         roomLobby.onDroppedCallback = ::onDropped
         roomLobby.onSelectedSongChange = ::onSelectedSongChange
+        roomLobby.onSongFetched = ::onSongFetched
     }
 
     private fun updateOpenSelectedSongWidgets() {
@@ -141,12 +147,38 @@ class RoomLobbyLayoutController(
     private fun onSelectedSongChange(songId: SongIdentifier) {
         if (isLayoutVisible() || layoutController.isState(SongPreviewLayoutController::class)) {
             GlobalScope.launch {
+                if (songId.namespace != SongNamespace.Public) {
+                    uiInfoService.showInfo(R.string.room_downloading_song, indefinite = true)
+                    roomLobby.fetchSong(songId)
+                    return@launch
+                }
+
                 val result = songOpener.openSongIdentifier(songId)
                 if (!result) {
                     logger.error("cant find selected song locally: $songId")
+                    uiInfoService.showInfo(R.string.room_downloading_song, indefinite = true)
+                    roomLobby.fetchSong(songId)
                 }
             }
         }
+    }
+
+    private fun onSongFetched(songId: SongIdentifier, categoryName: String, title: String, chordsNotation: ChordsNotation, content: String) {
+        val now: Long = Date().time
+        val ephemeralSong = Song(
+                id = songId.songId,
+                title = title,
+                categories = mutableListOf(),
+                content = content,
+                versionNumber = 1,
+                createTime = now,
+                updateTime = now,
+                status = SongStatus.PUBLISHED,
+                customCategoryName = categoryName,
+                chordsNotation = chordsNotation,
+                namespace = SongNamespace.Ephemeral,
+        )
+        songOpener.openSongPreview(ephemeralSong)
     }
 
     override fun onBackClicked() {

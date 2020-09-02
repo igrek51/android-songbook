@@ -56,6 +56,7 @@ class SongDetailsService(
             SongNamespace.Public -> R.string.song_details_namespace_public
             SongNamespace.Custom -> R.string.song_details_namespace_custom
             SongNamespace.Antechamber -> R.string.song_details_namespace_antechamber
+            SongNamespace.Ephemeral -> R.string.song_details_namespace_temporary
         }
         val namespaceName = uiResourceService.resString(namespaceId)
 

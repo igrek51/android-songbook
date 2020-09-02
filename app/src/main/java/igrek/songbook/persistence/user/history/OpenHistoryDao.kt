@@ -1,5 +1,6 @@
 package igrek.songbook.persistence.user.history
 
+import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.user.AbstractJsonDao
 import io.reactivex.subjects.PublishSubject
 import java.util.*
@@ -26,7 +27,11 @@ class OpenHistoryDao(
         return OpenHistoryDb()
     }
 
-    fun registerOpenedSong(songId: Long, custom: Boolean) {
+    fun registerOpenedSong(songId: Long, namespace: SongNamespace) {
+        if (namespace == SongNamespace.Ephemeral)
+            return
+
+        val custom = namespace == SongNamespace.Custom
         // remove other occurrences and old history
         historyDb.songs = historyDb.songs
                 .filter { s -> !(s.songId == songId && s.custom == custom) }

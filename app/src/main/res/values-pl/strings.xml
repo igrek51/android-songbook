@@ -427,4 +427,6 @@
     <string name="room_current_song">Obecna piosenka: %s</string>
     <string name="room_current_song_waiting">oczekiwanie na wybór piosenki…</string>
     <string name="room_chat">Czat:</string>
+    <string name="room_downloading_song">Pobieranie piosenki…</string>
+    <string name="song_details_namespace_temporary">Tymczasowe piosenki</string>
 </resources>

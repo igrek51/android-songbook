@@ -2,6 +2,7 @@ package igrek.songbook.room.protocol
 
 import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
+import igrek.songbook.settings.chordsnotation.ChordsNotation
 
 
 class HelloMsg : GtrMsg()
@@ -12,6 +13,8 @@ class RoomUsersMsg(val usernames: List<String>) : GtrMsg()
 class DisconnectMsg : GtrMsg()
 class ChatMessageMsg(val author: String, val timestampMs: Long, val message: String) : GtrMsg()
 class SelectSongMsg(val songId: SongIdentifier) : GtrMsg()
+class FetchSongMsg(val songId: SongIdentifier) : GtrMsg()
+class PushSongMsg(val songId: SongIdentifier, val categoryName: String, val title: String, val chordsNotation: ChordsNotation, val content: String) : GtrMsg()
 class HeartbeatRequestMsg : GtrMsg()
 class HeartbeatResponseMsg : GtrMsg()
 
@@ -60,6 +63,24 @@ internal val msgSpecs = listOf(
                     val namespace = SongNamespace.parseById(parts[0].toLong())
                     val songId = SongIdentifier(songId = parts[1].toLong(), namespace = namespace)
                     SelectSongMsg(songId)
+                }),
+        MsgSpec("FETCH_SONG", FetchSongMsg::class,
+                partsFormatter = { listOf(it.songId.namespace.id.toString(), it.songId.songId.toString()) },
+                requiredParts = 2,
+                partsParser = { parts ->
+                    val namespace = SongNamespace.parseById(parts[0].toLong())
+                    val songId = SongIdentifier(songId = parts[1].toLong(), namespace = namespace)
+                    FetchSongMsg(songId)
+                }),
+        MsgSpec("PUSH_SONG", PushSongMsg::class,
+                partsFormatter = { listOf(it.songId.namespace.id.toString(), it.songId.songId.toString(), it.categoryName, it.title, it.chordsNotation.id.toString(), it.content) },
+                requiredParts = 6,
+                partsParser = { parts ->
+                    val namespace = SongNamespace.parseById(parts[0].toLong())
+                    val songId = SongIdentifier(songId = parts[1].toLong(), namespace = namespace)
+                    val chordsNotation = ChordsNotation.parseById(parts[4].toLong())
+                            ?: ChordsNotation.default
+                    PushSongMsg(songId = songId, categoryName = parts[2], title = parts[3], chordsNotation = chordsNotation, content = parts[5])
                 }),
         MsgSpec("RUOK", HeartbeatRequestMsg::class,
                 partsParser = {
