@@ -1,6 +1,5 @@
 package igrek.songbook.room
 
-import android.view.MotionEvent
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -57,18 +56,7 @@ class RoomLobbyLayoutController(
         chatListView = layout.findViewById<RoomChatListView>(R.id.itemsListView)?.also {
             it.onClickCallback = {}
             it.items = listOf()
-            // enable scrolling inside scrollview
-            it.setOnTouchListener { v, event ->
-                when (event.action) {
-                    // Disallow ScrollView to intercept touch events.
-                    MotionEvent.ACTION_DOWN -> v.parent.requestDisallowInterceptTouchEvent(true)
-                    // Allow ScrollView to intercept touch events.
-                    MotionEvent.ACTION_UP -> v.parent.requestDisallowInterceptTouchEvent(false)
-                }
-                // Handle ListView touch events.
-                v.onTouchEvent(event)
-                true
-            }
+            it.enableNestedScrolling()
         }
 
         chatMessageEdit = layout.findViewById(R.id.chatMessageEdit)
@@ -92,6 +80,7 @@ class RoomLobbyLayoutController(
 
         roomLobby.newChatMessageCallback = { chatMessage: ChatMessage ->
             chatListView?.add(chatMessage)
+            chatListView?.scrollToBottom()
         }
 
         membersTextView = layout.findViewById(R.id.membersTextView)

@@ -2,6 +2,7 @@ package igrek.songbook.layout.list
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ListView
@@ -58,5 +59,24 @@ abstract class GenericListView<T>(
 
     fun add(element: T) {
         items = items + element
+    }
+
+    fun enableNestedScrolling() {
+        // enable scrolling inside scrollview
+        this.setOnTouchListener { v, event ->
+            when (event.action) {
+                // Disallow ScrollView to intercept touch events.
+                MotionEvent.ACTION_DOWN -> v.parent.requestDisallowInterceptTouchEvent(true)
+                // Allow ScrollView to intercept touch events.
+                MotionEvent.ACTION_UP -> v.parent.requestDisallowInterceptTouchEvent(false)
+            }
+            // Handle ListView touch events.
+            v.onTouchEvent(event)
+            true
+        }
+    }
+
+    fun scrollToBottom() {
+
     }
 }

@@ -60,6 +60,7 @@ class RoomListLayoutController(
             it.onClickCallback = { room ->
                 joinRoomKnock(room)
             }
+            it.enableNestedScrolling()
         }
 
         layout.findViewById<Button>(R.id.scanRoomsButtton)?.setOnClickListener {
@@ -152,9 +153,9 @@ class RoomListLayoutController(
                 if (showScanning) {
                     val found = joinRoomListView?.items?.size ?: 0
                     if (found > 0) {
-                        uiInfoService.showInfo(R.string.room_scanning_completed_found)
+                        uiInfoService.showInfo(R.string.room_scanning_completed_found, found.toString())
                     } else {
-                        uiInfoService.showInfo(R.string.room_scanning_completed_not_found, found.toString())
+                        uiInfoService.showInfo(R.string.room_scanning_completed_not_found)
                     }
                 }
             }, onFailure = { e ->
