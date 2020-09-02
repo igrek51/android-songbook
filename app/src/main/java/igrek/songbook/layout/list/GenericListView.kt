@@ -77,6 +77,6 @@ abstract class GenericListView<T>(
     }
 
     fun scrollToBottom() {
-
+        this.setSelection(this.count - 1)
     }
 }
