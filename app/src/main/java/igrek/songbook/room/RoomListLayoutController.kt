@@ -149,8 +149,14 @@ class RoomListLayoutController(
                         joinRoomListView?.add(room)
                     }
                 }
-                if (showScanning)
-                    uiInfoService.showInfo(R.string.room_scanning_completed)
+                if (showScanning) {
+                    val found = joinRoomListView?.items?.size ?: 0
+                    if (found > 0) {
+                        uiInfoService.showInfo(R.string.room_scanning_completed_found)
+                    } else {
+                        uiInfoService.showInfo(R.string.room_scanning_completed_not_found, found.toString())
+                    }
+                }
             }, onFailure = { e ->
                 UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
             })

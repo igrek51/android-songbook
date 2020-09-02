@@ -440,7 +440,7 @@
     <string name="room_joining_room">Joining room on %s…</string>
     <string name="room_joined_to_room">Joined to room</string>
     <string name="room_room_created">Room created</string>
-    <string name="room_scanning_completed">Scanning completed</string>
+    <string name="room_scanning_completed_not_found">Scanning completed. No room found.</string>
     <string name="room_dropped_from_host">Dropped from host</string>
     <string name="song_show_fullscreen">Fullscreen</string>
     <string name="room_members">Members:\n%s</string>
@@ -450,9 +450,10 @@
     <string name="room_confirm_leave_lobby">You are about to leave lobby. Do you really want to disconnect?</string>
     <string name="room_scanning_progress">Scanning all devices in proximity… %s</string>
     <string name="screen_share_feature_hint">Screen Sharing allows you to display the same songs on many devices using Bluetooth. Create a room so that your friends could join it. Then every song you choose will be displayed on devices connected to your room.</string>
-    <string name="room_current_song">Current song: %s</string>
+    <string name="room_current_song">Current song:\n%s</string>
     <string name="room_current_song_waiting">waiting for the song choice…</string>
     <string name="room_chat">Chat:</string>
     <string name="room_downloading_song">Fetching song…</string>
     <string name="song_details_namespace_temporary">Temporary songs</string>
+    <string name="room_scanning_completed_found">Scanning completed. Found rooms: %s</string>
 </resources>
