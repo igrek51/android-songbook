@@ -62,8 +62,7 @@ class RoomLobbyLayoutController(
         chatMessageEdit = layout.findViewById(R.id.chatMessageEdit)
 
         layout.findViewById<Button>(R.id.chatSendButton)?.setOnClickListener(SafeClickListener {
-            roomLobby.sendChatMessage(chatMessageEdit?.text?.toString().orEmpty())
-            chatMessageEdit?.setText("")
+            sendChatMessage()
         })
 
         openSelectedSongButton = layout.findViewById<Button>(R.id.openSelectedSongButton)?.also {
@@ -92,15 +91,29 @@ class RoomLobbyLayoutController(
         roomLobby.onSongFetched = ::onSongFetched
     }
 
+    private fun sendChatMessage() {
+        val message = chatMessageEdit?.text?.toString().orEmpty()
+        if (message.isEmpty()) {
+            uiInfoService.showInfo(R.string.room_empty_message_given)
+            return
+        }
+        roomLobby.sendChatMessage(message)
+        chatMessageEdit?.setText("")
+    }
+
     private fun updateOpenSelectedSongWidgets() {
         openSelectedSongButton?.visibility = when (roomLobby.currentSongId) {
             null -> View.INVISIBLE
             else -> View.VISIBLE
         }
         selectedSongTextView?.let { selectedSongTextView ->
+            val defaultNoSongMessage = uiInfoService.resString(when (roomLobby.peerStatus) {
+                PeerStatus.Master -> R.string.room_current_song_waiting_master
+                else -> R.string.room_current_song_waiting
+            })
             val currentSongName = roomLobby.currentSongId?.let { currentSongId ->
                 currentSongName(currentSongId)
-            } ?: uiInfoService.resString(R.string.room_current_song_waiting)
+            } ?: defaultNoSongMessage
             selectedSongTextView.text = uiInfoService.resString(R.string.room_current_song, currentSongName)
         }
     }

@@ -136,7 +136,7 @@ class RoomListLayoutController(
 
         GlobalScope.launch(Dispatchers.IO) {
             bluetoothService.scanRoomsAsync().await().fold(onSuccess = { (roomCh, progressCh) ->
-                GlobalScope.launch(Dispatchers.Main) {
+                GlobalScope.launch {
                     for (progress in progressCh) {
                         if (showScanning)
                             uiInfoService.showInfo(R.string.room_scanning_progress,

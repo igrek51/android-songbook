@@ -424,7 +424,7 @@
     <string name="screen_share_set_room_password">Room password (empty - no password)</string>
     <string name="room_lobby">Room Lobby</string>
     <string name="room_chat_send">Send message</string>
-    <string name="room_close_room">Close room</string>
+    <string name="room_close_room">Leave room</string>
     <string name="room_make_discoverable">Make discoverable</string>
     <string name="room_open_current_song">Open current song</string>
     <string name="edit_song_export_all_custom_songs">Export all songs</string>
@@ -456,4 +456,7 @@
     <string name="room_downloading_song">Fetching song…</string>
     <string name="song_details_namespace_temporary">Temporary songs</string>
     <string name="room_scanning_completed_found">Scanning completed. Found rooms: %s</string>
+    <string name="room_empty_message_given">Enter a message first</string>
+    <string name="room_current_song_waiting_master">Open a song in any window to share it with others.</string>
+    <string name="room_lobby_hint">Only owner of a room can choose songs.</string>
 </resources>

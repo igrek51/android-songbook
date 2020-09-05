@@ -398,7 +398,7 @@
     <string name="screen_share_set_room_password">Hasło do pokoju (puste - brak hasła)</string>
     <string name="room_lobby">Lobby pokoju</string>
     <string name="room_chat_send">Wyślij</string>
-    <string name="room_close_room">Zamknij pokój</string>
+    <string name="room_close_room">Opuść pokój</string>
     <string name="room_make_discoverable">Ustaw pokój widoczny</string>
     <string name="room_open_current_song">Otwórz obecną piosenkę</string>
     <string name="edit_song_export_all_custom_songs">Wyeksportuj wszystkie piosenki</string>
@@ -430,4 +430,7 @@
     <string name="room_downloading_song">Pobieranie piosenki…</string>
     <string name="song_details_namespace_temporary">Tymczasowe piosenki</string>
     <string name="room_scanning_completed_found">Skanowanie zakończone. Znalezione pokoje: %s</string>
+    <string name="room_empty_message_given">Nie podano wiadomości</string>
+    <string name="room_current_song_waiting_master">Otwórz piosenkę w dowolnym oknie, aby udostępnić ją innym.</string>
+    <string name="room_lobby_hint">Tylko właściciel pokoju może wybierać piosenki.</string>
 </resources>
