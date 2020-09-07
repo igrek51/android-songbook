@@ -113,36 +113,39 @@ class BluetoothService(
 
     private fun detectRoomOnDevice(device: BluetoothDevice) {
         val job = GlobalScope.launch(Dispatchers.IO) {
-            discoveryProgress.all.incrementAndGet()
             try {
-                discoveryProgressChannel.send(discoveryProgress)
-            } catch (e: ClosedSendChannelException) {
-            }
+                discoveryProgress.all.incrementAndGet()
+                try {
+                    discoveryProgressChannel.send(discoveryProgress)
+                } catch (e: ClosedSendChannelException) {
+                }
 
-            if (discoveredRoomDevices.containsKey(device.address))
-                return@launch
+                if (discoveredRoomDevices.containsKey(device.address))
+                    return@launch
 
-            try {
-                detectDeviceSocket(device.address)
-            } catch (e: Throwable) {
-                logger.warn("device ${device.address} room is unavailable: ${e.message}")
-                return@launch
-            }
+                try {
+                    detectDeviceSocket(device.address)
+                } catch (e: Throwable) {
+                    logger.warn("device ${device.address} room is unavailable: ${e.message}")
+                    return@launch
+                }
 
-            discoveredRoomDevices[device.address] = device
-            try {
-                val room = Room(
-                        name = device.name.orEmpty(),
-                        hostAddress = device.address,
-                )
-                discoveredRoomsChannel.send(room)
-            } catch (e: ClosedSendChannelException) {
-            }
+                discoveredRoomDevices[device.address] = device
+                try {
+                    val room = Room(
+                            name = device.name.orEmpty(),
+                            hostAddress = device.address,
+                    )
+                    discoveredRoomsChannel.send(room)
+                } catch (e: ClosedSendChannelException) {
+                }
 
-            discoveryProgress.done.incrementAndGet()
-            try {
-                discoveryProgressChannel.send(discoveryProgress)
-            } catch (e: ClosedSendChannelException) {
+            } finally {
+                discoveryProgress.done.incrementAndGet()
+                try {
+                    discoveryProgressChannel.send(discoveryProgress)
+                } catch (e: ClosedSendChannelException) {
+                }
             }
         }
         discoveryJobs.add(job)

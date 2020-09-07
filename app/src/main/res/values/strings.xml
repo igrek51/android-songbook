@@ -451,12 +451,12 @@
     <string name="room_scanning_progress">Scanning all devices in proximity… %s</string>
     <string name="screen_share_feature_hint">Screen Sharing allows you to display the same songs on many devices using Bluetooth. Create a room so that your friends could join it. Then every song you choose will be displayed on devices connected to your room.</string>
     <string name="room_current_song">Current song:\n%s</string>
-    <string name="room_current_song_waiting">waiting for the song choice…</string>
+    <string name="room_current_song_waiting">Not selected - waiting for the song choice…</string>
     <string name="room_chat">Chat:</string>
     <string name="room_downloading_song">Fetching song…</string>
     <string name="song_details_namespace_temporary">Temporary songs</string>
     <string name="room_scanning_completed_found">Scanning completed. Found rooms: %s</string>
-    <string name="room_empty_message_given">Enter a message first</string>
-    <string name="room_current_song_waiting_master">Open a song in any window to share it with others.</string>
+    <string name="room_empty_message_given">Enter a message</string>
+    <string name="room_current_song_waiting_master">Not selected - Open a song in any window to share it with others.</string>
     <string name="room_lobby_hint">Only owner of a room can choose songs.</string>
 </resources>

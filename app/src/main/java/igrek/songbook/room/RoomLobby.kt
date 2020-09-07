@@ -60,6 +60,7 @@ class RoomLobby(
         controller.close(broadcast)
         roomPassword = ""
         currentSong = null
+        chatHistory = mutableListOf()
     }
 
     fun hostRoomAsync(username: String, password: String): Deferred<Result<Unit>> {

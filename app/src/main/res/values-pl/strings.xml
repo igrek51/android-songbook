@@ -425,12 +425,12 @@
     <string name="room_scanning_progress">Skanowanie urządzeń w pobliżu… %s</string>
     <string name="screen_share_feature_hint">Udostępnianie ekranu pozwala wyświetlać te same piosenki na wielu urządzeniach przy użyciu Bluetooth. Stwórz pokój, aby Twoi znajomi mogli do niego dołączyć. Wtedy każda wybrana piosenka będzie wyświetlana na wszystkich urządzeniach połączonych do Twojego pokoju.</string>
     <string name="room_current_song">Obecna piosenka:\n%s</string>
-    <string name="room_current_song_waiting">oczekiwanie na wybór piosenki…</string>
+    <string name="room_current_song_waiting">Brak - oczekiwanie na wybór piosenki…</string>
     <string name="room_chat">Czat:</string>
     <string name="room_downloading_song">Pobieranie piosenki…</string>
     <string name="song_details_namespace_temporary">Tymczasowe piosenki</string>
     <string name="room_scanning_completed_found">Skanowanie zakończone. Znalezione pokoje: %s</string>
     <string name="room_empty_message_given">Nie podano wiadomości</string>
-    <string name="room_current_song_waiting_master">Otwórz piosenkę w dowolnym oknie, aby udostępnić ją innym.</string>
+    <string name="room_current_song_waiting_master">Brak - Otwórz piosenkę w dowolnym oknie, aby udostępnić ją innym.</string>
     <string name="room_lobby_hint">Tylko właściciel pokoju może wybierać piosenki.</string>
 </resources>

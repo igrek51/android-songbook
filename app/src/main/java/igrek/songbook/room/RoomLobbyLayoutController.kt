@@ -55,7 +55,6 @@ class RoomLobbyLayoutController(
             })
         }
         selectedSongTextView = layout.findViewById(R.id.selectedSongTextView)
-        updateOpenSelectedSongWidgets()
 
         chatListView = layout.findViewById<RoomChatListView>(R.id.itemsListView)?.also {
             it.onClickCallback = {}
@@ -71,10 +70,8 @@ class RoomLobbyLayoutController(
             chatListView?.add(chatMessage)
             chatListView?.scrollToBottom()
         }
-        updateChatMessages(roomLobby.chatHistory)
 
         membersTextView = layout.findViewById(R.id.membersTextView)
-        updateMembers(roomLobby.clients)
         roomLobby.updateMembersCallback = ::updateMembers
 
         roomLobby.onDroppedCallback = ::onDropped
@@ -85,11 +82,14 @@ class RoomLobbyLayoutController(
                 updateMembers(roomLobby.clients)
             }
         }
+        updateMembers(roomLobby.clients)
+        updateOpenSelectedSongWidgets()
+        updateChatMessages(roomLobby.chatHistory)
     }
 
     private fun updateChatMessages(chatHistory: List<ChatMessage>) {
         chatListView?.let { chatListView ->
-            chatListView.items = chatHistory
+            chatListView.items = chatHistory.toList()
             chatListView.scrollToBottom()
         }
     }
