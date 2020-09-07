@@ -31,11 +31,11 @@ class SongOpener(
         songPreviewLayoutController.currentSong = song
         layoutController.showLayout(SongPreviewLayoutController::class)
         songsRepository.openHistoryDao.registerOpenedSong(song.id, song.namespace)
-        roomLobby.reportSongSelected(song.songIdentifier())
+        roomLobby.reportSongSelected(song)
         AnalyticsLogger().logEventSongOpened(song)
     }
 
-    fun openSongIdentifier(songIdentifier: SongIdentifier): Boolean {
+    private fun openSongIdentifier(songIdentifier: SongIdentifier): Boolean {
         songsRepository.allSongsRepo.songFinder.find(songIdentifier)?.let { song ->
             openSongPreview(song)
             return true

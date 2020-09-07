@@ -12,11 +12,13 @@ class WelcomeMsg(val valid: Boolean) : GtrMsg()
 class RoomUsersMsg(val usernames: List<String>) : GtrMsg()
 class DisconnectMsg : GtrMsg()
 class ChatMessageMsg(val author: String, val timestampMs: Long, val message: String) : GtrMsg()
-class SelectSongMsg(val songId: SongIdentifier) : GtrMsg()
-class FetchSongMsg(val songId: SongIdentifier) : GtrMsg()
-class PushSongMsg(val songId: SongIdentifier, val categoryName: String, val title: String, val chordsNotation: ChordsNotation, val content: String) : GtrMsg()
+class SelectSongMsg(val song: SongDto) : GtrMsg()
+class RoomStatusMsg(val song: SongDto?) : GtrMsg()
+class WhatsupMsg : GtrMsg()
 class HeartbeatRequestMsg : GtrMsg()
 class HeartbeatResponseMsg : GtrMsg()
+
+class SongDto(val songId: SongIdentifier, val categoryName: String, val title: String, val chordsNotation: ChordsNotation, val content: String)
 
 internal val msgSpecs = listOf(
         MsgSpec("HI", HelloMsg::class,
@@ -50,6 +52,36 @@ internal val msgSpecs = listOf(
                 partsParser = {
                     DisconnectMsg()
                 }),
+        MsgSpec("WHATSUP", WhatsupMsg::class,
+                partsParser = {
+                    WhatsupMsg()
+                }),
+        MsgSpec("ROOMSTATUS", RoomStatusMsg::class,
+                partsFormatter = {
+                    if (it.song == null)
+                        return@MsgSpec listOf("0", "0", "", "", "0", "")
+                    listOf(it.song.songId.namespace.id.toString(), it.song.songId.songId.toString(),
+                            it.song.categoryName, it.song.title,
+                            it.song.chordsNotation.id.toString(), it.song.content)
+                },
+                requiredParts = 6,
+                partsParser = { parts ->
+                    val song = when (val songId = parts[1].toLong()) {
+                        0L -> null
+                        else -> {
+                            val namespace = SongNamespace.parseById(parts[0].toLong())
+                            val songIdentifier = SongIdentifier(songId = songId, namespace = namespace)
+                            val chordsNotation = ChordsNotation.parseById(parts[4].toLong())
+                                    ?: ChordsNotation.default
+                            SongDto(
+                                    songId = songIdentifier,
+                                    categoryName = parts[2], title = parts[3],
+                                    chordsNotation = chordsNotation, content = parts[5],
+                            )
+                        }
+                    }
+                    RoomStatusMsg(song)
+                }),
         MsgSpec("CHAT", ChatMessageMsg::class,
                 partsFormatter = { listOf(it.author, it.timestampMs.toString(), it.message) },
                 requiredParts = 3,
@@ -57,30 +89,24 @@ internal val msgSpecs = listOf(
                     ChatMessageMsg(parts[0], parts[1].toLong(), parts[2])
                 }),
         MsgSpec("SELECT_SONG", SelectSongMsg::class,
-                partsFormatter = { listOf(it.songId.namespace.id.toString(), it.songId.songId.toString()) },
-                requiredParts = 2,
-                partsParser = { parts ->
-                    val namespace = SongNamespace.parseById(parts[0].toLong())
-                    val songId = SongIdentifier(songId = parts[1].toLong(), namespace = namespace)
-                    SelectSongMsg(songId)
-                }),
-        MsgSpec("FETCH_SONG", FetchSongMsg::class,
-                partsFormatter = { listOf(it.songId.namespace.id.toString(), it.songId.songId.toString()) },
-                requiredParts = 2,
-                partsParser = { parts ->
-                    val namespace = SongNamespace.parseById(parts[0].toLong())
-                    val songId = SongIdentifier(songId = parts[1].toLong(), namespace = namespace)
-                    FetchSongMsg(songId)
-                }),
-        MsgSpec("PUSH_SONG", PushSongMsg::class,
-                partsFormatter = { listOf(it.songId.namespace.id.toString(), it.songId.songId.toString(), it.categoryName, it.title, it.chordsNotation.id.toString(), it.content) },
+                partsFormatter = {
+                    listOf(it.song.songId.namespace.id.toString(), it.song.songId.songId.toString(),
+                            it.song.categoryName, it.song.title,
+                            it.song.chordsNotation.id.toString(), it.song.content)
+                },
                 requiredParts = 6,
                 partsParser = { parts ->
+                    val songId = parts[1].toLong()
                     val namespace = SongNamespace.parseById(parts[0].toLong())
-                    val songId = SongIdentifier(songId = parts[1].toLong(), namespace = namespace)
+                    val songIdentifier = SongIdentifier(songId = songId, namespace = namespace)
                     val chordsNotation = ChordsNotation.parseById(parts[4].toLong())
                             ?: ChordsNotation.default
-                    PushSongMsg(songId = songId, categoryName = parts[2], title = parts[3], chordsNotation = chordsNotation, content = parts[5])
+                    val song = SongDto(
+                            songId = songIdentifier,
+                            categoryName = parts[2], title = parts[3],
+                            chordsNotation = chordsNotation, content = parts[5],
+                    )
+                    SelectSongMsg(song)
                 }),
         MsgSpec("RUOK", HeartbeatRequestMsg::class,
                 partsParser = {

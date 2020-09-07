@@ -5,8 +5,8 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.general.model.Song
-import igrek.songbook.persistence.general.model.SongIdentifier
-import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.persistence.general.model.SongNamespace
+import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.room.protocol.*
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import kotlinx.coroutines.Deferred
@@ -17,10 +17,8 @@ import java.util.*
 
 class RoomLobby(
         bluetoothService: LazyInject<BluetoothService> = appFactory.bluetoothService,
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
 ) {
     private val bluetoothService by LazyExtractor(bluetoothService)
-    private val songsRepository by LazyExtractor(songsRepository)
 
     private val controller = RoomLobbyController(this.bluetoothService)
 
@@ -29,16 +27,18 @@ class RoomLobby(
 
     private var roomPassword: String = ""
     private var username: String = ""
-    var currentSongId: SongIdentifier? = null
+    var currentSong: Song? = null
+        private set
+    var chatHistory: MutableList<ChatMessage> = mutableListOf()
         private set
 
     var updateMembersCallback: (List<PeerClient>) -> Unit = {}
     var newChatMessageCallback: (ChatMessage) -> Unit = {}
-    var onSelectedSongChange: (songId: SongIdentifier) -> Unit = {}
-    var onSongFetched: (songId: SongIdentifier, categoryName: String, title: String, chordsNotation: ChordsNotation, content: String) -> Unit = { _, _, _, _, _ -> }
+    var onOpenSong: (song: Song) -> Unit = {}
     var onRoomLobbyIntroduced: (roomName: String, withPassword: Boolean) -> Unit = { _, _ -> }
     var onRoomWrongPassword: () -> Unit = {}
     var onRoomWelcomedSuccessfully: () -> Unit = {}
+    var onModelChanged: () -> Unit = {}
     var onDroppedCallback: () -> Unit
         get() = controller.onDroppedFromMaster
         set(value) {
@@ -59,7 +59,7 @@ class RoomLobby(
     suspend fun close(broadcast: Boolean = true) {
         controller.close(broadcast)
         roomPassword = ""
-        currentSongId = null
+        currentSong = null
     }
 
     fun hostRoomAsync(username: String, password: String): Deferred<Result<Unit>> {
@@ -93,10 +93,12 @@ class RoomLobby(
         controller.sendToMaster(ChatMessageMsg(username, 0, message))
     }
 
-    fun reportSongSelected(songIdentifier: SongIdentifier) {
+    fun reportSongSelected(song: Song) {
         if (peerStatus == PeerStatus.Master) {
-            currentSongId = songIdentifier
-            controller.sendToSlaves(SelectSongMsg(songIdentifier))
+            currentSong = song
+            controller.sendToSlaves(SelectSongMsg(
+                    buildSongDto(song)
+            ))
         }
     }
 
@@ -113,18 +115,9 @@ class RoomLobby(
             }
             is ChatMessageMsg -> controller.sendToClients(ChatMessageMsg(msg.author, Date().time, msg.message))
             is DisconnectMsg -> slaveStream?.let { controller.onSlaveDisconnect(slaveStream) }
-            is FetchSongMsg -> {
-                if (slaveStream != null) {
-                    findSongById(msg.songId)?.let { song ->
-                        controller.sendToSlave(slaveStream, PushSongMsg(
-                                songId = msg.songId,
-                                categoryName = song.displayCategories(),
-                                title = song.title,
-                                chordsNotation = song.chordsNotation ?: ChordsNotation.default,
-                                content = song.content.orEmpty(),
-                        ))
-                    }
-                }
+            is WhatsupMsg -> {
+                if (slaveStream != null)
+                    sendRoomStatus(slaveStream)
             }
         }
     }
@@ -140,6 +133,7 @@ class RoomLobby(
             is WelcomeMsg -> {
                 if (msg.valid) {
                     onRoomWelcomedSuccessfully()
+                    controller.sendToMaster(WhatsupMsg())
                 } else {
                     onRoomWrongPassword()
                     close(broadcast = false)
@@ -157,17 +151,21 @@ class RoomLobby(
             is ChatMessageMsg -> {
                 val chatMessage = ChatMessage(msg.author, msg.message, msg.timestampMs.timestampMsToDate())
                 GlobalScope.launch(Dispatchers.Main) {
+                    chatHistory.add(chatMessage)
                     newChatMessageCallback(chatMessage)
                 }
             }
             is DisconnectMsg -> controller.onMasterDisconnect()
             is SelectSongMsg -> GlobalScope.launch {
-                currentSongId = msg.songId
-                onSelectedSongChange(msg.songId)
+                currentSong = buildEphemeralSong(msg.song)
+                logger.info("fetched song: ${msg.song.categoryName} - ${msg.song.title}")
+                currentSong?.let {
+                    onOpenSong(it)
+                }
             }
-            is PushSongMsg -> GlobalScope.launch {
-                logger.info("fetched song: ${msg.categoryName} - ${msg.title}")
-                onSongFetched(msg.songId, msg.categoryName, msg.title, msg.chordsNotation, msg.content)
+            is RoomStatusMsg -> {
+                currentSong = buildEphemeralSong(msg.song)
+                onModelChanged()
             }
         }
     }
@@ -184,12 +182,42 @@ class RoomLobby(
         controller.addNewSlave(username, slaveStream)
     }
 
-    fun fetchSong(songId: SongIdentifier) {
-        controller.sendToMaster(FetchSongMsg(songId))
+    private fun sendRoomStatus(slaveStream: PeerStream) {
+        val songDto = currentSong?.let { buildSongDto(it) }
+        controller.sendToSlave(slaveStream, RoomStatusMsg(songDto))
+        controller.sendToSlave(slaveStream, RoomUsersMsg(clients.map { it.username }))
+        chatHistory.forEach { chatMessage ->
+            controller.sendToSlave(slaveStream, ChatMessageMsg(chatMessage.author, chatMessage.time.time, chatMessage.message))
+        }
     }
 
-    private fun findSongById(songId: SongIdentifier): Song? {
-        return songsRepository.allSongsRepo.songFinder.find(songId)
+    private fun buildEphemeralSong(songDto: SongDto?): Song? {
+        if (songDto == null)
+            return null
+        val now: Long = Date().time
+        return Song(
+                id = songDto.songId.songId,
+                title = songDto.title,
+                categories = mutableListOf(),
+                content = songDto.content,
+                versionNumber = 1,
+                createTime = now,
+                updateTime = now,
+                status = SongStatus.PUBLISHED,
+                customCategoryName = songDto.categoryName,
+                chordsNotation = songDto.chordsNotation,
+                namespace = SongNamespace.Ephemeral,
+        )
+    }
+
+    private fun buildSongDto(song: Song): SongDto {
+        return SongDto(
+                songId = song.songIdentifier(),
+                categoryName = song.displayCategories(),
+                title = song.title,
+                chordsNotation = song.chordsNotation ?: ChordsNotation.default,
+                content = song.content.orEmpty(),
+        )
     }
 
 }

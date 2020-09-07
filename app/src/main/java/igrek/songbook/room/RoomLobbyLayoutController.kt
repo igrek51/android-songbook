@@ -15,30 +15,22 @@ import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
-import igrek.songbook.persistence.general.model.SongIdentifier
-import igrek.songbook.persistence.general.model.SongNamespace
-import igrek.songbook.persistence.general.model.SongStatus
-import igrek.songbook.persistence.repository.SongsRepository
-import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.*
 
 
 class RoomLobbyLayoutController(
         roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
         songOpener: LazyInject<SongOpener> = appFactory.songOpener,
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
 ) : InflatedLayout(
         _layoutResourceId = R.layout.screen_room_lobby
 ) {
     private val roomLobby by LazyExtractor(roomLobby)
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val songOpener by LazyExtractor(songOpener)
-    private val songsRepository by LazyExtractor(songsRepository)
 
     private var chatListView: RoomChatListView? = null
     private var chatMessageEdit: EditText? = null
@@ -53,23 +45,11 @@ class RoomLobbyLayoutController(
             showMoreActions()
         })
 
-        chatListView = layout.findViewById<RoomChatListView>(R.id.itemsListView)?.also {
-            it.onClickCallback = {}
-            it.items = listOf()
-            it.enableNestedScrolling()
-        }
-
-        chatMessageEdit = layout.findViewById(R.id.chatMessageEdit)
-
-        layout.findViewById<Button>(R.id.chatSendButton)?.setOnClickListener(SafeClickListener {
-            sendChatMessage()
-        })
-
         openSelectedSongButton = layout.findViewById<Button>(R.id.openSelectedSongButton)?.also {
             it.setOnClickListener(SafeClickListener {
                 GlobalScope.launch {
-                    roomLobby.currentSongId?.let { currentSongId ->
-                        songOpener.openSongIdentifier(currentSongId)
+                    roomLobby.currentSong?.let { currentSong ->
+                        songOpener.openSongPreview(currentSong)
                     }
                 }
             })
@@ -77,18 +57,41 @@ class RoomLobbyLayoutController(
         selectedSongTextView = layout.findViewById(R.id.selectedSongTextView)
         updateOpenSelectedSongWidgets()
 
+        chatListView = layout.findViewById<RoomChatListView>(R.id.itemsListView)?.also {
+            it.onClickCallback = {}
+            it.items = listOf()
+            it.enableNestedScrolling()
+        }
+        chatMessageEdit = layout.findViewById(R.id.chatMessageEdit)
+        layout.findViewById<Button>(R.id.chatSendButton)?.setOnClickListener(SafeClickListener {
+            sendChatMessage()
+        })
+
         roomLobby.newChatMessageCallback = { chatMessage: ChatMessage ->
             chatListView?.add(chatMessage)
             chatListView?.scrollToBottom()
         }
+        updateChatMessages(roomLobby.chatHistory)
 
         membersTextView = layout.findViewById(R.id.membersTextView)
         updateMembers(roomLobby.clients)
         roomLobby.updateMembersCallback = ::updateMembers
 
         roomLobby.onDroppedCallback = ::onDropped
-        roomLobby.onSelectedSongChange = ::onSelectedSongChange
-        roomLobby.onSongFetched = ::onSongFetched
+        roomLobby.onOpenSong = ::onOpenSong
+        roomLobby.onModelChanged = {
+            if (isLayoutVisible()) {
+                updateOpenSelectedSongWidgets()
+                updateMembers(roomLobby.clients)
+            }
+        }
+    }
+
+    private fun updateChatMessages(chatHistory: List<ChatMessage>) {
+        chatListView?.let { chatListView ->
+            chatListView.items = chatHistory
+            chatListView.scrollToBottom()
+        }
     }
 
     private fun sendChatMessage() {
@@ -102,7 +105,7 @@ class RoomLobbyLayoutController(
     }
 
     private fun updateOpenSelectedSongWidgets() {
-        openSelectedSongButton?.visibility = when (roomLobby.currentSongId) {
+        openSelectedSongButton?.visibility = when (roomLobby.currentSong) {
             null -> View.INVISIBLE
             else -> View.VISIBLE
         }
@@ -111,15 +114,9 @@ class RoomLobbyLayoutController(
                 PeerStatus.Master -> R.string.room_current_song_waiting_master
                 else -> R.string.room_current_song_waiting
             })
-            val currentSongName = roomLobby.currentSongId?.let { currentSongId ->
-                currentSongName(currentSongId)
-            } ?: defaultNoSongMessage
+            val currentSongName = roomLobby.currentSong?.displayName() ?: defaultNoSongMessage
             selectedSongTextView.text = uiInfoService.resString(R.string.room_current_song, currentSongName)
         }
-    }
-
-    private fun currentSongName(currentSongId: SongIdentifier): String? {
-        return songsRepository.allSongsRepo.songFinder.find(currentSongId)?.displayName()
     }
 
     private fun onDropped() {
@@ -158,41 +155,12 @@ class RoomLobbyLayoutController(
         ))
     }
 
-    private fun onSelectedSongChange(songId: SongIdentifier) {
+    private fun onOpenSong(song: Song) {
         if (isLayoutVisible() || layoutController.isState(SongPreviewLayoutController::class)) {
             GlobalScope.launch {
-                if (songId.namespace != SongNamespace.Public) {
-                    uiInfoService.showInfo(R.string.room_downloading_song, indefinite = true)
-                    roomLobby.fetchSong(songId)
-                    return@launch
-                }
-
-                val result = songOpener.openSongIdentifier(songId)
-                if (!result) {
-                    logger.error("cant find selected song locally: $songId")
-                    uiInfoService.showInfo(R.string.room_downloading_song, indefinite = true)
-                    roomLobby.fetchSong(songId)
-                }
+                songOpener.openSongPreview(song)
             }
         }
-    }
-
-    private fun onSongFetched(songId: SongIdentifier, categoryName: String, title: String, chordsNotation: ChordsNotation, content: String) {
-        val now: Long = Date().time
-        val ephemeralSong = Song(
-                id = songId.songId,
-                title = title,
-                categories = mutableListOf(),
-                content = content,
-                versionNumber = 1,
-                createTime = now,
-                updateTime = now,
-                status = SongStatus.PUBLISHED,
-                customCategoryName = categoryName,
-                chordsNotation = chordsNotation,
-                namespace = SongNamespace.Ephemeral,
-        )
-        songOpener.openSongPreview(ephemeralSong)
     }
 
     override fun onBackClicked() {
