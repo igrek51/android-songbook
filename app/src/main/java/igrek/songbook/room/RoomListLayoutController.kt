@@ -61,6 +61,7 @@ class RoomListLayoutController(
                 joinRoomKnock(room)
             }
             it.enableNestedScrolling()
+            it.emptyView = layout.findViewById(R.id.emptyRoomListTextView)
         }
 
         layout.findViewById<Button>(R.id.scanRoomsButtton)?.setOnClickListener {
@@ -132,10 +133,10 @@ class RoomListLayoutController(
     private fun scanRooms() {
         joinRoomListView?.items = emptyList()
         uiInfoService.showInfo(R.string.screen_share_scanning_devices, indefinite = true)
-        showScanning = true
 
         GlobalScope.launch(Dispatchers.IO) {
             bluetoothService.scanRoomsAsync().await().fold(onSuccess = { (roomCh, progressCh) ->
+                showScanning = true
                 GlobalScope.launch {
                     for (progress in progressCh) {
                         if (showScanning)

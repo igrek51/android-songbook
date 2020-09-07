@@ -105,12 +105,20 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/selectedSongTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:gravity="bottom"
                 android:text="@string/room_current_song"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/selectedSongTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:gravity="bottom"
+                android:text=""
                 android:textSize="18sp" />
 
             <Button
@@ -133,6 +141,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/emptyChatListTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:gravity="center"
+                android:text="@string/room_no_chat_messages"></TextView>
 
             <EditText
                 android:id="@+id/chatMessageEdit"

@@ -58,18 +58,25 @@ class RoomLobby(
 
     suspend fun close(broadcast: Boolean = true) {
         controller.close(broadcast)
+        reset()
+    }
+
+    private fun reset() {
+        controller.reset()
         roomPassword = ""
         currentSong = null
         chatHistory = mutableListOf()
     }
 
     fun hostRoomAsync(username: String, password: String): Deferred<Result<Unit>> {
+        reset()
         this.roomPassword = password
         this.username = username
         return controller.hostRoomAsync(username)
     }
 
     fun joinRoomKnockAsync(username: String, room: Room): Deferred<Result<Unit>> {
+        reset()
         this.username = username
         return controller.joinRoomKnockAsync(room)
     }
@@ -84,9 +91,7 @@ class RoomLobby(
 
     private fun onClientsChange(clients: List<PeerClient>) {
         controller.sendToSlaves(RoomUsersMsg(clients.map { it.username }))
-        GlobalScope.launch(Dispatchers.Main) {
-            updateMembersCallback(clients.toList())
-        }
+        updateMembersCallback(clients.toList())
     }
 
     fun sendChatMessage(message: String) {
@@ -145,9 +150,7 @@ class RoomLobby(
                     PeerClient(it, null, status = if (index == 0) PeerStatus.Master else PeerStatus.Slave)
                 }.toMutableList()
                 controller.setClients(clients)
-                GlobalScope.launch(Dispatchers.Main) {
-                    updateMembersCallback(clients.toList())
-                }
+                updateMembersCallback(clients.toList())
             }
             is ChatMessageMsg -> {
                 val chatMessage = ChatMessage(msg.author, msg.message, msg.timestampMs.timestampMsToDate())

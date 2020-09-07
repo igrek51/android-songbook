@@ -399,7 +399,7 @@
     <string name="room_lobby">Lobby pokoju</string>
     <string name="room_chat_send">Wyślij</string>
     <string name="room_close_room">Opuść pokój</string>
-    <string name="room_make_discoverable">Ustaw pokój widoczny</string>
+    <string name="room_make_discoverable">Ustaw widoczność pokoju</string>
     <string name="room_open_current_song">Otwórz obecną piosenkę</string>
     <string name="edit_song_export_all_custom_songs">Wyeksportuj wszystkie piosenki</string>
     <string name="edit_song_import_custom_songs">Importuj wiele piosenek</string>
@@ -424,7 +424,7 @@
     <string name="room_confirm_leave_lobby">Opuszczasz grupę, Czy na pewno chcesz się odłączyć?</string>
     <string name="room_scanning_progress">Skanowanie urządzeń w pobliżu… %s</string>
     <string name="screen_share_feature_hint">Udostępnianie ekranu pozwala wyświetlać te same piosenki na wielu urządzeniach przy użyciu Bluetooth. Stwórz pokój, aby Twoi znajomi mogli do niego dołączyć. Wtedy każda wybrana piosenka będzie wyświetlana na wszystkich urządzeniach połączonych do Twojego pokoju.</string>
-    <string name="room_current_song">Obecna piosenka:\n%s</string>
+    <string name="room_current_song">Obecna piosenka:</string>
     <string name="room_current_song_waiting">Brak - oczekiwanie na wybór piosenki…</string>
     <string name="room_chat">Czat:</string>
     <string name="room_downloading_song">Pobieranie piosenki…</string>
@@ -433,4 +433,6 @@
     <string name="room_empty_message_given">Nie podano wiadomości</string>
     <string name="room_current_song_waiting_master">Brak - Otwórz piosenkę w dowolnym oknie, aby udostępnić ją innym.</string>
     <string name="room_lobby_hint">Tylko właściciel pokoju może wybierać piosenki.</string>
+    <string name="room_empty_room_list">Brak pokojów.</string>
+    <string name="room_no_chat_messages">Brak wiadomości.</string>
 </resources>

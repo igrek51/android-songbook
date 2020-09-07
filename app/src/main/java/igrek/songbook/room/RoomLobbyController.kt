@@ -51,6 +51,10 @@ class RoomLobbyController(
         }
     }
 
+    fun reset() {
+        peerStatus = PeerStatus.Disconnected
+    }
+
     fun isActive(): Boolean = peerStatus != PeerStatus.Disconnected
 
     private fun watchNewSlave(clientStream: PeerStream) {

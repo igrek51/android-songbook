@@ -17,6 +17,7 @@ import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -60,6 +61,7 @@ class RoomLobbyLayoutController(
             it.onClickCallback = {}
             it.items = listOf()
             it.enableNestedScrolling()
+            it.emptyView = layout.findViewById(R.id.emptyChatListTextView)
         }
         chatMessageEdit = layout.findViewById(R.id.chatMessageEdit)
         layout.findViewById<Button>(R.id.chatSendButton)?.setOnClickListener(SafeClickListener {
@@ -72,14 +74,16 @@ class RoomLobbyLayoutController(
         }
 
         membersTextView = layout.findViewById(R.id.membersTextView)
-        roomLobby.updateMembersCallback = ::updateMembers
 
+        roomLobby.updateMembersCallback = ::updateMembers
         roomLobby.onDroppedCallback = ::onDropped
         roomLobby.onOpenSong = ::onOpenSong
         roomLobby.onModelChanged = {
             if (isLayoutVisible()) {
-                updateOpenSelectedSongWidgets()
-                updateMembers(roomLobby.clients)
+                GlobalScope.launch(Dispatchers.Main) {
+                    updateOpenSelectedSongWidgets()
+                    updateMembers(roomLobby.clients)
+                }
             }
         }
         updateMembers(roomLobby.clients)
@@ -105,17 +109,28 @@ class RoomLobbyLayoutController(
     }
 
     private fun updateOpenSelectedSongWidgets() {
-        openSelectedSongButton?.visibility = when (roomLobby.currentSong) {
-            null -> View.INVISIBLE
-            else -> View.VISIBLE
+        openSelectedSongButton?.let { openSelectedSongButton ->
+            openSelectedSongButton.visibility = when (roomLobby.currentSong) {
+                null -> View.GONE
+                else -> View.VISIBLE
+            }
+            openSelectedSongButton.text = when (roomLobby.currentSong) {
+                null -> uiInfoService.resString(R.string.room_open_current_song)
+                else -> roomLobby.currentSong?.displayName()
+            }
         }
+
         selectedSongTextView?.let { selectedSongTextView ->
-            val defaultNoSongMessage = uiInfoService.resString(when (roomLobby.peerStatus) {
-                PeerStatus.Master -> R.string.room_current_song_waiting_master
-                else -> R.string.room_current_song_waiting
-            })
-            val currentSongName = roomLobby.currentSong?.displayName() ?: defaultNoSongMessage
-            selectedSongTextView.text = uiInfoService.resString(R.string.room_current_song, currentSongName)
+            selectedSongTextView.visibility = when (roomLobby.currentSong) {
+                null -> View.VISIBLE
+                else -> View.GONE
+            }
+            if (roomLobby.currentSong == null) {
+                selectedSongTextView.text = uiInfoService.resString(when (roomLobby.peerStatus) {
+                    PeerStatus.Master -> R.string.room_current_song_waiting_master
+                    else -> R.string.room_current_song_waiting
+                })
+            }
         }
     }
 
@@ -127,8 +142,10 @@ class RoomLobbyLayoutController(
     }
 
     private fun updateMembers(members: List<PeerClient>) {
-        val membersStr = members.map { it.displayMember() }.joinToString("\n") { "- $it" }
-        membersTextView?.text = uiInfoService.resString(R.string.room_members, membersStr)
+        GlobalScope.launch(Dispatchers.Main) {
+            val membersStr = members.map { it.displayMember() }.joinToString("\n") { "- $it" }
+            membersTextView?.text = uiInfoService.resString(R.string.room_members, membersStr)
+        }
     }
 
     private fun PeerClient.displayMember(): String {
