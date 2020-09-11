@@ -4,7 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.ListAdapter
 import android.widget.ListView
 
 abstract class GenericListView<T>(
@@ -78,5 +80,20 @@ abstract class GenericListView<T>(
 
     fun scrollToBottom() {
         this.setSelection(this.count - 1)
+    }
+
+    fun alignListViewHeight() {
+        val listAdapter: ListAdapter = this.adapter
+        var totalHeight = 0
+        val desiredWidth = MeasureSpec.makeMeasureSpec(this.width, MeasureSpec.AT_MOST)
+        for (i in 0 until listAdapter.count) {
+            val listItem: View = listAdapter.getView(i, null, this)
+            listItem.measure(desiredWidth, MeasureSpec.UNSPECIFIED)
+            totalHeight += listItem.measuredHeight
+        }
+        val params: ViewGroup.LayoutParams = this.layoutParams
+        params.height = totalHeight + this.dividerHeight * (listAdapter.count - 1)
+        this.layoutParams = params
+        this.requestLayout()
     }
 }

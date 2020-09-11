@@ -139,8 +139,7 @@
             <igrek.songbook.room.RoomChatListView
                 android:id="@+id/itemsListView"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/emptyChatListTextView"
@@ -149,7 +148,8 @@
                 android:layout_gravity="center"
                 android:visibility="gone"
                 android:gravity="center"
-                android:text="@string/room_no_chat_messages"></TextView>
+                android:text="@string/room_no_chat_messages"
+                android:padding="8dp" />
 
             <EditText
                 android:id="@+id/chatMessageEdit"

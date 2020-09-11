@@ -459,6 +459,6 @@
     <string name="room_empty_message_given">Enter a message</string>
     <string name="room_current_song_waiting_master">Not selected - Open a song in any window to share it with others.</string>
     <string name="room_lobby_hint">Only owner of a room can choose songs.</string>
-    <string name="room_empty_room_list">No rooms.</string>
-    <string name="room_no_chat_messages">No messages yet.</string>
+    <string name="room_empty_room_list">No rooms</string>
+    <string name="room_no_chat_messages">No messages yet</string>
 </resources>

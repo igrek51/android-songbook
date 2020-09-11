@@ -59,7 +59,6 @@ class RoomLobbyLayoutController(
 
         chatListView = layout.findViewById<RoomChatListView>(R.id.itemsListView)?.also {
             it.onClickCallback = {}
-            it.items = listOf()
             it.enableNestedScrolling()
             it.emptyView = layout.findViewById(R.id.emptyChatListTextView)
         }
@@ -68,16 +67,18 @@ class RoomLobbyLayoutController(
             sendChatMessage()
         })
 
-        roomLobby.newChatMessageCallback = { chatMessage: ChatMessage ->
-            chatListView?.add(chatMessage)
-            chatListView?.scrollToBottom()
-        }
-
         membersTextView = layout.findViewById(R.id.membersTextView)
 
         roomLobby.updateMembersCallback = ::updateMembers
         roomLobby.onDroppedCallback = ::onDropped
         roomLobby.onOpenSong = ::onOpenSong
+        roomLobby.newChatMessageCallback = { chatMessage: ChatMessage ->
+            chatListView?.let { chatListView ->
+                chatListView.add(chatMessage)
+                chatListView.alignListViewHeight()
+                chatListView.scrollToBottom()
+            }
+        }
         roomLobby.onModelChanged = {
             if (isLayoutVisible()) {
                 GlobalScope.launch(Dispatchers.Main) {
@@ -92,9 +93,10 @@ class RoomLobbyLayoutController(
     }
 
     private fun updateChatMessages(chatHistory: List<ChatMessage>) {
-        chatListView?.let { chatListView ->
-            chatListView.items = chatHistory.toList()
-            chatListView.scrollToBottom()
+        chatListView?.let {
+            it.items = chatHistory.toList()
+            it.scrollToBottom()
+            it.alignListViewHeight()
         }
     }
 

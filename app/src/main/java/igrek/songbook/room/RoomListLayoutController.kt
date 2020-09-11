@@ -60,8 +60,10 @@ class RoomListLayoutController(
             it.onClickCallback = { room ->
                 joinRoomKnock(room)
             }
+            it.items = listOf()
             it.enableNestedScrolling()
             it.emptyView = layout.findViewById(R.id.emptyRoomListTextView)
+            it.alignListViewHeight()
         }
 
         layout.findViewById<Button>(R.id.scanRoomsButtton)?.setOnClickListener {
@@ -149,6 +151,7 @@ class RoomListLayoutController(
                 for (room in roomCh) {
                     withContext(Dispatchers.Main) {
                         joinRoomListView?.add(room)
+                        joinRoomListView?.alignListViewHeight()
                     }
                 }
                 if (showScanning) {

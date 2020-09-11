@@ -433,6 +433,6 @@
     <string name="room_empty_message_given">Nie podano wiadomości</string>
     <string name="room_current_song_waiting_master">Brak - Otwórz piosenkę w dowolnym oknie, aby udostępnić ją innym.</string>
     <string name="room_lobby_hint">Tylko właściciel pokoju może wybierać piosenki.</string>
-    <string name="room_empty_room_list">Brak pokojów.</string>
-    <string name="room_no_chat_messages">Brak wiadomości.</string>
+    <string name="room_empty_room_list">Brak pokojów</string>
+    <string name="room_no_chat_messages">Brak wiadomości</string>
 </resources>

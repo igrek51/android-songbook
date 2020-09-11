@@ -194,7 +194,9 @@ class LayoutController(
 
         val previousLayout = layoutHistory.last()
         logger.debug("Showing previous layout ${previousLayout::class.simpleName} [${layoutHistory.size} in history]")
-        showMainLayout(previousLayout)
+        GlobalScope.launch(Dispatchers.Main) {
+            showMainLayout(previousLayout)
+        }
     }
 
     fun isState(compareLayoutClass: KClass<out MainLayout>): Boolean {
