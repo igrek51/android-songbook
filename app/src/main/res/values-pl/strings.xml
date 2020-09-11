@@ -420,12 +420,12 @@
     <string name="room_members">Uczestnicy:\n%s</string>
     <string name="screen_share_enter_room_password">Podaj hasło:</string>
     <string name="room_wrong_password">Nieprawidłowe hasło</string>
-    <string name="room_host">Host</string>
+    <string name="room_host">Właściciel</string>
     <string name="room_confirm_leave_lobby">Opuszczasz grupę, Czy na pewno chcesz się odłączyć?</string>
     <string name="room_scanning_progress">Skanowanie urządzeń w pobliżu… %s</string>
     <string name="screen_share_feature_hint">Udostępnianie ekranu pozwala wyświetlać te same piosenki na wielu urządzeniach przy użyciu Bluetooth. Stwórz pokój, aby Twoi znajomi mogli do niego dołączyć. Wtedy każda wybrana piosenka będzie wyświetlana na wszystkich urządzeniach połączonych do Twojego pokoju.</string>
     <string name="room_current_song">Obecna piosenka:</string>
-    <string name="room_current_song_waiting">Brak - oczekiwanie na wybór piosenki…</string>
+    <string name="room_current_song_waiting">Brak - oczekiwanie…</string>
     <string name="room_chat">Czat:</string>
     <string name="room_downloading_song">Pobieranie piosenki…</string>
     <string name="song_details_namespace_temporary">Tymczasowe piosenki</string>

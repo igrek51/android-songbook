@@ -1,5 +1,7 @@
 package igrek.songbook.room
 
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -59,7 +61,6 @@ class RoomLobbyLayoutController(
 
         chatListView = layout.findViewById<RoomChatListView>(R.id.itemsListView)?.also {
             it.onClickCallback = {}
-            it.enableNestedScrolling()
             it.emptyView = layout.findViewById(R.id.emptyChatListTextView)
         }
         chatMessageEdit = layout.findViewById(R.id.chatMessageEdit)
@@ -82,15 +83,20 @@ class RoomLobbyLayoutController(
         roomLobby.onModelChanged = {
             if (isLayoutVisible()) {
                 GlobalScope.launch(Dispatchers.Main) {
-                    updateOpenSelectedSongWidgets()
-                    updateMembers(roomLobby.clients)
-                    updateChatMessages(roomLobby.chatHistory)
+                    Handler(Looper.getMainLooper()).post {
+                        updateOpenSelectedSongWidgets()
+                        updateMembers(roomLobby.clients)
+                        updateChatMessages(roomLobby.chatHistory)
+                    }
                 }
             }
         }
-        updateOpenSelectedSongWidgets()
-        updateMembers(roomLobby.clients)
-        updateChatMessages(roomLobby.chatHistory)
+
+        Handler(Looper.getMainLooper()).post {
+            updateOpenSelectedSongWidgets()
+            updateMembers(roomLobby.clients)
+            updateChatMessages(roomLobby.chatHistory)
+        }
     }
 
     private fun updateChatMessages(chatHistory: List<ChatMessage>) {
