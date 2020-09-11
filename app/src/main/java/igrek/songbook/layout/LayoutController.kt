@@ -1,6 +1,7 @@
 package igrek.songbook.layout
 
 import android.app.Activity
+import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.transition.Fade
@@ -93,6 +94,7 @@ class LayoutController(
     private var layoutHistory: MutableList<MainLayout> = mutableListOf()
     private var registeredLayouts: Map<KClass<out MainLayout>, MainLayout> = emptyMap()
     private val logger = LoggerFactory.logger
+    private val layoutCache = hashMapOf<Int, View>()
 
     fun init() {
         activity.setContentView(R.layout.main_layout)
@@ -156,9 +158,7 @@ class LayoutController(
         val transition: Transition = Fade()
         transition.duration = 200
 
-        val inflater = activity.layoutInflater
-        val properLayoutView = inflater.inflate(mainLayout.getLayoutResourceId(), null)
-        properLayoutView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        val (properLayoutView, cached) = createLayout(mainLayout.getLayoutResourceId())
 
         val firstTimeView = mainContentLayout.childCount == 0
 
@@ -171,6 +171,19 @@ class LayoutController(
 
         mainLayout.showLayout(properLayoutView)
         postInitLayout(mainLayout)
+    }
+
+    private fun createLayout(layoutResourceId: Int): Pair<View, Boolean> {
+        val cached = layoutCache[layoutResourceId]
+        if (cached != null) {
+            return cached to true
+        }
+
+        val inflater = activity.layoutInflater
+        val properLayoutView = inflater.inflate(layoutResourceId, null)
+        properLayoutView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        layoutCache[layoutResourceId] = properLayoutView
+        return properLayoutView to false
     }
 
     private fun postInitLayout(currentLayout: MainLayout) {
