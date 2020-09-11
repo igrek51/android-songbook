@@ -84,11 +84,12 @@ class RoomLobbyLayoutController(
                 GlobalScope.launch(Dispatchers.Main) {
                     updateOpenSelectedSongWidgets()
                     updateMembers(roomLobby.clients)
+                    updateChatMessages(roomLobby.chatHistory)
                 }
             }
         }
-        updateMembers(roomLobby.clients)
         updateOpenSelectedSongWidgets()
+        updateMembers(roomLobby.clients)
         updateChatMessages(roomLobby.chatHistory)
     }
 

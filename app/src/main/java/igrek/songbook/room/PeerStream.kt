@@ -18,6 +18,7 @@ class PeerStream(
     private var outStream: OutputStream = remoteSocket.outputStream
     private var inBuffer = StringBuffer()
     private val writeMutex = Mutex()
+    private val readMutex = Mutex()
     val disconnectedCh = Channel<Unit>(Channel.CONFLATED)
     private val looperJob: Job
     private var open = true
@@ -38,9 +39,11 @@ class PeerStream(
                     val actualBytes = inStream.read(buffer, 0, availableBytes)
 
                     val str = String(buffer, 0, actualBytes)
-                    inBuffer.append(str)
 
-                    findCompleteMessage()
+                    readMutex.withLock {
+                        inBuffer.append(str)
+                        findCompleteMessage()
+                    }
                 }
             } catch (e: IOException) {
                 logger.error("reading error, disconnecting peer", e)
@@ -52,20 +55,18 @@ class PeerStream(
         }
     }
 
-    fun write(input: String) {
+    suspend fun write(input: String) {
         if (!open)
             throw RuntimeException("peer disconnected")
 
-        runBlocking {
-            writeMutex.withLock {
-                try {
-                    outStream.write(input.toByteArray())
-                    outStream.write(0)
-                    outStream.flush()
-                } catch (e: IOException) {
-                    logger.error("sending error, disconnecting peer", e)
-                    close()
-                }
+        writeMutex.withLock {
+            try {
+                outStream.write(input.toByteArray())
+                outStream.write(0)
+                outStream.flush()
+            } catch (e: Throwable) {
+                logger.error("sending error, disconnecting peer", e)
+                close()
             }
         }
     }
