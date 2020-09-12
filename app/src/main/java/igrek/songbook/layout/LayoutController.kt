@@ -174,11 +174,6 @@ class LayoutController(
     }
 
     private fun createLayout(layoutResourceId: Int): Pair<View, Boolean> {
-        val cached = layoutCache[layoutResourceId]
-        if (cached != null) {
-            return cached to true
-        }
-
         val inflater = activity.layoutInflater
         val properLayoutView = inflater.inflate(layoutResourceId, null)
         properLayoutView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
