@@ -44,8 +44,10 @@ class SongOpener(
     }
 
     fun openLastSong() {
-        if (songPreviewLayoutController.currentSong != null) {
+        val currentSong = songPreviewLayoutController.currentSong
+        if (currentSong != null) {
             layoutController.showLayout(SongPreviewLayoutController::class)
+            roomLobby.reportSongSelected(currentSong)
             return
         }
 

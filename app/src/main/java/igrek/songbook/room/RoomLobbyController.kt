@@ -145,7 +145,12 @@ class RoomLobbyController(
                 PeerStatus.Slave -> {
                     val strMsg = msg.toString()
                     LoggerFactory.logger.debug("sending to master: $strMsg")
-                    masterStream?.write(strMsg)
+                    try {
+                        masterStream?.write(strMsg)
+                    } catch (e: Throwable) {
+                        LoggerFactory.logger.error("failed to write to host", e)
+                        onMasterDisconnect()
+                    }
                 }
                 else -> {
                 }
@@ -178,7 +183,7 @@ class RoomLobbyController(
                     activeSlaveStreams.forEach { stream ->
                         try {
                             stream.write(strMsg)
-                        } catch (e: Exception) {
+                        } catch (e: Throwable) {
                             LoggerFactory.logger.error("sending to disconnected peer", e)
                             stream.close()
                         }
@@ -198,7 +203,7 @@ class RoomLobbyController(
                     LoggerFactory.logger.debug("sending to ${stream.remoteName()} (${stream.remoteAddress()}) slave: $strMsg")
                     try {
                         stream.write(strMsg)
-                    } catch (e: Exception) {
+                    } catch (e: Throwable) {
                         LoggerFactory.logger.error("sending to disconnected peer", e)
                         stream.close()
                     }
@@ -251,7 +256,7 @@ class RoomLobbyController(
 
     suspend fun onMasterDisconnect() {
         if (peerStatus != PeerStatus.Disconnected) {
-            LoggerFactory.logger.debug("master dropped")
+            LoggerFactory.logger.debug("dropped from master")
             onDroppedFromMaster()
             close()
         }

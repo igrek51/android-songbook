@@ -40,6 +40,7 @@ class RoomLobbyLayoutController(
     private var membersTextView: TextView? = null
     private var selectedSongTextView: TextView? = null
     private var openSelectedSongButton: Button? = null
+    private var emptyChatListTextView: TextView? = null
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
@@ -59,9 +60,9 @@ class RoomLobbyLayoutController(
         }
         selectedSongTextView = layout.findViewById(R.id.selectedSongTextView)
 
+        emptyChatListTextView = layout.findViewById(R.id.emptyChatListTextView)
         chatListView = layout.findViewById<RoomChatListView>(R.id.itemsListView)?.also {
             it.onClickCallback = {}
-            it.emptyView = layout.findViewById(R.id.emptyChatListTextView)
         }
         chatMessageEdit = layout.findViewById(R.id.chatMessageEdit)
         layout.findViewById<Button>(R.id.chatSendButton)?.setOnClickListener(SafeClickListener {
@@ -73,12 +74,8 @@ class RoomLobbyLayoutController(
         roomLobby.updateMembersCallback = ::updateMembers
         roomLobby.onDroppedCallback = ::onDropped
         roomLobby.onOpenSong = ::onOpenSong
-        roomLobby.newChatMessageCallback = { chatMessage: ChatMessage ->
-            chatListView?.let { chatListView ->
-                chatListView.add(chatMessage)
-                chatListView.alignListViewHeight()
-                chatListView.scrollToBottom()
-            }
+        roomLobby.newChatMessageCallback = { _: ChatMessage ->
+            updateChatMessages(roomLobby.chatHistory)
         }
         roomLobby.onModelChanged = {
             if (isLayoutVisible()) {
@@ -100,10 +97,16 @@ class RoomLobbyLayoutController(
     }
 
     private fun updateChatMessages(chatHistory: List<ChatMessage>) {
+        emptyChatListTextView?.let {
+            it.visibility = when {
+                chatHistory.isEmpty() -> View.VISIBLE
+                else -> View.GONE
+            }
+        }
         chatListView?.let {
             it.items = chatHistory.toList()
-            it.scrollToBottom()
             it.alignListViewHeight()
+            it.scrollToBottom()
         }
     }
 
@@ -130,15 +133,16 @@ class RoomLobbyLayoutController(
         }
 
         selectedSongTextView?.let { selectedSongTextView ->
-            selectedSongTextView.visibility = when (roomLobby.currentSong) {
-                null -> View.VISIBLE
-                else -> View.GONE
-            }
-            if (roomLobby.currentSong == null) {
-                selectedSongTextView.text = uiInfoService.resString(when (roomLobby.peerStatus) {
-                    PeerStatus.Master -> R.string.room_current_song_waiting_master
-                    else -> R.string.room_current_song_waiting
-                })
+            val currentSongString = uiInfoService.resString(R.string.room_current_song)
+            selectedSongTextView.text = when (roomLobby.currentSong) {
+                null -> {
+                    val waitingString = uiInfoService.resString(when (roomLobby.peerStatus) {
+                        PeerStatus.Master -> R.string.room_current_song_waiting_master
+                        else -> R.string.room_current_song_waiting
+                    })
+                    "$currentSongString $waitingString"
+                }
+                else -> currentSongString
             }
         }
     }

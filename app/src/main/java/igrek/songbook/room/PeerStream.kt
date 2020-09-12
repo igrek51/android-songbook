@@ -45,7 +45,7 @@ class PeerStream(
                         findCompleteMessage()
                     }
                 }
-            } catch (e: IOException) {
+            } catch (e: Throwable) {
                 logger.error("reading error, disconnecting peer", e)
                 break
             }
@@ -55,18 +55,20 @@ class PeerStream(
         }
     }
 
-    suspend fun write(input: String) {
+    fun write(input: String) {
         if (!open)
             throw RuntimeException("peer disconnected")
 
-        writeMutex.withLock {
-            try {
-                outStream.write(input.toByteArray())
-                outStream.write(0)
-                outStream.flush()
-            } catch (e: Throwable) {
-                logger.error("sending error, disconnecting peer", e)
-                close()
+        runBlocking {
+            writeMutex.withLock {
+                try {
+                    outStream.write(input.toByteArray())
+                    outStream.write(0)
+                    outStream.flush()
+                } catch (e: Throwable) {
+                    logger.error("sending error, disconnecting peer", e)
+                    close()
+                }
             }
         }
     }

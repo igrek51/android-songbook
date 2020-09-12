@@ -95,22 +95,13 @@
                 android:text="@string/room_lobby_hint"
                 android:textSize="18sp" />
 
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:gravity="bottom"
-                android:text="@string/room_current_song"
-                android:textSize="18sp" />
-
             <TextView
                 android:id="@+id/selectedSongTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:gravity="bottom"
-                android:text=""
+                android:text="@string/room_current_song"
                 android:textSize="18sp" />
 
             <Button
@@ -160,6 +151,7 @@
                 android:layout_marginBottom="8dp"
                 android:background="#07ffffff"
                 android:gravity="center_vertical"
+                android:hint="@string/room_enter_message_hint"
                 android:inputType="text"
                 android:padding="8dp" />
 
