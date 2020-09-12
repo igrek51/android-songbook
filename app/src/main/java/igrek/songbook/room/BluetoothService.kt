@@ -99,7 +99,7 @@ class BluetoothService(
 
     private fun onDiscoveryFinished() {
         GlobalScope.launch(Dispatchers.IO) {
-            for (job in discoveryJobs) {
+            for (job in discoveryJobs.toList()) {
                 job.join()
             }
             discoveredRoomsChannel.close()
