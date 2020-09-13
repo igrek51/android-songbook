@@ -74,7 +74,8 @@ class RoomLobbyLayoutController(
         roomLobby.updateMembersCallback = ::updateMembers
         roomLobby.onDroppedCallback = ::onDropped
         roomLobby.onOpenSong = ::onOpenSong
-        roomLobby.newChatMessageCallback = { _: ChatMessage ->
+        roomLobby.newChatMessageCallback = { chatMessage: ChatMessage ->
+            notfiyNewMessage(chatMessage)
             updateChatMessages(roomLobby.chatHistory)
         }
         roomLobby.onModelChanged = {
@@ -94,6 +95,11 @@ class RoomLobbyLayoutController(
             updateMembers(roomLobby.clients)
             updateChatMessages(roomLobby.chatHistory)
         }
+    }
+
+    private fun notfiyNewMessage(chatMessage: ChatMessage) {
+        val message = "${chatMessage.author}: ${chatMessage.message}"
+        uiInfoService.showInfo(R.string.room_new_chat_message, message)
     }
 
     private fun updateChatMessages(chatHistory: List<ChatMessage>) {
@@ -173,9 +179,7 @@ class RoomLobbyLayoutController(
     private fun showMoreActions() {
         ContextMenuBuilder().showContextMenu(mutableListOf(
                 ContextMenuBuilder.Action(R.string.room_close_room) {
-                    GlobalScope.launch {
-                        closeAndReturn()
-                    }
+                    leaveLobbyConfirm()
                 },
                 ContextMenuBuilder.Action(R.string.room_make_discoverable) {
                     GlobalScope.launch {
@@ -196,13 +200,17 @@ class RoomLobbyLayoutController(
     override fun onBackClicked() {
         when (roomLobby.peerStatus) {
             PeerStatus.Master, PeerStatus.Slave -> {
-                ConfirmDialogBuilder().confirmAction(R.string.room_confirm_leave_lobby) {
-                    GlobalScope.launch {
-                        closeAndReturn()
-                    }
-                }
+                leaveLobbyConfirm()
             }
             PeerStatus.Disconnected -> super.onBackClicked()
+        }
+    }
+
+    private fun leaveLobbyConfirm() {
+        ConfirmDialogBuilder().confirmAction(R.string.room_confirm_leave_lobby) {
+            GlobalScope.launch {
+                closeAndReturn()
+            }
         }
     }
 
