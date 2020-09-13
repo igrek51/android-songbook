@@ -14,10 +14,7 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.InputDialogBuilder
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class RoomListLayoutController(
         bluetoothService: LazyInject<BluetoothService> = appFactory.bluetoothService,
@@ -33,6 +30,7 @@ class RoomListLayoutController(
     private var joinRoomListView: JoinRoomListView? = null
     private var myNameEditText: EditText? = null
     private var showScanning = true
+    private var scanJob: Job? = null
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
@@ -133,10 +131,12 @@ class RoomListLayoutController(
     }
 
     private fun scanRooms() {
+        showScanning = false
         joinRoomListView?.items = emptyList()
         uiInfoService.showInfo(R.string.screen_share_scanning_devices, indefinite = true)
 
-        GlobalScope.launch(Dispatchers.IO) {
+        scanJob?.cancel()
+        scanJob = GlobalScope.launch(Dispatchers.IO) {
             bluetoothService.scanRoomsAsync().await().fold(onSuccess = { (roomCh, progressCh) ->
                 showScanning = true
                 GlobalScope.launch {
