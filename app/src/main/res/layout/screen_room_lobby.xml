@@ -139,28 +139,44 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:visibility="gone"
                 android:gravity="center"
+                android:padding="8dp"
                 android:text="@string/room_no_chat_messages"
-                android:padding="8dp" />
+                android:visibility="gone" />
 
-            <EditText
-                android:id="@+id/chatMessageEdit"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="#07ffffff"
-                android:gravity="center_vertical"
-                android:hint="@string/room_enter_message_hint"
-                android:inputType="text"
-                android:padding="8dp" />
+                android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/chatSendButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="@string/room_chat_send" />
+                <EditText
+                    android:id="@+id/chatMessageEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:background="#07ffffff"
+                    android:gravity="center_vertical"
+                    android:hint="@string/room_enter_message_hint"
+                    android:inputType="text"
+                    android:padding="8dp" />
+
+                <ImageButton
+                    android:id="@+id/chatSendButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignTop="@+id/chatMessageEdit"
+                    android:layout_alignEnd="@+id/chatMessageEdit"
+                    android:layout_alignRight="@+id/chatMessageEdit"
+                    android:layout_alignBottom="@+id/chatMessageEdit"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="end|center_vertical"
+                    android:background="?android:selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="0dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/send" />
+
+            </RelativeLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

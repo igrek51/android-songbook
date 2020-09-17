@@ -65,7 +65,7 @@ class RoomLobbyLayoutController(
             it.onClickCallback = {}
         }
         chatMessageEdit = layout.findViewById(R.id.chatMessageEdit)
-        layout.findViewById<Button>(R.id.chatSendButton)?.setOnClickListener(SafeClickListener {
+        layout.findViewById<ImageButton>(R.id.chatSendButton)?.setOnClickListener(SafeClickListener {
             sendChatMessage()
         })
 

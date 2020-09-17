@@ -399,7 +399,7 @@
     <string name="room_lobby">Lobby pokoju</string>
     <string name="room_chat_send">Wyślij</string>
     <string name="room_close_room">Opuść pokój</string>
-    <string name="room_make_discoverable">Ustaw widoczność pokoju</string>
+    <string name="room_make_discoverable">Zwiększ widoczność pokoju</string>
     <string name="room_open_current_song">Otwórz obecną piosenkę</string>
     <string name="edit_song_export_all_custom_songs">Wyeksportuj wszystkie piosenki</string>
     <string name="edit_song_import_custom_songs">Importuj wiele piosenek</string>
