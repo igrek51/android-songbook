@@ -1,3 +1,5 @@
+Śpiewnik gitarowy z tekstami piosenek i narzędziami do akordów
+
 Guitar Songbook to śpiewnik gitarowy z tekstami piosenek i narzędziami do akordów.
 
 Główne funkcje:
@@ -6,6 +8,7 @@ Główne funkcje:
 - Automatyczne przewijanie tekstu podczas grania
 - Dodawanie własnych piosenek z zaawansowanym edytorem akordów
 - Playlisty z piosenkami
+- Udostępnianie i wyświetlanie piosenek na wielu urządzeniach jednocześnie przez Bluetooth
 - Diagramy akordów dla gitary, ukulele i mandoliny
 - Baza piosenek (polskich i obcojęzycznych) w trybie offline oraz z aktualizacjami online
 - Wybór stylu wyświetlania akordów: pomiędzy słowami, akordy nad tekstem lub na końcu linii
