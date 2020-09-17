@@ -70,10 +70,12 @@ class BluetoothService(
     }
 
     private fun startDiscovery() {
-        if (bluetoothAdapter.isDiscovering) {
-            bluetoothAdapter.cancelDiscovery()
+        if (!bluetoothAdapter.isDiscovering) {
+            val result = bluetoothAdapter.startDiscovery()
+            if (!result) {
+                logger.error("Starting Bluetooth discovery failed")
+            }
         }
-        bluetoothAdapter.startDiscovery()
 
         activity.registerReceiver(discoveryReceiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
         activity.registerReceiver(discoveryReceiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED))
@@ -163,8 +165,8 @@ class BluetoothService(
     fun ensureBluetoothEnabled() {
         // Coarse Location permission required to discover devices
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (activity.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 1)
+            if (activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
             }
         }
 
