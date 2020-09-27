@@ -42,7 +42,7 @@ class BluetoothService(
 
     var bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
 
-    private val discoveredRoomDevices: ConcurrentHashMap<String, BluetoothDevice> = ConcurrentHashMap()
+    private val discoveredDevices: ConcurrentHashMap<String, BluetoothDevice> = ConcurrentHashMap()
     private var discoveredRoomsChannel: Channel<Room> = Channel()
     private var discoveryProgressChannel: Channel<DiscoveryProgress> = Channel()
     private var discoveryProgress = DiscoveryProgress()
@@ -63,7 +63,7 @@ class BluetoothService(
                 startDiscovery()
                 discoveredRoomsChannel.close()
                 discoveredRoomsChannel = Channel(16)
-                discoveredRoomDevices.clear()
+                discoveredDevices.clear()
                 discoveryProgressChannel.close()
                 discoveryProgressChannel = Channel(Channel.UNLIMITED)
                 discoveryProgress = DiscoveryProgress()
@@ -114,6 +114,15 @@ class BluetoothService(
 
     private fun onDeviceDiscovered(intent: Intent) {
         val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+        logger.debug("BT device discovered: ${device.name} (${device.address})")
+
+        if (discoveredDevices.containsKey(device.address)) {
+            logger.debug("BT device already discovered (${device.address})")
+            return
+        }
+
+        discoveredDevices[device.address] = device
+
         detectRoomOnDevice(device)
     }
 
@@ -126,17 +135,13 @@ class BluetoothService(
                 } catch (e: ClosedSendChannelException) {
                 }
 
-                if (discoveredRoomDevices.containsKey(device.address))
-                    return@launch
-
                 try {
                     detectDeviceSocket(device.address)
                 } catch (e: Throwable) {
-                    logger.warn("device ${device.address} room is unavailable: ${e.message}")
+                    logger.warn("room is unavailable on device ${device.address}: ${e.message}")
                     return@launch
                 }
 
-                discoveredRoomDevices[device.address] = device
                 try {
                     val room = Room(
                             name = device.name.orEmpty(),
@@ -159,10 +164,7 @@ class BluetoothService(
 
     private fun detectDeviceSocket(address: String) {
         val device = bluetoothAdapter.getRemoteDevice(address)
-        logger.debug("Detecting BT socket on ${device.name} ($address)")
-
         reuseBluetoothSocket(address)
-
         logger.debug("Room found on ${device.name} ($address)")
     }
 
@@ -210,7 +212,7 @@ class BluetoothService(
     private fun connectBluetoothSocket(btAddress: String?): BluetoothSocket {
         val btSocket: BluetoothSocket
         val device = bluetoothAdapter.getRemoteDevice(btAddress)
-        logger.debug("Connecting to room socket ${device.name} (${btAddress})")
+        logger.debug("Detecting BT Room socket on ${device.name} (${btAddress})")
         try {
             btSocket = createBluetoothSocket(device)
         } catch (e: IOException) {

@@ -30,6 +30,7 @@ class RoomLobbyController(
     var onClientMsgReceived: suspend (gtrMsg: GtrMsg) -> Unit = {}
     var onJoinRoomKnocked: () -> Unit = {}
     var onClientsChange: (List<PeerClient>) -> Unit = {}
+    var onNewClientJoined: (String) -> Unit = {}
     var onDroppedFromMaster: (error: Throwable?) -> Unit = {}
 
     init {
@@ -219,6 +220,7 @@ class RoomLobbyController(
             clients.add(PeerClient(newUsername, clientStream, PeerStatus.Slave))
         }
         onClientsChange(clients)
+        onNewClientJoined(newUsername)
     }
 
     // receive as Master

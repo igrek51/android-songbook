@@ -44,6 +44,11 @@ class RoomLobby(
         set(value) {
             controller.onDroppedFromMaster = value
         }
+    var onNewClientJoined: (username: String) -> Unit
+        get() = controller.onNewClientJoined
+        set(value) {
+            controller.onNewClientJoined = value
+        }
 
     init {
         controller.onMasterMsgReceived = ::onMasterMsgReceived

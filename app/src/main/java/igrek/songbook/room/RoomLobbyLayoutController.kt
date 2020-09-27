@@ -74,6 +74,7 @@ class RoomLobbyLayoutController(
 
         roomLobby.updateMembersCallback = ::updateMembers
         roomLobby.onDroppedCallback = ::onDropped
+        roomLobby.onNewClientJoined = ::onNewClientJoined
         roomLobby.onOpenSong = ::onOpenSong
         roomLobby.newChatMessageCallback = { chatMessage: ChatMessage ->
             notfiyNewMessage(chatMessage)
@@ -163,6 +164,10 @@ class RoomLobbyLayoutController(
         if (isLayoutVisible()) {
             layoutController.showLayout(RoomListLayoutController::class)
         }
+    }
+
+    private fun onNewClientJoined(username: String) {
+        uiInfoService.showInfo(R.string.room_new_client_joined, username)
     }
 
     private fun updateMembers(members: List<PeerClient>) {
