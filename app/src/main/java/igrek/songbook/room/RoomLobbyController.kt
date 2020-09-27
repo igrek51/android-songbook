@@ -149,7 +149,7 @@ class RoomLobbyController(
                         masterStream?.write(strMsg)
                     } catch (e: Throwable) {
                         LoggerFactory.logger.error("failed to write to host", e)
-                        onMasterDisconnect()
+                        onMasterDisconnect(broadcast = false)
                     }
                 }
                 else -> {
@@ -254,11 +254,11 @@ class RoomLobbyController(
         onClientsChange(clients)
     }
 
-    suspend fun onMasterDisconnect() {
+    suspend fun onMasterDisconnect(broadcast: Boolean = true) {
         if (peerStatus != PeerStatus.Disconnected) {
             LoggerFactory.logger.debug("dropped from master")
             onDroppedFromMaster()
-            close()
+            close(broadcast)
         }
     }
 
