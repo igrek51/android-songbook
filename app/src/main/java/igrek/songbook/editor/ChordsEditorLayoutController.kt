@@ -2,6 +2,8 @@ package igrek.songbook.editor
 
 
 import android.graphics.Typeface
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -123,8 +125,10 @@ class ChordsEditorLayoutController(
             textEditor.setText(it)
         }
         history.reset(textEditor)
-        softKeyboardService.showSoftKeyboard(contentEdit)
         contentEdit?.setSelection(0, 0)
+        Handler(Looper.getMainLooper()).post {
+            softKeyboardService.showSoftKeyboard(contentEdit)
+        }
     }
 
     private fun configureTypeface(edit: EditText) {
