@@ -463,4 +463,5 @@
     <string name="room_no_chat_messages">No messages yet</string>
     <string name="room_enter_message_hint">Message</string>
     <string name="room_new_chat_message">New message: %s</string>
+    <string name="room_bluetooth_will_bediscoverable">Your device will be discoverable for next 5 minutes.</string>
 </resources>

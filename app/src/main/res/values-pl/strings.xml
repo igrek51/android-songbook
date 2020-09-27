@@ -437,4 +437,5 @@
     <string name="room_no_chat_messages">Brak wiadomości</string>
     <string name="room_enter_message_hint">Wiadomość</string>
     <string name="room_new_chat_message">Nowa wiadomość: %s</string>
+    <string name="room_bluetooth_will_bediscoverable">Twoje urządzenie będzie widoczne przez najbliższe 5 minut.</string>
 </resources>

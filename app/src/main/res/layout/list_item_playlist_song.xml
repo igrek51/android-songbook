@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/songImage"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_centerVertical="true"
         android:layout_gravity="start|center_vertical"
         android:layout_marginLeft="2dp"
@@ -18,7 +18,7 @@
         android:background="@drawable/note"
         android:clickable="false"
         android:focusable="false"
-        android:scaleType="fitCenter"/>
+        android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/itemTitleLabel"
@@ -28,15 +28,15 @@
         android:layout_gravity="start|center_vertical"
         android:layout_marginLeft="4dp"
         android:layout_marginStart="4dp"
-        android:layout_marginBottom="7dp"
-        android:layout_marginTop="7dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
         android:layout_toRightOf="@+id/songImage"
         android:layout_toEndOf="@+id/songImage"
         android:layout_toLeftOf="@+id/itemMoveButton"
         android:layout_toStartOf="@+id/itemMoveButton"
         android:gravity="start|center_vertical"
         android:text=""
-        android:textSize="16sp"/>
+        android:textSize="16sp" />
 
     <ImageButton
         android:id="@+id/itemMoveButton"

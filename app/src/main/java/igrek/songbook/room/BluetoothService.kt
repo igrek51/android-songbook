@@ -1,6 +1,7 @@
 package igrek.songbook.room
 
 import android.Manifest
+import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
@@ -13,6 +14,8 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import igrek.songbook.R
+import igrek.songbook.activity.ActivityResultDispatcher
+import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.LocalizedError
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
@@ -29,8 +32,12 @@ import java.util.concurrent.ConcurrentHashMap
 
 class BluetoothService(
         appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+        activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,
+        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
 ) {
     private val activity by LazyExtractor(appCompatActivity)
+    private val activityResultDispatcher by LazyExtractor(activityResultDispatcher)
+    private val uiInfoService by LazyExtractor(uiInfoService)
 
     companion object {
         private const val REQUEST_ENABLE_BT = 20
@@ -246,7 +253,12 @@ class BluetoothService(
         val discoverableIntent: Intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
             putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300)
         }
-        activity.startActivity(discoverableIntent)
+
+        activityResultDispatcher.startActivityForResult(discoverableIntent) { resultCode: Int, _: Intent? ->
+            if (resultCode == Activity.RESULT_OK) {
+                uiInfoService.showInfo(R.string.room_bluetooth_will_bediscoverable)
+            }
+        }
     }
 
 }

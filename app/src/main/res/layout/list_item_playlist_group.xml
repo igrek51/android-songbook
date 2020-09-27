@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/playlistImage"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_centerVertical="true"
         android:layout_gravity="start|center_vertical"
         android:layout_marginLeft="2dp"
@@ -18,7 +18,7 @@
         android:background="@drawable/playlist"
         android:clickable="false"
         android:focusable="false"
-        android:scaleType="fitCenter"/>
+        android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/itemTitleLabel"
@@ -28,8 +28,8 @@
         android:layout_gravity="start|center_vertical"
         android:layout_marginLeft="4dp"
         android:layout_marginStart="4dp"
-        android:layout_marginBottom="7dp"
-        android:layout_marginTop="7dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
         android:layout_toEndOf="@+id/playlistImage"
         android:layout_toLeftOf="@+id/itemMoreButton"
         android:layout_toRightOf="@+id/playlistImage"
@@ -37,7 +37,7 @@
         android:gravity="start|center_vertical"
         android:text=""
         android:textSize="16sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <ImageButton
         android:id="@+id/itemMoreButton"
