@@ -19,9 +19,11 @@ class PeerStream(
     private var inBuffer = StringBuffer()
     private val writeMutex = Mutex()
     private val readMutex = Mutex()
-    val disconnectedCh = Channel<Unit>(Channel.CONFLATED)
+    val disconnectedCh = Channel<Throwable?>(Channel.CONFLATED)
     private val looperJob: Job
     private var open = true
+    private val maxBuffer = 2048
+    private var lastError: Throwable? = null
 
     init {
         looperJob = GlobalScope.launch(Dispatchers.IO) {
@@ -33,9 +35,11 @@ class PeerStream(
         while (remoteSocket.isConnected) {
             try {
                 delay(100L) //pause and wait for rest of data.
-                if (inStream.available() != 0) {
-                    val buffer = ByteArray(2048)
-                    val availableBytes = inStream.available()
+                var availableBytes = inStream.available()
+                if (availableBytes > 0) {
+                    val buffer = ByteArray(maxBuffer)
+                    if (availableBytes > maxBuffer)
+                        availableBytes = maxBuffer
                     val actualBytes = inStream.read(buffer, 0, availableBytes)
 
                     val str = String(buffer, 0, actualBytes)
@@ -47,6 +51,7 @@ class PeerStream(
                 }
             } catch (e: Throwable) {
                 logger.error("reading error, disconnecting peer", e)
+                lastError = RuntimeException("reading error: ${e.message}", e)
                 break
             }
         }
@@ -89,7 +94,7 @@ class PeerStream(
         }
 
         GlobalScope.launch {
-            disconnectedCh.send(Unit)
+            disconnectedCh.send(lastError)
             disconnectedCh.close()
         }
     }

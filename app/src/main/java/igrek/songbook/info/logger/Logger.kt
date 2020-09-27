@@ -10,14 +10,14 @@ open class Logger internal constructor() {
         log(message, LogLevel.ERROR, "[ERROR] ")
     }
 
-    fun error(ex: Throwable) {
-        log("[${ex.javaClass.name}] ${ex.message}", LogLevel.ERROR, "[ERROR] ")
-        printExceptionStackTrace(ex)
+    fun error(t: Throwable) {
+        log("[${t.javaClass.name}] ${t.message}", LogLevel.ERROR, "[ERROR] ")
+        printExceptionStackTrace(t)
     }
 
     fun error(message: String?, t: Throwable) {
-        val msg = "$message: ${t.message}"
-        log(msg, LogLevel.ERROR, "[ERROR] ")
+        log("$message: ${t.message}", LogLevel.ERROR, "[ERROR] ")
+        printExceptionStackTrace(t)
     }
 
     open fun fatal(ex: Throwable) {

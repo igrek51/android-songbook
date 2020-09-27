@@ -30,7 +30,7 @@ class RoomLobbyController(
     var onClientMsgReceived: suspend (gtrMsg: GtrMsg) -> Unit = {}
     var onJoinRoomKnocked: () -> Unit = {}
     var onClientsChange: (List<PeerClient>) -> Unit = {}
-    var onDroppedFromMaster: () -> Unit = {}
+    var onDroppedFromMaster: (error: Throwable?) -> Unit = {}
 
     init {
         // new slave connections
@@ -67,8 +67,8 @@ class RoomLobbyController(
             LoggerFactory.logger.debug("slave channel closed")
         }
         GlobalScope.launch(Dispatchers.IO) {
-            clientStream.disconnectedCh.receive()
-            onSlaveDisconnect(clientStream)
+            val error = clientStream.disconnectedCh.receive()
+            onSlaveDisconnect(clientStream, error)
             LoggerFactory.logger.debug("slave disconnected: ${clientStream.remoteName()}")
         }
     }
@@ -127,8 +127,8 @@ class RoomLobbyController(
                 masterStream = PeerStream(btSocket, masterMessagesChannel)
                 peerStatus = PeerStatus.Slave
                 GlobalScope.launch {
-                    masterStream?.disconnectedCh?.receive()
-                    onMasterDisconnect()
+                    val error = masterStream?.disconnectedCh?.receive()
+                    onMasterDisconnect(error)
                 }
 
                 onJoinRoomKnocked()
@@ -149,7 +149,7 @@ class RoomLobbyController(
                         masterStream?.write(strMsg)
                     } catch (e: Throwable) {
                         LoggerFactory.logger.error("failed to write to host", e)
-                        onMasterDisconnect(broadcast = false)
+                        onMasterDisconnect(e, broadcast = false)
                     }
                 }
                 else -> {
@@ -244,7 +244,7 @@ class RoomLobbyController(
         }
     }
 
-    suspend fun onSlaveDisconnect(slaveStream: PeerStream) {
+    suspend fun onSlaveDisconnect(slaveStream: PeerStream, error: Throwable?) {
         LoggerFactory.logger.debug("slave dropped")
         slaveStream.close()
         writeMutex.withLock {
@@ -254,10 +254,10 @@ class RoomLobbyController(
         onClientsChange(clients)
     }
 
-    suspend fun onMasterDisconnect(broadcast: Boolean = true) {
+    suspend fun onMasterDisconnect(error: Throwable?, broadcast: Boolean = true) {
         if (peerStatus != PeerStatus.Disconnected) {
             LoggerFactory.logger.debug("dropped from master")
-            onDroppedFromMaster()
+            onDroppedFromMaster(error)
             close(broadcast)
         }
     }

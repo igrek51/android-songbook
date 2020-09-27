@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityResultDispatcher
-import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.LocalizedError
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
@@ -33,11 +32,9 @@ import java.util.concurrent.ConcurrentHashMap
 class BluetoothService(
         appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
         activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
 ) {
     private val activity by LazyExtractor(appCompatActivity)
     private val activityResultDispatcher by LazyExtractor(activityResultDispatcher)
-    private val uiInfoService by LazyExtractor(uiInfoService)
 
     companion object {
         private const val REQUEST_ENABLE_BT = 20
@@ -256,7 +253,7 @@ class BluetoothService(
 
         activityResultDispatcher.startActivityForResult(discoverableIntent) { resultCode: Int, _: Intent? ->
             if (resultCode == Activity.RESULT_OK) {
-                uiInfoService.showInfo(R.string.room_bluetooth_will_bediscoverable)
+                logger.debug("discoverability prolonged successfully")
             }
         }
     }

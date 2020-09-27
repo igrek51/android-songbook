@@ -416,6 +416,7 @@
     <string name="room_room_created">Pokój utworzony</string>
     <string name="room_scanning_completed_not_found">Skanowanie zakończone. Nie znaleziono pokoju.</string>
     <string name="room_dropped_from_host">Opuszczono pokój</string>
+    <string name="room_dropped_from_host_s">Opuszczono pokój: %s</string>
     <string name="song_show_fullscreen">Pełny ekran</string>
     <string name="room_members">Uczestnicy:\n%s</string>
     <string name="screen_share_enter_room_password">Podaj hasło:</string>

@@ -39,7 +39,7 @@ class RoomLobby(
     var onRoomWrongPassword: () -> Unit = {}
     var onRoomWelcomedSuccessfully: () -> Unit = {}
     var onModelChanged: () -> Unit = {}
-    var onDroppedCallback: () -> Unit
+    var onDroppedCallback: (error: Throwable?) -> Unit
         get() = controller.onDroppedFromMaster
         set(value) {
             controller.onDroppedFromMaster = value
@@ -120,7 +120,7 @@ class RoomLobby(
                     verifyLoggingUser(msg.username, msg.password, slaveStream)
             }
             is ChatMessageMsg -> controller.sendToClients(ChatMessageMsg(msg.author, Date().time, msg.message))
-            is DisconnectMsg -> slaveStream?.let { controller.onSlaveDisconnect(slaveStream) }
+            is DisconnectMsg -> slaveStream?.let { controller.onSlaveDisconnect(slaveStream, null) }
             is WhatsupMsg -> {
                 if (slaveStream != null)
                     sendRoomStatus(slaveStream)
@@ -159,7 +159,7 @@ class RoomLobby(
                     newChatMessageCallback(chatMessage)
                 }
             }
-            is DisconnectMsg -> controller.onMasterDisconnect()
+            is DisconnectMsg -> controller.onMasterDisconnect(null)
             is SelectSongMsg -> GlobalScope.launch {
                 currentSong = buildEphemeralSong(msg.song)
                 logger.info("fetched song: ${msg.song.categoryName} - ${msg.song.title}")
@@ -178,7 +178,7 @@ class RoomLobby(
         if (givenPassword != roomPassword) {
             logger.warn("User $username attempted to login to room with invalid password: $givenPassword")
             controller.sendToSlave(slaveStream, WelcomeMsg(false)).join()
-            slaveStream.let { controller.onSlaveDisconnect(slaveStream) }
+            slaveStream.let { controller.onSlaveDisconnect(slaveStream, null) }
             return
         }
 

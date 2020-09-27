@@ -10,6 +10,7 @@ import android.widget.TextView
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.SafeClickListener
+import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -153,8 +154,12 @@ class RoomLobbyLayoutController(
         }
     }
 
-    private fun onDropped() {
-        uiInfoService.showInfo(R.string.room_dropped_from_host)
+    private fun onDropped(error: Throwable?) {
+        if (error == null) {
+            uiInfoService.showInfo(R.string.room_dropped_from_host, indefinite = true)
+        } else {
+            UiErrorHandler().handleError(error, R.string.room_dropped_from_host_s)
+        }
         if (isLayoutVisible()) {
             layoutController.showLayout(RoomListLayoutController::class)
         }
@@ -184,6 +189,7 @@ class RoomLobbyLayoutController(
                 ContextMenuBuilder.Action(R.string.room_make_discoverable) {
                     GlobalScope.launch {
                         roomLobby.makeDiscoverable()
+                        uiInfoService.showInfo(R.string.room_bluetooth_will_bediscoverable)
                     }
                 },
         ))
