@@ -220,8 +220,8 @@ class ChordsEditorLayoutController(
 
     private fun returnNewContent() {
         val content = contentEdit?.text?.toString().orEmpty()
-        layoutController.showPreviousLayoutOrQuit()
         editSongLayoutController.setSongContent(content)
+        layoutController.showPreviousLayoutOrQuit()
     }
 
     override fun onLayoutExit() {

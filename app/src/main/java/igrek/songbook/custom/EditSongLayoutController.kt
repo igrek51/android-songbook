@@ -194,6 +194,7 @@ class EditSongLayoutController(
     }
 
     fun setSongContent(content: String) {
+        this.songContent = content
         songContentEdit?.setText(content)
     }
 
