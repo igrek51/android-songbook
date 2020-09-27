@@ -125,7 +125,9 @@ class ChordsEditorLayoutController(
             textEditor.setText(it)
         }
         history.reset(textEditor)
+
         contentEdit?.setSelection(0, 0)
+        contentEdit?.requestFocus()
         Handler(Looper.getMainLooper()).post {
             softKeyboardService.showSoftKeyboard(contentEdit)
         }

@@ -386,8 +386,7 @@
     <string name="chords_editor_select_line">Line</string>
     <string name="chords_editor_unmark_chords">Unmark chords</string>
     <string name="chords_editor_detect_chords_keeping_indent">Mark chords (not preserving indentation)</string>
-    <string name="settings_chords_editor">Song Editor</string>
-    <string name="settings_chords_editor_typeface">Editor font typeface</string>
+    <string name="settings_chords_editor_typeface">Song Editor font typeface</string>
     <string name="settings_keep_screen_on">Screen always on</string>
     <string name="settings_keep_screen_on_hint">Keep display always on when a song is opened</string>
     <string name="select_file_to_export">Save file</string>
