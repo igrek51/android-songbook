@@ -424,7 +424,7 @@
     <string name="room_confirm_leave_lobby">Opuszczasz grupę, Czy na pewno chcesz się odłączyć?</string>
     <string name="room_scanning_progress">Skanowanie urządzeń w pobliżu… %s</string>
     <string name="screen_share_feature_hint">Udostępnianie ekranu pozwala wyświetlać te same piosenki na wielu urządzeniach przy użyciu Bluetooth (wymaga to również dostępu do lokalizacji, aby móc skanować urządzenia w pobliżu). Stwórz pokój, aby Twoi znajomi mogli do niego dołączyć. Wtedy każda piosenka wybrana przez właściciela będzie wyświetlana na wszystkich urządzeniach połączonych do pokoju.</string>
-    <string name="room_current_song">Obecna piosenka: </string>
+    <string name="room_current_song">Aktualna piosenka: </string>
     <string name="room_current_song_waiting">Brak - oczekiwanie…</string>
     <string name="room_chat">Czat:</string>
     <string name="room_downloading_song">Pobieranie piosenki…</string>

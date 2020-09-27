@@ -83,7 +83,17 @@ abstract class GenericListView<T>(
     }
 
     fun alignListViewHeight() {
+        val params: ViewGroup.LayoutParams = this.layoutParams
+        params.height = getListViewHeight()
+        this.layoutParams = params
+        this.requestLayout()
+    }
+
+    private fun getListViewHeight(): Int {
         val listAdapter: ListAdapter = this.adapter
+        if (listAdapter.count == 0)
+            return 0
+
         var totalHeight = 0
         val desiredWidth = MeasureSpec.makeMeasureSpec(this.width, MeasureSpec.AT_MOST)
         for (i in 0 until listAdapter.count) {
@@ -91,9 +101,6 @@ abstract class GenericListView<T>(
             listItem.measure(desiredWidth, MeasureSpec.UNSPECIFIED)
             totalHeight += listItem.measuredHeight
         }
-        val params: ViewGroup.LayoutParams = this.layoutParams
-        params.height = totalHeight + this.dividerHeight * (listAdapter.count - 1)
-        this.layoutParams = params
-        this.requestLayout()
+        return totalHeight + this.dividerHeight * (listAdapter.count - 1)
     }
 }
