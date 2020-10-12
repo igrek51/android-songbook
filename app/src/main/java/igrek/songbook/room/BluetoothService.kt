@@ -40,7 +40,7 @@ class BluetoothService(
         private const val REQUEST_ENABLE_BT = 20
     }
 
-    var bluetoothAdapter: BluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+    var bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
 
     private val discoveredDevices: ConcurrentHashMap<String, BluetoothDevice> = ConcurrentHashMap()
     private var discoveredRoomsChannel: Channel<Room> = Channel()
@@ -50,7 +50,7 @@ class BluetoothService(
     private val reusableSockets: MutableMap<String, BluetoothSocket> = mutableMapOf()
 
     fun deviceName(): String {
-        return bluetoothAdapter.name.orEmpty()
+        return bluetoothAdapter?.name.orEmpty()
     }
 
     fun scanRoomsAsync(): Deferred<Result<Pair<Channel<Room>, Channel<DiscoveryProgress>>>> {
@@ -60,7 +60,7 @@ class BluetoothService(
 
                 discoveryJobs.forEach { it.cancel() }
                 discoveryJobs.clear()
-                startDiscovery()
+                bluetoothAdapter?.let { bluetoothAdapter -> startDiscovery(bluetoothAdapter) }
                 discoveredRoomsChannel.close()
                 discoveredRoomsChannel = Channel(16)
                 discoveredDevices.clear()
@@ -73,7 +73,7 @@ class BluetoothService(
         }
     }
 
-    private fun startDiscovery() {
+    private fun startDiscovery(bluetoothAdapter: BluetoothAdapter) {
         if (!bluetoothAdapter.isDiscovering) {
             val result = bluetoothAdapter.startDiscovery()
             if (!result) {
@@ -114,6 +114,7 @@ class BluetoothService(
 
     private fun onDeviceDiscovered(intent: Intent) {
         val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+                ?: return
         logger.debug("BT device discovered: ${device.name} (${device.address})")
 
         if (discoveredDevices.containsKey(device.address)) {
@@ -163,7 +164,8 @@ class BluetoothService(
     }
 
     private fun detectDeviceSocket(address: String) {
-        val device = bluetoothAdapter.getRemoteDevice(address)
+        val device = bluetoothAdapter?.getRemoteDevice(address)
+                ?: throw RuntimeException("no bluetooth adapter")
         reuseBluetoothSocket(address)
         logger.debug("Room found on ${device.name} ($address)")
     }
@@ -176,20 +178,20 @@ class BluetoothService(
             }
         }
 
-        if (bluetoothAdapter.isEnabled)
+        if (bluetoothAdapter?.isEnabled == true)
             return
 
         val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
         activity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
         val turnOnResult = waitUntil(retries = 20, delayMs = 500) {
-            bluetoothAdapter.isEnabled
+            bluetoothAdapter?.isEnabled == true
         }
         if (!turnOnResult)
             throw LocalizedError(R.string.error_bluetooth_not_enabled)
     }
 
     fun connectToRoomSocketAsync(room: Room): Deferred<Result<BluetoothSocket>> {
-        bluetoothAdapter.cancelDiscovery()
+        bluetoothAdapter?.cancelDiscovery()
 
         return GlobalScope.async(Dispatchers.IO) {
             runCatching {
@@ -211,7 +213,8 @@ class BluetoothService(
 
     private fun connectBluetoothSocket(btAddress: String?): BluetoothSocket {
         val btSocket: BluetoothSocket
-        val device = bluetoothAdapter.getRemoteDevice(btAddress)
+        val device = bluetoothAdapter?.getRemoteDevice(btAddress)
+                ?: throw RuntimeException("No Bluetooth adapter")
         logger.debug("Detecting BT Room socket on ${device.name} (${btAddress})")
         try {
             btSocket = createBluetoothSocket(device)
@@ -239,12 +242,17 @@ class BluetoothService(
     }
 
     fun cancelDiscovery() {
-        bluetoothAdapter.cancelDiscovery()
+        bluetoothAdapter?.cancelDiscovery()
         discoveryProgressChannel.close()
     }
 
     fun makeDiscoverable() {
-        if (bluetoothAdapter.scanMode == BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
+        if (bluetoothAdapter == null) {
+            logger.error("no bluetooth adapter")
+            return
+        }
+
+        if (bluetoothAdapter?.scanMode == BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
             logger.debug("already discoverable")
             return
         }

@@ -105,7 +105,9 @@ class RoomLobbyController(
             makeDiscoverable()
             this.clients = mutableListOf(PeerClient(username, null, PeerStatus.Master))
             newSlaveListener?.close()
-            newSlaveListener = NewSlaveListener(bluetoothService.bluetoothAdapter, newSlaveChannel)
+            val bluetoothAdapter = bluetoothService.bluetoothAdapter
+                    ?: throw RuntimeException("No Bluetooth adapter")
+            newSlaveListener = NewSlaveListener(bluetoothAdapter, newSlaveChannel)
             peerStatus = PeerStatus.Master
             newSlaveListener!!.isInitializedAsync()
         } catch (t: Throwable) {
