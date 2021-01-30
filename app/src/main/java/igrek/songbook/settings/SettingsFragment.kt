@@ -13,6 +13,7 @@ import igrek.songbook.R
 import igrek.songbook.chords.diagram.ChordDiagramStyle
 import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -228,12 +229,16 @@ class SettingsFragment(
         )
 
         setupClickPreference("settingsSyncSave") {
-            googleSyncManager.syncSave()
+            SafeExecutor {
+                googleSyncManager.syncSave()
+            }
         }
 
         setupClickPreference("settingsSyncRestore") {
             ConfirmDialogBuilder().confirmAction(R.string.settings_sync_restore_confirm) {
-                googleSyncManager.syncRestore()
+                SafeExecutor {
+                    googleSyncManager.syncRestore()
+                }
             }
         }
 
