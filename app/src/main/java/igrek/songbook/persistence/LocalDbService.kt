@@ -48,7 +48,7 @@ class LocalDbService(
     val appDataDir: File
         @SuppressLint("SdCardPath")
         get() {
-            return appFilesDir.parentFile
+            return appFilesDir.parentFile ?: File("/data/data/" + activity.packageName)
         }
 
     val songsDbFile: File

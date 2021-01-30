@@ -158,7 +158,7 @@ class LayoutController(
         val transition: Transition = Fade()
         transition.duration = 200
 
-        val (properLayoutView, cached) = createLayout(mainLayout.getLayoutResourceId())
+        val (properLayoutView, _) = createLayout(mainLayout.getLayoutResourceId())
 
         val firstTimeView = mainContentLayout.childCount == 0
 

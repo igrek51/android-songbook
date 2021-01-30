@@ -16,7 +16,7 @@ open class UiResourceService(
 
     open fun resString(resourceId: Int): String {
         return try {
-            activity.resources.getString(resourceId) ?: ""
+            activity.resources.getString(resourceId)
         } catch (e: NotFoundException) {
             ""
         }
