@@ -135,7 +135,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:scaleType="centerInside"
-                        android:src="@drawable/screen_cast"
+                        android:src="@drawable/bluetooth"
                         />
 
                     <ImageButton
