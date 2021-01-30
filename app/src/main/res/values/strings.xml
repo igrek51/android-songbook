@@ -424,7 +424,7 @@
     <string name="room_lobby">Room Lobby</string>
     <string name="room_chat_send">Send message</string>
     <string name="room_close_room">Leave room</string>
-    <string name="room_make_discoverable">Make discoverable</string>
+    <string name="room_make_discoverable">Make discoverable again</string>
     <string name="room_open_current_song">Open current song</string>
     <string name="edit_song_export_all_custom_songs">Export all songs</string>
     <string name="edit_song_import_custom_songs">Import multiple songs</string>
