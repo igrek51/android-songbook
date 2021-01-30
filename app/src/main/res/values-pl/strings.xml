@@ -51,7 +51,7 @@
         \nMożesz także zaproponować poprawkę w akordach lub tekście piosenek, jeśli odnajdziesz jakieś błędy.
     </string>
     <string name="ui_about_content" formatted="false">
-        Guitar Songbook
+        Songbook
         \nWersja aplikacji: %s (%s %s)
         \nWersja bazy piosenek: v%s
         \n
@@ -125,7 +125,7 @@
     <string name="edit_song_content_label">Tekst piosenki z akordami w nawiasach kwadratowych:</string>
     <string name="chords_editor_hint">Umieść tu tekst piosenki z akordami. Postaraj się trzymać następujących reguł, aby zachować spójność ze standardem piosenek:
         \n\n1. Zaznacz akordy w nawiasach kwadratowych, np. \"między [C G# A7 F#maj7] słowami\".
-        \n\n2. Mieszaj akordy z tekstem w tej samej linii, umieszczając je tuż przed słowami, gdzie występują, dokładnie wskazując moment zmiany akordu i jego akcentu w tekście, np. \"[C]And no reli[Cmaj7]gion [F]too\". Nie umieszczaj ich w osobnej linii ponad tekstem (wtedy sposób wyświetlania możesz zawsze zmienić w ustawieniach, więc pozwól innym wybrać ich ulubiony sposób wyświetlania). Umieszczanie akordów w tej samej linii jest niezmiernie ważne, bo pozwala to wyświetlać akordy zawsze w poprawnym miejscu, niezależnie od róźnych krojów czcionki i zawijania wyrazów. Nie martw się o Twój ulubiony styl wyświetlania akordów - Guitar Songbook wykona całą tą magię dla Ciebie.
+        \n\n2. Mieszaj akordy z tekstem w tej samej linii, umieszczając je tuż przed słowami, gdzie występują, dokładnie wskazując moment zmiany akordu i jego akcentu w tekście, np. \"[C]And no reli[Cmaj7]gion [F]too\". Nie umieszczaj ich w osobnej linii ponad tekstem (wtedy sposób wyświetlania możesz zawsze zmienić w ustawieniach, więc pozwól innym wybrać ich ulubiony sposób wyświetlania). Umieszczanie akordów w tej samej linii jest niezmiernie ważne, bo pozwala to wyświetlać akordy zawsze w poprawnym miejscu, niezależnie od róźnych krojów czcionki i zawijania wyrazów. Nie martw się o Twój ulubiony styl wyświetlania akordów - Songbook wykona całą tą magię dla Ciebie.
         \n\n3. Jeśli fragment piosenki się powtarza (np. refren), skopiuj go we wszystkie miejsca wystąpień. Kiedy piosenka zachowuje ciągłość, ułatwi to jej późniejsze przewijanie i nie będziesz musiał przewijać piosenki za każdym razem, aby wrócić do akordów refrenu. Nie umieszczaj odnośników lub akapitów w stylu \"Refren\", \"Zwrotka\", \"Tytuł\", \"Solo\", \"Instrumental\". Umieść tylko tekst piosenki z akordami.
         \n\n4. Upewnij się, że wybrałeś odpowiednią notację dla swoich akordów (\"Am\" lub \"a\").
         \n\n5. Jeśli piosenka ma trudny rytm z często zmieniającymi się akordami, umieść akordy między poszczególnymi słowami lub nawet w środku wyrazów, aby wskazać sylabę, w której akcentowany jest akord, np. \"[G]Hotel Cali[D]fornia\". W przypadku prostych akordów możesz umieścić akordy na końcu linii: \"Smoke on the water [C G#]\"
