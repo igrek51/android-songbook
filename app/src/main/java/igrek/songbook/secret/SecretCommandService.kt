@@ -246,7 +246,8 @@ class SecretCommandService(
     private fun hashedCommand(cmd: String) {
         val hash = ShaHasher().hash(cmd)
         if (hash !in hashedCommands) {
-            logger.warn("invalid hashed command entered: $cmd (#$hash)")
+            logger.warn("invalid hashed command: $cmd (#$hash)")
+            toast("invalid \"hush\" command (#$hash)")
             return
         }
         logger.info("hashed command activated: $cmd (#$hash)")
