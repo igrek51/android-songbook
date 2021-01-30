@@ -26,14 +26,6 @@ def getVersionName = { ->
 }
 
 android {
-    signingConfigs {
-        sign {
-            keyAlias 'songbook-key'
-            keyPassword 'songbook-key'
-            storeFile file('/home/igrek/.android/songbook.jks')
-            storePassword 'songbook-key'
-        }
-    }
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
 
@@ -51,7 +43,6 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.sign
             buildConfigField "java.util.Date", "BUILD_DATE", "new java.util.Date(" + System.currentTimeMillis() + "L)"
         }
         debug {
