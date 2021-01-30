@@ -63,7 +63,7 @@ class ChordsDiagramsService(
         val diagramBuilder = ChordDiagramBuilder(instrument, preferencesState.chordDiagramStyle)
         val (engChord: String, errors) = toEnglishConverter.convertChordsGroup(chord)
         if (errors.isNotEmpty()) {
-            throw RuntimeException("unrecognized chord: $errors")
+            throw RuntimeException("Unrecognized chord due to wrong notation: $errors")
         }
         val chordDiagramCodes = getChordDiagrams(instrument)
         return chordDiagramCodes[engChord]
