@@ -22,7 +22,7 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
     private var allItems: List<SongTreeItem> = emptyList()
     private var renderItemsCount: Int = 0
 
-    private val initialLazyRenderCount = 30
+    private val initialLazyRenderCount = 60
     private val lazyRenderPadding = 20
 
     private var scrollState: Int = OnScrollListener.SCROLL_STATE_IDLE
@@ -84,7 +84,6 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
     private fun attemptRestoreScrollPosition(scrollPosition: ListScrollPosition) {
         recalculateVisibleItems(scrollPosition.firstVisiblePosition, initialLazyRenderCount)
         setSelection(scrollPosition.firstVisiblePosition)
-//        smoothScrollBy(scrollPosition.yOffsetPx, 100)
     }
 
     private fun restoreScrollRepeatedly(scrollPosition: ListScrollPosition, attempts: Int) {
