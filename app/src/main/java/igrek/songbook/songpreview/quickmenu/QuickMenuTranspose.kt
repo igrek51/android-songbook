@@ -20,11 +20,13 @@ class QuickMenuTranspose(
     var isVisible = false
         set(visible) {
             field = visible
-            if (visible) {
-                quickMenuView!!.visibility = View.VISIBLE
-                updateTranspositionText()
-            } else {
-                quickMenuView!!.visibility = View.GONE
+            quickMenuView?.let { quickMenuView ->
+                if (visible) {
+                    quickMenuView.visibility = View.VISIBLE
+                    updateTranspositionText()
+                } else {
+                    quickMenuView.visibility = View.GONE
+                }
             }
         }
     private var quickMenuView: View? = null
@@ -72,7 +74,7 @@ class QuickMenuTranspose(
     private fun updateTranspositionText() {
         val semitonesDisplayName = chordsTransposerManager.transposedByDisplayName
         val transposedByText = uiResourceService.resString(R.string.transposed_by_semitones, semitonesDisplayName)
-        transposedByLabel!!.text = transposedByText
+        transposedByLabel?.text = transposedByText
     }
 
     fun onTransposedEvent() {

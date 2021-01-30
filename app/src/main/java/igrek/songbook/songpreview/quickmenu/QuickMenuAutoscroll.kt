@@ -32,10 +32,10 @@ class QuickMenuAutoscroll(
         set(visible) {
             field = visible
             if (visible) {
-                quickMenuView!!.visibility = View.VISIBLE
+                quickMenuView?.visibility = View.VISIBLE
                 updateView()
             } else {
-                quickMenuView!!.visibility = View.GONE
+                quickMenuView?.visibility = View.GONE
             }
         }
     private var quickMenuView: View? = null
@@ -70,7 +70,7 @@ class QuickMenuAutoscroll(
         this.quickMenuView = quickMenuView
 
         autoscrollToggleButton = quickMenuView.findViewById(R.id.autoscrollToggleButton)
-        autoscrollToggleButton!!.setOnClickListener {
+        autoscrollToggleButton?.setOnClickListener {
             if (!autoscrollService.isRunning)
                 isVisible = false
 
@@ -120,19 +120,22 @@ class QuickMenuAutoscroll(
     }
 
     private fun addInitialPause(diff: Float) {
-        var autoscrollInitialPause = autoscrollPauseSlider!!.value
-        autoscrollInitialPause += diff
-        autoscrollInitialPause = cutOff(autoscrollInitialPause, 90000f)
-        autoscrollPauseSlider!!.value = autoscrollInitialPause
-        autoscrollService.initialPause = autoscrollInitialPause.toLong()
+        autoscrollPauseSlider?.let { autoscrollPauseSlider ->
+            var autoscrollInitialPause = autoscrollPauseSlider.value
+            autoscrollInitialPause += diff
+            autoscrollInitialPause = cutOff(autoscrollInitialPause, 90000f)
+            autoscrollPauseSlider.value = autoscrollInitialPause
+            autoscrollService.initialPause = autoscrollInitialPause.toLong()
+        }
     }
 
     private fun addAutoscrollSpeed(diff: Float) {
-        var autoscrollSpeed = autoscrollSpeedSlider!!.value
-        autoscrollSpeed += diff
-        autoscrollSpeed = cutOff(autoscrollSpeed, 1.0f)
-        autoscrollSpeedSlider!!.value = autoscrollSpeed
-//        autoscrollService.autoscrollSpeed = autoscrollSpeed
+        autoscrollSpeedSlider?.let { autoscrollSpeedSlider ->
+            var autoscrollSpeed = autoscrollSpeedSlider.value
+            autoscrollSpeed += diff
+            autoscrollSpeed = cutOff(autoscrollSpeed, 1.0f)
+            autoscrollSpeedSlider.value = autoscrollSpeed
+        }
     }
 
     private fun cutOff(value: Float, max: Float): Float {
@@ -144,29 +147,29 @@ class QuickMenuAutoscroll(
     }
 
     private fun saveSettings() {
-        val autoscrollInitialPause = autoscrollPauseSlider!!.value
-        autoscrollService.initialPause = autoscrollInitialPause.toLong()
-        val autoscrollSpeed = autoscrollSpeedSlider!!.value
-        autoscrollService.autoscrollSpeed = autoscrollSpeed
+        autoscrollPauseSlider?.let { autoscrollPauseSlider ->
+            val autoscrollInitialPause = autoscrollPauseSlider.value
+            autoscrollService.initialPause = autoscrollInitialPause.toLong()
+        }
+        autoscrollSpeedSlider?.let { autoscrollSpeedSlider ->
+            val autoscrollSpeed = autoscrollSpeedSlider.value
+            autoscrollService.autoscrollSpeed = autoscrollSpeed
+        }
     }
 
     private fun updateView() {
         if (isVisible) {
             // set toggle button text
-            if (autoscrollToggleButton != null) {
-                if (autoscrollService.isRunning) {
-                    autoscrollToggleButton!!.text = uiResourceService.resString(R.string.stop_autoscroll)
-                } else {
-                    autoscrollToggleButton!!.text = uiResourceService.resString(R.string.start_autoscroll)
-                }
+            if (autoscrollService.isRunning) {
+                autoscrollToggleButton?.text = uiResourceService.resString(R.string.stop_autoscroll)
+            } else {
+                autoscrollToggleButton?.text = uiResourceService.resString(R.string.start_autoscroll)
             }
-            if (autoscrollPauseSlider != null && autoscrollSpeedSlider != null) {
-                // set sliders value
-                val autoscrollInitialPause = autoscrollService.initialPause.toFloat()
-                autoscrollPauseSlider!!.value = autoscrollInitialPause
-                val autoscrollSpeed = autoscrollService.autoscrollSpeed
-                autoscrollSpeedSlider!!.value = autoscrollSpeed
-            }
+            // set sliders value
+            val autoscrollInitialPause = autoscrollService.initialPause.toFloat()
+            autoscrollPauseSlider?.value = autoscrollInitialPause
+            val autoscrollSpeed = autoscrollService.autoscrollSpeed
+            autoscrollSpeedSlider?.value = autoscrollSpeed
         }
     }
 
