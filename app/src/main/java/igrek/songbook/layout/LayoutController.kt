@@ -70,29 +70,30 @@ class LayoutController(
     private val navigationMenuController by LazyExtractor(navigationMenuController)
     private val activityController by LazyExtractor(activityController)
     private val adService by LazyExtractor(adService)
-    private val songTreeLayoutController by LazyExtractor(songTreeLayoutController)
-    private val songSearchLayoutController by LazyExtractor(songSearchLayoutController)
-    private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
-    private val contactLayoutController by LazyExtractor(contactLayoutController)
-    private val settingsLayoutController by LazyExtractor(settingsLayoutController)
-    private val editSongLayoutController by LazyExtractor(editSongLayoutController)
-    private val chordsEditorLayoutController by LazyExtractor(chordsEditorLayoutController)
-    private val customSongsListLayoutController by LazyExtractor(customSongsListLayoutController)
-    private val favouritesLayoutController by LazyExtractor(favouritesLayoutController)
-    private val playlistLayoutController by LazyExtractor(playlistLayoutController)
-    private val latestSongsLayoutController by LazyExtractor(latestSongsLayoutController)
-    private val topSongsLayoutController by LazyExtractor(topSongsLayoutController)
-    private val openHistoryLayoutController by LazyExtractor(openHistoryLayoutController)
-    private val missingSongLayoutController by LazyExtractor(missingSongLayoutController)
-    private val publishSongLayoutController by LazyExtractor(publishSongLayoutController)
-    private val adminSongsLayoutContoller by LazyExtractor(adminSongsLayoutContoller)
-    private val shareViewLayoutController by LazyExtractor(roomListLayoutController)
-    private val roomLobbyLayoutController by LazyExtractor(roomLobbyLayoutController)
 
     private lateinit var mainContentLayout: CoordinatorLayout
     private var currentLayout: MainLayout? = null
     private var layoutHistory: MutableList<MainLayout> = mutableListOf()
-    private var registeredLayouts: Map<KClass<out MainLayout>, MainLayout> = emptyMap()
+    private var registeredLayouts: Map<KClass<out MainLayout>, MainLayout> = mapOf(
+            SongTreeLayoutController::class to songTreeLayoutController.get(),
+            SongSearchLayoutController::class to songSearchLayoutController.get(),
+            SongPreviewLayoutController::class to songPreviewLayoutController.get(),
+            ContactLayoutController::class to contactLayoutController.get(),
+            SettingsLayoutController::class to settingsLayoutController.get(),
+            EditSongLayoutController::class to editSongLayoutController.get(),
+            ChordsEditorLayoutController::class to chordsEditorLayoutController.get(),
+            CustomSongsListLayoutController::class to customSongsListLayoutController.get(),
+            FavouritesLayoutController::class to favouritesLayoutController.get(),
+            PlaylistLayoutController::class to playlistLayoutController.get(),
+            LatestSongsLayoutController::class to latestSongsLayoutController.get(),
+            TopSongsLayoutController::class to topSongsLayoutController.get(),
+            OpenHistoryLayoutController::class to openHistoryLayoutController.get(),
+            MissingSongLayoutController::class to missingSongLayoutController.get(),
+            PublishSongLayoutController::class to publishSongLayoutController.get(),
+            AdminSongsLayoutContoller::class to adminSongsLayoutContoller.get(),
+            RoomListLayoutController::class to roomListLayoutController.get(),
+            RoomLobbyLayoutController::class to roomLobbyLayoutController.get(),
+    )
     private val logger = LoggerFactory.logger
     private val layoutCache = hashMapOf<Int, View>()
 
@@ -100,30 +101,6 @@ class LayoutController(
         activity.setContentView(R.layout.main_layout)
         mainContentLayout = activity.findViewById(R.id.main_content)
         navigationMenuController.init()
-        registerLayouts()
-    }
-
-    private fun registerLayouts() {
-        registeredLayouts = mapOf(
-                SongTreeLayoutController::class to songTreeLayoutController,
-                SongSearchLayoutController::class to songSearchLayoutController,
-                SongPreviewLayoutController::class to songPreviewLayoutController,
-                ContactLayoutController::class to contactLayoutController,
-                SettingsLayoutController::class to settingsLayoutController,
-                EditSongLayoutController::class to editSongLayoutController,
-                ChordsEditorLayoutController::class to chordsEditorLayoutController,
-                CustomSongsListLayoutController::class to customSongsListLayoutController,
-                FavouritesLayoutController::class to favouritesLayoutController,
-                PlaylistLayoutController::class to playlistLayoutController,
-                LatestSongsLayoutController::class to latestSongsLayoutController,
-                TopSongsLayoutController::class to topSongsLayoutController,
-                OpenHistoryLayoutController::class to openHistoryLayoutController,
-                MissingSongLayoutController::class to missingSongLayoutController,
-                PublishSongLayoutController::class to publishSongLayoutController,
-                AdminSongsLayoutContoller::class to adminSongsLayoutContoller,
-                RoomListLayoutController::class to shareViewLayoutController,
-                RoomLobbyLayoutController::class to roomLobbyLayoutController,
-        )
     }
 
     fun showLayout(layoutClass: KClass<out MainLayout>, disableReturn: Boolean = false): Job {
