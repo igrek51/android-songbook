@@ -3,6 +3,7 @@ package igrek.songbook.songpreview
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.analytics.AnalyticsLogger
+import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -28,6 +29,7 @@ class SongOpener(
     private val roomLobby by LazyExtractor(roomLobby)
 
     fun openSongPreview(song: Song) {
+        logger.info("Opening song: $song")
         songPreviewLayoutController.currentSong = song
         layoutController.showLayout(SongPreviewLayoutController::class)
         songsRepository.openHistoryDao.registerOpenedSong(song.id, song.namespace)
