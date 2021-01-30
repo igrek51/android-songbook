@@ -100,18 +100,18 @@ class NavigationMenuController(
         drawerLayout = activity.findViewById(R.id.drawer_layout)
         navigationView = activity.findViewById(R.id.nav_view)
 
-        navigationView!!.setNavigationItemSelectedListener { menuItem ->
+        navigationView?.setNavigationItemSelectedListener { menuItem ->
             GlobalScope.launch(Dispatchers.Main) {
                 // set item as selected to persist highlight
                 menuItem.isChecked = true
-                drawerLayout!!.closeDrawers()
+                drawerLayout?.closeDrawers()
                 val id = menuItem.itemId
                 if (actionsMap.containsKey(id)) {
                     val action = actionsMap[id]
                     // postpone action - smoother navigation hide
                     Handler(Looper.getMainLooper()).post {
                         SafeExecutor {
-                            action!!.invoke()
+                            action?.invoke()
                         }
                     }
                 } else {
@@ -120,9 +120,9 @@ class NavigationMenuController(
 
                 Handler(Looper.getMainLooper()).postDelayed({
                     // unhighlight all menu items
-                    if (navigationView != null) {
-                        for (id1 in 0 until navigationView!!.menu.size())
-                            navigationView!!.menu.getItem(id1).isChecked = false
+                    navigationView?.let { navigationView ->
+                        for (id1 in 0 until navigationView.menu.size())
+                            navigationView.menu.getItem(id1).isChecked = false
                     }
                 }, 500)
             }
@@ -138,7 +138,7 @@ class NavigationMenuController(
     }
 
     fun navDrawerShow() {
-        drawerLayout!!.openDrawer(GravityCompat.START)
+        drawerLayout?.openDrawer(GravityCompat.START)
         softKeyboardService.hideSoftKeyboard()
     }
 
@@ -147,7 +147,7 @@ class NavigationMenuController(
     }
 
     fun isDrawerShown(): Boolean {
-        return drawerLayout!!.isDrawerOpen(GravityCompat.START)
+        return drawerLayout?.isDrawerOpen(GravityCompat.START) ?: false
     }
 
 }
