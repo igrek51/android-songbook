@@ -200,8 +200,8 @@ class ChordsEditorLayoutController(
         if (selStart > edited.length)
             selStart = edited.length
 
-        contentEdit!!.setSelection(selStart, selStart)
-        contentEdit!!.requestFocus()
+        contentEdit?.setSelection(selStart, selStart)
+        contentEdit?.requestFocus()
     }
 
     private fun undoChange() {

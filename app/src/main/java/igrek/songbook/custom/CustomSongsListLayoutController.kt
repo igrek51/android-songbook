@@ -158,7 +158,7 @@ class CustomSongsListLayoutController(
                         .map {
                             CustomSongListItem(customCategory = it)
                         }
-                val uncategorized = songsRepository.customSongsRepo.songs.get()
+                val uncategorized = songsRepository.customSongsRepo.uncategorizedSongs.get()
                         .sortedWith(songNameComparator)
                         .map {
                             CustomSongListItem(song = it)

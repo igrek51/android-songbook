@@ -39,11 +39,11 @@ class CustomSongsDbBuilder(private val userDataDao: UserDataDao) {
     }
 
     private fun assembleCustomSongs(customGeneralCategory: Category): Pair<List<Song>, List<Song>> {
-        val customSongs = userDataDao.customSongsDao!!.customSongs.songs
+        val customSongs = userDataDao.customSongsDao.customSongs.songs
         val mapper = CustomSongMapper()
 
         // bind custom categories to songs
-        userDataDao.customSongsDao!!.customCategories = customSongs
+        userDataDao.customSongsDao.customCategories = customSongs
                 .asSequence()
                 .map { song ->
                     song.categoryName
@@ -53,7 +53,7 @@ class CustomSongsDbBuilder(private val userDataDao: UserDataDao) {
                 .map { categoryName ->
                     CustomCategory(name = categoryName)
                 }.toList()
-        val customCategoryFinder = FinderByTuple(userDataDao.customSongsDao!!.customCategories) {
+        val customCategoryFinder = FinderByTuple(userDataDao.customSongsDao.customCategories) {
             it.name
         }
         val customSongsUncategorized = mutableListOf<Song>()
