@@ -63,4 +63,22 @@ class LyricsParserTest {
                 ))
         ))
     }
+
+    @Test
+    fun test_parse_without_trimming() {
+        val model = LyricsParser(trimWhitespaces = false).parseContent("""
+           a  [a]
+        bcde
+        """.trimIndent())
+
+        assertThat(model.lines).isEqualTo(listOf(
+                LyricsLine(listOf(
+                        LyricsFragment(text = "   a  ", type = LyricsTextType.REGULAR_TEXT),
+                        LyricsFragment(text = "a", type = LyricsTextType.CHORDS)
+                )),
+                LyricsLine(listOf(
+                        LyricsFragment(text = "bcde", type = LyricsTextType.REGULAR_TEXT),
+                ))
+        ))
+    }
 }

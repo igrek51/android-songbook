@@ -6,12 +6,13 @@ import igrek.songbook.chords.lyrics.model.LyricsModel
 import igrek.songbook.chords.lyrics.model.LyricsTextType
 import java.util.concurrent.atomic.AtomicBoolean
 
-class LyricsParser {
+class LyricsParser(
+        val trimWhitespaces: Boolean = true,
+) {
 
     fun parseContent(content: String): LyricsModel {
-        val normalized = normalizeContent(content)
+        val normalized = if (trimWhitespaces) normalizeContent(content) else content
         val rawLines = normalized.lines().dropLastWhile { it.isEmpty() }
-
         return parseLines(rawLines)
     }
 
@@ -25,7 +26,8 @@ class LyricsParser {
     private fun parseLines(rawLines: List<String>): LyricsModel {
         val bracket = AtomicBoolean(false)
         val lines = rawLines.map { rawLine ->
-            parseLine(rawLine.trim(), bracket)
+            val line = if (trimWhitespaces) rawLine.trim() else rawLine
+            parseLine(line, bracket)
         }.dropLastWhile { line -> line.isBlank() }
         return LyricsModel(lines = lines)
     }

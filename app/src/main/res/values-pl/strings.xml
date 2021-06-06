@@ -439,4 +439,6 @@
     <string name="room_new_chat_message">Nowa wiadomość: %s</string>
     <string name="room_bluetooth_will_bediscoverable">Twoje urządzenie będzie widoczne przez najbliższe 5 minut.</string>
     <string name="room_new_client_joined">Do pokoju dołączył: %s</string>
+    <string name="settings_trim_whitespaces">Ucinaj białe znaki</string>
+    <string name="settings_trim_whitespaces_hint">Usuwaj zbędne spacje na początku i na końcu linii</string>
 </resources>

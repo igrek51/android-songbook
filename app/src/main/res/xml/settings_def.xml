@@ -43,12 +43,17 @@
             android:key="fontSize"
             android:title="@string/settings_fontsize"
             app:showSeekBarValue="false"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false" />
         <ListPreference
             android:key="fontTypeface"
             android:title="@string/settings_typeface"
             android:summary="%s"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false" />
+        <SwitchPreference
+            android:key="trimWhitespaces"
+            android:title="@string/settings_trim_whitespaces"
+            android:summary="@string/settings_trim_whitespaces_hint"
+            app:iconSpaceReserved="false" />
         <SwitchPreference
             android:key="keepScreenOn"
             android:title="@string/settings_keep_screen_on"

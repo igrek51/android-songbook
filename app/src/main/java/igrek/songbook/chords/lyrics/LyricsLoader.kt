@@ -79,7 +79,7 @@ class LyricsLoader(
         val typeface = lyricsThemeService.fontTypeface.typeface
         val displayStyle = lyricsThemeService.displayStyle
 
-        val lyricsParser = LyricsParser()
+        val lyricsParser = LyricsParser(trimWhitespaces = preferencesState.trimWhitespaces)
         val parsedModel = lyricsParser.parseContent(transposedContent)
 
         val lyricsInflater = LyricsInflater(typeface, realFontsize)

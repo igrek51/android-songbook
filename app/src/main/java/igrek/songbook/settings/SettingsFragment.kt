@@ -267,6 +267,13 @@ class SettingsFragment(
                 }
         )
 
+        setupSwitchPreference("trimWhitespaces",
+                onLoad = { preferencesState.trimWhitespaces },
+                onSave = { value: Boolean ->
+                    preferencesState.trimWhitespaces = value
+                }
+        )
+
         refreshFragment()
     }
 

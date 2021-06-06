@@ -89,6 +89,8 @@ enum class PreferencesField constructor(
 
     UpdateDbOnStartup(true),
 
+    TrimWhitespaces(true),
+
     ;
 
     constructor(defaultValue: String) : this(StringPreferenceType(defaultValue))
