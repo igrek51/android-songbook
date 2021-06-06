@@ -96,7 +96,10 @@ dependencies {
     implementation('com.google.api-client:google-api-client-android:1.30.10') {
         exclude group: 'org.apache.httpcomponents'
     }
+    implementation 'com.google.android.gms:play-services-basement:17.6.0'
     implementation('com.google.android.gms:play-services-auth:19.0.0') {
+    // AdMob
+    implementation 'com.google.android.gms:play-services-ads:19.7.0'
     }
     implementation('com.google.http-client:google-http-client-gson:1.36.0') {
         exclude module: 'httpclient'
@@ -105,8 +108,6 @@ dependencies {
     implementation('com.google.apis:google-api-services-drive:v3-rev99-1.23.0') {
         exclude group: 'org.apache.httpcomponents'
     }
-    // AdMob
-    implementation 'com.google.android.gms:play-services-ads:19.7.0'
     // Kotlin
     implementation "androidx.core:core-ktx:1.3.2"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
