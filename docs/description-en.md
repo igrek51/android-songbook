@@ -1,8 +1,8 @@
-Songs lyrics viewer with guitar chords toolkit
+Songs lyrics viewer with chords toolkit for guitarists and musicians
 
-Songbook is a songs lyrics viewer with guitar chords toolkit.
+Songbook is a songs lyrics viewer with chords toolkit for guitarists and musicians.
 
-Main features:
+Our chief weapons are:
 - Songs lyrics viewer with highlighted chords
 - Chords transposition (any song to any key)
 - Auto scrolling while playing
