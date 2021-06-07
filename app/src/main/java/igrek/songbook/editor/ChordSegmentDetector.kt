@@ -33,7 +33,7 @@ data class ChordSegment(
 
 class ChordSegmentApplier {
     fun applyChords(line: String, chords: List<ChordSegment>): String {
-        val maxStart = chords.map { it.start }.max() ?: 0
+        val maxStart = chords.map { it.start }.maxOrNull() ?: 0
         var result = line.padEnd(maxStart, ' ')
         chords.reversed().forEach { chord ->
             val start = chord.start

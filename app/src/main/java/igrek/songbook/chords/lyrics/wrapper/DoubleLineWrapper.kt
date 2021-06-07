@@ -56,7 +56,7 @@ class DoubleLineWrapper(
         if (toWrapT.isEmpty())
             return wrapSingleWords(chords) to listOf(texts)
 
-        val moveBy = listOf(moveByC, moveByT).min() ?: 0f
+        val moveBy = listOf(moveByC, moveByT).minOrNull() ?: 0f
 
         if (moveBy <= 0f)
             return wrapSingleWords(chords) to wrapSingleWords(texts)

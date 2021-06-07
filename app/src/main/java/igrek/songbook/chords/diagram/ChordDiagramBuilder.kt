@@ -34,8 +34,8 @@ class ChordDiagramBuilder(
 
     private fun buildDiagram(frets: List<Int>): String {
         val positives = frets.filter { it > 0 }
-        val minFinger = positives.min() ?: 0
-        val maxFinger = positives.max() ?: 0
+        val minFinger = positives.minOrNull() ?: 0
+        val maxFinger = positives.maxOrNull() ?: 0
 
         val fingersRange = maxFinger - minFinger + 1
         val showEllipsis = maxFinger > 3
