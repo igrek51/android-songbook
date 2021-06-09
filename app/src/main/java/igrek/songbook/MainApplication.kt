@@ -22,7 +22,7 @@ class MainApplication : Application() {
         Thread.setDefaultUncaughtExceptionHandler { thread, th ->
             logger.fatal(th)
             // pass further to OS
-            defaultUEH.uncaughtException(thread, th)
+            defaultUEH?.uncaughtException(thread, th)
         }
     }
 

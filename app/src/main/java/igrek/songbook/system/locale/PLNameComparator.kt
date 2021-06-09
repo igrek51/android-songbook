@@ -9,8 +9,8 @@ object PLNameComparator : Comparator<String> {
     private val stringCollator = Collator.getInstance(locale)
 
     override fun compare(lhs: String?, rhs: String?): Int {
-        val lName = lhs?.toLowerCase(locale)
-        val rName = rhs?.toLowerCase(locale)
+        val lName = lhs?.lowercase(locale)
+        val rName = rhs?.lowercase(locale)
         return stringCollator.compare(lName, rName)
     }
 }

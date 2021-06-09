@@ -178,7 +178,7 @@ class EditSongLayoutController(
 
     private fun exportContentToFile() {
         var songTitle = songTitleEdit?.text?.toString().orEmpty()
-        songTitle = songTitle.takeIf { it.toLowerCase().endsWith(".txt") } ?: "$songTitle.txt"
+        songTitle = songTitle.takeIf { it.lowercase().endsWith(".txt") } ?: "$songTitle.txt"
         val songContent = songContentEdit?.text?.toString().orEmpty()
         songExportFileChooser.showFileChooser(songContent, songTitle) {
             uiInfoService.showInfo(R.string.song_content_exported)

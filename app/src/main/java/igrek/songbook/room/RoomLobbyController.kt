@@ -249,7 +249,7 @@ class RoomLobbyController(
     }
 
     suspend fun onSlaveDisconnect(slaveStream: PeerStream, error: Throwable?) {
-        LoggerFactory.logger.debug("slave dropped")
+        LoggerFactory.logger.debug("slave dropped: ${error?.message}")
         slaveStream.close()
         writeMutex.withLock {
             slaveStreams = slaveStreams.filterNot { it == slaveStream }.toMutableList()

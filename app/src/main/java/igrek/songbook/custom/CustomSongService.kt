@@ -48,7 +48,7 @@ class CustomSongService(
 
     fun exportSong(song: Song) {
         var songTitle = song.title
-        songTitle = songTitle.takeIf { it.toLowerCase().endsWith(".txt") } ?: "$songTitle.txt"
+        songTitle = songTitle.takeIf { it.lowercase().endsWith(".txt") } ?: "$songTitle.txt"
         val songContent = song.content.orEmpty()
         songExportFileChooser.showFileChooser(songContent, songTitle) {
             uiInfoService.showInfo(R.string.song_content_exported)

@@ -52,9 +52,9 @@ class AppLanguageService(
         val dm = res.displayMetrics
         val conf = res.configuration
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            conf.setLocale(Locale(langCode.toLowerCase()))
+            conf.setLocale(Locale(langCode.lowercase()))
         } else {
-            conf.locale = Locale(langCode.toLowerCase())
+            conf.locale = Locale(langCode.lowercase())
         }
         res.updateConfiguration(conf, dm)
     }

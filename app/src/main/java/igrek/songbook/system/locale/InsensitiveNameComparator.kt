@@ -11,8 +11,8 @@ class InsensitiveNameComparator<T>(
     private val stringCollator = Collator.getInstance(locale)
 
     override fun compare(lhs: T?, rhs: T?): Int {
-        val lName = accessName(lhs)?.toLowerCase(locale)
-        val rName = accessName(rhs)?.toLowerCase(locale)
+        val lName = accessName(lhs)?.lowercase(locale)
+        val rName = accessName(rhs)?.lowercase(locale)
         return stringCollator.compare(lName, rName)
     }
 

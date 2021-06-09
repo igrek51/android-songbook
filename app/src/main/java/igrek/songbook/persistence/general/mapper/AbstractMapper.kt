@@ -65,7 +65,7 @@ abstract class AbstractMapper<T> {
         val stringValue = cursor.getString(cursor.getColumnIndexOrThrow(name)) ?: return 0
         return try {
             val date = iso8601Format.parse(stringValue)
-            date.time
+            date?.time ?: 0
         } catch (e: ParseException) {
             logger.error(e)
             0

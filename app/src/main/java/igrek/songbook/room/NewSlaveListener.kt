@@ -6,7 +6,10 @@ import android.bluetooth.BluetoothSocket
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.room.protocol.GtrProtocol.Companion.BT_APP_UUID
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.*
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ClosedReceiveChannelException
+import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.channels.sendBlocking
 import java.io.IOException
 
 class NewSlaveListener(
@@ -74,7 +77,7 @@ class NewSlaveListener(
 
     fun isInitializedAsync(): Deferred<Result<Unit>> {
         return GlobalScope.async {
-            initChannel.receiveOrNull()
+            initChannel.receiveCatching().getOrNull()
                     ?: Result.failure(ClosedReceiveChannelException("init channel closed"))
         }
     }

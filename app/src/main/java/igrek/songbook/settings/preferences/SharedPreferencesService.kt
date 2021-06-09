@@ -92,12 +92,10 @@ class SharedPreferencesService(
     fun setValue(prefDef: PreferencesField, value: Any) {
         val propertyName = prefDef.preferenceName()
         // class type validation
-        if (value != null) {
-            val validClazz = prefDef.typeDef.validClass().simpleName
-            val givenClazz = value::class.simpleName
-            require(givenClazz == validClazz) {
-                "invalid value type, expected: $validClazz, but given: $givenClazz"
-            }
+        val validClazz = prefDef.typeDef.validClass().simpleName
+        val givenClazz = value::class.simpleName
+        require(givenClazz == validClazz) {
+            "invalid value type, expected: $validClazz, but given: $givenClazz"
         }
         propertyValues[propertyName] = value
     }

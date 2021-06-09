@@ -55,12 +55,13 @@ class ExternalCardService {
 
             val lines = s.toString().split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             for (line in lines) {
-                if (!line.toLowerCase(Locale.US).contains("asec")) {
+                if (!line.lowercase(Locale.US).contains("asec")) {
                     if (line.matches(reg.toRegex())) {
-                        val parts = line.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+                        val parts =
+                            line.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                         for (part in parts) {
                             if (part.startsWith("/"))
-                                if (!part.toLowerCase(Locale.US).contains("vold")) {
+                                if (!part.lowercase(Locale.US).contains("vold")) {
                                     var partr = part
                                     if (Build.MANUFACTURER.contains("LGE"))
                                         partr = part.replace("^/mnt/media_rw".toRegex(), "/storage")

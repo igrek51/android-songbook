@@ -24,8 +24,8 @@ class SongTreeSorter {
                     .onResultOf<SongTreeItem>(categoryTypeExtractor)
 
     private val itemNameOrdering = Ordering.from<SongTreeItem> { lhs, rhs ->
-        val lName = lhs.simpleName!!.toLowerCase(locale)
-        val rName = rhs.simpleName!!.toLowerCase(locale)
+        val lName = lhs.simpleName!!.lowercase(locale)
+        val rName = rhs.simpleName!!.lowercase(locale)
         stringCollator.compare(lName, rName)
     }
 

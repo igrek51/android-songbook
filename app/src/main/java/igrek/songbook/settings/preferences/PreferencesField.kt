@@ -102,7 +102,7 @@ enum class PreferencesField constructor(
     constructor(defaultValue: Boolean) : this(BooleanPreferenceType(defaultValue))
 
     fun preferenceName(): String {
-        return this.name.decapitalize()
+        return this.name.replaceFirstChar { it.lowercase() }
     }
 
 }
