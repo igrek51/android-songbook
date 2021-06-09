@@ -1,5 +1,5 @@
 # Songbook
-[![Build Status](https://travis-ci.org/igrek51/android-songbook.svg?branch=master)](https://travis-ci.org/igrek51/android-songbook)
+[![Build Status](https://www.travis-ci.com/igrek51/songbook.svg?token=xpwzLLeASgMyxvjHsf18&branch=master)](https://www.travis-ci.com/igrek51/songbook)
 
 Songs lyrics viewer with chords toolkit for guitarists and musicians
 
