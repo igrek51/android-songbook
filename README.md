@@ -1,12 +1,10 @@
 # Songbook
 [![Build Status](https://travis-ci.org/igrek51/android-songbook.svg?branch=master)](https://travis-ci.org/igrek51/android-songbook)
 
-Songs lyrics viewer with guitar chords toolkit
+Songs lyrics viewer with chords toolkit for guitarists and musicians
 
 ## Main features
-Songbook is a songs lyrics viewer with guitar chords toolkit.
-
-Main features:
+Our chief weapons are:
 - Songs lyrics viewer with highlighted chords
 - Chords transposition (any song to any key)
 - Auto scrolling while playing
