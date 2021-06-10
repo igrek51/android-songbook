@@ -24,18 +24,18 @@ import igrek.songbook.songselection.favourite.FavouriteSongsService
 import igrek.songbook.util.lookup.SimpleCache
 
 class SongContextMenuBuilder(
-        activity: LazyInject<Activity> = appFactory.activity,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        favouriteSongsService: LazyInject<FavouriteSongsService> = appFactory.favouriteSongsService,
-        customSongService: LazyInject<CustomSongService> = appFactory.customSongService,
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-        playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
-        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
-        songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
-        songDetailsService: LazyInject<SongDetailsService> = appFactory.songDetailsService,
-        publishSongService: LazyInject<PublishSongService> = appFactory.publishSongService,
-        adminService: LazyInject<AdminService> = appFactory.adminService,
-        antechamberService: LazyInject<AntechamberService> = appFactory.antechamberService,
+    activity: LazyInject<Activity> = appFactory.activity,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    favouriteSongsService: LazyInject<FavouriteSongsService> = appFactory.favouriteSongsService,
+    customSongService: LazyInject<CustomSongService> = appFactory.customSongService,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
+    layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+    songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
+    songDetailsService: LazyInject<SongDetailsService> = appFactory.songDetailsService,
+    publishSongService: LazyInject<PublishSongService> = appFactory.publishSongService,
+    adminService: LazyInject<AdminService> = appFactory.adminService,
+    antechamberService: LazyInject<AntechamberService> = appFactory.antechamberService,
 ) {
     private val activity by LazyExtractor(activity)
     private val uiResourceService by LazyExtractor(uiResourceService)
@@ -51,113 +51,110 @@ class SongContextMenuBuilder(
     private val antechamberService by LazyExtractor(antechamberService)
 
     private var allActions: SimpleCache<List<SongContextAction>> =
-            SimpleCache { createAllActions() }
+        SimpleCache { createAllActions() }
 
     private fun createAllActions(): List<SongContextAction> {
         val actions = mutableListOf(
-                SongContextAction(R.string.action_song_edit,
-                        availableCondition = { song -> song.isCustom() },
-                        executor = { song ->
-                            customSongService.showEditSongScreen(song)
-                        }),
-                SongContextAction(R.string.action_song_remove,
-                        availableCondition = { song -> song.isCustom() },
-                        executor = { song ->
-                            ConfirmDialogBuilder().confirmAction(R.string.confirm_remove_song) {
-                                customSongService.removeSong(song)
-                            }
-                        }),
-                SongContextAction(R.string.action_song_publish,
-                        availableCondition = { song -> song.isCustom() },
-                        executor = { song ->
-                            publishSongService.publishSong(song)
-                        }),
-                SongContextAction(R.string.action_add_to_playlist,
-                        availableCondition = { true },
-                        executor = { song ->
-                            playlistService.showAddSongToPlaylistDialog(song)
-                        }),
-                SongContextAction(R.string.action_remove_from_playlist,
-                        availableCondition = { song ->
-                            songsRepository.playlistDao.isSongOnAnyPlaylist(song)
-                        },
-                        executor = { song ->
-                            playlistService.removeFromPlaylist(song)
-                        }),
-                SongContextAction(R.string.action_song_copy,
-                        availableCondition = { song -> !song.isCustom() },
-                        executor = { song ->
-                            customSongService.copySongAsCustom(song)
-                        }),
-                SongContextAction(R.string.export_content_to_file,
-                        availableCondition = { song -> song.isCustom() },
-                        executor = { song ->
-                            customSongService.exportSong(song)
-                        }),
-                SongContextAction(R.string.song_details_title,
-                        availableCondition = { true },
-                        executor = { song ->
-                            songDetailsService.showSongDetails(song)
-                        }),
-                SongContextAction(R.string.action_song_set_favourite,
-                        availableCondition = { song ->
-                            !favouriteSongsService.isSongFavourite(song)
-                        },
-                        executor = { song ->
-                            favouriteSongsService.setSongFavourite(song)
-                        }),
-                SongContextAction(R.string.action_song_unset_favourite,
-                        availableCondition = { song ->
-                            favouriteSongsService.isSongFavourite(song)
-                        },
-                        executor = { song ->
-                            favouriteSongsService.unsetSongFavourite(song)
-                        }),
-                SongContextAction(R.string.show_chords_definitions,
-                        availableCondition = { layoutController.isState(SongPreviewLayoutController::class) },
-                        executor = {
-                            songPreviewLayoutController.showChordsGraphs()
-                        }),
-                SongContextAction(R.string.song_show_fullscreen,
-                        availableCondition = { layoutController.isState(SongPreviewLayoutController::class) },
-                        executor = {
-                            songPreviewLayoutController.toggleFullscreen()
-                        }),
-                SongContextAction(R.string.admin_antechamber_edit_action,
-                        availableCondition = { adminService.isAdminEnabled() },
-                        executor = { song ->
-                            customSongService.showEditSongScreen(song)
-                        }),
-                SongContextAction(R.string.admin_song_content_update_action,
-                        availableCondition = { song -> song.isPublic() && adminService.isAdminEnabled() },
-                        executor = { song ->
-                            adminService.updatePublicSongUi(song)
-                        }),
-                SongContextAction(R.string.admin_antechamber_update_action,
-                        availableCondition = { song -> song.isAntechamber() && adminService.isAdminEnabled() },
-                        executor = { song ->
-                            antechamberService.updateAntechamberSongUI(song)
-                        }),
-                SongContextAction(R.string.admin_antechamber_approve_action,
-                        availableCondition = { song -> song.isAntechamber() && adminService.isAdminEnabled() },
-                        executor = { song ->
-                            antechamberService.approveAntechamberSongUI(song)
-                        }),
-                SongContextAction(R.string.admin_antechamber_approve_action,
-                        availableCondition = { song -> song.isCustom() && adminService.isAdminEnabled() },
-                        executor = { song ->
-                            antechamberService.approveCustomSongUI(song)
-                        }),
-                SongContextAction(R.string.admin_antechamber_delete_action,
-                        availableCondition = { song -> song.isAntechamber() && adminService.isAdminEnabled() },
-                        executor = { song ->
-                            antechamberService.deleteAntechamberSongUI(song)
-                        }),
-                SongContextAction(R.string.admin_update_rank,
-                        availableCondition = { song -> song.isPublic() && adminService.isAdminEnabled() },
-                        executor = { song ->
-                            adminService.updateRankDialog(song)
-                        }),
+            SongContextAction(R.string.action_song_edit,
+                availableCondition = { song -> song.isCustom() },
+                executor = { song ->
+                    customSongService.showEditSongScreen(song)
+                }),
+            SongContextAction(R.string.action_song_remove,
+                availableCondition = { song -> song.isCustom() },
+                executor = { song ->
+                    ConfirmDialogBuilder().confirmAction(R.string.confirm_remove_song) {
+                        customSongService.removeSong(song)
+                    }
+                }),
+            SongContextAction(R.string.action_song_publish,
+                availableCondition = { song -> song.isCustom() },
+                executor = { song ->
+                    publishSongService.publishSong(song)
+                }),
+            SongContextAction(R.string.action_add_to_playlist,
+                availableCondition = { true },
+                executor = { song ->
+                    playlistService.showAddSongToPlaylistDialog(song)
+                }),
+            SongContextAction(R.string.action_remove_from_playlist,
+                availableCondition = { song ->
+                    songsRepository.playlistDao.isSongOnAnyPlaylist(song)
+                },
+                executor = { song ->
+                    playlistService.removeFromPlaylist(song)
+                }),
+            SongContextAction(R.string.action_song_copy,
+                availableCondition = { song -> !song.isCustom() },
+                executor = { song ->
+                    customSongService.copySongAsCustom(song)
+                }),
+            SongContextAction(R.string.export_content_to_file,
+                availableCondition = { song -> song.isCustom() },
+                executor = { song ->
+                    customSongService.exportSong(song)
+                }),
+            SongContextAction(R.string.song_details_title,
+                availableCondition = { !layoutController.isState(SongPreviewLayoutController::class) },
+                executor = { song ->
+                    songDetailsService.showSongDetails(song)
+                }),
+            SongContextAction(R.string.action_song_set_favourite,
+                availableCondition = { song ->
+                    !favouriteSongsService.isSongFavourite(song)
+                            && !layoutController.isState(SongPreviewLayoutController::class)
+                },
+                executor = { song ->
+                    favouriteSongsService.setSongFavourite(song)
+                }),
+            SongContextAction(R.string.action_song_unset_favourite,
+                availableCondition = { song ->
+                    favouriteSongsService.isSongFavourite(song)
+                            && !layoutController.isState(SongPreviewLayoutController::class)
+                },
+                executor = { song ->
+                    favouriteSongsService.unsetSongFavourite(song)
+                }),
+            SongContextAction(R.string.song_show_fullscreen,
+                availableCondition = { layoutController.isState(SongPreviewLayoutController::class) },
+                executor = {
+                    songPreviewLayoutController.toggleFullscreen()
+                }),
+            SongContextAction(R.string.admin_antechamber_edit_action,
+                availableCondition = { adminService.isAdminEnabled() },
+                executor = { song ->
+                    customSongService.showEditSongScreen(song)
+                }),
+            SongContextAction(R.string.admin_song_content_update_action,
+                availableCondition = { song -> song.isPublic() && adminService.isAdminEnabled() },
+                executor = { song ->
+                    adminService.updatePublicSongUi(song)
+                }),
+            SongContextAction(R.string.admin_antechamber_update_action,
+                availableCondition = { song -> song.isAntechamber() && adminService.isAdminEnabled() },
+                executor = { song ->
+                    antechamberService.updateAntechamberSongUI(song)
+                }),
+            SongContextAction(R.string.admin_antechamber_approve_action,
+                availableCondition = { song -> song.isAntechamber() && adminService.isAdminEnabled() },
+                executor = { song ->
+                    antechamberService.approveAntechamberSongUI(song)
+                }),
+            SongContextAction(R.string.admin_antechamber_approve_action,
+                availableCondition = { song -> song.isCustom() && adminService.isAdminEnabled() },
+                executor = { song ->
+                    antechamberService.approveCustomSongUI(song)
+                }),
+            SongContextAction(R.string.admin_antechamber_delete_action,
+                availableCondition = { song -> song.isAntechamber() && adminService.isAdminEnabled() },
+                executor = { song ->
+                    antechamberService.deleteAntechamberSongUI(song)
+                }),
+            SongContextAction(R.string.admin_update_rank,
+                availableCondition = { song -> song.isPublic() && adminService.isAdminEnabled() },
+                executor = { song ->
+                    adminService.updateRankDialog(song)
+                }),
         )
 
         actions.forEach { action ->
@@ -168,7 +165,7 @@ class SongContextMenuBuilder(
 
     fun showSongActions(song: Song) {
         val songActions = allActions.get()
-                .filter { action -> action.availableCondition(song) }
+            .filter { action -> action.availableCondition(song) }
         val actionNames = songActions.map { action -> action.displayName }.toTypedArray()
 
         val builder = AlertDialog.Builder(activity)
