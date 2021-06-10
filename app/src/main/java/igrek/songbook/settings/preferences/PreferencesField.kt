@@ -81,15 +81,19 @@ enum class PreferencesField constructor(
 
     AnonymousUsageData(false),
 
-    ChordDiagramStyle(GenericLongIdPreferenceType(
+    ChordDiagramStyle(
+        GenericLongIdPreferenceType(
             defaultValue = igrek.songbook.chords.diagram.ChordDiagramStyle.default,
             serializer = igrek.songbook.chords.diagram.ChordDiagramStyle::id,
             deserializer = igrek.songbook.chords.diagram.ChordDiagramStyle.Companion::parseById,
-    )),
+        )
+    ),
 
     UpdateDbOnStartup(true),
 
     TrimWhitespaces(true),
+
+    AutoscrollAutostart(false),
 
     ;
 

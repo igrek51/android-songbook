@@ -71,17 +71,22 @@
             android:key="autoscrollSpeed"
             android:title="@string/settings_autoscroll_speed"
             app:showSeekBarValue="false"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false" />
         <SwitchPreference
             android:key="autoscrollSpeedAutoAdjustment"
             android:title="@string/settings_autoscroll_speed_adjustment"
             android:summary="@string/settings_autoscroll_speed_adjustment_hint"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false" />
         <SwitchPreference
             android:key="autoscrollSpeedVolumeKeys"
             android:title="@string/settings_autoscroll_volume_keys"
             android:summary="@string/settings_autoscroll_volume_keys_hint"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false" />
+        <SwitchPreference
+            android:key="autoscrollAutostart"
+            android:title="@string/settings_autoscroll_autostart"
+            android:summary="@string/settings_autoscroll_autostart_hint"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_transposition">

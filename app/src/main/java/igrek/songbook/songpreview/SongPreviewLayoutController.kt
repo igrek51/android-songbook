@@ -255,6 +255,10 @@ class SongPreviewLayoutController(
             songPreview?.setFontSizes(lyricsThemeService.fontsize)
             songPreview?.setCRDModel(lyricsLoader.lyricsModel)
             resetOverlayScroll()
+
+            if (preferencesState.autoscrollAutostart) {
+                autoscrollService.autostart()
+            }
         }
     }
 

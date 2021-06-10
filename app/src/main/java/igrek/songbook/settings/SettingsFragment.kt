@@ -268,10 +268,17 @@ class SettingsFragment(
         )
 
         setupSwitchPreference("trimWhitespaces",
-                onLoad = { preferencesState.trimWhitespaces },
-                onSave = { value: Boolean ->
-                    preferencesState.trimWhitespaces = value
-                }
+            onLoad = { preferencesState.trimWhitespaces },
+            onSave = { value: Boolean ->
+                preferencesState.trimWhitespaces = value
+            }
+        )
+
+        setupSwitchPreference("autoscrollAutostart",
+            onLoad = { preferencesState.autoscrollAutostart },
+            onSave = { value: Boolean ->
+                preferencesState.autoscrollAutostart = value
+            }
         )
 
         refreshFragment()

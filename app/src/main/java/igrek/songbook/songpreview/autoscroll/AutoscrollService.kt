@@ -3,7 +3,6 @@ package igrek.songbook.songpreview.autoscroll
 import android.os.Handler
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
-import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
@@ -19,12 +18,10 @@ import java.util.concurrent.TimeUnit
 class AutoscrollService(
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
         songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
         preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val songPreviewController by LazyExtractor(songPreviewLayoutController)
-    private val uiResourceService by LazyExtractor(uiResourceService)
     private val preferencesState by LazyExtractor(preferencesState)
 
     var initialPause: Long // [ms]
@@ -49,7 +46,7 @@ class AutoscrollService(
         }
 
     private val logger = LoggerFactory.logger
-    private var state: AutoscrollState? = null
+    private var state: AutoscrollState = AutoscrollState.OFF
     private var startTime: Long = 0 // [ms]
     private var scrolledBuffer = 0f
 
@@ -83,8 +80,6 @@ class AutoscrollService(
         get() = songPreviewController.songPreview
 
     init {
-        reset()
-
         // aggreagate many little scrolls into greater parts (not proper RX method found)
         canvasScrollSubject
                 .observeOn(AndroidSchedulers.mainThread())
@@ -131,13 +126,19 @@ class AutoscrollService(
             startTime = System.currentTimeMillis()
             timerHandler.postDelayed(timerRunnable, 0)
         }
-        scrollStateSubject.onNext(state!!)
+        scrollStateSubject.onNext(state)
     }
 
     fun stop() {
         state = AutoscrollState.OFF
         timerHandler.removeCallbacks(timerRunnable)
-        scrollStateSubject.onNext(state!!)
+        scrollStateSubject.onNext(state)
+    }
+
+    fun autostart() {
+        if (canvas?.canScrollDown() == true) {
+            start()
+        }
     }
 
     private fun handleAutoscrollStep() {
@@ -148,7 +149,8 @@ class AutoscrollService(
                 timerHandler.postDelayed(timerRunnable, 0)
                 onAutoscrollStartedEvent()
             } else {
-                val delay = if (remainingTimeMs > 1000) 1000 else remainingTimeMs // cut off over 1000
+                val delay =
+                    if (remainingTimeMs > 1000) 1000 else remainingTimeMs // cut off over 1000
                 timerHandler.postDelayed(timerRunnable, delay)
                 onAutoscrollRemainingWaitTimeEvent(remainingTimeMs)
             }
