@@ -29,9 +29,7 @@ class WindowManagerService(
     }
 
     fun hideTaskbar() {
-        if (activity.supportActionBar != null) {
-            activity.supportActionBar!!.hide()
-        }
+        activity.supportActionBar?.hide()
     }
 
     fun setFullscreen(set: Boolean) {
