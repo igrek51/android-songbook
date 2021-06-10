@@ -32,12 +32,14 @@ class PlaylistDao(
     }
 
     fun savePlaylist(newPlaylist: Playlist) {
-        val olds = playlistDb.playlists
-                .filter { playlist -> playlist.id != newPlaylist.id }.toMutableList()
         if (newPlaylist.id == 0L)
-            newPlaylist.id = nextId(olds)
-        olds.add(newPlaylist)
-        playlistDb.playlists = olds
+            newPlaylist.id = nextId(playlistDb.playlists)
+        val index = playlistDb.playlists.indexOfFirst { it.id == newPlaylist.id }
+        if (index >= 0) {
+            playlistDb.playlists[index] = newPlaylist
+        } else {
+            playlistDb.playlists.add(newPlaylist)
+        }
         playlistDbSubject.onNext(playlistDb)
     }
 

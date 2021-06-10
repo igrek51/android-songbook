@@ -46,16 +46,22 @@ class CustomSongsDao(
     }
 
     fun saveCustomSong(newSong: CustomSong): Song {
-        val olds = customSongs.songs.filter { song ->
-            song.id != newSong.id
-        }.toMutableList()
         if (newSong.id == 0L)
-            newSong.id = nextId(olds)
+            newSong.id = nextId(customSongs.songs)
+        val index = customSongs.songs.indexOfFirst { it.id == newSong.id }
+        if (index >= 0) {
+            customSongs.songs[index] = newSong
+        } else {
+            customSongs.songs.add(newSong)
+        }
 
-        olds.add(newSong)
-        customSongs.songs = olds
         songsRepository.saveAndReloadUserData()
-        val customModelSong = songsRepository.customSongsRepo.songFinder.find(SongIdentifier(newSong.id, SongNamespace.Custom))
+        val customModelSong = songsRepository.customSongsRepo.songFinder.find(
+            SongIdentifier(
+                newSong.id,
+                SongNamespace.Custom
+            )
+        )
         return customModelSong!!
     }
 
