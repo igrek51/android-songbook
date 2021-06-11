@@ -9,11 +9,13 @@ import igrek.songbook.settings.theme.DisplayStyle
 import igrek.songbook.settings.theme.FontTypeface
 import igrek.songbook.songpreview.renderer.canvas.Align
 
-class LyricsRenderer internal constructor(private val canvas: SongPreview,
-                                          private val lyricsModel: LyricsModel?,
-                                          fontTypeface: FontTypeface,
-                                          colorScheme: ColorScheme,
-                                          private val displayStyle: DisplayStyle) {
+class LyricsRenderer internal constructor(
+    private val canvas: SongPreview,
+    private val lyricsModel: LyricsModel?,
+    fontTypeface: FontTypeface,
+    colorScheme: ColorScheme,
+    private val displayStyle: DisplayStyle,
+) {
 
     private val w: Float = canvas.w.toFloat()
     private val h: Float = canvas.h.toFloat()
@@ -54,7 +56,13 @@ class LyricsRenderer internal constructor(private val canvas: SongPreview,
         }
     }
 
-    private fun drawTextLine(line: LyricsLine, scroll: Float, fontsize: Float, lineheight: Float, lineIndex: Int) {
+    private fun drawTextLine(
+        line: LyricsLine,
+        scroll: Float,
+        fontsize: Float,
+        lineheight: Float,
+        lineIndex: Int,
+    ) {
         val y = lineheight * lineIndex - scroll
         if (y > h)
             return

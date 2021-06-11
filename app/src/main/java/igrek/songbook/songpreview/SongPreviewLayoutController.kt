@@ -3,7 +3,6 @@ package igrek.songbook.songpreview
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.view.View
-import android.view.View.*
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageButton
@@ -181,7 +180,7 @@ class SongPreviewLayoutController(
                 }
             })
             isVerticalScrollBarEnabled = false
-            overScrollMode = OVER_SCROLL_ALWAYS
+            overScrollMode = View.OVER_SCROLL_ALWAYS
             setOnClickListener { songPreview?.onClick() }
             setOnTouchListener(songPreview)
         }
@@ -397,15 +396,15 @@ class SongPreviewLayoutController(
     private fun updateScreenShareButton() {
         screenShareButton?.let { screenShareButton ->
             if (roomLobby.isActive()) {
-                screenShareButton.visibility = VISIBLE
+                screenShareButton.visibility = View.VISIBLE
                 highlightButton(screenShareButton)
             } else {
-                screenShareButton.visibility = GONE
+                screenShareButton.visibility = View.GONE
             }
         }
     }
 
-    fun showChordsGraphs() {
+    private fun showChordsGraphs() {
         chordsDiagramsService.showLyricsChordsMenu(lyricsLoader.lyricsModel)
     }
 
