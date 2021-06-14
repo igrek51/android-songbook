@@ -24,15 +24,16 @@ import kotlinx.coroutines.withContext
 import kotlin.reflect.KClass
 
 class AppInitializer(
-        windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
-        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
-        songsUpdater: LazyInject<SongsUpdater> = appFactory.songsUpdater,
-        appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-        adminService: LazyInject<AdminService> = appFactory.adminService,
-        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
-        chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
-        adService: LazyInject<AdService> = appFactory.adService,
+    windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
+    layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+    songsUpdater: LazyInject<SongsUpdater> = appFactory.songsUpdater,
+    appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    adminService: LazyInject<AdminService> = appFactory.adminService,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
+    adService: LazyInject<AdService> = appFactory.adService,
+    activityController: LazyInject<ActivityController> = appFactory.activityController,
 ) {
     private val windowManagerService by LazyExtractor(windowManagerService)
     private val layoutController by LazyExtractor(layoutController)
@@ -43,6 +44,7 @@ class AppInitializer(
     private val preferencesState by LazyExtractor(preferencesState)
     private val chordsNotationService by LazyExtractor(chordsNotationService)
     private val adService by LazyExtractor(adService)
+    private val activityController by LazyExtractor(activityController)
 
     private val logger = LoggerFactory.logger
     private val startingScreen: KClass<out MainLayout> = TopSongsLayoutController::class
@@ -73,6 +75,8 @@ class AppInitializer(
                 if (isRunningFirstTime())
                     firstRunInit()
                 reportExecution()
+
+                activityController.initialized = true
             }
 
             logger.info("Application has been initialized.")

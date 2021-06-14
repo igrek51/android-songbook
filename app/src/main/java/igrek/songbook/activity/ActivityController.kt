@@ -24,6 +24,7 @@ class ActivityController(
     private val userDataDao by LazyExtractor(userDataDao)
 
     private val logger = LoggerFactory.logger
+    var initialized = false
 
     fun onConfigurationChanged(newConfig: Configuration) {
         // resize event
@@ -49,20 +50,26 @@ class ActivityController(
     }
 
     fun onStart() {
-        logger.debug("starting activity...")
-        userDataDao.requestSave(false)
+        if (initialized) {
+            logger.debug("starting activity...")
+            userDataDao.requestSave(false)
+        }
     }
 
     fun onStop() {
-        logger.debug("stopping activity...")
-        preferencesService.saveAll()
-        userDataDao.requestSave(true)
+        if (initialized) {
+            logger.debug("stopping activity...")
+            preferencesService.saveAll()
+            userDataDao.requestSave(true)
+        }
     }
 
     fun onDestroy() {
-        preferencesService.saveAll()
-        userDataDao.saveNow()
-        logger.info("activity has been destroyed")
+        if (initialized) {
+            preferencesService.saveAll()
+            userDataDao.saveNow()
+            logger.info("activity has been destroyed")
+        }
     }
 
     fun minimize() {
