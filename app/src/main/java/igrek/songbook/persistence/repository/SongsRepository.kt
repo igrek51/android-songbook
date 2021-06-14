@@ -59,11 +59,7 @@ class SongsRepository(
     val transposeDao: TransposeDao get() = userDataDao.transposeDao
 
     fun init() {
-        try {
-            reloadSongsDb()
-        } catch (t: Throwable) {
-            factoryReset()
-        }
+        reloadSongsDb()
     }
 
     @Synchronized
@@ -86,8 +82,12 @@ class SongsRepository(
             userDataDao.reload()
         } catch (t: Throwable) {
             logger.error("failed to load user data", t)
-            resetUserData()
-            userDataDao.reload()
+            try {
+                userDataDao.reload()
+            } catch (t: Throwable) {
+                logger.error("failed to load user data", t)
+                throw RuntimeException("Can't load corrupted user data", t)
+            }
         }
 
         publicSongsRepo = try {
@@ -114,8 +114,12 @@ class SongsRepository(
             userDataDao.reload()
         } catch (t: Throwable) {
             logger.error("failed to load user data", t)
-            resetUserData()
-            userDataDao.reload()
+            try {
+                userDataDao.reload()
+            } catch (t: Throwable) {
+                logger.error("failed to load user data", t)
+                throw RuntimeException("Can't load corrupted user data", t)
+            }
         }
 
         val customDbBuilder = CustomSongsDbBuilder(userDataDao)
