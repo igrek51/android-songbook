@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="igrek.songbook"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="igrek.songbook">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -20,36 +20,54 @@
     <application
         android:name="igrek.songbook.MainApplication"
         android:allowBackup="true"
+        android:banner="@drawable/banner"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/icon_launcher"
         android:label="@string/app_name"
         android:roundIcon="@drawable/icon_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true"
-        android:banner="@drawable/banner"
-        >
+        android:usesCleartextTraffic="true">
 
         <activity
             android:name=".activity.SplashScreenActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|navigation"
-            android:resizeableActivity="true"
             android:label="@string/app_name"
+            android:resizeableActivity="true"
             android:theme="@style/SplashTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.SharedSongOpenActivity"
+            android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|navigation"
+            android:label="@string/app_name"
+            android:resizeableActivity="true"
+            android:theme="@style/SplashTheme">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="songbookapp.page.link"
+                    android:pathPrefix="/song" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".activity.MainActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|navigation"
-            android:resizeableActivity="true"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme"
-            />
+            android:resizeableActivity="true"
+            android:theme="@style/AppTheme" />
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

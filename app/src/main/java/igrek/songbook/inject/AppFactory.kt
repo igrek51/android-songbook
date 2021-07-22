@@ -153,4 +153,5 @@ class AppFactory(
     val roomLobby = SingletonInject { RoomLobby() }
     val allSongsImportFileChooser = SingletonInject { ImportFileChooser() }
     val activityResultDispatcher = SingletonInject { ActivityResultDispatcher() }
+    val shareSongService = SingletonInject { ShareSongService() }
 }

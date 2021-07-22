@@ -1,8 +1,10 @@
 package igrek.songbook.activity
 
 
+import android.app.Activity
 import igrek.songbook.BuildConfig
 import igrek.songbook.admin.AdminService
+import igrek.songbook.custom.ShareSongService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -34,6 +36,8 @@ class AppInitializer(
     chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
     adService: LazyInject<AdService> = appFactory.adService,
     activityController: LazyInject<ActivityController> = appFactory.activityController,
+    activity: LazyInject<Activity> = appFactory.activity,
+    shareSongService: LazyInject<ShareSongService> = appFactory.shareSongService,
 ) {
     private val windowManagerService by LazyExtractor(windowManagerService)
     private val layoutController by LazyExtractor(layoutController)
@@ -45,6 +49,8 @@ class AppInitializer(
     private val chordsNotationService by LazyExtractor(chordsNotationService)
     private val adService by LazyExtractor(adService)
     private val activityController by LazyExtractor(activityController)
+    private val activity by LazyExtractor(activity)
+    private val shareSongService by LazyExtractor(shareSongService)
 
     private val logger = LoggerFactory.logger
     private val startingScreen: KClass<out MainLayout> = TopSongsLayoutController::class
@@ -77,9 +83,16 @@ class AppInitializer(
                 reportExecution()
 
                 activityController.initialized = true
+                postInit()
             }
 
             logger.info("Application has been initialized.")
+        }
+    }
+
+    fun postInit() {
+        activity.intent.getStringExtra("encodedSong")?.let { encodedSong ->
+            shareSongService.openSharedEncodedSong(encodedSong)
         }
     }
 

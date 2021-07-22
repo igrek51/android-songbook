@@ -15,12 +15,12 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.history.OpenedSong
 import igrek.songbook.room.RoomLobby
 
-class SongOpener(
-        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
-        songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
+open class SongOpener(
+    layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+    songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
 ) {
     private val layoutController by LazyExtractor(layoutController)
     private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
