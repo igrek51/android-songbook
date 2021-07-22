@@ -7,6 +7,7 @@ import igrek.songbook.R
 import igrek.songbook.admin.AdminService
 import igrek.songbook.admin.antechamber.AntechamberService
 import igrek.songbook.custom.CustomSongService
+import igrek.songbook.custom.ShareSongService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.inject.LazyExtractor
@@ -36,6 +37,7 @@ class SongContextMenuBuilder(
     publishSongService: LazyInject<PublishSongService> = appFactory.publishSongService,
     adminService: LazyInject<AdminService> = appFactory.adminService,
     antechamberService: LazyInject<AntechamberService> = appFactory.antechamberService,
+    shareSongService: LazyInject<ShareSongService> = appFactory.shareSongService,
 ) {
     private val activity by LazyExtractor(activity)
     private val uiResourceService by LazyExtractor(uiResourceService)
@@ -49,6 +51,7 @@ class SongContextMenuBuilder(
     private val publishSongService by LazyExtractor(publishSongService)
     private val adminService by LazyExtractor(adminService)
     private val antechamberService by LazyExtractor(antechamberService)
+    private val shareSongService by LazyExtractor(shareSongService)
 
     private var allActions: SimpleCache<List<SongContextAction>> =
         SimpleCache { createAllActions() }
@@ -88,6 +91,11 @@ class SongContextMenuBuilder(
                 availableCondition = { song -> !song.isCustom() },
                 executor = { song ->
                     customSongService.copySongAsCustom(song)
+                }),
+            SongContextAction(R.string.action_share_song,
+                availableCondition = { true },
+                executor = { song ->
+                    shareSongService.shareSong(song)
                 }),
             SongContextAction(R.string.export_content_to_file,
                 availableCondition = { song -> song.isCustom() },

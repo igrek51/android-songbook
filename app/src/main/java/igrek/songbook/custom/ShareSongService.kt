@@ -1,6 +1,10 @@
 package igrek.songbook.custom
 
-import igrek.songbook.info.errorcheck.SafeExecutor
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import igrek.songbook.activity.CopyToClipboardActivity
+import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -20,10 +24,12 @@ import java.util.*
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
 
-class ShareSongService(
+open class ShareSongService(
     songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+    activity: LazyInject<Activity> = appFactory.activity,
 ) {
     private val songOpener by LazyExtractor(songOpener)
+    private val activity by LazyExtractor(activity)
 
     private val jsonSerializer = Json {
         encodeDefaults = true
@@ -78,14 +84,39 @@ class ShareSongService(
 
     fun openSharedEncodedSong(encodedSong: String) {
         logger.info("decoding shared song: $encodedSong")
-        SafeExecutor {
+        try {
             val song = decodeSong(encodedSong)
             song.let {
                 GlobalScope.launch {
                     songOpener.openSongPreview(song)
                 }
             }
+        } catch (t: Throwable) {
+            UiErrorHandler().handleError(RuntimeException("Invalid URL", t))
         }
+    }
+
+    private fun generateURL(song: Song): String {
+        val base64 = encodeSong(song)
+        return "https://songbookapp.page.link/song?d=$base64"
+    }
+
+    fun shareSong(song: Song) {
+        val url = generateURL(song)
+        val shareIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, "${song.displayName()}: $url")
+            type = "text/plain"
+        }
+
+        val clipboardIntent =
+            Intent(activity.applicationContext, CopyToClipboardActivity::class.java)
+        clipboardIntent.data = Uri.parse(url)
+
+        val chooserIntent = Intent.createChooser(shareIntent, "Share with")
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(clipboardIntent))
+
+        activity.startActivity(chooserIntent)
     }
 }
 

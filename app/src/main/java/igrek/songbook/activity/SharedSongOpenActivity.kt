@@ -13,7 +13,7 @@ class SharedSongOpenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val data: Uri? = intent?.data
-        val encodedSong = data?.path?.removePrefix("/song/")
+        val encodedSong = data?.path?.removePrefix("/song?d=")
         logger.info("opening encoded shared song: $encodedSong")
 
         val intent = Intent(applicationContext, MainActivity::class.java)

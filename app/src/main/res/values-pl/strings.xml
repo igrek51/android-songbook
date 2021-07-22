@@ -443,4 +443,6 @@
     <string name="settings_trim_whitespaces_hint">Usuwaj zbędne spacje na początku i na końcu linii</string>
     <string name="settings_autoscroll_autostart">Uruchom przewijanie automatycznie</string>
     <string name="settings_autoscroll_autostart_hint">Uruchamiaj autoprzewijanie po otwarciu każdej piosenki</string>
+    <string name="action_share_song">Udostępnij</string>
+    <string name="copy_to_clipboard">Kopiuj do schowka</string>
 </resources>

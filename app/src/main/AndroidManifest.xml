@@ -69,6 +69,13 @@
             android:resizeableActivity="true"
             android:theme="@style/AppTheme" />
 
+        <activity
+            android:name=".activity.CopyToClipboardActivity"
+            android:exported="false"
+            android:icon="@drawable/paste_black"
+            android:label="@string/copy_to_clipboard"
+            android:theme="@android:style/Theme.NoDisplay" />
+
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-8517210898119735~9943078986" />

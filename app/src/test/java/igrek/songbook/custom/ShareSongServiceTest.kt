@@ -1,7 +1,6 @@
 package igrek.songbook.custom
 
-import igrek.songbook.inject.SingletonInject
-import igrek.songbook.mock.SongOpenerMock
+import igrek.songbook.mock.ShareSongServiceMock
 import igrek.songbook.persistence.general.model.Category
 import igrek.songbook.persistence.general.model.CategoryType
 import igrek.songbook.persistence.general.model.Song
@@ -14,7 +13,7 @@ class ShareSongServiceTest {
 
     @Test
     fun test_encodeDecodeSong() {
-        val shareSongEncoder = ShareSongService(songOpener = SingletonInject { SongOpenerMock() })
+        val shareSongEncoder = ShareSongServiceMock()
         val song = Song(
             id = 1,
             title = "Epitafium dla Włodzimierza Wysockiego",
@@ -48,7 +47,7 @@ Nie mam czasu na przejażdżki wiedźmo wściekła! [a C G G]
 
     @Test
     fun test_marshalUnmarshal() {
-        val shareSongEncoder = ShareSongService(songOpener = SingletonInject { SongOpenerMock() })
+        val shareSongEncoder = ShareSongServiceMock()
         val song = Song(
             id = 1,
             title = "Epitafium dla Włodzimierza Wysockiego",

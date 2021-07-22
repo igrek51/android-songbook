@@ -469,4 +469,6 @@
     <string name="settings_trim_whitespaces_hint">Remove whitespaces at the beginning and at the end of lines</string>
     <string name="settings_autoscroll_autostart">Start autoscroll automatically</string>
     <string name="settings_autoscroll_autostart_hint">Start autoscrolling when opening a song</string>
+    <string name="action_share_song">Share</string>
+    <string name="copy_to_clipboard">Copy to clipboard</string>
 </resources>
