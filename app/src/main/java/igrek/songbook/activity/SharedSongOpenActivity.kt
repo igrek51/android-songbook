@@ -13,8 +13,12 @@ class SharedSongOpenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         val data: Uri? = intent?.data
-        val encodedSong = data?.path?.removePrefix("/song?d=")
-        logger.info("opening encoded shared song: $encodedSong")
+        val encodedSong = data?.getQueryParameter("d")
+        if (encodedSong == null) {
+            logger.error("invalid song url: $data")
+        } else {
+            logger.info("opening encoded shared song: $encodedSong")
+        }
 
         val intent = Intent(applicationContext, MainActivity::class.java)
         intent.putExtra("encodedSong", encodedSong);

@@ -20,6 +20,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.apache.commons.codec.binary.Base64
 import java.io.ByteArrayOutputStream
+import java.net.URLEncoder
 import java.util.*
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
@@ -53,10 +54,14 @@ open class ShareSongService(
     }
 
     fun marshal(song: Song): String {
+        var customCategory = song.customCategoryName
+        if (customCategory.isNullOrBlank()) {
+            customCategory = song.displayCategories()
+        }
         val dto = SharedSongDto(
             content = song.content.orEmpty(),
             title = song.title,
-            customCategory = song.customCategoryName,
+            customCategory = customCategory,
             chordsNotation = song.chordsNotation?.id,
         )
         return jsonSerializer.encodeToString(SharedSongDto.serializer(), dto)
@@ -92,13 +97,14 @@ open class ShareSongService(
                 }
             }
         } catch (t: Throwable) {
-            UiErrorHandler().handleError(RuntimeException("Invalid URL", t))
+            UiErrorHandler().handleError(RuntimeException("Invalid URL: ${t.message}", t))
         }
     }
 
     private fun generateURL(song: Song): String {
         val base64 = encodeSong(song)
-        return "https://songbookapp.page.link/song?d=$base64"
+        val query: String = URLEncoder.encode(base64, "utf-8")
+        return "https://songbookapp.page.link/song?d=$query"
     }
 
     fun shareSong(song: Song) {
