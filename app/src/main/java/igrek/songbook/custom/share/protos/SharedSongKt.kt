@@ -1,0 +1,1 @@
+package igrek.songbook.custom.share.protos

@@ -1,7 +1,7 @@
 package igrek.songbook.mock
 
 import androidx.appcompat.app.AppCompatActivity
-import igrek.songbook.custom.ShareSongService
+import igrek.songbook.custom.share.ShareSongService
 import igrek.songbook.inject.SingletonInject
 import org.mockito.Mockito
 

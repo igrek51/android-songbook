@@ -8,6 +8,7 @@ import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import org.assertj.core.api.Assertions
 import org.junit.Test
+import java.net.URLEncoder
 
 class ShareSongServiceTest {
 
@@ -31,7 +32,11 @@ Nie mam czasu na przejażdżki wiedźmo wściekła! [a C G G]
 
         val encoded = shareSongEncoder.encodeSong(song)
         Assertions.assertThat(encoded)
-            .isEqualTo("H4sIAAAAAAAAAHWOIQ4CMRBFrzJU43BYICtIsAhATNoBhqWdTTubDSUYrsFNyNrei+IwuP/z8/L+3SjrlczcrDpWPHLvwV0RtuUpLrNnirm2WxLbMp3ETI2VoBS0IvuwFOiY2vLECfzLOwQ67MOGCTx6sBlTDwGhi5kuWEZXxpZhYHLl7QWG8rI/6AIaaCr+FfdJxS9Q6494q/412uwxppa/61miSxtRVJZg5rPHB0tkCkzcAAAA")
+            .isEqualTo("H4sIAAAAAAAAAHWLIQ4CMRBFBa4SifoYLgJkBQkWQVZM2oEMZWizZbOhcq-BTcjauRcrMbj3kvfcZp-lSRfpFeFOONmYQhUV7upsr5J8FL6mpbhdQhaONtIa--hM4NYdhaGk8JVKjwchd5VvZFOwKQoG4WAfTRjs7X-OLRo0rVu5A-mq1JW5XXwB.YnGPKEAAAA_")
+
+        // encoded song is escaped url
+        val encodedUrl: String = URLEncoder.encode(encoded, "utf-8")
+        Assertions.assertThat(encodedUrl).isEqualTo(encoded)
 
         val decodedBack = shareSongEncoder.decodeSong(encoded)
         Assertions.assertThat(decodedBack.title).isEqualTo("Epitafium dla Włodzimierza Wysockiego")
@@ -64,8 +69,15 @@ Nie mam czasu na przejażdżki wiedźmo wściekła! [a C G G]
         )
 
         val marshaled = shareSongEncoder.marshal(song)
-        Assertions.assertThat(marshaled)
-            .isEqualTo("{\"title\":\"Epitafium dla Włodzimierza Wysockiego\",\"content\":\"\\nDo piekła! Do piekła! Do piekła! [a e]\\nNie mam czasu na przejażdżki wiedźmo wściekła! [a C G G]\\n\",\"customCategory\":\"Kaczmarski\",\"chordsNotation\":3}")
+        Assertions.assertThat(String(marshaled))
+            .isEqualTo(
+                "\n" +
+                        "&Epitafium dla Włodzimierza Wysockiego\u0012i\n" +
+                        "Do piekła! Do piekła! Do piekła! [a e]\n" +
+                        "Nie mam czasu na przejażdżki wiedźmo wściekła! [a C G G]\n" +
+                        "\u001A\n" +
+                        "Kaczmarski \u0003"
+            )
 
         val decodedBack = shareSongEncoder.unmarshal(marshaled)
         Assertions.assertThat(decodedBack.title).isEqualTo("Epitafium dla Włodzimierza Wysockiego")

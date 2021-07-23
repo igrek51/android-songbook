@@ -7,7 +7,7 @@ import igrek.songbook.R
 import igrek.songbook.admin.AdminService
 import igrek.songbook.admin.antechamber.AntechamberService
 import igrek.songbook.custom.CustomSongService
-import igrek.songbook.custom.ShareSongService
+import igrek.songbook.custom.share.ShareSongService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.inject.LazyExtractor

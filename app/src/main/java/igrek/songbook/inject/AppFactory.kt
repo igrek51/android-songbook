@@ -16,6 +16,7 @@ import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.chords.lyrics.LyricsLoader
 import igrek.songbook.chords.transpose.ChordsTransposerManager
 import igrek.songbook.custom.*
+import igrek.songbook.custom.share.ShareSongService
 import igrek.songbook.editor.ChordsEditorLayoutController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService

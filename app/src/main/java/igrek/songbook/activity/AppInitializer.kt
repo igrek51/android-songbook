@@ -4,7 +4,7 @@ package igrek.songbook.activity
 import android.app.Activity
 import igrek.songbook.BuildConfig
 import igrek.songbook.admin.AdminService
-import igrek.songbook.custom.ShareSongService
+import igrek.songbook.custom.share.ShareSongService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
