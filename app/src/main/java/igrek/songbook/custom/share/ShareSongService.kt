@@ -98,11 +98,6 @@ open class ShareSongService(
         }
     }
 
-    private fun generateURL(song: Song): String {
-        val base64 = encodeSong(song)
-        return "https://songbookapp.page.link/song?d=$base64"
-    }
-
     fun shareSong(song: Song) {
         val url = generateURL(song)
         val shareIntent: Intent = Intent().apply {
@@ -120,6 +115,34 @@ open class ShareSongService(
 
         activity.startActivity(chooserIntent)
     }
+
+    private fun generateURL(song: Song): String {
+        val base64 = encodeSong(song)
+        logger.debug("encoded to $base64")
+        return "https://songbookapp.page.link/?${SHARED_SONG_QUERY_PREFIX}${base64}"
+    }
+}
+
+const val SHARED_SONG_QUERY_PREFIX = "link=https://songbook.igrek.dev/song?d="
+const val SHARED_SONG_QUERY_PREFIX_ALT = "d="
+
+fun parseSongFromUri(intent: Intent?): String? {
+//    val uri = intent.toUri(Intent.URI_INTENT_SCHEME)
+//    logger.debug("shared song intent uri: uri: $uri")
+    val data: Uri? = intent?.data
+    val query = data?.query
+    if (query == null) {
+        logger.error("invalid song url: $data")
+        return null
+    }
+    if (query.startsWith(SHARED_SONG_QUERY_PREFIX)) {
+        return query.removePrefix(SHARED_SONG_QUERY_PREFIX)
+    }
+    if (query.startsWith(SHARED_SONG_QUERY_PREFIX_ALT)) {
+        return query.removePrefix(SHARED_SONG_QUERY_PREFIX_ALT)
+    }
+    logger.error("invalid song url prefix: $query")
+    return null
 }
 
 fun gzip(bytes: ByteArray): ByteArray {
@@ -145,16 +168,16 @@ fun base64Encode(bytes: ByteArray): String {
     // encode url
     return encoded
         .replace("+", ".")
-        .replace("/", "-")
-        .replace("=", "_")
+        .replace("/", "_")
+        .replace("=", "-")
 }
 
 fun base64Decode(str: String): ByteArray {
     // decode from url
     val encoded = str
         .replace(".", "+")
-        .replace("-", "/")
-        .replace("_", "=")
+        .replace("_", "/")
+        .replace("-", "=")
     return Base64.decodeBase64(encoded)
 }
 

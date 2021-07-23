@@ -57,8 +57,7 @@
 
                 <data
                     android:scheme="https"
-                    android:host="songbookapp.page.link"
-                    android:pathPrefix="/song" />
+                    android:host="songbookapp.page.link" />
             </intent-filter>
         </activity>
 
