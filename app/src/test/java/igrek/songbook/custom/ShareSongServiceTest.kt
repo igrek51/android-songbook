@@ -32,7 +32,7 @@ Nie mam czasu na przejażdżki wiedźmo wściekła! [a C G G]
 
         val encoded = shareSongEncoder.encodeSong(song)
         Assertions.assertThat(encoded)
-            .isEqualTo("H4sIAAAAAAAAAHWLIQ4CMRBFBa4SifoYLgJkBQkWQVZM2oEMZWizZbOhcq-BTcjauRcrMbj3kvfcZp-lSRfpFeFOONmYQhUV7upsr5J8FL6mpbhdQhaONtIa--hM4NYdhaGk8JVKjwchd5VvZFOwKQoG4WAfTRjs7X-OLRo0rVu5A-mq1JW5XXwB.YnGPKEAAAA_")
+            .isEqualTo("H4sIAAAAAAAAAHWLIQ4CMRBFBa4SifoYLgJkBQkWQVZM2oEMZWizZbOhcq_BTcjauRcrMbj3kvfcZp_lSRfpFeFOONmYQhUV7upsr5J8FL6mpbhdQhaONtIa__hM4NYdhaGk8JVKjwchd5VvZFOwKQoG4WAfTRjs7X_OLRo0rVu5A_mq1JW5XXwB.YnGPKEAAAA-")
 
         // encoded song is escaped url
         val encodedUrl: String = URLEncoder.encode(encoded, "utf-8")
