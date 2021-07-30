@@ -127,8 +127,6 @@ const val SHARED_SONG_QUERY_PREFIX = "link=https://songbook.igrek.dev/song?d="
 const val SHARED_SONG_QUERY_PREFIX_ALT = "d="
 
 fun parseSongFromUri(intent: Intent?): String? {
-//    val uri = intent.toUri(Intent.URI_INTENT_SCHEME)
-//    logger.debug("shared song intent uri: uri: $uri")
     val data: Uri? = intent?.data
     val query = data?.query
     if (query == null) {
