@@ -2,6 +2,7 @@ package igrek.songbook.activity
 
 
 import android.app.Activity
+import android.content.Intent
 import igrek.songbook.BuildConfig
 import igrek.songbook.admin.AdminService
 import igrek.songbook.custom.share.ShareSongService
@@ -91,7 +92,11 @@ class AppInitializer(
     }
 
     fun postInit() {
-        activity.intent.getStringExtra("encodedSong")?.let { encodedSong ->
+        postInitIntent(activity.intent)
+    }
+
+    fun postInitIntent(intent: Intent?) {
+        intent?.getStringExtra("encodedSong")?.let { encodedSong ->
             shareSongService.openSharedEncodedSong(encodedSong)
         }
     }
