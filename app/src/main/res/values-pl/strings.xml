@@ -172,9 +172,11 @@
     <string name="notation_german">Niemiecka:\na b B H C C# d f#</string>
     <string name="notation_german_is">Niemiecka (*is):\na b B H C Cis d fis</string>
     <string name="notation_english">Angielska:\nAm Bbm Bb B C C# Dm F#m</string>
+    <string name="notation_solfege">Solfeż:\nLam Sibm Sib Si Do Do# Rem Fa#m</string>
     <string name="notation_short_german">Niemiecka</string>
     <string name="notation_short_german_is">Niemiecka (*is)</string>
     <string name="notation_short_english">Angielska</string>
+    <string name="notation_short_solfege">Solfeż</string>
     <string name="fill_in_all_fields">Wypełnij wszystkie wymagane pola.</string>
     <string name="connection_error">Błąd połączenia</string>
     <string name="updating_db_in_progress">Aktualizuję piosenki…</string>
