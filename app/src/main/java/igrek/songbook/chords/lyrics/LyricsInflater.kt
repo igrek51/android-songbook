@@ -45,6 +45,7 @@ class LyricsInflater(
     private fun calculateTextWidth(text: String, type: LyricsTextType): Float {
         val paint = when (type) {
             LyricsTextType.REGULAR_TEXT -> normalPaint
+            LyricsTextType.COMMENT -> normalPaint
             LyricsTextType.CHORDS -> boldPaint
             else -> return 0f
         }

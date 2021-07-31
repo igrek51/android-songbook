@@ -22,14 +22,17 @@ class LyricsRenderer internal constructor(
 
     private var normalTypeface: Typeface? = null
     private var boldTypeface: Typeface? = null
+    private var italicTypeface: Typeface? = null
     private var textColor: Int
     private var chordColor: Int
+    private var commentColor: Int
     private var linewrapperColor: Int
 
     init {
         val typefaceFamily = fontTypeface.typeface
         normalTypeface = Typeface.create(typefaceFamily, Typeface.NORMAL)
         boldTypeface = Typeface.create(typefaceFamily, Typeface.BOLD)
+        italicTypeface = Typeface.create(typefaceFamily, Typeface.ITALIC)
 
         textColor = when (colorScheme) {
             ColorScheme.DARK -> 0xffffff
@@ -38,6 +41,10 @@ class LyricsRenderer internal constructor(
         chordColor = when (colorScheme) {
             ColorScheme.DARK -> 0xf00000
             ColorScheme.BRIGHT -> 0xf00000
+        }
+        commentColor = when (colorScheme) {
+            ColorScheme.DARK -> 0x929292
+            ColorScheme.BRIGHT -> 0x6D6D6D
         }
         linewrapperColor = when (colorScheme) {
             ColorScheme.DARK -> 0x707070
@@ -94,6 +101,10 @@ class LyricsRenderer internal constructor(
                     fragment.x * fontsize
                 }
                 canvas.drawText(fragment.text, x, y + lineheight, Align.LEFT)
+            } else if (fragment.type == LyricsTextType.COMMENT) {
+                canvas.setFontTypeface(italicTypeface)
+                canvas.setColor(commentColor)
+                canvas.drawText(fragment.text, fragment.x * fontsize, y + lineheight, Align.LEFT)
             }
 
         }
