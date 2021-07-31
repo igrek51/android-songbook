@@ -37,6 +37,7 @@ data class LyricsFragment(
         val txt = when (type) {
             LyricsTextType.REGULAR_TEXT -> text
             LyricsTextType.CHORDS -> "[$text]"
+            LyricsTextType.COMMENT -> "{$text}"
             LyricsTextType.LINEWRAPPER -> lineWrapperChar.toString()
         }
         return "($txt,x=$x,width=$width)"
@@ -60,13 +61,10 @@ data class LyricsFragment(
 }
 
 enum class LyricsTextType {
-
     REGULAR_TEXT,
-
     CHORDS,
-
+    COMMENT,
     LINEWRAPPER,
-
 }
 
 const val lineWrapperChar = '\u21B5'
