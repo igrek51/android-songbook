@@ -93,6 +93,22 @@ open class MainActivity(
                 if (activityData.systemKeyDispatcher.onVolumeDown())
                     return true
             }
+            KeyEvent.KEYCODE_DPAD_UP -> {
+                if (activityData.systemKeyDispatcher.onArrowUp())
+                    return true
+            }
+            KeyEvent.KEYCODE_DPAD_DOWN -> {
+                if (activityData.systemKeyDispatcher.onArrowDown())
+                    return true
+            }
+            KeyEvent.KEYCODE_DPAD_LEFT -> {
+                if (activityData.systemKeyDispatcher.onArrowLeft())
+                    return true
+            }
+            KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                if (activityData.systemKeyDispatcher.onArrowRight())
+                    return true
+            }
         }
         return super.onKeyDown(keyCode, event)
     }
