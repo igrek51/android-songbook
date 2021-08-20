@@ -45,24 +45,24 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
 
 class SongPreviewLayoutController(
-        lyricsLoader: LazyInject<LyricsLoader> = appFactory.lyricsLoader,
-        lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
-        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
-        windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
-        navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
-        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
-        quickMenuTranspose: LazyInject<QuickMenuTranspose> = appFactory.quickMenuTranspose,
-        quickMenuAutoscroll: LazyInject<QuickMenuAutoscroll> = appFactory.quickMenuAutoscroll,
-        autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
-        softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
-        songDetailsService: LazyInject<SongDetailsService> = appFactory.songDetailsService,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        favouriteSongsService: LazyInject<FavouriteSongsService> = appFactory.favouriteSongsService,
-        songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-        chordsDiagramsService: LazyInject<ChordsDiagramsService> = appFactory.chordsDiagramsService,
-        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
-        roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
+    lyricsLoader: LazyInject<LyricsLoader> = appFactory.lyricsLoader,
+    lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
+    layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+    windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
+    navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
+    appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+    quickMenuTranspose: LazyInject<QuickMenuTranspose> = appFactory.quickMenuTranspose,
+    quickMenuAutoscroll: LazyInject<QuickMenuAutoscroll> = appFactory.quickMenuAutoscroll,
+    autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
+    softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
+    songDetailsService: LazyInject<SongDetailsService> = appFactory.songDetailsService,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    favouriteSongsService: LazyInject<FavouriteSongsService> = appFactory.favouriteSongsService,
+    songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    chordsDiagramsService: LazyInject<ChordsDiagramsService> = appFactory.chordsDiagramsService,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
 ) : MainLayout {
     private val lyricsLoader by LazyExtractor(lyricsLoader)
     private val lyricsThemeService by LazyExtractor(lyricsThemeService)
@@ -87,7 +87,7 @@ class SongPreviewLayoutController(
         private set
     var currentSong: Song? = null
     private var overlayAdapter: OverlayRecyclerAdapter? = null
-    private var overlayRecyclerView: RecyclerView? = null
+    private var overlayScrollView: RecyclerView? = null
     private var songTitleLabel: TextView? = null
     private var fullscreen = false
     private var appBarLayout: AppBarLayout? = null
@@ -102,16 +102,16 @@ class SongPreviewLayoutController(
 
     init {
         autoscrollService.get().scrollStateSubject
-                .debounce(100, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    highlightPanelButtons()
-                }, UiErrorHandler::handleError)
+            .debounce(100, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                highlightPanelButtons()
+            }, UiErrorHandler::handleError)
         favouriteSongsService.get().updateFavouriteSongSubject
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    updateFavouriteButton()
-                }, UiErrorHandler::handleError)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                updateFavouriteButton()
+            }, UiErrorHandler::handleError)
     }
 
     override fun showLayout(layout: View) {
@@ -146,25 +146,32 @@ class SongPreviewLayoutController(
         val inflater = activity.layoutInflater
         // transpose panel
         val quickMenuTransposeView = inflater.inflate(R.layout.component_quick_menu_transpose, null)
-        quickMenuTransposeView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        quickMenuTransposeView.layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
         quickMenuContainer.addView(quickMenuTransposeView)
         quickMenuTranspose.setQuickMenuView(quickMenuTransposeView)
         quickMenuTranspose.isVisible = false
         // autoscroll panel
-        val quickMenuAutoscrollView = inflater.inflate(R.layout.component_quick_menu_autoscroll, null)
-        quickMenuAutoscrollView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        val quickMenuAutoscrollView =
+            inflater.inflate(R.layout.component_quick_menu_autoscroll, null)
+        quickMenuAutoscrollView.layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
         quickMenuContainer.addView(quickMenuAutoscrollView)
         quickMenuAutoscroll.setQuickMenuView(quickMenuAutoscrollView)
         quickMenuAutoscroll.isVisible = false
 
         // overlaying RecyclerView
-        overlayRecyclerView = activity.findViewById<RecyclerView>(R.id.overlayRecyclerView)?.apply {
+        overlayScrollView = activity.findViewById<RecyclerView>(R.id.overlayScrollView)?.apply {
             setHasFixedSize(true) // improve performance
             layoutManager = LinearLayoutManager(activity)
             songPreview?.let { songPreview ->
                 overlayAdapter = OverlayRecyclerAdapter(songPreview)
                 songPreview.overlayScrollResetter = { resetOverlayScroll() }
-                songPreview.overlayRecyclerView = this
+                songPreview.overlayScrollView = this
             }
             adapter = overlayAdapter
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -174,7 +181,7 @@ class SongPreviewLayoutController(
 
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     songPreview?.run {
-                        scrollByPx(dy.toFloat())
+                        scrollByPxVertical(dy.toFloat())
                         onManuallyScrolled(dy)
                     }
                 }
@@ -263,8 +270,8 @@ class SongPreviewLayoutController(
 
     private fun resetOverlayScroll() {
         // recenter
-        overlayRecyclerView?.layoutManager?.scrollToPosition(1)
-        overlayRecyclerView?.scrollToPosition(1)
+        overlayScrollView?.layoutManager?.scrollToPosition(1)
+        overlayScrollView?.scrollToPosition(1)
     }
 
     fun onLyricsModelUpdated() {

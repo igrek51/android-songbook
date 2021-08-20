@@ -281,6 +281,13 @@ class SettingsFragment(
             }
         )
 
+        setupSwitchPreference("horizontalScroll",
+            onLoad = { preferencesState.horizontalScroll },
+            onSave = { value: Boolean ->
+                preferencesState.horizontalScroll = value
+            }
+        )
+
         refreshFragment()
     }
 

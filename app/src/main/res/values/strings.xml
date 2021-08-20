@@ -473,4 +473,6 @@
     <string name="settings_autoscroll_autostart_hint">Start autoscrolling when opening a song</string>
     <string name="action_share_song">Share</string>
     <string name="copy_to_clipboard">Copy to clipboard</string>
+    <string name="settings_horizontalScroll">Horizontal scroll</string>
+    <string name="settings_horizontalScroll_hint">Enable scrolling song horizontally (without word wrap) - useful when viewing tabs</string>
 </resources>

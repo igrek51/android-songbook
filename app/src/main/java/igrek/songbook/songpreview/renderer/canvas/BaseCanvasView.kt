@@ -1,7 +1,10 @@
 package igrek.songbook.songpreview.renderer.canvas
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.Typeface
 import android.view.View
 
 abstract class BaseCanvasView(context: Context) : View(context) {
@@ -74,12 +77,12 @@ abstract class BaseCanvasView(context: Context) : View(context) {
         when (align) {
             Align.LEFT -> { // left only
                 paint?.textAlign = Paint.Align.LEFT
-                canvas!!.drawText(text, cx, cy, paint!!)
+                canvas?.drawText(text, cx, cy, paint!!)
                 return
             }
             Align.RIGHT -> { // right only
                 paint?.textAlign = Paint.Align.RIGHT
-                canvas!!.drawText(text, cx, cy, paint!!)
+                canvas?.drawText(text, cx, cy, paint!!)
                 return
             }
         }
@@ -97,7 +100,7 @@ abstract class BaseCanvasView(context: Context) : View(context) {
         } else if (isFlagSet(align, Align.BOTTOM)) {
             yPos -= (textBounds.height() / 2).toFloat()
         }
-        canvas!!.drawText(text, cx, yPos, paint!!)
+        canvas?.drawText(text, cx, yPos, paint!!)
     }
 
     fun setFontSize(textsize: Float) {
@@ -122,12 +125,12 @@ abstract class BaseCanvasView(context: Context) : View(context) {
 
     fun clearScreen() {
         paint?.style = Paint.Style.FILL
-        canvas!!.drawPaint(paint!!)
+        canvas?.drawPaint(paint!!)
     }
 
     fun fillRect(left: Float, top: Float, right: Float, bottom: Float) {
         paint?.style = Paint.Style.FILL
-        canvas!!.drawRect(left, top, right, bottom, paint!!)
+        canvas?.drawRect(left, top, right, bottom, paint!!)
     }
 
     companion object {

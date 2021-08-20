@@ -174,24 +174,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout android:id="@+id/songPreviewContainer"
-                     android:layout_width="match_parent"
-                     android:layout_height="match_parent"
-                     android:fillViewport="true">
+        <FrameLayout
+            android:id="@+id/songPreviewContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
             <!-- Song Preview -->
         </FrameLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/overlayRecyclerView"
+            android:id="@+id/overlayScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true"
-            android:scrollbars="vertical"/>
+            android:scrollbars="vertical" />
 
-        <FrameLayout android:id="@+id/quickMenuContainer"
-                     android:layout_width="match_parent"
-                     android:layout_height="match_parent"
-                     android:fillViewport="true">
+        <FrameLayout
+            android:id="@+id/quickMenuContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
             <!-- Quick Menus -->
         </FrameLayout>
 

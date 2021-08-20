@@ -39,22 +39,27 @@ class SongPreview(
     private val lyricsThemeService by LazyExtractor(lyricsThemeService)
 
     private var lyricsModel: LyricsModel? = null
-    var scroll: Float = 0.toFloat()
+    var scroll: Float = 0f
         private set
-    private var startScroll: Float = 0.toFloat()
-    private var fontsizeTmp: Float = 0.toFloat()
+    var scrollX: Float = 0f
+        private set
+    private var startScroll: Float = 0f
+    private var startScrollX: Float = 0f
+    private var fontsizeTmp: Float = 0f
     private var pointersDst0: Float? = null
     private var fontsize0: Float? = null
     private var lyricsRenderer: LyricsRenderer? = null
-    private var startTouchX = 0f
     private var startTouchY = 0f
+    private var startTouchScrollX = 0f
     private var startTouchTime: Long = 0
-    private val bottomMarginCache = SimpleCache { this.windowManagerService.dp2px(EOF_BOTTOM_RESERVE) }
-    private val scrollWidthCache = SimpleCache { this.windowManagerService.dp2px(1f) }
+    private val bottomMarginCache = SimpleCache {
+        this.windowManagerService.dp2px(EOF_BOTTOM_RESERVE)
+    }
+    private val scrollThicknessCache = SimpleCache { this.windowManagerService.dp2px(1f) }
     private var lastClickTime: Long? = null
     private var recyclerScrollState = RecyclerView.SCROLL_STATE_IDLE
     var overlayScrollResetter: () -> Unit = {}
-    var overlayRecyclerView: RecyclerView? = null
+    var overlayScrollView: RecyclerView? = null
 
     companion object {
         const val EOF_BOTTOM_RESERVE = 60f // padding bottom [dp]
@@ -69,10 +74,9 @@ class SongPreview(
     val lineheightPx: Float
         get() = fontsizePx * LINEHEIGHT_SCALE_FACTOR
 
-    internal// no scrolling possibility
-    val maxScroll: Float
+    internal val maxScroll: Float
         get() {
-            val bottomY = textBottomY
+            val bottomY = textBottomY.get()
             val reserve = bottomMarginCache.get()
             return if (bottomY > h) {
                 bottomY + reserve - h
@@ -81,27 +85,43 @@ class SongPreview(
             }
         }
 
-    private val textBottomY: Float
+    internal val maxScrollX: Float
         get() {
-            if (lyricsModel == null)
-                return 0f
-            val lines = lyricsModel!!.lines
-            if (lines.isEmpty())
-                return 0f
-            val lineheight = lineheightPx
-            return lines.size * lineheight + lineheight
+            return if (textRightX.get() > w) {
+                textRightX.get() - w
+            } else {
+                0f
+            }
         }
 
-    val scrollWidth: Float
-        get() = scrollWidthCache.get()
+    private val textBottomY: SimpleCache<Float> = SimpleCache {
+        if (lyricsModel == null)
+            return@SimpleCache 0f
+        val lines = lyricsModel?.lines
+        if (lines.isNullOrEmpty())
+            return@SimpleCache 0f
+        val lineheight = lineheightPx
+        lines.size * lineheight + lineheight
+    }
+
+    private val textRightX: SimpleCache<Float> = SimpleCache {
+        (lyricsModel?.lines?.maxOfOrNull { it.maxRightX() } ?: 0f) * fontsizePx
+    }
+
+    val scrollThickness: Float
+        get() = scrollThicknessCache.get()
 
     override fun reset() {
         super.reset()
         scroll = 0f
+        scrollX = 0f
         startScroll = 0f
+        startScrollX = 0f
         pointersDst0 = null
         fontsize0 = null
         lyricsModel = null
+        textBottomY.invalidate()
+        textRightX.invalidate()
     }
 
     override fun init() {
@@ -112,7 +132,7 @@ class SongPreview(
         drawBackground()
 
         if (this.lyricsRenderer != null) {
-            lyricsRenderer?.drawScrollBar()
+            lyricsRenderer?.drawScrollBars()
             lyricsRenderer?.drawFileContent(fontsizePx, lineheightPx)
         }
 
@@ -148,23 +168,34 @@ class SongPreview(
     }
 
     private fun onTouchDown(event: MotionEvent) {
-        startTouchX = event.x
         startTouchY = event.y
+        startTouchScrollX = event.x
         startTouchTime = System.currentTimeMillis()
         startScroll = scroll
+        startScrollX = scrollX
         pointersDst0 = null
     }
 
     private fun onTouchMove(event: MotionEvent) {
-        if (event.pointerCount >= 2) {
-            // pinch to font scaling
-            if (pointersDst0 != null) {
-                val pointersDst1 = hypot((event.getX(1) - event.getX(0)).toDouble(), (event.getY(1) - event
-                        .getY(0)).toDouble()).toFloat()
-                val scale = (pointersDst1 / pointersDst0!! - 1) * FONTSIZE_SCALE_FACTOR + 1
-                val fontsize1 = fontsize0!! * scale
-                scroll = startScroll * scale
-                previewFontsize(fontsize1)
+        when {
+            event.pointerCount == 1 -> {
+                val dx = event.x - startTouchScrollX
+                startTouchScrollX = event.x
+                scrollByPxHorizontal(-dx)
+            }
+            event.pointerCount >= 2 -> {
+                // pinch to font scaling
+                if (pointersDst0 != null) {
+                    val pointersDst1 = hypot(
+                        (event.getX(1) - event.getX(0)).toDouble(), (event.getY(1) - event
+                            .getY(0)).toDouble()
+                    ).toFloat()
+                    val scale = (pointersDst1 / pointersDst0!! - 1) * FONTSIZE_SCALE_FACTOR + 1
+                    val fontsize1 = fontsize0!! * scale
+                    scroll = startScroll * scale
+                    scrollX = startScrollX * scale
+                    previewFontsize(fontsize1)
+                }
             }
         }
     }
@@ -173,11 +204,13 @@ class SongPreview(
         pointersDst0 = hypot((event.getX(1) - event.getX(0)).toDouble(), (event.getY(1) - event.getY(0)).toDouble()).toFloat()
         fontsize0 = fontsizeTmp
         startScroll = scroll
+        startScrollX = scrollX
     }
 
     private fun onTouchPointerUp(event: MotionEvent) {
         pointersDst0 = null // reset initial length
         startScroll = scroll
+        startScrollX = scrollX
         // leave a pointer which is still active
         var pointerIndex: Int? = 0
         if (event.pointerCount >= 2) {
@@ -228,18 +261,23 @@ class SongPreview(
 
     fun setCRDModel(lyricsModel: LyricsModel?) {
         this.lyricsModel = lyricsModel
+        textBottomY.invalidate()
+        textRightX.invalidate()
         this.lyricsRenderer = LyricsRenderer(
-                this,
-                lyricsModel,
-                lyricsThemeService.fontTypeface,
-                lyricsThemeService.colorScheme,
-                lyricsThemeService.displayStyle
+            this,
+            lyricsModel,
+            lyricsThemeService.fontTypeface,
+            lyricsThemeService.colorScheme,
+            lyricsThemeService.displayStyle,
+            lyricsThemeService.horizontalScroll,
         )
         repaint()
     }
 
     fun setFontSizes(fontsizeDp: Float) {
         this.fontsizeTmp = fontsizeDp
+        textBottomY.invalidate()
+        textRightX.invalidate()
     }
 
     private fun previewFontsize(fontsize1: Float) {
@@ -255,15 +293,15 @@ class SongPreview(
      * @return
      */
     fun scrollByLines(lineheightPart: Float): Boolean {
-        return scrollByPx(lineheightPart * lineheightPx)
+        return scrollByPxVertical(lineheightPart * lineheightPx)
     }
 
     fun changedRecyclerScrollState(recyclerScrollState: Int) {
         this.recyclerScrollState = recyclerScrollState
-        scrollByPx(0f)
+        scrollByPxVertical(0f)
     }
 
-    fun scrollByPx(px: Float): Boolean {
+    fun scrollByPxVertical(py: Float): Boolean {
         val maxAbroad = lineheightPx * 6
         val stopRunawayScrollingMargin = lineheightPx * 5
         val boundaryHisteresis = 0.5f
@@ -276,52 +314,72 @@ class SongPreview(
                         scroll = 0f
                     }
 
-                    px < 0 && recyclerScrollState == RecyclerView.SCROLL_STATE_DRAGGING -> {
+                    py < 0 && recyclerScrollState == RecyclerView.SCROLL_STATE_DRAGGING -> {
                         if (exceeds < maxAbroad) {
-                            scroll += px * (1f - 1f / maxAbroad * exceeds)
+                            scroll += py * (1f - 1f / maxAbroad * exceeds)
                         }
                     }
-                    px < 0 && recyclerScrollState == RecyclerView.SCROLL_STATE_SETTLING -> {
-                        if (exceeds > stopRunawayScrollingMargin || -px / lineheightPx < minSettlingScrollPx) {
+                    py < 0 && recyclerScrollState == RecyclerView.SCROLL_STATE_SETTLING -> {
+                        if (exceeds > stopRunawayScrollingMargin || -py / lineheightPx < minSettlingScrollPx) {
                             overlayScrollResetter()
-                            overlayRecyclerView?.smoothScrollBy(0, exceeds.toInt(), OvershootInterpolator(), 200)
+                            overlayScrollView?.smoothScrollBy(
+                                0,
+                                exceeds.toInt(),
+                                OvershootInterpolator(),
+                                200
+                            )
                         } else {
-                            scroll += px * (1f - 1f / maxAbroad * exceeds)
+                            scroll += py * (1f - 1f / maxAbroad * exceeds)
                         }
                     }
                     recyclerScrollState == RecyclerView.SCROLL_STATE_IDLE -> {
                         if (scroll < -boundaryHisteresis)
-                            overlayRecyclerView?.smoothScrollBy(0, exceeds.toInt(), OvershootInterpolator(), 200)
+                            overlayScrollView?.smoothScrollBy(
+                                0,
+                                exceeds.toInt(),
+                                OvershootInterpolator(),
+                                200
+                            )
                     }
-                    else -> scroll += px
+                    else -> scroll += py
                 }
             }
 
             scroll > maxScroll -> {
                 val exceeds = scroll - maxScroll
                 when {
-                    px > 0 && recyclerScrollState == RecyclerView.SCROLL_STATE_DRAGGING -> {
+                    py > 0 && recyclerScrollState == RecyclerView.SCROLL_STATE_DRAGGING -> {
                         if (exceeds < maxAbroad) {
-                            scroll += px * (1f - 1f / maxAbroad * exceeds)
+                            scroll += py * (1f - 1f / maxAbroad * exceeds)
                         }
                     }
-                    px > 0 && recyclerScrollState == RecyclerView.SCROLL_STATE_SETTLING -> {
+                    py > 0 && recyclerScrollState == RecyclerView.SCROLL_STATE_SETTLING -> {
                         if (exceeds > stopRunawayScrollingMargin) {
                             overlayScrollResetter()
-                            overlayRecyclerView?.smoothScrollBy(0, -exceeds.toInt(), OvershootInterpolator(), 200)
+                            overlayScrollView?.smoothScrollBy(
+                                0,
+                                -exceeds.toInt(),
+                                OvershootInterpolator(),
+                                200
+                            )
                         } else {
-                            scroll += px * (1f - 1f / maxAbroad * exceeds)
+                            scroll += py * (1f - 1f / maxAbroad * exceeds)
                         }
                     }
                     recyclerScrollState == RecyclerView.SCROLL_STATE_IDLE -> {
                         if (scroll > maxScroll + boundaryHisteresis)
-                            overlayRecyclerView?.smoothScrollBy(0, -exceeds.toInt(), OvershootInterpolator(), 200)
+                            overlayScrollView?.smoothScrollBy(
+                                0,
+                                -exceeds.toInt(),
+                                OvershootInterpolator(),
+                                200
+                            )
                     }
-                    else -> scroll += px
+                    else -> scroll += py
                 }
             }
 
-            else -> scroll += px
+            else -> scroll += py
         }
 
         val scrollable = when {
@@ -336,6 +394,26 @@ class SongPreview(
 
         repaint()
         return scrollable
+    }
+
+    private fun scrollByPxHorizontal(px: Float) {
+        if (!lyricsThemeService.horizontalScroll) {
+            scrollX = 0f
+            return
+        }
+
+        scrollX += px
+        when {
+            scrollX < 0f -> {
+                scrollX = 0f
+            }
+
+            scrollX > maxScrollX -> {
+                scrollX = maxScrollX
+            }
+        }
+
+        repaint()
     }
 
     fun canScrollDown(): Boolean {
@@ -353,6 +431,7 @@ class SongPreview(
 
     fun goToBeginning() {
         scroll = 0f
+        scrollX = 0f
         repaint()
     }
 }

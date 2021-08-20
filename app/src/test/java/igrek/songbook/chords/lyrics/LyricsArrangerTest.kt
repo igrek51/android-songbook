@@ -265,19 +265,49 @@ class LyricsArrangerTest {
                 ),
         ))
         Assertions.assertThat(wrapped.lines).containsExactly(
+            LyricsLine(
+                LyricsFragment.Chord("G e", x = 0f, width = 3f),
+            ),
+            LyricsLine(
+                LyricsFragment.Text("wo lo lo", x = 0f, width = 8f),
+            ),
+            LyricsLine(
+                LyricsFragment.Chord("G", x = 8f, width = 1f),
+                LyricsFragment.Chord("e", x = 10f, width = 1f),
+            ),
+            LyricsLine(
+                LyricsFragment.Text("wo lo lo", x = 0f, width = 8f),
+            ),
+        )
+    }
+
+    @Test
+    fun test_wrapping_off_when_horizontal_scrolling() {
+        val wrapper =
+            LyricsArranger(DisplayStyle.ChordsInline, 16f, lengthMapper, horizontalScroll = true)
+        val wrapped = wrapper.arrangeModel(
+            LyricsModel(
                 LyricsLine(
-                        LyricsFragment.Chord("G e", x = 0f, width = 3f),
+                    chord("G"),
+                    text("mrs robinson"),
+                    chord("e"),
+                    text("know"),
+                    chord("a7"),
+                    chord("D"),
+                    text("wo wo wo"),
                 ),
-                LyricsLine(
-                        LyricsFragment.Text("wo lo lo", x = 0f, width = 8f),
-                ),
-                LyricsLine(
-                        LyricsFragment.Chord("G", x = 8f, width = 1f),
-                        LyricsFragment.Chord("e", x = 10f, width = 1f),
-                ),
-                LyricsLine(
-                        LyricsFragment.Text("wo lo lo", x = 0f, width = 8f),
-                ),
+            )
+        )
+        Assertions.assertThat(wrapped.lines).containsExactly(
+            LyricsLine(
+                LyricsFragment.Chord("G", x = 0f, width = 1f),
+                LyricsFragment.Text(" mrs robinson", x = 1f, width = 13f),
+                LyricsFragment.Chord("e", x = 14f, width = 1f),
+                LyricsFragment.Text("know", x = 15f, width = 5f),
+                LyricsFragment.Chord("a7", x = 20f, width = 2f),
+                LyricsFragment.Chord(" D", x = 22f, width = 2f),
+                LyricsFragment.Text(" wo wo wo", x = 24f, width = 9f),
+            )
         )
     }
 

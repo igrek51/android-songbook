@@ -9,19 +9,21 @@ import igrek.songbook.chords.lyrics.wrapper.LineWrapper
 import igrek.songbook.settings.theme.DisplayStyle
 
 class LyricsArranger(
-        private val displayStyle: DisplayStyle,
-        private val screenWRelative: Float,
-        private val lengthMapper: TypefaceLengthMapper
+    private val displayStyle: DisplayStyle,
+    private val screenWRelative: Float,
+    private val lengthMapper: TypefaceLengthMapper,
+    private val horizontalScroll: Boolean = false,
 ) {
     private val lineWrapper = LineWrapper(
-            screenWRelative = screenWRelative,
-            lengthMapper = lengthMapper,
+        screenWRelative = screenWRelative,
+        lengthMapper = lengthMapper,
+        horizontalScroll = horizontalScroll,
     )
 
     fun arrangeModel(model: LyricsModel): LyricsModel {
         val arrangerStrategy = when (displayStyle) {
             DisplayStyle.ChordsAbove -> {
-                val arranger = ChordsAboveArranger(screenWRelative, lengthMapper)
+                val arranger = ChordsAboveArranger(screenWRelative, lengthMapper, horizontalScroll)
                 arranger::arrangeLine
             }
             else -> this::arrangeLine

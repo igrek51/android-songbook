@@ -6,12 +6,14 @@ import igrek.songbook.chords.lyrics.model.LyricsTextType
 import igrek.songbook.chords.lyrics.wrapper.DoubleLineWrapper
 
 class ChordsAboveArranger(
-        screenWRelative: Float,
-        private val lengthMapper: TypefaceLengthMapper
+    screenWRelative: Float,
+    private val lengthMapper: TypefaceLengthMapper,
+    horizontalScroll: Boolean = false,
 ) {
     private val doubleLineWrapper = DoubleLineWrapper(
-            screenWRelative = screenWRelative,
-            lengthMapper = lengthMapper,
+        screenWRelative = screenWRelative,
+        lengthMapper = lengthMapper,
+        horizontalScroll = horizontalScroll,
     )
 
     fun arrangeLine(line: LyricsLine): List<LyricsLine> {
