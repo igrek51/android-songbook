@@ -182,7 +182,7 @@ class SongPreviewLayoutController(
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     songPreview?.run {
                         scrollByPxVertical(dy.toFloat())
-                        onManuallyScrolled(dy)
+                        onManuallyScrolled(dy.toFloat())
                     }
                 }
             })
@@ -413,6 +413,15 @@ class SongPreviewLayoutController(
 
     private fun showChordsGraphs() {
         chordsDiagramsService.showLyricsChordsMenu(lyricsLoader.lyricsModel)
+    }
+
+    fun scrollByStep(stepsDown: Int): Boolean {
+        val lines = stepsDown * 0.5f
+        val dy: Float = lines * (songPreview?.lineheightPx ?: 0f)
+//        overlayScrollView?.smoothScrollBy(0, dy.toInt())
+        songPreview?.scrollByPxVerticalDiscrete(dy)
+        songPreview?.onManuallyScrolled(dy)
+        return true
     }
 
 }

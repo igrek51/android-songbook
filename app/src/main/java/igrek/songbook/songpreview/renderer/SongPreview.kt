@@ -396,6 +396,21 @@ class SongPreview(
         return scrollable
     }
 
+    fun scrollByPxVerticalDiscrete(py: Float) {
+        scroll += py
+        when {
+            scroll < 0f -> {
+                scroll = 0f
+            }
+
+            scroll > maxScroll -> {
+                scroll = maxScroll
+            }
+        }
+
+        repaint()
+    }
+
     private fun scrollByPxHorizontal(px: Float) {
         if (!lyricsThemeService.horizontalScroll) {
             scrollX = 0f
@@ -420,9 +435,9 @@ class SongPreview(
         return scroll < maxScroll
     }
 
-    fun onManuallyScrolled(dy: Int) {
+    fun onManuallyScrolled(dy: Float) {
         // lines scrolled
-        val linePartScrolled = dy.toFloat() / lineheightPx
+        val linePartScrolled = dy / lineheightPx
         // monitor scroll changes\
         if (abs(linePartScrolled) > 0.01f) {
             autoscroll.canvasScrollSubject.onNext(linePartScrolled)
