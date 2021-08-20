@@ -12,15 +12,18 @@ Our chief weapons are:
 - Chord diagrams for guitar, ukulele and mandolin
 - Songs database available offline as well as with online updates
 - Customizable displaying styles: chords among words, chords above lyrics or at the end of line
-- Several chords notations supported: English ("Am Bbm Bb B C Dm") and German ("a b B H C d")
+- Several chords notations supported: English ("Am Bbm Bb B C Dm") and German ("a b B H C d"), Solfege ("Do Re Mi Fa")
 - Automatic chords detection
 - Custom songs & settings synchronization between many devices, back-ups & restoring all application data
+- Sharing songs by link
 - Always-on display while playing
 - User favourite songs, latest songs and recent history list
 - Filtering songs by languages
 - Fullscreen mode
 - Importing & Exporting songs from / to files or Google Drive
 - Social contributing to songs database
+- Horizontal scrolling for viewing tabs
+- Comments in songs
 - Editing any song
 - Songs browser with search engine
 - Scroll speed adjustment
@@ -28,5 +31,5 @@ Our chief weapons are:
 - Saving last chords transposing
 - Shuffling songs
 
-Songbook is a tool mainly focused on guitarists and musicians, but it also can be used just to view the songs lyrics on mobile devices.
+Songbook is a tool mainly focused on guitarists, pianists and other musicians, but it also can be used just to view the songs lyrics on mobile devices.
 It has many songs with chords on board and its database can be easily extended with your own songs.
