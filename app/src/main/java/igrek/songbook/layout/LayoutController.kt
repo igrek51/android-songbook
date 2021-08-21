@@ -108,24 +108,7 @@ class LayoutController(
         mainContentLayout.isFocusableInTouchMode = true
         mainContentLayout.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN) {
-                when (keyCode) {
-                    KeyEvent.KEYCODE_DPAD_UP -> {
-                        systemKeyDispatcher.onArrowUp()
-                        return@setOnKeyListener true
-                    }
-                    KeyEvent.KEYCODE_DPAD_DOWN -> {
-                        systemKeyDispatcher.onArrowDown()
-                        return@setOnKeyListener true
-                    }
-                    KeyEvent.KEYCODE_DPAD_LEFT -> {
-                        systemKeyDispatcher.onArrowLeft()
-                        return@setOnKeyListener true
-                    }
-                    KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                        systemKeyDispatcher.onArrowRight()
-                        return@setOnKeyListener true
-                    }
-                }
+                return@setOnKeyListener systemKeyDispatcher.onKeyDown(keyCode)
             }
             return@setOnKeyListener false
         }

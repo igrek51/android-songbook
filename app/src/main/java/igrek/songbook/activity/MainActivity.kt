@@ -76,40 +76,8 @@ open class MainActivity(
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        when (keyCode) {
-            KeyEvent.KEYCODE_BACK -> {
-                if (activityData.systemKeyDispatcher.onKeyBack())
-                    return true
-            }
-            KeyEvent.KEYCODE_MENU -> {
-                if (activityData.systemKeyDispatcher.onKeyMenu())
-                    return true
-            }
-            KeyEvent.KEYCODE_VOLUME_UP -> {
-                if (activityData.systemKeyDispatcher.onVolumeUp())
-                    return true
-            }
-            KeyEvent.KEYCODE_VOLUME_DOWN -> {
-                if (activityData.systemKeyDispatcher.onVolumeDown())
-                    return true
-            }
-            KeyEvent.KEYCODE_DPAD_UP -> {
-                if (activityData.systemKeyDispatcher.onArrowUp())
-                    return true
-            }
-            KeyEvent.KEYCODE_DPAD_DOWN -> {
-                if (activityData.systemKeyDispatcher.onArrowDown())
-                    return true
-            }
-            KeyEvent.KEYCODE_DPAD_LEFT -> {
-                if (activityData.systemKeyDispatcher.onArrowLeft())
-                    return true
-            }
-            KeyEvent.KEYCODE_DPAD_RIGHT -> {
-                if (activityData.systemKeyDispatcher.onArrowRight())
-                    return true
-            }
-        }
+        if (activityData.systemKeyDispatcher.onKeyDown(keyCode))
+            return true
         return super.onKeyDown(keyCode, event)
     }
 
