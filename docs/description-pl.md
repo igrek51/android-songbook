@@ -30,6 +30,8 @@ Główne funkcje:
 - Schematy kolorów oraz czcionki
 - Zapisywanie ostatniej transpozycji akordów
 - Losowanie piosenki
+- Przewijanie strzałkami na klawiaturze zewnętrznej
+- Wybór następnej lub poprzedniej piosenki strzałkami klawiatury (Lewo / Prawo)
 
 Songbook jest narzędziem głównie skupionym na gitarzystach, pianistach i innych muzykach, ale również świetnie nadaje się do wyświetlania tekstów piosenek na urządzeniach mobilnych.
 Śpiewnik gitarowy posiada wiele piosenek z akordami, a w tym piosenki polskich artystów, piosenki ogniskowe, harcerskie, żołnierskie, polskie kolędy, szanty oraz wiele innych.

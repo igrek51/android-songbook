@@ -31,6 +31,8 @@ Our chief weapons are:
 - Color schemes and font typeface selection
 - Saving last chords transposing
 - Shuffling songs
+- Scrolling with keyboard arrow keys (Up/Down)
+- Jumping to next/previous song in playlist with keyboard arrow keys (Left/Right)
 
 Songbook is a tool mainly focused on guitarists and musicians, but it also can be used just to view the songs lyrics on mobile devices.
 It has many songs with chords on board and its database can be easily extended with your own songs.
