@@ -416,11 +416,9 @@ class SongPreviewLayoutController(
     }
 
     fun scrollByStep(stepsDown: Int): Boolean {
-        val lines = stepsDown * 0.5f
+        val lines = stepsDown * 1f
         val dy: Float = lines * (songPreview?.lineheightPx ?: 0f)
-//        overlayScrollView?.smoothScrollBy(0, dy.toInt())
-        songPreview?.scrollByPxVerticalDiscrete(dy)
-        songPreview?.onManuallyScrolled(dy)
+        overlayScrollView?.smoothScrollBy(0, dy.toInt())
         return true
     }
 

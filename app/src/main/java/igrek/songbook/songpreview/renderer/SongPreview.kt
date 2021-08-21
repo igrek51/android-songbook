@@ -396,21 +396,6 @@ class SongPreview(
         return scrollable
     }
 
-    fun scrollByPxVerticalDiscrete(py: Float) {
-        scroll += py
-        when {
-            scroll < 0f -> {
-                scroll = 0f
-            }
-
-            scroll > maxScroll -> {
-                scroll = maxScroll
-            }
-        }
-
-        repaint()
-    }
-
     private fun scrollByPxHorizontal(px: Float) {
         if (!lyricsThemeService.horizontalScroll) {
             scrollX = 0f

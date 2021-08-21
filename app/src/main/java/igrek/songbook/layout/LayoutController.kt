@@ -1,6 +1,7 @@
 package igrek.songbook.layout
 
 import android.app.Activity
+import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -35,6 +36,7 @@ import igrek.songbook.songselection.latest.LatestSongsLayoutController
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.top.TopSongsLayoutController
 import igrek.songbook.songselection.tree.SongTreeLayoutController
+import igrek.songbook.system.SystemKeyDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -43,33 +45,35 @@ import kotlin.reflect.KClass
 
 
 class LayoutController(
-        activity: LazyInject<Activity> = appFactory.activity,
-        navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
-        activityController: LazyInject<ActivityController> = appFactory.activityController,
-        adService: LazyInject<AdService> = appFactory.adService,
-        songTreeLayoutController: LazyInject<SongTreeLayoutController> = appFactory.songTreeLayoutController,
-        songSearchLayoutController: LazyInject<SongSearchLayoutController> = appFactory.songSearchLayoutController,
-        songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
-        contactLayoutController: LazyInject<ContactLayoutController> = appFactory.contactLayoutController,
-        settingsLayoutController: LazyInject<SettingsLayoutController> = appFactory.settingsLayoutController,
-        editSongLayoutController: LazyInject<EditSongLayoutController> = appFactory.editSongLayoutController,
-        chordsEditorLayoutController: LazyInject<ChordsEditorLayoutController> = appFactory.chordsEditorLayoutController,
-        customSongsListLayoutController: LazyInject<CustomSongsListLayoutController> = appFactory.customSongsListLayoutController,
-        favouritesLayoutController: LazyInject<FavouritesLayoutController> = appFactory.favouritesLayoutController,
-        playlistLayoutController: LazyInject<PlaylistLayoutController> = appFactory.playlistLayoutController,
-        latestSongsLayoutController: LazyInject<LatestSongsLayoutController> = appFactory.latestSongsLayoutController,
-        topSongsLayoutController: LazyInject<TopSongsLayoutController> = appFactory.topSongsLayoutController,
-        openHistoryLayoutController: LazyInject<OpenHistoryLayoutController> = appFactory.openHistoryLayoutController,
-        missingSongLayoutController: LazyInject<MissingSongLayoutController> = appFactory.missingSongLayoutController,
-        publishSongLayoutController: LazyInject<PublishSongLayoutController> = appFactory.publishSongLayoutController,
-        adminSongsLayoutContoller: LazyInject<AdminSongsLayoutContoller> = appFactory.adminSongsLayoutContoller,
-        roomListLayoutController: LazyInject<RoomListLayoutController> = appFactory.shareViewLayoutController,
-        roomLobbyLayoutController: LazyInject<RoomLobbyLayoutController> = appFactory.roomLobbyLayoutController,
+    activity: LazyInject<Activity> = appFactory.activity,
+    navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
+    activityController: LazyInject<ActivityController> = appFactory.activityController,
+    adService: LazyInject<AdService> = appFactory.adService,
+    systemKeyDispatcher: LazyInject<SystemKeyDispatcher> = appFactory.systemKeyDispatcher,
+    songTreeLayoutController: LazyInject<SongTreeLayoutController> = appFactory.songTreeLayoutController,
+    songSearchLayoutController: LazyInject<SongSearchLayoutController> = appFactory.songSearchLayoutController,
+    songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
+    contactLayoutController: LazyInject<ContactLayoutController> = appFactory.contactLayoutController,
+    settingsLayoutController: LazyInject<SettingsLayoutController> = appFactory.settingsLayoutController,
+    editSongLayoutController: LazyInject<EditSongLayoutController> = appFactory.editSongLayoutController,
+    chordsEditorLayoutController: LazyInject<ChordsEditorLayoutController> = appFactory.chordsEditorLayoutController,
+    customSongsListLayoutController: LazyInject<CustomSongsListLayoutController> = appFactory.customSongsListLayoutController,
+    favouritesLayoutController: LazyInject<FavouritesLayoutController> = appFactory.favouritesLayoutController,
+    playlistLayoutController: LazyInject<PlaylistLayoutController> = appFactory.playlistLayoutController,
+    latestSongsLayoutController: LazyInject<LatestSongsLayoutController> = appFactory.latestSongsLayoutController,
+    topSongsLayoutController: LazyInject<TopSongsLayoutController> = appFactory.topSongsLayoutController,
+    openHistoryLayoutController: LazyInject<OpenHistoryLayoutController> = appFactory.openHistoryLayoutController,
+    missingSongLayoutController: LazyInject<MissingSongLayoutController> = appFactory.missingSongLayoutController,
+    publishSongLayoutController: LazyInject<PublishSongLayoutController> = appFactory.publishSongLayoutController,
+    adminSongsLayoutContoller: LazyInject<AdminSongsLayoutContoller> = appFactory.adminSongsLayoutContoller,
+    roomListLayoutController: LazyInject<RoomListLayoutController> = appFactory.shareViewLayoutController,
+    roomLobbyLayoutController: LazyInject<RoomLobbyLayoutController> = appFactory.roomLobbyLayoutController,
 ) {
     private val activity by LazyExtractor(activity)
     private val navigationMenuController by LazyExtractor(navigationMenuController)
     private val activityController by LazyExtractor(activityController)
     private val adService by LazyExtractor(adService)
+    private val systemKeyDispatcher by LazyExtractor(systemKeyDispatcher)
 
     private lateinit var mainContentLayout: CoordinatorLayout
     private var currentLayout: MainLayout? = null
@@ -100,6 +104,31 @@ class LayoutController(
     fun init() {
         activity.setContentView(R.layout.main_layout)
         mainContentLayout = activity.findViewById(R.id.main_content)
+        mainContentLayout.isFocusable = true
+        mainContentLayout.isFocusableInTouchMode = true
+        mainContentLayout.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN) {
+                when (keyCode) {
+                    KeyEvent.KEYCODE_DPAD_UP -> {
+                        systemKeyDispatcher.onArrowUp()
+                        return@setOnKeyListener true
+                    }
+                    KeyEvent.KEYCODE_DPAD_DOWN -> {
+                        systemKeyDispatcher.onArrowDown()
+                        return@setOnKeyListener true
+                    }
+                    KeyEvent.KEYCODE_DPAD_LEFT -> {
+                        systemKeyDispatcher.onArrowLeft()
+                        return@setOnKeyListener true
+                    }
+                    KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                        systemKeyDispatcher.onArrowRight()
+                        return@setOnKeyListener true
+                    }
+                }
+            }
+            return@setOnKeyListener false
+        }
         navigationMenuController.init()
     }
 

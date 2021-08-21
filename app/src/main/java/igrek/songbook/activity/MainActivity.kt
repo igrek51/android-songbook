@@ -114,7 +114,7 @@ open class MainActivity(
     }
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
-        return super.onKeyDown(keyCode, event)
+        return super.onKeyUp(keyCode, event)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
