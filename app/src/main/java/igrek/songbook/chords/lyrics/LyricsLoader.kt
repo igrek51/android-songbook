@@ -85,7 +85,12 @@ class LyricsLoader(
         val lyricsInflater = LyricsInflater(typeface, realFontsize)
         val infaltedModel = lyricsInflater.inflateLyrics(parsedModel)
 
-        val lyricsWrapper = LyricsArranger(displayStyle, screenWRelative, lyricsInflater.lengthMapper)
+        val lyricsWrapper = LyricsArranger(
+            displayStyle,
+            screenWRelative,
+            lyricsInflater.lengthMapper,
+            preferencesState.horizontalScroll
+        )
         val wrappedModel = lyricsWrapper.arrangeModel(infaltedModel)
 
         lyricsModel = wrappedModel

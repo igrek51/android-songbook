@@ -37,6 +37,11 @@ class LyricsThemeService(
         set(value) {
             preferencesState.chordsDisplayStyle = value
         }
+    var horizontalScroll: Boolean
+        get() = preferencesState.horizontalScroll
+        set(value) {
+            preferencesState.horizontalScroll = value
+        }
 
     fun fontTypefaceEntries(): LinkedHashMap<String, String> {
         val map = LinkedHashMap<String, String>()

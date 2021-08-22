@@ -18,6 +18,7 @@ import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.layout.dialog.InputDialogBuilder
 import igrek.songbook.layout.list.ListItemClickListener
+import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
@@ -25,6 +26,7 @@ import igrek.songbook.persistence.user.playlist.Playlist
 import igrek.songbook.playlist.list.PlaylistListItem
 import igrek.songbook.playlist.list.PlaylistListView
 import igrek.songbook.songpreview.SongOpener
+import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.listview.ListScrollPosition
 import igrek.songbook.songselection.tree.NoParentItemException
@@ -33,12 +35,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
 class PlaylistLayoutController(
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
-        contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
+    contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+    songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
 ) : InflatedLayout(
         _layoutResourceId = R.layout.screen_playlists
 ), ListItemClickListener<PlaylistListItem> {
@@ -48,6 +51,7 @@ class PlaylistLayoutController(
     private val contextMenuBuilder by LazyExtractor(contextMenuBuilder)
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val songOpener by LazyExtractor(songOpener)
+    private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
 
     private var itemsListView: PlaylistListView? = null
     private var addPlaylistButton: ImageButton? = null
@@ -106,23 +110,23 @@ class PlaylistLayoutController(
                     .map { p -> PlaylistListItem(playlist = p) }
                     .toMutableList()
         } else {
-            playlist!!.songs
-                    .mapNotNull { s ->
-                        val namespace = when {
-                            s.custom -> SongNamespace.Custom
-                            else -> SongNamespace.Public
-                        }
-                        val id = SongIdentifier(s.songId, namespace)
-                        val song = songsRepository.allSongsRepo.songFinder.find(id)
-                        when {
-                            song != null -> PlaylistListItem(song = song)
-                            else -> null
-                        }
+            playlist?.songs
+                ?.mapNotNull { s ->
+                    val namespace = when {
+                        s.custom -> SongNamespace.Custom
+                        else -> SongNamespace.Public
                     }
-                    .toMutableList()
+                    val id = SongIdentifier(s.songId, namespace)
+                    val song = songsRepository.allSongsRepo.songFinder.find(id)
+                    when {
+                        song != null -> PlaylistListItem(song = song)
+                        else -> null
+                    }
+                }
+                ?.toMutableList()
         }
 
-        itemsListView!!.items = items
+        itemsListView?.items = items
 
         if (storedScroll != null) {
             Handler(Looper.getMainLooper()).post {
@@ -233,8 +237,32 @@ class PlaylistLayoutController(
                         else -> null
                     }
                 }
-                .toMutableList()
-        itemsListView!!.items = items
+            .toMutableList()
+        itemsListView?.items = items
         return items
+    }
+
+    fun goToNextOrPrevious(next: Int): Boolean {
+        val currentSong = songPreviewLayoutController.currentSong ?: return true
+        val playlist = playlist ?: return true
+        val songIndex = findSongInPlaylist(currentSong, playlist)
+        if (songIndex == -1)
+            return true
+        val nextIndex = songIndex + next
+        if (nextIndex < 0 || nextIndex >= playlist.songs.size)
+            return true
+        val nextPlaylistSong = playlist.songs[nextIndex]
+        val namespace = when {
+            nextPlaylistSong.custom -> SongNamespace.Custom
+            else -> SongNamespace.Public
+        }
+        val songId = SongIdentifier(nextPlaylistSong.songId, namespace)
+        val nextSong = songsRepository.allSongsRepo.songFinder.find(songId) ?: return true
+        songOpener.openSongPreview(nextSong)
+        return true
+    }
+
+    private fun findSongInPlaylist(song: Song, playlist: Playlist): Int {
+        return playlist.songs.indexOfFirst { s -> s.songId == song.id && s.custom == song.isCustom() }
     }
 }

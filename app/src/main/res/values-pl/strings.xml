@@ -58,8 +58,8 @@
         \nAUTOR:
         \nIreneusz Szulc
         \n
-        \nWYKORZYSTANE TECHNOLOGIE:
-        \nAndroid SDK, AssertJ, Espresso, Firebase Analytics, Gradle, Guava, Jackson, Java, jUnit, Kotlin, Material Design icons, Mockito, OkHttp, RxAndroid, RxKotlin, SQLite
+        \nWYKORZYSTANE BIBLIOTEKI I NARZĘDZIA:
+        \nAndroid SDK, Apache Commons, AssertJ, Espresso, Firebase Analytics, Google API, Gradle, Guava, Jackson, Java, jUnit, Kotlin, Material Design icons, Mockito, OkHttp, Protobuf, RxAndroid, RxKotlin, SQLite
     </string>
     <string name="action_info_ok">OK</string>
     <string name="action_secret">\?\?\?</string>
@@ -172,9 +172,11 @@
     <string name="notation_german">Niemiecka:\na b B H C C# d f#</string>
     <string name="notation_german_is">Niemiecka (*is):\na b B H C Cis d fis</string>
     <string name="notation_english">Angielska:\nAm Bbm Bb B C C# Dm F#m</string>
+    <string name="notation_solfege">Solfeż:\nLam Sibm Sib Si Do Do# Rem Fa#m</string>
     <string name="notation_short_german">Niemiecka</string>
     <string name="notation_short_german_is">Niemiecka (*is)</string>
     <string name="notation_short_english">Angielska</string>
+    <string name="notation_short_solfege">Solfeż</string>
     <string name="fill_in_all_fields">Wypełnij wszystkie wymagane pola.</string>
     <string name="connection_error">Błąd połączenia</string>
     <string name="updating_db_in_progress">Aktualizuję piosenki…</string>
@@ -445,4 +447,6 @@
     <string name="settings_autoscroll_autostart_hint">Uruchamiaj autoprzewijanie po otwarciu każdej piosenki</string>
     <string name="action_share_song">Udostępnij</string>
     <string name="copy_to_clipboard">Kopiuj do schowka</string>
+    <string name="settings_horizontalScroll">Poziome przewijanie</string>
+    <string name="settings_horizontalScroll_hint">Umożliwia przewijanie piosenki poziomo (bez zawijania wierszy) - przydatne do wyświetlania tabulatury</string>
 </resources>

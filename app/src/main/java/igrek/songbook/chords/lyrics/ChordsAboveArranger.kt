@@ -6,19 +6,27 @@ import igrek.songbook.chords.lyrics.model.LyricsTextType
 import igrek.songbook.chords.lyrics.wrapper.DoubleLineWrapper
 
 class ChordsAboveArranger(
-        screenWRelative: Float,
-        private val lengthMapper: TypefaceLengthMapper
+    screenWRelative: Float,
+    private val lengthMapper: TypefaceLengthMapper,
+    horizontalScroll: Boolean = false,
 ) {
     private val doubleLineWrapper = DoubleLineWrapper(
-            screenWRelative = screenWRelative,
-            lengthMapper = lengthMapper,
+        screenWRelative = screenWRelative,
+        lengthMapper = lengthMapper,
+        horizontalScroll = horizontalScroll,
     )
 
     fun arrangeLine(line: LyricsLine): List<LyricsLine> {
         calculateXPositions(line.fragments)
 
         val chords = LyricsLine(filterFragments(line.fragments, LyricsTextType.CHORDS))
-        val texts = LyricsLine(filterFragments(line.fragments, LyricsTextType.REGULAR_TEXT))
+        val texts = LyricsLine(
+            filterFragments(
+                line.fragments,
+                LyricsTextType.REGULAR_TEXT,
+                LyricsTextType.COMMENT
+            )
+        )
         preventChordsOverlapping(chords.fragments, texts.fragments)
         alignSingleChordsLeft(chords.fragments, texts.fragments)
 
@@ -51,7 +59,7 @@ class ChordsAboveArranger(
         var x = 0f
         fragments.forEach { fragment ->
             fragment.x = x
-            if (fragment.type == LyricsTextType.REGULAR_TEXT) {
+            if (fragment.type == LyricsTextType.REGULAR_TEXT || fragment.type == LyricsTextType.COMMENT) {
                 x += fragment.width
             }
         }

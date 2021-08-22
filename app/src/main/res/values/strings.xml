@@ -58,8 +58,8 @@
         \nAUTHOR:
         \nigrek51 - Ireneusz Szulc
         \n
-        \nTECHNOLOGIES USED:
-        \nAndroid SDK, AssertJ, Espresso, Firebase Analytics, Gradle, Guava, Jackson, Java, jUnit, Kotlin, Material Design icons, Mockito, OkHttp, RxAndroid, RxKotlin, SQLite
+        \nUSED LIBRARIES &amp; TOOLS:
+        \nAndroid SDK, Apache Commons, AssertJ, Espresso, Firebase Analytics, Google API, Gradle, Guava, Jackson, Java, jUnit, Kotlin, Material Design icons, Mockito, OkHttp, Protobuf, RxAndroid, RxKotlin, SQLite
     </string>
     <string name="action_info_ok">OK</string>
     <string name="action_secret">\?\?\?</string>
@@ -172,9 +172,11 @@
     <string name="notation_german">German:\na b B H C C# d f#</string>
     <string name="notation_german_is">German (*is):\na b B H C Cis d fis</string>
     <string name="notation_english">English:\nAm Bbm Bb B C C# Dm F#m</string>
+    <string name="notation_solfege">Solfege:\nLam Sibm Sib Si Do Do# Rem Fa#m</string>
     <string name="notation_short_german">German</string>
     <string name="notation_short_german_is">German (*is)</string>
     <string name="notation_short_english">English</string>
+    <string name="notation_short_solfege">Solfege</string>
     <string name="fill_in_all_fields">Please fill in all required fields.</string>
     <string name="connection_error">Communication breakdown: Connection error</string>
     <string name="updating_db_in_progress">Updating songs…</string>
@@ -471,4 +473,6 @@
     <string name="settings_autoscroll_autostart_hint">Start autoscrolling when opening a song</string>
     <string name="action_share_song">Share</string>
     <string name="copy_to_clipboard">Copy to clipboard</string>
+    <string name="settings_horizontalScroll">Horizontal scroll</string>
+    <string name="settings_horizontalScroll_hint">Enable scrolling song horizontally (without word wrap) - useful when viewing tabs</string>
 </resources>

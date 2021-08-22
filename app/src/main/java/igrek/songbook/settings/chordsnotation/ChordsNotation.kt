@@ -10,6 +10,8 @@ enum class ChordsNotation(val id: Long, val displayNameResId: Int, val shortName
 
     ENGLISH(3, R.string.notation_english, R.string.notation_short_english),
 
+    SOLFEGE(4, R.string.notation_solfege, R.string.notation_short_solfege),
+
     ;
 
     companion object {

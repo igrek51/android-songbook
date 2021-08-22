@@ -38,15 +38,29 @@ class ChordNameProvider {
                     listOf("C"),
                     listOf("C#", "Db"),
                     listOf("D"),
-                    listOf("D#", "Eb"),
-                    listOf("E"),
-                    listOf("F"),
-                    listOf("F#", "Gb"),
-                    listOf("G"),
-                    listOf("G#", "Ab"),
-                    listOf("A"),
-                    listOf("Bb", "A#"),
-                    listOf("B")
+                listOf("D#", "Eb"),
+                listOf("E"),
+                listOf("F"),
+                listOf("F#", "Gb"),
+                listOf("G"),
+                listOf("G#", "Ab"),
+                listOf("A"),
+                listOf("Bb", "A#"),
+                listOf("B")
+            )
+            ChordsNotation.SOLFEGE -> listOf(
+                listOf("Do", "DO"),
+                listOf("Do#", "DO#", "Reb", "REb"),
+                listOf("Re", "RE"),
+                listOf("Re#", "RE#", "Mib", "MIb"),
+                listOf("Mi", "MI"),
+                listOf("Fa", "FA"),
+                listOf("Fa#", "FA#", "Solb", "SOLb"),
+                listOf("Sol", "SOL"),
+                listOf("Sol#", "SOL#", "Lab", "LAb"),
+                listOf("La", "LA"),
+                listOf("Sib", "SIb", "La#", "LA#"),
+                listOf("Si", "SI")
             )
         }
     }
@@ -85,20 +99,34 @@ class ChordNameProvider {
                     listOf("Cm"),
                     listOf("C#m"),
                     listOf("Dm"),
-                    listOf("D#m"),
-                    listOf("Em"),
-                    listOf("Fm"),
-                    listOf("F#m"),
-                    listOf("Gm"),
-                    listOf("G#m"),
-                    listOf("Am"),
-                    listOf("Bbm"),
-                    listOf("Bm")
+                listOf("D#m"),
+                listOf("Em"),
+                listOf("Fm"),
+                listOf("F#m"),
+                listOf("Gm"),
+                listOf("G#m"),
+                listOf("Am"),
+                listOf("Bbm"),
+                listOf("Bm")
+            )
+            ChordsNotation.SOLFEGE -> listOf(
+                listOf("Dom", "DOm"),
+                listOf("Do#m", "DO#m", "Rebm", "REbm"),
+                listOf("Rem", "REm"),
+                listOf("Re#m", "RE#m", "Mibm", "MIbm"),
+                listOf("Mim", "MIm"),
+                listOf("Fam", "FAm"),
+                listOf("Fa#m", "FA#m", "Solbm", "SOLbm"),
+                listOf("Solm", "SOLm"),
+                listOf("Sol#m", "SOL#m", "Labm", "LAbm"),
+                listOf("Lam", "LAm"),
+                listOf("Sibm", "SIbm", "La#m", "LA#m"),
+                listOf("Sim", "SIm")
             )
         }
     }
 
-    // seems like they belongs to that notation (meet rules) but they really don't
+    // seems like they belong to that notation (meet rules) but they really don't
     fun falseFriends(notation: ChordsNotation): Set<String> {
         return when (notation) {
             ChordsNotation.GERMAN -> setOf(
@@ -114,6 +142,7 @@ class ChordNameProvider {
                     "cm", "c#m", "dbm", "desm", "cism", "dm", "d#m", "ebm", "esm", "dism", "em", "fm", "f#m", "gbm", "gesm", "fism", "gm", "g#m", "abm", "asm", "gism", "am", "bm", "a#m", "aism", "hm"
             )
             ChordsNotation.ENGLISH -> setOf()
+            ChordsNotation.SOLFEGE -> setOf()
         }
     }
 

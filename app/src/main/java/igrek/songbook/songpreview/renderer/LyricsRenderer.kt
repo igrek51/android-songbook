@@ -15,6 +15,7 @@ class LyricsRenderer internal constructor(
     fontTypeface: FontTypeface,
     colorScheme: ColorScheme,
     private val displayStyle: DisplayStyle,
+    private val horizontalScroll: Boolean,
 ) {
 
     private val w: Float = canvas.w.toFloat()
@@ -22,14 +23,17 @@ class LyricsRenderer internal constructor(
 
     private var normalTypeface: Typeface? = null
     private var boldTypeface: Typeface? = null
+    private var italicTypeface: Typeface? = null
     private var textColor: Int
     private var chordColor: Int
+    private var commentColor: Int
     private var linewrapperColor: Int
 
     init {
         val typefaceFamily = fontTypeface.typeface
         normalTypeface = Typeface.create(typefaceFamily, Typeface.NORMAL)
         boldTypeface = Typeface.create(typefaceFamily, Typeface.BOLD)
+        italicTypeface = Typeface.create(typefaceFamily, Typeface.ITALIC)
 
         textColor = when (colorScheme) {
             ColorScheme.DARK -> 0xffffff
@@ -38,6 +42,10 @@ class LyricsRenderer internal constructor(
         chordColor = when (colorScheme) {
             ColorScheme.DARK -> 0xf00000
             ColorScheme.BRIGHT -> 0xf00000
+        }
+        commentColor = when (colorScheme) {
+            ColorScheme.DARK -> 0x929292
+            ColorScheme.BRIGHT -> 0x6D6D6D
         }
         linewrapperColor = when (colorScheme) {
             ColorScheme.DARK -> 0x707070
@@ -52,13 +60,14 @@ class LyricsRenderer internal constructor(
     fun drawFileContent(fontsize: Float, lineheight: Float) {
         canvas.setFontSize(fontsize)
         lyricsModel?.lines?.forEachIndexed { lineIndex, line ->
-            drawTextLine(line, canvas.scroll, fontsize, lineheight, lineIndex)
+            drawTextLine(line, canvas.scroll, canvas.scrollX, fontsize, lineheight, lineIndex)
         }
     }
 
     private fun drawTextLine(
         line: LyricsLine,
         scroll: Float,
+        scrollX: Float,
         fontsize: Float,
         lineheight: Float,
         lineIndex: Int,
@@ -80,26 +89,43 @@ class LyricsRenderer internal constructor(
         }
 
         for (fragment in line.fragments) {
-
-            if (fragment.type == LyricsTextType.REGULAR_TEXT) {
-                canvas.setFontTypeface(normalTypeface)
-                canvas.setColor(textColor)
-                canvas.drawText(fragment.text, fragment.x * fontsize, y + lineheight, Align.LEFT)
-            } else if (fragment.type == LyricsTextType.CHORDS) {
-                canvas.setFontTypeface(boldTypeface)
-                canvas.setColor(chordColor)
-                val x = if (displayStyle == DisplayStyle.ChordsAlignedRight) {
-                    fragment.x * fontsize - canvas.scrollWidth
-                } else {
-                    fragment.x * fontsize
+            when (fragment.type) {
+                LyricsTextType.REGULAR_TEXT -> {
+                    canvas.setFontTypeface(normalTypeface)
+                    canvas.setColor(textColor)
+                    canvas.drawText(
+                        fragment.text,
+                        fragment.x * fontsize - scrollX,
+                        y + lineheight,
+                        Align.LEFT
+                    )
                 }
-                canvas.drawText(fragment.text, x, y + lineheight, Align.LEFT)
+                LyricsTextType.CHORDS -> {
+                    canvas.setFontTypeface(boldTypeface)
+                    canvas.setColor(chordColor)
+                    val x = if (displayStyle == DisplayStyle.ChordsAlignedRight) {
+                        fragment.x * fontsize - canvas.scrollThickness - scrollX
+                    } else {
+                        fragment.x * fontsize - scrollX
+                    }
+                    canvas.drawText(fragment.text, x, y + lineheight, Align.LEFT)
+                }
+                LyricsTextType.COMMENT -> {
+                    canvas.setFontTypeface(italicTypeface)
+                    canvas.setColor(commentColor)
+                    canvas.drawText(
+                        fragment.text,
+                        fragment.x * fontsize - scrollX,
+                        y + lineheight,
+                        Align.LEFT
+                    )
+                }
             }
-
         }
     }
 
-    fun drawScrollBar() {
+    fun drawScrollBars() {
+        //vertical scrollbar
         val scroll = canvas.scroll
         val maxScroll = canvas.maxScroll
         val range = maxScroll + h
@@ -107,8 +133,20 @@ class LyricsRenderer internal constructor(
         val bottom = (scroll + h) / range
 
         canvas.setColor(0xAEC3E0)
-        val scrollWidth = canvas.scrollWidth
-        canvas.fillRect(w - scrollWidth, top * h, w, bottom * h)
+        val scrollThickness = canvas.scrollThickness
+        canvas.fillRect(w - scrollThickness, top * h, w, bottom * h)
+
+        //horizontal scrollbar
+        if (horizontalScroll) {
+            val maxScrollX = canvas.maxScrollX
+            if (maxScrollX > 0) {
+                val scrollX = canvas.scrollX
+                val rangeX = maxScrollX + w
+                val left = scrollX / rangeX
+                val right = (scrollX + w) / rangeX
+                canvas.fillRect(left * w, h - scrollThickness, right * w, h)
+            }
+        }
     }
 
 }

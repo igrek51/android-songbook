@@ -95,6 +95,8 @@ enum class PreferencesField constructor(
 
     AutoscrollAutostart(false),
 
+    HorizontalScroll(false),
+
     ;
 
     constructor(defaultValue: String) : this(StringPreferenceType(defaultValue))

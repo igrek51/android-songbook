@@ -76,29 +76,13 @@ open class MainActivity(
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        when (keyCode) {
-            KeyEvent.KEYCODE_BACK -> {
-                if (activityData.systemKeyDispatcher.onKeyBack())
-                    return true
-            }
-            KeyEvent.KEYCODE_MENU -> {
-                if (activityData.systemKeyDispatcher.onKeyMenu())
-                    return true
-            }
-            KeyEvent.KEYCODE_VOLUME_UP -> {
-                if (activityData.systemKeyDispatcher.onVolumeUp())
-                    return true
-            }
-            KeyEvent.KEYCODE_VOLUME_DOWN -> {
-                if (activityData.systemKeyDispatcher.onVolumeDown())
-                    return true
-            }
-        }
+        if (activityData.systemKeyDispatcher.onKeyDown(keyCode))
+            return true
         return super.onKeyDown(keyCode, event)
     }
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
-        return super.onKeyDown(keyCode, event)
+        return super.onKeyUp(keyCode, event)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {

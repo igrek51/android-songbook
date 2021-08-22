@@ -9,19 +9,21 @@ import igrek.songbook.chords.lyrics.wrapper.LineWrapper
 import igrek.songbook.settings.theme.DisplayStyle
 
 class LyricsArranger(
-        private val displayStyle: DisplayStyle,
-        private val screenWRelative: Float,
-        private val lengthMapper: TypefaceLengthMapper
+    private val displayStyle: DisplayStyle,
+    private val screenWRelative: Float,
+    private val lengthMapper: TypefaceLengthMapper,
+    private val horizontalScroll: Boolean = false,
 ) {
     private val lineWrapper = LineWrapper(
-            screenWRelative = screenWRelative,
-            lengthMapper = lengthMapper,
+        screenWRelative = screenWRelative,
+        lengthMapper = lengthMapper,
+        horizontalScroll = horizontalScroll,
     )
 
     fun arrangeModel(model: LyricsModel): LyricsModel {
         val arrangerStrategy = when (displayStyle) {
             DisplayStyle.ChordsAbove -> {
-                val arranger = ChordsAboveArranger(screenWRelative, lengthMapper)
+                val arranger = ChordsAboveArranger(screenWRelative, lengthMapper, horizontalScroll)
                 arranger::arrangeLine
             }
             else -> this::arrangeLine
@@ -48,7 +50,8 @@ class LyricsArranger(
             DisplayStyle.LyricsOnly -> filterFragments(fragments, LyricsTextType.REGULAR_TEXT)
             DisplayStyle.ChordsAlignedRight -> {
                 val chords = filterFragments(fragments, LyricsTextType.CHORDS)
-                val texts = filterFragments(fragments, LyricsTextType.REGULAR_TEXT)
+                val texts =
+                    filterFragments(fragments, LyricsTextType.REGULAR_TEXT, LyricsTextType.COMMENT)
                 if (areFragmentsBlank(chords)) {
                     texts
                 } else {
@@ -139,6 +142,16 @@ class LyricsArranger(
 
 }
 
-internal fun filterFragments(fragments: List<LyricsFragment>, textType: LyricsTextType): List<LyricsFragment> {
+internal fun filterFragments(
+    fragments: List<LyricsFragment>,
+    textType: LyricsTextType
+): List<LyricsFragment> {
     return fragments.filter { fragment -> fragment.type == textType }
+}
+
+internal fun filterFragments(
+    fragments: List<LyricsFragment>,
+    vararg textTypes: LyricsTextType
+): List<LyricsFragment> {
+    return fragments.filter { fragment -> fragment.type in textTypes }
 }

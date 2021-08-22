@@ -125,7 +125,13 @@ class ChordsDetectorTest {
     fun test_g6add11() {
         val detector = ChordsDetector(ChordsNotation.GERMAN)
         assertThat(detector.recognizeSingleChord("G6add11")).isNotNull
-        assertThat(detector.recognizeSingleChord("G6add11")).isEqualTo(Chord(noteIndex = 7, minor = false, suffix = "6add11"))
+        assertThat(detector.recognizeSingleChord("G6add11")).isEqualTo(
+            Chord(
+                noteIndex = 7,
+                minor = false,
+                suffix = "6add11"
+            )
+        )
     }
 
     @Test
@@ -133,5 +139,16 @@ class ChordsDetectorTest {
         val detector = ChordsDetector(ChordsNotation.GERMAN)
         assertThat(detector.isWordAChord("Am")).isFalse()
         assertThat(detector.isWordAChord("co")).isFalse()
+    }
+
+    @Test
+    fun test_detect_solfege() {
+        val detector = ChordsDetector(ChordsNotation.SOLFEGE)
+        assertThat(detector.recognizeSingleChord("Do")).isEqualTo(Chord(0, false, ""))
+        assertThat(detector.recognizeSingleChord("Dom")).isEqualTo(Chord(0, true, ""))
+        assertThat(detector.recognizeSingleChord("DOm")).isEqualTo(Chord(0, true, ""))
+        assertThat(detector.recognizeSingleChord("Do#m")).isEqualTo(Chord(1, true, ""))
+        assertThat(detector.recognizeSingleChord("Re")).isEqualTo(Chord(2, false, ""))
+        assertThat(detector.recognizeSingleChord("Mibmaj7")).isEqualTo(Chord(3, false, "maj7"))
     }
 }

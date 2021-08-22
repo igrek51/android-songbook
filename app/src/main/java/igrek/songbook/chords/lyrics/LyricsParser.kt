@@ -25,43 +25,66 @@ class LyricsParser(
 
     private fun parseLines(rawLines: List<String>): LyricsModel {
         val bracket = AtomicBoolean(false)
+        val brace = AtomicBoolean(false)
         val lines = rawLines.map { rawLine ->
             val line = if (trimWhitespaces) rawLine.trim() else rawLine
-            parseLine(line, bracket)
+            parseLine(line, bracket, brace)
         }.dropLastWhile { line -> line.isBlank() }
         return LyricsModel(lines = lines)
     }
 
-    private fun parseLine(rawLine: String, bracket: AtomicBoolean): LyricsLine {
+    private fun parseLine(
+        rawLine: String,
+        bracket: AtomicBoolean,
+        brace: AtomicBoolean
+    ): LyricsLine {
         val fragments = mutableListOf<LyricsFragment>()
         var frameStart = 0
         rawLine.forEachIndexed { index, character ->
             when (character) {
                 '[' -> {
-                    cutOffFragment(rawLine, fragments, bracket, frameStart, index)
+                    cutOffFragment(rawLine, fragments, bracket, brace, frameStart, index)
                     frameStart = index + 1
                     bracket.set(true)
                 }
                 ']' -> {
-                    cutOffFragment(rawLine, fragments, bracket, frameStart, index)
+                    cutOffFragment(rawLine, fragments, bracket, brace, frameStart, index)
                     frameStart = index + 1
                     bracket.set(false)
                 }
+                '{' -> {
+                    cutOffFragment(rawLine, fragments, bracket, brace, frameStart, index)
+                    frameStart = index + 1
+                    brace.set(true)
+                }
+                '}' -> {
+                    cutOffFragment(rawLine, fragments, bracket, brace, frameStart, index)
+                    frameStart = index + 1
+                    brace.set(false)
+                }
             }
         }
-        cutOffFragment(rawLine, fragments, bracket, frameStart, rawLine.length)
+        cutOffFragment(rawLine, fragments, bracket, brace, frameStart, rawLine.length)
 
         return LyricsLine(fragments = fragments)
     }
 
-    private fun cutOffFragment(rawLine: String, fragments: MutableList<LyricsFragment>, bracket: AtomicBoolean, frameStart: Int, nextIndex: Int) {
+    private fun cutOffFragment(
+        rawLine: String,
+        fragments: MutableList<LyricsFragment>,
+        bracket: AtomicBoolean,
+        brace: AtomicBoolean,
+        frameStart: Int,
+        nextIndex: Int,
+    ) {
         if (nextIndex <= frameStart)
             return
 
         val fragment = rawLine.substring(frameStart, nextIndex)
-        val type = when (bracket.get()) {
-            true -> LyricsTextType.CHORDS
-            false -> LyricsTextType.REGULAR_TEXT
+        val type = when {
+            brace.get() -> LyricsTextType.COMMENT
+            bracket.get() -> LyricsTextType.CHORDS
+            else -> LyricsTextType.REGULAR_TEXT
         }
         fragments.add(LyricsFragment(text = fragment, type = type))
     }

@@ -24,6 +24,10 @@ data class LyricsLine(
     fun isBlank(): Boolean {
         return fragments.all { fragment -> fragment.text.isBlank() }
     }
+
+    fun maxRightX(): Float {
+        return fragments.maxOfOrNull { it.rightX } ?: 0f
+    }
 }
 
 data class LyricsFragment(
@@ -37,16 +41,19 @@ data class LyricsFragment(
         val txt = when (type) {
             LyricsTextType.REGULAR_TEXT -> text
             LyricsTextType.CHORDS -> "[$text]"
+            LyricsTextType.COMMENT -> "{$text}"
             LyricsTextType.LINEWRAPPER -> lineWrapperChar.toString()
         }
         return "($txt,x=$x,width=$width)"
     }
 
+    val rightX get() = x + width
+
     companion object {
         val lineWrapper = LyricsFragment(
-                text = lineWrapperChar.toString(),
-                type = LyricsTextType.LINEWRAPPER,
-                width = 0f
+            text = lineWrapperChar.toString(),
+            type = LyricsTextType.LINEWRAPPER,
+            width = 0f
         )
 
         fun Text(text: String, x: Float = 0f, width: Float = 0f): LyricsFragment {
@@ -60,13 +67,10 @@ data class LyricsFragment(
 }
 
 enum class LyricsTextType {
-
     REGULAR_TEXT,
-
     CHORDS,
-
+    COMMENT,
     LINEWRAPPER,
-
 }
 
 const val lineWrapperChar = '\u21B5'

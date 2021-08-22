@@ -3,13 +3,14 @@ package igrek.songbook.chords.lyrics.wrapper
 import igrek.songbook.chords.lyrics.TypefaceLengthMapper
 
 class DoubleLineWrapper(
-        private val screenWRelative: Float,
-        private val lengthMapper: TypefaceLengthMapper
+    private val screenWRelative: Float,
+    private val lengthMapper: TypefaceLengthMapper,
+    private val horizontalScroll: Boolean = false,
 ) {
     private val singleLineWrapper = LineWrapper(screenWRelative, lengthMapper)
 
     fun wrapDoubleLine(chords: Line, texts: Line): List<Line> {
-        if (texts.end() <= screenWRelative && chords.end() <= screenWRelative) {
+        if (horizontalScroll || (texts.end() <= screenWRelative && chords.end() <= screenWRelative)) {
             return listOf(chords, texts).nonEmptyLines()
         }
 

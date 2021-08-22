@@ -71,14 +71,65 @@ class LyricsParserTest {
         bcde
         """.trimIndent())
 
-        assertThat(model.lines).isEqualTo(listOf(
-                LyricsLine(listOf(
+        assertThat(model.lines).isEqualTo(
+            listOf(
+                LyricsLine(
+                    listOf(
                         LyricsFragment(text = "   a  ", type = LyricsTextType.REGULAR_TEXT),
                         LyricsFragment(text = "a", type = LyricsTextType.CHORDS)
-                )),
-                LyricsLine(listOf(
+                    )
+                ),
+                LyricsLine(
+                    listOf(
                         LyricsFragment(text = "bcde", type = LyricsTextType.REGULAR_TEXT),
-                ))
-        ))
+                    )
+                )
+            )
+        )
+    }
+
+
+    @Test
+    fun test_parse_comments() {
+        val model = LyricsParser().parseContent(
+            """
+        {this is title}
+        dupa [a]
+        
+        {chorus}
+        next [a]verse {inline comment} [G]
+        """.trimIndent()
+        )
+        assertThat(model.lines).isEqualTo(
+            listOf(
+                LyricsLine(
+                    listOf(
+                        LyricsFragment(text = "this is title", type = LyricsTextType.COMMENT),
+                    )
+                ),
+                LyricsLine(
+                    listOf(
+                        LyricsFragment(text = "dupa ", type = LyricsTextType.REGULAR_TEXT),
+                        LyricsFragment(text = "a", type = LyricsTextType.CHORDS),
+                    )
+                ),
+                LyricsLine(listOf()),
+                LyricsLine(
+                    listOf(
+                        LyricsFragment(text = "chorus", type = LyricsTextType.COMMENT),
+                    )
+                ),
+                LyricsLine(
+                    listOf(
+                        LyricsFragment(text = "next ", type = LyricsTextType.REGULAR_TEXT),
+                        LyricsFragment(text = "a", type = LyricsTextType.CHORDS),
+                        LyricsFragment(text = "verse ", type = LyricsTextType.REGULAR_TEXT),
+                        LyricsFragment(text = "inline comment", type = LyricsTextType.COMMENT),
+                        LyricsFragment(text = " ", type = LyricsTextType.REGULAR_TEXT),
+                        LyricsFragment(text = "G", type = LyricsTextType.CHORDS),
+                    )
+                ),
+            )
+        )
     }
 }

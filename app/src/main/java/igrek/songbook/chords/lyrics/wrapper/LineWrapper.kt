@@ -3,12 +3,13 @@ package igrek.songbook.chords.lyrics.wrapper
 import igrek.songbook.chords.lyrics.TypefaceLengthMapper
 
 class LineWrapper(
-        private val screenWRelative: Float,
-        private val lengthMapper: TypefaceLengthMapper
+    private val screenWRelative: Float,
+    private val lengthMapper: TypefaceLengthMapper,
+    private val horizontalScroll: Boolean = false,
 ) {
 
     fun wrapLine(line: Line): List<Line> {
-        if (line.end() <= screenWRelative) {
+        if (line.end() <= screenWRelative || horizontalScroll) {
             return listOf(line).nonEmptyLines()
         }
 
