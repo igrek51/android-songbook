@@ -249,8 +249,14 @@ class PlaylistLayoutController(
         if (songIndex == -1)
             return true
         val nextIndex = songIndex + next
-        if (nextIndex < 0 || nextIndex >= playlist.songs.size)
+        if (nextIndex < 0) {
+            uiInfoService.showToast(R.string.playlist_at_beginning)
             return true
+        }
+        if (nextIndex >= playlist.songs.size) {
+            uiInfoService.showToast(R.string.playlist_at_end)
+            return true
+        }
         val nextPlaylistSong = playlist.songs[nextIndex]
         val namespace = when {
             nextPlaylistSong.custom -> SongNamespace.Custom

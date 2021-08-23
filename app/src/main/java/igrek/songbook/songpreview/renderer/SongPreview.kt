@@ -9,6 +9,7 @@ import igrek.songbook.chords.lyrics.model.LyricsModel
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import igrek.songbook.playlist.PlaylistLayoutController
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.SongPreviewLayoutController
@@ -23,13 +24,14 @@ import kotlin.math.hypot
 
 
 class SongPreview(
-        context: Context,
-        songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
-        autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
-        quickMenuTranspose: LazyInject<QuickMenuTranspose> = appFactory.quickMenuTranspose,
-        quickMenuAutoscroll: LazyInject<QuickMenuAutoscroll> = appFactory.quickMenuAutoscroll,
-        windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
-        lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
+    context: Context,
+    songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
+    autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
+    quickMenuTranspose: LazyInject<QuickMenuTranspose> = appFactory.quickMenuTranspose,
+    quickMenuAutoscroll: LazyInject<QuickMenuAutoscroll> = appFactory.quickMenuAutoscroll,
+    windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
+    lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
+    playlistLayoutController: LazyInject<PlaylistLayoutController> = appFactory.playlistLayoutController,
 ) : BaseCanvasView(context), View.OnTouchListener {
     private val songPreviewController by LazyExtractor(songPreviewLayoutController)
     private val autoscroll by LazyExtractor(autoscrollService)
@@ -37,6 +39,7 @@ class SongPreview(
     private val quickMenuAutoscroll by LazyExtractor(quickMenuAutoscroll)
     private val windowManagerService by LazyExtractor(windowManagerService)
     private val lyricsThemeService by LazyExtractor(lyricsThemeService)
+    private val playlistLayoutController by LazyExtractor(playlistLayoutController)
 
     private var lyricsModel: LyricsModel? = null
     var scroll: Float = 0f
@@ -50,6 +53,7 @@ class SongPreview(
     private var fontsize0: Float? = null
     private var lyricsRenderer: LyricsRenderer? = null
     private var startTouchY = 0f
+    private var startTouchX = 0f
     private var startTouchScrollX = 0f
     private var startTouchTime: Long = 0
     private val bottomMarginCache = SimpleCache {
@@ -66,6 +70,7 @@ class SongPreview(
         const val LINEHEIGHT_SCALE_FACTOR = 1.02f
         const val FONTSIZE_SCALE_FACTOR = 0.6f
         const val DOUBLE_CLICK_INTERVAL: Long = 500 // [ms]
+        const val GESTURE_HORIZONTAL_SWIPE = 0.25f // minimal factor of swiped screen width
     }
 
     private val fontsizePx: Float
@@ -161,6 +166,7 @@ class SongPreview(
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> onTouchDown(event)
             MotionEvent.ACTION_MOVE -> onTouchMove(event)
+            MotionEvent.ACTION_UP -> onTouchUp(event)
             MotionEvent.ACTION_POINTER_DOWN -> onTouchPointerDown(event)
             MotionEvent.ACTION_POINTER_UP -> onTouchPointerUp(event)
         }
@@ -169,6 +175,7 @@ class SongPreview(
 
     private fun onTouchDown(event: MotionEvent) {
         startTouchY = event.y
+        startTouchX = event.x
         startTouchScrollX = event.x
         startTouchTime = System.currentTimeMillis()
         startScroll = scroll
@@ -212,7 +219,7 @@ class SongPreview(
         startScroll = scroll
         startScrollX = scrollX
         // leave a pointer which is still active
-        var pointerIndex: Int? = 0
+        var pointerIndex = 0
         if (event.pointerCount >= 2) {
             for (i in 0 until event.pointerCount) {
                 if (i != event.actionIndex) {
@@ -221,9 +228,23 @@ class SongPreview(
                 }
             }
         }
-        startTouchY = event.getY(pointerIndex!!)
+        startTouchY = event.getY(pointerIndex)
 
         songPreviewController.onFontsizeChangedEvent(fontsizeTmp)
+    }
+
+    private fun onTouchUp(event: MotionEvent) {
+        if (!lyricsThemeService.horizontalScroll) {
+            val dx = event.x - startTouchX
+            val adx = abs(dx)
+            if (adx > GESTURE_HORIZONTAL_SWIPE * w) {
+                if (dx > 0) {
+                    playlistLayoutController.goToNextOrPrevious(-1)
+                } else {
+                    playlistLayoutController.goToNextOrPrevious(+1)
+                }
+            }
+        }
     }
 
     fun onClick() {

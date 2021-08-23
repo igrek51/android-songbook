@@ -475,4 +475,6 @@
     <string name="copy_to_clipboard">Copy to clipboard</string>
     <string name="settings_horizontalScroll">Horizontal scroll</string>
     <string name="settings_horizontalScroll_hint">Enable scrolling song horizontally (without word wrap) - useful when viewing tabs</string>
+    <string name="playlist_at_beginning">Beginning of playlist reached</string>
+    <string name="playlist_at_end">End of playlist reached</string>
 </resources>

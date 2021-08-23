@@ -449,4 +449,6 @@
     <string name="copy_to_clipboard">Kopiuj do schowka</string>
     <string name="settings_horizontalScroll">Poziome przewijanie</string>
     <string name="settings_horizontalScroll_hint">Umożliwia przewijanie piosenki poziomo (bez zawijania wierszy) - przydatne do wyświetlania tabulatury</string>
+    <string name="playlist_at_beginning">Początek playlisty</string>
+    <string name="playlist_at_end">Koniec playlisty</string>
 </resources>
