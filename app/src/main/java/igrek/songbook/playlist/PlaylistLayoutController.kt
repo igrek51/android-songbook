@@ -222,21 +222,32 @@ class PlaylistLayoutController(
     }
 
     @Synchronized
-    fun itemMoved(position: Int, step: Int): List<PlaylistListItem>? {
-        ListMover(playlist!!.songs).move(position, step)
-        val items = playlist!!.songs
-                .mapNotNull { s ->
-                    val namespace = when {
-                        s.custom -> SongNamespace.Custom
-                        else -> SongNamespace.Public
-                    }
-                    val id = SongIdentifier(s.songId, namespace)
-                    val song = songsRepository.allSongsRepo.songFinder.find(id)
-                    when {
-                        song != null -> PlaylistListItem(song = song)
-                        else -> null
-                    }
+    fun itemMoved(position: Int, step: Int): List<PlaylistListItem> {
+        val existingSongs = playlist!!.songs
+            .filter { s ->
+                val namespace = when {
+                    s.custom -> SongNamespace.Custom
+                    else -> SongNamespace.Public
                 }
+                val id = SongIdentifier(s.songId, namespace)
+                val song = songsRepository.allSongsRepo.songFinder.find(id)
+                song != null
+            }.toMutableList()
+        ListMover(existingSongs).move(position, step)
+        playlist?.songs = existingSongs
+        val items = existingSongs
+            .mapNotNull { s ->
+                val namespace = when {
+                    s.custom -> SongNamespace.Custom
+                    else -> SongNamespace.Public
+                }
+                val id = SongIdentifier(s.songId, namespace)
+                val song = songsRepository.allSongsRepo.songFinder.find(id)
+                when {
+                    song != null -> PlaylistListItem(song = song)
+                    else -> null
+                }
+            }
             .toMutableList()
         itemsListView?.items = items
         return items
