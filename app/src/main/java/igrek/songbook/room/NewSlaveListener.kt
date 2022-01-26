@@ -9,7 +9,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.channels.SendChannel
-import kotlinx.coroutines.channels.sendBlocking
+import kotlinx.coroutines.channels.trySendBlocking
 import java.io.IOException
 
 class NewSlaveListener(
@@ -37,11 +37,11 @@ class NewSlaveListener(
             try {
                 serverSocket = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord("Songbook", BT_APP_UUID)
                 logger.debug("sending success to init channel")
-                initChannel.sendBlocking(Result.success(Unit))
+                initChannel.trySendBlocking(Result.success(Unit))
                 logger.debug("initChannel: ${initChannel.isEmpty}")
             } catch (e: Throwable) {
                 logger.error("creating Rfcomm server socket", e)
-                initChannel.sendBlocking(Result.failure(e))
+                initChannel.trySendBlocking(Result.failure(e))
                 throw e
             }
 

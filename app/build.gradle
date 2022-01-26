@@ -90,13 +90,13 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     // Firebase
     implementation 'com.google.firebase:firebase-analytics-ktx:19.0.0'
-    implementation 'com.google.firebase:firebase-crashlytics:18.0.1'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.7'
     // Google APIs
     implementation('com.google.api-client:google-api-client-android:1.30.10') {
         exclude group: 'org.apache.httpcomponents'
     }
-    implementation 'com.google.android.gms:play-services-basement:17.6.0'
-    implementation('com.google.android.gms:play-services-auth:19.0.0') {
+    implementation 'com.google.android.gms:play-services-basement:18.0.0'
+    implementation('com.google.android.gms:play-services-auth:20.0.1') {
     // AdMob
     implementation 'com.google.android.gms:play-services-ads:19.7.0'
     }
@@ -108,11 +108,11 @@ dependencies {
         exclude group: 'org.apache.httpcomponents'
     }
     // Kotlin
-    implementation "androidx.core:core-ktx:1.5.0"
+    implementation "androidx.core:core-ktx:1.6.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc'
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"

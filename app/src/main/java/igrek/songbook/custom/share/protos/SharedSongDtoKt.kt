@@ -12,7 +12,7 @@ object SharedSongDtoKt {
   @kotlin.OptIn(com.google.protobuf.kotlin.OnlyForUseByGeneratedProtoCode::class)
   @com.google.protobuf.kotlin.ProtoDslMarker
   class Dsl private constructor(
-    @kotlin.jvm.JvmField private val _builder: SharedSong.SharedSongDto.Builder
+          @kotlin.jvm.JvmField val _builder: SharedSong.SharedSongDto.Builder
   ) {
     companion object {
       @kotlin.jvm.JvmSynthetic
