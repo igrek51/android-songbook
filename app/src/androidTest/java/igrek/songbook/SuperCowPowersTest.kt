@@ -9,6 +9,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
 import igrek.songbook.activity.MainActivity
+import igrek.songbook.test.ScreenshotCapture
 import org.hamcrest.Matchers.*
 import org.junit.Rule
 import org.junit.Test
@@ -45,6 +46,9 @@ class SuperCowPowersTest {
         onView(withId(android.R.id.button1)).perform(click())
 
         onView(withText(containsString("Moooo"))).check(matches(isDisplayed()))
-        onView(withText(containsString("Super Cow Powers"))).check(matches(isDisplayed()))
+        onView(withText(containsString("Secret Cow Level"))).check(matches(isDisplayed()))
+
+        ScreenshotCapture.takeScreenshot("moo")
     }
+
 }
