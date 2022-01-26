@@ -256,10 +256,17 @@ class SettingsFragment(
         )
 
         setupSwitchPreference("updateDbOnStartup",
-                onLoad = { preferencesState.updateDbOnStartup },
-                onSave = { value: Boolean ->
-                    preferencesState.updateDbOnStartup = value
-                }
+            onLoad = { preferencesState.updateDbOnStartup },
+            onSave = { value: Boolean ->
+                preferencesState.updateDbOnStartup = value
+            }
+        )
+
+        setupSwitchPreference("autoscrollForwardNextSong",
+            onLoad = { preferencesState.autoscrollForwardNextSong },
+            onSave = { value: Boolean ->
+                preferencesState.autoscrollForwardNextSong = value
+            }
         )
 
         refreshFragment()

@@ -40,7 +40,7 @@ class PreferencesState(
     var anonymousUsageData: Boolean by PreferenceDelegate(PreferencesField.AnonymousUsageData)
     var chordDiagramStyle: ChordDiagramStyle by PreferenceDelegate(PreferencesField.ChordDiagramStyle)
     var updateDbOnStartup: Boolean by PreferenceDelegate(PreferencesField.UpdateDbOnStartup)
-
+    var autoscrollForwardNextSong: Boolean by PreferenceDelegate(PreferencesField.AutoscrollForwardNextSong)
 }
 
 class PreferenceDelegate<T : Any>(

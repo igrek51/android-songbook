@@ -92,8 +92,15 @@ class SongPreview(
             return lines.size * lineheight + lineheight
         }
 
-    val scrollWidth: Float
-        get() = scrollWidthCache.get()
+    val visibleLinesAtEnd: Float
+        get() {
+            val bottom = textBottomY
+            return if (bottom < h) {
+                bottom / lineheightPx
+            } else {
+                h / lineheightPx
+            }
+        }
 
     override fun reset() {
         super.reset()

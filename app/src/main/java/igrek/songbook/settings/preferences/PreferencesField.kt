@@ -81,13 +81,17 @@ enum class PreferencesField constructor(
 
     AnonymousUsageData(false),
 
-    ChordDiagramStyle(GenericLongIdPreferenceType(
+    ChordDiagramStyle(
+        GenericLongIdPreferenceType(
             defaultValue = igrek.songbook.chords.diagram.ChordDiagramStyle.default,
             serializer = igrek.songbook.chords.diagram.ChordDiagramStyle::id,
             deserializer = igrek.songbook.chords.diagram.ChordDiagramStyle.Companion::parseById,
-    )),
+        )
+    ),
 
     UpdateDbOnStartup(true),
+
+    AutoscrollForwardNextSong(false),
 
     ;
 
@@ -100,7 +104,7 @@ enum class PreferencesField constructor(
     constructor(defaultValue: Boolean) : this(BooleanPreferenceType(defaultValue))
 
     fun preferenceName(): String {
-        return this.name.decapitalize()
+        return this.name.replaceFirstChar { it.lowercase() }
     }
 
 }
