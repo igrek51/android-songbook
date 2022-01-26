@@ -299,7 +299,7 @@ class SettingsFragment(
     }
 
     private fun openPrivacyPolicy() {
-        val uri = Uri.parse("https://docs.google.com/document/d/1_lzknjB5ZfBWwxEeOaaqE3qb_0ghx2HRmqpE5WIdTKQ")
+        val uri = Uri.parse("https://docs.google.com/document/d/e/2PACX-1vTRgTqRx6Cwbn_uuLXCuad9YEK3qY7XNxMkil26ZBV5XZ_qn6L-CaXu3M39k-Gc6OErnCmsrY8QPT8e/pub")
         val i = Intent(Intent.ACTION_VIEW, uri)
         activity.startActivity(i)
     }
