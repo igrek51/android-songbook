@@ -81,6 +81,7 @@
     <string name="autoscroll_starts_in">Autoprzewijanie zacznie się za %s s</string>
     <string name="autoscroll_started">Autoprzewijanie rozpoczęte.</string>
     <string name="autoscroll_stopped">Autoprzewijanie zatrzymane.</string>
+    <string name="autoscroll_forward_next_song_in">Następna piosenka za %s s</string>
     <string name="start_autoscroll">Uruchom autoprzewijanie</string>
     <string name="stop_autoscroll">Zatrzymaj autoprzewijanie</string>
     <string name="end_of_song_autoscroll_stopped">Koniec piosenki</string>
@@ -451,4 +452,6 @@
     <string name="settings_horizontalScroll_hint">Umożliwia przewijanie piosenki poziomo (bez zawijania wierszy) - przydatne do wyświetlania tabulatury</string>
     <string name="playlist_at_beginning">Początek playlisty</string>
     <string name="playlist_at_end">Koniec playlisty</string>
+    <string name="settings_autoscroll_forward_next_song">Automatycznie przejdź do następnej piosenki</string>
+    <string name="settings_autoscroll_forward_next_song_hint">Przejdź do następnej piosenki z playlisty, gdy autoprzewijanie dojdzie do końca piosenki</string>
 </resources>

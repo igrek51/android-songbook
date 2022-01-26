@@ -281,6 +281,13 @@ class SettingsFragment(
             }
         )
 
+        setupSwitchPreference("autoscrollForwardNextSong",
+            onLoad = { preferencesState.autoscrollForwardNextSong },
+            onSave = { value: Boolean ->
+                preferencesState.autoscrollForwardNextSong = value
+            }
+        )
+
         setupSwitchPreference("horizontalScroll",
             onLoad = { preferencesState.horizontalScroll },
             onSave = { value: Boolean ->

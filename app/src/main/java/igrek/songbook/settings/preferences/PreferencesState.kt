@@ -42,6 +42,7 @@ class PreferencesState(
     var updateDbOnStartup: Boolean by PreferenceDelegate(PreferencesField.UpdateDbOnStartup)
     var trimWhitespaces: Boolean by PreferenceDelegate(PreferencesField.TrimWhitespaces)
     var autoscrollAutostart: Boolean by PreferenceDelegate(PreferencesField.AutoscrollAutostart)
+    var autoscrollForwardNextSong: Boolean by PreferenceDelegate(PreferencesField.AutoscrollForwardNextSong)
     var horizontalScroll: Boolean by PreferenceDelegate(PreferencesField.HorizontalScroll)
 
 }

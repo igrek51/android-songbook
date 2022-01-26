@@ -56,6 +56,7 @@ class SongPreview(
     private var startTouchX = 0f
     private var startTouchScrollX = 0f
     private var startTouchTime: Long = 0
+    private var multiTouch = false
     private val bottomMarginCache = SimpleCache {
         this.windowManagerService.dp2px(EOF_BOTTOM_RESERVE)
     }
@@ -108,6 +109,16 @@ class SongPreview(
         val lineheight = lineheightPx
         lines.size * lineheight + lineheight
     }
+
+    val visibleLinesAtEnd: Float
+        get() {
+            val bottom = textBottomY.get()
+            return if (bottom < h) {
+                bottom / lineheightPx
+            } else {
+                h / lineheightPx
+            }
+        }
 
     private val textRightX: SimpleCache<Float> = SimpleCache {
         (lyricsModel?.lines?.maxOfOrNull { it.maxRightX() } ?: 0f) * fontsizePx
@@ -181,6 +192,7 @@ class SongPreview(
         startScroll = scroll
         startScrollX = scrollX
         pointersDst0 = null
+        multiTouch = false
     }
 
     private fun onTouchMove(event: MotionEvent) {
@@ -191,6 +203,7 @@ class SongPreview(
                 scrollByPxHorizontal(-dx)
             }
             event.pointerCount >= 2 -> {
+                multiTouch = true
                 // pinch to font scaling
                 if (pointersDst0 != null) {
                     val pointersDst1 = hypot(
@@ -208,7 +221,12 @@ class SongPreview(
     }
 
     private fun onTouchPointerDown(event: MotionEvent) {
-        pointersDst0 = hypot((event.getX(1) - event.getX(0)).toDouble(), (event.getY(1) - event.getY(0)).toDouble()).toFloat()
+        if (event.pointerCount >= 2)
+            multiTouch = true
+        pointersDst0 = hypot(
+            (event.getX(1) - event.getX(0)).toDouble(),
+            (event.getY(1) - event.getY(0)).toDouble()
+        ).toFloat()
         fontsize0 = fontsizeTmp
         startScroll = scroll
         startScrollX = scrollX
@@ -235,13 +253,15 @@ class SongPreview(
 
     private fun onTouchUp(event: MotionEvent) {
         if (!lyricsThemeService.horizontalScroll) {
-            val dx = event.x - startTouchX
-            val adx = abs(dx)
-            if (adx > GESTURE_HORIZONTAL_SWIPE * w) {
-                if (dx > 0) {
-                    playlistLayoutController.goToNextOrPrevious(-1)
-                } else {
-                    playlistLayoutController.goToNextOrPrevious(+1)
+            if (!multiTouch) {
+                val dx = event.x - startTouchX
+                val adx = abs(dx)
+                if (adx > GESTURE_HORIZONTAL_SWIPE * w) {
+                    if (dx > 0) {
+                        playlistLayoutController.goToNextOrPrevious(-1)
+                    } else {
+                        playlistLayoutController.goToNextOrPrevious(+1)
+                    }
                 }
             }
         }

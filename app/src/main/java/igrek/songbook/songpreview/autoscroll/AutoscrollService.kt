@@ -8,20 +8,24 @@ import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import igrek.songbook.playlist.PlaylistLayoutController
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.renderer.SongPreview
+import igrek.songbook.util.limitTo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 
 class AutoscrollService(
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
-        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
+    playlistLayoutController: LazyInject<PlaylistLayoutController> = appFactory.playlistLayoutController,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val songPreviewController by LazyExtractor(songPreviewLayoutController)
+    private val playlistLayoutController by LazyExtractor(playlistLayoutController)
     private val preferencesState by LazyExtractor(preferencesState)
 
     var initialPause: Long // [ms]
@@ -48,7 +52,9 @@ class AutoscrollService(
     private val logger = LoggerFactory.logger
     private var state: AutoscrollState = AutoscrollState.OFF
     private var startTime: Long = 0 // [ms]
+    private var nextSongAtTime: Long = 0 // [ms]
     private var scrolledBuffer = 0f
+    private var startAutoscrollOnNextSong = false
 
     val canvasScrollSubject = PublishSubject.create<Float>()
     private val aggregatedScrollSubject = PublishSubject.create<Float>()
@@ -71,12 +77,16 @@ class AutoscrollService(
         const val ADD_INITIAL_PAUSE_SCALE = 180.0f // [ms  /  scrolled lines]
         const val AUTOSCROLL_INTERVAL_TIME = 60f // [ms]
         const val VOLUME_BTNS_SPEED_STEP = 0.020f // [line / s]
+        const val MIN_NEXT_SONG_TIME: Long = 3000 // [ms]
     }
 
     val isRunning: Boolean
-        get() = state == AutoscrollState.WAITING || state == AutoscrollState.SCROLLING
+        get() = when (state) {
+            AutoscrollState.WAITING, AutoscrollState.SCROLLING, AutoscrollState.NEXT_SONG_COUNTDOWN -> true
+            AutoscrollState.OFF -> false
+        }
 
-    private val canvas: SongPreview?
+    private val songPreview: SongPreview?
         get() = songPreviewController.songPreview
 
     init {
@@ -92,8 +102,8 @@ class AutoscrollService(
                 .throttleLast(300, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    if (canvas != null)
-                        onCanvasScrollEvent(scrolledBuffer, canvas?.scroll ?: 0f)
+                    if (songPreview != null)
+                        onCanvasScrollEvent(scrolledBuffer, songPreview?.scroll ?: 0f)
                     scrolledBuffer = 0f
                 }, UiErrorHandler::handleError)
     }
@@ -103,7 +113,7 @@ class AutoscrollService(
     }
 
     fun start() {
-        canvas?.run {
+        songPreview?.run {
             val linePartScroll = scroll / lineheightPx
             if (linePartScroll <= START_NO_WAITING_MIN_SCROLL) {
                 start(true)
@@ -117,7 +127,7 @@ class AutoscrollService(
         if (isRunning) {
             stop()
         }
-        if (canvas?.canScrollDown() == true) {
+        if (songPreview?.canScrollDown() == true) {
             state = if (withWaiting) {
                 AutoscrollState.WAITING
             } else {
@@ -125,6 +135,8 @@ class AutoscrollService(
             }
             startTime = System.currentTimeMillis()
             timerHandler.postDelayed(timerRunnable, 0)
+        } else if (canCountdownToNextSong()) {
+            countdownToNextSong()
         }
         scrollStateSubject.onNext(state)
     }
@@ -135,35 +147,59 @@ class AutoscrollService(
         scrollStateSubject.onNext(state)
     }
 
-    fun autostart() {
-        if (canvas?.canScrollDown() == true) {
+    private fun autostart() {
+        if (songPreview?.canScrollDown() == true) {
+            start()
+        }
+    }
+
+    fun onLoad() {
+        if (preferencesState.autoscrollAutostart) {
+            autostart()
+        } else if (startAutoscrollOnNextSong) {
+            startAutoscrollOnNextSong = false
             start()
         }
     }
 
     private fun handleAutoscrollStep() {
-        if (state == AutoscrollState.WAITING) {
-            val remainingTimeMs = initialPause + startTime - System.currentTimeMillis()
-            if (remainingTimeMs <= 0) {
-                state = AutoscrollState.SCROLLING
-                timerHandler.postDelayed(timerRunnable, 0)
-                onAutoscrollStartedEvent()
-            } else {
-                val delay =
-                    if (remainingTimeMs > 1000) 1000 else remainingTimeMs // cut off over 1000
-                timerHandler.postDelayed(timerRunnable, delay)
-                onAutoscrollRemainingWaitTimeEvent(remainingTimeMs)
+        when (state) {
+            AutoscrollState.WAITING -> {
+                val remainingTimeMs = initialPause + startTime - System.currentTimeMillis()
+                if (remainingTimeMs <= 0) {
+                    state = AutoscrollState.SCROLLING
+                    timerHandler.postDelayed(timerRunnable, 0)
+                    onAutoscrollStartedEvent()
+                } else {
+                    val delay = remainingTimeMs.limitTo(1000)
+                    timerHandler.postDelayed(timerRunnable, delay)
+                    onAutoscrollRemainingWaitTimeEvent(remainingTimeMs)
+                }
             }
-        } else if (state == AutoscrollState.SCROLLING) {
-            // em = speed * time
-            val lineheightPart = autoscrollSpeed * AUTOSCROLL_INTERVAL_TIME / 1000
-            if (canvas?.scrollByLines(lineheightPart) != false) {
-                // scroll once again later
-                timerHandler.postDelayed(timerRunnable, AUTOSCROLL_INTERVAL_TIME.toLong())
-            } else {
-                // scroll has come to an end
-                stop()
-                onAutoscrollEndedEvent()
+            AutoscrollState.SCROLLING -> {
+                // em = speed * time
+                val lineheightPart = autoscrollSpeed * AUTOSCROLL_INTERVAL_TIME / 1000
+                if (songPreview?.scrollByLines(lineheightPart) != false) {
+                    // scroll once again later
+                    timerHandler.postDelayed(timerRunnable, AUTOSCROLL_INTERVAL_TIME.toLong())
+                } else {
+                    // scroll has come to an end
+                    stop()
+                    onAutoscrollEndedEvent()
+                }
+            }
+            AutoscrollState.NEXT_SONG_COUNTDOWN -> {
+                val remainingTimeMs = nextSongAtTime - System.currentTimeMillis()
+                if (remainingTimeMs <= 0) {
+                    state = AutoscrollState.OFF
+                    // Turn on autoscroll again in next song
+                    startAutoscrollOnNextSong = true
+                    playlistLayoutController.goToNextOrPrevious(+1)
+                } else {
+                    val delay = remainingTimeMs.limitTo(1000)
+                    onCountdownToNextSongRemainingTime(remainingTimeMs)
+                    timerHandler.postDelayed(timerRunnable, delay)
+                }
             }
         }
     }
@@ -173,32 +209,45 @@ class AutoscrollService(
      * @param scroll  current scroll
      */
     private fun onCanvasScrollEvent(dScroll: Float, scroll: Float) {
-        if (state == AutoscrollState.WAITING) {
-            if (dScroll > 0) { // skip counting down immediately
-                skipInitialPause()
-            } else if (dScroll < 0) { // increase inital waitng time
-                startTime -= (dScroll * ADD_INITIAL_PAUSE_SCALE).toLong()
-                val remainingTimeMs = initialPause + startTime - System.currentTimeMillis()
-                onAutoscrollRemainingWaitTimeEvent(remainingTimeMs)
-            }
-        } else if (state == AutoscrollState.SCROLLING) {
-            if (dScroll > 0) {
-                // speed up scrolling
-                val delta = +cutOffMax(dScroll * ADJUSTMENT_SPEED_SCALE, ADJUSTMENT_MAX_SPEED_CHANGE)
-                autoAdjustScrollSpeed(delta)
-
-            } else if (dScroll < 0) {
-                if (scroll <= 0) { // scrolling up to the beginning
-                    // set counting down state with additional time
-                    state = AutoscrollState.WAITING
-                    startTime = System.currentTimeMillis() - initialPause - (dScroll * ADD_INITIAL_PAUSE_SCALE).toLong()
+        when (state) {
+            AutoscrollState.WAITING -> {
+                if (dScroll > 0) { // skip counting down immediately
+                    skipInitialPause()
+                } else if (dScroll < 0) { // increase inital waitng time
+                    startTime -= (dScroll * ADD_INITIAL_PAUSE_SCALE).toLong()
                     val remainingTimeMs = initialPause + startTime - System.currentTimeMillis()
                     onAutoscrollRemainingWaitTimeEvent(remainingTimeMs)
-                    return
-                } else {
-                    // slow down scrolling
-                    val delta = -cutOffMax(-dScroll * ADJUSTMENT_SPEED_SCALE, ADJUSTMENT_MAX_SPEED_CHANGE)
+                }
+            }
+            AutoscrollState.SCROLLING -> {
+                if (dScroll > 0) {
+                    // speed up scrolling
+                    val delta =
+                        +cutOffMax(dScroll * ADJUSTMENT_SPEED_SCALE, ADJUSTMENT_MAX_SPEED_CHANGE)
                     autoAdjustScrollSpeed(delta)
+
+                } else if (dScroll < 0) {
+                    if (scroll <= 0) { // scrolling up to the beginning
+                        // set counting down state with additional time
+                        state = AutoscrollState.WAITING
+                        startTime =
+                            System.currentTimeMillis() - initialPause - (dScroll * ADD_INITIAL_PAUSE_SCALE).toLong()
+                        val remainingTimeMs = initialPause + startTime - System.currentTimeMillis()
+                        onAutoscrollRemainingWaitTimeEvent(remainingTimeMs)
+                        return
+                    } else {
+                        // slow down scrolling
+                        val delta = -cutOffMax(
+                            -dScroll * ADJUSTMENT_SPEED_SCALE,
+                            ADJUSTMENT_MAX_SPEED_CHANGE
+                        )
+                        autoAdjustScrollSpeed(delta)
+                    }
+                }
+            }
+            AutoscrollState.NEXT_SONG_COUNTDOWN -> {
+                if (dScroll < 0) { // scroll up
+                    onAutoscrollStopUIEvent()
                 }
             }
         }
@@ -229,22 +278,76 @@ class AutoscrollService(
     }
 
     private fun onAutoscrollStartUIEvent() {
-        if (!isRunning && canvas != null) {
-            if (canvas?.canScrollDown() == true) {
-                start()
-                uiInfoService.showInfoAction(R.string.autoscroll_started, actionResId = R.string.action_stop_autoscroll) { this.stop() }
-            } else {
-                uiInfoService.showInfo(R.string.end_of_song_autoscroll_stopped)
+        if (!isRunning && songPreview != null) {
+            when {
+                songPreview?.canScrollDown() == true -> {
+                    start()
+                    uiInfoService.showInfoAction(
+                        R.string.autoscroll_started,
+                        actionResId = R.string.action_stop_autoscroll
+                    ) {
+                        this.stop()
+                    }
+                }
+                canCountdownToNextSong() -> {
+                    start()
+                }
+                else -> {
+                    uiInfoService.showInfo(R.string.end_of_song_autoscroll_stopped)
+                }
             }
         }
     }
 
     private fun onAutoscrollStartedEvent() {
-        uiInfoService.showInfoAction(R.string.autoscroll_started, actionResId = R.string.action_stop_autoscroll) { this.stop() }
+        uiInfoService.showInfoAction(
+            R.string.autoscroll_started,
+            actionResId = R.string.action_stop_autoscroll
+        ) {
+            this.stop()
+        }
     }
 
     private fun onAutoscrollEndedEvent() {
-        uiInfoService.showInfo(R.string.end_of_song_autoscroll_stopped)
+        if (canCountdownToNextSong()) {
+            countdownToNextSong()
+        } else {
+            uiInfoService.showInfo(R.string.end_of_song_autoscroll_stopped)
+        }
+    }
+
+    private fun canCountdownToNextSong(): Boolean {
+        return preferencesState.autoscrollForwardNextSong && playlistLayoutController.hasNextSong()
+    }
+
+    private fun countdownToNextSong() {
+        state = AutoscrollState.NEXT_SONG_COUNTDOWN
+        val visibleLinesAtEnd = songPreview?.visibleLinesAtEnd ?: 0f
+        val visibleLinesMillis = visibleLinesAtEnd / autoscrollSpeed * 1000
+        var waitTimeMs: Long = when {
+            songPreview?.scroll ?: 0f <= 0f -> { // at the beginning
+                visibleLinesMillis
+            }
+            else -> {
+                visibleLinesMillis * 0.5  // eye focus is in the middle of the screen when autoscroll has ended
+            }
+        }.toLong()
+        if (waitTimeMs < MIN_NEXT_SONG_TIME)
+            waitTimeMs = MIN_NEXT_SONG_TIME
+        nextSongAtTime = System.currentTimeMillis() + waitTimeMs
+        timerHandler.postDelayed(timerRunnable, 0)
+        scrollStateSubject.onNext(state)
+    }
+
+    private fun onCountdownToNextSongRemainingTime(ms: Long) {
+        val seconds = ((ms + 500) / 1000).toString()
+        uiInfoService.showInfoAction(
+            R.string.autoscroll_forward_next_song_in,
+            seconds,
+            actionResId = R.string.action_stop_autoscroll
+        ) {
+            this.stop()
+        }
     }
 
     fun onAutoscrollStopUIEvent() {
@@ -270,24 +373,27 @@ class AutoscrollService(
     }
 
     fun onVolumeUp(): Boolean {
-        if (!volumeKeysSpeedControl || canvas == null)
+        if (!volumeKeysSpeedControl || songPreview == null)
             return false
         when (state) {
             AutoscrollState.OFF -> onAutoscrollStartUIEvent()
             AutoscrollState.WAITING -> skipInitialPause()
             AutoscrollState.SCROLLING -> addAutoscrollSpeed(+VOLUME_BTNS_SPEED_STEP)
+            AutoscrollState.NEXT_SONG_COUNTDOWN -> {
+            }
         }
         return true
     }
 
     fun onVolumeDown(): Boolean {
-        if (!volumeKeysSpeedControl || canvas == null)
+        if (!volumeKeysSpeedControl || songPreview == null)
             return false
         when (state) {
             AutoscrollState.OFF -> {
             }
             AutoscrollState.WAITING -> onAutoscrollStopUIEvent()
             AutoscrollState.SCROLLING -> addAutoscrollSpeed(-VOLUME_BTNS_SPEED_STEP)
+            AutoscrollState.NEXT_SONG_COUNTDOWN -> onAutoscrollStopUIEvent()
         }
         return true
     }

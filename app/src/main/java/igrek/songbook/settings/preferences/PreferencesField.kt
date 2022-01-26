@@ -95,6 +95,8 @@ enum class PreferencesField constructor(
 
     AutoscrollAutostart(false),
 
+    AutoscrollForwardNextSong(false),
+
     HorizontalScroll(false),
 
     ;

@@ -253,20 +253,20 @@ class PlaylistLayoutController(
         return items
     }
 
-    fun goToNextOrPrevious(next: Int): Boolean {
-        val currentSong = songPreviewLayoutController.currentSong ?: return true
-        val playlist = playlist ?: return true
+    fun goToNextOrPrevious(next: Int) {
+        val currentSong = songPreviewLayoutController.currentSong ?: return
+        val playlist = playlist ?: return
         val songIndex = findSongInPlaylist(currentSong, playlist)
         if (songIndex == -1)
-            return true
+            return
         val nextIndex = songIndex + next
         if (nextIndex < 0) {
             uiInfoService.showToast(R.string.playlist_at_beginning)
-            return true
+            return
         }
         if (nextIndex >= playlist.songs.size) {
             uiInfoService.showToast(R.string.playlist_at_end)
-            return true
+            return
         }
         val nextPlaylistSong = playlist.songs[nextIndex]
         val namespace = when {
@@ -274,9 +274,17 @@ class PlaylistLayoutController(
             else -> SongNamespace.Public
         }
         val songId = SongIdentifier(nextPlaylistSong.songId, namespace)
-        val nextSong = songsRepository.allSongsRepo.songFinder.find(songId) ?: return true
+        val nextSong = songsRepository.allSongsRepo.songFinder.find(songId) ?: return
         songOpener.openSongPreview(nextSong)
-        return true
+    }
+
+    fun hasNextSong(): Boolean {
+        val currentSong = songPreviewLayoutController.currentSong ?: return false
+        val playlist = playlist ?: return false
+        val songIndex = findSongInPlaylist(currentSong, playlist)
+        if (songIndex == -1)
+            return false
+        return songIndex + 1 < playlist.songs.size
     }
 
     private fun findSongInPlaylist(song: Song, playlist: Playlist): Int {

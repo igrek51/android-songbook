@@ -6,5 +6,8 @@ enum class AutoscrollState {
 
     WAITING,
 
-    SCROLLING
+    SCROLLING,
+
+    NEXT_SONG_COUNTDOWN,
+
 }

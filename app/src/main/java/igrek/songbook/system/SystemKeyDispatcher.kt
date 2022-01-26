@@ -86,12 +86,14 @@ class SystemKeyDispatcher(
     private fun onArrowLeft(): Boolean {
         if (!layoutController.isState(SongPreviewLayoutController::class))
             return false
-        return playlistLayoutController.goToNextOrPrevious(-1)
+        playlistLayoutController.goToNextOrPrevious(-1)
+        return true
     }
 
     private fun onArrowRight(): Boolean {
         if (!layoutController.isState(SongPreviewLayoutController::class))
             return false
-        return playlistLayoutController.goToNextOrPrevious(+1)
+        playlistLayoutController.goToNextOrPrevious(+1)
+        return true
     }
 }

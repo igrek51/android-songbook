@@ -262,9 +262,7 @@ class SongPreviewLayoutController(
             songPreview?.setCRDModel(lyricsLoader.lyricsModel)
             resetOverlayScroll()
 
-            if (preferencesState.autoscrollAutostart) {
-                autoscrollService.autostart()
-            }
+            autoscrollService.onLoad()
         }
     }
 

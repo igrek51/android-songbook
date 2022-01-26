@@ -92,6 +92,11 @@
             android:title="@string/settings_autoscroll_autostart"
             android:summary="@string/settings_autoscroll_autostart_hint"
             app:iconSpaceReserved="false" />
+        <SwitchPreference
+            android:key="autoscrollForwardNextSong"
+            android:title="@string/settings_autoscroll_forward_next_song"
+            android:summary="@string/settings_autoscroll_forward_next_song_hint"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_transposition">
