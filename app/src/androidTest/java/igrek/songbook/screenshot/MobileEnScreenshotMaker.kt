@@ -52,7 +52,7 @@ class MobileEnScreenshotMaker {
         onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.nav_search))
         // type song name
         onView(allOf(withClassName(endsWith("EditText")), withText(""))).perform(replaceText("Zombie Cranberries"))
-        onView(isRoot()).perform(waitFor(1000))
+        onView(isRoot()).perform(waitFor(500))
         // choose song
         onView(withText("Zombie - The Cranberries")).perform(click())
 
@@ -73,8 +73,24 @@ class MobileEnScreenshotMaker {
         preferencesState.fontsize = 20f
         preferencesState.chordsNotation = ChordsNotation.ENGLISH
         preferencesState.fontTypeface = FontTypeface.default
-        preferencesState.chordsDisplayStyle = DisplayStyle.ChordsInline
+        preferencesState.chordsDisplayStyle = DisplayStyle.ChordsAlignedRight
 
+        // open nav drawer
+        onView(withId(R.id.navMenuButton)).perform(click())
+        onView(withId(R.id.nav_view)).check(matches(isDisplayed()))
+        // open Search
+        onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.nav_search))
+        // type song name
+        onView(allOf(withClassName(endsWith("EditText")), withText(""))).perform(replaceText("Soldier of Fortune"))
+        onView(isRoot()).perform(waitFor(500))
+        // choose song
+        onView(withText("Soldier of Fortune - Deep Purple")).perform(click())
+
+        onView(withId(R.id.transposeButton)).perform(click())
+        onView(withId(R.id.transposeP1Button)).perform(click())
+        onView(withId(R.id.transposeP1Button)).perform(click())
+
+        onView(isRoot()).perform(waitFor(100))
 
         ScreenshotCapture.takeScreenshot("02")
     }
