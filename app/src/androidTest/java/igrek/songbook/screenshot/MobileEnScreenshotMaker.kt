@@ -10,11 +10,9 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
 import igrek.songbook.R
 import igrek.songbook.activity.MainActivity
-import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.language.AppLanguage
-import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.DisplayStyle
 import igrek.songbook.settings.theme.FontTypeface
@@ -38,8 +36,7 @@ class MobileEnScreenshotMaker {
     @Test
     fun test_01_open_bright_song() {
         // Zombie + birght theme + chords inline
-        val preferencesStateInject: LazyInject<PreferencesState> = appFactory.preferencesState
-        val preferencesState = preferencesStateInject.get()
+        val preferencesState = appFactory.preferencesState.get()
 
         preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
         preferencesState.colorScheme = ColorScheme.BRIGHT
@@ -69,36 +66,113 @@ class MobileEnScreenshotMaker {
     @Test
     fun test_02_transpose() {
         // Soldier of Fortune + tranpose + chords right
+        val preferencesState = appFactory.preferencesState.get()
+
+        preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
+        preferencesState.colorScheme = ColorScheme.BRIGHT
+        preferencesState.fontsize = 20f
+        preferencesState.chordsNotation = ChordsNotation.ENGLISH
+        preferencesState.fontTypeface = FontTypeface.default
+        preferencesState.chordsDisplayStyle = DisplayStyle.ChordsInline
+
+
+        ScreenshotCapture.takeScreenshot("02")
     }
 
     @Test
-    fun test_03_open_bright_song() {
+    fun test_03_autoscroll() {
         // Hey There Delilah + autoscroll + chords inline
+        val preferencesState = appFactory.preferencesState.get()
+
+        preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
+        preferencesState.colorScheme = ColorScheme.BRIGHT
+        preferencesState.fontsize = 20f
+        preferencesState.chordsNotation = ChordsNotation.ENGLISH
+        preferencesState.fontTypeface = FontTypeface.default
+        preferencesState.chordsDisplayStyle = DisplayStyle.ChordsInline
+
+
+        ScreenshotCapture.takeScreenshot("03")
     }
 
     @Test
-    fun test_04_open_bright_song() {
+    fun test_04_editor() {
         // Space Oddity in Editor
+        val preferencesState = appFactory.preferencesState.get()
+
+        preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
+        preferencesState.colorScheme = ColorScheme.BRIGHT
+        preferencesState.fontsize = 20f
+        preferencesState.chordsNotation = ChordsNotation.ENGLISH
+        preferencesState.fontTypeface = FontTypeface.default
+        preferencesState.chordsDisplayStyle = DisplayStyle.ChordsInline
+
+
+        ScreenshotCapture.takeScreenshot("04")
     }
 
     @Test
-    fun test_05_open_bright_song() {
+    fun test_05_ukulele_diagram() {
         // Knocking on Heaven's Door + Ukulele diagram
+        val preferencesState = appFactory.preferencesState.get()
+
+        preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
+        preferencesState.colorScheme = ColorScheme.BRIGHT
+        preferencesState.fontsize = 20f
+        preferencesState.chordsNotation = ChordsNotation.ENGLISH
+        preferencesState.fontTypeface = FontTypeface.default
+        preferencesState.chordsDisplayStyle = DisplayStyle.ChordsInline
+
+
+        ScreenshotCapture.takeScreenshot("05")
     }
 
     @Test
-    fun test_06_open_bright_song() {
+    fun test_06_preview_chords_above() {
         // Eye in the sky + bright + chords above
+        val preferencesState = appFactory.preferencesState.get()
+
+        preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
+        preferencesState.colorScheme = ColorScheme.BRIGHT
+        preferencesState.fontsize = 20f
+        preferencesState.chordsNotation = ChordsNotation.ENGLISH
+        preferencesState.fontTypeface = FontTypeface.default
+        preferencesState.chordsDisplayStyle = DisplayStyle.ChordsInline
+
+
+        ScreenshotCapture.takeScreenshot("06")
     }
 
     @Test
-    fun test_07_open_bright_song() {
+    fun test_07_settings() {
         // Settings
+        val preferencesState = appFactory.preferencesState.get()
+
+        preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
+        preferencesState.colorScheme = ColorScheme.BRIGHT
+        preferencesState.fontsize = 20f
+        preferencesState.chordsNotation = ChordsNotation.ENGLISH
+        preferencesState.fontTypeface = FontTypeface.default
+        preferencesState.chordsDisplayStyle = DisplayStyle.ChordsInline
+
+
+        ScreenshotCapture.takeScreenshot("07")
     }
 
     @Test
-    fun test_08_open_bright_song() {
+    fun test_08_preview_dark() {
         // Shallow  + dark + chords inline
+        val preferencesState = appFactory.preferencesState.get()
+
+        preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
+        preferencesState.colorScheme = ColorScheme.BRIGHT
+        preferencesState.fontsize = 20f
+        preferencesState.chordsNotation = ChordsNotation.ENGLISH
+        preferencesState.fontTypeface = FontTypeface.default
+        preferencesState.chordsDisplayStyle = DisplayStyle.ChordsInline
+
+
+        ScreenshotCapture.takeScreenshot("08")
     }
 
 }
