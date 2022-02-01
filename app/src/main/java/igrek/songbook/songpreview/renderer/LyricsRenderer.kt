@@ -28,6 +28,7 @@ class LyricsRenderer internal constructor(
     private var chordColor: Int
     private var commentColor: Int
     private var linewrapperColor: Int
+    private var scrollColor: Int
 
     init {
         val typefaceFamily = fontTypeface.typeface
@@ -50,6 +51,10 @@ class LyricsRenderer internal constructor(
         linewrapperColor = when (colorScheme) {
             ColorScheme.DARK -> 0x707070
             ColorScheme.BRIGHT -> 0x707070
+        }
+        scrollColor = when (colorScheme) {
+            ColorScheme.DARK -> 0x505050
+            ColorScheme.BRIGHT -> 0xA0A0A0
         }
     }
 
@@ -84,7 +89,7 @@ class LyricsRenderer internal constructor(
             if (lastFragment.type == LyricsTextType.LINEWRAPPER) {
                 canvas.setFontTypeface(normalTypeface)
                 canvas.setColor(linewrapperColor)
-                canvas.drawText(lastFragment.text, w, y + 0.9f * lineheight, Align.RIGHT)
+                canvas.drawText(lastFragment.text, w - 4, y + 0.9f * lineheight, Align.RIGHT)
             }
         }
 
@@ -132,7 +137,7 @@ class LyricsRenderer internal constructor(
         val top = scroll / range
         val bottom = (scroll + h) / range
 
-        canvas.setColor(0xAEC3E0)
+        canvas.setColor(scrollColor.toInt())
         val scrollThickness = canvas.scrollThickness
         canvas.fillRect(w - scrollThickness, top * h, w, bottom * h)
 

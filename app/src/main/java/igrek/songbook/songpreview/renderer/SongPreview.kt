@@ -60,7 +60,7 @@ class SongPreview(
     private val bottomMarginCache = SimpleCache {
         this.windowManagerService.dp2px(EOF_BOTTOM_RESERVE)
     }
-    private val scrollThicknessCache = SimpleCache { this.windowManagerService.dp2px(1f) }
+    private val scrollThicknessCache = SimpleCache { this.windowManagerService.dp2px(4f) }
     private var lastClickTime: Long? = null
     private var recyclerScrollState = RecyclerView.SCROLL_STATE_IDLE
     var overlayScrollResetter: () -> Unit = {}
