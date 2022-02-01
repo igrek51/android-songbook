@@ -6,7 +6,9 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.*
 import androidx.test.espresso.action.ViewActions.actionWithAssertions
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
+import org.hamcrest.Description
 import org.hamcrest.Matcher
+import org.hamcrest.TypeSafeMatcher
 
 
 fun waitFor(millis: Long): ViewAction {
@@ -51,5 +53,21 @@ internal class MyTranslatedCoordinatesProvider(
         xy[0] += dx * view.width
         xy[1] += dy * view.height
         return xy
+    }
+}
+
+fun withIndex(matcher: Matcher<View?>, index: Int): Matcher<View?>? {
+    return object : TypeSafeMatcher<View?>() {
+        var currentIndex = 0
+
+        override fun describeTo(description: Description) {
+            description.appendText("with index: ")
+            description.appendValue(index)
+            matcher.describeTo(description)
+        }
+
+        override fun matchesSafely(view: View?): Boolean {
+            return matcher.matches(view) && currentIndex++ == index
+        }
     }
 }

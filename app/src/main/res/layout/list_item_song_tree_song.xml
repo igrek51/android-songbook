@@ -57,9 +57,9 @@
         android:adjustViewBounds="true"
         android:background="?android:selectableItemBackground"
         android:focusable="false"
-        android:padding="4dp"
         android:focusableInTouchMode="false"
+        android:padding="4dp"
         android:scaleType="centerInside"
-        android:src="@drawable/more"/>
+        android:src="@drawable/more" />
 
 </RelativeLayout>

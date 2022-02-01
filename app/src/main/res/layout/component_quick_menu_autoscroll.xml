@@ -55,7 +55,8 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:text="@string/settings_scroll_initial_pause"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:gravity="center_horizontal" />
 
             <LinearLayout
                 android:layout_width="match_parent"
