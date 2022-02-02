@@ -27,12 +27,12 @@ fun waitFor(millis: Long): ViewAction {
     }
 }
 
-fun swipeUpABit(): ViewAction? {
+fun swipeUpABit(factor: Float = 0.5f): ViewAction? {
     return actionWithAssertions(
             GeneralSwipeAction(
                     Swipe.SLOW,
-                    translate(GeneralLocation.BOTTOM_CENTER, 0f, -0.083f * 0.1f),
-                    GeneralLocation.CENTER,
+                    translate(GeneralLocation.CENTER, 0f, factor / 2),
+                    translate(GeneralLocation.CENTER, 0f, -factor / 2),
                     Press.FINGER))
 }
 

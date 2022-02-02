@@ -21,6 +21,7 @@ import igrek.songbook.test.ScreenshotCapture
 import igrek.songbook.test.swipeUpABit
 import igrek.songbook.test.waitFor
 import igrek.songbook.test.withIndex
+import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.endsWith
 import org.junit.Rule
@@ -59,7 +60,7 @@ class MobileEnScreenshotMaker {
         // choose song
         onView(withText("Zombie - The Cranberries")).perform(click())
 
-        onView(withId(R.id.songPreviewContainer)).perform(swipeUpABit())
+        onView(withId(R.id.songPreviewContainer)).perform(swipeUpABit(0.5f))
 
         onView(isRoot()).perform(waitFor(1000))
 
@@ -242,20 +243,29 @@ class MobileEnScreenshotMaker {
         val preferencesState = appFactory.preferencesState.get()
 
         preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
-        preferencesState.colorScheme = ColorScheme.BRIGHT
+        preferencesState.colorScheme = ColorScheme.DARK
         preferencesState.fontsize = 20f
         preferencesState.chordsNotation = ChordsNotation.ENGLISH
         preferencesState.fontTypeface = FontTypeface.default
         preferencesState.chordsDisplayStyle = DisplayStyle.ChordsInline
         preferencesState.restoreTransposition = false
 
+        // open nav drawer
+        onView(withId(R.id.navMenuButton)).perform(click())
+        onView(withId(R.id.nav_view)).check(matches(isDisplayed()))
+        // open Search
+        onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.nav_settings))
+        onView(isRoot()).perform(waitFor(500))
+
+        onView(withId(R.id.fragment_content)).perform(swipeUpABit(0.37f))
+        onView(isRoot()).perform(waitFor(500))
 
         ScreenshotCapture.takeScreenshot("07")
     }
 
     @Test
     fun test_08_super_cow() {
-        // Wish You Were Here + dark + Super Cow
+        // Top songs + Super Cow
         val preferencesState = appFactory.preferencesState.get()
 
         preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
@@ -266,6 +276,23 @@ class MobileEnScreenshotMaker {
         preferencesState.chordsDisplayStyle = DisplayStyle.ChordsInline
         preferencesState.restoreTransposition = false
 
+        // open nav drawer
+        onView(withId(R.id.navMenuButton)).perform(click())
+        onView(withId(R.id.nav_view)).check(matches(isDisplayed()))
+        // open about
+        onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.nav_about))
+        onView(withText(R.string.nav_about)).check(matches(isDisplayed()))
+        // click ???
+        onView(withId(android.R.id.button3)).check(matches(withText(R.string.action_secret)))
+        onView(withId(android.R.id.button3)).perform(click())
+        // type secret key
+        onView(allOf(withClassName(endsWith("EditText")), withText(""))).perform(replaceText("moooooo"))
+        // click ok
+        onView(withId(android.R.id.button1)).check(matches(withText(R.string.action_check_secret)))
+        onView(withId(android.R.id.button1)).perform(click())
+
+        onView(withText(Matchers.containsString("Moooo"))).check(matches(isDisplayed()))
+        onView(withText(Matchers.containsString("Secret Cow Level"))).check(matches(isDisplayed()))
 
         ScreenshotCapture.takeScreenshot("08")
     }
