@@ -28,7 +28,17 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-
+/*
+Run this to fetch screenshots from a device
+adb pull /storage/emulated/0/Android/data/igrek.songbook/files/screenshots/01.png
+adb pull /storage/emulated/0/Android/data/igrek.songbook/files/screenshots/02.png
+adb pull /storage/emulated/0/Android/data/igrek.songbook/files/screenshots/03.png
+adb pull /storage/emulated/0/Android/data/igrek.songbook/files/screenshots/04.png
+adb pull /storage/emulated/0/Android/data/igrek.songbook/files/screenshots/05.png
+adb pull /storage/emulated/0/Android/data/igrek.songbook/files/screenshots/06.png
+adb pull /storage/emulated/0/Android/data/igrek.songbook/files/screenshots/07.png
+adb pull /storage/emulated/0/Android/data/igrek.songbook/files/screenshots/08.png
+ */
 @RunWith(AndroidJUnit4::class)
 class MobileEnScreenshotMaker {
 

@@ -14,7 +14,10 @@ class ScreenshotCapture {
             val capture: ScreenCapture = Screenshot.capture()
             val bmp: Bitmap = capture.bitmap
             val trimTop = 0
-            val trimBottom = 132
+            val trimBottom = when {
+                bmp.width > bmp.height -> 0 // horizontal
+                else -> 132
+            }
             val cropped: Bitmap = Bitmap.createBitmap(bmp, 0, trimTop, bmp.width, bmp.height - trimTop - trimBottom)
 
             val testContext: Context = InstrumentationRegistry.getInstrumentation().context
