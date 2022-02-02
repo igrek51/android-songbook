@@ -30,7 +30,7 @@ import org.junit.runner.RunWith
 
 
 @RunWith(AndroidJUnit4::class)
-class MobileEnScreenshotMaker {
+class MobilePlScreenshotMaker {
 
     @Rule
     @JvmField
@@ -38,13 +38,13 @@ class MobileEnScreenshotMaker {
 
     @Test
     fun test_01_open_bright_song() {
-        // Zombie + birght theme + chords inline
+        // Nie Płacz Ewka + birght theme + chords inline
         val preferencesState = appFactory.preferencesState.get()
 
-        preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
+        preferencesState.appLanguage = AppLanguage.POLISH // needs restart
         preferencesState.colorScheme = ColorScheme.BRIGHT
         preferencesState.fontsize = 20f
-        preferencesState.chordsNotation = ChordsNotation.ENGLISH
+        preferencesState.chordsNotation = ChordsNotation.GERMAN
         preferencesState.fontTypeface = FontTypeface.default
         preferencesState.chordsDisplayStyle = DisplayStyle.ChordsInline
         preferencesState.restoreTransposition = false
@@ -55,12 +55,10 @@ class MobileEnScreenshotMaker {
         // open Search
         onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.nav_search))
         // type song name
-        onView(allOf(withClassName(endsWith("EditText")), withText(""))).perform(replaceText("Zombie Cranberries"))
+        onView(allOf(withClassName(endsWith("EditText")), withText(""))).perform(replaceText("Nie Płacz Ewka"))
         onView(isRoot()).perform(waitFor(500))
         // choose song
-        onView(withText("Zombie - The Cranberries")).perform(click())
-
-        onView(withId(R.id.songPreviewContainer)).perform(swipeUpABit(0.5f))
+        onView(withText("Nie Płacz Ewka - Perfect")).perform(click())
 
         onView(isRoot()).perform(waitFor(100))
 
@@ -69,13 +67,13 @@ class MobileEnScreenshotMaker {
 
     @Test
     fun test_02_transpose() {
-        // Soldier of Fortune + tranpose + chords right
+        // Nim Wstanie Dzień + tranpose + chords right
         val preferencesState = appFactory.preferencesState.get()
 
-        preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
+        preferencesState.appLanguage = AppLanguage.POLISH // needs restart
         preferencesState.colorScheme = ColorScheme.BRIGHT
         preferencesState.fontsize = 20f
-        preferencesState.chordsNotation = ChordsNotation.ENGLISH
+        preferencesState.chordsNotation = ChordsNotation.GERMAN
         preferencesState.fontTypeface = FontTypeface.default
         preferencesState.chordsDisplayStyle = DisplayStyle.ChordsAlignedRight
         preferencesState.restoreTransposition = false
@@ -86,15 +84,14 @@ class MobileEnScreenshotMaker {
         // open Search
         onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.nav_search))
         // type song name
-        onView(allOf(withClassName(endsWith("EditText")), withText(""))).perform(replaceText("Soldier of Fortune"))
+        onView(allOf(withClassName(endsWith("EditText")), withText(""))).perform(replaceText("Nim Wstanie Dzień"))
         onView(isRoot()).perform(waitFor(500))
         // choose song
-        onView(withText("Soldier of Fortune - Deep Purple")).perform(click())
+        onView(withText("Nim Wstanie Dzień - Edmund Fetting")).perform(click())
 
         onView(withId(R.id.transposeButton)).perform(click())
         onView(withId(R.id.transpose0Button)).perform(click())
-        onView(withId(R.id.transposeP1Button)).perform(click())
-        onView(withId(R.id.transposeP1Button)).perform(click())
+        onView(withId(R.id.transposeM5Button)).perform(click())
 
         onView(isRoot()).perform(waitFor(100))
 
@@ -106,10 +103,10 @@ class MobileEnScreenshotMaker {
         // Hey There Delilah + autoscroll + chords inline
         val preferencesState = appFactory.preferencesState.get()
 
-        preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
+        preferencesState.appLanguage = AppLanguage.POLISH // needs restart
         preferencesState.colorScheme = ColorScheme.BRIGHT
         preferencesState.fontsize = 20f
-        preferencesState.chordsNotation = ChordsNotation.ENGLISH
+        preferencesState.chordsNotation = ChordsNotation.GERMAN
         preferencesState.fontTypeface = FontTypeface.default
         preferencesState.chordsDisplayStyle = DisplayStyle.ChordsInline
         preferencesState.restoreTransposition = false
@@ -136,13 +133,13 @@ class MobileEnScreenshotMaker {
 
     @Test
     fun test_04_editor() {
-        // Space Oddity in Editor
+        // Autobiografia Perfect in Editor
         val preferencesState = appFactory.preferencesState.get()
 
-        preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
+        preferencesState.appLanguage = AppLanguage.POLISH // needs restart
         preferencesState.colorScheme = ColorScheme.BRIGHT
         preferencesState.fontsize = 20f
-        preferencesState.chordsNotation = ChordsNotation.ENGLISH
+        preferencesState.chordsNotation = ChordsNotation.GERMAN
         preferencesState.fontTypeface = FontTypeface.default
         preferencesState.chordsDisplayStyle = DisplayStyle.ChordsInline
         preferencesState.restoreTransposition = false
@@ -153,7 +150,7 @@ class MobileEnScreenshotMaker {
         // open Search
         onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.nav_search))
         // type song name
-        onView(allOf(withClassName(endsWith("EditText")), withText(""))).perform(replaceText("Space Oddity"))
+        onView(allOf(withClassName(endsWith("EditText")), withText(""))).perform(replaceText("Autobiografia Perfect"))
         onView(isRoot()).perform(waitFor(500))
         // choose more options
         onView(withIndex(withId(R.id.itemSongMoreButton), 0)).perform(click())
@@ -182,10 +179,10 @@ class MobileEnScreenshotMaker {
         // Knocking on Heaven's Door + bright + Ukulele diagram
         val preferencesState = appFactory.preferencesState.get()
 
-        preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
+        preferencesState.appLanguage = AppLanguage.POLISH // needs restart
         preferencesState.colorScheme = ColorScheme.BRIGHT
         preferencesState.fontsize = 17.6f
-        preferencesState.chordsNotation = ChordsNotation.ENGLISH
+        preferencesState.chordsNotation = ChordsNotation.GERMAN
         preferencesState.fontTypeface = FontTypeface.default
         preferencesState.chordsDisplayStyle = DisplayStyle.ChordsInline
         preferencesState.chordsInstrument = ChordsInstrument.UKULELE
@@ -215,10 +212,10 @@ class MobileEnScreenshotMaker {
         // Hotel California + dark + chords above
         val preferencesState = appFactory.preferencesState.get()
 
-        preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
+        preferencesState.appLanguage = AppLanguage.POLISH // needs restart
         preferencesState.colorScheme = ColorScheme.DARK
         preferencesState.fontsize = 16.7f
-        preferencesState.chordsNotation = ChordsNotation.ENGLISH
+        preferencesState.chordsNotation = ChordsNotation.GERMAN
         preferencesState.fontTypeface = FontTypeface.default
         preferencesState.chordsDisplayStyle = DisplayStyle.ChordsAbove
         preferencesState.restoreTransposition = false
@@ -244,10 +241,10 @@ class MobileEnScreenshotMaker {
         // Settings
         val preferencesState = appFactory.preferencesState.get()
 
-        preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
+        preferencesState.appLanguage = AppLanguage.POLISH // needs restart
         preferencesState.colorScheme = ColorScheme.DARK
         preferencesState.fontsize = 20f
-        preferencesState.chordsNotation = ChordsNotation.ENGLISH
+        preferencesState.chordsNotation = ChordsNotation.GERMAN
         preferencesState.fontTypeface = FontTypeface.default
         preferencesState.chordsDisplayStyle = DisplayStyle.ChordsInline
         preferencesState.restoreTransposition = false
@@ -270,10 +267,10 @@ class MobileEnScreenshotMaker {
         // Top songs + Super Cow
         val preferencesState = appFactory.preferencesState.get()
 
-        preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
+        preferencesState.appLanguage = AppLanguage.POLISH // needs restart
         preferencesState.colorScheme = ColorScheme.DARK
         preferencesState.fontsize = 20f
-        preferencesState.chordsNotation = ChordsNotation.ENGLISH
+        preferencesState.chordsNotation = ChordsNotation.GERMAN
         preferencesState.fontTypeface = FontTypeface.default
         preferencesState.chordsDisplayStyle = DisplayStyle.ChordsInline
         preferencesState.restoreTransposition = false
