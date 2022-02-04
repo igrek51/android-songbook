@@ -44,6 +44,7 @@ class CustomSongsListLayoutController(
         exportFileChooser: LazyInject<ExportFileChooser> = appFactory.songExportFileChooser,
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
         importFileChooser: LazyInject<ImportFileChooser> = appFactory.allSongsImportFileChooser,
+        songImportFileChooser: LazyInject<SongImportFileChooser> = appFactory.songImportFileChooser,
 ) : InflatedLayout(
         _layoutResourceId = R.layout.screen_custom_songs
 ), ListItemClickListener<CustomSongListItem> {
@@ -56,6 +57,7 @@ class CustomSongsListLayoutController(
     private val songExportFileChooser by LazyExtractor(exportFileChooser)
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val importFileChooser by LazyExtractor(importFileChooser)
+    private val songImportFileChooser by LazyExtractor(songImportFileChooser)
 
     private var itemsListView: CustomSongListView? = null
     private var goBackButton: ImageButton? = null
@@ -101,11 +103,14 @@ class CustomSongsListLayoutController(
 
     private fun showMoreActions() {
         ContextMenuBuilder().showContextMenu(mutableListOf(
-                ContextMenuBuilder.Action(R.string.edit_song_export_all_custom_songs) {
-                    exportAllCustomSongs()
+                ContextMenuBuilder.Action(R.string.import_content_from_file) {
+                    importOneSong()
                 },
                 ContextMenuBuilder.Action(R.string.edit_song_import_custom_songs) {
                     importCustomSongs()
+                },
+                ContextMenuBuilder.Action(R.string.edit_song_export_all_custom_songs) {
+                    exportAllCustomSongs()
                 },
         ))
     }
@@ -122,6 +127,11 @@ class CustomSongsListLayoutController(
         songExportFileChooser.showFileChooser(content, "customsongs.json") {
             uiInfoService.showInfo(R.string.custom_songs_exported)
         }
+    }
+
+    private fun importOneSong() {
+        customSongService.showAddSongScreen()
+        songImportFileChooser.showFileChooser()
     }
 
     private fun importCustomSongs() {

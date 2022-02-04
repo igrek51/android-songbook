@@ -118,7 +118,7 @@
     <string name="scroll_at_the_beginning_already">Powrót na początek.</string>
     <string name="file_manager_not_found">Brak systemowej przeglądarki plików.</string>
     <string name="select_file_to_import">Wybierz plik z kodowaniem UTF-8 do zaimportowania.</string>
-    <string name="selected_file_is_too_big">Wybrany plik jest za duży.</string>
+    <string name="selected_file_is_too_big">Wybrany plik jest za duży. Czy to na pewno plik TEKSTOWY?</string>
     <string name="editing_custom_song">Moja piosenka</string>
     <string name="custom_song_editor">Edytor piosenki</string>
     <string name="edit_song_title_label">Tytuł piosenki:</string>
@@ -404,7 +404,7 @@
     <string name="room_make_discoverable">Ponownie ustaw widoczność</string>
     <string name="room_open_current_song">Otwórz obecną piosenkę</string>
     <string name="edit_song_export_all_custom_songs">Wyeksportuj wszystkie piosenki</string>
-    <string name="edit_song_import_custom_songs">Importuj wiele piosenek</string>
+    <string name="edit_song_import_custom_songs">Importuj wiele piosenek w partii</string>
     <string name="custom_songs_exported">Wyeksportowano własne piosenki.</string>
     <string name="select_file_to_open">Wybierz plik do otwarcia</string>
     <string name="custom_songs_imported">Zaimportowano %s nowych własnych piosenek.</string>

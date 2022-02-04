@@ -118,7 +118,7 @@
     <string name="scroll_at_the_beginning_already">Back to the beginning.</string>
     <string name="file_manager_not_found">Please install a File Manager.</string>
     <string name="select_file_to_import">Select a text file with UTF-8 encoding to import.</string>
-    <string name="selected_file_is_too_big">Selected file is too big.</string>
+    <string name="selected_file_is_too_big">Selected file is too big. Is it really a TEXT file?</string>
     <string name="editing_custom_song">Custom song</string>
     <string name="custom_song_editor">Song editor</string>
     <string name="edit_song_title_label">Song Title:</string>
@@ -430,7 +430,7 @@
     <string name="room_make_discoverable">Make discoverable again</string>
     <string name="room_open_current_song">Open current song</string>
     <string name="edit_song_export_all_custom_songs">Export all songs</string>
-    <string name="edit_song_import_custom_songs">Import multiple songs</string>
+    <string name="edit_song_import_custom_songs">Import multiple songs in a batch</string>
     <string name="custom_songs_exported">All custom songs exported</string>
     <string name="select_file_to_open">Select file to open</string>
     <string name="custom_songs_imported">%s new custom songs have been imported</string>

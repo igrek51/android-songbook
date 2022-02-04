@@ -53,7 +53,7 @@ class LyricsRenderer internal constructor(
             ColorScheme.BRIGHT -> 0x707070
         }
         scrollColor = when (colorScheme) {
-            ColorScheme.DARK -> 0x505050
+            ColorScheme.DARK -> 0x4A4A4A
             ColorScheme.BRIGHT -> 0xA0A0A0
         }
     }
@@ -89,7 +89,7 @@ class LyricsRenderer internal constructor(
             if (lastFragment.type == LyricsTextType.LINEWRAPPER) {
                 canvas.setFontTypeface(normalTypeface)
                 canvas.setColor(linewrapperColor)
-                canvas.drawText(lastFragment.text, w - 4, y + 0.9f * lineheight, Align.RIGHT)
+                canvas.drawText(lastFragment.text, w - 5, y + 0.9f * lineheight, Align.RIGHT)
             }
         }
 
@@ -119,12 +119,13 @@ class LyricsRenderer internal constructor(
                     canvas.setFontTypeface(italicTypeface)
                     canvas.setColor(commentColor)
                     canvas.drawText(
-                        fragment.text,
-                        fragment.x * fontsize - scrollX,
-                        y + lineheight,
-                        Align.LEFT
+                            fragment.text,
+                            fragment.x * fontsize - scrollX,
+                            y + lineheight,
+                            Align.LEFT
                     )
                 }
+                LyricsTextType.LINEWRAPPER -> {}
             }
         }
     }
