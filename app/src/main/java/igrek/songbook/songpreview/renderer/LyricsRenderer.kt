@@ -53,8 +53,8 @@ class LyricsRenderer internal constructor(
             ColorScheme.BRIGHT -> 0x707070
         }
         scrollColor = when (colorScheme) {
-            ColorScheme.DARK -> 0x4A4A4A
-            ColorScheme.BRIGHT -> 0xA0A0A0
+            ColorScheme.DARK -> 0x404040
+            ColorScheme.BRIGHT -> 0xAAAAAA
         }
     }
 
@@ -89,7 +89,7 @@ class LyricsRenderer internal constructor(
             if (lastFragment.type == LyricsTextType.LINEWRAPPER) {
                 canvas.setFontTypeface(normalTypeface)
                 canvas.setColor(linewrapperColor)
-                canvas.drawText(lastFragment.text, w - 5, y + 0.9f * lineheight, Align.RIGHT)
+                canvas.drawText(lastFragment.text, w, y + 0.9f * lineheight, Align.RIGHT)
             }
         }
 
