@@ -1,5 +1,5 @@
 # Songbook
-[![Build Status](https://www.travis-ci.com/igrek51/songbook.svg?token=xpwzLLeASgMyxvjHsf18&branch=master)](https://www.travis-ci.com/igrek51/songbook)
+[![Build Status](https://travis-ci.org/igrek51/android-songbook.svg?branch=master)](https://travis-ci.org/igrek51/android-songbook)
 
 Songs lyrics viewer with chords toolkit for guitarists and musicians
 
@@ -37,13 +37,15 @@ Our chief weapons are:
 Songbook is a tool mainly focused on guitarists and musicians, but it also can be used just to view the songs lyrics on mobile devices.
 It has many songs with chords on board and its database can be easily extended with your own songs.
 
-## Example Screenshots
-Example application screenshots are shown below:
+## Demo
+[![Songbook Demo](https://img.youtube.com/vi/VMsKZNkbl3A/0.jpg)](https://www.youtube.com/watch?v=VMsKZNkbl3A)
+
+Example application screenshots:
 
 | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/docs/screenshots/mobile/en/01.png) | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/docs/screenshots/mobile/en/02.png) | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/docs/screenshots/mobile/en/03.png) |
 |---|---|---|
 | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/docs/screenshots/mobile/en/04.png) | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/docs/screenshots/mobile/en/05.png) | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/docs/screenshots/mobile/en/06.png) |
-| ![alt tag](https://github.com/igrek51/android-songbook/blob/master/docs/screenshots/mobile/en/07.png) | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/docs/screenshots/mobile/en/08.png) | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/docs/screenshots/mobile/en/09.png) |
+| ![alt tag](https://github.com/igrek51/android-songbook/blob/master/docs/screenshots/mobile/en/07.png) | ![alt tag](https://github.com/igrek51/android-songbook/blob/master/docs/screenshots/mobile/en/08.png) |  |
 
 ## Available on Google Play
 

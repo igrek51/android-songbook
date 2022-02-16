@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "59875120927",
+    "project_id": "songbook-test-5dd1a",
+    "storage_bucket": "songbook-test-5dd1a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:59875120927:android:3d88d74a4f045bab2a422a",
+        "android_client_info": {
+          "package_name": "igrek.songbook"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "59875120927-ts6tjonm5l9qfs7nd3bdllc4csafbuhi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqyzHjy4Y8L9xljj5SWeURWwEGqS8ruE8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "59875120927-ts6tjonm5l9qfs7nd3bdllc4csafbuhi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
