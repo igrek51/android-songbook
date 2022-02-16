@@ -39,6 +39,7 @@ import igrek.songbook.room.RoomLobbyLayoutController
 import igrek.songbook.secret.SecretCommandService
 import igrek.songbook.send.*
 import igrek.songbook.settings.SettingsLayoutController
+import igrek.songbook.settings.buttons.MediaButtonService
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.instrument.ChordsInstrumentService
 import igrek.songbook.settings.language.AppLanguageService
@@ -155,4 +156,5 @@ class AppFactory(
     val allSongsImportFileChooser = SingletonInject { ImportFileChooser() }
     val activityResultDispatcher = SingletonInject { ActivityResultDispatcher() }
     val shareSongService = SingletonInject { ShareSongService() }
+    val mediaButtonService = SingletonInject { MediaButtonService() }
 }

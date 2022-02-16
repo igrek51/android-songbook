@@ -18,6 +18,8 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
+import igrek.songbook.settings.buttons.MediaButtonBehaviours
+import igrek.songbook.settings.buttons.MediaButtonService
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.instrument.ChordsInstrument
@@ -46,6 +48,7 @@ class SettingsFragment(
         preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
         googleSyncManager: LazyInject<GoogleSyncManager> = appFactory.googleSyncManager,
         chordsDiagramsService: LazyInject<ChordsDiagramsService> = appFactory.chordsDiagramsService,
+        mediaButtonService: LazyInject<MediaButtonService> = appFactory.mediaButtonService,
 ) : PreferenceFragmentCompat() {
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val activity by LazyExtractor(appCompatActivity)
@@ -56,6 +59,7 @@ class SettingsFragment(
     private val preferencesState by LazyExtractor(preferencesState)
     private val googleSyncManager by LazyExtractor(googleSyncManager)
     private val chordsDiagramsService by LazyExtractor(chordsDiagramsService)
+    private val mediaButtonService by LazyExtractor(mediaButtonService)
 
     private var decimalFormat1: DecimalFormat = DecimalFormat("#.#")
     private var decimalFormat3: DecimalFormat = DecimalFormat("#.###")
@@ -289,10 +293,18 @@ class SettingsFragment(
         )
 
         setupSwitchPreference("horizontalScroll",
-            onLoad = { preferencesState.horizontalScroll },
-            onSave = { value: Boolean ->
-                preferencesState.horizontalScroll = value
-            }
+                onLoad = { preferencesState.horizontalScroll },
+                onSave = { value: Boolean ->
+                    preferencesState.horizontalScroll = value
+                }
+        )
+
+        setupListPreference("mediaButtonBehaviour",
+                mediaButtonService.mediaButtonBehavioursEntries(),
+                onLoad = { preferencesState.mediaButtonBehaviour.id.toString() },
+                onSave = { id: String ->
+                    preferencesState.mediaButtonBehaviour = MediaButtonBehaviours.mustParseById(id.toLong())
+                }
         )
 
         refreshFragment()

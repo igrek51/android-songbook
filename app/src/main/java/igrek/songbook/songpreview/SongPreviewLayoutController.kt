@@ -420,4 +420,8 @@ class SongPreviewLayoutController(
         return true
     }
 
+    fun canScrollDown(): Boolean {
+        return songPreview?.canScrollDown() ?: false
+    }
+
 }

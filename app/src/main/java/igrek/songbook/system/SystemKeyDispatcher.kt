@@ -6,19 +6,23 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.playlist.PlaylistLayoutController
+import igrek.songbook.settings.buttons.MediaButtonBehaviours
+import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 
 class SystemKeyDispatcher(
-    layoutController: LazyInject<LayoutController> = appFactory.layoutController,
-    autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
-    songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
-    playlistLayoutController: LazyInject<PlaylistLayoutController> = appFactory.playlistLayoutController,
+        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+        autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
+        songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
+        playlistLayoutController: LazyInject<PlaylistLayoutController> = appFactory.playlistLayoutController,
+        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
     private val layoutController by LazyExtractor(layoutController)
     private val autoscrollService by LazyExtractor(autoscrollService)
     private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
     private val playlistLayoutController by LazyExtractor(playlistLayoutController)
+    private val preferencesState by LazyExtractor(preferencesState)
 
     fun onKeyDown(keyCode: Int): Boolean {
         when (keyCode) {
@@ -40,11 +44,25 @@ class SystemKeyDispatcher(
             KeyEvent.KEYCODE_DPAD_DOWN -> {
                 return onArrowDown()
             }
-            KeyEvent.KEYCODE_DPAD_LEFT -> {
+            KeyEvent.KEYCODE_DPAD_LEFT,
+            KeyEvent.KEYCODE_MEDIA_REWIND,
+            KeyEvent.KEYCODE_MEDIA_PREVIOUS,
+            KeyEvent.KEYCODE_MEDIA_SKIP_BACKWARD,
+            KeyEvent.KEYCODE_MEDIA_STEP_BACKWARD -> {
                 return onArrowLeft()
             }
-            KeyEvent.KEYCODE_DPAD_RIGHT -> {
+            KeyEvent.KEYCODE_DPAD_RIGHT,
+            KeyEvent.KEYCODE_MEDIA_FAST_FORWARD,
+            KeyEvent.KEYCODE_MEDIA_NEXT,
+            KeyEvent.KEYCODE_MEDIA_SKIP_FORWARD,
+            KeyEvent.KEYCODE_MEDIA_STEP_FORWARD -> {
                 return onArrowRight()
+            }
+            KeyEvent.KEYCODE_HEADSETHOOK, // mini jack headset button
+            KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE,
+            KeyEvent.KEYCODE_MEDIA_PLAY,
+            KeyEvent.KEYCODE_MEDIA_PAUSE -> {
+                return onMediaButton()
             }
         }
         return false
@@ -94,6 +112,30 @@ class SystemKeyDispatcher(
         if (!layoutController.isState(SongPreviewLayoutController::class))
             return false
         playlistLayoutController.goToNextOrPrevious(+1)
+        return true
+    }
+
+    private fun onMediaButton(): Boolean {
+        if (!layoutController.isState(SongPreviewLayoutController::class))
+            return false
+        when (preferencesState.mediaButtonBehaviour) {
+            MediaButtonBehaviours.DO_NOTHING -> {
+                return false
+            }
+            MediaButtonBehaviours.SCROLL_DOWN -> {
+                songPreviewLayoutController.scrollByStep(+1)
+            }
+            MediaButtonBehaviours.NEXT_SONG -> {
+                playlistLayoutController.goToNextOrPrevious(+1)
+            }
+            MediaButtonBehaviours.SCROLL_DOWN_NEXT_SONG -> {
+                if (songPreviewLayoutController.canScrollDown()) {
+                    songPreviewLayoutController.scrollByStep(+1)
+                } else {
+                    playlistLayoutController.goToNextOrPrevious(+1)
+                }
+            }
+        }
         return true
     }
 }

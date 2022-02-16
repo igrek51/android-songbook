@@ -4,6 +4,7 @@ import igrek.songbook.chords.diagram.ChordDiagramStyle
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import igrek.songbook.settings.buttons.MediaButtonBehaviours
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.instrument.ChordsInstrument
 import igrek.songbook.settings.language.AppLanguage
@@ -44,6 +45,7 @@ class PreferencesState(
     var autoscrollAutostart: Boolean by PreferenceDelegate(PreferencesField.AutoscrollAutostart)
     var autoscrollForwardNextSong: Boolean by PreferenceDelegate(PreferencesField.AutoscrollForwardNextSong)
     var horizontalScroll: Boolean by PreferenceDelegate(PreferencesField.HorizontalScroll)
+    var mediaButtonBehaviour: MediaButtonBehaviours by PreferenceDelegate(PreferencesField.MediaButtonBehaviour)
 
 }
 

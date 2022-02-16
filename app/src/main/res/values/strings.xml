@@ -480,4 +480,10 @@
     <string name="playlist_at_end">End of playlist reached</string>
     <string name="settings_autoscroll_forward_next_song">Forward to next song automatically</string>
     <string name="settings_autoscroll_forward_next_song_hint">Forward to the next song in a playlist once autoscroll reaches the end of a song</string>
+    <string name="media_button_behaviour">Media button action (eg. headset button or pedal plugged with mini jack cable)</string>
+    <string name="media_button_behaviour_scroll_down_and_next">Scroll down and go to next song</string>
+    <string name="media_button_behaviour_scroll_down">Scroll down</string>
+    <string name="media_button_behaviour_next_song">Go to next song</string>
+    <string name="media_button_behaviour_nothing">Do nothing</string>
+    <string name="settings_buttons_section">Buttons</string>
 </resources>

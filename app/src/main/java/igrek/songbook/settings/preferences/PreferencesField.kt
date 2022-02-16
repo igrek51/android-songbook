@@ -1,5 +1,6 @@
 package igrek.songbook.settings.preferences
 
+import igrek.songbook.settings.buttons.MediaButtonBehaviours
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.DisplayStyle
@@ -82,11 +83,11 @@ enum class PreferencesField constructor(
     AnonymousUsageData(false),
 
     ChordDiagramStyle(
-        GenericLongIdPreferenceType(
-            defaultValue = igrek.songbook.chords.diagram.ChordDiagramStyle.default,
-            serializer = igrek.songbook.chords.diagram.ChordDiagramStyle::id,
-            deserializer = igrek.songbook.chords.diagram.ChordDiagramStyle.Companion::parseById,
-        )
+            GenericLongIdPreferenceType(
+                    defaultValue = igrek.songbook.chords.diagram.ChordDiagramStyle.default,
+                    serializer = igrek.songbook.chords.diagram.ChordDiagramStyle::id,
+                    deserializer = igrek.songbook.chords.diagram.ChordDiagramStyle.Companion::parseById,
+            )
     ),
 
     UpdateDbOnStartup(true),
@@ -98,6 +99,14 @@ enum class PreferencesField constructor(
     AutoscrollForwardNextSong(false),
 
     HorizontalScroll(false),
+
+    MediaButtonBehaviour(
+            GenericLongIdPreferenceType(
+                    defaultValue = MediaButtonBehaviours.default,
+                    serializer = MediaButtonBehaviours::id,
+                    deserializer = MediaButtonBehaviours.Companion::parseById,
+            )
+    ),
 
     ;
 

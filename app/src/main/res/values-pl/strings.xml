@@ -454,4 +454,10 @@
     <string name="playlist_at_end">Koniec playlisty</string>
     <string name="settings_autoscroll_forward_next_song">Automatycznie przejdź do następnej piosenki</string>
     <string name="settings_autoscroll_forward_next_song_hint">Przejdź do następnej piosenki z playlisty, gdy autoprzewijanie dojdzie do końca piosenki</string>
+    <string name="media_button_behaviour">Akcja przycisku multimedialnego (np. przycisk zestawu słuchawkowego lub pedał podłączony kablem mini jack)</string>
+    <string name="media_button_behaviour_scroll_down_and_next">Przewiń w dół i przejdź do następnej piosenki</string>
+    <string name="media_button_behaviour_scroll_down">Przewiń w dół</string>
+    <string name="media_button_behaviour_next_song">Przejdź do następnej piosenki</string>
+    <string name="media_button_behaviour_nothing">Nie rób nic</string>
+    <string name="settings_buttons_section">Przyciski</string>
 </resources>
