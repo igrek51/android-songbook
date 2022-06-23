@@ -41,6 +41,7 @@
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|navigation"
             android:label="@string/app_name"
             android:resizeableActivity="true"
+            android:exported="true"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,6 +56,7 @@
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|navigation"
             android:label="@string/app_name"
             android:resizeableActivity="true"
+            android:exported="true"
             android:theme="@style/SplashTheme">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
@@ -78,7 +80,7 @@
 
         <activity
             android:name=".activity.CopyToClipboardActivity"
-            android:exported="false"
+            android:exported="true"
             android:icon="@drawable/paste_black"
             android:label="@string/copy_to_clipboard"
             android:theme="@android:style/Theme.NoDisplay" />
