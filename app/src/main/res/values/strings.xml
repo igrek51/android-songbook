@@ -487,8 +487,8 @@
     <string name="media_button_behaviour_next_song">Go to next song</string>
     <string name="media_button_behaviour_nothing">Do nothing</string>
     <string name="settings_buttons_section">Buttons</string>
-    <string name="billing_ad_free_info">Ad-free - removes ad banner. One time payment</string>
+    <string name="billing_ad_free_info">Buy "Ad-free" to remove the ad banner in the application. One time payment</string>
     <string name="billing_buy_ad_free">Buy Ad-Free</string>
-    <string name="billing_restore_pruchases">Restore purchases</string>
+    <string name="billing_restore_pruchases">Restore previous purchases</string>
     <string name="billing_already_purchased">Already purchased</string>
 </resources>
