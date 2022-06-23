@@ -109,6 +109,7 @@ dependencies {
     }
     // Google Play Billing
     implementation "com.android.billingclient:billing:5.0.0"
+    implementation 'com.android.billingclient:billing-ktx:5.0.0'
     // Kotlin
     implementation "androidx.core:core-ktx:1.6.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
