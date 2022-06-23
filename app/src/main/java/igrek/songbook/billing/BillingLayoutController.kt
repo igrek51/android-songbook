@@ -13,6 +13,7 @@ import igrek.songbook.layout.InflatedLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class BillingLayoutController(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
@@ -35,17 +36,20 @@ class BillingLayoutController(
             billingService.callRestorePurchases()
         }
 
-        GlobalScope.launch(Dispatchers.Main) {
-            uiInfoService.showInfo(R.string.billing_loading_purchases)
+        uiInfoService.showInfo(R.string.billing_loading_purchases)
+        GlobalScope.launch {
             billingService.waitForInitialized()
-            val adfreePurchased = billingService.isPurchased(PRODUCT_ID_NO_ADS)
+            val adfreePurchased: Boolean? = billingService.isPurchased(PRODUCT_ID_NO_ADS)
             val price = when (adfreePurchased) {
                 true -> uiResourceService.resString(R.string.billing_already_purchased)
                 else -> billingService.getSkuPrice(PRODUCT_ID_NO_ADS)
             }
 
-            layout.findViewById<TextView>(R.id.billingAdFreePrice)?.let {
-                it.text = price
+            withContext(Dispatchers.Main) {
+                layout.findViewById<TextView>(R.id.billingAdFreePrice)?.let {
+                    it.text = price
+                }
+                uiInfoService.clearSnackBars()
             }
         }
 

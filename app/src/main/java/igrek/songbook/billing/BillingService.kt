@@ -74,6 +74,7 @@ class BillingService(
 
     private fun initConnection() {
         try {
+            logger.debug("initializing Billing Service")
             billingClient = BillingClient.newBuilder(context)
                     .setListener(this)
                     .enablePendingPurchases()
@@ -215,12 +216,36 @@ class BillingService(
                     uiInfoService.showInfo(R.string.billing_user_already_owns_item)
                 }
                 BillingClient.BillingResponseCode.DEVELOPER_ERROR -> {
-                    UiErrorHandler().handleError(RuntimeException("Billing Response Developer Error"), R.string.error_purchase_error)
+                    throw RuntimeException("Billing Response: Invalid arguments provided to the API")
                     // Developer error means that Google Play does not recognize the configuration.
                     // The SKU product ID must match and the APK you are using must be signed with release keys."
                 }
+                BillingClient.BillingResponseCode.BILLING_UNAVAILABLE -> {
+                    throw RuntimeException("Billing API version is not supported for the type requested")
+                }
+                BillingClient.BillingResponseCode.ERROR -> {
+                    throw RuntimeException("Fatal error during the API action. ${billingResult.debugMessage}")
+                }
+                BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED -> {
+                    throw RuntimeException("Requested feature is not supported by Play Store on the current device")
+                }
+                BillingClient.BillingResponseCode.ITEM_NOT_OWNED -> {
+                    throw RuntimeException("Failure to consume since item is not owned.")
+                }
+                BillingClient.BillingResponseCode.ITEM_UNAVAILABLE -> {
+                    throw RuntimeException("Requested product is not available for purchase")
+                }
+                BillingClient.BillingResponseCode.SERVICE_DISCONNECTED -> {
+                    throw RuntimeException("Play Store service is not connected now - potentially transient state.")
+                }
+                BillingClient.BillingResponseCode.SERVICE_TIMEOUT -> {
+                    throw RuntimeException("The request has reached the maximum timeout before Google Play responds.")
+                }
+                BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE -> {
+                    throw RuntimeException("Network connection is down.")
+                }
                 else -> {
-                    UiErrorHandler().handleError(RuntimeException("${billingResult.responseCode} ${billingResult.debugMessage}"), R.string.error_purchase_error)
+                    throw RuntimeException("Billing Response Code ${billingResult.responseCode} ${billingResult.debugMessage}")
                 }
             }
 

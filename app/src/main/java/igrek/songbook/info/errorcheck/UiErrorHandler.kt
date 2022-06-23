@@ -25,13 +25,14 @@ class UiErrorHandler(
             uiInfoService.showInfo(t.messageRes, indefinite = true)
         } else {
             uiInfoService.showInfoAction(contextResId, err, indefinite = true, actionResId = R.string.error_details) {
-                showDetails(t)
+                showDetails(t, contextResId)
             }
         }
     }
 
-    private fun showDetails(t: Throwable) {
-        val message = "${t::class.simpleName}\n${t.message.orEmpty()}"
+    private fun showDetails(t: Throwable, contextResId: Int) {
+        val errorMessage = uiInfoService.resString(contextResId, t.message.orEmpty())
+        val message = "${errorMessage}\nType: ${t::class.simpleName}"
         uiInfoService.dialog(titleResId = R.string.error_occurred, message = message)
     }
 

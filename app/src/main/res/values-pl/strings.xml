@@ -461,7 +461,7 @@
     <string name="media_button_behaviour_next_song">Przejdź do następnej piosenki</string>
     <string name="media_button_behaviour_nothing">Nie rób nic</string>
     <string name="settings_buttons_section">Przyciski</string>
-    <string name="billing_ad_free_info">Kup "Brak reklam", aby usunąć banner z reklamami w aplikacji. Jednorazowa płatność</string>
+    <string name="billing_ad_free_info">Kup \"Brak reklam\", aby usunąć banner z reklamami w aplikacji. Jednorazowa płatność:</string>
     <string name="billing_buy_ad_free">Kup Brak reklam</string>
     <string name="billing_restore_pruchases">Przywróc poprzednie zakupy</string>
     <string name="billing_already_purchased">Już kupione</string>
