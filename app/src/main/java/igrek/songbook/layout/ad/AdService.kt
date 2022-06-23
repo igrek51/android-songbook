@@ -51,6 +51,7 @@ class AdService(
         } catch (t: Throwable) {
             logger.error("AdMob initialization failed", t)
         }
+        billingHelper  // fetch purchases
     }
 
     private fun setTagForChildDirectedTreatment() {

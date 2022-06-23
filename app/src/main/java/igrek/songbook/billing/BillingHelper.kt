@@ -74,7 +74,6 @@ class BillingHelper(
     override fun onBillingSetupFinished(billingResult: BillingResult) {
         val responseCode = billingResult.responseCode
         val debugMessage = billingResult.debugMessage
-        logger.debug("onBillingSetupFinished: $responseCode $debugMessage")
         when (responseCode) {
             BillingClient.BillingResponseCode.OK -> {
                 // The billing client is ready. You can query purchases here.
@@ -84,7 +83,11 @@ class BillingHelper(
                     querySkuDetailsAsync()
                     restorePurchases()
                     initChannel.trySendBlocking(Result.success(Unit))
+                    logger.debug("Billing service initialized")
                 }
+            }
+            else -> {
+                logger.error("Billing setup response: $responseCode $debugMessage")
             }
         }
     }
@@ -106,7 +109,6 @@ class BillingHelper(
         val debugMessage = billingResult.debugMessage
         when (responseCode) {
             BillingClient.BillingResponseCode.OK -> {
-                logger.info("onSkuDetailsResponse: $responseCode, $debugMessage")
                 if (skuDetailsList == null || skuDetailsList.isEmpty()) {
                     logger.error("onSkuDetailsResponse: " +
                         "Found null or empty SkuDetails. " +
@@ -118,6 +120,9 @@ class BillingHelper(
                         skuDetailsMap[sku] = skuDetails
                     }
                 }
+            }
+            else -> {
+                logger.error("Billing: SKU details response: $responseCode $debugMessage")
             }
         }
     }
