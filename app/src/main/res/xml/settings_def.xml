@@ -162,6 +162,14 @@
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
+
+    <PreferenceCategory android:title="@string/settings_ads">
+        <Preference
+            android:title="@string/billing_remove_ad_banner"
+            android:key="billingRemoveAds"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/settings_privacy">
         <SwitchPreference
             android:key="anonymousUsageData"

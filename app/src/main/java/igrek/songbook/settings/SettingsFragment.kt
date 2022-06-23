@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.preference.*
 import igrek.songbook.R
+import igrek.songbook.billing.BillingLayoutController
 import igrek.songbook.chords.diagram.ChordDiagramStyle
 import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.info.UiResourceService
@@ -17,6 +18,7 @@ import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.settings.buttons.MediaButtonBehaviours
 import igrek.songbook.settings.buttons.MediaButtonService
@@ -39,16 +41,17 @@ import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
 class SettingsFragment(
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
-        lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
-        appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
-        chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
-        chordsInstrumentService: LazyInject<ChordsInstrumentService> = appFactory.chordsInstrumentService,
-        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
-        googleSyncManager: LazyInject<GoogleSyncManager> = appFactory.googleSyncManager,
-        chordsDiagramsService: LazyInject<ChordsDiagramsService> = appFactory.chordsDiagramsService,
-        mediaButtonService: LazyInject<MediaButtonService> = appFactory.mediaButtonService,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+    lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
+    appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
+    chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
+    chordsInstrumentService: LazyInject<ChordsInstrumentService> = appFactory.chordsInstrumentService,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    googleSyncManager: LazyInject<GoogleSyncManager> = appFactory.googleSyncManager,
+    chordsDiagramsService: LazyInject<ChordsDiagramsService> = appFactory.chordsDiagramsService,
+    mediaButtonService: LazyInject<MediaButtonService> = appFactory.mediaButtonService,
+    layoutController: LazyInject<LayoutController> = appFactory.layoutController,
 ) : PreferenceFragmentCompat() {
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val activity by LazyExtractor(appCompatActivity)
@@ -60,6 +63,7 @@ class SettingsFragment(
     private val googleSyncManager by LazyExtractor(googleSyncManager)
     private val chordsDiagramsService by LazyExtractor(chordsDiagramsService)
     private val mediaButtonService by LazyExtractor(mediaButtonService)
+    private val layoutController by LazyExtractor(layoutController)
 
     private var decimalFormat1: DecimalFormat = DecimalFormat("#.#")
     private var decimalFormat3: DecimalFormat = DecimalFormat("#.###")
@@ -306,6 +310,10 @@ class SettingsFragment(
                     preferencesState.mediaButtonBehaviour = MediaButtonBehaviours.mustParseById(id.toLong())
                 }
         )
+
+        setupClickPreference("billingRemoveAds") {
+            layoutController.showLayout(BillingLayoutController::class)
+        }
 
         refreshFragment()
     }
