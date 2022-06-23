@@ -12,6 +12,7 @@ import androidx.transition.TransitionManager
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
+import igrek.songbook.billing.BillingLayoutController
 import igrek.songbook.custom.CustomSongsListLayoutController
 import igrek.songbook.custom.EditSongLayoutController
 import igrek.songbook.editor.ChordsEditorLayoutController
@@ -68,6 +69,7 @@ class LayoutController(
     adminSongsLayoutContoller: LazyInject<AdminSongsLayoutContoller> = appFactory.adminSongsLayoutContoller,
     roomListLayoutController: LazyInject<RoomListLayoutController> = appFactory.shareViewLayoutController,
     roomLobbyLayoutController: LazyInject<RoomLobbyLayoutController> = appFactory.roomLobbyLayoutController,
+    billingLayoutController: LazyInject<BillingLayoutController> = appFactory.billingLayoutController,
 ) {
     private val activity by LazyExtractor(activity)
     private val navigationMenuController by LazyExtractor(navigationMenuController)
@@ -97,6 +99,7 @@ class LayoutController(
             AdminSongsLayoutContoller::class to adminSongsLayoutContoller.get(),
             RoomListLayoutController::class to roomListLayoutController.get(),
             RoomLobbyLayoutController::class to roomLobbyLayoutController.get(),
+            BillingLayoutController::class to billingLayoutController.get(),
     )
     private val logger = LoggerFactory.logger
     private val layoutCache = hashMapOf<Int, View>()

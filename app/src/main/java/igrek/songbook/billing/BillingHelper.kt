@@ -127,6 +127,12 @@ class BillingHelper(
         }
     }
 
+    fun callRestorePurchases() {
+        defaultScope.launch {
+            restorePurchases()
+        }
+    }
+
     private suspend fun restorePurchases() {
         val purchasesResult = billingClient!!.queryPurchasesAsync(BillingClient.SkuType.INAPP)
         val billingResult = purchasesResult.billingResult

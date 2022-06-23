@@ -14,6 +14,7 @@
     <string name="nav_contact">Contact</string>
     <string name="nav_help">Help</string>
     <string name="nav_screen_share">Screen Share</string>
+    <string name="nav_purchase">Ad-free / Donate</string>
     <string name="ui_help_content">
         SONG SELECTION:
         \nYou can choose a song from a categories tree or search it by title or artist (by any word from name, uppercase doesn\'t matter).
@@ -486,4 +487,8 @@
     <string name="media_button_behaviour_next_song">Go to next song</string>
     <string name="media_button_behaviour_nothing">Do nothing</string>
     <string name="settings_buttons_section">Buttons</string>
+    <string name="billing_ad_free_info">Ad-free - removes ad banner. One time payment</string>
+    <string name="billing_buy_ad_free">Buy Ad-Free</string>
+    <string name="billing_restore_pruchases">Restore purchases</string>
+    <string name="billing_already_purchased">Already purchased</string>
 </resources>

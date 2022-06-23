@@ -72,6 +72,10 @@
             android:icon="@drawable/settings"
             android:title="@string/nav_settings" />
         <item
+            android:id="@+id/nav_purchase"
+            android:icon="@drawable/shopping_cart"
+            android:title="@string/nav_purchase" />
+        <item
             android:id="@+id/nav_contact"
             android:icon="@drawable/send"
             android:title="@string/nav_contact" />

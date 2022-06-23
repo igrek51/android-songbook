@@ -11,6 +11,7 @@ import igrek.songbook.about.AboutLayoutController
 import igrek.songbook.about.HelpLayoutController
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
+import igrek.songbook.billing.BillingLayoutController
 import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.custom.CustomSongsListLayoutController
 import igrek.songbook.info.errorcheck.SafeExecutor
@@ -94,6 +95,7 @@ class NavigationMenuController(
         actionsMap[R.id.nav_admin_antechamber] = { layoutController.showLayout(AdminSongsLayoutContoller::class) }
         actionsMap[R.id.nav_chord_diagram] = { chordsDiagramsService.showFindChordByNameMenu() }
         actionsMap[R.id.nav_screen_share] = { layoutController.showLayout(RoomListLayoutController::class) }
+        actionsMap[R.id.nav_purchase] = { layoutController.showLayout(BillingLayoutController::class) }
     }
 
     fun init() {

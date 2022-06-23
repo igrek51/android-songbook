@@ -12,6 +12,7 @@
     <string name="nav_contact">Kontakt</string>
     <string name="nav_help">Pomoc</string>
     <string name="nav_screen_share">Udostępnianie ekranu</string>
+    <string name="nav_purchase">Bez reklam</string>
     <string name="ui_help_content">
         WYBÓR PIOSENKI:
         \nMożesz wybrać piosenkę z drzewa kategorii lub wyszukać ją po tytule lub nazwie artysty (po dowolnym słowie z nazwy, wielkość liter i polskie znaki nie mają znaczenia).
@@ -460,4 +461,8 @@
     <string name="media_button_behaviour_next_song">Przejdź do następnej piosenki</string>
     <string name="media_button_behaviour_nothing">Nie rób nic</string>
     <string name="settings_buttons_section">Przyciski</string>
+    <string name="billing_ad_free_info">Brak reklam - usuwa banner z reklamami w aplikacji. Jednorazowa płatność</string>
+    <string name="billing_buy_ad_free">Kup Brak reklam</string>
+    <string name="billing_restore_pruchases">Przywróc zakupy</string>
+    <string name="billing_already_purchased">Już kupione</string>
 </resources>
