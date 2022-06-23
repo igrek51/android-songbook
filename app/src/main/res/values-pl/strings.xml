@@ -465,4 +465,12 @@
     <string name="billing_buy_ad_free">Kup Brak reklam</string>
     <string name="billing_restore_pruchases">Przywróc poprzednie zakupy</string>
     <string name="billing_already_purchased">Już kupione</string>
+    <string name="error_purchase_error">Błąd płatności: %s</string>
+    <string name="billing_loading_purchases">Wczytywanie płatności…</string>
+    <string name="billing_restoring_purchases">Przywracanie poprzednich zakupów…</string>
+    <string name="billing_purchases_restored">Płatności przywrócone</string>
+    <string name="billing_starting_purchase">Rozpoczynanie płatności…</string>
+    <string name="billing_thanks_for_purchase">Dziękuję za płatność.</string>
+    <string name="billing_user_canceled_purchase">Użytkownik anulował płatność</string>
+    <string name="billing_user_already_owns_item">Użytkownik już posiada tą pozycję</string>
 </resources>

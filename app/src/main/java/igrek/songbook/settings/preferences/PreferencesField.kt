@@ -108,6 +108,8 @@ enum class PreferencesField constructor(
             )
     ),
 
+    PurchasedAdFree(false),
+
     ;
 
     constructor(defaultValue: String) : this(StringPreferenceType(defaultValue))

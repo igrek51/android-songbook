@@ -8,8 +8,6 @@ import com.google.android.gms.ads.*
 import com.google.android.gms.ads.AdRequest.*
 import igrek.songbook.BuildConfig
 import igrek.songbook.R
-import igrek.songbook.billing.BillingHelper
-import igrek.songbook.billing.PRODUCT_ID_NO_ADS
 import igrek.songbook.editor.ChordsEditorLayoutController
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.LoggerFactory.logger
@@ -24,13 +22,11 @@ import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 
 class AdService(
-        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
-        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
-        billingHelper: LazyInject<BillingHelper> = appFactory.billingHelper,
+    appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
     private val activity by LazyExtractor(appCompatActivity)
     private val preferencesState by LazyExtractor(preferencesState)
-    private val billingHelper by LazyExtractor(billingHelper)
 
     private var testingMode = BuildConfig.DEBUG
     private val requestAdViewSubject = PublishSubject.create<Boolean>()
@@ -51,7 +47,6 @@ class AdService(
         } catch (t: Throwable) {
             logger.error("AdMob initialization failed", t)
         }
-        billingHelper  // fetch purchases
     }
 
     private fun setTagForChildDirectedTreatment() {
@@ -78,8 +73,8 @@ class AdService(
             BuildConfig.DEBUG && hideAdsOnDebug -> false
             SongPreviewLayoutController::class.isInstance(currentLayout) -> false
             ChordsEditorLayoutController::class.isInstance(currentLayout) -> false
-            areAdsDisabled() -> false
-            billingHelper.syncIsPurchased(PRODUCT_ID_NO_ADS) == true -> false
+            preferencesState.adsStatus == 1L -> false
+            preferencesState.purchasedAdFree -> false
             else -> true
         }
     }
@@ -163,7 +158,4 @@ class AdService(
         preferencesState.adsStatus = 1
     }
 
-    private fun areAdsDisabled(): Boolean {
-        return preferencesState.adsStatus == 1L
-    }
 }

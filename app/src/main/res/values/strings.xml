@@ -491,4 +491,12 @@
     <string name="billing_buy_ad_free">Buy Ad-Free</string>
     <string name="billing_restore_pruchases">Restore previous purchases</string>
     <string name="billing_already_purchased">Already purchased</string>
+    <string name="error_purchase_error">Purchase error: %s</string>
+    <string name="billing_loading_purchases">Loading purchases…</string>
+    <string name="billing_restoring_purchases">Restoring previous purchases…</string>
+    <string name="billing_purchases_restored">Purchases restored</string>
+    <string name="billing_starting_purchase">Starting a new purchase…</string>
+    <string name="billing_thanks_for_purchase">Thank you for your purchase</string>
+    <string name="billing_user_canceled_purchase">User canceled the purchase</string>
+    <string name="billing_user_already_owns_item">The user already owns this item</string>
 </resources>

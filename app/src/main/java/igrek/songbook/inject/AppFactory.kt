@@ -12,7 +12,7 @@ import igrek.songbook.admin.AdminService
 import igrek.songbook.admin.SongRankService
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.admin.antechamber.AntechamberService
-import igrek.songbook.billing.BillingHelper
+import igrek.songbook.billing.BillingService
 import igrek.songbook.billing.BillingLayoutController
 import igrek.songbook.chords.diagram.ChordsDiagramsService
 import igrek.songbook.chords.lyrics.LyricsLoader
@@ -159,6 +159,6 @@ class AppFactory(
     val activityResultDispatcher = SingletonInject { ActivityResultDispatcher() }
     val shareSongService = SingletonInject { ShareSongService() }
     val mediaButtonService = SingletonInject { MediaButtonService() }
-    val billingHelper = SingletonInject { BillingHelper() }
+    val billingService = SingletonInject { BillingService() }
     val billingLayoutController = SingletonInject { BillingLayoutController() }
 }

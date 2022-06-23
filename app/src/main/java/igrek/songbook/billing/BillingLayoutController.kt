@@ -10,36 +10,43 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class BillingLayoutController(
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        billingHelper: LazyInject<BillingHelper> = appFactory.billingHelper,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    billingService: LazyInject<BillingService> = appFactory.billingService,
 ) : InflatedLayout(
         _layoutResourceId = R.layout.screen_billing
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val uiResourceService by LazyExtractor(uiResourceService)
-    private val billingHelper by LazyExtractor(billingHelper)
+    private val billingService by LazyExtractor(billingService)
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
 
         layout.findViewById<Button>(R.id.billingBuyAdFree)?.setOnClickListener {
-            billingHelper.launchBillingFlow(PRODUCT_ID_NO_ADS)
+            billingService.launchBillingFlow(PRODUCT_ID_NO_ADS)
         }
         layout.findViewById<Button>(R.id.billingRestorePurchases)?.setOnClickListener {
-            billingHelper.callRestorePurchases()
+            billingService.callRestorePurchases()
         }
 
-        val adfreePurchased = billingHelper.syncIsPurchased(PRODUCT_ID_NO_ADS)
-        val price = when(adfreePurchased) {
-            true -> uiResourceService.resString(R.string.billing_already_purchased)
-            else -> billingHelper.getSkuPrice(PRODUCT_ID_NO_ADS)
-        }
+        GlobalScope.launch(Dispatchers.Main) {
+            uiInfoService.showInfo(R.string.billing_loading_purchases)
+            billingService.waitForInitialized()
+            val adfreePurchased = billingService.isPurchased(PRODUCT_ID_NO_ADS)
+            val price = when (adfreePurchased) {
+                true -> uiResourceService.resString(R.string.billing_already_purchased)
+                else -> billingService.getSkuPrice(PRODUCT_ID_NO_ADS)
+            }
 
-        layout.findViewById<TextView>(R.id.billingAdFreePrice)?.let {
-            it.text = price
+            layout.findViewById<TextView>(R.id.billingAdFreePrice)?.let {
+                it.text = price
+            }
         }
 
     }
