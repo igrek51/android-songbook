@@ -79,6 +79,7 @@ class SettingsFragment(
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.settings_def, rootKey)
+        lateInit()
         Handler(Looper.getMainLooper()).post {
             lateInit()
         }
