@@ -501,4 +501,7 @@
     <string name="billing_user_already_owns_item">The user already owns this item</string>
     <string name="billing_remove_ad_banner">Remove ad banner</string>
     <string name="settings_ads">Ads</string>
+    <string name="billing_donate_1_info">If you like this app, you can express your appreciation by making a donation to the developer in a symbolic \"beer\" currency. You can donate multiple times.</string>
+    <string name="billing_buy_donate_1">Send a beer to the developer</string>
+    <string name="billing_price_loading">Price loading…</string>
 </resources>

@@ -32,6 +32,9 @@ class BillingLayoutController(
         layout.findViewById<Button>(R.id.billingBuyAdFree)?.setOnClickListener {
             billingService.launchBillingFlow(PRODUCT_ID_NO_ADS)
         }
+        layout.findViewById<Button>(R.id.billingBuyAdFree)?.setOnClickListener {
+            billingService.launchBillingFlow(PRODUCT_ID_DONATE_1_BEER)
+        }
         layout.findViewById<Button>(R.id.billingRestorePurchases)?.setOnClickListener {
             billingService.callRestorePurchases()
         }
@@ -39,16 +42,24 @@ class BillingLayoutController(
         uiInfoService.showInfo(R.string.billing_loading_purchases)
         GlobalScope.launch {
             billingService.waitForInitialized()
+
             val adfreePurchased: Boolean? = billingService.isPurchased(PRODUCT_ID_NO_ADS)
-            val price = when (adfreePurchased) {
+            val priceAdFree = when (adfreePurchased) {
                 true -> uiResourceService.resString(R.string.billing_already_purchased)
                 else -> billingService.getSkuPrice(PRODUCT_ID_NO_ADS)
             }
 
+            val priceDonate1 = billingService.getSkuPrice(PRODUCT_ID_DONATE_1_BEER)
+
             withContext(Dispatchers.Main) {
+
                 layout.findViewById<TextView>(R.id.billingAdFreePrice)?.let {
-                    it.text = price
+                    it.text = priceAdFree
                 }
+                layout.findViewById<TextView>(R.id.billingDonate1Price)?.let {
+                    it.text = priceDonate1
+                }
+
                 uiInfoService.clearSnackBars()
             }
         }

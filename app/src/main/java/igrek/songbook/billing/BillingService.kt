@@ -22,6 +22,7 @@ import kotlin.RuntimeException
 const val BILLING_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhCjsZRfLF2/6f0/5De3TAKzezDcx/Kozz3d+qsvsHS8Q3TPopC4ODQ8dCZG/6RHbtSMvqXmW7H1K/YqCYJ/cQ6LGwbe6QMUUDy9BV0l8yYaTFGqfkIhaHqbA95934K5DeAzXwnk6eFIWiRm5iTmlg9kNWwQafT3Yd8Es32xWcFh69NUAjIrlgS5xojjm5Tf8rksu1aF8uBwqxwvaCONpMYl9BABf9mzZ27ibiYvHSyAuPqyuQj1Ql4z4FZ8faF9oZrFkXCOD7iD1eoRIHUwelPvEAt5OIIYNyQpW4stv57RR7T8xgrj13GUOROozoaUyLswaR9aDsV51FUBvEoinkwIDAQAB"
 
 const val PRODUCT_ID_NO_ADS = "no_ads_forever"
+const val PRODUCT_ID_DONATE_1_BEER = "donate_1_beer"
 
 
 class BillingService(
@@ -42,9 +43,15 @@ class BillingService(
     private var billingClient: BillingClient? = null
     private val defaultScope: CoroutineScope
     private val knownInAppSKUs: List<String> = listOf(
-            PRODUCT_ID_NO_ADS,
+        PRODUCT_ID_NO_ADS,
     )
-    private val knowConsumableInAppKUSs: List<String> = listOf()
+    private val knowConsumableInAppKUSs: List<String> = listOf(
+        PRODUCT_ID_DONATE_1_BEER,
+    )
+    private val knownAllSKUs: List<String> = listOf(
+        PRODUCT_ID_NO_ADS,
+        PRODUCT_ID_DONATE_1_BEER,
+    )
     private val skuStateMap: MutableMap<String, SkuState> = HashMap()
     private val skuDetailsMap: MutableMap<String, SkuDetails?> = HashMap()
     private val initChannel = Channel<Result<Boolean>>(1)
@@ -64,7 +71,7 @@ class BillingService(
             initChannel.receive()
         }
 
-        for (sku: String in this.knownInAppSKUs) {
+        for (sku: String in this.knownAllSKUs) {
             skuStateMap[sku] = SkuState.UNKNOWN
             skuDetailsMap[sku] = null
         }
@@ -121,11 +128,11 @@ class BillingService(
     }
 
     private suspend fun querySkuDetails() {
-        if (!knownInAppSKUs.isNullOrEmpty()) {
+        if (!knownAllSKUs.isNullOrEmpty()) {
             val skuDetailsResult = billingClient!!.querySkuDetails(
                     SkuDetailsParams.newBuilder()
                             .setType(BillingClient.SkuType.INAPP)
-                            .setSkusList(knownInAppSKUs.toMutableList())
+                            .setSkusList(knownAllSKUs.toMutableList())
                             .build()
             )
             onSkuDetailsResponse(skuDetailsResult.billingResult, skuDetailsResult.skuDetailsList)
@@ -170,7 +177,7 @@ class BillingService(
                 logger.debug("restorePurchases: BillingResult [${billingResult.responseCode}]: ${billingResult.debugMessage}")
             }
 
-            for (sku in knownInAppSKUs) {
+            for (sku in knownAllSKUs) {
                 when(skuStateMap[sku]) {
                     SkuState.UNKNOWN -> {
                         skuStateMap[sku] = SkuState.UNPURCHASED
@@ -271,6 +278,12 @@ class BillingService(
                             for (sku in purchase.skus) {
                                 if (knowConsumableInAppKUSs.contains(sku)) {
                                     // Consume item
+                                    val consumeParams = ConsumeParams.newBuilder()
+                                            .setPurchaseToken(purchase.purchaseToken)
+                                            .build()
+                                    val consumeResult = withContext(Dispatchers.IO) {
+                                        billingClient?.consumePurchase(consumeParams)
+                                    }
                                 }
 
                                 // Acknowledge item and change its state
@@ -280,7 +293,7 @@ class BillingService(
                                                 .build()
                                 )
                                 if (billingResult.responseCode != BillingClient.BillingResponseCode.OK) {
-                                    logger.error("Error acknowledging purchase: ${purchase.skus}")
+                                    UiErrorHandler().handleError(RuntimeException("Error acknowledging purchase: ${purchase.skus}"), R.string.error_purchase_error)
                                 } else {
                                     // purchase acknowledged
                                     skuStateMap[sku] = SkuState.PURCHASED_AND_ACKNOWLEDGED
