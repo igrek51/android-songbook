@@ -1,13 +1,9 @@
 buildscript {
-    ext.kotlin_version = '1.6.10'
+    ext.kotlin_version = '1.6.21'
 
     repositories {
         google()
         mavenCentral()
-//        maven {
-//            url "http://dl.bintray.com/kotlin/kotlin-eap"
-//            allowInsecureProtocol = true
-//        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.2.1'
@@ -24,10 +20,6 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-//        maven {
-//            url "http://dl.bintray.com/kotlin/kotlin-eap"
-//            allowInsecureProtocol = true
-//        }
     }
 }
 

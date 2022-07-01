@@ -30,7 +30,7 @@ class ActivityResultDispatcher(
         return activityResultLauncher
     }
 
-    fun startActivityForResult(intent: Intent, onResult: (resultCode: Int, data: Intent?) -> Unit) {
+    fun startRegisteredActivityForResult(intent: Intent, onResult: (resultCode: Int, data: Intent?) -> Unit) {
         val activityResultLauncher: ActivityResultLauncher<Intent> =
             appCompatActivity.registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult(),
@@ -40,7 +40,7 @@ class ActivityResultDispatcher(
         activityResultLauncher.launch(intent)
     }
 
-    fun startOldActivityForResult(intent: Intent, onResult: (resultCode: Int, data: Intent?) -> Unit) {
+    fun startActivityForResult(intent: Intent, onResult: (resultCode: Int, data: Intent?) -> Unit) {
         val requestCode = requestCodeSequence.incrementAndGet()
         requestCodeReactions[requestCode] = onResult
         appCompatActivity.startActivityForResult(intent, requestCode)

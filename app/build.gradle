@@ -82,8 +82,8 @@ dependencies {
     // Android
     implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'androidx.annotation:annotation:1.4.0'
-    implementation 'com.google.android.material:material:1.4.0-rc01'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'com.google.android.material:material:1.7.0-alpha02'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
@@ -96,8 +96,8 @@ dependencies {
     implementation('com.google.api-client:google-api-client-android:1.30.10') {
         exclude group: 'org.apache.httpcomponents'
     }
-    implementation 'com.google.android.gms:play-services-basement:18.0.0'
-    implementation('com.google.android.gms:play-services-auth:20.0.1') {
+    implementation 'com.google.android.gms:play-services-basement:18.1.0'
+    implementation('com.google.android.gms:play-services-auth:20.2.0') {
     // AdMob
     implementation 'com.google.android.gms:play-services-ads:19.7.0'
     }
@@ -111,11 +111,11 @@ dependencies {
     // Google Play Billing
     implementation 'com.android.billingclient:billing-ktx:5.0.0'
     // Kotlin
-    implementation "androidx.core:core-ktx:1.6.0"
+    implementation "androidx.core:core-ktx:1.8.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3'
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc'
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
@@ -135,7 +135,7 @@ dependencies {
     // JWT
     implementation 'com.auth0.android:jwtdecode:2.0.0'
     // Unit tests
-    testImplementation 'androidx.appcompat:appcompat:1.2.0'
+    testImplementation 'androidx.appcompat:appcompat:1.4.2'
     testImplementation 'junit:junit:4.13'
     testImplementation 'org.mockito:mockito-core:2.22.0'
     testImplementation 'org.assertj:assertj-core:3.16.1'

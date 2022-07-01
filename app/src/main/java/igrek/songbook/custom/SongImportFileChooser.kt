@@ -16,7 +16,6 @@ import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import igrek.songbook.system.PermissionService
 import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -72,7 +71,7 @@ class SongImportFileChooser(
                         fileChooserLauncher.launch(intent)
 
                     } else {
-                        activityResultDispatcher.startOldActivityForResult(intent) { resultCode: Int, data: Intent? ->
+                        activityResultDispatcher.startActivityForResult(intent) { resultCode: Int, data: Intent? ->
                             when (resultCode) {
                                 Activity.RESULT_OK -> {
                                     onFileSelect(data?.data)

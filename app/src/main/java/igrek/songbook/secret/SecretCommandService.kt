@@ -223,7 +223,7 @@ class SecretCommandService(
     private fun commandAttempt(key: String) {
         logger.info("secret command entered: $key")
 
-        GlobalScope.launch {
+        GlobalScope.launch(Dispatchers.Main) {
             if (!checkActivationRules(key)) {
                 toast(R.string.unlock_key_invalid)
             }
