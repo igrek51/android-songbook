@@ -79,7 +79,7 @@
     <string name="action_stop_autoscroll">Stop</string>
     <string name="action_start_now_autoscroll">Start now</string>
     <string name="autoscroll_starts_in">Autoscroll starts in %s s</string>
-    <string name="autoscroll_started">Autoscroll has been started.</string>
+    <string name="autoscroll_started">Autoscrolling…</string>
     <string name="autoscroll_stopped">Autoscroll has been stopped.</string>
     <string name="autoscroll_forward_next_song_in">Forwarding to next song in %s s</string>
     <string name="start_autoscroll">Start autoscroll</string>
@@ -88,7 +88,7 @@
     <string name="song_category_others">Others</string>
     <string name="song_category_custom">My songs</string>
     <string name="song_search_edit_hint">Song title or artist</string>
-    <string name="unlock_key_invalid">Key is not valid.</string>
+    <string name="unlock_key_invalid">Key is not valid, try again.</string>
     <string name="unlock_new_songs_unlocked">Songs unlocked: %d</string>
     <string name="settings_scroll_initial_pause">Autoscroll initial delay: %s s</string>
     <string name="autoscroll_panel_speed">Autoscroll speed: %s line / s</string>
@@ -285,9 +285,9 @@
     <string name="action_remove_from_playlist">🚫 Remove from playlist</string>
     <string name="song_is_not_on_playlist">Song is not on a playlist</string>
     <string name="song_removed_from_playlist" formatted="false">Song \"%s\" has been removed from playlist \"%s\"</string>
-    <string name="remove_playlist">Remove playlist</string>
+    <string name="remove_playlist">❌ Remove playlist</string>
     <string name="confirm_remove_playlist">Do you really want to remove this playlist?</string>
-    <string name="rename_playlist">Rename playlist</string>
+    <string name="rename_playlist">✏️ Rename playlist</string>
     <string name="playlist_removed">Playlist has been removed</string>
     <string name="empty_playlist_songs">No songs on this playlist</string>
     <string name="nav_latest">Latest songs</string>

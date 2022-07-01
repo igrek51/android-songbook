@@ -12,7 +12,7 @@
     <string name="nav_contact">Kontakt</string>
     <string name="nav_help">Pomoc</string>
     <string name="nav_screen_share">Udostępnianie ekranu</string>
-    <string name="nav_purchase">Bez reklam</string>
+    <string name="nav_purchase">Sklep</string>
     <string name="ui_help_content">
         WYBÓR PIOSENKI:
         \nMożesz wybrać piosenkę z drzewa kategorii lub wyszukać ją po tytule lub nazwie artysty (po dowolnym słowie z nazwy, wielkość liter i polskie znaki nie mają znaczenia).
@@ -79,7 +79,7 @@
     <string name="action_stop_autoscroll">Stop</string>
     <string name="action_start_now_autoscroll">Start</string>
     <string name="autoscroll_starts_in">Autoprzewijanie zacznie się za %s s</string>
-    <string name="autoscroll_started">Autoprzewijanie rozpoczęte.</string>
+    <string name="autoscroll_started">Przewijam…</string>
     <string name="autoscroll_stopped">Autoprzewijanie zatrzymane.</string>
     <string name="autoscroll_forward_next_song_in">Następna piosenka za %s s</string>
     <string name="start_autoscroll">Uruchom autoprzewijanie</string>
@@ -88,7 +88,7 @@
     <string name="song_category_others">Inne</string>
     <string name="song_category_custom">Moje piosenki</string>
     <string name="song_search_edit_hint">Tytuł piosenki lub artysta</string>
-    <string name="unlock_key_invalid">Hasło jest niepoprawne.</string>
+    <string name="unlock_key_invalid">Hasło niepoprawne, próbuj dalej.</string>
     <string name="unlock_new_songs_unlocked">Odblokowano piosenki: %d</string>
     <string name="settings_scroll_initial_pause">Opóźnienie autoprzewijania: %s s</string>
     <string name="autoscroll_panel_speed">Szybkość autoprzewijania: %s linii / s</string>
@@ -276,9 +276,9 @@
     <string name="action_remove_from_playlist">🚫 Usuń z playlisty</string>
     <string name="song_is_not_on_playlist">Piosenka nie należy do playlisty</string>
     <string name="song_removed_from_playlist" formatted="false">Usunięto piosenkę \"%s\" z playlisty \"%s\"</string>
-    <string name="remove_playlist">Usuń playlistę</string>
+    <string name="remove_playlist">❌ Usuń playlistę</string>
     <string name="confirm_remove_playlist">Czy na pewno chcesz usunąć playlistę?</string>
-    <string name="rename_playlist">Zmień nazwę</string>
+    <string name="rename_playlist">✏️ Zmień nazwę</string>
     <string name="playlist_removed">Usunięto playlistę</string>
     <string name="empty_playlist_songs">Brak piosenek na playliście</string>
     <string name="nav_latest">Najnowsze piosenki</string>
@@ -460,8 +460,8 @@
     <string name="media_button_behaviour_nothing">Nie rób nic</string>
     <string name="settings_buttons_section">Przyciski</string>
     <string name="billing_ad_free_info">Kup \"Brak reklam\", aby usunąć banner z reklamami w aplikacji, raz na zawsze (jednorazowa płatność).</string>
-    <string name="billing_buy_ad_free">Kup Brak reklam</string>
-    <string name="billing_restore_pruchases">Przywróc poprzednie zakupy</string>
+    <string name="billing_buy_ad_free">Wykup Brak reklam</string>
+    <string name="billing_restore_pruchases">Wczytaj poprzednie zakupy</string>
     <string name="billing_already_purchased">Już kupione</string>
     <string name="error_purchase_error">Błąd płatności: %s</string>
     <string name="billing_loading_purchases">Wczytywanie płatności…</string>
@@ -473,7 +473,7 @@
     <string name="billing_user_already_owns_item">Użytkownik już posiada tą pozycję</string>
     <string name="billing_remove_ad_banner">Usuń banner z reklamami</string>
     <string name="settings_ads">Reklamy</string>
-    <string name="billing_donate_1_info">Jeśli podoba Ci się aplikacja, możesz wyrazić swoje uznanie, przekazując deweloperowi darowiznę w symbolicznej \"piwnej\" walucie. Możesz przekazywać darowiznę wiele razy.</string>
+    <string name="billing_donate_1_info">Jeśli podoba Ci się aplikacja, możesz wyrazić swoje uznanie, przekazując deweloperowi podarunek w symbolicznej \"piwnej\" walucie. Możesz przekazywać darowiznę wiele razy.</string>
     <string name="billing_buy_donate_1">🍺 Postaw piwo deweloperowi</string>
     <string name="billing_price_loading">Wczytywanie ceny…</string>
     <string name="billing_donate_1_amount">Podarowane piwa: %s</string>

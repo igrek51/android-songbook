@@ -43,16 +43,20 @@ class BillingLayoutController(
         GlobalScope.launch {
             billingService.waitForInitialized()
 
+            val priceAdFree = billingService.getSkuPrice(PRODUCT_ID_NO_ADS)
             val adfreePurchased: Boolean? = billingService.isPurchased(PRODUCT_ID_NO_ADS)
-            val priceAdFree = when (adfreePurchased) {
-                true -> uiResourceService.resString(R.string.billing_already_purchased)
-                else -> billingService.getSkuPrice(PRODUCT_ID_NO_ADS)
-            }
 
             val priceDonate1 = billingService.getSkuPrice(PRODUCT_ID_DONATE_1_BEER)
             val purchasedDonations1 = billingService.getSkuPurchasedAmount(PRODUCT_ID_DONATE_1_BEER)
 
             withContext(Dispatchers.Main) {
+
+                if (adfreePurchased == true) {
+                    layout.findViewById<Button>(R.id.billingBuyAdFree)?.let {
+                        it.isEnabled = false
+                        it.text = uiResourceService.resString(R.string.billing_already_purchased)
+                    }
+                }
 
                 layout.findViewById<TextView>(R.id.billingAdFreePrice)?.let {
                     it.text = uiInfoService.resString(R.string.billing_item_price, priceAdFree)

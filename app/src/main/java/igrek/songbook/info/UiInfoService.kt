@@ -97,6 +97,10 @@ open class UiInfoService(
     }
 
     fun clearSnackBars() {
+        infobars.forEach { (_, snackbar) ->
+            if (snackbar.isShown)
+                snackbar.dismiss()
+        }
         infobars.clear()
     }
 
