@@ -278,12 +278,12 @@ class BillingService(
                             for (sku in purchase.skus) {
                                 if (knowConsumableInAppKUSs.contains(sku)) {
                                     // Consume item
-                                    val consumeParams = ConsumeParams.newBuilder()
-                                            .setPurchaseToken(purchase.purchaseToken)
-                                            .build()
-                                    val consumeResult = withContext(Dispatchers.IO) {
-                                        billingClient?.consumePurchase(consumeParams)
-                                    }
+//                                    val consumeParams = ConsumeParams.newBuilder()
+//                                            .setPurchaseToken(purchase.purchaseToken)
+//                                            .build()
+//                                    val consumeResult = withContext(Dispatchers.IO) {
+//                                        billingClient?.consumePurchase(consumeParams)
+//                                    }
                                 }
 
                                 // Acknowledge item and change its state

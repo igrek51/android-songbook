@@ -75,7 +75,10 @@
                 android:id="@+id/billingAdFreePrice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
                 android:gravity="center"
                 android:text="@string/billing_price_loading"
                 android:textSize="18sp" />
@@ -103,7 +106,10 @@
                 android:id="@+id/billingDonate1Price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
                 android:gravity="center"
                 android:text="@string/billing_price_loading"
                 android:textSize="18sp" />

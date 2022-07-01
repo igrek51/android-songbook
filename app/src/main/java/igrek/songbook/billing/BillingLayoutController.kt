@@ -32,7 +32,7 @@ class BillingLayoutController(
         layout.findViewById<Button>(R.id.billingBuyAdFree)?.setOnClickListener {
             billingService.launchBillingFlow(PRODUCT_ID_NO_ADS)
         }
-        layout.findViewById<Button>(R.id.billingBuyAdFree)?.setOnClickListener {
+        layout.findViewById<Button>(R.id.billingBuyDonate1Button)?.setOnClickListener {
             billingService.launchBillingFlow(PRODUCT_ID_DONATE_1_BEER)
         }
         layout.findViewById<Button>(R.id.billingRestorePurchases)?.setOnClickListener {
