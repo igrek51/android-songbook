@@ -45,10 +45,9 @@
         \nYou can view your custom songs by clicking \"My songs\" in main menu. To add a new one, click the plus icon.
         \nAdd your lyrics as a simple text with chords in square brackets.
         \nThere are many useful tools in chords editor, which make the editing easier.
-        \nYou can edit a song later or perform some other actions by clicking dots icon near the song on the list.
         \n
         \nSOCIAL CONTRIBUTING:
-        \nApplication allows you to publish your custom songs and share it along all the other users.
+        \nSongbook allows you to publish your custom songs and share it along all the other users.
         \nYou can also suggest improving some chords or lyrics, if you have noticed some bugs.
     </string>
     <string name="ui_about_content" formatted="false">
@@ -506,4 +505,5 @@
     <string name="billing_price_loading">Price loading…</string>
     <string name="billing_donate_1_amount">Donated beers: %s</string>
     <string name="billing_item_price">Price: %s</string>
+    <string name="file_select_operation_canceled">File import canceled</string>
 </resources>

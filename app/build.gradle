@@ -80,14 +80,15 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     // Android
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.annotation:annotation:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.annotation:annotation:1.4.0'
     implementation 'com.google.android.material:material:1.4.0-rc01'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
     implementation 'androidx.multidex:multidex:2.0.1'
+    implementation "androidx.activity:activity-ktx:1.5.0"
     // Firebase
     implementation 'com.google.firebase:firebase-analytics-ktx:19.0.0'
     implementation 'com.google.firebase:firebase-crashlytics:18.2.7'

@@ -45,10 +45,9 @@
         \nEdytor piosenek posiada wiele przydatnych narzędzi ułatwiających edycję.
         \nUżyj przycisku \"[akord]\", aby szybko dodać akord w nawiasach kwadratowych.
         \nPo zapisaniu piosenki, znajdziesz ją w kategorii \"Moje piosenki\".
-        \nMożesz edytować dodaną piosenkę później lub wykonać dodatkowe akcje, klikając odpowiednią ikonę obok piosenki na liście.
         \n
         \nWKŁAD SPOŁECZNOŚCI:
-        \nAplikacja pozwala na publikowanie dodanych przez Ciebie piosenek i współdzielenie ich z pozostałymi użytkownikami.
+        \nSongbook pozwala na publikowanie dodanych przez Ciebie piosenek i współdzielenie ich z pozostałymi użytkownikami.
         \nMożesz także zaproponować poprawkę w akordach lub tekście piosenek, jeśli odnajdziesz jakieś błędy.
     </string>
     <string name="ui_about_content" formatted="false">
@@ -480,4 +479,5 @@
     <string name="billing_price_loading">Wczytywanie ceny…</string>
     <string name="billing_donate_1_amount">Podarowane piwa: %s</string>
     <string name="billing_item_price">Cena: %s</string>
+    <string name="file_select_operation_canceled">Import pliku anulowany</string>
 </resources>

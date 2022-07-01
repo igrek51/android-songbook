@@ -19,7 +19,7 @@ class PermissionService(
 
     val isStoragePermissionGranted: Boolean
         get() {
-            return if (Build.VERSION.SDK_INT >= 23) {
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     true
                 } else {
@@ -30,6 +30,25 @@ class PermissionService(
                 true //permission is automatically granted on sdk<23 upon installation
             }
         }
+
+    fun ensureStorageReadAccess() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ActivityCompat.requestPermissions(
+                activity, arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ),
+                1
+            )
+        } else {
+            ActivityCompat.requestPermissions(
+                activity, arrayOf(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ),
+                1
+            )
+        }
+    }
 
     private fun onPermissionGranted(permission: String) {
         logger.info("permission $permission has been granted")

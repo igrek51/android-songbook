@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import igrek.songbook.BuildConfig
 import igrek.songbook.admin.AdminService
+import igrek.songbook.custom.SongImportFileChooser
 import igrek.songbook.custom.share.ShareSongService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
@@ -20,10 +21,7 @@ import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songselection.top.TopSongsLayoutController
 import igrek.songbook.system.WindowManagerService
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import kotlin.reflect.KClass
 
 class AppInitializer(
@@ -39,6 +37,7 @@ class AppInitializer(
     activityController: LazyInject<ActivityController> = appFactory.activityController,
     activity: LazyInject<Activity> = appFactory.activity,
     shareSongService: LazyInject<ShareSongService> = appFactory.shareSongService,
+    songImportFileChooser: LazyInject<SongImportFileChooser> = appFactory.songImportFileChooser,
 ) {
     private val windowManagerService by LazyExtractor(windowManagerService)
     private val layoutController by LazyExtractor(layoutController)
@@ -52,17 +51,21 @@ class AppInitializer(
     private val activityController by LazyExtractor(activityController)
     private val activity by LazyExtractor(activity)
     private val shareSongService by LazyExtractor(shareSongService)
+    private val songImportFileChooser by LazyExtractor(songImportFileChooser)
 
     private val logger = LoggerFactory.logger
     private val startingScreen: KClass<out MainLayout> = TopSongsLayoutController::class
     private val debugInitEnabled = false
 
+    @OptIn(DelicateCoroutinesApi::class)
     fun init() {
         if (debugInitEnabled && BuildConfig.DEBUG) {
             debugInit()
         }
 
         logger.info("Initializing application...")
+
+        syncInit()
 
         GlobalScope.launch {
             withContext(Dispatchers.Main) {
@@ -91,7 +94,11 @@ class AppInitializer(
         }
     }
 
-    fun postInit() {
+    private fun syncInit() {
+        songImportFileChooser.init()  // has to be done inside activity.onCreate
+    }
+
+    private fun postInit() {
         postInitIntent(activity.intent)
     }
 
