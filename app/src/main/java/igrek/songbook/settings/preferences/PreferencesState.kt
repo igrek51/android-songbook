@@ -47,7 +47,6 @@ class PreferencesState(
     var horizontalScroll: Boolean by PreferenceDelegate(PreferencesField.HorizontalScroll)
     var mediaButtonBehaviour: MediaButtonBehaviours by PreferenceDelegate(PreferencesField.MediaButtonBehaviour)
     var purchasedAdFree: Boolean by PreferenceDelegate(PreferencesField.PurchasedAdFree)
-    var purchasedBeerDonations: Long by PreferenceDelegate(PreferencesField.PurchasedBeerDonations)
 
 }
 

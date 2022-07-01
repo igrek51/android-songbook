@@ -50,6 +50,7 @@ class BillingLayoutController(
             }
 
             val priceDonate1 = billingService.getSkuPrice(PRODUCT_ID_DONATE_1_BEER)
+            val purchasedDonations1 = billingService.getSkuPurchasedAmount(PRODUCT_ID_DONATE_1_BEER)
 
             withContext(Dispatchers.Main) {
 
@@ -58,6 +59,9 @@ class BillingLayoutController(
                 }
                 layout.findViewById<TextView>(R.id.billingDonate1Price)?.let {
                     it.text = priceDonate1
+                }
+                layout.findViewById<TextView>(R.id.billingDonate1PurchasedAmount)?.let {
+                    it.text = uiInfoService.resString(R.string.billing_donate_1_amount, purchasedDonations1.toString())
                 }
 
                 uiInfoService.clearSnackBars()

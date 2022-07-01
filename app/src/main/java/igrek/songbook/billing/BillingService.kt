@@ -42,18 +42,15 @@ class BillingService(
     private val logger: Logger = LoggerFactory.logger
     private var billingClient: BillingClient? = null
     private val defaultScope: CoroutineScope
-    private val knownInAppSKUs: List<String> = listOf(
-        PRODUCT_ID_NO_ADS,
-    )
-    private val knowConsumableInAppKUSs: List<String> = listOf(
-        PRODUCT_ID_DONATE_1_BEER,
-    )
     private val knownAllSKUs: List<String> = listOf(
         PRODUCT_ID_NO_ADS,
         PRODUCT_ID_DONATE_1_BEER,
     )
+    private val knownConsumableInAppKUSs: List<String> = listOf(
+    )
     private val skuStateMap: MutableMap<String, SkuState> = HashMap()
     private val skuDetailsMap: MutableMap<String, SkuDetails?> = HashMap()
+    private val skuAmountsMap: MutableMap<String, Long> = HashMap()
     private val initChannel = Channel<Result<Boolean>>(1)
     private val initJob: Job
 
@@ -74,6 +71,7 @@ class BillingService(
         for (sku: String in this.knownAllSKUs) {
             skuStateMap[sku] = SkuState.UNKNOWN
             skuDetailsMap[sku] = null
+            skuAmountsMap[sku] = 0
         }
 
         initConnection()
@@ -173,6 +171,11 @@ class BillingService(
 
     private suspend fun restorePurchases() {
         try{
+
+            for (sku: String in this.knownAllSKUs) {
+                skuAmountsMap[sku] = 0
+            }
+
             val purchasesResult = billingClient!!.queryPurchasesAsync(BillingClient.SkuType.INAPP)
             val billingResult = purchasesResult.billingResult
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
@@ -182,10 +185,8 @@ class BillingService(
             }
 
             for (sku in knownAllSKUs) {
-                when(skuStateMap[sku]) {
-                    SkuState.UNKNOWN -> {
-                        skuStateMap[sku] = SkuState.UNPURCHASED
-                    }
+                if (skuStateMap[sku] == SkuState.UNKNOWN) {
+                    skuStateMap[sku] = SkuState.UNPURCHASED
                 }
             }
 
@@ -282,11 +283,11 @@ class BillingService(
                 setSkuStateFromPurchase(purchase)
 
                 defaultScope.launch {
-                    var isConsumable = false
                     for (sku in purchase.skus) {
-                        if (knowConsumableInAppKUSs.contains(sku)) {
-                            isConsumable = true
-                        }
+
+                        skuAmountsMap[sku] = (skuAmountsMap[sku] ?: 0) + 1
+
+                        val isConsumable = knownConsumableInAppKUSs.contains(sku)
 
                         if (isConsumable) {
                             consumePurchase(purchase)
@@ -328,7 +329,6 @@ class BillingService(
         if (consumePurchaseResult.billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
             // Since we've consumed the purchase
             for (sku in purchase.skus) {
-                saveConsumedPurchaseData(sku)
                 logger.info("Purchase consumed: $sku")
                 skuStateMap[sku] = SkuState.UNPURCHASED
             }
@@ -380,16 +380,6 @@ class BillingService(
         }
     }
 
-    private fun saveConsumedPurchaseData(sku: String) {
-        when(sku) {
-            PRODUCT_ID_DONATE_1_BEER -> {
-                preferencesState.purchasedBeerDonations += 1
-                preferencesService.saveAll()
-                logger.info("Saving Purchase in preferences data, SKU: $sku")
-            }
-        }
-    }
-
     fun waitForInitialized() {
         runBlocking {
             initJob.join()
@@ -401,19 +391,20 @@ class BillingService(
                 ?.let { skuState -> skuState == SkuState.PURCHASED_AND_ACKNOWLEDGED }
     }
 
-    fun getSkuTitle(sku: String): String? {
-        return skuDetailsMap[sku]
-                ?.let { skuDetails -> skuDetails.title }
+    fun getSkuPrice(sku: String): String? {
+        return skuDetailsMap[sku]?.price
     }
 
-    fun getSkuPrice(sku: String): String? {
-        return skuDetailsMap[sku]
-                ?.let { skuDetails -> skuDetails.price }
+    fun getSkuPurchasedAmount(sku: String): Long {
+        return skuAmountsMap[sku] ?: 0
+    }
+
+    fun getSkuTitle(sku: String): String? {
+        return skuDetailsMap[sku]?.title
     }
 
     fun getSkuDescription(sku: String): String? {
-        return skuDetailsMap[sku]
-                ?.let { skuDetails -> skuDetails.description }
+        return skuDetailsMap[sku]?.description
     }
 
     private fun isSignatureValid(purchase: Purchase): Boolean {
