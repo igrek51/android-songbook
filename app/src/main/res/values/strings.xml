@@ -95,7 +95,7 @@
     <string name="settings_font_size_value">%s dp</string>
     <string name="settings_scroll_initial_pause_value">%s s</string>
     <string name="settings_autoscroll_speed_value">%s line / s</string>
-    <string name="song_details_title">Song details</string>
+    <string name="song_details_title">ℹ️ Song details</string>
     <string name="song_details" formatted="false">
         %s
         \nTitle: %s
@@ -164,7 +164,7 @@
         \n…Smoke on the water [C G#]…
         \nCheck out help (?) for more details.
     </string>
-    <string name="import_content_from_file">Import from file / cloud</string>
+    <string name="import_content_from_file">📂 Import from file / cloud</string>
     <string name="edit_song_save">Save song</string>
     <string name="edit_song_remove">Remove song</string>
     <string name="edit_song_has_been_saved">Song has been saved in \"My songs\".</string>
@@ -205,17 +205,16 @@
     <string name="typeface_serif">Serif</string>
     <string name="typeface_monospace">Monospace</string>
     <string name="no_songs_to_shuffle">No songs to shuffle</string>
-    <string name="action_song_copy">Make editable copy</string>
+    <string name="action_song_copy">📋 Make editable copy</string>
     <string name="action_song_amend">Suggest correction</string>
-    <string name="action_song_edit">Edit</string>
-    <string name="action_song_remove">Remove</string>
-    <string name="action_song_set_favourite">Add to favourites</string>
-    <string name="action_song_unset_favourite">Remove from favourites</string>
-    <string name="action_song_add_comment">Add comment</string>
+    <string name="action_song_edit">✏️Edit</string>
+    <string name="action_song_remove">❌ Remove</string>
+    <string name="action_song_set_favourite">⭐️ Add to favourites</string>
+    <string name="action_song_unset_favourite">⭐️ Remove from favourites</string>
     <string name="song_action_more">More</string>
     <string name="song_copied_as_custom">Song has been copied to \"My songs\".</string>
     <string name="song_action_choose">Choose an action</string>
-    <string name="action_song_publish">Publish</string>
+    <string name="action_song_publish">🌐 Publish</string>
     <string name="settings_song_preview">Song preview appearance</string>
     <string name="settings_color_scheme">Color Scheme</string>
     <string name="settings_fontsize">Font size</string>
@@ -234,7 +233,7 @@
     <string name="settings_autoscroll_speed">Autoscroll speed</string>
     <string name="settings_general_section">General</string>
     <string name="db_update_failed_incompatible">Database is not compatible with your application version. Please udpate an application.</string>
-    <string name="action_rate_app">Rate App</string>
+    <string name="action_rate_app">⭐️Rate App</string>
     <string name="edit_song_open_in_editor">Open in Song Editor</string>
     <string name="tooltip">Hint</string>
     <string name="edit_song_copy">Copy</string>
@@ -278,12 +277,12 @@
         \nDo you want to ignore these errors?</string>
     <string name="nav_playlists">Playlists</string>
     <string name="empty_playlists">No playlists. Create your own playlists e.g.:\n\"Training\",\n\"Campfire songs\",\n\"Concert setlist\",\n\"Fingerstyle\"</string>
-    <string name="action_add_to_playlist">Add to playlist</string>
+    <string name="action_add_to_playlist">▶️ Add to playlist</string>
     <string name="no_playlists_to_add">No playlists found. Create a new playlist first.</string>
     <string name="choose_playlist">Choose a playlist</string>
     <string name="song_added_to_playlist" formatted="false">Song \"%s\" has been added to playlist \"%s\"</string>
     <string name="song_already_on_playlist" formatted="false">Song \"%s\" is already on playlist \"%s\"</string>
-    <string name="action_remove_from_playlist">Remove from playlist</string>
+    <string name="action_remove_from_playlist">🚫 Remove from playlist</string>
     <string name="song_is_not_on_playlist">Song is not on a playlist</string>
     <string name="song_removed_from_playlist" formatted="false">Song \"%s\" has been removed from playlist \"%s\"</string>
     <string name="remove_playlist">Remove playlist</string>
@@ -337,10 +336,10 @@
     <string name="admin_downloading_antechamber" translatable="false">Downloading antechamber songs…</string>
     <string name="admin_communication_breakdown" translatable="false">Communication breakdown: %s</string>
     <string name="admin_downloaded_antechamber" translatable="false">Songs downloaded</string>
-    <string name="admin_antechamber_edit_action" translatable="false">[admin] Edit song</string>
-    <string name="admin_antechamber_update_action" translatable="false">[admin] Push update to antechamber</string>
-    <string name="admin_antechamber_approve_action" translatable="false">[admin] Approve song</string>
-    <string name="admin_antechamber_delete_action" translatable="false">[admin] Delete song</string>
+    <string name="admin_antechamber_edit_action" translatable="false">✏️ [admin] Edit song</string>
+    <string name="admin_antechamber_update_action" translatable="false">📤 [admin] Push update to antechamber</string>
+    <string name="admin_antechamber_approve_action" translatable="false">✅ [admin] Approve song</string>
+    <string name="admin_antechamber_delete_action" translatable="false">❌ [admin] Delete song</string>
     <string name="admin_antechamber_confirm_delete" translatable="false">Do you really want to delete song \"%s\"?</string>
     <string name="admin_antechamber_confirm_approve" translatable="false">Do you really want to approve song \"%s\"?</string>
     <string name="admin_sending" translatable="false">Sending…</string>
@@ -374,7 +373,7 @@
     <string name="settings_chords_section">Chords style</string>
     <string name="settings_privacy">Privacy</string>
     <string name="settings_show_privacy_policy">Privacy Policy</string>
-    <string name="admin_song_content_update_action" translatable="false">[admin] Push content update</string>
+    <string name="admin_song_content_update_action" translatable="false">📤 [admin] Push content update</string>
     <string name="ads_disabled">Ads disabled</string>
     <string name="error_no_chords_marked_in_song">This song doesn\'t have any chords marked properly.\nPut chords in your song.</string>
     <string name="display_style_chords_inline">Chords inline, among the words</string>
@@ -393,14 +392,14 @@
     <string name="settings_keep_screen_on">Screen always on</string>
     <string name="settings_keep_screen_on_hint">Keep display always on when a song is opened</string>
     <string name="select_file_to_export">Save file</string>
-    <string name="export_content_to_file">Export to file / cloud</string>
+    <string name="export_content_to_file">💾 Export to file / cloud</string>
     <string name="song_content_exported">Song content has been exported</string>
     <string name="multichoice_invert">Invert</string>
     <string name="song_languages">Song languages</string>
     <string name="nav_top_songs">Top songs</string>
     <string name="settings_send_anonymous_usage_data">Send anonymous usage data</string>
     <string name="settings_send_anonymous_usage_data_hint">Send anonymous statistical usage data to improve Top songs ranking</string>
-    <string name="admin_update_rank" translatable="false">[admin] Update rank</string>
+    <string name="admin_update_rank" translatable="false">🏅 [admin] Update rank</string>
     <string name="editor_reformat_error">Your song is not formatted properly. Use \"Reformat\" option.</string>
     <string name="chords_editor_remove_bracket_content">Remove everything inside brackets</string>
     <string name="chords_editor_detect_and_move_chords_to_words"><![CDATA[Detect chords & move from upper line to matching words]]></string>
@@ -429,8 +428,8 @@
     <string name="room_close_room">Leave room</string>
     <string name="room_make_discoverable">Make discoverable again</string>
     <string name="room_open_current_song">Open current song</string>
-    <string name="edit_song_export_all_custom_songs">Export all songs</string>
-    <string name="edit_song_import_custom_songs">Import multiple songs in a batch</string>
+    <string name="edit_song_export_all_custom_songs">💾 Export all songs</string>
+    <string name="edit_song_import_custom_songs">🗂️ Import multiple songs in a batch</string>
     <string name="custom_songs_exported">All custom songs exported</string>
     <string name="select_file_to_open">Select file to open</string>
     <string name="custom_songs_imported">%s new custom songs have been imported</string>
@@ -445,7 +444,7 @@
     <string name="room_scanning_completed_not_found">Scanning completed. No room found.</string>
     <string name="room_dropped_from_host">Dropped from host</string>
     <string name="room_dropped_from_host_s">Dropped from host: %s</string>
-    <string name="song_show_fullscreen">Fullscreen</string>
+    <string name="song_show_fullscreen">📺 Fullscreen</string>
     <string name="room_members">Members:\n%s</string>
     <string name="screen_share_enter_room_password">Enter room password:</string>
     <string name="room_wrong_password">Wrong password</string>
@@ -472,7 +471,7 @@
     <string name="settings_trim_whitespaces_hint">Remove whitespaces at the beginning and at the end of lines</string>
     <string name="settings_autoscroll_autostart">Start autoscroll automatically</string>
     <string name="settings_autoscroll_autostart_hint">Start autoscrolling when opening a song</string>
-    <string name="action_share_song">Share</string>
+    <string name="action_share_song">🔗 Share</string>
     <string name="copy_to_clipboard">Copy to clipboard</string>
     <string name="settings_horizontalScroll">Horizontal scroll</string>
     <string name="settings_horizontalScroll_hint">Enable scrolling song horizontally (without word wrap) - useful when viewing tabs</string>
@@ -486,7 +485,7 @@
     <string name="media_button_behaviour_next_song">Go to next song</string>
     <string name="media_button_behaviour_nothing">Do nothing</string>
     <string name="settings_buttons_section">Buttons</string>
-    <string name="billing_ad_free_info">Buy \"Ad-free\" to remove the ad banner in the application once and for all. One time payment:</string>
+    <string name="billing_ad_free_info">Buy \"Ad-free\" to remove the advertisement banner in the application once and for all (one time payment).</string>
     <string name="billing_buy_ad_free">Buy Ad-Free</string>
     <string name="billing_restore_pruchases">Restore previous purchases</string>
     <string name="billing_already_purchased">Already purchased</string>
@@ -498,7 +497,7 @@
     <string name="billing_thanks_for_purchase">Thank you for your purchase</string>
     <string name="billing_user_canceled_purchase">User canceled the purchase</string>
     <string name="billing_user_already_owns_item">The user already owns this item</string>
-    <string name="billing_remove_ad_banner">Remove ad banner</string>
+    <string name="billing_remove_ad_banner">Remove advertisement banner</string>
     <string name="settings_ads">Ads</string>
     <string name="billing_donate_1_info">If you like this app, you can express your appreciation by making a donation to the developer in a symbolic \"beer\" currency. You can donate multiple times.</string>
     <string name="billing_buy_donate_1">🍺 Send a beer to the developer</string>
