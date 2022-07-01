@@ -273,71 +273,51 @@ class BillingService(
         }
 
         for (purchase in purchases) {
-            // Global check to make sure all purchases are signed correctly.
-            val purchaseState = purchase.purchaseState
-            if (purchaseState == Purchase.PurchaseState.PURCHASED){
-                if (!isSignatureValid(purchase)) {
-                    throw RuntimeException("Invalid purchase signature. Signature is not valid with the public key.")
-                }
-
-                setSkuStateFromPurchase(purchase)
-
-                defaultScope.launch {
-                    for (sku in purchase.skus) {
-
-                        skuAmountsMap[sku] = (skuAmountsMap[sku] ?: 0) + 1
-
-                        val isConsumable = knownConsumableInAppKUSs.contains(sku)
-
-                        if (isConsumable) {
-                            consumePurchase(purchase)
-
-                        } else if (!purchase.isAcknowledged) {
-
-                            // Acknowledge item and change its state
-                            val billingResult = billingClient!!.acknowledgePurchase(
-                                AcknowledgePurchaseParams.newBuilder()
-                                    .setPurchaseToken(purchase.purchaseToken)
-                                    .build()
-                            )
-                            if (billingResult.responseCode != BillingClient.BillingResponseCode.OK) {
-                                UiErrorHandler().handleError(
-                                    RuntimeException("Error acknowledging purchase: ${purchase.skus}"),
-                                    R.string.error_purchase_error,
-                                )
-                            } else {
-                                // purchase acknowledged
-                                skuStateMap[sku] = SkuState.PURCHASED_AND_ACKNOWLEDGED
-                                savePurchaseData(sku)
-                            }
-                        }
-                    }
-                }
-
-            }  else {
-                setSkuStateFromPurchase(purchase)  // set not purchased
-            }
+            processPurchase(purchase)
         }
     }
 
-    private suspend fun consumePurchase(purchase: Purchase) {
-        val consumePurchaseResult = billingClient!!.consumePurchase(
-            ConsumeParams.newBuilder()
-                .setPurchaseToken(purchase.purchaseToken)
-                .build()
-        )
-        if (consumePurchaseResult.billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-            // Since we've consumed the purchase
-            for (sku in purchase.skus) {
-                logger.info("Purchase consumed: $sku")
-                skuStateMap[sku] = SkuState.UNPURCHASED
+    private fun processPurchase(purchase: Purchase) {
+        if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+            if (!isSignatureValid(purchase)) {
+                throw RuntimeException("Invalid purchase signature. Signature is not valid with the public key.")
             }
-        } else {
-            UiErrorHandler().handleError(
-                RuntimeException("Error while consuming purchase ${consumePurchaseResult.billingResult.debugMessage}"),
-                R.string.error_purchase_error,
-            )
+
+            runBlocking {
+                for (sku in purchase.skus) {
+
+                    skuAmountsMap[sku] = (skuAmountsMap[sku] ?: 0) + 1
+
+                    val isConsumable = knownConsumableInAppKUSs.contains(sku)
+
+                    if (isConsumable) {
+                        consumePurchase(purchase)
+
+                    } else if (!purchase.isAcknowledged) {
+
+                        val billingResult = billingClient!!.acknowledgePurchase(
+                            AcknowledgePurchaseParams.newBuilder()
+                                .setPurchaseToken(purchase.purchaseToken)
+                                .build()
+                        )
+                        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+                            // purchase acknowledged
+                            skuStateMap[sku] = SkuState.PURCHASED_AND_ACKNOWLEDGED
+                            savePurchaseData(sku)
+
+                        } else {
+                            UiErrorHandler().handleError(
+                                RuntimeException("Error acknowledging purchase: ${purchase.skus}"),
+                                R.string.error_purchase_error,
+                            )
+                        }
+                    }
+
+                }
+            }
         }
+
+        setSkuStateFromPurchase(purchase)
     }
 
     // Set the state of every sku inside skuStateMap
@@ -377,6 +357,26 @@ class BillingService(
                     logger.info("Saving Purchase in preferences data, SKU: $sku")
                 }
             }
+        }
+    }
+
+    private suspend fun consumePurchase(purchase: Purchase) {
+        val consumePurchaseResult = billingClient!!.consumePurchase(
+            ConsumeParams.newBuilder()
+                .setPurchaseToken(purchase.purchaseToken)
+                .build()
+        )
+        if (consumePurchaseResult.billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+            // Since we've consumed the purchase
+            for (sku in purchase.skus) {
+                logger.info("Purchase consumed: $sku")
+                skuStateMap[sku] = SkuState.UNPURCHASED
+            }
+        } else {
+            UiErrorHandler().handleError(
+                RuntimeException("Error while consuming purchase ${consumePurchaseResult.billingResult.debugMessage}"),
+                R.string.error_purchase_error,
+            )
         }
     }
 

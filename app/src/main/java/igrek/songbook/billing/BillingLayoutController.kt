@@ -55,10 +55,10 @@ class BillingLayoutController(
             withContext(Dispatchers.Main) {
 
                 layout.findViewById<TextView>(R.id.billingAdFreePrice)?.let {
-                    it.text = priceAdFree
+                    it.text = uiInfoService.resString(R.string.billing_item_price, priceAdFree)
                 }
                 layout.findViewById<TextView>(R.id.billingDonate1Price)?.let {
-                    it.text = priceDonate1
+                    it.text = uiInfoService.resString(R.string.billing_item_price, priceDonate1)
                 }
                 layout.findViewById<TextView>(R.id.billingDonate1PurchasedAmount)?.let {
                     it.text = uiInfoService.resString(R.string.billing_donate_1_amount, purchasedDonations1.toString())
