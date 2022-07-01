@@ -476,6 +476,6 @@
     <string name="billing_remove_ad_banner">Usuń banner z reklamami</string>
     <string name="settings_ads">Reklamy</string>
     <string name="billing_donate_1_info">Jeśli podoba Ci się aplikacja, możesz wyrazić swoje uznanie, przekazując deweloperowi darowiznę w symbolicznej \"piwnej\" walucie. Możesz przekazywać darowiznę wiele razy:</string>
-    <string name="billing_buy_donate_1">Postaw piwo deweloperowi</string>
+    <string name="billing_buy_donate_1">🍺 Postaw piwo deweloperowi</string>
     <string name="billing_price_loading">Wczytywanie ceny…</string>
 </resources>

@@ -128,18 +128,22 @@ class BillingService(
     }
 
     private suspend fun querySkuDetails() {
-        if (!knownAllSKUs.isNullOrEmpty()) {
+        if (knownAllSKUs.isEmpty())
+            return
+
+
+        if (knownAllSKUs.isNotEmpty()) {
             val skuDetailsResult = billingClient!!.querySkuDetails(
                     SkuDetailsParams.newBuilder()
                             .setType(BillingClient.SkuType.INAPP)
                             .setSkusList(knownAllSKUs.toMutableList())
                             .build()
             )
-            onSkuDetailsResponse(skuDetailsResult.billingResult, skuDetailsResult.skuDetailsList)
+            onProductDetailsResponse(skuDetailsResult.billingResult, skuDetailsResult.skuDetailsList)
         }
     }
 
-    private fun onSkuDetailsResponse(billingResult: BillingResult, skuDetailsList: List<SkuDetails>?) {
+    private fun onProductDetailsResponse(billingResult: BillingResult, skuDetailsList: List<SkuDetails>?) {
         val responseCode = billingResult.responseCode
         val debugMessage = billingResult.debugMessage
         when (responseCode) {
@@ -172,7 +176,7 @@ class BillingService(
             val purchasesResult = billingClient!!.queryPurchasesAsync(BillingClient.SkuType.INAPP)
             val billingResult = purchasesResult.billingResult
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                handlePurchase(purchasesResult.purchasesList)
+                processPurchaseList(purchasesResult.purchasesList)
             } else {
                 logger.debug("restorePurchases: BillingResult [${billingResult.responseCode}]: ${billingResult.debugMessage}")
             }
@@ -209,7 +213,7 @@ class BillingService(
             when (billingResult.responseCode) {
                 BillingClient.BillingResponseCode.OK -> {
                     if (null != purchases) {
-                        handlePurchase(purchases)
+                        processPurchaseList(purchases)
                         uiInfoService.showInfo(R.string.billing_thanks_for_purchase)
                         return
                     } else {
@@ -261,60 +265,84 @@ class BillingService(
         }
     }
 
-    private fun handlePurchase(purchases: List<Purchase>?) {
-        if (null != purchases) {
-            for (purchase in purchases) {
-                // Global check to make sure all purchases are signed correctly.
-                val purchaseState = purchase.purchaseState
-                if (purchaseState == Purchase.PurchaseState.PURCHASED){
-                    if (!isSignatureValid(purchase)) {
-                        throw RuntimeException("Invalid purchase signature. Signature is not valid with the public key.")
-                    }
+    private fun processPurchaseList(purchases: List<Purchase>?) {
+        if (purchases == null) {
+            logger.debug("Empty purchase list.")
+            return
+        }
 
-                    setSkuStateFromPurchase(purchase)
+        for (purchase in purchases) {
+            // Global check to make sure all purchases are signed correctly.
+            val purchaseState = purchase.purchaseState
+            if (purchaseState == Purchase.PurchaseState.PURCHASED){
+                if (!isSignatureValid(purchase)) {
+                    throw RuntimeException("Invalid purchase signature. Signature is not valid with the public key.")
+                }
 
-                    if (!purchase.isAcknowledged) {
-                        defaultScope.launch {
-                            for (sku in purchase.skus) {
-                                if (knowConsumableInAppKUSs.contains(sku)) {
-                                    // Consume item
-//                                    val consumeParams = ConsumeParams.newBuilder()
-//                                            .setPurchaseToken(purchase.purchaseToken)
-//                                            .build()
-//                                    val consumeResult = withContext(Dispatchers.IO) {
-//                                        billingClient?.consumePurchase(consumeParams)
-//                                    }
-                                }
+                setSkuStateFromPurchase(purchase)
 
-                                // Acknowledge item and change its state
-                                val billingResult = billingClient!!.acknowledgePurchase(
-                                        AcknowledgePurchaseParams.newBuilder()
-                                                .setPurchaseToken(purchase.purchaseToken)
-                                                .build()
+                defaultScope.launch {
+                    var isConsumable = false
+                    for (sku in purchase.skus) {
+                        if (knowConsumableInAppKUSs.contains(sku)) {
+                            isConsumable = true
+                        }
+
+                        if (isConsumable) {
+                            consumePurchase(purchase)
+
+                        } else if (!purchase.isAcknowledged) {
+
+                            // Acknowledge item and change its state
+                            val billingResult = billingClient!!.acknowledgePurchase(
+                                AcknowledgePurchaseParams.newBuilder()
+                                    .setPurchaseToken(purchase.purchaseToken)
+                                    .build()
+                            )
+                            if (billingResult.responseCode != BillingClient.BillingResponseCode.OK) {
+                                UiErrorHandler().handleError(
+                                    RuntimeException("Error acknowledging purchase: ${purchase.skus}"),
+                                    R.string.error_purchase_error,
                                 )
-                                if (billingResult.responseCode != BillingClient.BillingResponseCode.OK) {
-                                    UiErrorHandler().handleError(RuntimeException("Error acknowledging purchase: ${purchase.skus}"), R.string.error_purchase_error)
-                                } else {
-                                    // purchase acknowledged
-                                    skuStateMap[sku] = SkuState.PURCHASED_AND_ACKNOWLEDGED
-                                    savePurchaseData(sku)
-                                }
+                            } else {
+                                // purchase acknowledged
+                                skuStateMap[sku] = SkuState.PURCHASED_AND_ACKNOWLEDGED
+                                savePurchaseData(sku)
                             }
                         }
                     }
-
-                }  else {
-                    setSkuStateFromPurchase(purchase)  // set not purchased
                 }
+
+            }  else {
+                setSkuStateFromPurchase(purchase)  // set not purchased
+            }
+        }
+    }
+
+    private suspend fun consumePurchase(purchase: Purchase) {
+        val consumePurchaseResult = billingClient!!.consumePurchase(
+            ConsumeParams.newBuilder()
+                .setPurchaseToken(purchase.purchaseToken)
+                .build()
+        )
+        if (consumePurchaseResult.billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+            // Since we've consumed the purchase
+            for (sku in purchase.skus) {
+                saveConsumedPurchaseData(sku)
+                logger.info("Purchase consumed: $sku")
+                skuStateMap[sku] = SkuState.UNPURCHASED
             }
         } else {
-            logger.debug("Empty purchase list.")
+            UiErrorHandler().handleError(
+                RuntimeException("Error while consuming purchase ${consumePurchaseResult.billingResult.debugMessage}"),
+                R.string.error_purchase_error,
+            )
         }
     }
 
     // Set the state of every sku inside skuStateMap
     private fun setSkuStateFromPurchase(purchase: Purchase) {
-        if (purchase.skus.isNullOrEmpty()) {
+        if (purchase.skus.isEmpty()) {
             logger.error("Empty list of SKUs in a purchase")
             return
         }
@@ -352,6 +380,16 @@ class BillingService(
         }
     }
 
+    private fun saveConsumedPurchaseData(sku: String) {
+        when(sku) {
+            PRODUCT_ID_DONATE_1_BEER -> {
+                preferencesState.purchasedBeerDonations += 1
+                preferencesService.saveAll()
+                logger.info("Saving Purchase in preferences data, SKU: $sku")
+            }
+        }
+    }
+
     fun waitForInitialized() {
         runBlocking {
             initJob.join()
@@ -383,7 +421,7 @@ class BillingService(
     }
 
     override fun onBillingServiceDisconnected() {
-        logger.info("Service disconnected")
+        logger.info("Billing Service disconnected")
     }
 
 }
