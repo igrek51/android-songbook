@@ -13,7 +13,7 @@
     <string name="nav_about">About</string>
     <string name="nav_contact">Contact</string>
     <string name="nav_help">Help</string>
-    <string name="nav_screen_share">Screen Share</string>
+    <string name="nav_screen_share">Bluetooth Screen Share</string>
     <string name="nav_purchase">Ad-free / Donate</string>
     <string name="ui_help_content">
         SONG SELECTION:
@@ -233,7 +233,7 @@
     <string name="settings_autoscroll_speed">Autoscroll speed</string>
     <string name="settings_general_section">General</string>
     <string name="db_update_failed_incompatible">Database is not compatible with your application version. Please udpate an application.</string>
-    <string name="action_rate_app">⭐️Rate App</string>
+    <string name="action_rate_app">⭐️ Rate App</string>
     <string name="edit_song_open_in_editor">Open in Song Editor</string>
     <string name="tooltip">Hint</string>
     <string name="edit_song_copy">Copy</string>
