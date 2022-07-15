@@ -8,7 +8,6 @@ import android.widget.TextView
 import igrek.songbook.R
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.UiErrorHandler
-import igrek.songbook.info.errorcheck.UiErrorHandler.Companion.handleError
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory

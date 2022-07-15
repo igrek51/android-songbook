@@ -71,14 +71,14 @@ import okhttp3.OkHttpClient
 
 
 class AppFactory(
-        activity: AppCompatActivity,
+        var _activity: AppCompatActivity?,
 ) {
-    val activity: LazyInject<Activity> = SingletonInject { activity }
-    val appCompatActivity: LazyInject<AppCompatActivity> = SingletonInject { activity }
+    val activity: LazyInject<Activity> = SingletonInject { _activity!! }
+    val appCompatActivity: LazyInject<AppCompatActivity> = SingletonInject { _activity!! }
 
-    val context: LazyInject<Context> = SingletonInject { activity.applicationContext }
+    val context: LazyInject<Context> = SingletonInject { _activity!!.applicationContext }
     val logger: LazyInject<Logger> = PrototypeInject { LoggerFactory.logger }
-    val sharedPreferences: LazyInject<SharedPreferences> = PrototypeInject { SharedPreferencesService.sharedPreferencesCreator(activity) }
+    val sharedPreferences: LazyInject<SharedPreferences> = PrototypeInject { SharedPreferencesService.sharedPreferencesCreator(_activity!!) }
 
     /* Services */
     val activityData = SingletonInject { MainActivityData() }
