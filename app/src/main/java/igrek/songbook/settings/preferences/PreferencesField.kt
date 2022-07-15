@@ -12,7 +12,7 @@ enum class PreferencesField constructor(
 
     Fontsize(20.0f), // dp
 
-    AutoscrollInitialPause(36000L), // ms
+    AutoscrollInitialPause(0L), // ms
 
     AutoscrollSpeed(0.15f), // em / s
 

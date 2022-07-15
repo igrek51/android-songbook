@@ -160,11 +160,12 @@ class LyricsRenderer internal constructor(
         if (eyeFocusLines <= 0f)
             return
 
-        val eyeFocusTop = eyeFocusLines * lineheight - canvas.scroll
+        val eyeFocusTop = (eyeFocusLines - 0.5f) * lineheight - canvas.scroll
+        val eyeFocusBottom = eyeFocusTop + lineheight
         val thickness = canvas.scrollThickness
 
         canvas.setColor(0xf0f000, 130)
-        canvas.fillRect(w - thickness, eyeFocusTop, w, eyeFocusTop + lineheight)
+        canvas.fillRect(w - thickness, eyeFocusTop, w, eyeFocusBottom)
     }
 
 }

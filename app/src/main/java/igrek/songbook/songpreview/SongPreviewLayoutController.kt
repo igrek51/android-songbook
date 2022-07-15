@@ -1,5 +1,6 @@
 package igrek.songbook.songpreview
 
+import android.annotation.SuppressLint
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.view.View
@@ -44,6 +45,7 @@ import igrek.songbook.system.WindowManagerService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
 
+@SuppressLint("CheckResult")
 class SongPreviewLayoutController(
     lyricsLoader: LazyInject<LyricsLoader> = appFactory.lyricsLoader,
     lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,

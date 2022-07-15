@@ -9,9 +9,9 @@ import android.view.View
 
 abstract class BaseCanvasView(context: Context) : View(context) {
 
-    var w = 0
+    var w: Int = 0
         protected set
-    var h = 0
+    var h: Int = 0
         protected set
 
     var paint: Paint? = null

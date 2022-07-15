@@ -120,6 +120,11 @@ class SongPreview(
             }
         }
 
+    val visibleLines: Float
+        get() {
+            return textBottomY.get() / lineheightPx
+        }
+
     private val textRightX: SimpleCache<Float> = SimpleCache {
         (lyricsModel?.lines?.maxOfOrNull { it.maxRightX() } ?: 0f) * fontsizePx
     }
@@ -335,7 +340,7 @@ class SongPreview(
 
     /**
      * @param lineheightPart lineheight part to move (em)
-     * @return
+     * @return if it can be scrolled
      */
     fun scrollByLines(lineheightPart: Float): Boolean {
         return scrollByPxVertical(lineheightPart * lineheightPx)
@@ -433,7 +438,7 @@ class SongPreview(
                     scroll = 0f
                 false
             }
-            scroll > maxScroll -> false
+            scroll >= maxScroll -> false
             else -> true
         }
 
