@@ -6,6 +6,6 @@ var appFactory: AppFactory = AppFactory(null)
 
 object AppContextFactory {
     fun createAppContext(activity: AppCompatActivity) {
-        appFactory._activity = activity
+        appFactory = AppFactory(activity)
     }
 }

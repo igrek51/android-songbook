@@ -73,6 +73,7 @@ import okhttp3.OkHttpClient
 class AppFactory(
         var _activity: AppCompatActivity?,
 ) {
+
     val activity: LazyInject<Activity> = SingletonInject { _activity!! }
     val appCompatActivity: LazyInject<AppCompatActivity> = SingletonInject { _activity!! }
 
