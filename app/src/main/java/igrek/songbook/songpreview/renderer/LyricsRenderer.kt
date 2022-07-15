@@ -29,6 +29,7 @@ class LyricsRenderer internal constructor(
     private var commentColor: Int
     private var linewrapperColor: Int
     private var scrollColor: Int
+    private var eyeFocusZoneColor: Long
 
     init {
         val typefaceFamily = fontTypeface.typeface
@@ -55,6 +56,10 @@ class LyricsRenderer internal constructor(
         scrollColor = when (colorScheme) {
             ColorScheme.DARK -> 0x404040
             ColorScheme.BRIGHT -> 0xAAAAAA
+        }
+        eyeFocusZoneColor = when (colorScheme) {
+            ColorScheme.DARK -> 0xb03A82C5
+            ColorScheme.BRIGHT -> 0xc03A82C5
         }
     }
 
@@ -89,7 +94,7 @@ class LyricsRenderer internal constructor(
             if (lastFragment.type == LyricsTextType.LINEWRAPPER) {
                 canvas.setFontTypeface(normalTypeface)
                 canvas.setColor(linewrapperColor)
-                canvas.drawText(lastFragment.text, w - 2, y + 0.9f * lineheight, Align.RIGHT)
+                canvas.drawText(lastFragment.text, w - 4, y + 0.9f * lineheight, Align.RIGHT)
             }
         }
 
@@ -160,11 +165,11 @@ class LyricsRenderer internal constructor(
         if (eyeFocusLines <= 0f)
             return
 
-        val eyeFocusTop = (eyeFocusLines - 0.5f) * lineheight - canvas.scroll
-        val eyeFocusBottom = eyeFocusTop + lineheight
-        val thickness = canvas.scrollThickness
+        val eyeFocusTop = (eyeFocusLines - 1f) * lineheight - canvas.scroll
+        val eyeFocusBottom = eyeFocusTop + 2f * lineheight
+        val thickness = canvas.scrollThickness * 2f
 
-        canvas.setColor(0xf0f000, 130)
+        canvas.setColor(eyeFocusZoneColor)
         canvas.fillRect(w - thickness, eyeFocusTop, w, eyeFocusBottom)
     }
 

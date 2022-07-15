@@ -57,6 +57,7 @@ class AutoscrollService(
     private val logger = LoggerFactory.logger
     private var state: AutoscrollState = AutoscrollState.OFF
     private var previousStepTime: Long = 0 // [ms]
+    private var lastWaitingTimeRefresh: Long = 0 // [ms]
     private var nextSongAtTime: Long = 0 // [ms]
     private var scrolledBuffer = 0f
     private var startAutoscrollOnNextSong = false
@@ -80,10 +81,10 @@ class AutoscrollService(
         const val START_NO_WAITING_MIN_SCROLL = 0.9f // [line]
         const val ADJUSTMENT_SPEED_SCALE = 0.001f // [line / s  /  scrolled lines]
         const val ADJUSTMENT_MAX_SPEED_CHANGE = 0.03f // [line / s  /  scrolled lines]
-        const val ADD_INITIAL_PAUSE_SCALE = 180.0f // [ms  /  scrolled lines]
-        const val AUTOSCROLL_INTERVAL_TIME = 60f // [ms]
+        const val AUTOSCROLL_INTERVAL_TIME = 60L // [ms]
         const val VOLUME_BTNS_SPEED_STEP = 0.020f // [line / s]
         const val MIN_NEXT_SONG_TIME: Long = 3000 // [ms]
+        const val WAITING_TIME_ADJUST_MODIFIER = 0.5f // fraction of scrolled pixels
     }
 
     val isRunning: Boolean
@@ -236,9 +237,11 @@ class AutoscrollService(
                         timerHandler.postDelayed(timerRunnable, 0)
                         onAutoscrollStartedEvent()
                     } else {
-                        val delayMs = remainingWaitingTimeS.limitTo(0.5f) * 1000
-                        timerHandler.postDelayed(timerRunnable, delayMs.toLong())
-                        showAutoscrollWaitingTime(remainingWaitingTimeS)
+                        timerHandler.postDelayed(timerRunnable, AUTOSCROLL_INTERVAL_TIME)
+                        if (System.currentTimeMillis() - lastWaitingTimeRefresh >= 500) {
+                            showAutoscrollWaitingTime(remainingWaitingTimeS)
+                            lastWaitingTimeRefresh = System.currentTimeMillis()
+                        }
                     }
                 }
 
@@ -253,8 +256,7 @@ class AutoscrollService(
                     // eye focus always in the middle of the screen
                     eyeFocus = (songPreview.scroll + songPreview.h / 2) / songPreview.lineheightPx
 
-                    // scroll once again later
-                    timerHandler.postDelayed(timerRunnable, AUTOSCROLL_INTERVAL_TIME.toLong())
+                    timerHandler.postDelayed(timerRunnable, AUTOSCROLL_INTERVAL_TIME)
                 }
 
                 AutoscrollState.ENDING -> {
@@ -264,8 +266,7 @@ class AutoscrollService(
                     songPreview.repaint()
 
                     if (eyeFocus <= songPreview.visibleLines) {
-                        // scroll once again later
-                        timerHandler.postDelayed(timerRunnable, AUTOSCROLL_INTERVAL_TIME.toLong())
+                        timerHandler.postDelayed(timerRunnable, AUTOSCROLL_INTERVAL_TIME)
                     } else {
                         // autoscroll has come to an end (eye focus at the bottom)
                         stop()
@@ -289,6 +290,7 @@ class AutoscrollService(
 
                 else -> {}
             }
+            null
         }
     }
 
@@ -299,7 +301,7 @@ class AutoscrollService(
     private fun onCanvasScrollEvent(dScroll: Float, scroll: Float) {
         when (state) {
             AutoscrollState.WAITING -> {
-                eyeFocus += dScroll
+                eyeFocus += dScroll * WAITING_TIME_ADJUST_MODIFIER
                 eyeFocus = eyeFocus.cutOffMin(0f)
                 showAutoscrollWaitingTime(remainingWaitingTimeS())
             }
@@ -382,6 +384,7 @@ class AutoscrollService(
                 actionResId = R.string.action_stop_autoscroll,
             ) {
                 this.stop()
+                songPreview?.repaint()
             }
         }
     }
@@ -392,6 +395,7 @@ class AutoscrollService(
             actionResId = R.string.action_stop_autoscroll,
         ) {
             this.stop()
+            songPreview?.repaint()
         }
     }
 

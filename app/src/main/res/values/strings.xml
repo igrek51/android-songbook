@@ -215,7 +215,7 @@
     <string name="song_copied_as_custom">Song has been copied to \"My songs\".</string>
     <string name="song_action_choose">Choose an action</string>
     <string name="action_song_publish">🌐 Publish</string>
-    <string name="settings_song_preview">Song preview appearance</string>
+    <string name="settings_song_preview">Song Appearance</string>
     <string name="settings_color_scheme">Color Scheme</string>
     <string name="settings_fontsize">Font size</string>
     <string name="settings_typeface">Font typeface</string>

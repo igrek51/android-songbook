@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.view.View
+import androidx.core.graphics.toColorInt
 
 abstract class BaseCanvasView(context: Context) : View(context) {
 
@@ -117,6 +118,14 @@ abstract class BaseCanvasView(context: Context) : View(context) {
         if (color1 and -0x1000000 == 0)
             color1 = color1 or -0x1000000
         paint?.color = color1
+    }
+
+    fun setColor(color: Long) {
+        var color1: Long = color
+        // if alpha channel is not set - set it to max (opaque)
+        if (color1 and -0x1000000 == 0L)
+            color1 = color1 or -0x1000000
+        paint?.color = color1.toInt()
     }
 
     fun setColor(rgb: Int, alpha: Int) {
