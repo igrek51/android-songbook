@@ -430,8 +430,11 @@ class SongPreview(
             }
 
             else -> {
-                if (!autoscroll.isWaiting || py <= 0) {
-                    scroll += py
+                when {
+                    autoscroll.isWaiting && py > 0 -> {}
+                    else -> {
+                        scroll += py
+                    }
                 }
             }
         }

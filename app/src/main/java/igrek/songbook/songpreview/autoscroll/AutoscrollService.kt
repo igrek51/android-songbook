@@ -326,7 +326,7 @@ class AutoscrollService(
                 }
             }
             AutoscrollState.ENDING -> {
-                eyeFocus += dScroll
+                onAutoscrollStopUIEvent()
             }
             AutoscrollState.NEXT_SONG_COUNTDOWN -> {
                 if (dScroll < 0) { // scroll up
