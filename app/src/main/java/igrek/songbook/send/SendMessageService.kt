@@ -75,7 +75,7 @@ class SendMessageService(
                 if (!response.isSuccessful) {
                     onErrorReceived("Unexpected code: $response")
                 } else {
-                    onResponseReceived(response.body()!!.string())
+                    onResponseReceived(response.body!!.string())
                 }
             }
         })

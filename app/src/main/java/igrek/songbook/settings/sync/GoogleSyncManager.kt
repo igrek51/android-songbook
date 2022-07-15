@@ -8,9 +8,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.Scopes
 import com.google.android.gms.common.api.Scope
-import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.http.FileContent
+import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
@@ -35,6 +35,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.FileNotFoundException
 import java.io.IOException
+
 
 class GoogleSyncManager(
         appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
@@ -250,7 +251,7 @@ class GoogleSyncManager(
             // Use the authenticated account to sign in to the Drive service.
             val credential = GoogleAccountCredential.usingOAuth2(activity, setOf(DriveScopes.DRIVE_APPDATA))
             credential.selectedAccount = googleAccount.account
-            val googleDriveService = Drive.Builder(AndroidHttp.newCompatibleTransport(), GsonFactory(), credential)
+            val googleDriveService = Drive.Builder(NetHttpTransport(), GsonFactory(), credential)
                     .setApplicationName("igrek.songbook")
                     .build()
 

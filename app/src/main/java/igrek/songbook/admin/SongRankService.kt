@@ -10,6 +10,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
@@ -28,7 +29,7 @@ class SongRankService(
     }
 
     private val httpRequester = HttpRequester()
-    private val jsonType = MediaType.parse("application/json; charset=utf-8")
+    private val jsonType = "application/json; charset=utf-8".toMediaTypeOrNull()
     private val jsonSerializer = Json {
         encodeDefaults = true
         ignoreUnknownKeys = false
@@ -49,7 +50,7 @@ class SongRankService(
                 .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
         return httpRequester.httpRequestAsync(request) { response: Response ->
-            logger.debug("Update rank response", response.body()?.string())
+            logger.debug("Update rank response", response.body?.string())
         }
     }
 

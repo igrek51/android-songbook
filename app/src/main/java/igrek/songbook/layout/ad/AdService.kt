@@ -102,9 +102,9 @@ class AdService(
         adView.adListener = object : AdListener() {
             override fun onAdLoaded() {}
 
-            override fun onAdFailedToLoad(errorCode: Int) {
-                logger.warn("ad failed to load, error code: $errorCode")
-                when (errorCode) {
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                logger.warn("ad failed to load, error code: ${adError.code}")
+                when (adError.code) {
                     ERROR_CODE_INTERNAL_ERROR -> logger.warn("Something happened internally; for instance, an invalid response was received from the ad server")
                     ERROR_CODE_INVALID_REQUEST -> logger.warn("The ad request was invalid")
                     ERROR_CODE_NETWORK_ERROR -> logger.warn("The ad request was unsuccessful due to network connectivity")
@@ -120,7 +120,7 @@ class AdService(
                 logger.debug("ad clicked")
             }
 
-            override fun onAdLeftApplication() {}
+            override fun onAdImpression() {}
 
             override fun onAdClosed() {}
         }
@@ -144,7 +144,7 @@ class AdService(
             else -> R.string.adaptive_banner_ad_unit_id_prod
         }
         adView.adUnitId = activity.getString(adUnitResId)
-        adView.adSize = adSize
+        adView.setAdSize(adSize)
 
         val adRequest = Builder().build()
         adView.loadAd(adRequest)
