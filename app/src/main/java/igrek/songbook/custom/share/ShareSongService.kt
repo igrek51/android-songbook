@@ -162,7 +162,7 @@ fun ungzip(content: ByteArray): ByteArray {
 }
 
 fun base64Encode(bytes: ByteArray): String {
-    val encoded = Base64.encodeBase64String(bytes)
+    val encoded = String(Base64.encodeBase64(bytes))
     // encode url
     return encoded
         .replace("+", ".")
