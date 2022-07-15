@@ -1,5 +1,6 @@
 package igrek.songbook.songpreview.autoscroll
 
+import android.annotation.SuppressLint
 import android.os.Handler
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
@@ -17,6 +18,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 
+@SuppressLint("CheckResult")
 class AutoscrollService(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
@@ -38,6 +40,7 @@ class AutoscrollService(
         set(value) {
             preferencesState.autoscrollSpeed = value
         }
+    var eyeFocusLines: Float = 0f
     private var autoSpeedAdjustment: Boolean
         get() = preferencesState.autoscrollSpeedAutoAdjustment
         set(value) {
@@ -82,7 +85,7 @@ class AutoscrollService(
 
     val isRunning: Boolean
         get() = when (state) {
-            AutoscrollState.WAITING, AutoscrollState.SCROLLING, AutoscrollState.NEXT_SONG_COUNTDOWN -> true
+            AutoscrollState.WAITING, AutoscrollState.SCROLLING, AutoscrollState.ENDING, AutoscrollState.NEXT_SONG_COUNTDOWN -> true
             AutoscrollState.OFF -> false
         }
 
@@ -145,6 +148,7 @@ class AutoscrollService(
         state = AutoscrollState.OFF
         timerHandler.removeCallbacks(timerRunnable)
         scrollStateSubject.onNext(state)
+        eyeFocusLines = 0f
     }
 
     private fun autostart() {
@@ -165,6 +169,8 @@ class AutoscrollService(
     private fun handleAutoscrollStep() {
         when (state) {
             AutoscrollState.WAITING -> {
+                val lineheightPart = autoscrollSpeed * 1000 / 1000
+                eyeFocusLines += lineheightPart
                 val remainingTimeMs = initialPause + startTime - System.currentTimeMillis()
                 if (remainingTimeMs <= 0) {
                     state = AutoscrollState.SCROLLING
@@ -179,6 +185,7 @@ class AutoscrollService(
             AutoscrollState.SCROLLING -> {
                 // em = speed * time
                 val lineheightPart = autoscrollSpeed * AUTOSCROLL_INTERVAL_TIME / 1000
+                eyeFocusLines += lineheightPart
                 if (songPreview?.scrollByLines(lineheightPart) != false) {
                     // scroll once again later
                     timerHandler.postDelayed(timerRunnable, AUTOSCROLL_INTERVAL_TIME.toLong())
@@ -188,6 +195,7 @@ class AutoscrollService(
                     onAutoscrollEndedEvent()
                 }
             }
+            AutoscrollState.ENDING -> {}
             AutoscrollState.NEXT_SONG_COUNTDOWN -> {
                 val remainingTimeMs = nextSongAtTime - System.currentTimeMillis()
                 if (remainingTimeMs <= 0) {
@@ -201,6 +209,7 @@ class AutoscrollService(
                     timerHandler.postDelayed(timerRunnable, delay)
                 }
             }
+            else -> {}
         }
     }
 
@@ -222,8 +231,7 @@ class AutoscrollService(
             AutoscrollState.SCROLLING -> {
                 if (dScroll > 0) {
                     // speed up scrolling
-                    val delta =
-                        +cutOffMax(dScroll * ADJUSTMENT_SPEED_SCALE, ADJUSTMENT_MAX_SPEED_CHANGE)
+                    val delta = (dScroll * ADJUSTMENT_SPEED_SCALE).limitTo(ADJUSTMENT_MAX_SPEED_CHANGE)
                     autoAdjustScrollSpeed(delta)
 
                 } else if (dScroll < 0) {
@@ -237,19 +245,18 @@ class AutoscrollService(
                         return
                     } else {
                         // slow down scrolling
-                        val delta = -cutOffMax(
-                            -dScroll * ADJUSTMENT_SPEED_SCALE,
-                            ADJUSTMENT_MAX_SPEED_CHANGE
-                        )
+                        val delta = -(-dScroll * ADJUSTMENT_SPEED_SCALE).limitTo(ADJUSTMENT_MAX_SPEED_CHANGE)
                         autoAdjustScrollSpeed(delta)
                     }
                 }
             }
+            AutoscrollState.ENDING -> {}
             AutoscrollState.NEXT_SONG_COUNTDOWN -> {
                 if (dScroll < 0) { // scroll up
                     onAutoscrollStopUIEvent()
                 }
             }
+            else -> {}
         }
     }
 
@@ -258,10 +265,6 @@ class AutoscrollService(
             addAutoscrollSpeed(delta)
             logger.info("autoscroll speed adjusted: $autoscrollSpeed line / s")
         }
-    }
-
-    private fun cutOffMax(value: Float, max: Float): Float {
-        return if (value > max) max else value
     }
 
     private fun onAutoscrollRemainingWaitTimeEvent(ms: Long) {
@@ -325,7 +328,7 @@ class AutoscrollService(
         val visibleLinesAtEnd = songPreview?.visibleLinesAtEnd ?: 0f
         val visibleLinesMillis = visibleLinesAtEnd / autoscrollSpeed * 1000
         var waitTimeMs: Long = when {
-            songPreview?.scroll ?: 0f <= 0f -> { // at the beginning
+            (songPreview?.scroll ?: 0f) <= 0f -> { // at the beginning
                 visibleLinesMillis
             }
             else -> {
@@ -379,8 +382,8 @@ class AutoscrollService(
             AutoscrollState.OFF -> onAutoscrollStartUIEvent()
             AutoscrollState.WAITING -> skipInitialPause()
             AutoscrollState.SCROLLING -> addAutoscrollSpeed(+VOLUME_BTNS_SPEED_STEP)
-            AutoscrollState.NEXT_SONG_COUNTDOWN -> {
-            }
+            AutoscrollState.ENDING -> {}
+            AutoscrollState.NEXT_SONG_COUNTDOWN -> {}
         }
         return true
     }
@@ -389,10 +392,10 @@ class AutoscrollService(
         if (!volumeKeysSpeedControl || songPreview == null)
             return false
         when (state) {
-            AutoscrollState.OFF -> {
-            }
+            AutoscrollState.OFF -> {}
             AutoscrollState.WAITING -> onAutoscrollStopUIEvent()
             AutoscrollState.SCROLLING -> addAutoscrollSpeed(-VOLUME_BTNS_SPEED_STEP)
+            AutoscrollState.ENDING -> {}
             AutoscrollState.NEXT_SONG_COUNTDOWN -> onAutoscrollStopUIEvent()
         }
         return true

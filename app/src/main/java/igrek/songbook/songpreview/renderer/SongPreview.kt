@@ -127,6 +127,9 @@ class SongPreview(
     val scrollThickness: Float
         get() = scrollThicknessCache.get()
 
+    val eyeFocusLines: Float
+        get() = autoscroll.eyeFocusLines
+
     override fun reset() {
         super.reset()
         scroll = 0f
@@ -149,6 +152,7 @@ class SongPreview(
 
         if (this.lyricsRenderer != null) {
             lyricsRenderer?.drawScrollBars()
+            lyricsRenderer?.drawEyeFocusZone(lineheightPx)
             lyricsRenderer?.drawFileContent(fontsizePx, lineheightPx)
         }
 

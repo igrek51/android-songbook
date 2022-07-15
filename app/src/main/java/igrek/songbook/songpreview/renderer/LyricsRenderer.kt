@@ -89,7 +89,7 @@ class LyricsRenderer internal constructor(
             if (lastFragment.type == LyricsTextType.LINEWRAPPER) {
                 canvas.setFontTypeface(normalTypeface)
                 canvas.setColor(linewrapperColor)
-                canvas.drawText(lastFragment.text, w, y + 0.9f * lineheight, Align.RIGHT)
+                canvas.drawText(lastFragment.text, w - 2, y + 0.9f * lineheight, Align.RIGHT)
             }
         }
 
@@ -138,7 +138,7 @@ class LyricsRenderer internal constructor(
         val top = scroll / range
         val bottom = (scroll + h) / range
 
-        canvas.setColor(scrollColor.toInt())
+        canvas.setColor(scrollColor)
         val scrollThickness = canvas.scrollThickness
         canvas.fillRect(w - scrollThickness, top * h, w, bottom * h)
 
@@ -153,6 +153,18 @@ class LyricsRenderer internal constructor(
                 canvas.fillRect(left * w, h - scrollThickness, right * w, h)
             }
         }
+    }
+
+    fun drawEyeFocusZone(lineheight: Float) {
+        val eyeFocusLines = canvas.eyeFocusLines
+        if (eyeFocusLines <= 0f)
+            return
+
+        val eyeFocusTop = eyeFocusLines * lineheight - canvas.scroll
+        val thickness = canvas.scrollThickness
+
+        canvas.setColor(0xf0f000, 130)
+        canvas.fillRect(w - thickness, eyeFocusTop, w, eyeFocusTop + lineheight)
     }
 
 }

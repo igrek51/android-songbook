@@ -11,3 +11,11 @@ fun Long.limitTo(max: Long): Long {
 fun Float.limitTo(max: Float): Float {
     return if (this > max) max else this
 }
+
+fun Float.limitBetween(min: Float, max: Float): Float {
+    if (this < 0f)
+        return min
+    if (this > max)
+        return max
+    return this
+}

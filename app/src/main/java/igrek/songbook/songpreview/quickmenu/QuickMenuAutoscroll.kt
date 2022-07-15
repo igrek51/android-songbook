@@ -13,6 +13,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.slider.SliderController
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
+import igrek.songbook.util.limitBetween
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -122,7 +123,7 @@ class QuickMenuAutoscroll(
         autoscrollPauseSlider?.let { autoscrollPauseSlider ->
             var autoscrollInitialPause = autoscrollPauseSlider.value
             autoscrollInitialPause += diff
-            autoscrollInitialPause = cutOff(autoscrollInitialPause, 90000f)
+            autoscrollInitialPause = autoscrollInitialPause.limitBetween(0f, 90000f)
             autoscrollPauseSlider.value = autoscrollInitialPause
             autoscrollService.initialPause = autoscrollInitialPause.toLong()
         }
@@ -132,17 +133,9 @@ class QuickMenuAutoscroll(
         autoscrollSpeedSlider?.let { autoscrollSpeedSlider ->
             var autoscrollSpeed = autoscrollSpeedSlider.value
             autoscrollSpeed += diff
-            autoscrollSpeed = cutOff(autoscrollSpeed, 1.0f)
+            autoscrollSpeed = autoscrollSpeed.limitBetween(0f, 1.0f)
             autoscrollSpeedSlider.value = autoscrollSpeed
         }
-    }
-
-    private fun cutOff(value: Float, max: Float): Float {
-        if (value < 0)
-            return 0f
-        if (value > max)
-            return max
-        return value
     }
 
     private fun saveSettings() {
