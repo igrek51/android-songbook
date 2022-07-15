@@ -1,8 +1,5 @@
 package igrek.songbook.inject.activity
 
-import android.app.Activity
-import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
@@ -33,21 +30,15 @@ class ActivityInjectTest {
     }
 }
 
-private var appFactory: AppFactory = AppFactory(AppCompatActivity())
+class ActivityMock
 
-private object AppContextFactory {
-    fun createAppContext(activity: AppCompatActivity) {
-        appFactory = AppFactory(activity)
-    }
-}
+private var appFactory: AppFactory = AppFactory(ActivityMock())
 
 private class AppFactory(
-        activity: AppCompatActivity,
+        activity: ActivityMock,
 ) {
-    val activity: LazyInject<Activity> = SingletonInject { activity }
-    val appCompatActivity: LazyInject<AppCompatActivity> = SingletonInject { activity }
+    val activity: LazyInject<ActivityMock> = SingletonInject { activity }
 
-    val context: LazyInject<Context> = SingletonInject { activity.applicationContext }
     val logger: LazyInject<Logger> = PrototypeInject { LoggerFactory.logger }
 
     val singletonCounter = SingletonInject { Counter() }
@@ -57,19 +48,19 @@ private class AppFactory(
 data class Counter(var c: Int = 0)
 
 class ServiceRequiringActivity(
-        activity: LazyInject<Activity> = appFactory.activity,
+        activity: LazyInject<ActivityMock> = appFactory.activity,
         logger: LazyInject<Logger> = appFactory.logger,
 ) {
     private val activity by LazyExtractor(activity)
     private val logger by LazyExtractor(logger)
 
     fun doSomethingWithActivity(): Boolean {
-        return activity is AppCompatActivity
+        return activity is ActivityMock
     }
 }
 
 class Service2(
-        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+        appCompatActivity: LazyInject<ActivityMock> = appFactory.activity,
         logger: LazyInject<Logger> = appFactory.logger,
         singletonCounter: LazyInject<Counter> = appFactory.singletonCounter,
         prototypeCounter: LazyInject<Counter> = appFactory.prototypeCounter,
