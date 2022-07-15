@@ -90,6 +90,7 @@ open class MainActivity(
         activityData.permissionService.onRequestPermissionsResult(permissions, grantResults)
     }
 
+    @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         activityData.activityResultDispatcher.onActivityResult(requestCode, resultCode, data)
         super.onActivityResult(requestCode, resultCode, data)

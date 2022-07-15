@@ -65,6 +65,7 @@ class AutoscrollService(
     val scrollStateSubject = PublishSubject.create<AutoscrollState>()
     val scrollSpeedAdjustmentSubject = PublishSubject.create<Float>()
 
+    @Suppress("DEPRECATION")
     private val timerHandler = Handler()
     private val timerRunnable: () -> Unit = {
         if (state != AutoscrollState.OFF) {
@@ -230,7 +231,7 @@ class AutoscrollService(
                         timerHandler.postDelayed(timerRunnable, 0)
                         onAutoscrollStartedEvent()
                     } else {
-                        val delayMs = remainingWaitingTimeS.limitTo(1f) * 1000
+                        val delayMs = remainingWaitingTimeS.limitTo(0.5f) * 1000
                         timerHandler.postDelayed(timerRunnable, delayMs.toLong())
                         showAutoscrollWaitingTime(remainingWaitingTimeS)
                     }
@@ -293,60 +294,55 @@ class AutoscrollService(
      * @param scroll  current scroll
      */
     private fun onCanvasScrollEvent(dScroll: Float, scroll: Float) {
-        songPreview?.let { songPreview ->
-            when (state) {
-                AutoscrollState.WAITING -> {
-                    if (dScroll > 0) { // skip counting down immediately
-                        skipInitialPause()
-                    } else if (dScroll < 0) { // increase inital waitng time
-    //                    countDownStartTime -= (dScroll * ADD_INITIAL_PAUSE_SCALE).toLong()
-
-                        eyeFocusLines += dScroll
-
-                        showAutoscrollWaitingTime(remainingWaitingTimeS())
-                    }
-                }
-                AutoscrollState.SCROLLING -> {
-                    if (dScroll > 0) {
-                        // speed up scrolling
-                        eyeFocusLines += dScroll
-                        val delta = (dScroll * ADJUSTMENT_SPEED_SCALE).limitTo(ADJUSTMENT_MAX_SPEED_CHANGE)
-                        autoAdjustScrollSpeed(delta)
-
-                    } else if (dScroll < 0) {
-                        if (scroll <= 0) { // scrolling up to the beginning
-                            // set counting down state with additional time
-                            state = AutoscrollState.WAITING
-                            countDownStartTime = System.currentTimeMillis()
-                            eyeFocusLines -= -dScroll
-//                            countDownStartTime = System.currentTimeMillis() - initialPause - (dScroll * ADD_INITIAL_PAUSE_SCALE).toLong()
-                            showAutoscrollWaitingTime(remainingWaitingTimeS())
-                            return
-                        } else {
-                            // slow down scrolling
-                            eyeFocusLines += dScroll
-                            val delta = -(-dScroll * ADJUSTMENT_SPEED_SCALE).limitTo(ADJUSTMENT_MAX_SPEED_CHANGE)
-                            autoAdjustScrollSpeed(delta)
-                        }
-                    }
-                }
-                AutoscrollState.ENDING -> {
+        when (state) {
+            AutoscrollState.WAITING -> {
+                if (dScroll > 0) { // skip counting down immediately
+                    skipInitialPause()
+                } else if (dScroll < 0) { // increase inital waitng time
                     eyeFocusLines += dScroll
-                    if (dScroll > 0) {
-                        val delta = (dScroll * ADJUSTMENT_SPEED_SCALE).limitTo(ADJUSTMENT_MAX_SPEED_CHANGE)
-                        autoAdjustScrollSpeed(delta)
-                    } else if (dScroll < 0) {
+
+                    showAutoscrollWaitingTime(remainingWaitingTimeS())
+                }
+            }
+            AutoscrollState.SCROLLING -> {
+                if (dScroll > 0) {
+                    // speed up scrolling
+                    eyeFocusLines += dScroll
+                    val delta = (dScroll * ADJUSTMENT_SPEED_SCALE).limitTo(ADJUSTMENT_MAX_SPEED_CHANGE)
+                    autoAdjustScrollSpeed(delta)
+
+                } else if (dScroll < 0) {
+                    if (scroll <= 0) { // scrolling up to the beginning
+                        // set counting down state with additional time
+                        state = AutoscrollState.WAITING
+                        countDownStartTime = System.currentTimeMillis()
+                        eyeFocusLines -= -dScroll
+                        showAutoscrollWaitingTime(remainingWaitingTimeS())
+                        return
+                    } else {
+                        // slow down scrolling
+                        eyeFocusLines += dScroll
                         val delta = -(-dScroll * ADJUSTMENT_SPEED_SCALE).limitTo(ADJUSTMENT_MAX_SPEED_CHANGE)
                         autoAdjustScrollSpeed(delta)
                     }
                 }
-                AutoscrollState.NEXT_SONG_COUNTDOWN -> {
-                    if (dScroll < 0) { // scroll up
-                        onAutoscrollStopUIEvent()
-                    }
-                }
-                else -> {}
             }
+            AutoscrollState.ENDING -> {
+                eyeFocusLines += dScroll
+                if (dScroll > 0) {
+                    val delta = (dScroll * ADJUSTMENT_SPEED_SCALE).limitTo(ADJUSTMENT_MAX_SPEED_CHANGE)
+                    autoAdjustScrollSpeed(delta)
+                } else if (dScroll < 0) {
+                    val delta = -(-dScroll * ADJUSTMENT_SPEED_SCALE).limitTo(ADJUSTMENT_MAX_SPEED_CHANGE)
+                    autoAdjustScrollSpeed(delta)
+                }
+            }
+            AutoscrollState.NEXT_SONG_COUNTDOWN -> {
+                if (dScroll < 0) { // scroll up
+                    onAutoscrollStopUIEvent()
+                }
+            }
+            else -> {}
         }
     }
 

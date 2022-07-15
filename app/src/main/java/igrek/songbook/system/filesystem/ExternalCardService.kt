@@ -15,6 +15,7 @@ class ExternalCardService {
     private val logger = LoggerFactory.logger
     private val externalSDPath: String?
 
+    @Suppress("DEPRECATION")
     private val externalStorageDirectory: String
         get() {
             logger.warn("getting Environment.getExternalStorageDirectory() -  it's probably not what it's named for")

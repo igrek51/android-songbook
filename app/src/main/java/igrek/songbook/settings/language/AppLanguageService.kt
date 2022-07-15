@@ -46,6 +46,7 @@ class AppLanguageService(
      * forces locale settings
      * @param langCode language code (pl)
      */
+    @Suppress("DEPRECATION")
     private fun setLocale(langCode: String) {
         val res = activity.resources
         // Change locale settings in the app.
@@ -65,6 +66,7 @@ class AppLanguageService(
         }
     }
 
+    @Suppress("DEPRECATION")
     fun getCurrentLocale(): Locale {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             activity.resources.configuration.locales.get(0)

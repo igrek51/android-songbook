@@ -19,10 +19,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Request
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import java.util.*
 
@@ -80,7 +79,7 @@ class AntechamberService(
         val json = jsonSerializer.encodeToString(AntechamberSongDto.serializer(), antechamberSongDto)
         val request: Request = Request.Builder()
                 .url(specificSongUrl(song.id))
-                .put(RequestBody.create(jsonType, json))
+                .put(json.toRequestBody(jsonType))
                 .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
         return httpRequester.httpRequestAsync(request) { }
@@ -93,7 +92,7 @@ class AntechamberService(
         val json = jsonSerializer.encodeToString(AntechamberSongDto.serializer(), antechamberSongDto)
         val request: Request = Request.Builder()
                 .url(allSongsUrl)
-                .post(RequestBody.create(jsonType, json))
+                .post(json.toRequestBody(jsonType))
                 .build()
         return httpRequester.httpRequestAsync(request) { }
     }
@@ -115,7 +114,7 @@ class AntechamberService(
         val json = jsonSerializer.encodeToString(ChordsSongDto.serializer(), dto)
         val request: Request = Request.Builder()
                 .url(updatePublicSongIdUrl(song.id))
-                .put(RequestBody.create(jsonType, json))
+                .put(json.toRequestBody(jsonType))
                 .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
         return httpRequester.httpRequestAsync(request) { response: Response ->
@@ -131,7 +130,7 @@ class AntechamberService(
         val json = jsonSerializer.encodeToString(ChordsSongDto.serializer(), dto)
         val request: Request = Request.Builder()
                 .url(approveSongUrl)
-                .post(RequestBody.create(jsonType, json))
+                .post(json.toRequestBody(jsonType))
                 .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
         return httpRequester.httpRequestAsync(request) { response: Response ->

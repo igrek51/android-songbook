@@ -36,9 +36,7 @@ class NewSlaveListener(
         try {
             try {
                 serverSocket = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord("Songbook", BT_APP_UUID)
-                logger.debug("sending success to init channel")
                 initChannel.trySendBlocking(Result.success(Unit))
-                logger.debug("initChannel: ${initChannel.isEmpty}")
             } catch (e: Throwable) {
                 logger.error("creating Rfcomm server socket", e)
                 initChannel.trySendBlocking(Result.failure(e))

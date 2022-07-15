@@ -29,6 +29,7 @@ import java.io.IOException
 import java.util.concurrent.ConcurrentHashMap
 
 
+@Suppress("DEPRECATION")
 class BluetoothService(
         appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
         activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,

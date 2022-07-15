@@ -90,6 +90,7 @@ class AdService(
         requestAdViewSubject.onNext(true)
     }
 
+    @Suppress("DEPRECATION")
     private fun requestAdRefresh() {
         logger.debug("initializing ad banner")
         val adViewContainer: FrameLayout? = activity.findViewById(R.id.ad_view_container)

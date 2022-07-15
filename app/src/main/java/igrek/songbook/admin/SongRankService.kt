@@ -9,10 +9,9 @@ import igrek.songbook.persistence.general.model.Song
 import kotlinx.coroutines.Deferred
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Request
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 
 class SongRankService(
@@ -46,7 +45,7 @@ class SongRankService(
         val json = jsonSerializer.encodeToString(SongRankUpdateDto.serializer(), dto)
         val request: Request = Request.Builder()
                 .url(updatePublicSongIdUrl(song.id))
-                .put(RequestBody.create(jsonType, json))
+                .put(json.toRequestBody(jsonType))
                 .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
         return httpRequester.httpRequestAsync(request) { response: Response ->

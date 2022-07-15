@@ -8,6 +8,7 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 
+@Suppress("DEPRECATION")
 class PackageInfoService(
         appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
 ) {

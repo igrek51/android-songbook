@@ -40,6 +40,7 @@ class ActivityResultDispatcher(
         activityResultLauncher.launch(intent)
     }
 
+    @Suppress("DEPRECATION")
     fun startActivityForResult(intent: Intent, onResult: (resultCode: Int, data: Intent?) -> Unit) {
         val requestCode = requestCodeSequence.incrementAndGet()
         requestCodeReactions[requestCode] = onResult

@@ -8,10 +8,9 @@ import igrek.songbook.inject.appFactory
 import kotlinx.coroutines.Deferred
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.Request
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 
 class AdminCategoryManager(
@@ -44,7 +43,7 @@ class AdminCategoryManager(
         val json = jsonSerializer.encodeToString(CreateCategoryDto.serializer(), dto)
         val request: Request = Request.Builder()
                 .url(createCategoryUrl)
-                .post(RequestBody.create(jsonType, json))
+                .post(json.toRequestBody(jsonType))
                 .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
         return httpRequester.httpRequestAsync(request) { response: Response ->

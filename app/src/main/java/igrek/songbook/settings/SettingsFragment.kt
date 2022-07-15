@@ -325,6 +325,7 @@ class SettingsFragment(
         activity.startActivity(i)
     }
 
+    @Suppress("DEPRECATION")
     private fun refreshFragment() {
         fragmentManager?.let { fragmentManager ->
             val ft: FragmentTransaction = fragmentManager.beginTransaction()
