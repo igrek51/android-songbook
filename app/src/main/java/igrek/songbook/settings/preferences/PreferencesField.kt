@@ -14,7 +14,7 @@ enum class PreferencesField constructor(
 
     AutoscrollInitialPause(0L), // ms
 
-    AutoscrollSpeed(0.15f), // em / s
+    AutoscrollSpeed(0.18f), // em / s
 
     ChordsNotationId(GenericLongIdPreferenceType(
             defaultValue = ChordsNotation.default,

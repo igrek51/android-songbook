@@ -19,3 +19,7 @@ fun Float.limitBetween(min: Float, max: Float): Float {
         return max
     return this
 }
+
+fun Float.cutOffMin(min: Float): Float {
+    return if (this < min) min else this
+}

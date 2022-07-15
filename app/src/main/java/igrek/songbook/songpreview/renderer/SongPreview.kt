@@ -133,7 +133,7 @@ class SongPreview(
         get() = scrollThicknessCache.get()
 
     val eyeFocusLines: Float
-        get() = autoscroll.eyeFocusLines
+        get() = autoscroll.eyeFocus
 
     override fun reset() {
         super.reset()
@@ -429,7 +429,11 @@ class SongPreview(
                 }
             }
 
-            else -> scroll += py
+            else -> {
+                if (!autoscroll.isWaiting || py <= 0) {
+                    scroll += py
+                }
+            }
         }
 
         val scrollable = when {
