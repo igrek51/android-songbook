@@ -345,7 +345,10 @@ class AutoscrollService(
     }
 
     private fun showAutoscrollWaitingTime(s: Float) {
-        val ms = (s * 1000).toLong()
+        val ms = when {
+            s < 0 -> 0L
+            else -> (s * 1000).toLong()
+        }
         val seconds = ((ms + 500) / 1000).toString()
         uiInfoService.showInfoAction(
             R.string.autoscroll_starts_in,
