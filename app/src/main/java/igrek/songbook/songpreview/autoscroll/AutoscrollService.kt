@@ -9,6 +9,8 @@ import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import igrek.songbook.persistence.general.model.SongIdentifier
+import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.playlist.PlaylistLayoutController
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songpreview.SongPreviewLayoutController
@@ -26,16 +28,19 @@ class AutoscrollService(
     songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
     playlistLayoutController: LazyInject<PlaylistLayoutController> = appFactory.playlistLayoutController,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val songPreviewController by LazyExtractor(songPreviewLayoutController)
     private val playlistLayoutController by LazyExtractor(playlistLayoutController)
     private val preferencesState by LazyExtractor(preferencesState)
+    private val songsRepository by LazyExtractor(songsRepository)
 
     var autoscrollSpeed: Float // [em / s]
         get() = preferencesState.autoscrollSpeed
         set(value) {
             preferencesState.autoscrollSpeed = value
+            persistIndividualSongSpeed()
         }
     var eyeFocus: Float = 0f
     private var autoSpeedAdjustment: Boolean
@@ -58,6 +63,7 @@ class AutoscrollService(
     private var nextSongAtTime: Long = 0 // [ms]
     private var scrolledBuffer = 0f
     private var startAutoscrollOnNextSong = false
+    private var currentSongIdentifier: SongIdentifier? = null
 
     val canvasScrollSubject = PublishSubject.create<Float>()
     private val aggregatedScrollSubject = PublishSubject.create<Float>()
@@ -165,7 +171,14 @@ class AutoscrollService(
         }
     }
 
-    fun onLoad() {
+    fun onLoad(songIdentifier: SongIdentifier) {
+        if (preferencesState.autoscrollIndividualSpeed) {
+            songsRepository.songTweakDao.getSongAutoscrollSpeed(songIdentifier)?.let { songSpeed ->
+                preferencesState.autoscrollSpeed = songSpeed
+            }
+        }
+        currentSongIdentifier = songIdentifier
+
         if (preferencesState.autoscrollAutostart) {
             autostart()
         } else if (startAutoscrollOnNextSong) {
@@ -442,8 +455,16 @@ class AutoscrollService(
     }
 
     private fun addAutoscrollSpeed(delta: Float) {
-        autoscrollSpeed += delta
-        autoscrollSpeed = autoscrollSpeed.limitBetween(MIN_SPEED, MAX_SPEED)
+        autoscrollSpeed = (autoscrollSpeed + delta).limitBetween(MIN_SPEED, MAX_SPEED)
         scrollSpeedAdjustmentSubject.onNext(autoscrollSpeed)
     }
+
+    private fun persistIndividualSongSpeed() {
+        if (preferencesState.autoscrollIndividualSpeed) {
+            currentSongIdentifier?.let { currentSongIdentifier ->
+                songsRepository.songTweakDao.setSongAutoscrollSpeed(currentSongIdentifier, autoscrollSpeed)
+            }
+        }
+    }
+
 }

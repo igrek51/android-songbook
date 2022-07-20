@@ -190,6 +190,13 @@ class SettingsFragment(
                 }
         )
 
+        setupSwitchPreference("autoscrollIndividualSpeed",
+                onLoad = { preferencesState.autoscrollIndividualSpeed },
+                onSave = { value: Boolean ->
+                    preferencesState.autoscrollIndividualSpeed = value
+                }
+        )
+
         setupSwitchPreference("autoscrollSpeedVolumeKeys",
                 onLoad = { preferencesState.autoscrollSpeedVolumeKeys },
                 onSave = { value: Boolean ->

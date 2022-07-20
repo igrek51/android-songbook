@@ -44,6 +44,7 @@ class PreferencesState(
     var autoscrollAutostart: Boolean by PreferenceDelegate(PreferencesField.AutoscrollAutostart)
     var autoscrollForwardNextSong: Boolean by PreferenceDelegate(PreferencesField.AutoscrollForwardNextSong)
     var autoscrollShowEyeFocus: Boolean by PreferenceDelegate(PreferencesField.AutoscrollShowEyeFocus)
+    var autoscrollIndividualSpeed: Boolean by PreferenceDelegate(PreferencesField.AutoscrollIndividualSpeed)
     var horizontalScroll: Boolean by PreferenceDelegate(PreferencesField.HorizontalScroll)
     var mediaButtonBehaviour: MediaButtonBehaviours by PreferenceDelegate(PreferencesField.MediaButtonBehaviour)
     var purchasedAdFree: Boolean by PreferenceDelegate(PreferencesField.PurchasedAdFree)

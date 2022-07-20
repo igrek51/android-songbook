@@ -481,4 +481,6 @@
     <string name="file_select_operation_canceled">Import pliku anulowany</string>
     <string name="settings_autoscroll_show_eye_focus_zone">Postęp strefy skupienia wzroku</string>
     <string name="settings_autoscroll_show_eye_focus_zone_hint">Wyświetlaj postęp i stan autoprzewijania, pokazując strefę skupienia wzroku.</string>
+    <string name="settings_autoscroll_restore_speed">Indywidualna szybkość autoprzewijania</string>
+    <string name="settings_autoscroll_restore_speed_hint">Zapamiętuj i przywracaj szybkość autoprzewijania dla każdej piosenki</string>
 </resources>

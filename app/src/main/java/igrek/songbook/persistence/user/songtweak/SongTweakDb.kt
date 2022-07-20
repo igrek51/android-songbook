@@ -11,6 +11,5 @@ data class SongTweakDb(
 data class TweakedSong(
     val songId: Long,
     val namespaceId: Long,
-
     var autoscrollSpeed: Float?,
 )

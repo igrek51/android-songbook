@@ -83,6 +83,11 @@
             android:summary="@string/settings_autoscroll_speed_adjustment_hint"
             app:iconSpaceReserved="false" />
         <SwitchPreference
+            android:key="autoscrollIndividualSpeed"
+            android:title="@string/settings_autoscroll_restore_speed"
+            android:summary="@string/settings_autoscroll_restore_speed_hint"
+            app:iconSpaceReserved="false"/>
+        <SwitchPreference
             android:key="autoscrollAutostart"
             android:title="@string/settings_autoscroll_autostart"
             android:summary="@string/settings_autoscroll_autostart_hint"

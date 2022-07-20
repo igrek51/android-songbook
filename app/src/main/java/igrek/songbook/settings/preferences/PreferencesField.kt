@@ -100,6 +100,8 @@ enum class PreferencesField constructor(
 
     AutoscrollShowEyeFocus(true),
 
+    AutoscrollIndividualSpeed(true),
+
     HorizontalScroll(false),
 
     MediaButtonBehaviour(
