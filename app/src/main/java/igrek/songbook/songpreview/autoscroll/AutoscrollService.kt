@@ -32,11 +32,6 @@ class AutoscrollService(
     private val playlistLayoutController by LazyExtractor(playlistLayoutController)
     private val preferencesState by LazyExtractor(preferencesState)
 
-    var initialPause: Long // [ms]
-        get() = preferencesState.autoscrollInitialPause
-        set(value) {
-            preferencesState.autoscrollInitialPause = value
-        }
     var autoscrollSpeed: Float // [em / s]
         get() = preferencesState.autoscrollSpeed
         set(value) {

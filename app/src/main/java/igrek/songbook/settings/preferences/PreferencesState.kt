@@ -24,7 +24,6 @@ class PreferencesState(
     var chordsNotation: ChordsNotation by PreferenceDelegate(PreferencesField.ChordsNotationId)
     var fontTypeface: FontTypeface by PreferenceDelegate(PreferencesField.FontTypefaceId)
     var colorScheme: ColorScheme by PreferenceDelegate(PreferencesField.ColorSchemeId)
-    var autoscrollInitialPause: Long by PreferenceDelegate(PreferencesField.AutoscrollInitialPause)
     var autoscrollSpeed: Float by PreferenceDelegate(PreferencesField.AutoscrollSpeed)
     var autoscrollSpeedAutoAdjustment: Boolean by PreferenceDelegate(PreferencesField.AutoscrollSpeedAutoAdjustment)
     var autoscrollSpeedVolumeKeys: Boolean by PreferenceDelegate(PreferencesField.AutoscrollSpeedVolumeKeys)

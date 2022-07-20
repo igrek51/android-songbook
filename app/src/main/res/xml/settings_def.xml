@@ -68,11 +68,6 @@
 
     <PreferenceCategory android:title="@string/settings_autoscroll_section">
         <SeekBarPreference
-            android:key="autoscrollInitialPause"
-            android:title="@string/settings_autoscroll_initial_delay"
-            app:showSeekBarValue="false"
-            app:iconSpaceReserved="false"/>
-        <SeekBarPreference
             android:key="autoscrollSpeed"
             android:title="@string/settings_autoscroll_speed"
             app:showSeekBarValue="false"

@@ -54,7 +54,6 @@ class ShowcaseVideoMaker {
         preferencesState.fontTypeface = FontTypeface.default
         preferencesState.chordsDisplayStyle = DisplayStyle.ChordsInline
         preferencesState.restoreTransposition = false
-        preferencesState.autoscrollInitialPause = 3000L
         preferencesState.autoscrollSpeed = 0.234f
         preferencesState.chordsInstrument = ChordsInstrument.GUITAR
 

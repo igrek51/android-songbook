@@ -15,7 +15,6 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.slider.SliderController
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.util.limitBetween
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import java.math.RoundingMode
@@ -42,7 +41,6 @@ class QuickMenuAutoscroll(
         }
     private var quickMenuView: View? = null
     private var autoscrollToggleButton: Button? = null
-    private var autoscrollPauseSlider: SliderController? = null
     private var autoscrollSpeedSlider: SliderController? = null
 
     private val subscriptions = mutableListOf<Disposable>()
@@ -79,20 +77,6 @@ class QuickMenuAutoscroll(
             autoscrollService.onAutoscrollToggleUIEvent()
         }
 
-        // initial pause
-        val initialPauseLabel = quickMenuView.findViewById<TextView>(R.id.initialPauseLabel)
-        val initialPauseSeekbar = quickMenuView.findViewById<SeekBar>(R.id.initialPauseSeekbar)
-        val autoscrollInitialPause = autoscrollService.initialPause.toFloat()
-        autoscrollPauseSlider = object : SliderController(initialPauseSeekbar, initialPauseLabel, autoscrollInitialPause, 0f, 90000f) {
-            override fun generateLabelText(value: Float): String {
-                return uiResourceService.resString(R.string.settings_scroll_initial_pause, roundDecimal(value / 1000, "##0"))
-            }
-        }
-        val initialPauseMinusButton = quickMenuView.findViewById<ImageButton>(R.id.initialPauseMinusButton)
-        initialPauseMinusButton.setOnClickListener { addInitialPause(-1000f) }
-        val initialPausePlusButton = quickMenuView.findViewById<ImageButton>(R.id.initialPausePlusButton)
-        initialPausePlusButton.setOnClickListener { addInitialPause(1000f) }
-
         // autoscroll speed
         val speedLabel = quickMenuView.findViewById<TextView>(R.id.speedLabel)
         val speedSeekbar = quickMenuView.findViewById<SeekBar>(R.id.speedSeekbar)
@@ -111,24 +95,12 @@ class QuickMenuAutoscroll(
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
         subscriptions.add(
-                Observable.merge(
-                        autoscrollPauseSlider!!.valueSubject,
-                        autoscrollSpeedSlider!!.valueSubject)
-                        .debounce(200, TimeUnit.MILLISECONDS)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({
-                            saveSettings()
-                        }, UiErrorHandler::handleError))
-    }
-
-    private fun addInitialPause(diff: Float) {
-        autoscrollPauseSlider?.let { autoscrollPauseSlider ->
-            var autoscrollInitialPause = autoscrollPauseSlider.value
-            autoscrollInitialPause += diff
-            autoscrollInitialPause = autoscrollInitialPause.limitBetween(0f, 90000f)
-            autoscrollPauseSlider.value = autoscrollInitialPause
-            autoscrollService.initialPause = autoscrollInitialPause.toLong()
-        }
+            autoscrollSpeedSlider!!.valueSubject
+                .debounce(200, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    saveSettings()
+                }, UiErrorHandler::handleError))
     }
 
     private fun addAutoscrollSpeed(diff: Float) {
@@ -141,10 +113,6 @@ class QuickMenuAutoscroll(
     }
 
     private fun saveSettings() {
-        autoscrollPauseSlider?.let { autoscrollPauseSlider ->
-            val autoscrollInitialPause = autoscrollPauseSlider.value
-            autoscrollService.initialPause = autoscrollInitialPause.toLong()
-        }
         autoscrollSpeedSlider?.let { autoscrollSpeedSlider ->
             val autoscrollSpeed = autoscrollSpeedSlider.value
             autoscrollService.autoscrollSpeed = autoscrollSpeed
@@ -160,8 +128,6 @@ class QuickMenuAutoscroll(
                 autoscrollToggleButton?.text = uiResourceService.resString(R.string.start_autoscroll)
             }
             // set sliders value
-            val autoscrollInitialPause = autoscrollService.initialPause.toFloat()
-            autoscrollPauseSlider?.value = autoscrollInitialPause
             val autoscrollSpeed = autoscrollService.autoscrollSpeed
             autoscrollSpeedSlider?.value = autoscrollSpeed
         }

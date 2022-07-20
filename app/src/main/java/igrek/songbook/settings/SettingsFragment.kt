@@ -156,16 +156,6 @@ class SettingsFragment(
                 }
         )
 
-        setupSeekBarPreference("autoscrollInitialPause", min = 0, max = 90000,
-                onLoad = { preferencesState.autoscrollInitialPause.toFloat() },
-                onSave = { value: Float ->
-                    preferencesState.autoscrollInitialPause = value.toLong()
-                },
-                stringConverter = { value: Float ->
-                    uiResourceService.resString(R.string.settings_scroll_initial_pause_value, msToS(value).toString())
-                }
-        )
-
         setupSeekBarPreference("autoscrollSpeed", min = AutoscrollService.MIN_SPEED, max = AutoscrollService.MAX_SPEED,
                 onLoad = { preferencesState.autoscrollSpeed },
                 onSave = { value: Float ->

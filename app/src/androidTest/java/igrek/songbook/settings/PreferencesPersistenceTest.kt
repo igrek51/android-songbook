@@ -45,29 +45,29 @@ class PreferencesPersistenceTest {
 
         var pause: Long
 
-        pause = preferencesService.getValue(PreferencesField.AutoscrollInitialPause)
-        assertEquals(pause, 36000L)
-        assertEquals(preferencesState.autoscrollInitialPause, 36000L)
+        pause = preferencesService.getValue(PreferencesField.AutoscrollSpeed)
+        assertEquals(pause, 0.200f)
+        assertEquals(preferencesState.autoscrollSpeed, 0.200f)
         // check modified
-        preferencesState.autoscrollInitialPause = 23
-        pause = preferencesService.getValue(PreferencesField.AutoscrollInitialPause)
-        assertEquals(pause, 23L)
-        assertEquals(preferencesState.autoscrollInitialPause, 23L)
+        preferencesState.autoscrollSpeed = 23f
+        pause = preferencesService.getValue(PreferencesField.AutoscrollSpeed)
+        assertEquals(pause, 23f)
+        assertEquals(preferencesState.autoscrollSpeed, 23f)
 
         preferencesService.saveAll()
         preferencesService.loadAll()
         // check if persisted after save & reload
-        pause = preferencesService.getValue(PreferencesField.AutoscrollInitialPause)
-        assertEquals(pause, 23L)
-        assertEquals(preferencesState.autoscrollInitialPause, 23L)
+        pause = preferencesService.getValue(PreferencesField.AutoscrollSpeed)
+        assertEquals(pause, 23f)
+        assertEquals(preferencesState.autoscrollSpeed, 23f)
 
-        preferencesState.autoscrollInitialPause = 51
-        assertEquals(preferencesState.autoscrollInitialPause, 51L)
+        preferencesState.autoscrollSpeed = 51f
+        assertEquals(preferencesState.autoscrollSpeed, 51f)
         // lose changes by reloading without saving
         preferencesService.loadAll()
-        assertEquals(preferencesState.autoscrollInitialPause, 23L)
-        pause = preferencesService.getValue(PreferencesField.AutoscrollInitialPause)
-        assertEquals(pause, 23L)
+        assertEquals(preferencesState.autoscrollSpeed, 23f)
+        pause = preferencesService.getValue(PreferencesField.AutoscrollSpeed)
+        assertEquals(pause, 23f)
     }
 
     @Test
@@ -76,13 +76,13 @@ class PreferencesPersistenceTest {
         preferencesService.clear()
 
         try {
-            var pause: Boolean = preferencesService.getValue(PreferencesField.AutoscrollInitialPause)
+            var pause: Boolean = preferencesService.getValue(PreferencesField.AutoscrollSpeed)
             check(false) { "should throw type error" }
         } catch (e: RuntimeException) {
         }
 
         try {
-            preferencesService.setValue(PreferencesField.AutoscrollInitialPause, true)
+            preferencesService.setValue(PreferencesField.AutoscrollSpeed, true)
             check(false) { "should throw type error" }
         } catch (e: RuntimeException) {
         }
