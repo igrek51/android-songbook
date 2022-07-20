@@ -479,4 +479,6 @@
     <string name="billing_donate_1_amount">Podarowane piwa: %s</string>
     <string name="billing_item_price">Cena: %s</string>
     <string name="file_select_operation_canceled">Import pliku anulowany</string>
+    <string name="settings_autoscroll_show_eye_focus_zone">Postęp autoprzewijania</string>
+    <string name="settings_autoscroll_show_eye_focus_zone_hint">Wyświetlaj pasek postępu autoprzewijania, pokazując strefę skupienia wzroku.</string>
 </resources>

@@ -43,6 +43,7 @@ class PreferencesState(
     var trimWhitespaces: Boolean by PreferenceDelegate(PreferencesField.TrimWhitespaces)
     var autoscrollAutostart: Boolean by PreferenceDelegate(PreferencesField.AutoscrollAutostart)
     var autoscrollForwardNextSong: Boolean by PreferenceDelegate(PreferencesField.AutoscrollForwardNextSong)
+    var autoscrollShowEyeFocus: Boolean by PreferenceDelegate(PreferencesField.AutoscrollShowEyeFocus)
     var horizontalScroll: Boolean by PreferenceDelegate(PreferencesField.HorizontalScroll)
     var mediaButtonBehaviour: MediaButtonBehaviours by PreferenceDelegate(PreferencesField.MediaButtonBehaviour)
     var purchasedAdFree: Boolean by PreferenceDelegate(PreferencesField.PurchasedAdFree)

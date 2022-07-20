@@ -183,6 +183,13 @@ class SettingsFragment(
                 }
         )
 
+        setupSwitchPreference("autoscrollShowEyeFocus",
+                onLoad = { preferencesState.autoscrollShowEyeFocus },
+                onSave = { value: Boolean ->
+                    preferencesState.autoscrollShowEyeFocus = value
+                }
+        )
+
         setupSwitchPreference("autoscrollSpeedVolumeKeys",
                 onLoad = { preferencesState.autoscrollSpeedVolumeKeys },
                 onSave = { value: Boolean ->

@@ -98,6 +98,8 @@ enum class PreferencesField constructor(
 
     AutoscrollForwardNextSong(false),
 
+    AutoscrollShowEyeFocus(true),
+
     HorizontalScroll(false),
 
     MediaButtonBehaviour(

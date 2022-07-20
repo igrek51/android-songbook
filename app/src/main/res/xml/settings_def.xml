@@ -73,6 +73,11 @@
             app:showSeekBarValue="false"
             app:iconSpaceReserved="false" />
         <SwitchPreference
+            android:key="autoscrollShowEyeFocus"
+            android:title="@string/settings_autoscroll_show_eye_focus_zone"
+            android:summary="@string/settings_autoscroll_show_eye_focus_zone_hint"
+            app:iconSpaceReserved="false" />
+        <SwitchPreference
             android:key="autoscrollSpeedAutoAdjustment"
             android:title="@string/settings_autoscroll_speed_adjustment"
             android:summary="@string/settings_autoscroll_speed_adjustment_hint"

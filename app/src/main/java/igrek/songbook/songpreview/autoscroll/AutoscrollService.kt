@@ -48,6 +48,8 @@ class AutoscrollService(
         set(value) {
             preferencesState.autoscrollSpeedVolumeKeys = value
         }
+    val isEyeFocusZoneOn: Boolean
+        get() = preferencesState.autoscrollShowEyeFocus
 
     private val logger = LoggerFactory.logger
     private var state: AutoscrollState = AutoscrollState.OFF
@@ -311,7 +313,7 @@ class AutoscrollService(
                     if (scroll <= 0) { // scrolling up to the beginning
                         // set counting down state with additional time
                         state = AutoscrollState.WAITING
-                        eyeFocus += dScroll
+                        eyeFocus += dScroll * WAITING_TIME_ADJUST_MODIFIER
                         previousStepTime = System.currentTimeMillis()
                         showAutoscrollWaitingTime(remainingWaitingTimeS())
                         return

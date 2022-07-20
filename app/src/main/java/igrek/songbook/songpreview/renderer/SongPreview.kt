@@ -157,7 +157,9 @@ class SongPreview(
 
         if (this.lyricsRenderer != null) {
             lyricsRenderer?.drawScrollBars()
-            lyricsRenderer?.drawEyeFocusZone(lineheightPx)
+            if (autoscroll.isEyeFocusZoneOn) {
+                lyricsRenderer?.drawEyeFocusZone(lineheightPx)
+            }
             lyricsRenderer?.drawFileContent(fontsizePx, lineheightPx)
         }
 

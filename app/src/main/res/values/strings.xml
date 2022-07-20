@@ -470,7 +470,7 @@
     <string name="settings_trim_whitespaces">Trim whitespaces</string>
     <string name="settings_trim_whitespaces_hint">Remove whitespaces at the beginning and at the end of lines</string>
     <string name="settings_autoscroll_autostart">Start autoscroll automatically</string>
-    <string name="settings_autoscroll_autostart_hint">Start autoscrolling when opening a song</string>
+    <string name="settings_autoscroll_autostart_hint">Start autoscrolling as soon as a song is opened</string>
     <string name="action_share_song">🔗 Share</string>
     <string name="copy_to_clipboard">Copy to clipboard</string>
     <string name="settings_horizontalScroll">Horizontal scroll</string>
@@ -505,4 +505,6 @@
     <string name="billing_donate_1_amount">Donated beers: %s</string>
     <string name="billing_item_price">Price: %s</string>
     <string name="file_select_operation_canceled">File import canceled</string>
+    <string name="settings_autoscroll_show_eye_focus_zone">Eye-focus progress</string>
+    <string name="settings_autoscroll_show_eye_focus_zone_hint">Display the progress and state of autoscroll by indicating the eye-focus zone.</string>
 </resources>
