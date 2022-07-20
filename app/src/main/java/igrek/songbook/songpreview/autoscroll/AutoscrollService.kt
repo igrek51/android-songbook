@@ -81,7 +81,7 @@ class AutoscrollService(
         const val AUTOSCROLL_INTERVAL_TIME = 60L // [ms]
         const val VOLUME_BTNS_SPEED_STEP = 0.020f // [line / s]
         const val MIN_NEXT_SONG_TIME: Long = 3000 // [ms]
-        const val WAITING_TIME_ADJUST_MODIFIER = 0.5f // fraction of scrolled pixels
+        const val WAITING_TIME_ADJUST_MODIFIER = 0.4f // fraction of scrolled pixels
     }
 
     val isRunning: Boolean
