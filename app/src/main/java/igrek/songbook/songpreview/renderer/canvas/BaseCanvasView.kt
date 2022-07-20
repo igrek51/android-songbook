@@ -1,12 +1,13 @@
 package igrek.songbook.songpreview.renderer.canvas
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Rect
-import android.graphics.Typeface
+import android.graphics.*
+import android.graphics.LinearGradient
+import android.graphics.Shader.TileMode
+import android.os.Build
 import android.view.View
-import androidx.core.graphics.toColorInt
+import androidx.annotation.RequiresApi
+
 
 abstract class BaseCanvasView(context: Context) : View(context) {
 
@@ -140,6 +141,14 @@ abstract class BaseCanvasView(context: Context) : View(context) {
     fun fillRect(left: Float, top: Float, right: Float, bottom: Float) {
         paint?.style = Paint.Style.FILL
         canvas?.drawRect(left, top, right, bottom, paint!!)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    fun fillRectGradientH(left: Float, top: Float, right: Float, bottom: Float, color1: Int, color2: Int) {
+        val shader: Shader = LinearGradient(left, top, right, top, color1, color2, TileMode.CLAMP)
+        val paint = Paint()
+        paint.shader = shader
+        canvas?.drawRect(RectF(left, top, right, bottom), paint)
     }
 
     companion object {

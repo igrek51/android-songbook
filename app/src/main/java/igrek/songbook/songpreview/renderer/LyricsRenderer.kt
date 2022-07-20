@@ -1,6 +1,7 @@
 package igrek.songbook.songpreview.renderer
 
 import android.graphics.Typeface
+import android.os.Build
 import igrek.songbook.chords.lyrics.model.LyricsLine
 import igrek.songbook.chords.lyrics.model.LyricsModel
 import igrek.songbook.chords.lyrics.model.LyricsTextType
@@ -29,7 +30,8 @@ class LyricsRenderer internal constructor(
     private var commentColor: Int
     private var linewrapperColor: Int
     private var scrollColor: Int
-    private var eyeFocusZoneColor: Long
+    private var eyeFocusZoneColor: Int
+    private var eyeFocusZoneColorTransparent: Int
 
     init {
         val typefaceFamily = fontTypeface.typeface
@@ -58,8 +60,12 @@ class LyricsRenderer internal constructor(
             ColorScheme.BRIGHT -> 0xAAAAAA
         }
         eyeFocusZoneColor = when (colorScheme) {
-            ColorScheme.DARK -> 0xb03A82C5
-            ColorScheme.BRIGHT -> 0xc03A82C5
+            ColorScheme.DARK -> 0xd03A82C5.toInt()
+            ColorScheme.BRIGHT -> 0xd03A82C5.toInt()
+        }
+        eyeFocusZoneColorTransparent = when (colorScheme) {
+            ColorScheme.DARK -> 0x003A82C5
+            ColorScheme.BRIGHT -> 0x003A82C5
         }
     }
 
@@ -167,10 +173,15 @@ class LyricsRenderer internal constructor(
 
         val eyeFocusTop = (eyeFocusLines - 1f) * lineheight - canvas.scroll
         val eyeFocusBottom = eyeFocusTop + 2f * lineheight
-        val thickness = canvas.scrollThickness * 2f
 
-        canvas.setColor(eyeFocusZoneColor)
-        canvas.fillRect(w - thickness, eyeFocusTop, w, eyeFocusBottom)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val thickness = canvas.scrollThickness * 4f
+            canvas.fillRectGradientH(w - thickness, eyeFocusTop, w, eyeFocusBottom, eyeFocusZoneColorTransparent, eyeFocusZoneColor)
+        } else {
+            val thickness = canvas.scrollThickness * 2f
+            canvas.setColor(eyeFocusZoneColor)
+            canvas.fillRect(w - thickness, eyeFocusTop, w, eyeFocusBottom)
+        }
     }
 
 }
