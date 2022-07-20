@@ -92,6 +92,7 @@ class CustomSongsDao(
         songsRepository.playlistDao.removeUsage(newSong.id, true)
         songsRepository.openHistoryDao.removeUsage(newSong.id, true)
         songsRepository.transposeDao.removeUsage(newSong.id, true)
+        songsRepository.songTweakDao.removeUsage(SongIdentifier(newSong.id, SongNamespace.Custom))
 
         songsRepository.saveAndReloadUserData()
     }

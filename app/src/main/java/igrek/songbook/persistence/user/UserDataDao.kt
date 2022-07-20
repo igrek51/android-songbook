@@ -13,6 +13,7 @@ import igrek.songbook.persistence.user.favourite.FavouriteSongsDao
 import igrek.songbook.persistence.user.history.OpenHistoryDao
 import igrek.songbook.persistence.user.playlist.PlaylistDao
 import igrek.songbook.persistence.user.preferences.PreferencesDao
+import igrek.songbook.persistence.user.songtweak.SongTweakDao
 import igrek.songbook.persistence.user.transpose.TransposeDao
 import igrek.songbook.persistence.user.unlocked.UnlockedSongsDao
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -34,6 +35,7 @@ class UserDataDao(
     var exclusionDao: ExclusionDao by LazyDaoLoader { path -> ExclusionDao(path) }
     var transposeDao: TransposeDao by LazyDaoLoader { path -> TransposeDao(path) }
     var preferencesDao: PreferencesDao by LazyDaoLoader { path -> PreferencesDao(path) }
+    var songTweakDao: SongTweakDao by LazyDaoLoader { path -> SongTweakDao(path) }
 
     private var saveRequestSubject: PublishSubject<Boolean> = PublishSubject.create()
     private val logger = LoggerFactory.logger
@@ -59,6 +61,7 @@ class UserDataDao(
         exclusionDao = ExclusionDao(path)
         transposeDao = TransposeDao(path)
         preferencesDao = PreferencesDao(path)
+        songTweakDao = SongTweakDao(path)
 
         logger.debug("user data reloaded")
     }
@@ -73,6 +76,7 @@ class UserDataDao(
         exclusionDao.save()
         transposeDao.save()
         preferencesDao.save()
+        songTweakDao.save()
         logger.info("user data saved")
     }
 
@@ -85,6 +89,7 @@ class UserDataDao(
         exclusionDao.factoryReset()
         transposeDao.factoryReset()
         preferencesDao.factoryReset()
+        songTweakDao.factoryReset()
     }
 
     fun requestSave(toSave: Boolean) {
