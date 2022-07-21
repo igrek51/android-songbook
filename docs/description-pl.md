@@ -1,4 +1,4 @@
-Śpiewnik z tekstami piosenek i narzędziami do akordów dla muzyków, gitarzystów i pianistów
+Śpiewnik z tekstami piosenek i narzędziami dla muzyków, gitarzystów i pianistów
 
 Songbook to śpiewnik z tekstami piosenek i narzędziami do akordów dla muzyków, gitarzystów i pianistów.
 
@@ -33,6 +33,6 @@ Główne funkcje:
 - Przewijanie strzałkami na klawiaturze zewnętrznej
 - Wybór następnej lub poprzedniej piosenki strzałkami klawiatury (Lewo / Prawo)
 
-Songbook jest narzędziem głównie skupionym na gitarzystach, pianistach i innych muzykach, ale również świetnie nadaje się do wyświetlania tekstów piosenek na urządzeniach mobilnych.
+Songbook jest narzędziem skupionym na gitarzystach, pianistach i innych muzykach, ale również świetnie nadaje się do wyświetlania tekstów piosenek na urządzeniach mobilnych.
 Śpiewnik gitarowy posiada wiele piosenek z akordami, a w tym piosenki polskich artystów, piosenki ogniskowe, harcerskie, żołnierskie, polskie kolędy, szanty oraz wiele innych.
 Baza aplikacji może być łatwo powiększana o własne piosenki użytkowników.

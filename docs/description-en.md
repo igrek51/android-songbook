@@ -33,5 +33,5 @@ Our chief weapons are:
 - Scrolling with keyboard arrow keys (Up/Down)
 - Jumping to next/previous song in playlist with keyboard arrow keys (Left/Right)
 
-Songbook is a tool mainly focused on guitarists, pianists and other musicians, but it also can be used just to view the songs lyrics on mobile devices.
+Songbook is a tool focused on guitarists, pianists and other musicians, but it also can be used just to view the songs lyrics on mobile devices.
 It has many songs with chords on board and its database can be easily extended with your own songs.
