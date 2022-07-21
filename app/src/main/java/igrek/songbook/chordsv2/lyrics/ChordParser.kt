@@ -44,7 +44,6 @@ class ChordParser(
                 suffix="",
                 originalNoteIndex=noteIndex,
                 originalText=chord,
-                originalNotation=notation,
             )
         }
         baseChordToNoteIndex[chord]?.let { noteIndex: Int ->
@@ -55,7 +54,6 @@ class ChordParser(
                 suffix="",
                 originalNoteIndex=noteIndex,
                 originalText=chord,
-                originalNotation=notation,
             )
         }
 
@@ -71,7 +69,6 @@ class ChordParser(
                         suffix=suffix,
                         originalNoteIndex=noteIndex,
                         originalText=chord,
-                        originalNotation=notation,
                     )
             }
         }
@@ -86,7 +83,6 @@ class ChordParser(
                         suffix=suffix,
                         originalNoteIndex=noteIndex,
                         originalText=chord,
-                        originalNotation=notation,
                     )
             }
         }
