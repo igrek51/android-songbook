@@ -13,6 +13,7 @@ import igrek.songbook.activity.ActivityController
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.billing.BillingLayoutController
 import igrek.songbook.chords.diagram.ChordsDiagramsService
+import igrek.songbook.custom.CustomSongService
 import igrek.songbook.custom.CustomSongsListLayoutController
 import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.info.logger.LoggerFactory
@@ -41,17 +42,18 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 class NavigationMenuController(
-        activity: LazyInject<Activity> = appFactory.activity,
-        activityController: LazyInject<ActivityController> = appFactory.activityController,
-        helpLayoutController: LazyInject<HelpLayoutController> = appFactory.helpLayoutController,
-        aboutLayoutController: LazyInject<AboutLayoutController> = appFactory.aboutLayoutController,
-        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
-        songsUpdater: LazyInject<SongsUpdater> = appFactory.songsUpdater,
-        softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
-        randomSongOpener: LazyInject<RandomSongOpener> = appFactory.randomSongOpener,
-        sendMessageService: LazyInject<SendMessageService> = appFactory.sendMessageService,
-        songOpener: LazyInject<SongOpener> = appFactory.songOpener,
-        chordsDiagramsService: LazyInject<ChordsDiagramsService> = appFactory.chordsDiagramsService,
+    activity: LazyInject<Activity> = appFactory.activity,
+    activityController: LazyInject<ActivityController> = appFactory.activityController,
+    helpLayoutController: LazyInject<HelpLayoutController> = appFactory.helpLayoutController,
+    aboutLayoutController: LazyInject<AboutLayoutController> = appFactory.aboutLayoutController,
+    layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+    songsUpdater: LazyInject<SongsUpdater> = appFactory.songsUpdater,
+    softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
+    randomSongOpener: LazyInject<RandomSongOpener> = appFactory.randomSongOpener,
+    sendMessageService: LazyInject<SendMessageService> = appFactory.sendMessageService,
+    songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+    chordsDiagramsService: LazyInject<ChordsDiagramsService> = appFactory.chordsDiagramsService,
+    customSongService: LazyInject<CustomSongService> = appFactory.customSongService,
 ) {
     private val activity by LazyExtractor(activity)
     private val activityController by LazyExtractor(activityController)
@@ -64,6 +66,7 @@ class NavigationMenuController(
     private val sendMessageService by LazyExtractor(sendMessageService)
     private val songOpener by LazyExtractor(songOpener)
     private val chordsDiagramsService by LazyExtractor(chordsDiagramsService)
+    private val customSongService by LazyExtractor(customSongService)
 
     private var drawerLayout: DrawerLayout? = null
     private var navigationView: NavigationView? = null
@@ -81,6 +84,7 @@ class NavigationMenuController(
         actionsMap[R.id.nav_playlists] = { layoutController.showLayout(PlaylistLayoutController::class) }
         actionsMap[R.id.nav_update_db] = { songsUpdater.updateSongsDb(forced = true) }
         actionsMap[R.id.nav_custom_songs] = { layoutController.showLayout(CustomSongsListLayoutController::class) }
+        actionsMap[R.id.nav_add_custom_song] = { customSongService.showAddSongScreen() }
         actionsMap[R.id.nav_random_song] = { randomSongOpener.openRandomSong() }
         actionsMap[R.id.nav_settings] = { layoutController.showLayout(SettingsLayoutController::class) }
         actionsMap[R.id.nav_help] = { helpLayoutController.showUIHelp() }

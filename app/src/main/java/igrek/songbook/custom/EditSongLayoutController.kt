@@ -29,17 +29,17 @@ import io.reactivex.disposables.Disposable
 
 
 class EditSongLayoutController(
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        customSongService: LazyInject<CustomSongService> = appFactory.customSongService,
-        softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
-        songImportFileChooser: LazyInject<SongImportFileChooser> = appFactory.songImportFileChooser,
-        exportFileChooser: LazyInject<ExportFileChooser> = appFactory.songExportFileChooser,
-        chordsEditorLayoutController: LazyInject<ChordsEditorLayoutController> = appFactory.chordsEditorLayoutController,
-        chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
-        contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
-        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-        adminService: LazyInject<AdminService> = appFactory.adminService,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    customSongService: LazyInject<CustomSongService> = appFactory.customSongService,
+    softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
+    songImportFileChooser: LazyInject<SongImportFileChooser> = appFactory.songImportFileChooser,
+    exportFileChooser: LazyInject<ExportFileChooser> = appFactory.songExportFileChooser,
+    chordsEditorLayoutController: LazyInject<ChordsEditorLayoutController> = appFactory.chordsEditorLayoutController,
+    chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
+    contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    adminService: LazyInject<AdminService> = appFactory.adminService,
 ) : InflatedLayout(
         _layoutResourceId = R.layout.screen_custom_song_details
 ) {
@@ -134,21 +134,21 @@ class EditSongLayoutController(
 
     private fun showMoreActions() {
         val actions = mutableListOf(
-                ContextMenuBuilder.Action(R.string.edit_song_open_in_editor) {
-                    openInChordsEditor()
-                },
-                ContextMenuBuilder.Action(R.string.edit_song_save) {
-                    saveSong()
-                },
-                ContextMenuBuilder.Action(R.string.import_content_from_file) {
-                    importContentFromFile()
-                },
-                ContextMenuBuilder.Action(R.string.export_content_to_file) {
-                    exportContentToFile()
-                },
-                ContextMenuBuilder.Action(R.string.edit_song_remove) {
-                    removeSong()
-                },
+            ContextMenuBuilder.Action(R.string.edit_song_open_in_editor) {
+                openInChordsEditor()
+            },
+            ContextMenuBuilder.Action(R.string.edit_song_save) {
+                saveSong()
+            },
+            ContextMenuBuilder.Action(R.string.import_content_from_file) {
+                importContentFromFile()
+            },
+            ContextMenuBuilder.Action(R.string.export_content_to_file) {
+                exportContentToFile()
+            },
+            ContextMenuBuilder.Action(R.string.edit_song_remove) {
+                removeSong()
+            },
         )
         if (adminService.isAdminEnabled()) {
             actions += ContextMenuBuilder.Action(R.string.admin_create_category) {

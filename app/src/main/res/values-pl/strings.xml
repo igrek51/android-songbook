@@ -165,8 +165,8 @@
         \nOtwórz pomoc (?), aby uzyskać więcej szczegółów.
     </string>
     <string name="import_content_from_file">📂 Importuj z pliku / chmury</string>
-    <string name="edit_song_save">Zapisz piosenkę</string>
-    <string name="edit_song_remove">Usuń piosenkę</string>
+    <string name="edit_song_save">💾 Zapisz piosenkę</string>
+    <string name="edit_song_remove">❌ Usuń piosenkę</string>
     <string name="edit_song_has_been_saved">Zapisano piosenkę w \"Moje piosenki\".</string>
     <string name="edit_song_has_been_removed">Usunięto piosenkę.</string>
     <string name="settings_chords_notation">Notacja akordów</string>
@@ -232,7 +232,7 @@
     <string name="settings_general_section">Ogólne</string>
     <string name="db_update_failed_incompatible">Baza danych nie jest kompatybilna z Twoją wersją aplikacji. Proszę, zaktualizuj aplikację.</string>
     <string name="action_rate_app">⭐️ Oceń</string>
-    <string name="edit_song_open_in_editor">Otwórz w edytorze</string>
+    <string name="edit_song_open_in_editor">📑 Otwórz w edytorze</string>
     <string name="tooltip">Wskazówka</string>
     <string name="edit_song_copy">Kopiuj</string>
     <string name="edit_song_paste">Wklej</string>
@@ -368,7 +368,7 @@
     <string name="settings_keep_screen_on">Zawsze włączony ekran</string>
     <string name="settings_keep_screen_on_hint">Utrzymuj niegasnący wyświetlacz na podglądzie piosenki</string>
     <string name="select_file_to_export">Zapisz plik</string>
-    <string name="export_content_to_file">💾 Eksportuj do pliku / chmury</string>
+    <string name="export_content_to_file">📤 Eksportuj do pliku / chmury</string>
     <string name="song_content_exported">Zawartość piosenki została wyeksportowana.</string>
     <string name="multichoice_invert">Odwróć</string>
     <string name="song_languages">Języki piosenek</string>
@@ -486,4 +486,5 @@
     <string name="settings_autoscroll_restore_speed_hint">Zapamiętuj i przywracaj szybkość autoprzewijania dla każdej piosenki</string>
     <string name="settings_random_playlist_songs">Losowanie z playlisty</string>
     <string name="settings_random_playlist_songs_hint">Akcja \"Losowa piosenka\" losuje piosenkę z aktualnie otwartej playlisty.</string>
+    <string name="nav_add_custom_song">Nowa piosenka</string>
 </resources>

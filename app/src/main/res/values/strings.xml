@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">Songbook</string>
-    <string name="app_name_nav" translatable="false">S O N G B O O K</string>
+    <string name="app_name_nav" translatable="false">Songbook</string>
     <string name="adaptive_banner_ad_unit_id_test" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
     <string name="adaptive_banner_ad_unit_id_prod" translatable="false">ca-app-pub-8517210898119735/5760576809</string>
     <string name="nav_categories_list">Categories</string>
@@ -166,8 +166,8 @@
         \nCheck out help (?) for more details.
     </string>
     <string name="import_content_from_file">📂 Import from file / cloud</string>
-    <string name="edit_song_save">Save song</string>
-    <string name="edit_song_remove">Remove song</string>
+    <string name="edit_song_save">💾 Save song</string>
+    <string name="edit_song_remove">❌ Remove song</string>
     <string name="edit_song_has_been_saved">Song has been saved in \"My songs\".</string>
     <string name="edit_song_has_been_removed">Song has been removed.</string>
     <string name="settings_chords_notation">Chords notation</string>
@@ -235,7 +235,7 @@
     <string name="settings_general_section">General</string>
     <string name="db_update_failed_incompatible">Database is not compatible with your application version. Please udpate an application.</string>
     <string name="action_rate_app">⭐️ Rate App</string>
-    <string name="edit_song_open_in_editor">Open in Song Editor</string>
+    <string name="edit_song_open_in_editor">📑 Open in Song Editor</string>
     <string name="tooltip">Hint</string>
     <string name="edit_song_copy">Copy</string>
     <string name="edit_song_paste">Paste</string>
@@ -393,7 +393,7 @@
     <string name="settings_keep_screen_on">Screen always on</string>
     <string name="settings_keep_screen_on_hint">Keep display always on when a song is opened</string>
     <string name="select_file_to_export">Save file</string>
-    <string name="export_content_to_file">💾 Export to file / cloud</string>
+    <string name="export_content_to_file">📤 Export to file / cloud</string>
     <string name="song_content_exported">Song content has been exported</string>
     <string name="multichoice_invert">Invert</string>
     <string name="song_languages">Song languages</string>
@@ -404,7 +404,7 @@
     <string name="editor_reformat_error">Your song is not formatted properly. Use \"Reformat\" option.</string>
     <string name="chords_editor_remove_bracket_content">Remove everything inside brackets</string>
     <string name="chords_editor_detect_and_move_chords_to_words"><![CDATA[Detect chords & move from upper line to matching words]]></string>
-    <string name="admin_create_category" translatable="false">[admin] Create category</string>
+    <string name="admin_create_category" translatable="false">➕ [admin] Create category</string>
     <string name="chords_editor_align_misplaced_chords">Align misplaced chords</string>
     <string name="chord_diagram_style_horizontal">Horizontal</string>
     <string name="chord_diagram_style_vertical">Vertical</string>
@@ -513,4 +513,5 @@
     <string name="settings_autoscroll_restore_speed_hint">Remember and restore autoscroll speed for each song</string>
     <string name="settings_random_playlist_songs">Random playlist song</string>
     <string name="settings_random_playlist_songs_hint">\"Random song\" option shuffles a song from an opened playlist if there\'s a chosen one.</string>
+    <string name="nav_add_custom_song">New song</string>
 </resources>
