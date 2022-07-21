@@ -5,7 +5,7 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.layout.NextFocusTraverser
+import igrek.songbook.layout.GlobalFocusTraverser
 import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.settings.buttons.MediaButtonBehaviours
 import igrek.songbook.settings.preferences.PreferencesState
@@ -18,14 +18,14 @@ class SystemKeyDispatcher(
     songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
     playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
-    nextFocusTraverser: LazyInject<NextFocusTraverser> = appFactory.nextFocusTraverser,
+    globalFocusTraverser: LazyInject<GlobalFocusTraverser> = appFactory.globalFocusTraverser,
 ) {
     private val layoutController by LazyExtractor(layoutController)
     private val autoscrollService by LazyExtractor(autoscrollService)
     private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
     private val preferencesState by LazyExtractor(preferencesState)
     private val playlistService by LazyExtractor(playlistService)
-    private val nextFocusTraverser by LazyExtractor(nextFocusTraverser)
+    private val nextFocusTraverser by LazyExtractor(globalFocusTraverser)
 
     fun onKeyDown(keyCode: Int): Boolean {
         when (keyCode) {

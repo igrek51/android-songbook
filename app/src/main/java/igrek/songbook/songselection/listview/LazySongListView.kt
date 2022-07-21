@@ -58,34 +58,34 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
         itemsCanFocus = true
         isFocusable = true
         descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+        scrollState = OnScrollListener.SCROLL_STATE_IDLE
 
         val localFocus = LocalFocusTraverser(
-            currentViewGetter = {
-                val focusView: View? = this.selectedView
-                val focusedViewName = focusView?.javaClass?.simpleName
-                logger.debug("NextFocusSwitch: currentViewGetter: selected focus view id: ${focusView?.id} - $focusedViewName")
-                focusView
-            },
-            currentFocusGetter = {
-                appFactory.activity.get().currentFocus?.id
-            },
-            nextLeft = { currentViewId: Int, currentView: View ->
+            currentViewGetter = { this.selectedView },
+            currentFocusGetter = { appFactory.activity.get().currentFocus?.id },
+            nextLeft = { currentFocusId: Int, currentView: View ->
                 (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
                 this.requestFocusFromTouch()
-
-                R.id.listItemSongTreeSongLayout
-            },
-            nextRight = { currentViewId: Int, currentView: View ->
-                (currentView as? ViewGroup)?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
-
-                R.id.itemSongMoreButton
-            },
-            nextUp = { currentViewId: Int, currentView: View ->
-                (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
-                this.requestFocusFromTouch()
-
                 when {
-                    currentViewId == R.id.itemSongMoreButton -> -1
+                    currentFocusId == R.id.itemSongMoreButton -> -1
+                    currentFocusId == R.id.itemsList -> 0
+                    else -> 0
+                }
+            },
+            nextRight = { currentFocusId: Int, currentView: View ->
+                when {
+                    currentFocusId == R.id.itemsList -> {
+                        (currentView as? ViewGroup)?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+                        R.id.itemSongMoreButton
+                    }
+                    else -> 0
+                }
+            },
+            nextUp = { currentFocusId: Int, currentView: View ->
+                (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                this.requestFocusFromTouch()
+                when {
+                    currentFocusId == R.id.itemSongMoreButton -> -1
                     this.selectedItemPosition == 0 -> {
                         appFactory.activity.get().findViewById<View>(R.id.navMenuButton)?.run {
                             requestFocusFromTouch()
@@ -95,14 +95,12 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
                     else -> 0
                 }
             },
-            nextDown = { currentViewId: Int, currentView: View ->
+            nextDown = { currentFocusId: Int, currentView: View ->
                 (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
                 this.requestFocusFromTouch()
-
                 0
             },
         )
-
         setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN) {
                 if (localFocus.handleKey(keyCode))
@@ -110,7 +108,6 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
             }
             return@setOnKeyListener false
         }
-        scrollState = OnScrollListener.SCROLL_STATE_IDLE
     }
 
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {

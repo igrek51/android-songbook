@@ -1,8 +1,12 @@
 package igrek.songbook.layout
 
+import android.app.Activity
 import android.view.KeyEvent
 import android.view.View
 import igrek.songbook.info.logger.LoggerFactory.logger
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 
 
 class LocalFocusTraverser(
@@ -12,7 +16,11 @@ class LocalFocusTraverser(
     private val nextRight: (Int, View) -> Int = { _, _ -> 0 },
     private val nextUp: (Int, View) -> Int = { _, _ -> 0 },
     private val nextDown: (Int, View) -> Int = { _, _ -> 0 },
+    activity: LazyInject<Activity> = appFactory.activity,
 ) {
+    private val activity by LazyExtractor(activity)
+
+    private val debugMode: Boolean = true
 
     fun handleKey(keyCode: Int): Boolean {
         when (keyCode) {
@@ -43,6 +51,12 @@ class LocalFocusTraverser(
     private fun moveToNextView(nextViewProvider: (Int, View) -> Int): Boolean {
         val currentView: View = currentViewGetter() ?: return false
         val currentFocusId: Int = currentFocusGetter() ?: 0
+
+        if (debugMode && currentFocusId != 0) {
+            val viewName = activity.currentFocus?.javaClass?.simpleName
+            val resourceName = activity.resources.getResourceName(currentFocusId)
+            logger.debug("Current focus view: $currentFocusId - $resourceName - $viewName")
+        }
 
         val nextViewId = nextViewProvider(currentFocusId, currentView)
 

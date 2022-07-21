@@ -24,7 +24,7 @@ import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.layout.NextFocusTraverser
+import igrek.songbook.layout.GlobalFocusTraverser
 import igrek.songbook.layout.ad.AdService
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
@@ -163,5 +163,5 @@ class AppFactory(
     val billingLayoutController = SingletonInject { BillingLayoutController() }
     val homeScreenEnumService = SingletonInject { HomeScreenEnumService() }
     val settingsEnumService = SingletonInject { SettingsEnumService() }
-    val nextFocusTraverser = SingletonInject { NextFocusTraverser() }
+    val globalFocusTraverser = SingletonInject { GlobalFocusTraverser() }
 }

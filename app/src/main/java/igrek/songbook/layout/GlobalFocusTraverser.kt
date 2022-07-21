@@ -10,7 +10,7 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.songselection.top.TopSongsLayoutController
 
-class NextFocusTraverser(
+class GlobalFocusTraverser(
     activity: LazyInject<Activity> = appFactory.activity,
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
     navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
@@ -19,13 +19,15 @@ class NextFocusTraverser(
     private val layoutController by LazyExtractor(layoutController)
     private val navigationMenuController by LazyExtractor(navigationMenuController)
 
+    private val debugMode: Boolean = true
+
     fun moveToNextView(nextViewProvider: (Int) -> Int): Boolean {
         val currentFocusId = activity.currentFocus?.id ?: 0
 
-        if (currentFocusId != 0) {
+        if (debugMode && currentFocusId != 0) {
             val viewName = activity.currentFocus?.javaClass?.simpleName
             val resourceName = activity.resources.getResourceName(currentFocusId)
-            logger.debug("Global Traverser: current focus view: $currentFocusId - $viewName - $resourceName")
+            logger.debug("Current focus view: $currentFocusId - $resourceName - $viewName")
         }
 
         val nextViewId = nextViewProvider(currentFocusId)
@@ -64,7 +66,7 @@ class NextFocusTraverser(
             R.id.navMenuButton -> 0
             R.id.languageFilterButton -> R.id.navMenuButton
             R.id.searchSongButton -> R.id.languageFilterButton
-            else -> 0
+            else -> R.id.navMenuButton
         }
     }
 
@@ -85,6 +87,11 @@ class NextFocusTraverser(
     }
 
     fun nextUpView(currentViewId: Int): Int {
+        if (navigationMenuController.isDrawerShown()) {
+            if (currentViewId == R.id.navMenuButton)
+                return R.id.nav_view
+        }
+
         return when (currentViewId) {
             R.id.main_content -> R.id.navMenuButton
             R.id.navMenuButton -> 0

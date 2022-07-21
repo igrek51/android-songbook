@@ -3,6 +3,7 @@ package igrek.songbook.songselection.listview
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ListView
 import igrek.songbook.songselection.SongClickListener
@@ -34,6 +35,9 @@ class SongListView : ListView, AdapterView.OnItemClickListener, AdapterView.OnIt
         onItemClickListener = this
         onItemLongClickListener = this
         choiceMode = CHOICE_MODE_SINGLE
+        itemsCanFocus = true
+        isFocusable = true
+        descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
         adapter = SongListItemAdapter(context, emptyList(), songContextMenuBuilder)
         setAdapter(adapter)
     }
