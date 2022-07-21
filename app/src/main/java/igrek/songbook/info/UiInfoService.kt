@@ -64,7 +64,7 @@ open class UiInfoService(
             snackbar.show()
             infobars[view] = snackbar
         }
-        logger.debug("UI: snackbar: $info")
+        logger.info("UI: snackbar: $info")
     }
 
     fun showInfo(infoResId: Int, vararg args: String?,

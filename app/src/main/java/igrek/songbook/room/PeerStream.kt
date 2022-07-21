@@ -1,5 +1,6 @@
 package igrek.songbook.room
 
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothSocket
 import igrek.songbook.info.logger.LoggerFactory.logger
 import kotlinx.coroutines.*
@@ -122,6 +123,7 @@ class PeerStream(
         return remoteSocket.remoteDevice.address
     }
 
+    @SuppressLint("MissingPermission")
     fun remoteName(): String {
         return remoteSocket.remoteDevice.name
     }

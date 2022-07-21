@@ -59,6 +59,7 @@ android {
         debug {
             minifyEnabled false
             buildConfigField "java.util.Date", "BUILD_DATE", "new java.util.Date(" + System.currentTimeMillis() + "L)"
+            debuggable true
         }
     }
     packagingOptions {

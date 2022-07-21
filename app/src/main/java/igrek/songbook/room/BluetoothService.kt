@@ -1,6 +1,7 @@
 package igrek.songbook.room
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
@@ -30,6 +31,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 
 @Suppress("DEPRECATION")
+@SuppressLint("MissingPermission")
 class BluetoothService(
         appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
         activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,

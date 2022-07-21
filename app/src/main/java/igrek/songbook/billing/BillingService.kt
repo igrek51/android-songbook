@@ -17,7 +17,6 @@ import igrek.songbook.settings.preferences.PreferencesState
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.trySendBlocking
 import kotlin.RuntimeException
 
 
@@ -27,7 +26,7 @@ const val PRODUCT_ID_NO_ADS = "no_ads_forever"
 const val PRODUCT_ID_DONATE_1_BEER = "donate_1_beer"
 
 
-@Suppress("DEPRECATION")
+@OptIn(DelicateCoroutinesApi::class)
 class BillingService(
     activity: LazyInject<Activity> = appFactory.activity,
     context: LazyInject<Context> = appFactory.context,
@@ -47,19 +46,23 @@ class BillingService(
     private val logger: Logger = LoggerFactory.logger
     private var billingClient: BillingClient? = null
     private val defaultScope: CoroutineScope
-    private val knownAllSKUs: List<String> = listOf(
+    private val knownAllProducts: List<String> = listOf(
         PRODUCT_ID_NO_ADS,
         PRODUCT_ID_DONATE_1_BEER,
     )
-    private val knownConsumableInAppKUSs: List<String> = listOf()
-    private val skuStateMap: MutableMap<String, SkuState> = HashMap()
-    private val skuDetailsMap: MutableMap<String, SkuDetails?> = HashMap()
-    private val skuAmountsMap: MutableMap<String, Long> = HashMap()
+    private val knownConsumableInAppProducts: List<String> = listOf(
+        PRODUCT_ID_DONATE_1_BEER,
+    )
+    private val productStateMap: MutableMap<String, ProductState> = hashMapOf()
+    private val productsDetails: MutableMap<String, ProductDetails> = hashMapOf()
+    private val productPrices: MutableMap<String, String?> = hashMapOf()
+    private val productAmounts: MutableMap<String, Long> = hashMapOf()
     private val initChannel = Channel<Result<Boolean>>(1)
+    private val initDetailsChannel = Channel<Result<Boolean>>(1)
     private val initJob: Job
     val purchaseEventsSubject = PublishSubject.create<Boolean>()
 
-    private enum class SkuState {
+    private enum class ProductState {
         UNKNOWN,
         UNPURCHASED,
         PENDING,
@@ -71,12 +74,13 @@ class BillingService(
         defaultScope = GlobalScope
         initJob = defaultScope.launch {
             initChannel.receive()
+            initDetailsChannel.receive()
+            logger.debug("Billing service initialized")
         }
 
-        for (sku: String in this.knownAllSKUs) {
-            skuStateMap[sku] = SkuState.UNKNOWN
-            skuDetailsMap[sku] = null
-            skuAmountsMap[sku] = 0
+        for (productId: String in this.knownAllProducts) {
+            productStateMap[productId] = ProductState.UNKNOWN
+            productAmounts[productId] = 0
         }
 
         initConnection()
@@ -93,6 +97,7 @@ class BillingService(
         } catch (t: Throwable) {
             UiErrorHandler().handleError(t, R.string.error_purchase_error)
             initChannel.trySend(Result.success(false))
+            initDetailsChannel.trySend(Result.success(false))
         }
     }
 
@@ -107,57 +112,72 @@ class BillingService(
                     // means that you have a connection to the Billing service.
                     defaultScope.launch {
                         try {
-                            querySkuDetails()
-                            restorePurchases()
-                            initChannel.trySendBlocking(Result.success(true))
-                            logger.debug("Billing service initialized")
-
+                            queryProductDetails()
                         } catch (t: Throwable) {
                             UiErrorHandler().handleError(t, R.string.error_purchase_error)
-                            initChannel.trySend(Result.success(false))
+                            initDetailsChannel.trySend(Result.success(false))
                         }
+
+                        try {
+                            restorePurchases()
+                        } catch (t: Throwable) {
+                            UiErrorHandler().handleError(t, R.string.error_purchase_error)
+                        }
+
+                        initChannel.trySend(Result.success(true))
                     }
                 }
                 else -> {
                     logger.error("Billing setup response: $responseCode $debugMessage")
                     initChannel.trySend(Result.success(false))
+                    initDetailsChannel.trySend(Result.success(false))
                 }
             }
 
         } catch (t: Throwable) {
             UiErrorHandler().handleError(t, R.string.error_purchase_error)
             initChannel.trySend(Result.success(false))
+            initDetailsChannel.trySend(Result.success(false))
         }
     }
 
-    private suspend fun querySkuDetails() {
-        if (knownAllSKUs.isEmpty())
+    private fun queryProductDetails() {
+        if (knownAllProducts.isEmpty())
             return
 
-
-        if (knownAllSKUs.isNotEmpty()) {
-            val skuDetailsResult = billingClient!!.querySkuDetails(
-                    SkuDetailsParams.newBuilder()
-                            .setType(BillingClient.SkuType.INAPP)
-                            .setSkusList(knownAllSKUs.toMutableList())
-                            .build()
-            )
-            onProductDetailsResponse(skuDetailsResult.billingResult, skuDetailsResult.skuDetailsList)
+        if (knownAllProducts.isNotEmpty()) {
+            val queryProductsList = knownAllProducts.map { productId ->
+                QueryProductDetailsParams.Product.newBuilder()
+                    .setProductId(productId)
+                    .setProductType(BillingClient.ProductType.INAPP)
+                    .build()
+            }
+            val queryProductDetailsParams = QueryProductDetailsParams.newBuilder()
+                    .setProductList(queryProductsList)
+                    .build()
+            billingClient?.queryProductDetailsAsync(queryProductDetailsParams) {
+                billingResult: BillingResult, productDetailsList: List<ProductDetails> ->
+                onProductDetailsResponse(billingResult, productDetailsList)
+                initDetailsChannel.trySend(Result.success(true))
+            }
         }
     }
 
-    private fun onProductDetailsResponse(billingResult: BillingResult, skuDetailsList: List<SkuDetails>?) {
+    private fun onProductDetailsResponse(billingResult: BillingResult, productDetails: List<ProductDetails>) {
         val responseCode = billingResult.responseCode
         val debugMessage = billingResult.debugMessage
         when (responseCode) {
             BillingClient.BillingResponseCode.OK -> {
-                if (skuDetailsList == null || skuDetailsList.isEmpty()) {
-                    UiErrorHandler().handleError(RuntimeException("Found empty product details"), R.string.error_purchase_error)
+                if (productDetails.isEmpty()) {
+                    logger.warn("Found empty product details")
                 } else {
-                    for (skuDetails in skuDetailsList) {
-                        val sku = skuDetails.sku
-                        skuDetailsMap[sku] = skuDetails
+                    for (productDetail in productDetails) {
+                        val productId = productDetail.productId
+                        productsDetails[productId] = productDetail
+                        val offerDetails: ProductDetails.OneTimePurchaseOfferDetails? = productDetail.oneTimePurchaseOfferDetails
+                        productPrices[productId] = offerDetails?.formattedPrice
                     }
+                    logger.debug("Product details fetched: ${productDetails.size}")
                 }
             }
             else -> {
@@ -178,11 +198,14 @@ class BillingService(
     private suspend fun restorePurchases() {
         try{
 
-            for (sku: String in this.knownAllSKUs) {
-                skuAmountsMap[sku] = 0
+            for (productId: String in this.knownAllProducts) {
+                productAmounts[productId] = 0
+                productStateMap[productId] = ProductState.UNKNOWN
             }
 
-            val purchasesResult = billingClient!!.queryPurchasesAsync(BillingClient.SkuType.INAPP)
+            val params = QueryPurchasesParams.newBuilder()
+                .setProductType(BillingClient.ProductType.INAPP)
+            val purchasesResult = billingClient!!.queryPurchasesAsync(params.build())
             val billingResult = purchasesResult.billingResult
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                 processPurchaseList(purchasesResult.purchasesList)
@@ -190,25 +213,89 @@ class BillingService(
                 throw RuntimeException("Restoring purchases failed: ${billingResult.responseCode} ${billingResult.debugMessage}")
             }
 
-            for (sku in knownAllSKUs) {
-                if (skuStateMap[sku] == SkuState.UNKNOWN) {
-                    skuStateMap[sku] = SkuState.UNPURCHASED
+            // restorePurchasesFromHistory()
+
+            for (productId in knownAllProducts) {
+                if (productStateMap[productId] == ProductState.UNKNOWN) {
+                    productStateMap[productId] = ProductState.UNPURCHASED
                 }
             }
+
+            logger.debug("Restored purchases: " +
+                    "$PRODUCT_ID_NO_ADS - ${productStateMap[PRODUCT_ID_NO_ADS]?.name}, " +
+                    "$PRODUCT_ID_DONATE_1_BEER - ${productStateMap[PRODUCT_ID_DONATE_1_BEER]?.name} quantity=${productAmounts[PRODUCT_ID_DONATE_1_BEER]}")
 
         } catch (t: Throwable) {
             UiErrorHandler().handleError(t, R.string.error_purchase_error)
         }
     }
 
-    fun launchBillingFlow(sku: String) {
+    private suspend fun restorePurchasesFromHistory() {
+        val historyParams = QueryPurchaseHistoryParams.newBuilder()
+            .setProductType(BillingClient.ProductType.INAPP)
+        val purchaseHistoryResult = billingClient!!.queryPurchaseHistory(historyParams.build())
+        val billingResult = purchaseHistoryResult.billingResult
+        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+            processPurchaseHistory(purchaseHistoryResult.purchaseHistoryRecordList)
+        } else {
+            throw RuntimeException("Restoring purchases history failed: ${billingResult.responseCode} ${billingResult.debugMessage}")
+        }
+    }
+
+    fun launchBillingFlow(productId: String) {
         uiInfoService.showInfo(R.string.billing_starting_purchase)
         try {
-            val skuDetails = skuDetailsMap[sku] ?: throw RuntimeException("Product SKU Details not found for $sku")
-            val flowParams = BillingFlowParams.newBuilder()
-                    .setSkuDetails(skuDetails)
+            val productDetails = productsDetails[productId] ?: throw RuntimeException("Product Details not found for product ID: $productId")
+            val productDetailsParamsList = listOf(
+                BillingFlowParams.ProductDetailsParams.newBuilder()
+                    .setProductDetails(productDetails)
                     .build()
-            billingClient?.launchBillingFlow(activity, flowParams) // calls onPurchasesUpdated
+            )
+            val billingFlowParams = BillingFlowParams.newBuilder()
+                .setProductDetailsParamsList(productDetailsParamsList)
+                .build()
+            val billingResult = billingClient!!.launchBillingFlow(activity, billingFlowParams)
+            when (billingResult.responseCode) {
+                BillingClient.BillingResponseCode.OK -> {}
+                BillingClient.BillingResponseCode.USER_CANCELED -> {
+                    uiInfoService.showInfo(R.string.billing_user_canceled_purchase)
+                }
+                BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> {
+                    uiInfoService.showInfo(R.string.billing_user_already_owns_item)
+                }
+                BillingClient.BillingResponseCode.DEVELOPER_ERROR -> {
+                    throw RuntimeException("Billing Response: Invalid arguments provided to the API")
+                    // Developer error means that Google Play does not recognize the configuration.
+                    // The product ID must match and the APK you are using must be signed with release keys."
+                }
+                BillingClient.BillingResponseCode.BILLING_UNAVAILABLE -> {
+                    throw RuntimeException("Google Play Billing API is not available.")
+                }
+                BillingClient.BillingResponseCode.ERROR -> {
+                    throw RuntimeException("Fatal error during the API action. ${billingResult.debugMessage}")
+                }
+                BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED -> {
+                    throw RuntimeException("Requested feature is not supported by Play Store on the current device")
+                }
+                BillingClient.BillingResponseCode.ITEM_NOT_OWNED -> {
+                    throw RuntimeException("Failure to consume since item is not owned.")
+                }
+                BillingClient.BillingResponseCode.ITEM_UNAVAILABLE -> {
+                    throw RuntimeException("Requested product is not available for purchase")
+                }
+                BillingClient.BillingResponseCode.SERVICE_DISCONNECTED -> {
+                    throw RuntimeException("Play Store service is not connected now - potentially transient state.")
+                }
+                BillingClient.BillingResponseCode.SERVICE_TIMEOUT -> {
+                    throw RuntimeException("The request has reached the maximum timeout before Google Play responds.")
+                }
+                BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE -> {
+                    throw RuntimeException("Network connection is down.")
+                }
+                else -> {
+                    throw RuntimeException("Billing Response Code ${billingResult.responseCode} ${billingResult.debugMessage}")
+                }
+            }
 
         } catch (t: Throwable) {
             UiErrorHandler().handleError(t, R.string.error_purchase_error)
@@ -237,10 +324,10 @@ class BillingService(
                 BillingClient.BillingResponseCode.DEVELOPER_ERROR -> {
                     throw RuntimeException("Billing Response: Invalid arguments provided to the API")
                     // Developer error means that Google Play does not recognize the configuration.
-                    // The SKU product ID must match and the APK you are using must be signed with release keys."
+                    // The product ID must match and the APK you are using must be signed with release keys."
                 }
                 BillingClient.BillingResponseCode.BILLING_UNAVAILABLE -> {
-                    throw RuntimeException("Billing API version is not supported for the type requested")
+                    throw RuntimeException("Google Play Billing API is not available.")
                 }
                 BillingClient.BillingResponseCode.ERROR -> {
                     throw RuntimeException("Fatal error during the API action. ${billingResult.debugMessage}")
@@ -278,9 +365,7 @@ class BillingService(
             logger.warn("purchases list is null")
             return
         }
-        if (purchases.isEmpty()) {
-            logger.debug("Purchases list is empty")
-        } else {
+        if (purchases.isNotEmpty()) {
             logger.debug("Processing purchases: ${purchases.size}")
         }
 
@@ -296,16 +381,12 @@ class BillingService(
             }
 
             runBlocking {
-                for (sku in purchase.skus) {
+                for (productId in purchase.products) {
 
-                    skuAmountsMap[sku] = (skuAmountsMap[sku] ?: 0) + 1
+                    if (purchase.isAcknowledged) {
+                        productAmounts[productId] = (productAmounts[productId] ?: 0) + purchase.quantity
 
-                    val isConsumable = knownConsumableInAppKUSs.contains(sku)
-
-                    if (isConsumable) {
-                        consumePurchase(purchase)
-
-                    } else if (!purchase.isAcknowledged) {
+                    } else {
 
                         val billingResult = billingClient!!.acknowledgePurchase(
                             AcknowledgePurchaseParams.newBuilder()
@@ -313,62 +394,81 @@ class BillingService(
                                 .build()
                         )
                         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                            // purchase acknowledged
-                            skuStateMap[sku] = SkuState.PURCHASED_AND_ACKNOWLEDGED
-                            savePurchaseData(sku)
+                            logger.info("Purchase acknowledged: $productId")
+                            productStateMap[productId] = ProductState.PURCHASED_AND_ACKNOWLEDGED
+                            productAmounts[productId] = (productAmounts[productId] ?: 0) + purchase.quantity
+                            savePurchaseData(productId)
 
                         } else {
                             UiErrorHandler().handleError(
-                                RuntimeException("Error acknowledging purchase: ${purchase.skus}"),
+                                RuntimeException("Error acknowledging purchase: $productId"),
                                 R.string.error_purchase_error,
                             )
                         }
+                    }
+
+                    if (isConsumable(productId)) {
+                        consumePurchase(purchase)
                     }
 
                 }
             }
         }
 
-        setSkuStateFromPurchase(purchase)
+        setProductStateFromPurchase(purchase)
     }
 
-    // Set the state of every sku inside skuStateMap
-    private fun setSkuStateFromPurchase(purchase: Purchase) {
-        if (purchase.skus.isEmpty()) {
-            logger.error("Empty list of SKUs in a purchase")
+    private fun setProductStateFromPurchase(purchase: Purchase) {
+        if (purchase.products.isEmpty()) {
+            logger.error("Empty list of Products in a purchase")
             return
         }
 
-        for (sku in purchase.skus) {
-            val skuState = skuStateMap[sku]
-            if (skuState == null) {
-                logger.error("Unknown Product SKU in a purchase: $sku.")
+        for (productId in purchase.products) {
+            val productState = productStateMap[productId]
+            if (productState == null) {
+                logger.error("Unknown Product ID in a purchase: $productId.")
                 continue
             }
 
             when (purchase.purchaseState) {
-                Purchase.PurchaseState.PENDING -> skuStateMap[sku] = SkuState.PENDING
-                Purchase.PurchaseState.UNSPECIFIED_STATE -> skuStateMap[sku] = SkuState.UNPURCHASED
+                Purchase.PurchaseState.PENDING -> productStateMap[productId] = ProductState.PENDING
+                Purchase.PurchaseState.UNSPECIFIED_STATE -> productStateMap[productId] = ProductState.UNPURCHASED
                 Purchase.PurchaseState.PURCHASED -> if (purchase.isAcknowledged) {
-                    skuStateMap[sku] = SkuState.PURCHASED_AND_ACKNOWLEDGED
-                    savePurchaseData(sku)
+                    productStateMap[productId] = ProductState.PURCHASED_AND_ACKNOWLEDGED
+                    savePurchaseData(productId)
                 } else {
-                    skuStateMap[sku] = SkuState.PURCHASED
+                    productStateMap[productId] = ProductState.PURCHASED
                 }
                 else -> logger.error("Purchase in unknown state: ${purchase.purchaseState}")
             }
         }
     }
 
-    private fun savePurchaseData(sku: String) {
-        when(sku) {
+    private fun processPurchaseHistory(purchaseHistoryRecords: List<PurchaseHistoryRecord>?) {
+        if (purchaseHistoryRecords.isNullOrEmpty())
+            return
+
+        logger.debug("Processing Purchase history records: ${purchaseHistoryRecords.size}")
+        for (purchaseHistoryRecord in purchaseHistoryRecords) {
+            for (productId in purchaseHistoryRecord.products) {
+                val isConsumable = knownConsumableInAppProducts.contains(productId)
+                if (isConsumable) {
+                    productAmounts[productId] = (productAmounts[productId] ?: 0) + purchaseHistoryRecord.quantity
+                }
+            }
+        }
+    }
+
+    private fun savePurchaseData(productId: String) {
+        when(productId) {
             PRODUCT_ID_NO_ADS -> {
                 if (!preferencesState.purchasedAdFree) {
                     preferencesState.purchasedAdFree = true
                     preferencesService.saveAll()
                     adService.hideAdBanner()
                     purchaseEventsSubject.onNext(true)
-                    logger.info("Saving Purchase in preferences data, SKU: $sku")
+                    logger.info("Saving Purchase in preferences data, Product ID: $productId")
                 }
             }
         }
@@ -382,9 +482,8 @@ class BillingService(
         )
         if (consumePurchaseResult.billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
             // Since we've consumed the purchase
-            for (sku in purchase.skus) {
-                logger.info("Purchase consumed: $sku")
-                skuStateMap[sku] = SkuState.UNPURCHASED
+            for (productId in purchase.products) {
+                logger.info("Purchase consumed: $productId")
             }
         } else {
             UiErrorHandler().handleError(
@@ -394,31 +493,33 @@ class BillingService(
         }
     }
 
+    private fun isConsumable(productId: String): Boolean = knownConsumableInAppProducts.contains(productId)
+
     fun waitForInitialized() {
         runBlocking {
             initJob.join()
         }
     }
 
-    fun isPurchased(sku: String): Boolean? {
-        return skuStateMap[sku]
-                ?.let { skuState -> skuState == SkuState.PURCHASED_AND_ACKNOWLEDGED }
+    fun isPurchased(productId: String): Boolean? {
+        return productStateMap[productId]
+                ?.let { productState -> productState == ProductState.PURCHASED_AND_ACKNOWLEDGED }
     }
 
-    fun getSkuPrice(sku: String): String? {
-        return skuDetailsMap[sku]?.price
+    fun getProductPrice(productId: String): String? {
+        return productPrices[productId]
     }
 
-    fun getSkuPurchasedAmount(sku: String): Long {
-        return skuAmountsMap[sku] ?: 0
+    fun getProductPurchasedAmount(productId: String): Long {
+        return productAmounts[productId] ?: 0
     }
 
-    fun getSkuTitle(sku: String): String? {
-        return skuDetailsMap[sku]?.title
+    fun getProductTitle(productId: String): String? {
+        return productsDetails[productId]?.title
     }
 
-    fun getSkuDescription(sku: String): String? {
-        return skuDetailsMap[sku]?.description
+    fun getProductDescription(productId: String): String? {
+        return productsDetails[productId]?.description
     }
 
     private fun isSignatureValid(purchase: Purchase): Boolean {

@@ -13,9 +13,11 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
 
+@OptIn(DelicateCoroutinesApi::class)
 @SuppressLint("CheckResult")
 class BillingLayoutController(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
@@ -31,24 +33,26 @@ class BillingLayoutController(
     private var buyAdFreeButton: Button? = null
     private var adFreePriceTextView: TextView? = null
     private var donate1PriceTextView: TextView? = null
-    private var donate1PurchasedAmountTextView: TextView? = null
 
-    init {
-        this.billingService.purchaseEventsSubject
-            .debounce(200, TimeUnit.MILLISECONDS)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                updateView()
-            }, UiErrorHandler::handleError)
-    }
+    private val subscriptions = mutableListOf<Disposable>()
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
 
+        subscriptions.forEach { s -> s.dispose() }
+        subscriptions.clear()
+        subscriptions.add(
+            billingService.purchaseEventsSubject
+                .debounce(200, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    updateView()
+                }, UiErrorHandler::handleError)
+        )
+
         buyAdFreeButton = layout.findViewById(R.id.billingBuyAdFree)
         adFreePriceTextView = layout.findViewById(R.id.billingAdFreePrice)
         donate1PriceTextView = layout.findViewById(R.id.billingDonate1Price)
-        donate1PurchasedAmountTextView = layout.findViewById(R.id.billingDonate1PurchasedAmount)
 
         buyAdFreeButton?.setOnClickListener {
             billingService.launchBillingFlow(PRODUCT_ID_NO_ADS)
@@ -60,11 +64,9 @@ class BillingLayoutController(
             billingService.callRestorePurchases()
         }
 
-        uiInfoService.showInfo(R.string.billing_loading_purchases)
         GlobalScope.launch {
             billingService.waitForInitialized()
             updateComponents()
-            uiInfoService.clearSnackBars()
         }
 
     }
@@ -78,11 +80,11 @@ class BillingLayoutController(
     }
 
     private fun updateComponents() {
-        val priceAdFree = billingService.getSkuPrice(PRODUCT_ID_NO_ADS)
+        val priceAdFree = billingService.getProductPrice(PRODUCT_ID_NO_ADS)
         val adfreePurchased: Boolean? = billingService.isPurchased(PRODUCT_ID_NO_ADS)
 
-        val priceDonate1 = billingService.getSkuPrice(PRODUCT_ID_DONATE_1_BEER)
-        val purchasedDonations1 = billingService.getSkuPurchasedAmount(PRODUCT_ID_DONATE_1_BEER)
+        val priceDonate1 = billingService.getProductPrice(PRODUCT_ID_DONATE_1_BEER)
+        // val donate1Quantity = billingService.getProductPurchasedAmount(PRODUCT_ID_DONATE_1_BEER)
 
         runBlocking(Dispatchers.Main) {
 
@@ -99,12 +101,7 @@ class BillingLayoutController(
             donate1PriceTextView?.let {
                 it.text = uiInfoService.resString(R.string.billing_item_price, priceDonate1)
             }
-            donate1PurchasedAmountTextView?.let {
-                it.text = uiInfoService.resString(
-                    R.string.billing_donate_1_amount,
-                    purchasedDonations1.toString()
-                )
-            }
+
         }
     }
 

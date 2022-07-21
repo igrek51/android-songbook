@@ -111,18 +111,6 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/billingDonate1PurchasedAmount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:gravity="left"
-                android:text="@string/billing_donate_1_amount"
-                android:textSize="18sp" />
-
-            <TextView
                 android:id="@+id/billingDonate1Price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
