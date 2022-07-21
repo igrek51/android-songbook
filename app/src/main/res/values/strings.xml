@@ -494,7 +494,8 @@
     <string name="billing_restoring_purchases">Restoring previous purchases…</string>
     <string name="billing_purchases_restored">Purchases restored</string>
     <string name="billing_starting_purchase">Starting a new purchase…</string>
-    <string name="billing_thanks_for_purchase">Thank you for your purchase. Wait until it\'s processed.</string>
+    <string name="billing_thanks_for_purchase_wait">Thank you for your purchase. Wait until it\'s processed.</string>
+    <string name="billing_thanks_for_purchase_confirm">Thank you for your purchase. Purchase is confirmed.</string>
     <string name="billing_user_canceled_purchase">User canceled the purchase</string>
     <string name="billing_user_already_owns_item">The user already owns this item</string>
     <string name="billing_remove_ad_banner">Remove advertisement banner</string>

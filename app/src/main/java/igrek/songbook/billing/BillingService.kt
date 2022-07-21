@@ -307,9 +307,9 @@ class BillingService(
             when (billingResult.responseCode) {
                 BillingClient.BillingResponseCode.OK -> {
                     if (null != purchases) {
+                        uiInfoService.showInfo(R.string.billing_thanks_for_purchase_wait)
                         processPurchaseList(purchases)
                         purchaseEventsSubject.onNext(true)
-                        uiInfoService.showInfo(R.string.billing_thanks_for_purchase)
                         return
                     } else {
                         logger.debug("Null Purchase List Returned from OK response!")
@@ -398,6 +398,7 @@ class BillingService(
                             productStateMap[productId] = ProductState.PURCHASED_AND_ACKNOWLEDGED
                             productAmounts[productId] = (productAmounts[productId] ?: 0) + purchase.quantity
                             savePurchaseData(productId)
+                            uiInfoService.showInfo(R.string.billing_thanks_for_purchase_confirm)
 
                         } else {
                             UiErrorHandler().handleError(

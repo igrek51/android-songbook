@@ -468,7 +468,8 @@
     <string name="billing_restoring_purchases">Przywracanie poprzednich zakupów…</string>
     <string name="billing_purchases_restored">Płatności przywrócone</string>
     <string name="billing_starting_purchase">Rozpoczynanie płatności…</string>
-    <string name="billing_thanks_for_purchase">Dziękuję za płatność. Oczekiwanie na przetworzenie transakcji…</string>
+    <string name="billing_thanks_for_purchase_wait">Dziękuję za płatność. Oczekiwanie na przetworzenie transakcji…</string>
+    <string name="billing_thanks_for_purchase_confirm">Dziękuję za płatność. Płatność potwierdzona.</string>
     <string name="billing_user_canceled_purchase">Użytkownik anulował płatność</string>
     <string name="billing_user_already_owns_item">Użytkownik już posiada tą pozycję</string>
     <string name="billing_remove_ad_banner">Usuń banner z reklamami</string>
