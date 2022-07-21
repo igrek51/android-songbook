@@ -226,7 +226,7 @@
     <string name="settings_autoscroll_volume_keys_hint">Use Up / Down volume buttons to increase or decrease scroll speed respectively</string>
     <string name="settings_random_song_section">Random song</string>
     <string name="settings_autoscroll_section">Autoscroll</string>
-    <string name="settings_random_favourite">Random favourites only</string>
+    <string name="settings_random_favourite">Random favourites</string>
     <string name="settings_random_favourite_hint">Shuffle songs from favourite songs only</string>
     <string name="settings_songs_list_section">Songs list</string>
     <string name="settings_filter_languages">Show songs with particular lyrics languages only</string>
@@ -512,5 +512,5 @@
     <string name="settings_autoscroll_restore_speed">Individual autoscroll speed</string>
     <string name="settings_autoscroll_restore_speed_hint">Remember and restore autoscroll speed for each song</string>
     <string name="settings_random_playlist_songs">Random playlist song</string>
-    <string name="settings_random_playlist_songs_hint">\"Random song\" shuffles a song from an opened playlist if there\'s a chosen one.</string>
+    <string name="settings_random_playlist_songs_hint">\"Random song\" option shuffles a song from an opened playlist if there\'s a chosen one.</string>
 </resources>

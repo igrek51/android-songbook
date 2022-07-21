@@ -223,8 +223,8 @@
     <string name="settings_autoscroll_volume_keys_hint">Przyciski zwiększania / zmniejszania głośności przyspieszą lub spowolnią autoprzewijanie</string>
     <string name="settings_random_song_section">Losowa piosenka</string>
     <string name="settings_autoscroll_section">Autoprzewijanie</string>
-    <string name="settings_random_favourite">Losuj tylko ulubione</string>
-    <string name="settings_random_favourite_hint">Losowanie piosenek tylko z listy ulubionych</string>
+    <string name="settings_random_favourite">Losuj ulubione</string>
+    <string name="settings_random_favourite_hint">Losuj piosenki tylko z listy ulubionych</string>
     <string name="settings_songs_list_section">Lista piosenek</string>
     <string name="settings_filter_languages">Pokazuj tylko piosenki z tekstem w wybranych językach</string>
     <string name="settings_autoscroll_initial_delay">Opóźnienie autoprzewijania</string>
@@ -484,6 +484,6 @@
     <string name="settings_autoscroll_show_eye_focus_zone_hint">Wyświetlaj postęp i stan autoprzewijania, pokazując strefę skupienia wzroku</string>
     <string name="settings_autoscroll_restore_speed">Indywidualna szybkość autoprzewijania</string>
     <string name="settings_autoscroll_restore_speed_hint">Zapamiętuj i przywracaj szybkość autoprzewijania dla każdej piosenki</string>
-    <string name="settings_random_playlist_songs">Losowanie playlisty</string>
-    <string name="settings_random_playlist_songs_hint">\"Losowa piosenka\" losuje piosenkę z otwartej playlisty, jeśli playlista jest wybrana.</string>
+    <string name="settings_random_playlist_songs">Losowanie z playlisty</string>
+    <string name="settings_random_playlist_songs_hint">Akcja \"Losowa piosenka\" losuje piosenkę z aktualnie otwartej playlisty.</string>
 </resources>
