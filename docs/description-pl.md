@@ -13,7 +13,7 @@ Główne funkcje:
 - Baza piosenek (polskich i obcojęzycznych) w trybie offline oraz z aktualizacjami online
 - Wybór stylu wyświetlania akordów: pomiędzy słowami, akordy nad tekstem lub na końcu linii
 - Wsparcie dla kilku notacji akordów: Niemiecka ("a b B H C d"), Angielska ("Am Bbm Bb B C Dm"), Solfeż ("Do Re Mi Fa")
-- Automatyczne wykrywanie akordów
+- Automatyczne wykrywanie akordów, rozpoznawanie tonacji piosenki
 - Synchronizacja własnych piosenek i ustawień między wieloma urządzeniami, kopie zapasowe i odzyskiwanie wszystkich danych aplikacji
 - Udostępnianie piosenek przez link
 - Niegasnący wyświetlacz podczas grania

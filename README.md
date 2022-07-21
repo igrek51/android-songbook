@@ -15,7 +15,7 @@ Our chief weapons are:
 - Songs database available offline as well as with online updates
 - Customizable displaying styles: chords among words, chords above lyrics or at the end of line
 - Several chords notations supported: English ("Am Bbm Bb B C Dm"), German ("a b B H C d"), Solfege ("Do Re Mi Fa")
-- Automatic chords detection
+- Automatic chords detection, detecting a song key
 - Custom songs & settings synchronization between many devices, back-ups & restoring all application data
 - Sharing songs by link
 - Always-on display while playing
