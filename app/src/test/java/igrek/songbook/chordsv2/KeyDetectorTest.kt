@@ -1,7 +1,7 @@
 package igrek.songbook.chordsv2
 
-import igrek.songbook.chordsv2.finder.KeyDetector
-import igrek.songbook.chordsv2.finder.UniqueChordsFinder
+import igrek.songbook.chordsv2.detect.KeyDetector
+import igrek.songbook.chordsv2.detect.UniqueChordsFinder
 import igrek.songbook.chordsv2.model.*
 import igrek.songbook.chordsv2.parser.ChordParser
 import igrek.songbook.chordsv2.parser.LyricsParser

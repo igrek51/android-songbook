@@ -3,6 +3,7 @@ package igrek.songbook.chordsv2
 import igrek.songbook.chordsv2.model.*
 import igrek.songbook.chordsv2.parser.ChordParser
 import igrek.songbook.chordsv2.parser.LyricsParser
+import igrek.songbook.chordsv2.syntax.MajorKey
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -16,8 +17,8 @@ class ChordFormatTest {
         assertThat(Chord(0, false, "maj7").format(notation)).isEqualTo("Cmaj7")
         assertThat(Chord(1, true, "").format(notation)).isEqualTo("C#m")
         assertThat(Chord(1, true, "").format(ChordsNotation.GERMAN)).isEqualTo("c#")
-        assertThat(Chord(1, false, "").format(notation, NoteModifier.SHARP)).isEqualTo("C#")
-        assertThat(Chord(1, false, "").format(notation, NoteModifier.FLAT)).isEqualTo("Db")
+        assertThat(Chord(1, false, "").format(notation, MajorKey.D_MAJOR)).isEqualTo("C#")
+        assertThat(Chord(1, false, "").format(notation, MajorKey.A_FLAT_MAJOR)).isEqualTo("Db")
 
         assertThat(Chord(10, false, "").format(ChordsNotation.GERMAN)).isEqualTo("B")
         assertThat(Chord(10, false, "").format(ChordsNotation.ENGLISH)).isEqualTo("Bb")
@@ -102,6 +103,41 @@ class ChordFormatTest {
                 )),
                 ChordFragment(text=" ", type=ChordFragmentType.CHORD_SPLITTER),
                 ChordFragment(text="G", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.G.index, false)),
+            )),
+        )))
+    }
+
+
+    @Test
+    fun test_formatWithKey() {
+        val lyrics = LyricsParser().parseLyrics("""text [D/Ab G#m]""".trimIndent())
+        ChordParser(ChordsNotation.ENGLISH).parseAndFillChords(lyrics)
+        ChordsFormatter(ChordsNotation.ENGLISH, key=MajorKey.E_MAJOR).formatLyrics(lyrics)
+
+        assertThat(lyrics.lines[0]).isEqualTo(LyricsLine(listOf(
+            LyricsFragment(text = "text ", type = LyricsTextType.REGULAR_TEXT),
+            LyricsFragment(text = "D/G# G#m", type = LyricsTextType.CHORDS, chordFragments = listOf(
+                ChordFragment(text="D/G#", type=ChordFragmentType.COMPOUND_CHORD, compoundChord = CompoundChord(
+                    Chord(Note.D.index, false),
+                    "/",
+                    Chord(Note.G_SHARP.index, false),
+                )),
+                ChordFragment(text=" ", type=ChordFragmentType.CHORD_SPLITTER),
+                ChordFragment(text="G#m", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.G_SHARP.index, true)),
+            )),
+        )))
+
+        ChordsFormatter(ChordsNotation.ENGLISH, key=MajorKey.E_FLAT_MAJOR).formatLyrics(lyrics)
+        assertThat(lyrics.lines[0]).isEqualTo(LyricsLine(listOf(
+            LyricsFragment(text = "text ", type = LyricsTextType.REGULAR_TEXT),
+            LyricsFragment(text = "D/Ab Abm", type = LyricsTextType.CHORDS, chordFragments = listOf(
+                ChordFragment(text="D/Ab", type=ChordFragmentType.COMPOUND_CHORD, compoundChord = CompoundChord(
+                    Chord(Note.D.index, false),
+                    "/",
+                    Chord(Note.A_FLAT.index, false),
+                )),
+                ChordFragment(text=" ", type=ChordFragmentType.CHORD_SPLITTER),
+                ChordFragment(text="Abm", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.A_FLAT.index, true)),
             )),
         )))
     }

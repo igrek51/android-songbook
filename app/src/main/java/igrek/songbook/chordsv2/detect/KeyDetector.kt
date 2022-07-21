@@ -1,4 +1,4 @@
-package igrek.songbook.chordsv2.finder
+package igrek.songbook.chordsv2.detect
 
 import igrek.songbook.chordsv2.model.*
 import igrek.songbook.chordsv2.syntax.MajorKey

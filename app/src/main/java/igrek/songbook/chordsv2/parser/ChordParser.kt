@@ -15,10 +15,10 @@ class ChordParser(
 
         // recognize basic chord (without suffixes)
         minorChordToNoteIndex[chord]?.let { noteIndex: Int ->
-            return Chord(noteIndex=noteIndex, minor=true, noteModifier = getNoteModifier(chord))
+            return Chord(noteIndex=noteIndex, minor=true)
         }
         baseChordToNoteIndex[chord]?.let { noteIndex: Int ->
-            return Chord(noteIndex=noteIndex, minor=false, noteModifier = getNoteModifier(chord))
+            return Chord(noteIndex=noteIndex, minor=false)
         }
 
         // recognize base chord + suffix
@@ -26,14 +26,14 @@ class ChordParser(
             if (chord.startsWith(baseName)) {
                 val suffix = chord.drop(baseName.length)
                 if (suffix in chordSuffixes)
-                    return Chord(noteIndex=noteIndex, minor=true, suffix=suffix, noteModifier = getNoteModifier(baseName))
+                    return Chord(noteIndex=noteIndex, minor=true, suffix=suffix)
             }
         }
         baseChordToNoteIndex.forEach { (baseName: String, noteIndex: Int) ->
             if (chord.startsWith(baseName)) {
                 val suffix = chord.drop(baseName.length)
                 if (suffix in chordSuffixes)
-                    return Chord(noteIndex=noteIndex, minor=false, suffix=suffix, noteModifier = getNoteModifier(baseName))
+                    return Chord(noteIndex=noteIndex, minor=false, suffix=suffix)
             }
         }
         return null

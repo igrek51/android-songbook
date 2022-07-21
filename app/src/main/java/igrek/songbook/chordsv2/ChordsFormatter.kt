@@ -1,11 +1,12 @@
 package igrek.songbook.chordsv2
 
 import igrek.songbook.chordsv2.model.*
+import igrek.songbook.chordsv2.syntax.MajorKey
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
 class ChordsFormatter (
     private val notation: ChordsNotation,
-    private val keyModifier: NoteModifier? = null,
+    private val key: MajorKey? = null,
 ) {
 
     fun formatLyrics(lyrics: LyricsModel): LyricsModel {
@@ -27,10 +28,10 @@ class ChordsFormatter (
     private fun renderChordFragment(chordFragment: ChordFragment) {
         when (chordFragment.type) {
             ChordFragmentType.SINGLE_CHORD -> {
-                chordFragment.text = chordFragment.singleChord!!.format(notation, keyModifier)
+                chordFragment.text = chordFragment.singleChord!!.format(notation, key)
             }
             ChordFragmentType.COMPOUND_CHORD -> {
-                chordFragment.text = chordFragment.compoundChord!!.format(notation, keyModifier)
+                chordFragment.text = chordFragment.compoundChord!!.format(notation, key)
             }
             else -> {}
         }
