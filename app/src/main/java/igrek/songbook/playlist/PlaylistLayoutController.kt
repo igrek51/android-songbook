@@ -3,9 +3,12 @@ package igrek.songbook.playlist
 
 import android.os.Handler
 import android.os.Looper
+import android.view.KeyEvent
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.view.isVisible
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -14,6 +17,7 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
+import igrek.songbook.layout.LocalFocusTraverser
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.layout.dialog.InputDialogBuilder
@@ -75,6 +79,74 @@ class PlaylistLayoutController(
 
         itemsListView!!.init(activity, this, ::itemMoved)
         updateItemsList()
+
+        val localFocus = LocalFocusTraverser(
+            currentViewGetter = { itemsListView?.selectedView },
+            currentFocusGetter = { appFactory.activity.get().currentFocus?.id },
+            preNextFocus = { currentFocusId: Int, currentView: View ->
+                when {
+                    appFactory.navigationMenuController.get().isDrawerShown() -> R.id.nav_view
+                    else -> 0
+                }
+            },
+            nextLeft = { currentFocusId: Int, currentView: View ->
+                when (currentFocusId) {
+                    R.id.itemSongMoreButton, R.id.playlistListView -> {
+                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        itemsListView?.requestFocusFromTouch()
+                    }
+                }
+                when {
+                    currentFocusId == R.id.itemSongMoreButton -> -1
+                    currentFocusId == R.id.playlistListView && playlist != null -> R.id.goBackButton
+                    currentFocusId == R.id.playlistListView && playlist == null -> R.id.navMenuButton
+                    else -> 0
+                }
+            },
+            nextRight = { currentFocusId: Int, currentView: View ->
+                when {
+                    currentFocusId == R.id.playlistListView && currentView.findViewById<View>(R.id.itemSongMoreButton)?.isVisible == true -> {
+                        (currentView as? ViewGroup)?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+                        R.id.itemSongMoreButton
+                    }
+                    else -> 0
+                }
+            },
+            nextUp = { currentFocusId: Int, currentView: View ->
+                when (currentFocusId) {
+                    R.id.itemSongMoreButton, R.id.playlistListView -> {
+                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        itemsListView?.requestFocusFromTouch()
+                    }
+                }
+                when {
+                    currentFocusId == R.id.itemSongMoreButton -> -1
+                    itemsListView?.selectedItemPosition == 0 -> {
+                        when {
+                            playlist != null -> R.id.goBackButton
+                            else -> R.id.navMenuButton
+                        }
+                    }
+                    else -> 0
+                }
+            },
+            nextDown = { currentFocusId: Int, currentView: View ->
+                when (currentFocusId) {
+                    R.id.itemSongMoreButton, R.id.playlistListView -> {
+                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        itemsListView?.requestFocusFromTouch()
+                    }
+                }
+                0
+            },
+        )
+        itemsListView?.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN) {
+                if (localFocus.handleKey(keyCode))
+                    return@setOnKeyListener true
+            }
+            return@setOnKeyListener false
+        }
 
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()

@@ -21,9 +21,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
 class OpenHistoryLayoutController(
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-        songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
-        songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
+    songOpener: LazyInject<SongOpener> = appFactory.songOpener,
 ) : InflatedLayout(
         _layoutResourceId = R.layout.screen_open_history
 ), SongClickListener {

@@ -10,6 +10,7 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.navigation.NavigationMenuController
+import igrek.songbook.playlist.PlaylistLayoutController
 import igrek.songbook.songselection.top.TopSongsLayoutController
 
 class GlobalFocusTraverser(
@@ -75,6 +76,14 @@ class GlobalFocusTraverser(
                 R.id.addCustomSongButton -> R.id.moreActionsButton
                 else -> 0
             }
+            layoutController.isState(PlaylistLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton -> when {
+                    activity.findViewById<View>(R.id.goBackButton)?.isVisible == true -> R.id.goBackButton
+                    activity.findViewById<View>(R.id.addPlaylistButton)?.isVisible == true -> R.id.addPlaylistButton
+                    else -> 0
+                }
+                else -> 0
+            }
             currentViewId == R.id.goBackButton -> when {
                 activity.findViewById<View>(R.id.languageFilterButton)?.isVisible == true -> R.id.languageFilterButton
                 activity.findViewById<View>(R.id.searchSongButton)?.isVisible == true -> R.id.searchSongButton
@@ -104,7 +113,12 @@ class GlobalFocusTraverser(
                     else -> R.id.navMenuButton
                 }
                 R.id.goBackButton -> R.id.navMenuButton
-                else -> 0
+                else -> R.id.navMenuButton
+            }
+            layoutController.isState(PlaylistLayoutController::class) -> when (currentViewId) {
+                R.id.goBackButton -> R.id.navMenuButton
+                R.id.addPlaylistButton -> R.id.navMenuButton
+                else -> R.id.navMenuButton
             }
             currentViewId == R.id.languageFilterButton -> when {
                 activity.findViewById<View>(R.id.goBackButton)?.isVisible == true -> R.id.goBackButton
@@ -133,6 +147,7 @@ class GlobalFocusTraverser(
             R.id.navMenuButton -> when {
                 layoutController.isState(TopSongsLayoutController::class) -> R.id.itemsList
                 layoutController.isState(CustomSongsListLayoutController::class) -> R.id.itemsListView
+                layoutController.isState(PlaylistLayoutController::class) -> R.id.playlistListView
                 else -> 0
             }
             else -> 0

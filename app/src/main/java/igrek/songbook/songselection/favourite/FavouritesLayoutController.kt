@@ -1,7 +1,5 @@
 package igrek.songbook.songselection.favourite
 
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.TextView
 import igrek.songbook.R
@@ -9,9 +7,12 @@ import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import igrek.songbook.layout.MainLayout
-import igrek.songbook.persistence.repository.AllSongsRepository
-import igrek.songbook.songselection.SongSelectionLayoutController
+import igrek.songbook.layout.InflatedLayout
+import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.songpreview.SongOpener
+import igrek.songbook.songselection.SongClickListener
+import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
+import igrek.songbook.songselection.listview.LazySongListView
 import igrek.songbook.songselection.listview.ListScrollPosition
 import igrek.songbook.songselection.search.SongSearchItem
 import igrek.songbook.songselection.tree.SongTreeItem
@@ -19,50 +20,62 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
 class FavouritesLayoutController(
-        favouriteSongsService: LazyInject<FavouriteSongsService> = appFactory.favouriteSongsService,
-) : SongSelectionLayoutController(), MainLayout {
+    favouriteSongsService: LazyInject<FavouriteSongsService> = appFactory.favouriteSongsService,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
+    songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+) : InflatedLayout(
+    _layoutResourceId = R.layout.screen_favourite_songs
+), SongClickListener {
     private val favouriteSongsService by LazyExtractor(favouriteSongsService)
+    private val songsRepository by LazyExtractor(songsRepository)
+    private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
+    private val songOpener by LazyExtractor(songOpener)
 
+    private var itemsListView: LazySongListView? = null
     private var storedScroll: ListScrollPosition? = null
     private var emptyListLabel: TextView? = null
-
     private val subscriptions = mutableListOf<Disposable>()
 
     override fun showLayout(layout: View) {
-        initSongSelectionLayout(layout)
+        super.showLayout(layout)
 
         emptyListLabel = layout.findViewById(R.id.emptyListLabel)
 
-        itemsListView!!.init(activity, this, songContextMenuBuilder)
-        updateSongItemsList()
+        itemsListView = layout.findViewById<LazySongListView>(R.id.itemsList)?.also {
+            it.init(activity, this, songContextMenuBuilder)
+        }
+        updateItemsList()
 
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
-        subscriptions.add(songsRepository.dbChangeSubject
+        subscriptions.add(
+            songsRepository.dbChangeSubject
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    if (layoutController.isState(this::class))
-                        updateSongItemsList()
-                }, UiErrorHandler::handleError))
-        subscriptions.add(favouriteSongsService.updateFavouriteSongSubject
+                    if (isLayoutVisible())
+                        updateItemsList()
+                }, UiErrorHandler::handleError)
+        )
+        subscriptions.add(
+            favouriteSongsService.updateFavouriteSongSubject
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    if (layoutController.isState(this::class))
-                        updateSongItemsList()
-                }, UiErrorHandler::handleError))
+                    if (isLayoutVisible())
+                        updateItemsList()
+                }, UiErrorHandler::handleError)
+        )
     }
 
-    override fun getLayoutResourceId(): Int {
-        return R.layout.screen_favourite_songs
-    }
+    private fun updateItemsList() {
+        val songsSequence = favouriteSongsService.getFavouriteSongs()
+            .asSequence()
+            .map { song -> SongSearchItem.song(song) }
 
-    override fun updateSongItemsList() {
-        super.updateSongItemsList()
-        // restore Scroll Position
+        itemsListView?.setItems(songsSequence.toList())
+
         if (storedScroll != null) {
-            Handler(Looper.getMainLooper()).post {
-                itemsListView?.restoreScrollPosition(storedScroll)
-            }
+            itemsListView?.restoreScrollPosition(storedScroll)
         }
 
         if (itemsListView!!.count == 0) {
@@ -72,23 +85,16 @@ class FavouritesLayoutController(
         }
     }
 
-    override fun getSongItems(songsRepo: AllSongsRepository): MutableList<SongTreeItem> {
-        // filter songs
-        val songsSequence = favouriteSongsService.getFavouriteSongs()
-                .asSequence()
-                .map { song -> SongSearchItem.song(song) }
-        return songsSequence.toMutableList()
-    }
-
-    override fun onBackClicked() {
-        layoutController.showPreviousLayoutOrQuit()
-    }
-
     override fun onSongItemClick(item: SongTreeItem) {
-        // store Scroll Position
         storedScroll = itemsListView?.currentScrollPosition
-        super.onSongItemClick(item)
+        if (item.isSong) {
+            songOpener.openSongPreview(item.song!!)
+        }
     }
 
-    override fun onLayoutExit() {}
+    override fun onSongItemLongClick(item: SongTreeItem) {
+        if (item.isSong) {
+            songContextMenuBuilder.showSongActions(item.song!!)
+        }
+    }
 }
