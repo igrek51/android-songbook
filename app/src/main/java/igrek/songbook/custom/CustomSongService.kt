@@ -12,29 +12,20 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.custom.CustomSong
 import igrek.songbook.persistence.user.custom.CustomSongMapper
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import igrek.songbook.settings.preferences.PreferencesState
 import java.util.*
 
 class CustomSongService(
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
-        editSongLayoutController: LazyInject<EditSongLayoutController> = appFactory.editSongLayoutController,
-        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
-        exportFileChooser: LazyInject<ExportFileChooser> = appFactory.songExportFileChooser,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+    editSongLayoutController: LazyInject<EditSongLayoutController> = appFactory.editSongLayoutController,
+    exportFileChooser: LazyInject<ExportFileChooser> = appFactory.songExportFileChooser,
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val songsRepository by LazyExtractor(songsRepository)
     private val layoutController by LazyExtractor(layoutController)
     private val editSongLayoutController by LazyExtractor(editSongLayoutController)
-    private val preferencesState by LazyExtractor(preferencesState)
     private val songExportFileChooser by LazyExtractor(exportFileChooser)
-
-    var customSongsGroupCategories: Boolean
-        get() = preferencesState.customSongsGroupCategories
-        set(value) {
-            preferencesState.customSongsGroupCategories = value
-        }
 
     fun showAddSongScreen() {
         editSongLayoutController.setCurrentSong(null)
@@ -123,7 +114,7 @@ class CustomSongService(
     }
 
     fun showEditorHintsIfNeeded() {
-        if (songsRepository.customSongsRepo.songs.get().count() == 0) {
+        if (songsRepository.customSongsRepo.songs.get().isEmpty()) {
             uiInfoService.showTooltip(R.string.chords_editor_hint)
         }
     }

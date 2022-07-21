@@ -61,15 +61,13 @@ enum class PreferencesField constructor(
 
     RandomPlaylistSongs(false),
 
-    CustomSongsGroupCategories(false),
-
     RestoreTransposition(true),
 
     ChordsInstrument(
         GenericLongIdPreferenceType(
-            defaultValue = igrek.songbook.settings.instrument.ChordsInstrument.default,
-            serializer = igrek.songbook.settings.instrument.ChordsInstrument::id,
-            deserializer = igrek.songbook.settings.instrument.ChordsInstrument.Companion::parseById
+            defaultValue = igrek.songbook.settings.enums.ChordsInstrument.default,
+            serializer = igrek.songbook.settings.enums.ChordsInstrument::id,
+            deserializer = igrek.songbook.settings.enums.ChordsInstrument.Companion::parseById
         )
     ),
 
@@ -136,6 +134,14 @@ enum class PreferencesField constructor(
             defaultValue = HomeScreenEnum.default,
             serializer = HomeScreenEnum::id,
             deserializer = HomeScreenEnum.Companion::parseById,
+        )
+    ),
+
+    CustomSongsOrdering(
+        GenericLongIdPreferenceType(
+            defaultValue = igrek.songbook.settings.enums.CustomSongsOrdering.default,
+            serializer = igrek.songbook.settings.enums.CustomSongsOrdering::id,
+            deserializer = igrek.songbook.settings.enums.CustomSongsOrdering.Companion::parseById,
         )
     ),
 

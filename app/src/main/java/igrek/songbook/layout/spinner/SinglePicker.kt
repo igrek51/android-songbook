@@ -37,5 +37,7 @@ class SinglePicker<T>(
 
     override fun onClick(dialog: DialogInterface?, which: Int) {
         selectedKey = entityNames.keys.elementAt(which)
+        dialog?.dismiss()
+        onChange.invoke(selectedKey)
     }
 }

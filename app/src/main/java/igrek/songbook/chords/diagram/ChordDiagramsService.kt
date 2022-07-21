@@ -31,8 +31,7 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
-import igrek.songbook.settings.instrument.ChordsInstrument
-import igrek.songbook.settings.instrument.ChordsInstrumentService
+import igrek.songbook.settings.enums.ChordsInstrument
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.system.SoftKeyboardService
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -46,7 +45,6 @@ class ChordDiagramsService(
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
     contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
     activity: LazyInject<Activity> = appFactory.activity,
-    chordsInstrumentService: LazyInject<ChordsInstrumentService> = appFactory.chordsInstrumentService,
     chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
     softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
@@ -55,7 +53,6 @@ class ChordDiagramsService(
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val contextMenuBuilder by LazyExtractor(contextMenuBuilder)
     private val activity by LazyExtractor(activity)
-    private val chordsInstrumentService by LazyExtractor(chordsInstrumentService)
     private val chordsNotationService by LazyExtractor(chordsNotationService)
     private val preferencesState by LazyExtractor(preferencesState)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
@@ -84,7 +81,7 @@ class ChordDiagramsService(
         GlobalScope.launch(Dispatchers.Main) {
             SafeExecutor {
 
-                val instrument = chordsInstrumentService.instrument
+                val instrument = preferencesState.chordsInstrument
                 val instrumentName = uiResourceService.resString(instrument.displayNameResId)
                 val title = uiResourceService.resString(R.string.chord_diagrams_versions, typedChord, instrumentName)
 
@@ -104,7 +101,7 @@ class ChordDiagramsService(
 
                 val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-                val diagramView = when (chordsInstrumentService.instrument) {
+                val diagramView = when (preferencesState.chordsInstrument) {
                     ChordsInstrument.PIANO -> inflateDrawableChordDiagramView(typedChord, inflater)
                     else -> inflateTextChordDiagramView(typedChord, inflater)
                 }
@@ -161,7 +158,7 @@ class ChordDiagramsService(
     }
 
     private fun hasChordDiagram(typedChordName: String): Boolean {
-        return when (chordsInstrumentService.instrument) {
+        return when (preferencesState.chordsInstrument) {
             ChordsInstrument.PIANO -> {
                 val chord: GeneralChord? = ChordParser(chordsNotationService.chordsNotation).parseGeneralChord(typedChordName)
                 if (chord == null) {
@@ -173,7 +170,7 @@ class ChordDiagramsService(
             else -> {
                 val toEnglishConverter = ChordsNotationConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH, false)
                 val engChord = toEnglishConverter.convertChordFragments(typedChordName)
-                val chordDiagramCodes = getChordDiagramCodes(chordsInstrumentService.instrument)
+                val chordDiagramCodes = getChordDiagramCodes(preferencesState.chordsInstrument)
                 engChord in chordDiagramCodes
             }
         }
@@ -195,7 +192,7 @@ class ChordDiagramsService(
         val toEnglishConverter = ChordsNotationConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH, preferencesState.forceSharpNotes)
         val engChord: String = toEnglishConverter.convertChordFragments(typedChord)
 
-        val instrument = chordsInstrumentService.instrument
+        val instrument = preferencesState.chordsInstrument
         val diagramBuilder = ChordTextDiagramBuilder(instrument, preferencesState.chordDiagramStyle)
 
         val chordDiagramCodes = getChordDiagramCodes(instrument)
@@ -214,7 +211,7 @@ class ChordDiagramsService(
         val toEnglishConverter = ChordsNotationConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH, preferencesState.forceSharpNotes)
         val engChord: String = toEnglishConverter.convertChordFragments(typedChord)
 
-        val diagramBuilder: DrawableChordDiagramBuilder = when (chordsInstrumentService.instrument) {
+        val diagramBuilder: DrawableChordDiagramBuilder = when (preferencesState.chordsInstrument) {
             ChordsInstrument.PIANO -> PianoChordDiagramBuilder()
             else -> throw RuntimeException("Unsupported instrument")
         }

@@ -295,8 +295,6 @@
     <string name="settings_toggle_all_languages">Zaznacz / Odznacz wszystkie języki</string>
     <string name="settings_toggle_all_artists">Zaznacz / Odznacz wszystkie kategorie</string>
     <string name="settings_custom_songs">Moje piosenki</string>
-    <string name="settings_group_custom_songs">Grupuj własne piosenki</string>
-    <string name="settings_group_custom_songs_hint">Grupuj razem własne piosenki należące do tej samej kategorii (artysty)</string>
     <string name="settings_chords_end_of_line">Wyświetlaj akordy na końcu linii</string>
     <string name="settings_chords_end_of_line_hint">Wyświetlaj wszystkie akordy wyrównane do prawej strony ekranu</string>
     <string name="settings_chords_above">Wyświetlaj akordy nad tekstem</string>
@@ -508,9 +506,11 @@
     <string name="settings_force_sharp_chords_hint">Zawsze pokazuj dźwięki z krzyżykami (C#, D#), unikając bemoli (Db, Eb).</string>
     <string name="settings_chord_diagrams_section">Diagramy akordów</string>
     <string name="instrument_piano">Pianino</string>
-    <string name="song_list_sorting">Sortuj</string>
-    <string name="song_sorting_by_title">wg tytułu piosenki</string>
-    <string name="song_sorting_by_artist">wg artysty (kategorii)</string>
-    <string name="song_sorting_by_latest">od najnowszych</string>
-    <string name="song_sorting_by_oldest">od najstarszych</string>
+    <string name="settings_custom_songs_ordering">Porządek listy moich piosenek</string>
+    <string name="song_list_ordering">Porządek piosenek</string>
+    <string name="song_sorting_by_title">Sortuj wg tytułu</string>
+    <string name="song_sorting_by_artist">Sortuj wg artysty (kategorii)</string>
+    <string name="song_sorting_by_latest">Sortuj od najnowszych</string>
+    <string name="song_sorting_by_oldest">Sortuj od najstarszych</string>
+    <string name="song_sorting_group_categories">Grupuj wg artysty</string>
 </resources>

@@ -7,7 +7,8 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.buttons.MediaButtonBehaviours
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.homescreen.HomeScreenEnum
-import igrek.songbook.settings.instrument.ChordsInstrument
+import igrek.songbook.settings.enums.ChordsInstrument
+import igrek.songbook.settings.enums.CustomSongsOrdering
 import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.DisplayStyle
@@ -30,7 +31,6 @@ class PreferencesState(
     var autoscrollSpeedVolumeKeys: Boolean by PreferenceDelegate(PreferencesField.AutoscrollSpeedVolumeKeys)
     var randomFavouriteSongsOnly: Boolean by PreferenceDelegate(PreferencesField.RandomFavouriteSongsOnly)
     var randomPlaylistSongs: Boolean by PreferenceDelegate(PreferencesField.RandomPlaylistSongs)
-    var customSongsGroupCategories: Boolean by PreferenceDelegate(PreferencesField.CustomSongsGroupCategories)
     var restoreTransposition: Boolean by PreferenceDelegate(PreferencesField.RestoreTransposition)
     var chordsInstrument: ChordsInstrument by PreferenceDelegate(PreferencesField.ChordsInstrument)
     var userAuthToken: String by PreferenceDelegate(PreferencesField.UserAuthToken)
@@ -52,6 +52,7 @@ class PreferencesState(
     var purchasedAdFree: Boolean by PreferenceDelegate(PreferencesField.PurchasedAdFree)
     var homeScreen: HomeScreenEnum by PreferenceDelegate(PreferencesField.HomeScreen)
     var forceSharpNotes: Boolean by PreferenceDelegate(PreferencesField.ForceSharpNotes)
+    var customSongsOrdering: CustomSongsOrdering by PreferenceDelegate(PreferencesField.CustomSongsOrdering)
 
 }
 

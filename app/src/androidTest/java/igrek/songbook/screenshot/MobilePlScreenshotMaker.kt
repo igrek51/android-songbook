@@ -12,7 +12,7 @@ import igrek.songbook.R
 import igrek.songbook.activity.MainActivity
 import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import igrek.songbook.settings.instrument.ChordsInstrument
+import igrek.songbook.settings.enums.ChordsInstrument
 import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.DisplayStyle

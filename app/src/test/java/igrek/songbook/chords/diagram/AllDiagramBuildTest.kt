@@ -1,7 +1,7 @@
 package igrek.songbook.chords.diagram
 
 import igrek.songbook.chords.diagram.guitar.ChordTextDiagramBuilder
-import igrek.songbook.settings.instrument.ChordsInstrument
+import igrek.songbook.settings.enums.ChordsInstrument
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package igrek.songbook.settings.instrument
+package igrek.songbook.settings.enums
 
 import igrek.songbook.R
 

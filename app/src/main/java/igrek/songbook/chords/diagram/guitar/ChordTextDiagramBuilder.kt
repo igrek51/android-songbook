@@ -1,6 +1,6 @@
 package igrek.songbook.chords.diagram.guitar
 
-import igrek.songbook.settings.instrument.ChordsInstrument
+import igrek.songbook.settings.enums.ChordsInstrument
 import kotlin.math.max
 
 

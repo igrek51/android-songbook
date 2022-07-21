@@ -305,8 +305,6 @@
     <string name="settings_toggle_all_languages">Toggle all languages</string>
     <string name="settings_toggle_all_artists">Toggle all categories</string>
     <string name="settings_custom_songs">My songs</string>
-    <string name="settings_group_custom_songs">Group custom songs</string>
-    <string name="settings_group_custom_songs_hint">Group custom songs with the same category (artist) together</string>
     <string name="settings_chords_end_of_line">Display chords at the end of line</string>
     <string name="settings_chords_end_of_line_hint">Align chords to the right edge of the screen</string>
     <string name="settings_chords_above">Display chords above lyrics</string>
@@ -535,9 +533,11 @@
     <string name="settings_force_sharp_chords_hint">Always show sharp notes (C#, D#), avoiding flat notes (Db, Eb).</string>
     <string name="settings_chord_diagrams_section">Chord diagrams</string>
     <string name="instrument_piano">Piano</string>
-    <string name="song_list_sorting">Sort by</string>
-    <string name="song_sorting_by_title">Song Title</string>
-    <string name="song_sorting_by_artist">Artist (Category)</string>
-    <string name="song_sorting_by_latest">Latest</string>
-    <string name="song_sorting_by_oldest">Oldest</string>
+    <string name="settings_custom_songs_ordering">My Songs ordering</string>
+    <string name="song_list_ordering">Songs list ordering</string>
+    <string name="song_sorting_by_title">Sort by title</string>
+    <string name="song_sorting_by_artist">Sort by artist (category)</string>
+    <string name="song_sorting_by_latest">Sort by latest</string>
+    <string name="song_sorting_by_oldest">Sort by oldest</string>
+    <string name="song_sorting_group_categories">Group by artists</string>
 </resources>

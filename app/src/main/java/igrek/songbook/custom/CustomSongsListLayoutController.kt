@@ -25,6 +25,8 @@ import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.custom.CustomCategory
 import igrek.songbook.persistence.user.custom.CustomSongsDb
+import igrek.songbook.settings.enums.CustomSongsOrdering
+import igrek.songbook.settings.enums.SettingsEnumService
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
@@ -46,6 +48,7 @@ class CustomSongsListLayoutController(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     importFileChooser: LazyInject<ImportFileChooser> = appFactory.allSongsImportFileChooser,
     songImportFileChooser: LazyInject<SongImportFileChooser> = appFactory.songImportFileChooser,
+    settingsEnumService: LazyInject<SettingsEnumService> = appFactory.settingsEnumService,
 ) : InflatedLayout(
     _layoutResourceId = R.layout.screen_custom_songs
 ), ListItemClickListener<CustomSongListItem> {
@@ -59,6 +62,7 @@ class CustomSongsListLayoutController(
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val importFileChooser by LazyExtractor(importFileChooser)
     private val songImportFileChooser by LazyExtractor(songImportFileChooser)
+    private val settingsEnumService by LazyExtractor(settingsEnumService)
 
     private var itemsListView: CustomSongListView? = null
     private var goBackButton: ImageButton? = null
@@ -67,8 +71,7 @@ class CustomSongsListLayoutController(
     private var emptyListLabel: TextView? = null
 
     private var customCategory: CustomCategory? = null
-    private var sortPicker: SinglePicker<SongSorting>? = null
-    private var currentSorting: SongSorting = SongSorting.BY_TITLE
+    private var sortPicker: SinglePicker<CustomSongsOrdering>? = null
     private var subscriptions = mutableListOf<Disposable>()
 
     override fun showLayout(layout: View) {
@@ -90,15 +93,15 @@ class CustomSongsListLayoutController(
         }
 
         layout.findViewById<ImageButton>(R.id.songsSortButton)?.apply {
-            val title = uiResourceService.resString(R.string.song_list_sorting)
+            val title = uiResourceService.resString(R.string.song_list_ordering)
             sortPicker = SinglePicker(
                 activity,
-                entityNames = songSortingEntries(),
-                selected = currentSorting,
+                entityNames = settingsEnumService.customSongsOrderingEnumEntries(),
+                selected = settingsEnumService.preferencesState.customSongsOrdering,
                 title = title,
             ) { selectedSorting ->
-                if (currentSorting != selectedSorting) {
-                    currentSorting = selectedSorting
+                if (settingsEnumService.preferencesState.customSongsOrdering != selectedSorting) {
+                    settingsEnumService.preferencesState.customSongsOrdering = selectedSorting
                     updateItemsList()
                 }
             }
@@ -176,33 +179,33 @@ class CustomSongsListLayoutController(
     }
 
     private fun updateItemsList() {
-        val locale = appLanguageService.getCurrentLocale()
+        val groupingEnabled = settingsEnumService.preferencesState.customSongsOrdering == CustomSongsOrdering.GROUP_CATEGORIES
+        val songItems: List<CustomSongListItem> = when {
 
-        val songItems: List<CustomSongListItem>
-        val groupingEnabled = customSongService.customSongsGroupCategories
-        if (groupingEnabled) {
-
-            val categoryNameComparator = InsensitiveNameComparator<CustomCategory>(locale) { category -> category.name }
-            if (customCategory == null) {
+            groupingEnabled && customCategory == null -> {
+                val locale = appLanguageService.getCurrentLocale()
+                val categoryNameComparator = InsensitiveNameComparator<CustomCategory>(locale) { category -> category.name }
                 val categories = songsRepository.customSongsDao.customCategories
                     .sortedWith(categoryNameComparator)
                     .map { CustomSongListItem(customCategory = it) }
                 val uncategorized = songsRepository.customSongsRepo.uncategorizedSongs.get()
                     .sortSongs()
                     .map { CustomSongListItem(song = it) }
-                songItems = categories + uncategorized
-            } else {
-                songItems = customCategory!!.songs
+                categories + uncategorized
+            }
+
+            groupingEnabled && customCategory != null -> {
+                customCategory!!.songs
                     .sortSongs()
                     .map { CustomSongListItem(song = it) }
             }
 
-        } else {
-            songItems = songsRepository.customSongsRepo.songs.get()
-                .sortSongs()
-                .map { CustomSongListItem(song = it) }
+            else -> {
+                songsRepository.customSongsRepo.songs.get()
+                    .sortSongs()
+                    .map { CustomSongListItem(song = it) }
+            }
         }
-
         itemsListView?.items = songItems
 
         if (storedScroll != null) {
@@ -230,25 +233,24 @@ class CustomSongsListLayoutController(
 
     private fun List<Song>.sortSongs(): List<Song> {
         val locale = appLanguageService.getCurrentLocale()
-
-        return when (currentSorting) {
-            SongSorting.BY_TITLE -> {
+        return when (settingsEnumService.preferencesState.customSongsOrdering) {
+            CustomSongsOrdering.SORT_BY_TITLE, CustomSongsOrdering.GROUP_CATEGORIES -> {
                 this.sortedBy { song -> song.displayName().lowercase(locale) }
             }
-            SongSorting.BY_ARTIST -> {
+            CustomSongsOrdering.SORT_BY_ARTIST -> {
                 this.sortedWith(
                     compareBy<Song> { song -> song.displayCategories().isEmpty() }
                         .thenBy { song -> song.displayCategories() }
                         .thenBy { song -> song.displayName().lowercase(locale) }
                 )
             }
-            SongSorting.BY_LATEST -> {
+            CustomSongsOrdering.SORT_BY_LATEST -> {
                 this.sortedWith(compareBy (
                     { song -> -song.updateTime },
                     { song -> song.displayName().lowercase(locale) },
                 ))
             }
-            SongSorting.BY_OLDEST -> {
+            CustomSongsOrdering.SORT_BY_OLDEST -> {
                 this.sortedWith(compareBy (
                     { song -> song.updateTime },
                     { song -> song.displayName().lowercase(locale) },
@@ -290,24 +292,6 @@ class CustomSongsListLayoutController(
         item.song?.let {
             songContextMenuBuilder.showSongActions(it)
         }
-    }
-
-    enum class SongSorting(val resId: Int) {
-
-        BY_TITLE(R.string.song_sorting_by_title),
-        BY_ARTIST(R.string.song_sorting_by_artist),
-        BY_LATEST(R.string.song_sorting_by_latest),
-        BY_OLDEST(R.string.song_sorting_by_oldest),
-        ;
-    }
-
-    private fun songSortingEntries(): LinkedHashMap<SongSorting, String> {
-        val map = LinkedHashMap<SongSorting, String>()
-        SongSorting.values().forEach { item ->
-            val displayName = uiResourceService.resString(item.resId)
-            map[item] = displayName
-        }
-        return map
     }
 
 }

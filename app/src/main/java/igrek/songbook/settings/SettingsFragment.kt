@@ -23,10 +23,11 @@ import igrek.songbook.settings.buttons.MediaButtonBehaviours
 import igrek.songbook.settings.buttons.MediaButtonService
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
+import igrek.songbook.settings.enums.SettingsEnumService
 import igrek.songbook.settings.homescreen.HomeScreenEnum
 import igrek.songbook.settings.homescreen.HomeScreenEnumService
-import igrek.songbook.settings.instrument.ChordsInstrument
-import igrek.songbook.settings.instrument.ChordsInstrumentService
+import igrek.songbook.settings.enums.ChordsInstrument
+import igrek.songbook.settings.enums.CustomSongsOrdering
 import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesState
@@ -47,24 +48,24 @@ class SettingsFragment(
     lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
     appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
     chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
-    chordsInstrumentService: LazyInject<ChordsInstrumentService> = appFactory.chordsInstrumentService,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
     googleSyncManager: LazyInject<GoogleSyncManager> = appFactory.googleSyncManager,
     mediaButtonService: LazyInject<MediaButtonService> = appFactory.mediaButtonService,
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
     homeScreenEnumService: LazyInject<HomeScreenEnumService> = appFactory.homeScreenEnumService,
+    settingsEnumService: LazyInject<SettingsEnumService> = appFactory.settingsEnumService,
 ) : PreferenceFragmentCompat() {
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val activity by LazyExtractor(appCompatActivity)
     private val lyricsThemeService by LazyExtractor(lyricsThemeService)
     private val appLanguageService by LazyExtractor(appLanguageService)
     private val chordsNotationService by LazyExtractor(chordsNotationService)
-    private val chordsInstrumentService by LazyExtractor(chordsInstrumentService)
     private val preferencesState by LazyExtractor(preferencesState)
     private val googleSyncManager by LazyExtractor(googleSyncManager)
     private val mediaButtonService by LazyExtractor(mediaButtonService)
     private val layoutController by LazyExtractor(layoutController)
     private val homeScreenEnumService by LazyExtractor(homeScreenEnumService)
+    private val settingsEnumService by LazyExtractor(settingsEnumService)
 
     private var decimalFormat1: DecimalFormat = DecimalFormat("#.#")
     private var decimalFormat3: DecimalFormat = DecimalFormat("#.###")
@@ -97,7 +98,7 @@ class SettingsFragment(
         )
 
         setupListPreference("chordsInstrument",
-            chordsInstrumentService.instrumentEntries(),
+            settingsEnumService.instrumentEntries(),
             onLoad = { preferencesState.chordsInstrument.id.toString() },
             onSave = { id: String ->
                 preferencesState.chordsInstrument = ChordsInstrument.parseById(id.toLong())
@@ -106,7 +107,7 @@ class SettingsFragment(
         )
 
         setupListPreference("chordDiagramStyle",
-            chordsInstrumentService.chordDiagramStyleEntries(),
+            settingsEnumService.chordDiagramStyleEntries(),
             onLoad = { preferencesState.chordDiagramStyle.id.toString() },
             onSave = { id: String ->
                 preferencesState.chordDiagramStyle = ChordDiagramStyle.mustParseById(id.toLong())
@@ -235,13 +236,6 @@ class SettingsFragment(
             }
         )
 
-        setupSwitchPreference("customSongsGroupCategories",
-            onLoad = { preferencesState.customSongsGroupCategories },
-            onSave = { value: Boolean ->
-                preferencesState.customSongsGroupCategories = value
-            }
-        )
-
         setupSwitchPreference("restoreTransposition",
             onLoad = { preferencesState.restoreTransposition },
             onSave = { value: Boolean ->
@@ -328,6 +322,14 @@ class SettingsFragment(
             onLoad = { preferencesState.mediaButtonBehaviour.id.toString() },
             onSave = { id: String ->
                 preferencesState.mediaButtonBehaviour = MediaButtonBehaviours.mustParseById(id.toLong())
+            }
+        )
+
+        setupListPreference("customSongsOrdering",
+            settingsEnumService.customSongsOrderingStringEntries(),
+            onLoad = { preferencesState.customSongsOrdering.id.toString() },
+            onSave = { id: String ->
+                preferencesState.customSongsOrdering = CustomSongsOrdering.mustParseById(id.toLong())
             }
         )
 
