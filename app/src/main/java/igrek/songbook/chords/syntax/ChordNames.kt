@@ -385,7 +385,7 @@ class ChordNames {
                         Note.G_FLAT -> "Ges"
                         Note.G -> "G"
                         Note.G_SHARP -> "Gis"
-                        Note.A_FLAT -> "Aa"
+                        Note.A_FLAT -> "As"
                         Note.A -> "A"
                         Note.A_SHARP -> "Ais"
                         Note.B_FLAT -> "Bes"
