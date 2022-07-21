@@ -1,9 +1,9 @@
 package igrek.songbook.editor
 
-import igrek.songbook.chords.detector.ChordsDetector
+import igrek.songbook.chordsv2.parser.ChordParser
 
 class ChordsMarker(
-        private val detector: ChordsDetector
+    private val chordParser: ChordParser,
 ) {
 
     var allMarkedChords = mutableListOf<String>()
@@ -37,7 +37,7 @@ class ChordsMarker(
                     wordsConsumed++
                     return@forEach // continue
                 }
-                if (!detector.isWordAChord(word)) {
+                if (!chordParser.isWordAChord(word)) {
                     return@loop // break
                 }
                 wordsConsumed++

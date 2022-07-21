@@ -32,15 +32,15 @@ import igrek.songbook.settings.theme.FontTypeface
 import igrek.songbook.system.SoftKeyboardService
 
 class ChordsEditorLayoutController(
-        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
-        navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
-        editSongLayoutController: LazyInject<EditSongLayoutController> = appFactory.editSongLayoutController,
-        softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
-        contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
-        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+    navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
+    editSongLayoutController: LazyInject<EditSongLayoutController> = appFactory.editSongLayoutController,
+    softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
+    contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) : MainLayout {
     private val layoutController by LazyExtractor(layoutController)
     private val uiInfoService by LazyExtractor(uiInfoService)
@@ -54,7 +54,7 @@ class ChordsEditorLayoutController(
 
     private var contentEdit: EditText? = null
     private var layout: View? = null
-    var chordsNotation: ChordsNotation? = null
+    var chordsNotation: ChordsNotation = ChordsNotation.default
     var loadContent: String? = null
     private var history = LyricsEditorHistory()
     private var transformer: ChordsEditorTransformer? = null

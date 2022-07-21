@@ -162,10 +162,10 @@ class EditSongLayoutController(
         this.songTitle = songTitleEdit?.text?.toString().orEmpty()
         this.songContent = songContentEdit?.text?.toString().orEmpty()
         this.customCategoryName = customCategoryNameEdit?.text?.toString().orEmpty()
-        this.songChordsNotation = chordsNotationSpinner?.selectedNotation
-                ?: chordsNotationService.chordsNotation
+        val chordsNotation = chordsNotationSpinner?.selectedNotation ?: preferencesState.chordsNotation
+        this.songChordsNotation = chordsNotation
 
-        chordsEditorLayoutController.chordsNotation = this.songChordsNotation
+        chordsEditorLayoutController.chordsNotation = chordsNotation
         chordsEditorLayoutController.loadContent = songContentEdit?.text.toString()
         layoutController.showLayout(ChordsEditorLayoutController::class)
 

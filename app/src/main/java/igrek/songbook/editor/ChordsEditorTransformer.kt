@@ -4,6 +4,7 @@ import igrek.songbook.R
 import igrek.songbook.chords.converter.ChordsConverter
 import igrek.songbook.chords.detector.ChordsDetector
 import igrek.songbook.chords.syntax.ChordNameProvider
+import igrek.songbook.chordsv2.parser.ChordParser
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -13,11 +14,11 @@ import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.system.ClipboardManager
 
 class ChordsEditorTransformer(
-        private var history: LyricsEditorHistory,
-        private val chordsNotation: ChordsNotation?,
-        private val textEditor: ITextEditor,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        clipboardManager: LazyInject<ClipboardManager> = appFactory.clipboardManager,
+    private var history: LyricsEditorHistory,
+    private val chordsNotation: ChordsNotation,
+    private val textEditor: ITextEditor,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    clipboardManager: LazyInject<ClipboardManager> = appFactory.clipboardManager,
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val clipboardManager by LazyExtractor(clipboardManager)
@@ -269,23 +270,13 @@ class ChordsEditorTransformer(
 
 
     fun detectChords(keepIndentation: Boolean = false) {
-        val chordsMarker = ChordsMarker(ChordsDetector(chordsNotation))
+        val chordsMarker = ChordsMarker(ChordParser(chordsNotation))
         transformLyrics { lyrics ->
             chordsMarker.detectAndMarkChords(lyrics, keepIndentation)
         }
         val detectedChordsNum = chordsMarker.allMarkedChords.size
         if (detectedChordsNum == 0) {
-            // find chords from other notations as well
-            val text = textEditor.getText()
-            val genericChordsMarker = ChordsMarker(ChordsDetector())
-            genericChordsMarker.detectAndMarkChords(text, keepIndentation)
-            val otherChordsDetected = genericChordsMarker.allMarkedChords
-            if (otherChordsDetected.isNotEmpty()) {
-                val message = uiInfoService.resString(R.string.editor_other_chords_detected, otherChordsDetected.joinToString())
-                uiInfoService.showToast(message)
-            } else {
-                uiInfoService.showToast(R.string.no_new_chords_detected)
-            }
+            uiInfoService.showToast(R.string.no_new_chords_detected)
         } else {
             uiInfoService.showToast(uiInfoService.resString(R.string.new_chords_detected, detectedChordsNum.toString()))
         }
@@ -332,7 +323,7 @@ class ChordsEditorTransformer(
     private fun transformDetectAndMoveChordsAboveToInline(lyrics: String): String {
         val sharedLyrics = lyrics.replace("]", "]  ") // bring all chords to same unaligned format
 
-        val chordsMarker = ChordsMarker(ChordsDetector(chordsNotation))
+        val chordsMarker = ChordsMarker(ChordParser(chordsNotation))
         val lyricsDetected = chordsMarker.detectAndMarkChords(sharedLyrics, keepIndentation = false)
 
         val lyricsJoined = transformDoubleLines(lyricsDetected) { first: String, second: String ->

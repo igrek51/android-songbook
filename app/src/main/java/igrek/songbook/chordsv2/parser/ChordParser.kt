@@ -168,6 +168,15 @@ class ChordParser(
             }
     }
 
+    fun isWordAChord(word: String): Boolean {
+        val unknowns = mutableSetOf<String>()
+        val chordFragments = parseChordFragments(word, unknowns)
+        if (chordFragments.any { it.type == ChordFragmentType.UNKNOWN_CHORD })
+            return false
+        return chordFragments.any {
+            it.type == ChordFragmentType.SINGLE_CHORD || it.type == ChordFragmentType.COMPOUND_CHORD
+        }
+    }
 
     private val baseChordToNoteIndex: Map<String, Int> by lazy {
         val allNames = hashMapOf<String, Int>()
