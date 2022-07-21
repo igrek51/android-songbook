@@ -315,9 +315,13 @@ class AutoscrollService(
     private fun onCanvasScrollEvent(dScroll: Float, scroll: Float) {
         when (state) {
             AutoscrollState.WAITING -> {
-                eyeFocus += dScroll * WAITING_TIME_ADJUST_MODIFIER
-                eyeFocus = eyeFocus.cutOffMin(0f)
-                showAutoscrollWaitingTime(remainingWaitingTimeS())
+                if (dScroll > 0) {
+                    skipInitialPause()
+                } else if (dScroll < 0) {
+                    eyeFocus += dScroll * WAITING_TIME_ADJUST_MODIFIER
+                    eyeFocus = eyeFocus.cutOffMin(0f)
+                    showAutoscrollWaitingTime(remainingWaitingTimeS())
+                }
             }
             AutoscrollState.SCROLLING -> {
                 if (dScroll > 0) {
