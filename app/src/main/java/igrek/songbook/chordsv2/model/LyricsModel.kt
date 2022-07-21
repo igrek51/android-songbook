@@ -58,25 +58,6 @@ data class LyricsFragment(
     }
 }
 
-// A chord composed of multiple single chords, eg. Cadd9/G
-data class CompoundChord(
-    var text: String,
-    var chordFragments: List<ChordFragment> = listOf(),
-)
-
-data class ChordFragment(
-    var text: String,
-    val type: ChordFragmentType,
-    var x: Float = 0f,
-    var width: Float = 0f,
-    val chord: Chord? = null,
-) {
-    override fun toString(): String {
-        return text
-    }
-}
-
-
 enum class LyricsTextType {
     REGULAR_TEXT,
     CHORDS,
@@ -84,9 +65,29 @@ enum class LyricsTextType {
     LINEWRAPPER,
 }
 
-enum class ChordFragmentType {
-    CHORD,
-    CHORD_SPLITTER,
+data class ChordFragment(
+    var text: String,
+    val type: ChordFragmentType,
+    var x: Float = 0f,
+    var width: Float = 0f,
+    val singleChord: Chord? = null,
+    val compoundChord: CompoundChord? = null,
+) {
 }
+
+enum class ChordFragmentType {
+    SINGLE_CHORD,
+    COMPOUND_CHORD,
+    CHORD_SPLITTER,
+    UNKNOWN_CHORD,
+}
+
+// A chord composed of multiple single notes, eg. Cadd9/G
+data class CompoundChord(
+    var text: String,
+    val chord1: Chord,
+    val splitter: String,
+    val chord2: Chord,
+)
 
 const val lineWrapperChar = '\u21B5'
