@@ -95,7 +95,7 @@ fun convertToSharp(note: Note): Note {
         Note.E_FLAT -> Note.D_SHARP
         Note.G_FLAT -> Note.F_SHARP
         Note.A_FLAT -> Note.G_SHARP
-        Note.B_FLAT -> Note.B_FLAT // keep this exception
+        Note.B_FLAT -> Note.A_SHARP
         Note.C_FLAT -> Note.B
         else -> note
     }
