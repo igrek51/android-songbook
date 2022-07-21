@@ -1,6 +1,6 @@
 package igrek.songbook.chordsv2.transpose
 
-import igrek.songbook.chordsv2.ChordsFormatter
+import igrek.songbook.chordsv2.formatter.ChordsFormatter
 import igrek.songbook.chordsv2.detect.KeyDetector
 import igrek.songbook.chordsv2.parser.ChordParser
 import igrek.songbook.chordsv2.parser.LyricsParser

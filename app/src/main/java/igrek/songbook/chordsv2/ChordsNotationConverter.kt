@@ -1,6 +1,7 @@
 package igrek.songbook.chordsv2
 
 import igrek.songbook.chordsv2.detect.KeyDetector
+import igrek.songbook.chordsv2.formatter.ChordsFormatter
 import igrek.songbook.chordsv2.model.LyricsFragment
 import igrek.songbook.chordsv2.model.LyricsTextType
 import igrek.songbook.chordsv2.parser.ChordParser

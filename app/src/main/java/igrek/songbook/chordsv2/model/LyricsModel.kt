@@ -68,7 +68,7 @@ data class LyricsFragment(
         }
 
         fun chords(text: String, x: Float = 0f, width: Float = 0f): LyricsFragment {
-            return LyricsFragment(text, LyricsTextType.CHORDS, x = x, width = width)
+            return LyricsFragment(text, LyricsTextType.CHORDS, x = x, width = width, chordFragments = listOf())
         }
     }
 }

@@ -78,7 +78,7 @@ class ChordsNotationConverterTest {
     @Test
     fun test_lyrics_with_newlines() {
         val converter = ChordsNotationConverter(ChordsNotation.GERMAN, ChordsNotation.ENGLISH)
-        assertThat(converter.convertLyrics("a\n[a\nb\nB\nh]", originalModifiers = true)).isEqualTo("a\n[Am\nBbm\nBb\nBm]")
+        assertThat(converter.convertLyrics("a\n[a\nb\nB\nh]", originalModifiers = true)).isEqualTo("a\n[Am]\n[Bbm]\n[Bb]\n[Bm]")
     }
 
     @Test
