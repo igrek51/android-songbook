@@ -20,7 +20,7 @@ class NextFocusTraverser(
         val currentFocusId = activity.currentFocus?.id ?: 0
 
         val viewName = activity.currentFocus?.javaClass?.simpleName
-        logger.debug("current focus view id: $currentFocusId - $viewName")
+        logger.debug("Global Traverser: current focus view id: $currentFocusId - $viewName")
 
         val nextViewId = nextViewProvider(currentFocusId)
         if (nextViewId != 0 && nextViewId != currentFocusId) {
