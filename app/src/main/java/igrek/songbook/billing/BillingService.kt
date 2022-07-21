@@ -187,7 +187,7 @@ class BillingService(
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                 processPurchaseList(purchasesResult.purchasesList)
             } else {
-                logger.debug("restorePurchases: BillingResult [${billingResult.responseCode}]: ${billingResult.debugMessage}")
+                throw RuntimeException("Restoring purchases failed: ${billingResult.responseCode} ${billingResult.debugMessage}")
             }
 
             for (sku in knownAllSKUs) {
@@ -275,8 +275,13 @@ class BillingService(
 
     private fun processPurchaseList(purchases: List<Purchase>?) {
         if (purchases == null) {
-            logger.debug("Empty purchase list.")
+            logger.warn("purchases list is null")
             return
+        }
+        if (purchases.isEmpty()) {
+            logger.debug("Purchases list is empty")
+        } else {
+            logger.debug("Processing purchases: ${purchases.size}")
         }
 
         for (purchase in purchases) {
