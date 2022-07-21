@@ -173,7 +173,7 @@
     <string name="edit_song_remove">❌ Remove song</string>
     <string name="edit_song_has_been_saved">Song has been saved in \"My songs\".</string>
     <string name="edit_song_has_been_removed">Song has been removed.</string>
-    <string name="settings_chords_notation">Chords notation</string>
+    <string name="settings_chords_notation">Chords notation (note naming convention)</string>
     <string name="notation_german">German:\na b B H C C# d f#</string>
     <string name="notation_german_is">German (*is):\na b B H C Cis d fis</string>
     <string name="notation_english">English:\nAm Bbm Bb B C C# Dm F#m</string>

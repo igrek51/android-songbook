@@ -16,7 +16,7 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 class PreferencesState(
-        preferencesService: LazyInject<PreferencesService> = appFactory.preferencesService,
+    preferencesService: LazyInject<PreferencesService> = appFactory.preferencesService,
 ) {
     internal val preferencesService by LazyExtractor(preferencesService)
 
