@@ -313,12 +313,18 @@ class SongPreviewLayoutController(
         quickMenuAutoscroll.isVisible = false
         quickMenuTranspose.isVisible = !quickMenuTranspose.isVisible
         songPreview?.repaint()
+        if (quickMenuTranspose.isVisible) {
+            activity.findViewById<View>(R.id.transpose0Button)?.requestFocus()
+        }
     }
 
     private fun toggleAutoscrollPanel() {
         quickMenuTranspose.isVisible = false
         quickMenuAutoscroll.isVisible = !quickMenuAutoscroll.isVisible
         songPreview?.repaint()
+        if (quickMenuAutoscroll.isVisible) {
+            activity.findViewById<View>(R.id.autoscrollToggleButton)?.requestFocus()
+        }
     }
 
     fun isTransposePanelVisible(): Boolean = quickMenuTranspose.isVisible

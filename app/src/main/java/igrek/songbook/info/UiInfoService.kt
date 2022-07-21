@@ -18,7 +18,6 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.*
 
 
 @OptIn(DelicateCoroutinesApi::class)
@@ -30,14 +29,15 @@ open class UiInfoService(
     private val uiResourceService by LazyExtractor(uiResourceService)
 
     private val infobars = HashMap<View?, Snackbar>()
+    private var lastSnakbar: Snackbar? = null
     private val logger: Logger = LoggerFactory.logger
 
     open fun showSnackbar(
-            info: String = "",
-            infoResId: Int = 0,
-            actionResId: Int = 0,
-            action: (() -> Unit)? = null, // dissmiss by default
-            indefinite: Boolean = false,
+        info: String = "",
+        infoResId: Int = 0,
+        actionResId: Int = 0,
+        action: (() -> Unit)? = null, // dissmiss by default
+        indefinite: Boolean = false,
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             val snackbarLength = if (indefinite) Snackbar.LENGTH_INDEFINITE else Snackbar.LENGTH_LONG
@@ -64,6 +64,7 @@ open class UiInfoService(
             }
 
             snackbar.show()
+            lastSnakbar = snackbar
             infobars[view] = snackbar
         }
         logger.info("UI: snackbar: $info")
@@ -79,6 +80,17 @@ open class UiInfoService(
                        indefinite: Boolean = false, actionResId: Int, action: () -> Unit) {
         val info = uiResourceService.resString(infoResId, *args)
         showSnackbar(info = info, actionResId = actionResId, action = action, indefinite = indefinite)
+    }
+
+    fun isSnackbarShown(): Boolean {
+        return lastSnakbar?.isShown ?: false
+    }
+
+    fun focusSnackBar(): Boolean {
+        if (!isSnackbarShown())
+            return false
+        val actionView = lastSnakbar?.view?.findViewById<View>(com.google.android.material.R.id.snackbar_action)
+        return actionView?.requestFocusFromTouch() ?: false
     }
 
 

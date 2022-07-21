@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import igrek.songbook.R
 import igrek.songbook.custom.CustomSongsListLayoutController
+import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -19,11 +20,13 @@ class GlobalFocusTraverser(
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
     navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
     songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
 ) {
     private val activity by LazyExtractor(activity)
     private val layoutController by LazyExtractor(layoutController)
     private val navigationMenuController by LazyExtractor(navigationMenuController)
     private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
+    private val uiInfoService by LazyExtractor(uiInfoService)
 
     private val debugMode: Boolean = true
 
@@ -188,6 +191,10 @@ class GlobalFocusTraverser(
             when (currentViewId) {
                 R.id.navMenuButton, R.id.itemsList, R.id.itemsListView, R.id.main_content -> return R.id.nav_view
             }
+        }
+        if (uiInfoService.isSnackbarShown()) {
+            if (uiInfoService.focusSnackBar())
+                return -1
         }
 
         return when {
