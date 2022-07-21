@@ -1,6 +1,5 @@
 package igrek.songbook.admin
 
-
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -8,9 +7,9 @@ import igrek.songbook.inject.appFactory
 import kotlinx.coroutines.Deferred
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MediaType
 import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.RequestBody
 import okhttp3.Response
 
 class AdminCategoryManager(
@@ -27,7 +26,7 @@ class AdminCategoryManager(
     }
 
     private val httpRequester = HttpRequester()
-    private val jsonType = "application/json; charset=utf-8".toMediaTypeOrNull()
+    private val jsonType = MediaType.parse("application/json; charset=utf-8")
     private val jsonSerializer = Json {
         encodeDefaults = true
         ignoreUnknownKeys = false
@@ -43,11 +42,11 @@ class AdminCategoryManager(
         val json = jsonSerializer.encodeToString(CreateCategoryDto.serializer(), dto)
         val request: Request = Request.Builder()
                 .url(createCategoryUrl)
-                .post(json.toRequestBody(jsonType))
+                .post(RequestBody.create(jsonType, json))
                 .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
         return httpRequester.httpRequestAsync(request) { response: Response ->
-            logger.debug("Add category response", response.body?.string())
+            logger.debug("Add category response", response.body()?.string())
         }
     }
 }

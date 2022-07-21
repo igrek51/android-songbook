@@ -86,7 +86,7 @@ class SongsUpdater(
 
     private fun onSongDatabaseReceived(response: Response, songsDbFile: File, forcedUpdate: Boolean) {
         try {
-            val inputStream: InputStream = response.body!!.byteStream()
+            val inputStream: InputStream = response.body()!!.byteStream()
             val input = BufferedInputStream(inputStream)
             try {
                 songsRepository.close()
@@ -133,7 +133,7 @@ class SongsUpdater(
 
     private fun onSongDatabaseVersionReceived(response: Response) {
         try {
-            val remoteVersion = response.body?.string()?.toLong()
+            val remoteVersion = response.body()?.string()?.toLong()
             val localVersion = songsRepository.songsDbVersion()
 
             logger.debug("DB Update availability check: local: $localVersion, remote: $remoteVersion")

@@ -14,17 +14,15 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MediaType
 import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.RequestBody
 import okhttp3.Response
 import java.util.*
 
+@OptIn(DelicateCoroutinesApi::class)
 class AntechamberService(
         uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
@@ -51,7 +49,7 @@ class AntechamberService(
     }
 
     private val httpRequester = HttpRequester()
-    private val jsonType = "application/json; charset=utf-8".toMediaTypeOrNull()
+    private val jsonType = MediaType.parse("application/json; charset=utf-8")
     private val jsonSerializer = Json {
         encodeDefaults = true
         ignoreUnknownKeys = false
@@ -67,7 +65,7 @@ class AntechamberService(
                 .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
         return httpRequester.httpRequestAsync(request) { response: Response ->
-            val json = response.body?.string() ?: ""
+            val json = response.body()?.string() ?: ""
             val allDtos: AllAntechamberSongsDto = jsonSerializer.decodeFromString(AllAntechamberSongsDto.serializer(), json)
             val antechamberSongs: List<Song> = allDtos.toModel()
             antechamberSongs
@@ -79,7 +77,7 @@ class AntechamberService(
         val json = jsonSerializer.encodeToString(AntechamberSongDto.serializer(), antechamberSongDto)
         val request: Request = Request.Builder()
                 .url(specificSongUrl(song.id))
-                .put(json.toRequestBody(jsonType))
+                .put(RequestBody.create(jsonType, json))
                 .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
         return httpRequester.httpRequestAsync(request) { }
@@ -92,7 +90,7 @@ class AntechamberService(
         val json = jsonSerializer.encodeToString(AntechamberSongDto.serializer(), antechamberSongDto)
         val request: Request = Request.Builder()
                 .url(allSongsUrl)
-                .post(json.toRequestBody(jsonType))
+                .post(RequestBody.create(jsonType, json))
                 .build()
         return httpRequester.httpRequestAsync(request) { }
     }
@@ -114,11 +112,11 @@ class AntechamberService(
         val json = jsonSerializer.encodeToString(ChordsSongDto.serializer(), dto)
         val request: Request = Request.Builder()
                 .url(updatePublicSongIdUrl(song.id))
-                .put(json.toRequestBody(jsonType))
+                .put(RequestBody.create(jsonType, json))
                 .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
         return httpRequester.httpRequestAsync(request) { response: Response ->
-            logger.debug("Update response", response.body?.string())
+            logger.debug("Update response", response.body()?.string())
         }
     }
 
@@ -130,11 +128,11 @@ class AntechamberService(
         val json = jsonSerializer.encodeToString(ChordsSongDto.serializer(), dto)
         val request: Request = Request.Builder()
                 .url(approveSongUrl)
-                .post(json.toRequestBody(jsonType))
+                .post(RequestBody.create(jsonType, json))
                 .addHeader(authTokenHeader, adminService.userAuthToken)
                 .build()
         return httpRequester.httpRequestAsync(request) { response: Response ->
-            logger.debug("Approve response", response.body?.string())
+            logger.debug("Approve response", response.body()?.string())
         }
     }
 
