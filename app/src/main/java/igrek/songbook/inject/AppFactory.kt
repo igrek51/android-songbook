@@ -43,6 +43,7 @@ import igrek.songbook.send.*
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.settings.buttons.MediaButtonService
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
+import igrek.songbook.settings.homescreen.HomeScreenEnumService
 import igrek.songbook.settings.instrument.ChordsInstrumentService
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesService
@@ -162,4 +163,5 @@ class AppFactory(
     val mediaButtonService = SingletonInject { MediaButtonService() }
     val billingService = SingletonInject { BillingService() }
     val billingLayoutController = SingletonInject { BillingLayoutController() }
+    val homeScreenEnumService = SingletonInject { HomeScreenEnumService() }
 }

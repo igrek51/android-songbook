@@ -8,6 +8,11 @@
             android:title="@string/settings_language"
             android:summary="%s"
             app:iconSpaceReserved="false"/>
+        <ListPreference
+            android:key="homeScreen"
+            android:title="@string/settings_home_screen"
+            android:summary="%s"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_chords_section">

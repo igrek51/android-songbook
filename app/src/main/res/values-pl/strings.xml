@@ -487,4 +487,13 @@
     <string name="settings_random_playlist_songs">Losowanie z playlisty</string>
     <string name="settings_random_playlist_songs_hint">Akcja \"Losowa piosenka\" losuje piosenkę z aktualnie otwartej playlisty.</string>
     <string name="nav_add_custom_song">Nowa piosenka</string>
+    <string name="home_screen_enum_top">Top lista</string>
+    <string name="home_screen_enum_categories">Kategorie</string>
+    <string name="home_screen_enum_search">Szukaj</string>
+    <string name="home_screen_enum_latest">Najnowsze piosenki</string>
+    <string name="home_screen_enum_playlists">Playlisty</string>
+    <string name="home_screen_enum_my_songs">Moje piosenki</string>
+    <string name="home_screen_enum_favourites">Ulubione</string>
+    <string name="home_screen_enum_history">Historia</string>
+    <string name="settings_home_screen">Ekran startowy</string>
 </resources>

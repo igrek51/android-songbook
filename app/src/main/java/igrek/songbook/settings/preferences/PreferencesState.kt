@@ -6,6 +6,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.buttons.MediaButtonBehaviours
 import igrek.songbook.settings.chordsnotation.ChordsNotation
+import igrek.songbook.settings.homescreen.HomeScreenEnum
 import igrek.songbook.settings.instrument.ChordsInstrument
 import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.theme.ColorScheme
@@ -49,6 +50,7 @@ class PreferencesState(
     var horizontalScroll: Boolean by PreferenceDelegate(PreferencesField.HorizontalScroll)
     var mediaButtonBehaviour: MediaButtonBehaviours by PreferenceDelegate(PreferencesField.MediaButtonBehaviour)
     var purchasedAdFree: Boolean by PreferenceDelegate(PreferencesField.PurchasedAdFree)
+    var homeScreen: HomeScreenEnum by PreferenceDelegate(PreferencesField.HomeScreen)
 
 }
 

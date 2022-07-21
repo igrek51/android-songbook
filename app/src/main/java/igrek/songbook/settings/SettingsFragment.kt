@@ -24,6 +24,8 @@ import igrek.songbook.settings.buttons.MediaButtonBehaviours
 import igrek.songbook.settings.buttons.MediaButtonService
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
+import igrek.songbook.settings.homescreen.HomeScreenEnum
+import igrek.songbook.settings.homescreen.HomeScreenEnumService
 import igrek.songbook.settings.instrument.ChordsInstrument
 import igrek.songbook.settings.instrument.ChordsInstrumentService
 import igrek.songbook.settings.language.AppLanguage
@@ -52,6 +54,7 @@ class SettingsFragment(
     chordsDiagramsService: LazyInject<ChordsDiagramsService> = appFactory.chordsDiagramsService,
     mediaButtonService: LazyInject<MediaButtonService> = appFactory.mediaButtonService,
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+    homeScreenEnumService: LazyInject<HomeScreenEnumService> = appFactory.homeScreenEnumService,
 ) : PreferenceFragmentCompat() {
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val activity by LazyExtractor(appCompatActivity)
@@ -64,6 +67,7 @@ class SettingsFragment(
     private val chordsDiagramsService by LazyExtractor(chordsDiagramsService)
     private val mediaButtonService by LazyExtractor(mediaButtonService)
     private val layoutController by LazyExtractor(layoutController)
+    private val homeScreenEnumService by LazyExtractor(homeScreenEnumService)
 
     private var decimalFormat1: DecimalFormat = DecimalFormat("#.#")
     private var decimalFormat3: DecimalFormat = DecimalFormat("#.###")
@@ -87,165 +91,165 @@ class SettingsFragment(
 
     private fun lateInit() {
         setupListPreference("applicationLanguage",
-                appLanguageService.languageStringEntries(),
-                onLoad = { preferencesState.appLanguage.langCode },
-                onSave = { id: String ->
-                    preferencesState.appLanguage = AppLanguage.parseByLangCode(id)
-                            ?: AppLanguage.DEFAULT
-                }
+            appLanguageService.languageStringEntries(),
+            onLoad = { preferencesState.appLanguage.langCode },
+            onSave = { id: String ->
+                preferencesState.appLanguage = AppLanguage.parseByLangCode(id)
+                        ?: AppLanguage.DEFAULT
+            }
         )
 
         setupListPreference("chordsInstrument",
-                chordsInstrumentService.instrumentEntries(),
-                onLoad = { preferencesState.chordsInstrument.id.toString() },
-                onSave = { id: String ->
-                    preferencesState.chordsInstrument = ChordsInstrument.parseById(id.toLong())
-                            ?: ChordsInstrument.default
-                }
+            chordsInstrumentService.instrumentEntries(),
+            onLoad = { preferencesState.chordsInstrument.id.toString() },
+            onSave = { id: String ->
+                preferencesState.chordsInstrument = ChordsInstrument.parseById(id.toLong())
+                        ?: ChordsInstrument.default
+            }
         )
 
         setupListPreference("chordDiagramStyle",
-                chordsDiagramsService.chordDiagramStyleEntries(),
-                onLoad = { preferencesState.chordDiagramStyle.id.toString() },
-                onSave = { id: String ->
-                    preferencesState.chordDiagramStyle = ChordDiagramStyle.mustParseById(id.toLong())
-                }
+            chordsDiagramsService.chordDiagramStyleEntries(),
+            onLoad = { preferencesState.chordDiagramStyle.id.toString() },
+            onSave = { id: String ->
+                preferencesState.chordDiagramStyle = ChordDiagramStyle.mustParseById(id.toLong())
+            }
         )
 
         setupListPreference("chordsNotation",
-                chordsNotationService.chordsNotationEntries(),
-                onLoad = { preferencesState.chordsNotation.id.toString() },
-                onSave = { id: String ->
-                    preferencesState.chordsNotation = ChordsNotation.parseById(id.toLong())
-                            ?: ChordsNotation.default
-                }
+            chordsNotationService.chordsNotationEntries(),
+            onLoad = { preferencesState.chordsNotation.id.toString() },
+            onSave = { id: String ->
+                preferencesState.chordsNotation = ChordsNotation.parseById(id.toLong())
+                        ?: ChordsNotation.default
+            }
         )
 
         setupListPreference("chordsDisplayStyle",
-                lyricsThemeService.displayStyleEntries(),
-                onLoad = { preferencesState.chordsDisplayStyle.id.toString() },
-                onSave = { id: String ->
-                    preferencesState.chordsDisplayStyle = DisplayStyle.mustParseById(id.toLong())
-                }
+            lyricsThemeService.displayStyleEntries(),
+            onLoad = { preferencesState.chordsDisplayStyle.id.toString() },
+            onSave = { id: String ->
+                preferencesState.chordsDisplayStyle = DisplayStyle.mustParseById(id.toLong())
+            }
         )
 
         setupListPreference("fontTypeface",
-                lyricsThemeService.fontTypefaceEntries(),
-                onLoad = { preferencesState.fontTypeface.id },
-                onSave = { id: String ->
-                    preferencesState.fontTypeface = FontTypeface.parseById(id)
-                            ?: FontTypeface.default
-                }
+            lyricsThemeService.fontTypefaceEntries(),
+            onLoad = { preferencesState.fontTypeface.id },
+            onSave = { id: String ->
+                preferencesState.fontTypeface = FontTypeface.parseById(id)
+                        ?: FontTypeface.default
+            }
         )
 
         setupListPreference("chordsEditorFontTypeface",
-                lyricsThemeService.fontTypefaceEntries(),
-                onLoad = { preferencesState.chordsEditorFontTypeface.id },
-                onSave = { id: String ->
-                    preferencesState.chordsEditorFontTypeface = FontTypeface.parseById(id)
-                            ?: FontTypeface.MONOSPACE
-                }
+            lyricsThemeService.fontTypefaceEntries(),
+            onLoad = { preferencesState.chordsEditorFontTypeface.id },
+            onSave = { id: String ->
+                preferencesState.chordsEditorFontTypeface = FontTypeface.parseById(id)
+                        ?: FontTypeface.MONOSPACE
+            }
         )
 
         setupListPreference("colorScheme",
-                lyricsThemeService.colorSchemeEntries(),
-                onLoad = { preferencesState.colorScheme.id.toString() },
-                onSave = { id: String ->
-                    preferencesState.colorScheme = ColorScheme.parseById(id.toLong())
-                            ?: ColorScheme.default
-                }
+            lyricsThemeService.colorSchemeEntries(),
+            onLoad = { preferencesState.colorScheme.id.toString() },
+            onSave = { id: String ->
+                preferencesState.colorScheme = ColorScheme.parseById(id.toLong())
+                        ?: ColorScheme.default
+            }
         )
 
         setupSeekBarPreference("autoscrollSpeed", min = AutoscrollService.MIN_SPEED, max = AutoscrollService.MAX_SPEED,
-                onLoad = { preferencesState.autoscrollSpeed },
-                onSave = { value: Float ->
-                    preferencesState.autoscrollSpeed = value
-                },
-                stringConverter = { value: Float ->
-                    uiResourceService.resString(R.string.settings_autoscroll_speed_value, decimal3(value))
-                }
+            onLoad = { preferencesState.autoscrollSpeed },
+            onSave = { value: Float ->
+                preferencesState.autoscrollSpeed = value
+            },
+            stringConverter = { value: Float ->
+                uiResourceService.resString(R.string.settings_autoscroll_speed_value, decimal3(value))
+            }
         )
 
         setupSeekBarPreference("fontSize", min = 5, max = 100,
-                onLoad = { preferencesState.fontsize },
-                onSave = { value: Float ->
-                    preferencesState.fontsize = value
-                },
-                stringConverter = { value: Float ->
-                    uiResourceService.resString(R.string.settings_font_size_value, decimal1(value))
-                }
+            onLoad = { preferencesState.fontsize },
+            onSave = { value: Float ->
+                preferencesState.fontsize = value
+            },
+            stringConverter = { value: Float ->
+                uiResourceService.resString(R.string.settings_font_size_value, decimal1(value))
+            }
         )
 
         setupSwitchPreference("autoscrollSpeedAutoAdjustment",
-                onLoad = { preferencesState.autoscrollSpeedAutoAdjustment },
-                onSave = { value: Boolean ->
-                    preferencesState.autoscrollSpeedAutoAdjustment = value
-                }
+            onLoad = { preferencesState.autoscrollSpeedAutoAdjustment },
+            onSave = { value: Boolean ->
+                preferencesState.autoscrollSpeedAutoAdjustment = value
+            }
         )
 
         setupSwitchPreference("autoscrollShowEyeFocus",
-                onLoad = { preferencesState.autoscrollShowEyeFocus },
-                onSave = { value: Boolean ->
-                    preferencesState.autoscrollShowEyeFocus = value
-                }
+            onLoad = { preferencesState.autoscrollShowEyeFocus },
+            onSave = { value: Boolean ->
+                preferencesState.autoscrollShowEyeFocus = value
+            }
         )
 
         setupSwitchPreference("autoscrollIndividualSpeed",
-                onLoad = { preferencesState.autoscrollIndividualSpeed },
-                onSave = { value: Boolean ->
-                    preferencesState.autoscrollIndividualSpeed = value
-                }
+            onLoad = { preferencesState.autoscrollIndividualSpeed },
+            onSave = { value: Boolean ->
+                preferencesState.autoscrollIndividualSpeed = value
+            }
         )
 
         setupSwitchPreference("autoscrollSpeedVolumeKeys",
-                onLoad = { preferencesState.autoscrollSpeedVolumeKeys },
-                onSave = { value: Boolean ->
-                    preferencesState.autoscrollSpeedVolumeKeys = value
-                }
+            onLoad = { preferencesState.autoscrollSpeedVolumeKeys },
+            onSave = { value: Boolean ->
+                preferencesState.autoscrollSpeedVolumeKeys = value
+            }
         )
 
         setupSwitchPreference("randomFavouriteSongsOnly",
-                onLoad = { preferencesState.randomFavouriteSongsOnly },
-                onSave = { value: Boolean ->
-                    preferencesState.randomFavouriteSongsOnly = value
-                }
+            onLoad = { preferencesState.randomFavouriteSongsOnly },
+            onSave = { value: Boolean ->
+                preferencesState.randomFavouriteSongsOnly = value
+            }
         )
 
         setupSwitchPreference("randomPlaylistSongs",
-                onLoad = { preferencesState.randomPlaylistSongs },
-                onSave = { value: Boolean ->
-                    preferencesState.randomPlaylistSongs = value
-                }
+            onLoad = { preferencesState.randomPlaylistSongs },
+            onSave = { value: Boolean ->
+                preferencesState.randomPlaylistSongs = value
+            }
         )
 
         setupMultiListPreference("filterLanguages",
-                appLanguageService.languageFilterEntries(),
-                onLoad = {
-                    appLanguageService.selectedSongLanguages.map { it.langCode }.toMutableSet()
-                },
-                onSave = { ids: Set<String> ->
-                    appLanguageService.setSelectedSongLanguageCodes(ids)
-                },
-                stringConverter = { ids: Set<String>, entriesMap: LinkedHashMap<String, String> ->
-                    if (ids.isEmpty())
-                        uiResourceService.resString(R.string.none)
-                    else
-                        ids.map { id -> entriesMap[id].orEmpty() }.sorted().joinToString(separator = ", ")
-                }
+            appLanguageService.languageFilterEntries(),
+            onLoad = {
+                appLanguageService.selectedSongLanguages.map { it.langCode }.toMutableSet()
+            },
+            onSave = { ids: Set<String> ->
+                appLanguageService.setSelectedSongLanguageCodes(ids)
+            },
+            stringConverter = { ids: Set<String>, entriesMap: LinkedHashMap<String, String> ->
+                if (ids.isEmpty())
+                    uiResourceService.resString(R.string.none)
+                else
+                    ids.map { id -> entriesMap[id].orEmpty() }.sorted().joinToString(separator = ", ")
+            }
         )
 
         setupSwitchPreference("customSongsGroupCategories",
-                onLoad = { preferencesState.customSongsGroupCategories },
-                onSave = { value: Boolean ->
-                    preferencesState.customSongsGroupCategories = value
-                }
+            onLoad = { preferencesState.customSongsGroupCategories },
+            onSave = { value: Boolean ->
+                preferencesState.customSongsGroupCategories = value
+            }
         )
 
         setupSwitchPreference("restoreTransposition",
-                onLoad = { preferencesState.restoreTransposition },
-                onSave = { value: Boolean ->
-                    preferencesState.restoreTransposition = value
-                }
+            onLoad = { preferencesState.restoreTransposition },
+            onSave = { value: Boolean ->
+                preferencesState.restoreTransposition = value
+            }
         )
 
         setupClickPreference("settingsSyncSave") {
@@ -267,24 +271,24 @@ class SettingsFragment(
         }
 
         setupSwitchPreference("anonymousUsageData",
-                onLoad = { preferencesState.anonymousUsageData },
-                onSave = { value: Boolean ->
-                    preferencesState.anonymousUsageData = value
-                }
+            onLoad = { preferencesState.anonymousUsageData },
+            onSave = { value: Boolean ->
+                preferencesState.anonymousUsageData = value
+            }
         )
 
         setupSwitchPreference("keepScreenOn",
-                onLoad = { preferencesState.keepScreenOn },
-                onSave = { value: Boolean ->
-                    preferencesState.keepScreenOn = value
-                }
+            onLoad = { preferencesState.keepScreenOn },
+            onSave = { value: Boolean ->
+                preferencesState.keepScreenOn = value
+            }
         )
 
         setupSwitchPreference("updateDbOnStartup",
-                onLoad = { preferencesState.updateDbOnStartup },
-                onSave = { value: Boolean ->
-                    preferencesState.updateDbOnStartup = value
-                }
+            onLoad = { preferencesState.updateDbOnStartup },
+            onSave = { value: Boolean ->
+                preferencesState.updateDbOnStartup = value
+            }
         )
 
         setupSwitchPreference("trimWhitespaces",
@@ -309,18 +313,26 @@ class SettingsFragment(
         )
 
         setupSwitchPreference("horizontalScroll",
-                onLoad = { preferencesState.horizontalScroll },
-                onSave = { value: Boolean ->
-                    preferencesState.horizontalScroll = value
-                }
+            onLoad = { preferencesState.horizontalScroll },
+            onSave = { value: Boolean ->
+                preferencesState.horizontalScroll = value
+            }
         )
 
         setupListPreference("mediaButtonBehaviour",
-                mediaButtonService.mediaButtonBehavioursEntries(),
-                onLoad = { preferencesState.mediaButtonBehaviour.id.toString() },
-                onSave = { id: String ->
-                    preferencesState.mediaButtonBehaviour = MediaButtonBehaviours.mustParseById(id.toLong())
-                }
+            mediaButtonService.mediaButtonBehavioursEntries(),
+            onLoad = { preferencesState.mediaButtonBehaviour.id.toString() },
+            onSave = { id: String ->
+                preferencesState.mediaButtonBehaviour = MediaButtonBehaviours.mustParseById(id.toLong())
+            }
+        )
+
+        setupListPreference("homeScreen",
+            homeScreenEnumService.homeScreenEnumsEntries(),
+            onLoad = { preferencesState.homeScreen.id.toString() },
+            onSave = { id: String ->
+                preferencesState.homeScreen = HomeScreenEnum.mustParseById(id.toLong())
+            }
         )
 
         setupClickPreference("billingRemoveAds") {

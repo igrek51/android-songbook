@@ -514,4 +514,13 @@
     <string name="settings_random_playlist_songs">Random playlist song</string>
     <string name="settings_random_playlist_songs_hint">\"Random song\" option shuffles a song from an opened playlist if there\'s a chosen one.</string>
     <string name="nav_add_custom_song">New song</string>
+    <string name="home_screen_enum_top">Top songs</string>
+    <string name="home_screen_enum_categories">Categories</string>
+    <string name="home_screen_enum_search">Search</string>
+    <string name="home_screen_enum_latest">Latest songs</string>
+    <string name="home_screen_enum_playlists">Playlists</string>
+    <string name="home_screen_enum_my_songs">My songs</string>
+    <string name="home_screen_enum_favourites">Favourites</string>
+    <string name="home_screen_enum_history">History</string>
+    <string name="settings_home_screen">Home Screen</string>
 </resources>

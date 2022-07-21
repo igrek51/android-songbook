@@ -19,11 +19,11 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesState
-import igrek.songbook.songselection.top.TopSongsLayoutController
 import igrek.songbook.system.WindowManagerService
 import kotlinx.coroutines.*
 import kotlin.reflect.KClass
 
+@OptIn(DelicateCoroutinesApi::class)
 class AppInitializer(
     windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
@@ -54,10 +54,8 @@ class AppInitializer(
     private val songImportFileChooser by LazyExtractor(songImportFileChooser)
 
     private val logger = LoggerFactory.logger
-    private val startingScreen: KClass<out MainLayout> = TopSongsLayoutController::class
     private val debugInitEnabled = false
 
-    @OptIn(DelicateCoroutinesApi::class)
     fun init() {
         if (debugInitEnabled && BuildConfig.DEBUG) {
             debugInit()
@@ -74,7 +72,7 @@ class AppInitializer(
                 layoutController.init()
                 windowManagerService.hideTaskbar()
 
-                layoutController.showLayout(startingScreen).join()
+                layoutController.showLayout(getStartingScreen()).join()
 
                 songsUpdater.checkUpdateIsAvailable()
 
@@ -123,6 +121,10 @@ class AppInitializer(
 
     private fun reportExecution() {
         preferencesState.appExecutionCount += 1
+    }
+
+    private fun getStartingScreen(): KClass<out MainLayout> {
+        return preferencesState.homeScreen.layoutClass
     }
 
 }
