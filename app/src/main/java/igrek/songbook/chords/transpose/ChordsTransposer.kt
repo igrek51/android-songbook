@@ -10,7 +10,7 @@ import igrek.songbook.settings.chordsnotation.ChordsNotation
 
 class ChordsTransposer(
         fromNotation: ChordsNotation,
-        private val toNotation: ChordsNotation
+        private val toNotation: ChordsNotation,
 ) {
 
     private val chordNameProvider = ChordNameProvider()

@@ -1,13 +1,15 @@
 package igrek.songbook.chordsv2.model
 
-import com.google.common.base.Joiner
-
 
 data class LyricsModel(
     val lines: List<LyricsLine> = listOf(),
 ) {
     override fun toString(): String {
-        return Joiner.on("\n").join(lines)
+        return lines.joinToString("\n")
+    }
+
+    fun displayString(): String {
+        return lines.joinToString (separator = "\n") { it.displayString() }
     }
 }
 
@@ -15,7 +17,11 @@ data class LyricsLine(
     val fragments: List<LyricsFragment> = listOf(),
 ) {
     override fun toString(): String {
-        return Joiner.on("").join(fragments)
+        return fragments.joinToString("")
+    }
+
+    fun displayString(): String {
+        return fragments.joinToString (separator = "") { it.displayString() }
     }
 
     val isBlank: Boolean = fragments.all { fragment -> fragment.text.isBlank() }
@@ -37,6 +43,15 @@ data class LyricsFragment(
             LyricsTextType.LINEWRAPPER -> lineWrapperChar.toString()
         }
         return "($txt,x=$x,width=$width)"
+    }
+
+    fun displayString(): String {
+        return when (type) {
+            LyricsTextType.REGULAR_TEXT -> text
+            LyricsTextType.CHORDS -> "[$text]"
+            LyricsTextType.COMMENT -> "{$text}"
+            LyricsTextType.LINEWRAPPER -> lineWrapperChar.toString()
+        }
     }
 
     val rightX: Float = x + width

@@ -20,10 +20,9 @@ data class Chord (
      10 - Bb / A#
      11 - B
      */
-    val noteIndex: Int,
+    var noteIndex: Int,
     val minor: Boolean = false,
     val suffix: String = "",
-    val noteModifier: NoteModifier = NoteModifier.NATURAL,
 ) {
 
     fun format(notation: ChordsNotation, key: MajorKey? = null): String {
@@ -44,5 +43,12 @@ data class CompoundChord(
         val chord1String = chord1.format(notation, key)
         val chord2String = chord2.format(notation, key)
         return chord1String + splitter + chord2String
+    }
+
+    fun clone(): CompoundChord {
+        return this.copy(
+            chord1=this.chord1.copy(),
+            chord2=this.chord2.copy(),
+        )
     }
 }

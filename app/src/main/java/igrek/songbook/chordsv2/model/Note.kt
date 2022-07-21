@@ -49,8 +49,8 @@ fun indexToNote(noteIndex: Int, key: MajorKey? = null): Note {
             else -> Note.E_FLAT
         }
         4 -> Note.E
-        5 -> when (key?.isSharpy) {
-            true -> Note.E_SHARP
+        5 -> when (key) {
+            F_SHARP_MAJOR -> Note.E_SHARP
             else -> Note.F
         }
         6 -> when (key?.isFlatty) {
@@ -67,8 +67,8 @@ fun indexToNote(noteIndex: Int, key: MajorKey? = null): Note {
             true -> Note.A_SHARP
             else -> Note.B_FLAT
         }
-        11 -> when (key?.isFlatty) {
-            true -> Note.C_FLAT
+        11 -> when (key) {
+            F_SHARP_MAJOR -> Note.C_FLAT
             else -> Note.B
         }
         else -> throw RuntimeException("Unknown note index $noteIndex")
