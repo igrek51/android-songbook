@@ -418,7 +418,7 @@
     <string name="settings_chord_digram_style">Chord diagrams (visualisation) layout</string>
     <string name="action_find_chord">Find</string>
     <string name="chord_diagram_find_chord">Enter chord name</string>
-    <string name="chord_diagram_not_found">Diagrams not found for given chord name</string>
+    <string name="chord_diagram_not_found">No diagram found for a given chord and instrument</string>
     <string name="nav_chord_diagram">Chord diagrams</string>
     <string name="settings_update_db_on_startup">Update songs on startup</string>
     <string name="settings_update_db_on_startup_hint">Download latest songs automatically</string>

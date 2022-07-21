@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import igrek.songbook.chords.diagram.DrawableChordDiagramBuilder
+import igrek.songbook.chords.model.CompoundChord
 import igrek.songbook.chords.model.GeneralChord
 import igrek.songbook.chords.parser.ChordParser
 import igrek.songbook.info.logger.LoggerFactory
@@ -24,15 +25,15 @@ class PianoChordDiagramBuilder : DrawableChordDiagramBuilder {
     private val logger = LoggerFactory.logger
 
     override fun buildDiagram(engChord: String): Bitmap? {
+        val markedNotes: Set<Int>
+        try {
 
-        val chord: GeneralChord? = ChordParser(ChordsNotation.ENGLISH).parseGeneralChord(engChord)
-        if (chord == null) {
-            logger.warn("$engChord is not a valid english chord")
-            return null
-        }
-        val markedNotes = evaluateChordNotes(chord)
-        if (markedNotes.isEmpty()) {
-            logger.warn("$engChord has unsupported suffix")
+            val chord: GeneralChord = ChordParser(ChordsNotation.ENGLISH).parseGeneralChord(engChord)
+                ?: throw NoChordDiagramException("not a valid english chord")
+            markedNotes = evaluateChordNotes(chord)
+
+        } catch (e: NoChordDiagramException) {
+            logger.warn("$e: $engChord")
             return null
         }
 
@@ -54,8 +55,15 @@ class PianoChordDiagramBuilder : DrawableChordDiagramBuilder {
         return bitmap
     }
 
+    override fun hasDiagram(chord: GeneralChord): Boolean {
+        var suffix = chord.baseChord.suffix
+        if (chord.baseChord.minor)
+            suffix = "m$suffix"
+        return suffix in chordTypeSequences.keys
+    }
+
     private fun evaluateChordNotes(chord: GeneralChord): Set<Int> {
-        val notes = mutableSetOf<Int>()
+        var notes = mutableSetOf<Int>()
         val baseNote = chord.baseChord.noteIndex
         notes.add(baseNote)
 
@@ -63,11 +71,39 @@ class PianoChordDiagramBuilder : DrawableChordDiagramBuilder {
         if (chord.baseChord.minor)
            suffix = "m$suffix"
 
-        val sequence = chordTypeSequences[suffix] ?: return emptySet()
+        val sequence = chordTypeSequences[suffix] ?: throw NoChordDiagramException("chord has unsupported suffix")
         sequence.forEach { offset ->
             notes.add(baseNote + offset)
         }
+
+        if (chord is CompoundChord) {
+            if (chord.splitter == "/") {
+                notes = applyChordInversion(notes, chord.chord2.noteIndex)
+            }
+        }
+
         return notes
+    }
+
+    private fun applyChordInversion(notes: Set<Int>, inversionNote: Int): MutableSet<Int> {
+        val newNotes = mutableSetOf<Int>()
+        var inverted = false
+        notes.forEach { note ->
+            if (note % 12 == inversionNote % 12) {
+                newNotes.add(note)
+                inverted = true
+            } else {
+                if (!inverted) {
+                    newNotes.add(note + 12)
+                } else {
+                    newNotes.add(note)
+                }
+            }
+        }
+
+        if (!inverted)
+            throw NoChordDiagramException("Inverted note not found in a chord")
+        return newNotes
     }
 
     private fun drawKeys(canvas: Canvas, markedNotes: Set<Int>, octaves: Int) {
@@ -220,5 +256,7 @@ class PianoChordDiagramBuilder : DrawableChordDiagramBuilder {
             "m6add9" to listOf(0, 3, 7, 9, 14),
         )
     }
+
+    class NoChordDiagramException(message: String) : RuntimeException(message)
 
 }

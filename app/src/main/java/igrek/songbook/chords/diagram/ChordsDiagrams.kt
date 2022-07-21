@@ -1,7 +1,6 @@
 package igrek.songbook.chords.diagram
 
 import igrek.songbook.chords.diagram.piano.PianoChordDiagramBuilder
-import igrek.songbook.chords.model.Note
 
 // English chords
 val guitarChordsDiagrams: Map<String, List<String>> = mapOf(

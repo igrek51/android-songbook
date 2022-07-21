@@ -18,7 +18,9 @@ import igrek.songbook.chords.converter.ChordsNotationConverter
 import igrek.songbook.chords.detect.UniqueChordsFinder
 import igrek.songbook.chords.diagram.guitar.ChordTextDiagramBuilder
 import igrek.songbook.chords.diagram.piano.PianoChordDiagramBuilder
+import igrek.songbook.chords.model.GeneralChord
 import igrek.songbook.chords.model.LyricsModel
+import igrek.songbook.chords.parser.ChordParser
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
@@ -107,6 +109,11 @@ class ChordDiagramsService(
                     else -> inflateTextChordDiagramView(typedChord, inflater)
                 }
 
+                if (diagramView == null) {
+                    uiInfoService.showInfo(R.string.chord_diagram_not_found)
+                    return@SafeExecutor
+                }
+
                 alertBuilder.setView(diagramView)
 
                 if (!activity.isFinishing) {
@@ -145,14 +152,31 @@ class ChordDiagramsService(
             uiInfoService.showInfo(R.string.chord_diagram_not_found)
             return
         }
-        val toEnglishConverter = ChordsNotationConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH, preferencesState.forceSharpNotes)
-        val engChord = toEnglishConverter.convertChordFragments(typedChordName)
-        val chordDiagramCodes = getChordDiagramCodes(chordsInstrumentService.instrument)
-        if (engChord !in chordDiagramCodes) {
+        if (!hasChordDiagram(typedChordName)) {
             uiInfoService.showInfo(R.string.chord_diagram_not_found)
             return
         }
+
         showChordDiagramsAlert(typedChordName, emptySet())
+    }
+
+    private fun hasChordDiagram(typedChordName: String): Boolean {
+        return when (chordsInstrumentService.instrument) {
+            ChordsInstrument.PIANO -> {
+                val chord: GeneralChord? = ChordParser(chordsNotationService.chordsNotation).parseGeneralChord(typedChordName)
+                if (chord == null) {
+                    false
+                } else {
+                    PianoChordDiagramBuilder().hasDiagram(chord)
+                }
+            }
+            else -> {
+                val toEnglishConverter = ChordsNotationConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH, false)
+                val engChord = toEnglishConverter.convertChordFragments(typedChordName)
+                val chordDiagramCodes = getChordDiagramCodes(chordsInstrumentService.instrument)
+                engChord in chordDiagramCodes
+            }
+        }
     }
 
     private fun getChordDiagramCodes(instrument: ChordsInstrument): Map<String, List<String>> {
@@ -183,7 +207,7 @@ class ChordDiagramsService(
         return diagramView
     }
 
-    private fun inflateDrawableChordDiagramView(typedChord: String, inflater: LayoutInflater): View {
+    private fun inflateDrawableChordDiagramView(typedChord: String, inflater: LayoutInflater): View? {
         val diagramView = inflater.inflate(R.layout.component_chord_drawable_diagram, null, false)
         val diagramImage = diagramView.findViewById<ImageView>(R.id.chordDiagramImage)
 
@@ -195,12 +219,9 @@ class ChordDiagramsService(
             else -> throw RuntimeException("Unsupported instrument")
         }
 
-        val bitmap = diagramBuilder.buildDiagram(engChord)
-        bitmap?.let {
-            diagramImage.setImageBitmap(bitmap)
-        }
-        if (bitmap == null)
-            logger.warn("no diagram generated for a chord: $typedChord")
+        val bitmap = diagramBuilder.buildDiagram(engChord) ?: return null
+
+        diagramImage.setImageBitmap(bitmap)
         return diagramView
     }
 
