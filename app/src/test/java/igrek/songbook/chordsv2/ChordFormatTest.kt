@@ -6,7 +6,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 
-class ChordRenderTest {
+class ChordFormatTest {
 
     @Test
     fun test_formatChordToString() {
@@ -24,5 +24,7 @@ class ChordRenderTest {
         assertThat(Chord(3, false, "").format(ChordsNotation.ENGLISH)).isEqualTo("Eb")
         assertThat(Chord(1, false, "").format(ChordsNotation.ENGLISH)).isEqualTo("C#")
     }
+
+
 
 }

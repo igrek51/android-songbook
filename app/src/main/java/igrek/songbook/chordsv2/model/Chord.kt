@@ -22,14 +22,8 @@ data class Chord (
     val noteIndex: Int,
     val minor: Boolean,
     val suffix: String = "",
-    var displayText: String = "",
     val noteModifier: NoteModifier = NoteModifier.NATURAL,
 ) {
-
-    fun render(notation: ChordsNotation, keyModifier: NoteModifier? = null): Chord {
-        displayText = format(notation, keyModifier)
-        return this
-    }
 
     fun format(notation: ChordsNotation, keyModifier: NoteModifier? = null): String {
         val note = indexToNote(noteIndex, keyModifier)
@@ -37,4 +31,17 @@ data class Chord (
         return baseNote + suffix
     }
 
+}
+
+// A chord composed of multiple single notes, eg. Cadd9/G
+data class CompoundChord(
+    val chord1: Chord,
+    val splitter: String,
+    val chord2: Chord,
+) {
+    fun format(notation: ChordsNotation, keyModifier: NoteModifier? = null): String {
+        val chord1String = chord1.format(notation, keyModifier)
+        val chord2String = chord2.format(notation, keyModifier)
+        return chord1String + splitter + chord2String
+    }
 }

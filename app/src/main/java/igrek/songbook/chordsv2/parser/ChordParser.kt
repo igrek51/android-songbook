@@ -15,10 +15,10 @@ class ChordParser(
 
         // recognize basic chord (without suffixes)
         minorChordToNoteIndex[chord]?.let { noteIndex: Int ->
-            return Chord(noteIndex=noteIndex, minor=true, displayText=chord, noteModifier = getNoteModifier(chord))
+            return Chord(noteIndex=noteIndex, minor=true, noteModifier = getNoteModifier(chord))
         }
         baseChordToNoteIndex[chord]?.let { noteIndex: Int ->
-            return Chord(noteIndex=noteIndex, minor=false, displayText=chord, noteModifier = getNoteModifier(chord))
+            return Chord(noteIndex=noteIndex, minor=false, noteModifier = getNoteModifier(chord))
         }
 
         // recognize base chord + suffix
@@ -26,14 +26,14 @@ class ChordParser(
             if (chord.startsWith(baseName)) {
                 val suffix = chord.drop(baseName.length)
                 if (suffix in chordSuffixes)
-                    return Chord(noteIndex=noteIndex, minor=true, suffix=suffix, displayText=chord, noteModifier = getNoteModifier(baseName))
+                    return Chord(noteIndex=noteIndex, minor=true, suffix=suffix, noteModifier = getNoteModifier(baseName))
             }
         }
         baseChordToNoteIndex.forEach { (baseName: String, noteIndex: Int) ->
             if (chord.startsWith(baseName)) {
                 val suffix = chord.drop(baseName.length)
                 if (suffix in chordSuffixes)
-                    return Chord(noteIndex=noteIndex, minor=false, suffix=suffix, displayText=chord, noteModifier = getNoteModifier(baseName))
+                    return Chord(noteIndex=noteIndex, minor=false, suffix=suffix, noteModifier = getNoteModifier(baseName))
             }
         }
         return null
@@ -71,7 +71,6 @@ class ChordParser(
             fragments[1].type == ChordFragmentType.CHORD_SPLITTER &&
             fragments[2].type == ChordFragmentType.SINGLE_CHORD) {
             return CompoundChord(
-                text=chord,
                 chord1 = fragments[0].singleChord!!,
                 splitter = fragments[1].text,
                 chord2 = fragments[2].singleChord!!,

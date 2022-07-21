@@ -81,12 +81,4 @@ enum class ChordFragmentType {
     UNKNOWN_CHORD,
 }
 
-// A chord composed of multiple single notes, eg. Cadd9/G
-data class CompoundChord(
-    var text: String,
-    val chord1: Chord,
-    val splitter: String,
-    val chord2: Chord,
-)
-
 const val lineWrapperChar = '\u21B5'

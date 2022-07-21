@@ -48,7 +48,11 @@ fun indexToNote(noteIndex: Int, keyModifier: NoteModifier? = null): Note {
             Note.E_FLAT
         }
         4 -> Note.E
-        5 -> Note.F
+        5 -> if (keyModifier == NoteModifier.SHARP) {
+            Note.E_SHARP
+        } else {
+            Note.F
+        }
         6 -> if (keyModifier == NoteModifier.FLAT) {
             Note.G_FLAT
         } else {
@@ -66,7 +70,11 @@ fun indexToNote(noteIndex: Int, keyModifier: NoteModifier? = null): Note {
         } else {
             Note.B_FLAT
         }
-        11 -> Note.B
+        11 -> if (keyModifier == NoteModifier.FLAT) {
+            Note.C_FLAT
+        } else {
+            Note.B
+        }
         else -> throw RuntimeException("Unknown note index $noteIndex")
     }
 }
