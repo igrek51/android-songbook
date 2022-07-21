@@ -1,6 +1,4 @@
-package igrek.songbook.chordsv2
-
-import igrek.songbook.chordsv2.model.*
+package igrek.songbook.chordsv2.model
 
 class LyricsCloner {
 

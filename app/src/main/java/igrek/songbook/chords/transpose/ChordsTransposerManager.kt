@@ -14,13 +14,13 @@ import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 
 class ChordsTransposerManager(
-        lyricsLoader: LazyInject<LyricsLoader> = appFactory.lyricsLoader,
-        chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
-        songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        quickMenuTranspose: LazyInject<QuickMenuTranspose> = appFactory.quickMenuTranspose,
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    lyricsLoader: LazyInject<LyricsLoader> = appFactory.lyricsLoader,
+    chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
+    songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    quickMenuTranspose: LazyInject<QuickMenuTranspose> = appFactory.quickMenuTranspose,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
 ) {
     private val lyricsLoader by LazyExtractor(lyricsLoader)
     private val chordsNotationService by LazyExtractor(chordsNotationService)
@@ -33,16 +33,18 @@ class ChordsTransposerManager(
     private var transposedBy = 0
     private var chordsTransposer: ChordsTransposer? = null
 
-    val isTransposed: Boolean
-        get() = transposedBy != 0
+    val isTransposed: Boolean = transposedBy != 0
 
     val transposedByDisplayName: String
-        get() = (if (transposedBy > 0) "+" else "") + transposedBy + " " + getSemitonesDisplayName(transposedBy)
+        get() = (if (transposedBy > 0) "+" else "") + transposedBy + " " + getSemitonesDisplayName(
+            transposedBy
+        )
 
     fun reset(initialTransposed: Int = 0, srcNotation: ChordsNotation) {
         transposedBy = initialTransposed
         val displayNotation = chordsNotationService.chordsNotation
-        chordsTransposer = ChordsTransposer(fromNotation = srcNotation, toNotation = displayNotation)
+        chordsTransposer =
+            ChordsTransposer(fromNotation = srcNotation, toNotation = displayNotation)
     }
 
     fun transposeContent(fileContent: String): String {
@@ -55,8 +57,12 @@ class ChordsTransposerManager(
         songPreviewController.onLyricsModelUpdated()
 
         if (isTransposed) {
-            userInfo.showInfoAction(R.string.transposed_by_semitones, transposedByDisplayName,
-                    actionResId = R.string.action_transposition_reset) { this.onTransposeResetEvent() }
+            userInfo.showInfoAction(
+                R.string.transposed_by_semitones, transposedByDisplayName,
+                actionResId = R.string.action_transposition_reset
+            ) {
+                this.onTransposeResetEvent()
+            }
         } else {
             userInfo.showInfo(R.string.transposed_by_semitones, transposedByDisplayName)
         }
@@ -69,6 +75,7 @@ class ChordsTransposerManager(
     }
 
     fun onTransposeResetEvent() {
+        transposeBy(-transposedBy)
         onTransposeEvent(-transposedBy)
     }
 
@@ -78,7 +85,8 @@ class ChordsTransposerManager(
             transposedBy -= 12
         if (transposedBy <= -12)
             transposedBy += 12
-        lyricsLoader.reparse()
+
+        lyricsLoader.onTransposed()
     }
 
     private fun getSemitonesDisplayName(transposed: Int): String {

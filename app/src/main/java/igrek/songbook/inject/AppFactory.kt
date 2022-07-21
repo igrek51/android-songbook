@@ -94,7 +94,6 @@ class AppFactory(
     val autoscrollService = SingletonInject { AutoscrollService() }
     val lyricsLoader = SingletonInject { LyricsLoader() }
     val preferencesService = SingletonInject { PreferencesService() }
-    val chordsTransposerManager = SingletonInject { ChordsTransposerManager() }
     val scrollPosBuffer = SingletonInject { ScrollPosBuffer() }
     val layoutController = SingletonInject { LayoutController() }
     val softKeyboardService = SingletonInject { SoftKeyboardService() }

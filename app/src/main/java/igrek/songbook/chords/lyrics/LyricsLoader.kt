@@ -13,13 +13,11 @@ import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.system.WindowManagerService
 
 class LyricsLoader(
-        chordsTransposerManager: LazyInject<ChordsTransposerManager> = appFactory.chordsTransposerManager,
-        autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
-        lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
-        windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
-        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
+    lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
+    windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
-    private val chordsTransposerManager by LazyExtractor(chordsTransposerManager)
     private val autoscrollService by LazyExtractor(autoscrollService)
     private val lyricsThemeService by LazyExtractor(lyricsThemeService)
     private val windowManagerService by LazyExtractor(windowManagerService)
@@ -27,20 +25,21 @@ class LyricsLoader(
 
     var lyricsModel: LyricsModel = LyricsModel()
         private set
+    private val chordsTransposerManager = ChordsTransposerManager()
     private var screenW = 0
     private var paint: Paint? = null
     private var originalFileContent: String = ""
 
-    private var restoreTransposition
-        get() = preferencesState.restoreTransposition
-        set(value) {
-            preferencesState.restoreTransposition = value
-        }
-
-    fun load(fileContent: String, screenW: Int?, paint: Paint?, initialTransposed: Int, srcNotation: ChordsNotation) {
+    fun load(
+        fileContent: String,
+        screenW: Int?,
+        paint: Paint?,
+        initialTransposed: Int,
+        srcNotation: ChordsNotation,
+    ) {
         chordsTransposerManager.run {
             val transposed = when {
-                restoreTransposition -> initialTransposed
+                preferencesState.restoreTransposition -> initialTransposed
                 else -> 0
             }
             reset(transposed, srcNotation)
@@ -54,7 +53,7 @@ class LyricsLoader(
         if (paint != null)
             this.paint = paint
 
-        parseAndTranspose(originalFileContent)
+        reparse()
     }
 
     fun onPreviewSizeChange(screenW: Int, paint: Paint?) {
@@ -63,11 +62,26 @@ class LyricsLoader(
         reparse()
     }
 
-    fun reparse() {
-        parseAndTranspose(originalFileContent)
+    fun onFontSizeChanged() {
+        reparse()
     }
 
-    private fun parseAndTranspose(originalFileContent: String) {
+    fun onTransposed() {
+        reparse()
+    }
+
+    val isTransposed: Boolean get() = chordsTransposerManager.isTransposed
+    val transposedByDisplayName: String get() = chordsTransposerManager.transposedByDisplayName
+
+    fun onTransposeEvent(semitones: Int) {
+        chordsTransposerManager.onTransposeEvent(semitones)
+    }
+
+    fun onTransposeResetEvent() {
+        chordsTransposerManager.onTransposeResetEvent()
+    }
+
+    private fun reparse() {
         if (originalFileContent.isEmpty()) {
             lyricsModel = LyricsModel()
             return

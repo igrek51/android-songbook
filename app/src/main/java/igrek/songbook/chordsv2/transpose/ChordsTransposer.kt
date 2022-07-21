@@ -1,6 +1,6 @@
 package igrek.songbook.chordsv2.transpose
 
-import igrek.songbook.chordsv2.LyricsCloner
+import igrek.songbook.chordsv2.model.LyricsCloner
 import igrek.songbook.chordsv2.model.Chord
 import igrek.songbook.chordsv2.model.ChordFragment
 import igrek.songbook.chordsv2.model.ChordFragmentType

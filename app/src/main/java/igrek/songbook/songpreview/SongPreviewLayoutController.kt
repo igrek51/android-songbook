@@ -261,7 +261,7 @@ class SongPreviewLayoutController(
             lyricsLoader.load(fileContent, w, paint, transposed, srcNotation)
 
             songPreview?.setFontSizes(lyricsThemeService.fontsize)
-            songPreview?.setCRDModel(lyricsLoader.lyricsModel)
+            songPreview?.setLyricsModel(lyricsLoader.lyricsModel)
             resetOverlayScroll()
 
             autoscrollService.onLoad(it.songIdentifier())
@@ -275,7 +275,7 @@ class SongPreviewLayoutController(
     }
 
     fun onLyricsModelUpdated() {
-        songPreview?.setCRDModel(lyricsLoader.lyricsModel)
+        songPreview?.setLyricsModel(lyricsLoader.lyricsModel)
         resetOverlayScroll()
         highlightPanelButtons()
     }
@@ -300,7 +300,7 @@ class SongPreviewLayoutController(
     fun onFontsizeChangedEvent(fontsize: Float) {
         lyricsThemeService.fontsize = fontsize
         // parse without reading a whole file again
-        lyricsLoader.reparse()
+        lyricsLoader.onFontSizeChanged()
         onLyricsModelUpdated()
     }
 

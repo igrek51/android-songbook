@@ -311,7 +311,7 @@ class SongPreview(
         }
     }
 
-    fun setCRDModel(lyricsModel: LyricsModel?) {
+    fun setLyricsModel(lyricsModel: LyricsModel?) {
         this.lyricsModel = lyricsModel
         textBottomY.invalidate()
         textRightX.invalidate()
