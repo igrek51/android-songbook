@@ -1,6 +1,6 @@
 package igrek.songbook.editor
 
-import igrek.songbook.chordsv2.parser.ChordParser
+import igrek.songbook.chords.parser.ChordParser
 
 class ChordsMarker(
     private val chordParser: ChordParser,

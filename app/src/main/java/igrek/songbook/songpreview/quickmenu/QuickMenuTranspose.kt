@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import igrek.songbook.R
-import igrek.songbook.chordsv2.loader.LyricsLoader
+import igrek.songbook.chords.loader.LyricsLoader
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject

@@ -1,6 +1,6 @@
 package igrek.songbook.settings.preferences
 
-import igrek.songbook.chordsv2.diagram.ChordDiagramStyle
+import igrek.songbook.chords.diagram.ChordDiagramStyle
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory

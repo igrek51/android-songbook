@@ -1,8 +1,8 @@
 package igrek.songbook.editor
 
 import igrek.songbook.R
-import igrek.songbook.chordsv2.ChordsNotationConverter
-import igrek.songbook.chordsv2.parser.ChordParser
+import igrek.songbook.chords.ChordsNotationConverter
+import igrek.songbook.chords.parser.ChordParser
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject

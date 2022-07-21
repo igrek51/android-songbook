@@ -1,6 +1,5 @@
 package igrek.songbook.settings.preferences
 
-import igrek.songbook.chordsv2.diagram.ChordDiagramStyle
 import igrek.songbook.settings.buttons.MediaButtonBehaviours
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.homescreen.HomeScreenEnum
@@ -102,9 +101,9 @@ enum class PreferencesField constructor(
 
     ChordDiagramStyle(
         GenericLongIdPreferenceType(
-            defaultValue = igrek.songbook.chordsv2.diagram.ChordDiagramStyle.default,
-            serializer = igrek.songbook.chordsv2.diagram.ChordDiagramStyle::id,
-            deserializer = igrek.songbook.chordsv2.diagram.ChordDiagramStyle.Companion::parseById,
+            defaultValue = igrek.songbook.chords.diagram.ChordDiagramStyle.default,
+            serializer = igrek.songbook.chords.diagram.ChordDiagramStyle::id,
+            deserializer = igrek.songbook.chords.diagram.ChordDiagramStyle.Companion::parseById,
         )
     ),
 

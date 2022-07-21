@@ -14,8 +14,8 @@ import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.admin.antechamber.AntechamberService
 import igrek.songbook.billing.BillingService
 import igrek.songbook.billing.BillingLayoutController
-import igrek.songbook.chordsv2.diagram.ChordsDiagramsService
-import igrek.songbook.chordsv2.loader.LyricsLoader
+import igrek.songbook.chords.diagram.ChordsDiagramsService
+import igrek.songbook.chords.loader.LyricsLoader
 import igrek.songbook.custom.*
 import igrek.songbook.custom.share.ShareSongService
 import igrek.songbook.editor.ChordsEditorLayoutController

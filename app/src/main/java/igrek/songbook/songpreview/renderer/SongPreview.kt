@@ -5,7 +5,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.animation.OvershootInterpolator
 import androidx.recyclerview.widget.RecyclerView
-import igrek.songbook.chordsv2.model.LyricsModel
+import igrek.songbook.chords.model.LyricsModel
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
