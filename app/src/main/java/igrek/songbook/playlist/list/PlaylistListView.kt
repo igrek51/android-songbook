@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.util.SparseIntArray
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.AdapterView
 import android.widget.ListView
@@ -58,6 +59,9 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.
         onItemClickListener = this
         onItemLongClickListener = this
         choiceMode = CHOICE_MODE_SINGLE
+        itemsCanFocus = true
+        isFocusable = true
+        descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
 
         scrollHandler = TreeListScrollHandler(this, context)
         setOnScrollListener(scrollHandler)

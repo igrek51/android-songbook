@@ -67,7 +67,7 @@ class CustomSongItemAdapter internal constructor(
         val itemTitleLabel = itemView.findViewById<TextView>(R.id.itemTitleLabel)
         itemTitleLabel.text = song.displayName()
 
-        val itemMoreButton = itemView.findViewById<ImageButton>(R.id.itemMoreButton)
+        val itemMoreButton = itemView.findViewById<ImageButton>(R.id.itemSongMoreButton)
         itemMoreButton.setOnClickListener { onClickListener.onMoreActions(item) }
 
         return itemView

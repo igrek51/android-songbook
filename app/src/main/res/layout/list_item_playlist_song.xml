@@ -44,14 +44,14 @@
         android:layout_height="22dp"
         android:layout_centerVertical="true"
         android:layout_gravity="start|center_vertical"
-        android:layout_toLeftOf="@+id/itemMoreButton"
-        android:layout_toStartOf="@+id/itemMoreButton"
+        android:layout_toLeftOf="@+id/itemSongMoreButton"
+        android:layout_toStartOf="@+id/itemSongMoreButton"
         android:background="@drawable/reorder"
         android:scaleType="fitCenter"
         />
 
     <ImageButton
-        android:id="@+id/itemMoreButton"
+        android:id="@+id/itemSongMoreButton"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignParentEnd="true"

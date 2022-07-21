@@ -53,10 +53,10 @@ class LocalFocusTraverser(
         val currentView: View = currentViewGetter() ?: return false
         val currentFocusId: Int = currentFocusGetter() ?: 0
 
-        if (debugMode && currentFocusId != 0) {
+        if (debugMode && currentFocusId > 0) {
             val viewName = activity.currentFocus?.javaClass?.simpleName
             val resourceName = activity.resources.getResourceName(currentFocusId)
-            logger.debug("Current focus view: $currentFocusId - $resourceName - $viewName")
+            logger.debug("Current focus view: $resourceName - $viewName")
         }
 
         var nextViewId = preNextFocus(currentFocusId, currentView)
@@ -76,11 +76,13 @@ class LocalFocusTraverser(
                     logger.warn("cant find next view with ID $nextViewId ")
             }
             nextView?.let {
-                val nextViewName = it.javaClass.simpleName
+                val nextViewClass = it.javaClass.simpleName
 
                 val result = it.requestFocusFromTouch()
-                if (!result)
-                    logger.warn("requesting focus failed for $nextViewId - $nextViewName")
+                if (!result && debugMode && nextViewId > 0) {
+                    val nextResourceName = activity.resources.getResourceName(nextViewId)
+                    logger.warn("requesting focus failed for $nextResourceName - $nextViewClass")
+                }
 
                 it.setOnKeyListener { _, keyCode, event ->
                     if (event.action == KeyEvent.ACTION_DOWN) {
@@ -90,8 +92,10 @@ class LocalFocusTraverser(
                     return@setOnKeyListener false
                 }
 
-                if (result)
-                    logger.debug("focus set to $nextViewId - $nextViewName")
+                if (result && debugMode && nextViewId > 0) {
+                    val nextResourceName = activity.resources.getResourceName(nextViewId)
+                    logger.debug("focus set to $nextResourceName - $nextViewClass")
+                }
                 return result
             }
         }

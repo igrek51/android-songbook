@@ -82,7 +82,7 @@ class PlaylistListItemAdapter internal constructor(
         val itemTitleLabel = itemView.findViewById<TextView>(R.id.itemTitleLabel)
         itemTitleLabel.text = song.displayName()
 
-        val itemMoreButton = itemView.findViewById<ImageButton>(R.id.itemMoreButton)
+        val itemMoreButton = itemView.findViewById<ImageButton>(R.id.itemSongMoreButton)
         itemMoreButton.setOnClickListener { onClickListener.onMoreActions(item) }
 
         val moveButton = itemView.findViewById<ImageButton>(R.id.itemMoveButton)

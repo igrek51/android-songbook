@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.view.isVisible
 import igrek.songbook.R
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
@@ -87,19 +88,22 @@ class SongTreeLayoutController(
                 }
             },
             nextLeft = { currentFocusId: Int, currentView: View ->
-                (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
-                itemsListView?.requestFocusFromTouch()
+                when (currentFocusId) {
+                    R.id.itemSongMoreButton, R.id.itemsList -> {
+                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        itemsListView?.requestFocusFromTouch()
+                    }
+                }
                 when {
                     currentFocusId == R.id.itemSongMoreButton -> -1
-                    currentFocusId == R.id.itemsList && currentCategory != null -> {
-                        R.id.goBackButton
-                    }
+                    currentFocusId == R.id.itemsList && currentCategory != null -> R.id.goBackButton
+                    currentFocusId == R.id.itemsList && currentCategory == null -> R.id.navMenuButton
                     else -> 0
                 }
             },
             nextRight = { currentFocusId: Int, currentView: View ->
                 when {
-                    currentFocusId == R.id.itemsList -> {
+                    currentFocusId == R.id.itemsList && currentView.findViewById<View>(R.id.itemSongMoreButton)?.isVisible == true -> {
                         (currentView as? ViewGroup)?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
                         R.id.itemSongMoreButton
                     }
@@ -107,8 +111,12 @@ class SongTreeLayoutController(
                 }
             },
             nextUp = { currentFocusId: Int, currentView: View ->
-                (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
-                itemsListView?.requestFocusFromTouch()
+                when (currentFocusId) {
+                    R.id.itemSongMoreButton, R.id.itemsList -> {
+                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        itemsListView?.requestFocusFromTouch()
+                    }
+                }
                 when {
                     currentFocusId == R.id.itemSongMoreButton -> -1
                     itemsListView?.selectedItemPosition == 0 -> {
@@ -121,8 +129,12 @@ class SongTreeLayoutController(
                 }
             },
             nextDown = { currentFocusId: Int, currentView: View ->
-                (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
-                itemsListView?.requestFocusFromTouch()
+                when (currentFocusId) {
+                    R.id.itemSongMoreButton, R.id.itemsList -> {
+                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        itemsListView?.requestFocusFromTouch()
+                    }
+                }
                 0
             },
         )

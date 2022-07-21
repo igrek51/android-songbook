@@ -70,11 +70,15 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
                 }
             },
             nextLeft = { currentFocusId: Int, currentView: View ->
-                (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
-                this.requestFocusFromTouch()
+                when (currentFocusId) {
+                    R.id.itemSongMoreButton, R.id.itemsList -> {
+                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        this.requestFocusFromTouch()
+                    }
+                }
                 when {
                     currentFocusId == R.id.itemSongMoreButton -> -1
-                    currentFocusId == R.id.itemsList -> 0
+                    currentFocusId == R.id.itemsList -> R.id.navMenuButton
                     else -> 0
                 }
             },
@@ -88,8 +92,12 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
                 }
             },
             nextUp = { currentFocusId: Int, currentView: View ->
-                (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
-                this.requestFocusFromTouch()
+                when (currentFocusId) {
+                    R.id.itemSongMoreButton, R.id.itemsList -> {
+                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        this.requestFocusFromTouch()
+                    }
+                }
                 when {
                     currentFocusId == R.id.itemSongMoreButton -> -1
                     this.selectedItemPosition == 0 -> {
@@ -99,8 +107,12 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
                 }
             },
             nextDown = { currentFocusId: Int, currentView: View ->
-                (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
-                this.requestFocusFromTouch()
+                when (currentFocusId) {
+                    R.id.itemSongMoreButton, R.id.itemsList -> {
+                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        this.requestFocusFromTouch()
+                    }
+                }
                 0
             },
         )

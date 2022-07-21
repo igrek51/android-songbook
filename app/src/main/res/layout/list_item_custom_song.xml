@@ -32,14 +32,14 @@
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@+id/songImage"
         android:layout_toEndOf="@+id/songImage"
-        android:layout_toLeftOf="@+id/itemMoreButton"
-        android:layout_toStartOf="@+id/itemMoreButton"
+        android:layout_toLeftOf="@+id/itemSongMoreButton"
+        android:layout_toStartOf="@+id/itemSongMoreButton"
         android:gravity="start|center_vertical"
         android:text=""
         android:textSize="16sp" />
 
     <ImageButton
-        android:id="@+id/itemMoreButton"
+        android:id="@+id/itemSongMoreButton"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_alignParentEnd="true"

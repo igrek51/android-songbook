@@ -4,9 +4,12 @@ package igrek.songbook.custom
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.view.KeyEvent
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.view.isVisible
 import igrek.songbook.R
 import igrek.songbook.custom.list.CustomSongListItem
 import igrek.songbook.custom.list.CustomSongListView
@@ -17,6 +20,7 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
+import igrek.songbook.layout.LocalFocusTraverser
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.layout.list.ListItemClickListener
@@ -114,6 +118,74 @@ class CustomSongsListLayoutController(
         itemsListView!!.init(activity as Context, this)
         updateItemsList()
 
+        val localFocus = LocalFocusTraverser(
+            currentViewGetter = { itemsListView?.selectedView },
+            currentFocusGetter = { appFactory.activity.get().currentFocus?.id },
+            preNextFocus = { currentFocusId: Int, currentView: View ->
+                when {
+                    appFactory.navigationMenuController.get().isDrawerShown() -> R.id.nav_view
+                    else -> 0
+                }
+            },
+            nextLeft = { currentFocusId: Int, currentView: View ->
+                when (currentFocusId) {
+                    R.id.itemSongMoreButton, R.id.itemsListView -> {
+                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        itemsListView?.requestFocusFromTouch()
+                    }
+                }
+                when {
+                    currentFocusId == R.id.itemSongMoreButton -> -1
+                    currentFocusId == R.id.itemsListView && customCategory != null -> R.id.goBackButton
+                    currentFocusId == R.id.itemsListView && customCategory == null -> R.id.navMenuButton
+                    else -> 0
+                }
+            },
+            nextRight = { currentFocusId: Int, currentView: View ->
+                when {
+                    currentFocusId == R.id.itemsListView && currentView.findViewById<View>(R.id.itemSongMoreButton)?.isVisible == true -> {
+                        (currentView as? ViewGroup)?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+                        R.id.itemSongMoreButton
+                    }
+                    else -> 0
+                }
+            },
+            nextUp = { currentFocusId: Int, currentView: View ->
+                when (currentFocusId) {
+                    R.id.itemSongMoreButton, R.id.itemsListView -> {
+                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        itemsListView?.requestFocusFromTouch()
+                    }
+                }
+                when {
+                    currentFocusId == R.id.itemSongMoreButton -> -1
+                    itemsListView?.selectedItemPosition == 0 -> {
+                        when {
+                            customCategory != null -> R.id.goBackButton
+                            else -> R.id.navMenuButton
+                        }
+                    }
+                    else -> 0
+                }
+            },
+            nextDown = { currentFocusId: Int, currentView: View ->
+                when (currentFocusId) {
+                    R.id.itemSongMoreButton, R.id.itemsListView -> {
+                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        itemsListView?.requestFocusFromTouch()
+                    }
+                }
+                0
+            },
+        )
+        itemsListView?.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN) {
+                if (localFocus.handleKey(keyCode))
+                    return@setOnKeyListener true
+            }
+            return@setOnKeyListener false
+        }
+
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
         subscriptions.add(songsRepository.dbChangeSubject
@@ -180,6 +252,9 @@ class CustomSongsListLayoutController(
 
     private fun updateItemsList() {
         val groupingEnabled = settingsEnumService.preferencesState.customSongsOrdering == CustomSongsOrdering.GROUP_CATEGORIES
+        if (!groupingEnabled)
+            customCategory = null
+
         val songItems: List<CustomSongListItem> = when {
 
             groupingEnabled && customCategory == null -> {
