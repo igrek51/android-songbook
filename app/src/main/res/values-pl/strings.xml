@@ -508,4 +508,9 @@
     <string name="settings_force_sharp_chords_hint">Zawsze pokazuj dźwięki z krzyżykami (C#, D#), unikając bemoli (Db, Eb).</string>
     <string name="settings_chord_diagrams_section">Diagramy akordów</string>
     <string name="instrument_piano">Pianino</string>
+    <string name="song_list_sorting">Sortuj</string>
+    <string name="song_sorting_by_title">wg tytułu piosenki</string>
+    <string name="song_sorting_by_artist">wg artysty (kategorii)</string>
+    <string name="song_sorting_by_latest">od najnowszych</string>
+    <string name="song_sorting_by_oldest">od najstarszych</string>
 </resources>

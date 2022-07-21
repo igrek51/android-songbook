@@ -535,4 +535,9 @@
     <string name="settings_force_sharp_chords_hint">Always show sharp notes (C#, D#), avoiding flat notes (Db, Eb).</string>
     <string name="settings_chord_diagrams_section">Chord diagrams</string>
     <string name="instrument_piano">Piano</string>
+    <string name="song_list_sorting">Sort by</string>
+    <string name="song_sorting_by_title">Song Title</string>
+    <string name="song_sorting_by_artist">Artist (Category)</string>
+    <string name="song_sorting_by_latest">Latest</string>
+    <string name="song_sorting_by_oldest">Oldest</string>
 </resources>
