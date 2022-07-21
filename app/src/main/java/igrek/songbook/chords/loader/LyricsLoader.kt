@@ -75,10 +75,10 @@ class LyricsLoader(
             lyrics
         }
 
-        transposeAndArrangeLyrics()
+        transposeAndFormatLyrics()
     }
 
-    private fun transposeAndArrangeLyrics() {
+    private fun transposeAndFormatLyrics() {
         val lyrics = ChordsTransposer().transposeLyrics(originalLyrics, chordsTransposerManager.transposedBy)
         songKey = KeyDetector().detectKey(lyrics)
 
@@ -124,7 +124,7 @@ class LyricsLoader(
     }
 
     fun onTransposed() {
-        transposeAndArrangeLyrics()
+        transposeAndFormatLyrics()
     }
 
     val isTransposed: Boolean get() = chordsTransposerManager.isTransposed

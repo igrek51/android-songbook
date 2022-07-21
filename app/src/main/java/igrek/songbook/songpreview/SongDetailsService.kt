@@ -13,9 +13,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class SongDetailsService(
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
 ) {
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
@@ -32,9 +32,10 @@ class SongDetailsService(
         val songVersion = song.versionNumber.toString()
         val modificationDate = getLastModificationDate(song)
         val path = buildSongPath(song)
+        val namespaceName = buildNamespaceName(song)
 
         val messageLines = mutableListOf<String>()
-        messageLines.add(uiResourceService.resString(R.string.song_details, path, songTitle, categories, songVersion, modificationDate))
+        messageLines.add(uiResourceService.resString(R.string.song_details, namespaceName, path, songTitle, categories, songVersion, modificationDate))
         if (!preferredKey.isNullOrEmpty())
             messageLines.add(uiResourceService.resString(R.string.song_details_preferred_key, preferredKey))
         if (!metre.isNullOrEmpty())
@@ -52,13 +53,7 @@ class SongDetailsService(
     }
 
     private fun buildSongPath(song: Song): String {
-        val namespaceId = when (song.namespace) {
-            SongNamespace.Public -> R.string.song_details_namespace_public
-            SongNamespace.Custom -> R.string.song_details_namespace_custom
-            SongNamespace.Antechamber -> R.string.song_details_namespace_antechamber
-            SongNamespace.Ephemeral -> R.string.song_details_namespace_temporary
-        }
-        val namespaceName = uiResourceService.resString(namespaceId)
+        val namespaceName = buildNamespaceName(song)
 
         var displayCategories = song.displayCategories()
         if (displayCategories.isEmpty()) {
@@ -68,6 +63,16 @@ class SongDetailsService(
         return listOf(namespaceName, displayCategories, song.title)
                 .filter { it.isNotEmpty() }
                 .joinToString(" / ")
+    }
+
+    private fun buildNamespaceName(song: Song): String {
+        val namespaceId = when (song.namespace) {
+            SongNamespace.Public -> R.string.song_details_namespace_public
+            SongNamespace.Custom -> R.string.song_details_namespace_custom
+            SongNamespace.Antechamber -> R.string.song_details_namespace_antechamber
+            SongNamespace.Ephemeral -> R.string.song_details_namespace_temporary
+        }
+        return uiResourceService.resString(namespaceId)
     }
 
     private fun getLastModificationDate(song: Song): String {

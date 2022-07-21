@@ -99,6 +99,8 @@
     <string name="song_details_title">ℹ️ Song details</string>
     <string name="song_details" formatted="false">
         %s
+        \n
+        \nType: %s
         \nTitle: %s
         \nCategories: %s
         \nSong version: %s
@@ -106,6 +108,7 @@
     </string>
     <string name="song_details_comment">Comment: %s</string>
     <string name="song_details_preferred_key">Preferred key: %s</string>
+    <string name="song_detected_key">Detected key: %s</string>
     <string name="song_details_metre">Metre: %s</string>
     <string name="easter_egg_discovered">Congratulations!
         \nYou have found a Secret Cow Level :)</string>

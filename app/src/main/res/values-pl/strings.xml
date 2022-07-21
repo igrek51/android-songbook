@@ -98,6 +98,8 @@
     <string name="song_details_title">ℹ️ Szczegóły piosenki</string>
     <string name="song_details" formatted="false">
         %s
+        \n
+        \nTyp: %s
         \nTytuł: %s
         \nKategorie: %s
         \nWersja piosenki: %s
@@ -105,6 +107,7 @@
     </string>
     <string name="song_details_comment">Komentarz: %s</string>
     <string name="song_details_preferred_key">Preferowana tonacja: %s</string>
+    <string name="song_detected_key">Rozpoznana tonacja: %s</string>
     <string name="song_details_metre">Metrum: %s</string>
     <string name="easter_egg_discovered">Gratulacje!
         \nOdnalazłeś Sekretny Krowi Poziom :)</string>

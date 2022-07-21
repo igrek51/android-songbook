@@ -1,21 +1,27 @@
 package igrek.songbook.songpreview.quickmenu
 
+import android.annotation.SuppressLint
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import igrek.songbook.R
 import igrek.songbook.chords.loader.LyricsLoader
+import igrek.songbook.chords.syntax.ChordNames
+import igrek.songbook.chords.syntax.MajorKey
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import igrek.songbook.settings.preferences.PreferencesState
 
 class QuickMenuTranspose(
     lyricsLoader: LazyInject<LyricsLoader> = appFactory.lyricsLoader,
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
     private val lyricsLoader by LazyExtractor(lyricsLoader)
     private val uiResourceService by LazyExtractor(uiResourceService)
+    private val preferencesState by LazyExtractor(preferencesState)
 
     var isVisible = false
         set(visible) {
@@ -71,10 +77,22 @@ class QuickMenuTranspose(
         updateTranspositionText()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateTranspositionText() {
         val semitonesDisplayName = lyricsLoader.transposedByDisplayName
         val transposedByText = uiResourceService.resString(R.string.transposed_by_semitones, semitonesDisplayName)
-        transposedByLabel?.text = transposedByText
+
+        val detectedKeyStr = buildSongKeyName(lyricsLoader.songKey)
+        val detectedKeyText = uiResourceService.resString(R.string.song_detected_key, detectedKeyStr)
+
+        transposedByLabel?.text = "$transposedByText\n$detectedKeyText"
+    }
+
+    private fun buildSongKeyName(key: MajorKey): String {
+        val notation = preferencesState.chordsNotation
+        val majorNoteName = ChordNames.formatNoteName(notation, key.baseMajorNote, false)
+        val minorNoteName = ChordNames.formatNoteName(notation, key.baseMinorNote, true)
+        return "$majorNoteName / $minorNoteName"
     }
 
     fun onTransposedEvent() {
