@@ -22,6 +22,7 @@ import igrek.songbook.chords.model.LyricsModel
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -192,9 +193,12 @@ class ChordDiagramsService(
             else -> throw RuntimeException("Unsupported instrument")
         }
 
-        val bitmap = diagramBuilder.buildDiagram(engChord, activity)
-
-        diagramImage.setImageBitmap(bitmap)
+        val bitmap = diagramBuilder.buildDiagram(engChord)
+        bitmap?.let {
+            diagramImage.setImageBitmap(bitmap)
+        }
+        if (bitmap == null)
+            logger.warn("no diagram generated for a chord: $typedChord")
         return diagramView
     }
 

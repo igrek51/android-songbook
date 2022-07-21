@@ -169,6 +169,7 @@ class ChordParser(
     }
 
     fun isWordAChord(word: String): Boolean {
+        // is word or sentence a chord or a group of chords
         val unknowns = mutableSetOf<String>()
         val chordFragments = parseChordFragments(word, unknowns)
         if (chordFragments.any { it.type == ChordFragmentType.UNKNOWN_CHORD })
@@ -176,6 +177,51 @@ class ChordParser(
         return chordFragments.any {
             it.type == ChordFragmentType.SINGLE_CHORD || it.type == ChordFragmentType.COMPOUND_CHORD
         }
+    }
+
+    fun parseGeneralChord(chord: String): GeneralChord? {
+        val fragments = chord.split(regexSplitSingleChordsWithDelimiters)
+            .filter { it.isNotEmpty() }
+            .map { part ->
+                if (part in singleChordsDelimiters) {
+                    return@map ChordFragment(
+                        text = part,
+                        type = ChordFragmentType.CHORD_SPLITTER,
+                    )
+                }
+
+                val singleChord: Chord = recognizeSingleChord(part) ?: return null // propagate failure
+                return@map ChordFragment(
+                    text = part,
+                    type = ChordFragmentType.SINGLE_CHORD,
+                    singleChord = singleChord,
+                )
+            }
+
+        if (fragments.isEmpty())
+            return null
+
+        if (fragments.all { it.type == ChordFragmentType.CHORD_SPLITTER })
+            return null
+
+        if (fragments.size == 3 &&
+            fragments[0].type == ChordFragmentType.SINGLE_CHORD &&
+            fragments[1].type == ChordFragmentType.CHORD_SPLITTER &&
+            fragments[2].type == ChordFragmentType.SINGLE_CHORD) {
+            return CompoundChord(
+                chord1 = fragments[0].singleChord!!,
+                splitter = fragments[1].text,
+                chord2 = fragments[2].singleChord!!,
+            )
+        }
+
+        if (fragments.size == 1) {
+            val fragment = fragments[0]
+            if (fragment.type == ChordFragmentType.SINGLE_CHORD) {
+                return fragment.singleChord
+            }
+        }
+        return null
     }
 
     private val baseChordToNoteIndex: Map<String, Int> by lazy {

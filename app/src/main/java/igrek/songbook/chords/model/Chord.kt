@@ -24,13 +24,13 @@ data class Chord (
     val minor: Boolean = false,
     val suffix: String = "",
     val originalModifier: NoteModifier = NoteModifier.NATURAL,
-) {
+): GeneralChord {
 
-    fun format(
+    override fun format(
         notation: ChordsNotation,
-        key: MajorKey? = null,
-        originalModifiers: Boolean = false,
-        forceSharps: Boolean = false,
+        key: MajorKey?,
+        originalModifiers: Boolean,
+        forceSharps: Boolean,
     ): String {
 
         val forceModifier = when {
@@ -45,6 +45,10 @@ data class Chord (
         val baseNote = ChordNames.formatNoteName(notation, note, minor)
         return baseNote + suffix
     }
+
+    override val baseChord: Chord get() = this
+
+    override fun clone(): Chord = this.copy()
 }
 
 // A chord composed of multiple single notes, eg. Cadd9/G
@@ -52,22 +56,38 @@ data class CompoundChord(
     val chord1: Chord,
     val splitter: String,
     val chord2: Chord,
-) {
-    fun format(
+): GeneralChord {
+
+    override fun format(
         notation: ChordsNotation,
-        key: MajorKey? = null,
-        originalModifiers: Boolean = false,
-        forceSharps: Boolean = false,
+        key: MajorKey?,
+        originalModifiers: Boolean,
+        forceSharps: Boolean,
     ): String {
         val chord1String = chord1.format(notation, key, originalModifiers, forceSharps)
         val chord2String = chord2.format(notation, key, originalModifiers, forceSharps)
         return chord1String + splitter + chord2String
     }
 
-    fun clone(): CompoundChord {
+    override val baseChord: Chord get() = this.chord1
+
+    override fun clone(): CompoundChord {
         return this.copy(
             chord1=this.chord1.copy(),
             chord2=this.chord2.copy(),
         )
     }
+}
+
+interface GeneralChord {
+    fun format(
+        notation: ChordsNotation,
+        key: MajorKey? = null,
+        originalModifiers: Boolean = false,
+        forceSharps: Boolean = false,
+    ): String
+
+    val baseChord: Chord
+
+    fun clone(): GeneralChord
 }
