@@ -7,9 +7,9 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:clickable="false"
-    android:descendantFocusability="beforeDescendants"
+    android:descendantFocusability="blocksDescendants"
     android:focusable="false"
-    android:focusableInTouchMode="false">
+    >
 
     <ImageView
         android:id="@+id/songImage"
@@ -58,7 +58,6 @@
         android:adjustViewBounds="true"
         android:background="?android:selectableItemBackground"
         android:focusable="false"
-        android:focusableInTouchMode="true"
         android:padding="4dp"
         android:scaleType="centerInside"
         android:src="@drawable/more" />

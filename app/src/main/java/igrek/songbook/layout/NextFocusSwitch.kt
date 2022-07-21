@@ -2,6 +2,7 @@ package igrek.songbook.layout
 
 import android.view.KeyEvent
 import android.view.View
+import android.view.ViewGroup
 import igrek.songbook.info.logger.LoggerFactory.logger
 
 class NextFocusSwitch(
@@ -49,16 +50,6 @@ class NextFocusSwitch(
         val focusedViewName = focusView?.javaClass?.simpleName
         logger.debug("NextFocusSwitch: current focus view id: $currentFocusId - $focusedViewName")
 
-//        GlobalScope.launch {
-//            currentView.allViews.forEach { child ->
-//                logger.debug("SETTING focus on ${child.javaClass.simpleName} - ${child.id}")
-//                withContext(Dispatchers.Main) {
-//                    child.requestFocus()
-//                }
-//                delay(500)
-//            }
-//        }
-
         val nextViewId = nextViewProvider(currentFocusId)
         if (nextViewId != 0 && nextViewId != currentFocusId) {
 
@@ -67,6 +58,10 @@ class NextFocusSwitch(
                 logger.warn("didnt find view $nextViewId ")
             }
             nextView?.run {
+
+                val viewGroup = currentView as ViewGroup
+                viewGroup.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+
                 requestFocus()
                 logger.debug("focus set to $nextViewId ")
                 return true

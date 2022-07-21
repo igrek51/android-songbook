@@ -6,6 +6,7 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AbsListView
 import android.widget.AdapterView
 import android.widget.ListView
@@ -55,12 +56,13 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
         setOnScrollListener(this)
         itemsCanFocus = true
         isFocusable = true
+        descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
 
         val focusSwitch = NextFocusSwitch(
             currentViewGetter = {
                 val focusView: View? = this.selectedView
                 val focusedViewName = focusView?.javaClass?.simpleName
-                logger.debug("selected focus view id: ${focusView?.id} - $focusedViewName")
+                logger.debug("NextFocusSwitch: currentViewGetter: selected focus view id: ${focusView?.id} - $focusedViewName")
                 focusView
             },
             nextRight = { currentViewId -> R.id.itemSongMoreButton },
