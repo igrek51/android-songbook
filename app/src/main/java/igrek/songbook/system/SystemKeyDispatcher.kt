@@ -98,7 +98,8 @@ class SystemKeyDispatcher(
 
     private fun onArrowUp(): Boolean {
         if (layoutController.isState(SongPreviewLayoutController::class))
-            return songPreviewLayoutController.scrollByStep(-1)
+            if (songPreviewLayoutController.scrollByStep(-1))
+                return true
 
         if (nextFocusTraverser.moveToNextView(nextFocusTraverser::nextUpView))
             return true
@@ -108,7 +109,8 @@ class SystemKeyDispatcher(
 
     private fun onArrowDown(): Boolean {
         if (layoutController.isState(SongPreviewLayoutController::class))
-            return songPreviewLayoutController.scrollByStep(+1)
+            if (songPreviewLayoutController.scrollByStep(+1))
+                return true
 
         if (nextFocusTraverser.moveToNextView(nextFocusTraverser::nextDownView))
             return true
@@ -117,10 +119,9 @@ class SystemKeyDispatcher(
     }
 
     private fun onArrowLeft(): Boolean {
-        if (layoutController.isState(SongPreviewLayoutController::class)) {
-            playlistService.goToNextOrPrevious(-1)
-            return true
-        }
+        if (layoutController.isState(SongPreviewLayoutController::class))
+            if (playlistService.goToNextOrPrevious(-1))
+                return true
 
         if (nextFocusTraverser.moveToNextView(nextFocusTraverser::nextLeftView))
             return true
@@ -129,10 +130,9 @@ class SystemKeyDispatcher(
     }
 
     private fun onArrowRight(): Boolean {
-        if (layoutController.isState(SongPreviewLayoutController::class)) {
-            playlistService.goToNextOrPrevious(+1)
-            return true
-        }
+        if (layoutController.isState(SongPreviewLayoutController::class))
+            if (playlistService.goToNextOrPrevious(+1))
+                return true
 
         if (nextFocusTraverser.moveToNextView(nextFocusTraverser::nextRightView))
             return true

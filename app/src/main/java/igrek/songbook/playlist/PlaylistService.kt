@@ -91,20 +91,20 @@ class PlaylistService(
         uiInfoService.showInfo(R.string.song_removed_from_playlist, song.displayName(), playlist.name)
     }
 
-    fun goToNextOrPrevious(next: Int) {
-        val currentSong = songPreviewLayoutController.currentSong ?: return
-        val playlist = songOpener.playlist ?: return
+    fun goToNextOrPrevious(next: Int): Boolean {
+        val currentSong = songPreviewLayoutController.currentSong ?: return false
+        val playlist = songOpener.playlist ?: return false
         val songIndex = findSongInPlaylist(currentSong, playlist)
         if (songIndex == -1)
-            return
+            return false
         val nextIndex = songIndex + next
         if (nextIndex < 0) {
             uiInfoService.showToast(R.string.playlist_at_beginning)
-            return
+            return false
         }
         if (nextIndex >= playlist.songs.size) {
             uiInfoService.showToast(R.string.playlist_at_end)
-            return
+            return false
         }
         val nextPlaylistSong = playlist.songs[nextIndex]
         val namespace = when {
@@ -112,8 +112,9 @@ class PlaylistService(
             else -> SongNamespace.Public
         }
         val songId = SongIdentifier(nextPlaylistSong.songId, namespace)
-        val nextSong = songsRepository.allSongsRepo.songFinder.find(songId) ?: return
+        val nextSong = songsRepository.allSongsRepo.songFinder.find(songId) ?: return false
         songOpener.openSongPreview(nextSong, playlist=playlist)
+        return true
     }
 
     fun hasNextSong(): Boolean {

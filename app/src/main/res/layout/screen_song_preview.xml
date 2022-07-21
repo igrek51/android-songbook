@@ -54,7 +54,7 @@
                         android:adjustViewBounds="true"
                         android:background="?android:selectableItemBackground"
                         android:clickable="true"
-                        android:focusable="true"
+                        android:focusable="false"
                         android:scaleType="centerInside"
                         android:src="@drawable/menu"/>
 
@@ -67,7 +67,7 @@
                         android:adjustViewBounds="true"
                         android:background="?android:selectableItemBackground"
                         android:clickable="true"
-                        android:focusable="true"
+                        android:focusable="false"
                         android:scaleType="centerInside"
                         android:src="@drawable/info" />
 
@@ -80,7 +80,7 @@
                         android:adjustViewBounds="true"
                         android:background="?android:selectableItemBackground"
                         android:clickable="true"
-                        android:focusable="true"
+                        android:focusable="false"
                         android:scaleType="centerInside"
                         android:src="@drawable/grid"
                         />
@@ -94,7 +94,7 @@
                         android:adjustViewBounds="true"
                         android:background="?android:selectableItemBackground"
                         android:clickable="true"
-                        android:focusable="true"
+                        android:focusable="false"
                         android:scaleType="centerInside"
                         android:src="@drawable/star_border"
                         />
@@ -108,7 +108,7 @@
                         android:adjustViewBounds="true"
                         android:background="?android:selectableItemBackground"
                         android:clickable="true"
-                        android:focusable="true"
+                        android:focusable="false"
                         android:scaleType="centerInside"
                         android:src="@drawable/transpose"
                         />
@@ -122,7 +122,7 @@
                         android:adjustViewBounds="true"
                         android:background="?android:selectableItemBackground"
                         android:clickable="true"
-                        android:focusable="true"
+                        android:focusable="false"
                         android:scaleType="centerInside"
                         android:src="@drawable/scroll1"
                         />
@@ -136,7 +136,7 @@
                         android:adjustViewBounds="true"
                         android:background="?android:selectableItemBackground"
                         android:clickable="true"
-                        android:focusable="true"
+                        android:focusable="false"
                         android:scaleType="centerInside"
                         android:src="@drawable/bluetooth"
                         />
@@ -150,7 +150,7 @@
                         android:adjustViewBounds="true"
                         android:background="?android:selectableItemBackground"
                         android:clickable="true"
-                        android:focusable="true"
+                        android:focusable="false"
                         android:scaleType="centerInside"
                         android:src="@drawable/more"
                         />

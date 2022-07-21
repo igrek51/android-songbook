@@ -11,6 +11,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.playlist.PlaylistLayoutController
+import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.top.TopSongsLayoutController
 
 class GlobalFocusTraverser(
@@ -59,6 +60,20 @@ class GlobalFocusTraverser(
 
         return when {
             currentViewId == R.id.main_content -> R.id.navMenuButton
+            layoutController.isState(SongPreviewLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton -> R.id.songInfoButton
+                R.id.songInfoButton -> R.id.chordsHelpButton
+                R.id.chordsHelpButton -> R.id.setFavouriteButton
+                R.id.setFavouriteButton -> R.id.transposeButton
+                R.id.transposeButton -> R.id.autoscrollButton
+                R.id.autoscrollButton -> when {
+                    activity.findViewById<View>(R.id.screenShareButton)?.isVisible == true -> R.id.screenShareButton
+                    else -> R.id.moreActionsButton
+                }
+                R.id.screenShareButton -> R.id.moreActionsButton
+                R.id.speedMinusButton -> R.id.speedPlusButton
+                else -> 0
+            }
             currentViewId == R.id.navMenuButton -> when {
                 activity.findViewById<View>(R.id.goBackButton)?.isVisible == true -> R.id.goBackButton
                 activity.findViewById<View>(R.id.languageFilterButton)?.isVisible == true -> R.id.languageFilterButton
@@ -98,13 +113,27 @@ class GlobalFocusTraverser(
     fun nextLeftView(currentViewId: Int): Int {
         if (navigationMenuController.isDrawerShown()) {
             when (currentViewId) {
-                R.id.navMenuButton, R.id.itemsList, R.id.itemsListView -> return R.id.nav_view
+                R.id.navMenuButton, R.id.itemsList, R.id.itemsListView, R.id.main_content -> return R.id.nav_view
             }
         }
 
         return when {
             currentViewId == R.id.main_content -> R.id.navMenuButton
             currentViewId == R.id.navMenuButton -> R.id.navMenuButton
+            layoutController.isState(SongPreviewLayoutController::class) -> when (currentViewId) {
+                R.id.moreActionsButton -> when {
+                    activity.findViewById<View>(R.id.screenShareButton)?.isVisible == true -> R.id.screenShareButton
+                    else -> R.id.autoscrollButton
+                }
+                R.id.screenShareButton -> R.id.autoscrollButton
+                R.id.autoscrollButton -> R.id.transposeButton
+                R.id.transposeButton -> R.id.setFavouriteButton
+                R.id.setFavouriteButton -> R.id.chordsHelpButton
+                R.id.chordsHelpButton -> R.id.songInfoButton
+                R.id.songInfoButton -> R.id.navMenuButton
+                R.id.speedPlusButton -> R.id.speedMinusButton
+                else -> R.id.navMenuButton
+            }
             layoutController.isState(CustomSongsListLayoutController::class) -> when (currentViewId) {
                 R.id.moreActionsButton -> R.id.addCustomSongButton
                 R.id.addCustomSongButton -> R.id.languageFilterButton
@@ -138,13 +167,23 @@ class GlobalFocusTraverser(
     fun nextDownView(currentViewId: Int): Int {
         if (navigationMenuController.isDrawerShown()) {
             when (currentViewId) {
-                R.id.navMenuButton, R.id.itemsList, R.id.itemsListView -> return R.id.nav_view
+                R.id.navMenuButton, R.id.itemsList, R.id.itemsListView, R.id.main_content -> return R.id.nav_view
             }
         }
 
-        return when (currentViewId) {
-            R.id.main_content -> R.id.navMenuButton
-            R.id.navMenuButton -> when {
+        return when {
+            layoutController.isState(SongPreviewLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton, R.id.songInfoButton, R.id.chordsHelpButton, R.id.setFavouriteButton,
+                R.id.transposeButton, R.id.autoscrollButton, R.id.screenShareButton, R.id.moreActionsButton -> when {
+                    activity.findViewById<View>(R.id.transpose0Button)?.isVisible == true -> R.id.transpose0Button
+                    activity.findViewById<View>(R.id.autoscrollToggleButton)?.isVisible == true -> R.id.autoscrollToggleButton
+                    else -> R.id.main_content
+                }
+                R.id.autoscrollToggleButton -> R.id.speedMinusButton
+                else -> 0
+            }
+            currentViewId == R.id.main_content -> R.id.navMenuButton
+            currentViewId == R.id.navMenuButton -> when {
                 layoutController.isState(TopSongsLayoutController::class) -> R.id.itemsList
                 layoutController.isState(CustomSongsListLayoutController::class) -> R.id.itemsListView
                 layoutController.isState(PlaylistLayoutController::class) -> R.id.playlistListView
@@ -157,13 +196,23 @@ class GlobalFocusTraverser(
     fun nextUpView(currentViewId: Int): Int {
         if (navigationMenuController.isDrawerShown()) {
             when (currentViewId) {
-                R.id.navMenuButton, R.id.itemsList, R.id.itemsListView -> return R.id.nav_view
+                R.id.navMenuButton, R.id.itemsList, R.id.itemsListView, R.id.main_content -> return R.id.nav_view
             }
         }
 
-        return when (currentViewId) {
-            R.id.main_content -> R.id.navMenuButton
-            R.id.navMenuButton -> R.id.navMenuButton
+        return when {
+            currentViewId == R.id.main_content -> R.id.navMenuButton
+            currentViewId == R.id.navMenuButton -> R.id.navMenuButton
+            layoutController.isState(SongPreviewLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton, R.id.songInfoButton, R.id.chordsHelpButton, R.id.setFavouriteButton,
+                R.id.transposeButton, R.id.autoscrollButton, R.id.screenShareButton, R.id.moreActionsButton,
+                R.id.autoscrollToggleButton,
+                R.id.transposeM5Button, R.id.transposeM1Button, R.id.transpose0Button,
+                R.id.transposeP1Button, R.id.transposeP5Button -> R.id.navMenuButton
+                R.id.speedMinusButton -> R.id.autoscrollToggleButton
+                R.id.speedPlusButton -> R.id.autoscrollToggleButton
+                else -> 0
+            }
             else -> 0
         }
     }

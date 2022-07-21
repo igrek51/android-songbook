@@ -318,7 +318,7 @@ class SongPreviewLayoutController(
 
     private fun goToBeginning() {
         resetOverlayScroll()
-        if (songPreview?.scroll ?: 0f == 0f && !autoscrollService.isRunning) {
+        if ((songPreview?.scroll ?: 0f) == 0f && !autoscrollService.isRunning) {
             uiInfoService.showInfo(R.string.scroll_at_the_beginning_already)
         }
         songPreview?.goToBeginning()
@@ -419,6 +419,8 @@ class SongPreviewLayoutController(
         val lines = stepsDown * 1f
         val dy: Float = lines * (songPreview?.lineheightPx ?: 0f)
         overlayScrollView?.smoothScrollBy(0, dy.toInt())
+        if (stepsDown < 0 && (songPreview?.scroll ?: 0f) <= 0f)
+            return false
         return true
     }
 
