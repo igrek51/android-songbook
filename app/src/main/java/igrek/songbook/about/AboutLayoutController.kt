@@ -39,7 +39,13 @@ class AboutLayoutController(
         val appVersionCode = packageInfoService.versionCode.toString()
         val dbVersionNumber = songsRepository.publicSongsRepo.versionNumber.toString()
         val title = uiResourceService.resString(R.string.nav_about)
-        val message = uiResourceService.resString(R.string.ui_about_content, appVersionName, appVersionCode, buildDate, dbVersionNumber)
+
+        val variant = when {
+            BuildConfig.DEBUG -> " debug"
+            else -> ""
+        }
+        val appVersionLong = "$appVersionCode ${buildDate}$variant"
+        val message = uiResourceService.resString(R.string.ui_about_content, appVersionName, appVersionLong, dbVersionNumber)
 
         showDialogWithActions(title, message)
     }

@@ -52,7 +52,7 @@
     </string>
     <string name="ui_about_content" formatted="false">
         Songbook
-        \nApplication version: %s (%s %s)
+        \nApplication version: %s (%s)
         \nSongs database version: v%s
         \n
         \nAUTHOR:
