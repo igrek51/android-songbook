@@ -80,12 +80,20 @@ class SongTreeLayoutController(
         val localFocus = LocalFocusTraverser(
             currentViewGetter = { itemsListView?.selectedView },
             currentFocusGetter = { appFactory.activity.get().currentFocus?.id },
+            preNextFocus = { currentFocusId: Int, currentView: View ->
+                when {
+                    appFactory.navigationMenuController.get().isDrawerShown() -> R.id.nav_view
+                    else -> 0
+                }
+            },
             nextLeft = { currentFocusId: Int, currentView: View ->
                 (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
                 itemsListView?.requestFocusFromTouch()
                 when {
                     currentFocusId == R.id.itemSongMoreButton -> -1
-                    currentFocusId == R.id.itemsList -> 0
+                    currentFocusId == R.id.itemsList && currentCategory != null -> {
+                        R.id.goBackButton
+                    }
                     else -> 0
                 }
             },
@@ -104,10 +112,10 @@ class SongTreeLayoutController(
                 when {
                     currentFocusId == R.id.itemSongMoreButton -> -1
                     itemsListView?.selectedItemPosition == 0 -> {
-                        appFactory.activity.get().findViewById<View>(R.id.navMenuButton)?.run {
-                            requestFocusFromTouch()
+                        when {
+                            currentCategory != null -> R.id.goBackButton
+                            else -> R.id.navMenuButton
                         }
-                        -1
                     }
                     else -> 0
                 }

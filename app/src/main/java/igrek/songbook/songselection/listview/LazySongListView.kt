@@ -63,6 +63,12 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
         val localFocus = LocalFocusTraverser(
             currentViewGetter = { this.selectedView },
             currentFocusGetter = { appFactory.activity.get().currentFocus?.id },
+            preNextFocus = { currentFocusId: Int, currentView: View ->
+                when {
+                    appFactory.navigationMenuController.get().isDrawerShown() -> R.id.nav_view
+                    else -> 0
+                }
+            },
             nextLeft = { currentFocusId: Int, currentView: View ->
                 (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
                 this.requestFocusFromTouch()
@@ -87,10 +93,7 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
                 when {
                     currentFocusId == R.id.itemSongMoreButton -> -1
                     this.selectedItemPosition == 0 -> {
-                        appFactory.activity.get().findViewById<View>(R.id.navMenuButton)?.run {
-                            requestFocusFromTouch()
-                        }
-                        -1
+                        R.id.navMenuButton
                     }
                     else -> 0
                 }

@@ -57,8 +57,9 @@ class GlobalFocusTraverser(
 
     fun nextLeftView(currentViewId: Int): Int {
         if (navigationMenuController.isDrawerShown()) {
-            if (currentViewId == R.id.navMenuButton)
-                return R.id.nav_view
+            when (currentViewId) {
+                R.id.navMenuButton, R.id.itemsList -> return R.id.nav_view
+            }
         }
 
         return when (currentViewId) {
@@ -72,8 +73,9 @@ class GlobalFocusTraverser(
 
     fun nextDownView(currentViewId: Int): Int {
         if (navigationMenuController.isDrawerShown()) {
-            if (currentViewId == R.id.navMenuButton)
-                return R.id.nav_view
+            when (currentViewId) {
+                R.id.navMenuButton, R.id.itemsList -> return R.id.nav_view
+            }
         }
 
         return when (currentViewId) {
@@ -88,8 +90,9 @@ class GlobalFocusTraverser(
 
     fun nextUpView(currentViewId: Int): Int {
         if (navigationMenuController.isDrawerShown()) {
-            if (currentViewId == R.id.navMenuButton)
-                return R.id.nav_view
+            when (currentViewId) {
+                R.id.navMenuButton, R.id.itemsList -> return R.id.nav_view
+            }
         }
 
         return when (currentViewId) {

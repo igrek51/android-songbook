@@ -12,6 +12,7 @@ import igrek.songbook.inject.appFactory
 class LocalFocusTraverser(
     private val currentViewGetter: () -> View?,
     private val currentFocusGetter: () -> Int?,
+    private val preNextFocus: (Int, View) -> Int = { _, _ -> 0 },
     private val nextLeft: (Int, View) -> Int = { _, _ -> 0 },
     private val nextRight: (Int, View) -> Int = { _, _ -> 0 },
     private val nextUp: (Int, View) -> Int = { _, _ -> 0 },
@@ -58,16 +59,21 @@ class LocalFocusTraverser(
             logger.debug("Current focus view: $currentFocusId - $resourceName - $viewName")
         }
 
-        val nextViewId = nextViewProvider(currentFocusId, currentView)
+        var nextViewId = preNextFocus(currentFocusId, currentView)
+        if (nextViewId == 0) {
+            nextViewId = nextViewProvider(currentFocusId, currentView)
+        }
 
         if (nextViewId == -1)
             return true
 
         if (nextViewId != 0 && nextViewId != currentFocusId) {
 
-            val nextView: View? = currentView.findViewById(nextViewId)
+            var nextView: View? = currentView.findViewById(nextViewId)
             if (nextView == null) {
-                logger.warn("cant find next view with ID $nextViewId ")
+                nextView = activity.findViewById(nextViewId)
+                if (nextView == null)
+                    logger.warn("cant find next view with ID $nextViewId ")
             }
             nextView?.let {
                 val nextViewName = it.javaClass.simpleName
