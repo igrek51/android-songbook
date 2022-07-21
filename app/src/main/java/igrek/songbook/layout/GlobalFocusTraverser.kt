@@ -40,6 +40,10 @@ class GlobalFocusTraverser(
         }
 
         val nextViewId = nextViewProvider(currentFocusId)
+
+        if (nextViewId == -1)
+            return true
+
         if (nextViewId != 0 && nextViewId != currentFocusId) {
             activity.findViewById<View>(nextViewId)?.let {
                 val result = it.requestFocusFromTouch()
@@ -65,7 +69,7 @@ class GlobalFocusTraverser(
 
         return when {
             layoutController.isState(SongPreviewLayoutController::class) -> when (currentViewId) {
-                R.id.main_content -> 0
+                R.id.main_content, R.id.overlayScrollView -> 0
                 R.id.navMenuButton -> R.id.songInfoButton
                 R.id.songInfoButton -> R.id.chordsHelpButton
                 R.id.chordsHelpButton -> R.id.setFavouriteButton
@@ -132,8 +136,11 @@ class GlobalFocusTraverser(
 
         return when {
             layoutController.isState(SongPreviewLayoutController::class) -> when (currentViewId) {
-                R.id.main_content -> 0
-                R.id.navMenuButton -> R.id.navMenuButton
+                R.id.main_content, R.id.overlayScrollView -> 0
+                R.id.navMenuButton -> {
+                    navigationMenuController.navDrawerShow()
+                    -1
+                }
                 R.id.moreActionsButton -> when {
                     activity.findViewById<View>(R.id.screenShareButton)?.isVisible == true -> R.id.screenShareButton
                     else -> R.id.autoscrollButton
@@ -155,7 +162,10 @@ class GlobalFocusTraverser(
                 else -> R.id.navMenuButton
             }
             currentViewId == R.id.main_content -> R.id.navMenuButton
-            currentViewId == R.id.navMenuButton -> R.id.navMenuButton
+            currentViewId == R.id.navMenuButton -> {
+                navigationMenuController.navDrawerShow()
+                -1
+            }
             layoutController.isState(CustomSongsListLayoutController::class) -> when (currentViewId) {
                 R.id.moreActionsButton -> R.id.addCustomSongButton
                 R.id.addCustomSongButton -> R.id.languageFilterButton
@@ -199,15 +209,22 @@ class GlobalFocusTraverser(
 
         return when {
             layoutController.isState(SongPreviewLayoutController::class) -> when (currentViewId) {
-                R.id.main_content -> when {
+                R.id.main_content, R.id.overlayScrollView -> when {
                     songPreviewLayoutController.canScrollDown() -> 0
-                    else -> R.id.navMenuButton
+                    else -> {
+                        songPreviewLayoutController.scrollByStep(+1)
+                        R.id.navMenuButton
+                    }
                 }
-                R.id.navMenuButton, R.id.songInfoButton, R.id.chordsHelpButton, R.id.setFavouriteButton,
+                R.id.songInfoButton, R.id.chordsHelpButton, R.id.setFavouriteButton,
                 R.id.transposeButton, R.id.autoscrollButton, R.id.screenShareButton, R.id.moreActionsButton -> when {
                     activity.findViewById<View>(R.id.transpose0Button)?.isVisible == true && songPreviewLayoutController.isTransposePanelVisible() -> R.id.transpose0Button
                     activity.findViewById<View>(R.id.autoscrollToggleButton)?.isVisible == true && songPreviewLayoutController.isAutoscrollPanelVisible() -> R.id.autoscrollToggleButton
-                    else -> R.id.main_content
+                    songPreviewLayoutController.canScrollDown() -> R.id.main_content
+                    else -> {
+                        songPreviewLayoutController.scrollByStep(+1)
+                        R.id.navMenuButton
+                    }
                 }
                 R.id.autoscrollToggleButton -> R.id.speedSeekbar
                 else -> 0
@@ -232,7 +249,7 @@ class GlobalFocusTraverser(
 
         return when {
             layoutController.isState(SongPreviewLayoutController::class) -> when (currentViewId) {
-                R.id.main_content -> when {
+                R.id.main_content, R.id.overlayScrollView -> when {
                     songPreviewLayoutController.canScrollUp() -> 0
                     else -> R.id.navMenuButton
                 }

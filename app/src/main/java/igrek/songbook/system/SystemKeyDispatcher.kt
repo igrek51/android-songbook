@@ -97,23 +97,23 @@ class SystemKeyDispatcher(
     }
 
     private fun onArrowUp(): Boolean {
+        if (nextFocusTraverser.moveToNextView(nextFocusTraverser::nextUpView))
+            return true
+
         if (layoutController.isState(SongPreviewLayoutController::class))
             if (songPreviewLayoutController.scrollByStep(-1))
                 return true
-
-        if (nextFocusTraverser.moveToNextView(nextFocusTraverser::nextUpView))
-            return true
 
         return false
     }
 
     private fun onArrowDown(): Boolean {
+        if (nextFocusTraverser.moveToNextView(nextFocusTraverser::nextDownView))
+            return true
+
         if (layoutController.isState(SongPreviewLayoutController::class))
             if (songPreviewLayoutController.scrollByStep(+1))
                 return true
-
-        if (nextFocusTraverser.moveToNextView(nextFocusTraverser::nextDownView))
-            return true
 
         return false
     }

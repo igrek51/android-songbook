@@ -436,6 +436,8 @@ class SongPreviewLayoutController(
     }
 
     fun scrollByStep(stepsDown: Int): Boolean {
+        if (navigationMenuController.isDrawerShown())
+            return false
         val lines = stepsDown * 1f
         val dy: Float = lines * (songPreview?.lineheightPx ?: 0f)
         overlayScrollView?.smoothScrollBy(0, dy.toInt())

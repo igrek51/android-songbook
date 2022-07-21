@@ -3,6 +3,7 @@ package igrek.songbook.layout.navigation
 import android.app.Activity
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
@@ -148,6 +149,7 @@ class NavigationMenuController(
     fun navDrawerShow() {
         drawerLayout?.openDrawer(GravityCompat.START)
         softKeyboardService.hideSoftKeyboard()
+        activity.findViewById<View>(R.id.nav_top_songs)?.requestFocus()
     }
 
     fun navDrawerHide() {
