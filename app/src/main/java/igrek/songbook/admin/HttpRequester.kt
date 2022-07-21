@@ -2,6 +2,7 @@ package igrek.songbook.admin
 
 import igrek.songbook.info.logger.LoggerFactory
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import okhttp3.OkHttpClient
@@ -9,6 +10,7 @@ import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
 
+@OptIn(DelicateCoroutinesApi::class)
 class HttpRequester {
 
     private val okHttpClient: OkHttpClient = OkHttpClient()

@@ -28,11 +28,13 @@ import igrek.songbook.settings.instrument.ChordsInstrument
 import igrek.songbook.settings.instrument.ChordsInstrumentService
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.system.SoftKeyboardService
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
 
+@OptIn(DelicateCoroutinesApi::class)
 class ChordsDiagramsService(
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
         uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,

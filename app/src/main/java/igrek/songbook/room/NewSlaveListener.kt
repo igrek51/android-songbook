@@ -12,6 +12,7 @@ import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.trySendBlocking
 import java.io.IOException
 
+@OptIn(DelicateCoroutinesApi::class)
 class NewSlaveListener(
         private val bluetoothAdapter: BluetoothAdapter,
         private val newSlaveChannel: SendChannel<PeerStream>,

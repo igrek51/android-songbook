@@ -30,6 +30,7 @@ import java.io.IOException
 import java.util.concurrent.ConcurrentHashMap
 
 
+@OptIn(DelicateCoroutinesApi::class)
 @Suppress("DEPRECATION")
 @SuppressLint("MissingPermission")
 class BluetoothService(

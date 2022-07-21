@@ -87,22 +87,22 @@ android {
         }
     }
     kotlinOptions {
-        freeCompilerArgs = ["-Xallow-result-return-type", "-Xopt-in=kotlin.RequiresOptIn"]
+        freeCompilerArgs = ["-Xallow-result-return-type", "-opt-in=kotlin.RequiresOptIn"]
     }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     // Android
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'androidx.annotation:annotation:1.5.0'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.annotation:annotation:1.4.0'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.activity:activity-ktx:1.6.0'
+    implementation 'androidx.activity:activity-ktx:1.5.0'
     implementation 'androidx.work:work-runtime:2.7.1'
     // Firebase
     implementation 'com.google.firebase:firebase-analytics-ktx:21.1.1'
@@ -151,7 +151,7 @@ dependencies {
     // JWT
     implementation 'com.auth0.android:jwtdecode:2.0.1'
     // Unit tests
-    testImplementation 'androidx.appcompat:appcompat:1.5.1'
+    testImplementation 'androidx.appcompat:appcompat:1.4.2'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:2.28.2'
     testImplementation 'org.assertj:assertj-core:3.23.1'

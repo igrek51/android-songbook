@@ -10,10 +10,12 @@ import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+@OptIn(DelicateCoroutinesApi::class)
 class PublishSongService(
         layoutController: LazyInject<LayoutController> = appFactory.layoutController,
         publishSongLayoutController: LazyInject<PublishSongLayoutController> = appFactory.publishSongLayoutController,

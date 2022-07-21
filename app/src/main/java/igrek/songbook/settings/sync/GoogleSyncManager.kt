@@ -29,14 +29,12 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.system.filesystem.saveInputStreamToFile
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.io.FileNotFoundException
 import java.io.IOException
 
 
+@OptIn(DelicateCoroutinesApi::class)
 class GoogleSyncManager(
         appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,

@@ -17,8 +17,10 @@ import igrek.songbook.layout.ad.AdService
 import igrek.songbook.persistence.general.SongsUpdater
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
+import igrek.songbook.settings.homescreen.HomeScreenEnum
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.system.WindowManagerService
 import kotlinx.coroutines.*
 import kotlin.reflect.KClass
@@ -38,6 +40,7 @@ class AppInitializer(
     activity: LazyInject<Activity> = appFactory.activity,
     shareSongService: LazyInject<ShareSongService> = appFactory.shareSongService,
     songImportFileChooser: LazyInject<SongImportFileChooser> = appFactory.songImportFileChooser,
+    songOpener: LazyInject<SongOpener> = appFactory.songOpener,
 ) {
     private val windowManagerService by LazyExtractor(windowManagerService)
     private val layoutController by LazyExtractor(layoutController)
@@ -52,6 +55,7 @@ class AppInitializer(
     private val activity by LazyExtractor(activity)
     private val shareSongService by LazyExtractor(shareSongService)
     private val songImportFileChooser by LazyExtractor(songImportFileChooser)
+    private val songOpener by LazyExtractor(songOpener)
 
     private val logger = LoggerFactory.logger
     private val debugInitEnabled = false
@@ -72,7 +76,11 @@ class AppInitializer(
                 layoutController.init()
                 windowManagerService.hideTaskbar()
 
-                layoutController.showLayout(getStartingScreen()).join()
+                if (preferencesState.homeScreen == HomeScreenEnum.LAST_SONG && songOpener.hasLastSong()) {
+                    songOpener.openLastSong()
+                } else {
+                    layoutController.showLayout(getStartingScreen()).join()
+                }
 
                 songsUpdater.checkUpdateIsAvailable()
 

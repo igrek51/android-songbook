@@ -14,12 +14,14 @@ import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.*
 
 
+@OptIn(DelicateCoroutinesApi::class)
 open class UiInfoService(
         activity: LazyInject<Activity> = appFactory.activity,
         uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,

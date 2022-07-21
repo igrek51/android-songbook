@@ -15,6 +15,7 @@ import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.songpreview.SongOpener
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.apache.commons.codec.binary.Base64
@@ -24,6 +25,7 @@ import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
 
 
+@OptIn(DelicateCoroutinesApi::class)
 open class ShareSongService(
     songOpener: LazyInject<SongOpener> = appFactory.songOpener,
     activity: LazyInject<Activity> = appFactory.activity,

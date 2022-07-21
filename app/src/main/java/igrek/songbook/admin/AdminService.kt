@@ -20,10 +20,12 @@ import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.system.SoftKeyboardService
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+@OptIn(DelicateCoroutinesApi::class)
 class AdminService(
         navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
         preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,

@@ -18,10 +18,12 @@ import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.system.SoftKeyboardService
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+@OptIn(DelicateCoroutinesApi::class)
 class PublishSongLayoutController(
         layoutController: LazyInject<LayoutController> = appFactory.layoutController,
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,

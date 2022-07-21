@@ -38,13 +38,11 @@ import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.top.TopSongsLayoutController
 import igrek.songbook.songselection.tree.SongTreeLayoutController
 import igrek.songbook.system.SystemKeyDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlin.reflect.KClass
 
 
+@OptIn(DelicateCoroutinesApi::class)
 class LayoutController(
     activity: LazyInject<Activity> = appFactory.activity,
     navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,

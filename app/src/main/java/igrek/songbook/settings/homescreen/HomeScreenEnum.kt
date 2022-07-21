@@ -4,6 +4,7 @@ import igrek.songbook.R
 import igrek.songbook.custom.CustomSongsListLayoutController
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.playlist.PlaylistLayoutController
+import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.favourite.FavouritesLayoutController
 import igrek.songbook.songselection.history.OpenHistoryLayoutController
 import igrek.songbook.songselection.latest.LatestSongsLayoutController
@@ -33,6 +34,8 @@ enum class HomeScreenEnum(
     FAVOURITES(7, FavouritesLayoutController::class, R.string.home_screen_enum_favourites),
 
     HISTORY(8, OpenHistoryLayoutController::class, R.string.home_screen_enum_history),
+
+    LAST_SONG(9, SongPreviewLayoutController::class, R.string.home_screen_enum_last_song),
 
     ;
 

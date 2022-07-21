@@ -20,11 +20,13 @@ import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
+@OptIn(DelicateCoroutinesApi::class)
 class RoomLobbyLayoutController(
         roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
         uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
