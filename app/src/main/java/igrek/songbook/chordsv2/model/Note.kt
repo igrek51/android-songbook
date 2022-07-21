@@ -8,6 +8,7 @@ enum class NoteModifier {
 }
 
 enum class Note(val noteIndex: Int, modifier: NoteModifier) {
+    // ENGLISH notation
 
     C(0, NoteModifier.NATURAL),
     C_SHARP(1, NoteModifier.SHARP),
@@ -30,4 +31,42 @@ enum class Note(val noteIndex: Int, modifier: NoteModifier) {
     C_FLAT(11, NoteModifier.FLAT),
     E_SHARP(5, NoteModifier.SHARP),
 
+}
+
+fun indexToNote(noteIndex: Int, keyModifier: NoteModifier? = null): Note {
+    return when (noteIndex) {
+        0 -> Note.C
+        1 -> if (keyModifier == NoteModifier.FLAT) {
+            Note.D_FLAT
+        } else {
+            Note.C_SHARP
+        }
+        2 -> Note.D
+        3 -> if (keyModifier == NoteModifier.SHARP) {
+            Note.D_SHARP
+        } else {
+            Note.E_FLAT
+        }
+        4 -> Note.E
+        5 -> Note.F
+        6 -> if (keyModifier == NoteModifier.FLAT) {
+            Note.G_FLAT
+        } else {
+            Note.F_SHARP
+        }
+        7 -> Note.G
+        8 -> if (keyModifier == NoteModifier.SHARP) {
+            Note.G_SHARP
+        } else {
+            Note.A_FLAT
+        }
+        9 -> Note.A
+        10 -> if (keyModifier == NoteModifier.SHARP) {
+            Note.A_SHARP
+        } else {
+            Note.B_FLAT
+        }
+        11 -> Note.B
+        else -> throw RuntimeException("Unknown note index $noteIndex")
+    }
 }

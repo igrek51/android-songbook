@@ -3,7 +3,7 @@ package igrek.songbook.chordsv2.syntax
 import igrek.songbook.chordsv2.model.Note.*
 import igrek.songbook.chordsv2.model.Note
 
-class ScaleNoteNames {
+class MajorScales {
     companion object {
 
         val majorKeyNotes: Map<Note, List<Note>> = mapOf(
@@ -14,7 +14,7 @@ class ScaleNoteNames {
             E to listOf(C_SHARP, D_SHARP, E, F_SHARP, G_SHARP, A, B), // E Major
             B to listOf(C_SHARP, D_SHARP, E, F_SHARP, G_SHARP, A_SHARP, B), // B Major
             F_SHARP to listOf(C_SHARP, D_SHARP, E_SHARP, F_SHARP, G_SHARP, A_SHARP, B), // F# (Gb) Major
-            G_FLAT to listOf(D_FLAT, E_FLAT, F, G_FLAT, A_FLAT, B_FLAT, C_FLAT), // Gb (F#) Major
+            //G_FLAT to listOf(D_FLAT, E_FLAT, F, G_FLAT, A_FLAT, B_FLAT, C_FLAT), // Gb (F#) Major
             D_FLAT to listOf(C, D_FLAT, E_FLAT, F, G_FLAT, A_FLAT, B_FLAT), // Db (C#) Major
             A_FLAT to listOf(C, D_FLAT, E_FLAT, F, G, A_FLAT, B_FLAT), // Ab (G#) Major
             E_FLAT to listOf(C, D, E_FLAT, F, G, A_FLAT, B_FLAT), // Eb (D#) Major
@@ -23,4 +23,5 @@ class ScaleNoteNames {
         )
 
     }
+
 }

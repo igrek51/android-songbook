@@ -172,7 +172,7 @@ class ChordParser(
 
     private val baseChordToNoteIndex: Map<String, Int> by lazy {
         val allNames = hashMapOf<String, Int>()
-        ChordNames.baseNoteNames[notation]!!.forEachIndexed { index, names ->
+        ChordNames.validMajorChordNames[notation]!!.forEachIndexed { index, names ->
             names.forEach { name ->
                 allNames[name] = index
             }
@@ -182,7 +182,7 @@ class ChordParser(
 
     private val minorChordToNoteIndex: Map<String, Int> by lazy {
         val allNames = hashMapOf<String, Int>()
-        ChordNames.minorChordNames[notation]!!.forEachIndexed { index, names ->
+        ChordNames.validMinorChordNames[notation]!!.forEachIndexed { index, names ->
             names.forEach { name ->
                 allNames[name] = index
             }

@@ -1,5 +1,6 @@
 package igrek.songbook.chordsv2.model
 
+import igrek.songbook.chordsv2.syntax.ChordNames
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
 // Single chord with one single note: Cm, F#maj7, Bbm
@@ -25,18 +26,15 @@ data class Chord (
     val noteModifier: NoteModifier = NoteModifier.NATURAL,
 ) {
 
-    fun render(notation: ChordsNotation, key: Int? = null): Chord {
-        displayText = format(notation, key)
+    fun render(notation: ChordsNotation, keyModifier: NoteModifier? = null): Chord {
+        displayText = format(notation, keyModifier)
         return this
     }
 
-    fun format(notation: ChordsNotation, key: Int? = null): String {
-        return when (notation) {
-            ChordsNotation.GERMAN -> TODO()
-            ChordsNotation.GERMAN_IS -> TODO()
-            ChordsNotation.ENGLISH -> TODO()
-            ChordsNotation.SOLFEGE -> TODO()
-        }
+    fun format(notation: ChordsNotation, keyModifier: NoteModifier? = null): String {
+        val note = indexToNote(noteIndex, keyModifier)
+        val baseNote = ChordNames.formatNoteName(notation, note, minor)
+        return baseNote + suffix
     }
 
 }
