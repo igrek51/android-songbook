@@ -99,9 +99,9 @@
     <string name="song_details" formatted="false">
         %s
         \n
-        \nTyp: %s
         \nTytuł: %s
         \nKategorie: %s
+        \nLokalizacja: %s
         \nWersja piosenki: %s
         \nOstatnia modyfikacja: %s
     </string>
@@ -229,7 +229,7 @@
     <string name="settings_random_favourite">Losuj ulubione</string>
     <string name="settings_random_favourite_hint">Losuj piosenki tylko z listy ulubionych</string>
     <string name="settings_songs_list_section">Lista piosenek</string>
-    <string name="settings_filter_languages">Pokazuj tylko piosenki z tekstem w wybranych językach</string>
+    <string name="settings_filter_languages">Filtruj tylko piosenki w wybranych językach</string>
     <string name="settings_autoscroll_initial_delay">Opóźnienie autoprzewijania</string>
     <string name="settings_autoscroll_speed">Szybkość autoprzewijania</string>
     <string name="settings_general_section">Ogólne</string>
@@ -292,14 +292,14 @@
     <string name="settings_toggle_all_artists">Zaznacz / Odznacz wszystkie kategorie</string>
     <string name="settings_custom_songs">Moje piosenki</string>
     <string name="settings_group_custom_songs">Grupuj własne piosenki</string>
-    <string name="settings_group_custom_songs_hint">Grupuj razem własne piosenki należące do tej samej kategorii / artysty</string>
+    <string name="settings_group_custom_songs_hint">Grupuj razem własne piosenki należące do tej samej kategorii (artysty)</string>
     <string name="settings_chords_end_of_line">Wyświetlaj akordy na końcu linii</string>
     <string name="settings_chords_end_of_line_hint">Wyświetlaj wszystkie akordy wyrównane do prawej strony ekranu</string>
     <string name="settings_chords_above">Wyświetlaj akordy nad tekstem</string>
     <string name="settings_chords_above_hint">Wyświetlaj akordy w osobnej linii ponad słowami</string>
-    <string name="settings_transposition">Transpozycja akordów</string>
-    <string name="settings_restore_transposition">Przywracanie ostatniej transpozycji</string>
-    <string name="settings_restore_transposition_hint">Zapamiętuj i przywracaj ostatnią transpozycję akordów dla każdej piosenki</string>
+    <string name="settings_transposition">Transpozycja</string>
+    <string name="settings_restore_transposition">Przywracanie ostatniej tonacji</string>
+    <string name="settings_restore_transposition_hint">Zapamiętuj i przywracaj ostatnią transpozycję akordów (tonację) dla każdej piosenki</string>
     <string name="new_playlist_name">Nazwa nowej playlisty</string>
     <string name="confirm_send_contact">Czy na pewno chcesz to wysłać?</string>
     <string name="no_chords_recognized_in_song">Nie rozpoznano akordów w piosence</string>
@@ -337,7 +337,7 @@
     <string name="settings_sync">Kopia zapasowa i Przywracanie / Synchronizacja urządzeń</string>
     <string name="settings_sync_save">Zapisz kopię zapasową</string>
     <string name="settings_sync_restore">Przywróć kopię zapasową</string>
-    <string name="settings_sync_save_hint">Zapisz wszystkie dane aplikacji (ustawienia, własne piosenki, playlisty, ulubione) na Twoim koncie Google Drive w ukrytym folderze danych aplikacji. Nadpisze to Twoją poprzednią kopię zapasową.</string>
+    <string name="settings_sync_save_hint">Zapisz wszystkie dane aplikacji (ustawienia, własne piosenki, playlisty, ulubione) na Twoim koncie Google Drive w ukrytym folderze danych aplikacji. Nadpisze to Twoją poprzednią kopię zapasową!</string>
     <string name="settings_sync_save_success">Dane aplikacji zostały zapisane.</string>
     <string name="settings_sync_save_error">Błąd tworzenia kopii zapasowej: %s</string>
     <string name="settings_sync_restore_hint">Przywróć zapisane dane aplikacji z twojego konta Google Drive.\nUwaga: Przywracanie nadpisze twoje obecne niezapisane dane aplikacji. Wymagany restart.</string>
@@ -484,7 +484,7 @@
     <string name="billing_item_price">Cena: %s</string>
     <string name="file_select_operation_canceled">Import pliku anulowany</string>
     <string name="settings_autoscroll_show_eye_focus_zone">Postęp strefy skupienia wzroku</string>
-    <string name="settings_autoscroll_show_eye_focus_zone_hint">Wyświetlaj postęp i stan autoprzewijania, pokazując strefę skupienia wzroku</string>
+    <string name="settings_autoscroll_show_eye_focus_zone_hint">Wyświetlaj postęp autoprzewijania, pokazując strefę skupienia wzroku</string>
     <string name="settings_autoscroll_restore_speed">Indywidualna szybkość autoprzewijania</string>
     <string name="settings_autoscroll_restore_speed_hint">Zapamiętuj i przywracaj szybkość autoprzewijania dla każdej piosenki</string>
     <string name="settings_random_playlist_songs">Losowanie z playlisty</string>
@@ -501,6 +501,6 @@
     <string name="settings_home_screen">Ekran startowy</string>
     <string name="home_screen_enum_last_song">Ostatnia piosenka</string>
     <string name="settings_force_sharp_chords">Wymuszaj krzyżyki</string>
-    <string name="settings_force_sharp_chords_hint">Zawsze pokazuj dźwięki z krzyżykami (C#, D#), unikając bemoli (Db, Eb). Nie dotyczy "Bb".</string>
+    <string name="settings_force_sharp_chords_hint">Zawsze pokazuj dźwięki z krzyżykami (C#, D#), unikając bemoli (Db, Eb). Nie dotyczy \"Bb\".</string>
     <string name="settings_chord_diagrams_section">Diagramy akordów</string>
 </resources>

@@ -35,7 +35,7 @@ class SongDetailsService(
         val namespaceName = buildNamespaceName(song)
 
         val messageLines = mutableListOf<String>()
-        messageLines.add(uiResourceService.resString(R.string.song_details, namespaceName, path, songTitle, categories, songVersion, modificationDate))
+        messageLines.add(uiResourceService.resString(R.string.song_details, path, songTitle, categories, namespaceName, songVersion, modificationDate))
         if (!preferredKey.isNullOrEmpty())
             messageLines.add(uiResourceService.resString(R.string.song_details_preferred_key, preferredKey))
         if (!metre.isNullOrEmpty())

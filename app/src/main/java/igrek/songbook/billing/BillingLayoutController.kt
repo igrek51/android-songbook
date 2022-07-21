@@ -80,10 +80,10 @@ class BillingLayoutController(
     }
 
     private fun updateComponents() {
-        val priceAdFree = billingService.getProductPrice(PRODUCT_ID_NO_ADS)
+        val priceAdFree = billingService.getProductPrice(PRODUCT_ID_NO_ADS).orEmpty()
         val adfreePurchased: Boolean? = billingService.isPurchased(PRODUCT_ID_NO_ADS)
 
-        val priceDonate1 = billingService.getProductPrice(PRODUCT_ID_DONATE_1_BEER)
+        val priceDonate1 = billingService.getProductPrice(PRODUCT_ID_DONATE_1_BEER).orEmpty()
         // val donate1Quantity = billingService.getProductPurchasedAmount(PRODUCT_ID_DONATE_1_BEER)
 
         runBlocking(Dispatchers.Main) {
