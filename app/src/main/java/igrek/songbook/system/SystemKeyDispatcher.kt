@@ -5,6 +5,7 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
+import igrek.songbook.layout.NextFocusTraverser
 import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.settings.buttons.MediaButtonBehaviours
 import igrek.songbook.settings.preferences.PreferencesState
@@ -17,12 +18,14 @@ class SystemKeyDispatcher(
     songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
     playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
+    nextFocusTraverser: LazyInject<NextFocusTraverser> = appFactory.nextFocusTraverser,
 ) {
     private val layoutController by LazyExtractor(layoutController)
     private val autoscrollService by LazyExtractor(autoscrollService)
     private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
     private val preferencesState by LazyExtractor(preferencesState)
     private val playlistService by LazyExtractor(playlistService)
+    private val nextFocusTraverser by LazyExtractor(nextFocusTraverser)
 
     fun onKeyDown(keyCode: Int): Boolean {
         when (keyCode) {
@@ -58,6 +61,10 @@ class SystemKeyDispatcher(
             KeyEvent.KEYCODE_MEDIA_STEP_FORWARD -> {
                 return onArrowRight()
             }
+            KeyEvent.KEYCODE_DPAD_CENTER,
+            KeyEvent.KEYCODE_ENTER -> {
+                return onEnterKey()
+            }
             KeyEvent.KEYCODE_HEADSETHOOK, // mini jack headset button
             KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE,
             KeyEvent.KEYCODE_MEDIA_PLAY,
@@ -78,41 +85,63 @@ class SystemKeyDispatcher(
     }
 
     private fun onVolumeUp(): Boolean {
-        if (!layoutController.isState(SongPreviewLayoutController::class))
-            return false
-        return autoscrollService.onVolumeUp()
+        if (layoutController.isState(SongPreviewLayoutController::class))
+            return autoscrollService.onVolumeUp()
+        return false
     }
 
     private fun onVolumeDown(): Boolean {
-        if (!layoutController.isState(SongPreviewLayoutController::class))
-            return false
-        return autoscrollService.onVolumeDown()
+        if (layoutController.isState(SongPreviewLayoutController::class))
+            return autoscrollService.onVolumeDown()
+        return false
     }
 
     private fun onArrowUp(): Boolean {
-        if (!layoutController.isState(SongPreviewLayoutController::class))
-            return false
-        return songPreviewLayoutController.scrollByStep(-1)
+        if (layoutController.isState(SongPreviewLayoutController::class))
+            return songPreviewLayoutController.scrollByStep(-1)
+
+        if (nextFocusTraverser.moveToNextView(nextFocusTraverser::nextUpView))
+            return true
+
+        return false
     }
 
     private fun onArrowDown(): Boolean {
-        if (!layoutController.isState(SongPreviewLayoutController::class))
-            return false
-        return songPreviewLayoutController.scrollByStep(+1)
+        if (layoutController.isState(SongPreviewLayoutController::class))
+            return songPreviewLayoutController.scrollByStep(+1)
+
+        if (nextFocusTraverser.moveToNextView(nextFocusTraverser::nextDownView))
+            return true
+
+        return false
     }
 
     private fun onArrowLeft(): Boolean {
-        if (!layoutController.isState(SongPreviewLayoutController::class))
-            return false
-        playlistService.goToNextOrPrevious(-1)
-        return true
+        if (layoutController.isState(SongPreviewLayoutController::class)) {
+            playlistService.goToNextOrPrevious(-1)
+            return true
+        }
+
+        if (nextFocusTraverser.moveToNextView(nextFocusTraverser::nextLeftView))
+            return true
+
+        return false
     }
 
     private fun onArrowRight(): Boolean {
-        if (!layoutController.isState(SongPreviewLayoutController::class))
-            return false
-        playlistService.goToNextOrPrevious(+1)
-        return true
+        if (layoutController.isState(SongPreviewLayoutController::class)) {
+            playlistService.goToNextOrPrevious(+1)
+            return true
+        }
+
+        if (nextFocusTraverser.moveToNextView(nextFocusTraverser::nextRightView))
+            return true
+
+        return false
+    }
+
+    private fun onEnterKey(): Boolean {
+        return false
     }
 
     private fun onMediaButton(): Boolean {

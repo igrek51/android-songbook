@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
     android:orientation="vertical"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:descendantFocusability="afterDescendants">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -47,7 +48,8 @@
                     android:focusable="true"
                     android:padding="8dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/menu" />
+                    android:src="@drawable/menu"
+                    />
 
                 <TextView
                     android:id="@+id/toolbarTitle"

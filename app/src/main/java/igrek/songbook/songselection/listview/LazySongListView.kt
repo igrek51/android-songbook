@@ -50,6 +50,8 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
         adapter = SongListItemAdapter(context, emptyList(), songContextMenuBuilder)
         setAdapter(adapter)
         setOnScrollListener(this)
+        itemsCanFocus = true
+        isFocusable = true
         scrollState = OnScrollListener.SCROLL_STATE_IDLE
     }
 
