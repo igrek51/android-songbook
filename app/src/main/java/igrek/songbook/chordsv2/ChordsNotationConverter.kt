@@ -21,7 +21,7 @@ class ChordsNotationConverter(
         return lyrics.displayString()
     }
 
-    fun convertSingleChord(chord: String, originalModifiers: Boolean = false): String {
+    fun convertChordFragments(chord: String, originalModifiers: Boolean = false): String {
         val unknowns = mutableSetOf<String>()
         val chordFragments = ChordParser(fromNotation).parseSingleChordFragments(chord, unknowns)
         val lyricsFragment = LyricsFragment(chord, LyricsTextType.CHORDS, chordFragments=chordFragments)

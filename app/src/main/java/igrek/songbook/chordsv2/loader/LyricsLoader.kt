@@ -10,6 +10,7 @@ import igrek.songbook.chordsv2.render.LyricsInflater
 import igrek.songbook.chordsv2.model.LyricsModel
 import igrek.songbook.chordsv2.parser.ChordParser
 import igrek.songbook.chordsv2.parser.LyricsParser
+import igrek.songbook.chordsv2.syntax.MajorKey
 import igrek.songbook.chordsv2.transpose.ChordsTransposer
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -38,6 +39,8 @@ class LyricsLoader(
     private var originalLyrics: LyricsModel = LyricsModel()
     private var transposedLyrics: LyricsModel = LyricsModel()
     var lyricsModel: LyricsModel = LyricsModel()
+        private set
+    var songKey: MajorKey = MajorKey.C_MAJOR
         private set
 
     fun load(
@@ -75,13 +78,15 @@ class LyricsLoader(
     }
 
     private fun transposeAndArrangeLyrics() {
-
-        val lyrics =
-            ChordsTransposer().transposeLyrics(originalLyrics, chordsTransposerManager.transposedBy)
-        val songKey = KeyDetector().detectKey(lyrics)
+        val lyrics = ChordsTransposer().transposeLyrics(originalLyrics, chordsTransposerManager.transposedBy)
+        songKey = KeyDetector().detectKey(lyrics)
 
         val toNotation = preferencesState.chordsNotation
-        ChordsRenderer(toNotation, songKey).formatLyrics(lyrics)
+        val originalModifiers = when {
+            toNotation == originalSongNotation && chordsTransposerManager.transposedBy == 0 -> true
+            else -> false
+        }
+        ChordsRenderer(toNotation, songKey).formatLyrics(lyrics, originalModifiers)
         transposedLyrics = lyrics
 
         arrangeLyrics()
@@ -131,6 +136,5 @@ class LyricsLoader(
     fun onTransposeResetEvent() {
         chordsTransposerManager.onTransposeResetEvent()
     }
-
 
 }

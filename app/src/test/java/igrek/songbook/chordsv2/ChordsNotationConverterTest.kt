@@ -41,11 +41,18 @@ class ChordsNotationConverterTest {
     @Test
     fun test_convertChordSharpMoll() {
         val english2german = ChordsNotationConverter(ChordsNotation.ENGLISH, ChordsNotation.GERMAN)
-        assertThat(english2german.convertSingleChord("Gm")).isEqualTo("g")
-        assertThat(english2german.convertSingleChord("G#", originalModifiers = true)).isEqualTo("G#")
-        assertThat(english2german.convertSingleChord("G#m", originalModifiers = true)).isEqualTo("g#")
-        assertThat(english2german.convertSingleChord("G#m", originalModifiers = false)).isEqualTo("ab")
-        assertThat(english2german.convertSingleChord("G#m7", originalModifiers = true)).isEqualTo("g#7")
+        assertThat(english2german.convertChordFragments("Gm")).isEqualTo("g")
+        assertThat(english2german.convertChordFragments("G#", originalModifiers = true)).isEqualTo("G#")
+        assertThat(english2german.convertChordFragments("G#m", originalModifiers = true)).isEqualTo("g#")
+        assertThat(english2german.convertChordFragments("G#m", originalModifiers = false)).isEqualTo("ab")
+        assertThat(english2german.convertChordFragments("G#m7", originalModifiers = true)).isEqualTo("g#7")
+    }
+
+    @Test
+    fun test_convertCompoundChord() {
+        val english2german = ChordsNotationConverter(ChordsNotation.ENGLISH, ChordsNotation.GERMAN)
+        assertThat(english2german.convertChordFragments("G#m/A", originalModifiers = true)).isEqualTo("g#/A")
+        assertThat(english2german.convertChordFragments("dupa", originalModifiers = true)).isEqualTo("dupa")
     }
 
     @Test
@@ -60,7 +67,7 @@ class ChordsNotationConverterTest {
         val converter = ChordsNotationConverter(ChordsNotation.GERMAN, ChordsNotation.ENGLISH)
         assertThat(converter.convertLyrics("lyrics [a b B h] [Asus4 d7 f#]")).
                 isEqualTo("lyrics [Am Bbm Bb Bm] [Asus4 Dm7 F#m]")
-        assertThat(converter.convertSingleChord("a")).isEqualTo("Am")
+        assertThat(converter.convertChordFragments("a")).isEqualTo("Am")
     }
 
     @Test

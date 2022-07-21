@@ -5,8 +5,8 @@ import kotlin.math.max
 
 
 class ChordDiagramBuilder(
-        private val instrument: ChordsInstrument = ChordsInstrument.default,
-        private val chordDiagramStyle: ChordDiagramStyle = ChordDiagramStyle.Horizontal,
+    private val instrument: ChordsInstrument = ChordsInstrument.default,
+    private val chordDiagramStyle: ChordDiagramStyle = ChordDiagramStyle.Horizontal,
 ) {
 
     private val minimumFretsShown = 3
@@ -79,10 +79,10 @@ interface DiagramRenderer {
 }
 
 data class DisplayStringFret(
-        val stringName: String,
-        var fretSign: String = " ",
-        val fretsShown: Int,
-        val digitsCount: Int = 1,
-        var fingerPosition: Int? = null,
-        var fingerValue: Int? = null
+    val stringName: String,
+    var fretSign: String = " ",
+    val fretsShown: Int,
+    val digitsCount: Int = 1,
+    var fingerPosition: Int? = null,
+    var fingerValue: Int? = null,
 )

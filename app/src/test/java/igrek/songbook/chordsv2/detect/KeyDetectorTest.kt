@@ -1,15 +1,12 @@
-package igrek.songbook.chordsv2
+package igrek.songbook.chordsv2.detect
 
-import igrek.songbook.chordsv2.detect.KeyDetector
-import igrek.songbook.chordsv2.detect.UniqueChordsFinder
-import igrek.songbook.chordsv2.model.*
+import igrek.songbook.chordsv2.model.Note
 import igrek.songbook.chordsv2.parser.ChordParser
 import igrek.songbook.chordsv2.parser.LyricsParser
 import igrek.songbook.chordsv2.syntax.MajorKey
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.Test
-
 
 class KeyDetectorTest {
 
@@ -24,12 +21,12 @@ class KeyDetectorTest {
         chordParser.parseAndFillChords(lyrics)
 
         val uniqueNotes = UniqueChordsFinder().findUniqueNotesInLyrics(lyrics)
-        assertThat(uniqueNotes).isEqualTo(setOf(
+        Assertions.assertThat(uniqueNotes).isEqualTo(setOf(
             Note.A.index, Note.F.index, Note.C.index, Note.G.index
         ))
 
         val key = KeyDetector().detectKey(lyrics)
-        assertThat(key).isEqualTo(MajorKey.C_MAJOR)
+        Assertions.assertThat(key).isEqualTo(MajorKey.C_MAJOR)
     }
 
     @Test
@@ -37,7 +34,7 @@ class KeyDetectorTest {
         val lyrics = LyricsParser().parseLyrics("[F# E D G]")
         ChordParser(ChordsNotation.ENGLISH).parseAndFillChords(lyrics)
         val key = KeyDetector().detectKey(lyrics)
-        assertThat(key).isEqualTo(MajorKey.G_MAJOR)
+        Assertions.assertThat(key).isEqualTo(MajorKey.G_MAJOR)
     }
 
     @Test
@@ -45,7 +42,7 @@ class KeyDetectorTest {
         val lyrics = LyricsParser().parseLyrics("[F# E D A]")
         ChordParser(ChordsNotation.ENGLISH).parseAndFillChords(lyrics)
         val key = KeyDetector().detectKey(lyrics)
-        assertThat(key).isEqualTo(MajorKey.D_MAJOR)
+        Assertions.assertThat(key).isEqualTo(MajorKey.D_MAJOR)
     }
 
     @Test
@@ -55,7 +52,7 @@ class KeyDetectorTest {
         val scores = KeyDetector().detectKeyScores(lyrics)
         println(scores)
         val key = KeyDetector().detectKey(lyrics)
-        assertThat(key).isEqualTo(MajorKey.D_MAJOR)
+        Assertions.assertThat(key).isEqualTo(MajorKey.D_MAJOR)
     }
 
     @Test
@@ -65,7 +62,7 @@ class KeyDetectorTest {
         val scores = KeyDetector().detectKeyScores(lyrics)
         println(scores)
         val key = KeyDetector().detectKey(lyrics)
-        assertThat(key).isEqualTo(MajorKey.A_MAJOR)
+        Assertions.assertThat(key).isEqualTo(MajorKey.A_MAJOR)
     }
 
     @Test
@@ -73,7 +70,7 @@ class KeyDetectorTest {
         val lyrics = LyricsParser().parseLyrics("[Dm C Bb F]")
         ChordParser(ChordsNotation.ENGLISH).parseAndFillChords(lyrics)
         val key = KeyDetector().detectKey(lyrics)
-        assertThat(key).isEqualTo(MajorKey.F_MAJOR)
+        Assertions.assertThat(key).isEqualTo(MajorKey.F_MAJOR)
     }
 
     @Test
@@ -81,7 +78,7 @@ class KeyDetectorTest {
         val lyrics = LyricsParser().parseLyrics("[Dm C Bb F Eb]")
         ChordParser(ChordsNotation.ENGLISH).parseAndFillChords(lyrics)
         val key = KeyDetector().detectKey(lyrics)
-        assertThat(key).isEqualTo(MajorKey.B_FLAT_MAJOR)
+        Assertions.assertThat(key).isEqualTo(MajorKey.B_FLAT_MAJOR)
     }
 
     @Test
@@ -91,7 +88,7 @@ class KeyDetectorTest {
         val scores = KeyDetector().detectKeyScores(lyrics)
         println(scores)
         val key = KeyDetector().detectKey(lyrics)
-        assertThat(key).isEqualTo(MajorKey.C_MAJOR)
+        Assertions.assertThat(key).isEqualTo(MajorKey.C_MAJOR)
     }
 
 }

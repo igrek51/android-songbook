@@ -12,8 +12,8 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import igrek.songbook.R
-import igrek.songbook.chords.converter.ChordsConverter
-import igrek.songbook.chords.detector.UniqueChordsFinder
+import igrek.songbook.chordsv2.ChordsNotationConverter
+import igrek.songbook.chordsv2.detect.UniqueChordsFinder
 import igrek.songbook.chordsv2.model.LyricsModel
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -36,14 +36,14 @@ import java.util.*
 
 @OptIn(DelicateCoroutinesApi::class)
 class ChordsDiagramsService(
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
-        activity: LazyInject<Activity> = appFactory.activity,
-        chordsInstrumentService: LazyInject<ChordsInstrumentService> = appFactory.chordsInstrumentService,
-        chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
-        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
-        softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
+    activity: LazyInject<Activity> = appFactory.activity,
+    chordsInstrumentService: LazyInject<ChordsInstrumentService> = appFactory.chordsInstrumentService,
+    chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val uiResourceService by LazyExtractor(uiResourceService)
@@ -54,20 +54,11 @@ class ChordsDiagramsService(
     private val preferencesState by LazyExtractor(preferencesState)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
 
-    private var toEnglishConverter = ChordsConverter(ChordsNotation.default, ChordsNotation.ENGLISH)
-
-    private fun findUniqueChords(crdModel: LyricsModel): Set<String> {
-        val chordsFinder = UniqueChordsFinder(chordsInstrumentService.instrument)
-        return chordsFinder.findUniqueChordsInLyrics(igrek.songbook.chords.lyrics.model.LyricsModel())
-    }
-
-    private fun chordGraphs(chord: String): String {
+    private fun chordGraphs(typedChord: String): String {
         val instrument = chordsInstrumentService.instrument
         val diagramBuilder = ChordDiagramBuilder(instrument, preferencesState.chordDiagramStyle)
-        val (engChord: String, errors) = toEnglishConverter.convertChordsGroup(chord)
-        if (errors.isNotEmpty()) {
-            throw RuntimeException("Unrecognized chord due to wrong notation: $errors")
-        }
+        val toEnglishConverter = ChordsNotationConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH)
+        val engChord: String = toEnglishConverter.convertChordFragments(typedChord)
         val chordDiagramCodes = getChordDiagrams(instrument)
         return chordDiagramCodes[engChord]
                 ?.joinToString(separator = "\n\n\n") { diagramBuilder.buildDiagram(it) }
@@ -82,16 +73,17 @@ class ChordsDiagramsService(
         }
     }
 
-    fun showLyricsChordsMenu(crdModel: LyricsModel) {
-        toEnglishConverter = ChordsConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH)
-
-        val uniqueChords = findUniqueChords(crdModel)
+    fun showLyricsChordsMenu(lyrics: LyricsModel) {
+        val uniqueChords = findUniqueChords(lyrics)
         if (uniqueChords.isEmpty()) {
             uiInfoService.showInfo(R.string.no_chords_recognized_in_song)
             return
         }
-
         showUniqueChordsMenu(uniqueChords)
+    }
+
+    private fun findUniqueChords(lyrics: LyricsModel): Set<String> {
+        return UniqueChordsFinder().findUniqueChordNamesInLyrics(lyrics)
     }
 
     private fun showUniqueChordsMenu(uniqueChords: Set<String>) {
@@ -104,13 +96,13 @@ class ChordsDiagramsService(
         contextMenuBuilder.showContextMenu(R.string.choose_a_chord, actions)
     }
 
-    private fun showChordDefinition(chord: String, uniqueChords: Set<String>) {
+    private fun showChordDefinition(typedChord: String, uniqueChords: Set<String>) {
         GlobalScope.launch(Dispatchers.Main) {
             SafeExecutor {
-                val message = chordGraphs(chord)
+                val message = chordGraphs(typedChord)
                 val instrument = chordsInstrumentService.instrument
                 val instrumentName = uiResourceService.resString(instrument.displayNameResId)
-                val title = uiResourceService.resString(R.string.chord_diagrams_versions, chord, instrumentName)
+                val title = uiResourceService.resString(R.string.chord_diagrams_versions, typedChord, instrumentName)
 
                 val alertBuilder = AlertDialog.Builder(activity)
                 alertBuilder.setTitle(title)
@@ -140,8 +132,6 @@ class ChordsDiagramsService(
     }
 
     fun showFindChordByNameMenu() {
-        toEnglishConverter = ChordsConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH)
-
         val dlgAlert = AlertDialog.Builder(activity)
         dlgAlert.setTitle(uiResourceService.resString(R.string.chord_diagram_find_chord))
 
@@ -165,22 +155,19 @@ class ChordsDiagramsService(
     }
 
     private fun tryToFindChordDiagram(_chordName: String) {
-        val chordName = _chordName.trim()
-        if (chordName.isBlank()) {
+        val typedChordName = _chordName.trim()
+        if (typedChordName.isBlank()) {
             uiInfoService.showInfo(R.string.chord_diagram_not_found)
             return
         }
-        val (engChord, errors) = toEnglishConverter.convertChordsGroup(chordName)
-        if (errors.isNotEmpty()) {
-            uiInfoService.showInfo(R.string.chord_diagram_not_found)
-            return
-        }
+        val toEnglishConverter = ChordsNotationConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH)
+        val engChord = toEnglishConverter.convertChordFragments(typedChordName)
         val chordDiagramCodes = getChordDiagrams(chordsInstrumentService.instrument)
         if (engChord !in chordDiagramCodes) {
             uiInfoService.showInfo(R.string.chord_diagram_not_found)
             return
         }
-        showChordDefinition(chordName, emptySet())
+        showChordDefinition(typedChordName, emptySet())
     }
 
     fun chordDiagramStyleEntries(): LinkedHashMap<String, String> {
