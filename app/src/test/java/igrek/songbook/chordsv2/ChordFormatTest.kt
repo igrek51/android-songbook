@@ -47,39 +47,39 @@ class ChordFormatTest {
             LyricsLine(listOf(
                 LyricsFragment(text = "dupa ", type = LyricsTextType.REGULAR_TEXT),
                 LyricsFragment(text = "a F C7/G G", type = LyricsTextType.CHORDS, chordFragments = listOf(
-                    ChordFragment(text="a", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.A.noteIndex, true)),
+                    ChordFragment(text="a", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.A.index, true)),
                     ChordFragment(text=" ", type=ChordFragmentType.CHORD_SPLITTER),
-                    ChordFragment(text="F", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.F.noteIndex, false)),
+                    ChordFragment(text="F", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.F.index, false)),
                     ChordFragment(text=" ", type=ChordFragmentType.CHORD_SPLITTER),
                     ChordFragment(text="C7/G", type=ChordFragmentType.COMPOUND_CHORD, compoundChord = CompoundChord(
-                        Chord(Note.C.noteIndex, false, "7"), "/",  Chord(Note.G.noteIndex, false),
+                        Chord(Note.C.index, false, "7"), "/",  Chord(Note.G.index, false),
                     )),
                     ChordFragment(text=" ", type=ChordFragmentType.CHORD_SPLITTER),
-                    ChordFragment(text="G", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.G.noteIndex, false)),
+                    ChordFragment(text="G", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.G.index, false)),
                 )),
             )),
             LyricsLine(listOf(
                 LyricsFragment(text = "D", type = LyricsTextType.CHORDS, chordFragments = listOf(
-                    ChordFragment(text="D", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.D.noteIndex, false)),
+                    ChordFragment(text="D", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.D.index, false)),
                 )),
                 LyricsFragment(text = "next li", type = LyricsTextType.REGULAR_TEXT),
                 LyricsFragment(text = "e", type = LyricsTextType.CHORDS, chordFragments = listOf(
-                    ChordFragment(text="e", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.E.noteIndex, true)),
+                    ChordFragment(text="e", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.E.index, true)),
                 )),
                 LyricsFragment(text = "ne ", type = LyricsTextType.REGULAR_TEXT),
                 LyricsFragment(text = "C", type = LyricsTextType.CHORDS, chordFragments = listOf(
-                    ChordFragment(text="C", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.C.noteIndex, false)),
+                    ChordFragment(text="C", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.C.index, false)),
                 )),
             )),
             LyricsLine(listOf()),
             LyricsLine(listOf(
                 LyricsFragment(text = "next ", type = LyricsTextType.REGULAR_TEXT),
                 LyricsFragment(text = "a", type = LyricsTextType.CHORDS, chordFragments = listOf(
-                    ChordFragment(text="a", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.A.noteIndex, true)),
+                    ChordFragment(text="a", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.A.index, true)),
                 )),
                 LyricsFragment(text = "verse ", type = LyricsTextType.REGULAR_TEXT),
                 LyricsFragment(text = "G", type = LyricsTextType.CHORDS, chordFragments = listOf(
-                    ChordFragment(text="G", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.G.noteIndex, false)),
+                    ChordFragment(text="G", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.G.index, false)),
                 )),
             )),
             LyricsLine(listOf(
@@ -93,15 +93,15 @@ class ChordFormatTest {
         assertThat(lyrics.lines[0]).isEqualTo(LyricsLine(listOf(
             LyricsFragment(text = "dupa ", type = LyricsTextType.REGULAR_TEXT),
             LyricsFragment(text = "Am F C7/G G", type = LyricsTextType.CHORDS, chordFragments = listOf(
-                ChordFragment(text="Am", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.A.noteIndex, true)),
+                ChordFragment(text="Am", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.A.index, true)),
                 ChordFragment(text=" ", type=ChordFragmentType.CHORD_SPLITTER),
-                ChordFragment(text="F", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.F.noteIndex, false)),
+                ChordFragment(text="F", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.F.index, false)),
                 ChordFragment(text=" ", type=ChordFragmentType.CHORD_SPLITTER),
                 ChordFragment(text="C7/G", type=ChordFragmentType.COMPOUND_CHORD, compoundChord = CompoundChord(
-                    Chord(Note.C.noteIndex, false, "7"), "/",  Chord(Note.G.noteIndex, false),
+                    Chord(Note.C.index, false, "7"), "/",  Chord(Note.G.index, false),
                 )),
                 ChordFragment(text=" ", type=ChordFragmentType.CHORD_SPLITTER),
-                ChordFragment(text="G", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.G.noteIndex, false)),
+                ChordFragment(text="G", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.G.index, false)),
             )),
         )))
     }

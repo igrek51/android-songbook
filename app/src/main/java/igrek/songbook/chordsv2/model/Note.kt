@@ -7,7 +7,7 @@ enum class NoteModifier {
     FLAT,
 }
 
-enum class Note(val noteIndex: Int, modifier: NoteModifier) {
+enum class Note(val index: Int, val modifier: NoteModifier) {
     // ENGLISH notation
 
     C(0, NoteModifier.NATURAL),

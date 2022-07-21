@@ -20,7 +20,7 @@ class UniqueChordsFinder {
         return allSingleChords.distinct().toSet()
     }
 
-    fun findUniqueNotesInLyrics(lyrics: LyricsModel): Set<Note> {
+    fun findUniqueNotesInLyrics(lyrics: LyricsModel): Set<Int> {
         val chordFragments = lyrics.lines
             .flatMap { line -> line.fragments }
             .filter { it.type == LyricsTextType.CHORDS }
@@ -36,9 +36,9 @@ class UniqueChordsFinder {
         return findUniqueNotes(allSingleChords)
     }
 
-    private fun findUniqueNotes(chords: List<Chord>): Set<Note> {
+    private fun findUniqueNotes(chords: List<Chord>): Set<Int> {
         return chords
-            .map { indexToNote(it.noteIndex, it.noteModifier) }
+            .map { it.noteIndex }
             .distinct()
             .toSet()
     }
