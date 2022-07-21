@@ -487,7 +487,7 @@
     <string name="settings_buttons_section">Buttons</string>
     <string name="billing_ad_free_info">Buy \"Ad-free\" to remove the advertisement banner in the application once and for all (one time payment).</string>
     <string name="billing_buy_ad_free">Buy Ad-Free</string>
-    <string name="billing_restore_pruchases">Restore previous purchases</string>
+    <string name="billing_restore_pruchases">Restore your purchases</string>
     <string name="billing_already_purchased">Already purchased</string>
     <string name="error_purchase_error">Purchase error: %s</string>
     <string name="billing_loading_purchases">Loading purchases…</string>

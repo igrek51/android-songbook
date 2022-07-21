@@ -79,7 +79,7 @@ class AdService(
         }
     }
 
-    private fun hideAdBanner() {
+    fun hideAdBanner() {
         val adViewContainer: FrameLayout? = activity.findViewById(R.id.ad_view_container)
         adViewContainer?.visibility = View.GONE
     }

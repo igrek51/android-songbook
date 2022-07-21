@@ -11,8 +11,10 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.layout.ad.AdService
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.PreferencesState
+import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.trySendBlocking
@@ -32,6 +34,7 @@ class BillingService(
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
     preferencesService: LazyInject<PreferencesService> = appFactory.preferencesService,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    adService: LazyInject<AdService> = appFactory.adService,
 ) : PurchasesUpdatedListener, BillingClientStateListener {
 
     private val activity by LazyExtractor(activity)
@@ -39,6 +42,7 @@ class BillingService(
     private val preferencesState by LazyExtractor(preferencesState)
     private val preferencesService by LazyExtractor(preferencesService)
     private val uiInfoService by LazyExtractor(uiInfoService)
+    private val adService by LazyExtractor(adService)
 
     private val logger: Logger = LoggerFactory.logger
     private var billingClient: BillingClient? = null
@@ -47,13 +51,13 @@ class BillingService(
         PRODUCT_ID_NO_ADS,
         PRODUCT_ID_DONATE_1_BEER,
     )
-    private val knownConsumableInAppKUSs: List<String> = listOf(
-    )
+    private val knownConsumableInAppKUSs: List<String> = listOf()
     private val skuStateMap: MutableMap<String, SkuState> = HashMap()
     private val skuDetailsMap: MutableMap<String, SkuDetails?> = HashMap()
     private val skuAmountsMap: MutableMap<String, Long> = HashMap()
     private val initChannel = Channel<Result<Boolean>>(1)
     private val initJob: Job
+    val purchaseEventsSubject = PublishSubject.create<Boolean>()
 
     private enum class SkuState {
         UNKNOWN,
@@ -166,6 +170,7 @@ class BillingService(
         uiInfoService.showInfo(R.string.billing_restoring_purchases)
         defaultScope.launch {
             restorePurchases()
+            purchaseEventsSubject.onNext(true)
             uiInfoService.showInfo(R.string.billing_purchases_restored)
         }
     }
@@ -216,6 +221,7 @@ class BillingService(
                 BillingClient.BillingResponseCode.OK -> {
                     if (null != purchases) {
                         processPurchaseList(purchases)
+                        purchaseEventsSubject.onNext(true)
                         uiInfoService.showInfo(R.string.billing_thanks_for_purchase)
                         return
                     } else {
@@ -355,6 +361,8 @@ class BillingService(
                 if (!preferencesState.purchasedAdFree) {
                     preferencesState.purchasedAdFree = true
                     preferencesService.saveAll()
+                    adService.hideAdBanner()
+                    purchaseEventsSubject.onNext(true)
                     logger.info("Saving Purchase in preferences data, SKU: $sku")
                 }
             }
