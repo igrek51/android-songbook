@@ -100,7 +100,7 @@ enum class PreferencesField constructor(
 
     AutoscrollShowEyeFocus(true),
 
-    AutoscrollIndividualSpeed(true),
+    AutoscrollIndividualSpeed(false),
 
     HorizontalScroll(false),
 
