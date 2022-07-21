@@ -7,13 +7,17 @@ import android.os.Handler
 import android.os.Looper
 import android.text.InputType
 import android.view.LayoutInflater
+import android.view.View
 import android.view.WindowManager
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import igrek.songbook.R
 import igrek.songbook.chords.converter.ChordsNotationConverter
 import igrek.songbook.chords.detect.UniqueChordsFinder
+import igrek.songbook.chords.diagram.guitar.ChordTextDiagramBuilder
+import igrek.songbook.chords.diagram.piano.PianoChordDiagramBuilder
 import igrek.songbook.chords.model.LyricsModel
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -32,10 +36,9 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.*
 
 @OptIn(DelicateCoroutinesApi::class)
-class ChordsDiagramsService(
+class ChordDiagramsService(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
     contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
@@ -54,27 +57,8 @@ class ChordsDiagramsService(
     private val preferencesState by LazyExtractor(preferencesState)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
 
-    private fun chordGraphs(typedChord: String): String {
-        val instrument = chordsInstrumentService.instrument
-        val diagramBuilder = ChordDiagramBuilder(instrument, preferencesState.chordDiagramStyle)
-        val toEnglishConverter = ChordsNotationConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH, preferencesState.forceSharpNotes)
-        val engChord: String = toEnglishConverter.convertChordFragments(typedChord)
-        val chordDiagramCodes = getChordDiagrams(instrument)
-        return chordDiagramCodes[engChord]
-                ?.joinToString(separator = "\n\n\n") { diagramBuilder.buildDiagram(it) }
-                ?: ""
-    }
-
-    private fun getChordDiagrams(instrument: ChordsInstrument): Map<String, List<String>> {
-        return when (instrument) {
-            ChordsInstrument.GUITAR -> allGuitarChordsDiagrams
-            ChordsInstrument.UKULELE -> allUkuleleChordsDiagrams
-            ChordsInstrument.MANDOLIN -> allMandolinChordsDiagrams
-        }
-    }
-
     fun showLyricsChordsMenu(lyrics: LyricsModel) {
-        val uniqueChords = findUniqueChords(lyrics)
+        val uniqueChords = UniqueChordsFinder().findUniqueChordNamesInLyrics(lyrics)
         if (uniqueChords.isEmpty()) {
             uiInfoService.showInfo(R.string.no_chords_recognized_in_song)
             return
@@ -82,24 +66,19 @@ class ChordsDiagramsService(
         showUniqueChordsMenu(uniqueChords)
     }
 
-    private fun findUniqueChords(lyrics: LyricsModel): Set<String> {
-        return UniqueChordsFinder().findUniqueChordNamesInLyrics(lyrics)
-    }
-
     private fun showUniqueChordsMenu(uniqueChords: Set<String>) {
         val actions = uniqueChords.map { chord ->
             ContextMenuBuilder.Action(chord) {
-                showChordDefinition(chord, uniqueChords)
+                showChordDiagramsAlert(chord, uniqueChords)
             }
         }.toList()
-
         contextMenuBuilder.showContextMenu(R.string.choose_a_chord, actions)
     }
 
-    private fun showChordDefinition(typedChord: String, uniqueChords: Set<String>) {
+    private fun showChordDiagramsAlert(typedChord: String, uniqueChords: Set<String>) {
         GlobalScope.launch(Dispatchers.Main) {
             SafeExecutor {
-                val message = chordGraphs(typedChord)
+
                 val instrument = chordsInstrumentService.instrument
                 val instrumentName = uiResourceService.resString(instrument.displayNameResId)
                 val title = uiResourceService.resString(R.string.chord_diagrams_versions, typedChord, instrumentName)
@@ -119,9 +98,12 @@ class ChordsDiagramsService(
                 }
 
                 val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-                val diagramView = inflater.inflate(R.layout.component_chord_diagrams, null, false)
-                val diagramContent = diagramView.findViewById<TextView>(R.id.chordDiagramContent)
-                diagramContent.text = message
+
+                val diagramView = when (chordsInstrumentService.instrument) {
+                    ChordsInstrument.PIANO -> inflateDrawableChordDiagramView(typedChord, inflater)
+                    else -> inflateTextChordDiagramView(typedChord, inflater)
+                }
+
                 alertBuilder.setView(diagramView)
 
                 if (!activity.isFinishing) {
@@ -162,21 +144,58 @@ class ChordsDiagramsService(
         }
         val toEnglishConverter = ChordsNotationConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH, preferencesState.forceSharpNotes)
         val engChord = toEnglishConverter.convertChordFragments(typedChordName)
-        val chordDiagramCodes = getChordDiagrams(chordsInstrumentService.instrument)
+        val chordDiagramCodes = getChordDiagramCodes(chordsInstrumentService.instrument)
         if (engChord !in chordDiagramCodes) {
             uiInfoService.showInfo(R.string.chord_diagram_not_found)
             return
         }
-        showChordDefinition(typedChordName, emptySet())
+        showChordDiagramsAlert(typedChordName, emptySet())
     }
 
-    fun chordDiagramStyleEntries(): LinkedHashMap<String, String> {
-        val map = LinkedHashMap<String, String>()
-        for (item in ChordDiagramStyle.values()) {
-            val displayName = uiResourceService.resString(item.nameResId)
-            map[item.id.toString()] = displayName
+    private fun getChordDiagramCodes(instrument: ChordsInstrument): Map<String, List<String>> {
+        return when (instrument) {
+            ChordsInstrument.GUITAR -> allGuitarChordsDiagrams
+            ChordsInstrument.UKULELE -> allUkuleleChordsDiagrams
+            ChordsInstrument.MANDOLIN -> allMandolinChordsDiagrams
+            ChordsInstrument.PIANO -> allPianoChordsNames
         }
-        return map
+    }
+
+    private fun inflateTextChordDiagramView(typedChord: String, inflater: LayoutInflater): View {
+        val diagramView = inflater.inflate(R.layout.component_chord_text_diagrams, null, false)
+        val diagramContent = diagramView.findViewById<TextView>(R.id.chordDiagramContent)
+
+        val toEnglishConverter = ChordsNotationConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH, preferencesState.forceSharpNotes)
+        val engChord: String = toEnglishConverter.convertChordFragments(typedChord)
+
+        val instrument = chordsInstrumentService.instrument
+        val diagramBuilder = ChordTextDiagramBuilder(instrument, preferencesState.chordDiagramStyle)
+
+        val chordDiagramCodes = getChordDiagramCodes(instrument)
+        val message = chordDiagramCodes[engChord]
+            ?.joinToString(separator = "\n\n\n") { diagramBuilder.buildDiagram(it) }
+            ?: ""
+
+        diagramContent.text = message
+        return diagramView
+    }
+
+    private fun inflateDrawableChordDiagramView(typedChord: String, inflater: LayoutInflater): View {
+        val diagramView = inflater.inflate(R.layout.component_chord_drawable_diagram, null, false)
+        val diagramImage = diagramView.findViewById<ImageView>(R.id.chordDiagramImage)
+
+        val toEnglishConverter = ChordsNotationConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH, preferencesState.forceSharpNotes)
+        val engChord: String = toEnglishConverter.convertChordFragments(typedChord)
+
+        val diagramBuilder: DrawableChordDiagramBuilder = when (chordsInstrumentService.instrument) {
+            ChordsInstrument.PIANO -> PianoChordDiagramBuilder()
+            else -> throw RuntimeException("Unsupported instrument")
+        }
+
+        val bitmap = diagramBuilder.buildDiagram(engChord, activity)
+
+        diagramImage.setImageBitmap(bitmap)
+        return diagramView
     }
 
 }

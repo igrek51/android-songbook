@@ -1,4 +1,4 @@
-package igrek.songbook.chords.diagram
+package igrek.songbook.chords.diagram.guitar
 
 import igrek.songbook.R
 

@@ -11,8 +11,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.preference.*
 import igrek.songbook.R
 import igrek.songbook.billing.BillingLayoutController
-import igrek.songbook.chords.diagram.ChordDiagramStyle
-import igrek.songbook.chords.diagram.ChordsDiagramsService
+import igrek.songbook.chords.diagram.guitar.ChordDiagramStyle
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.inject.LazyExtractor
@@ -51,7 +50,6 @@ class SettingsFragment(
     chordsInstrumentService: LazyInject<ChordsInstrumentService> = appFactory.chordsInstrumentService,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
     googleSyncManager: LazyInject<GoogleSyncManager> = appFactory.googleSyncManager,
-    chordsDiagramsService: LazyInject<ChordsDiagramsService> = appFactory.chordsDiagramsService,
     mediaButtonService: LazyInject<MediaButtonService> = appFactory.mediaButtonService,
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
     homeScreenEnumService: LazyInject<HomeScreenEnumService> = appFactory.homeScreenEnumService,
@@ -64,7 +62,6 @@ class SettingsFragment(
     private val chordsInstrumentService by LazyExtractor(chordsInstrumentService)
     private val preferencesState by LazyExtractor(preferencesState)
     private val googleSyncManager by LazyExtractor(googleSyncManager)
-    private val chordsDiagramsService by LazyExtractor(chordsDiagramsService)
     private val mediaButtonService by LazyExtractor(mediaButtonService)
     private val layoutController by LazyExtractor(layoutController)
     private val homeScreenEnumService by LazyExtractor(homeScreenEnumService)
@@ -109,7 +106,7 @@ class SettingsFragment(
         )
 
         setupListPreference("chordDiagramStyle",
-            chordsDiagramsService.chordDiagramStyleEntries(),
+            chordsInstrumentService.chordDiagramStyleEntries(),
             onLoad = { preferencesState.chordDiagramStyle.id.toString() },
             onSave = { id: String ->
                 preferencesState.chordDiagramStyle = ChordDiagramStyle.mustParseById(id.toLong())

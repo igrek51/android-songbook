@@ -12,7 +12,7 @@ import igrek.songbook.about.HelpLayoutController
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.billing.BillingLayoutController
-import igrek.songbook.chords.diagram.ChordsDiagramsService
+import igrek.songbook.chords.diagram.ChordDiagramsService
 import igrek.songbook.custom.CustomSongService
 import igrek.songbook.custom.CustomSongsListLayoutController
 import igrek.songbook.info.errorcheck.SafeExecutor
@@ -54,7 +54,7 @@ class NavigationMenuController(
     randomSongOpener: LazyInject<RandomSongOpener> = appFactory.randomSongOpener,
     sendMessageService: LazyInject<SendMessageService> = appFactory.sendMessageService,
     songOpener: LazyInject<SongOpener> = appFactory.songOpener,
-    chordsDiagramsService: LazyInject<ChordsDiagramsService> = appFactory.chordsDiagramsService,
+    chordDiagramsService: LazyInject<ChordDiagramsService> = appFactory.chordDiagramsService,
     customSongService: LazyInject<CustomSongService> = appFactory.customSongService,
 ) {
     private val activity by LazyExtractor(activity)
@@ -67,7 +67,7 @@ class NavigationMenuController(
     private val randomSongOpener by LazyExtractor(randomSongOpener)
     private val sendMessageService by LazyExtractor(sendMessageService)
     private val songOpener by LazyExtractor(songOpener)
-    private val chordsDiagramsService by LazyExtractor(chordsDiagramsService)
+    private val chordsDiagramsService by LazyExtractor(chordDiagramsService)
     private val customSongService by LazyExtractor(customSongService)
 
     private var drawerLayout: DrawerLayout? = null

@@ -1,13 +1,15 @@
 package igrek.songbook.chords.diagram
 
+import igrek.songbook.chords.diagram.guitar.ChordDiagramStyle
+import igrek.songbook.chords.diagram.guitar.ChordTextDiagramBuilder
 import igrek.songbook.settings.instrument.ChordsInstrument
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 class UkuleleDiagramTest {
 
-    private val horizontalBuilder = ChordDiagramBuilder(ChordsInstrument.UKULELE, ChordDiagramStyle.Horizontal)
-    private val verticalBuilder = ChordDiagramBuilder(ChordsInstrument.UKULELE, ChordDiagramStyle.Vertical)
+    private val horizontalBuilder = ChordTextDiagramBuilder(ChordsInstrument.UKULELE, ChordDiagramStyle.Horizontal)
+    private val verticalBuilder = ChordTextDiagramBuilder(ChordsInstrument.UKULELE, ChordDiagramStyle.Vertical)
 
     @Test
     fun buildHorizontalDiagram() {

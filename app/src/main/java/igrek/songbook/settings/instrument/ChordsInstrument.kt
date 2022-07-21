@@ -10,6 +10,8 @@ enum class ChordsInstrument(val id: Long, val displayNameResId: Int) {
 
     MANDOLIN(3, R.string.instrument_mandolin),
 
+    PIANO(4, R.string.instrument_piano),
+
     ;
 
     companion object {

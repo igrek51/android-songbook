@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import igrek.songbook.R
-import igrek.songbook.chords.diagram.ChordsDiagramsService
+import igrek.songbook.chords.diagram.ChordDiagramsService
 import igrek.songbook.chords.loader.LyricsLoader
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
@@ -62,7 +62,7 @@ class SongPreviewLayoutController(
     favouriteSongsService: LazyInject<FavouriteSongsService> = appFactory.favouriteSongsService,
     songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-    chordsDiagramsService: LazyInject<ChordsDiagramsService> = appFactory.chordsDiagramsService,
+    chordDiagramsService: LazyInject<ChordDiagramsService> = appFactory.chordDiagramsService,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
     roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
 ) : MainLayout {
@@ -81,7 +81,7 @@ class SongPreviewLayoutController(
     private val favouriteSongsService by LazyExtractor(favouriteSongsService)
     private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
     private val songsRepository by LazyExtractor(songsRepository)
-    private val chordsDiagramsService by LazyExtractor(chordsDiagramsService)
+    private val chordsDiagramsService by LazyExtractor(chordDiagramsService)
     private val preferencesState by LazyExtractor(preferencesState)
     private val roomLobby by LazyExtractor(roomLobby)
 

@@ -1,5 +1,6 @@
 package igrek.songbook.settings.instrument
 
+import igrek.songbook.chords.diagram.guitar.ChordDiagramStyle
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -24,6 +25,15 @@ class ChordsInstrumentService(
         val map = LinkedHashMap<String, String>()
         for (item in ChordsInstrument.values()) {
             val displayName = uiResourceService.resString(item.displayNameResId)
+            map[item.id.toString()] = displayName
+        }
+        return map
+    }
+
+    fun chordDiagramStyleEntries(): LinkedHashMap<String, String> {
+        val map = LinkedHashMap<String, String>()
+        for (item in ChordDiagramStyle.values()) {
+            val displayName = uiResourceService.resString(item.nameResId)
             map[item.id.toString()] = displayName
         }
         return map

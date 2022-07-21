@@ -101,9 +101,9 @@ enum class PreferencesField constructor(
 
     ChordDiagramStyle(
         GenericLongIdPreferenceType(
-            defaultValue = igrek.songbook.chords.diagram.ChordDiagramStyle.default,
-            serializer = igrek.songbook.chords.diagram.ChordDiagramStyle::id,
-            deserializer = igrek.songbook.chords.diagram.ChordDiagramStyle.Companion::parseById,
+            defaultValue = igrek.songbook.chords.diagram.guitar.ChordDiagramStyle.default,
+            serializer = igrek.songbook.chords.diagram.guitar.ChordDiagramStyle::id,
+            deserializer = igrek.songbook.chords.diagram.guitar.ChordDiagramStyle.Companion::parseById,
         )
     ),
 

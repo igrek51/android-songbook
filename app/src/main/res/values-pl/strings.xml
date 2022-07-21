@@ -507,4 +507,5 @@
     <string name="settings_force_sharp_chords">Wymuszaj krzyżyki</string>
     <string name="settings_force_sharp_chords_hint">Zawsze pokazuj dźwięki z krzyżykami (C#, D#), unikając bemoli (Db, Eb).</string>
     <string name="settings_chord_diagrams_section">Diagramy akordów</string>
+    <string name="instrument_piano">Pianino</string>
 </resources>

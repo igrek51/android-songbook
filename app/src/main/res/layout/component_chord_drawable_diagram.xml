@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical|horizontal"
+        android:layout_marginTop="16dp"
+        >
+
+        <ImageView
+            android:id="@+id/chordDiagramImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:clickable="false"
+            android:focusable="false"
+            android:scaleType="fitCenter" />
+
+    </ScrollView>
+</LinearLayout>

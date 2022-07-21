@@ -1,5 +1,8 @@
 package igrek.songbook.chords.diagram
 
+import igrek.songbook.chords.diagram.piano.PianoChordDiagramBuilder
+import igrek.songbook.chords.model.Note
+
 // English chords
 val guitarChordsDiagrams: Map<String, List<String>> = mapOf(
 
@@ -778,6 +781,21 @@ val allUkuleleChordsDiagrams: Map<String, List<String>> by lazy {
 
 val allMandolinChordsDiagrams: Map<String, List<String>> by lazy {
     populateAllChordDiagrams(mandolinChordsDiagrams)
+}
+
+val allPianoChordsNames: Map<String, List<String>> by lazy {
+    val notes = listOf(
+        "C", "C#", "Db", "D", "D#", "Eb", "E", "E#", "F", "F#", "Gb", "G", "G#", "Ab", "A", "A#", "Bb", "B", "Cb",
+    )
+    val suffixes = PianoChordDiagramBuilder.supportedSuffixes + ""
+    val diagrams = hashMapOf<String, List<String>>()
+    notes.forEach { note ->
+        suffixes.forEach { suffix ->
+            val chordName = note + suffix
+            diagrams[chordName] = emptyList<String>()
+        }
+    }
+    diagrams
 }
 
 private fun populateAllChordDiagrams(baseMap: Map<String, List<String>>): Map<String, List<String>> {

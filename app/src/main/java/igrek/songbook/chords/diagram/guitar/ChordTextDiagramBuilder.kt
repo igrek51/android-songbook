@@ -1,19 +1,19 @@
-package igrek.songbook.chords.diagram
+package igrek.songbook.chords.diagram.guitar
 
 import igrek.songbook.settings.instrument.ChordsInstrument
 import kotlin.math.max
 
 
-class ChordDiagramBuilder(
+class ChordTextDiagramBuilder(
     private val instrument: ChordsInstrument = ChordsInstrument.default,
     private val chordDiagramStyle: ChordDiagramStyle = ChordDiagramStyle.Horizontal,
 ) {
 
     private val minimumFretsShown = 3
     private val stringsNames = mapOf(
-            ChordsInstrument.GUITAR to listOf("E", "H", "G", "D", "A", "E"),
-            ChordsInstrument.UKULELE to listOf("A", "E", "C", "G"),
-            ChordsInstrument.MANDOLIN to listOf("E", "A", "D", "G")
+        ChordsInstrument.GUITAR to listOf("E", "H", "G", "D", "A", "E"),
+        ChordsInstrument.UKULELE to listOf("A", "E", "C", "G"),
+        ChordsInstrument.MANDOLIN to listOf("E", "A", "D", "G")
     )
 
     fun buildDiagram(definition: String): String {

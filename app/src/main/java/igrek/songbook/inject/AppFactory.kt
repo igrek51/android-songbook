@@ -14,7 +14,7 @@ import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.admin.antechamber.AntechamberService
 import igrek.songbook.billing.BillingService
 import igrek.songbook.billing.BillingLayoutController
-import igrek.songbook.chords.diagram.ChordsDiagramsService
+import igrek.songbook.chords.diagram.ChordDiagramsService
 import igrek.songbook.chords.loader.LyricsLoader
 import igrek.songbook.custom.*
 import igrek.songbook.custom.share.ShareSongService
@@ -137,7 +137,7 @@ class AppFactory(
     val topSongsLayoutController = SingletonInject { TopSongsLayoutController() }
     val songOpener = SingletonInject { SongOpener() }
     val openHistoryLayoutController = SingletonInject { OpenHistoryLayoutController() }
-    val chordsDiagramsService = SingletonInject { ChordsDiagramsService() }
+    val chordDiagramsService = SingletonInject { ChordDiagramsService() }
     val chordsInstrumentService = SingletonInject { ChordsInstrumentService() }
     val publishSongLayoutController = SingletonInject { PublishSongLayoutController() }
     val missingSongLayoutController = SingletonInject { MissingSongLayoutController() }

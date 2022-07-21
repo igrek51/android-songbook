@@ -534,4 +534,5 @@
     <string name="settings_force_sharp_chords">Force sharp notes</string>
     <string name="settings_force_sharp_chords_hint">Always show sharp notes (C#, D#), avoiding flat notes (Db, Eb).</string>
     <string name="settings_chord_diagrams_section">Chord diagrams</string>
+    <string name="instrument_piano">Piano</string>
 </resources>

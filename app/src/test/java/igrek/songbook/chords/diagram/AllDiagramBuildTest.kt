@@ -1,17 +1,18 @@
 package igrek.songbook.chords.diagram
 
+import igrek.songbook.chords.diagram.guitar.ChordTextDiagramBuilder
 import igrek.songbook.settings.instrument.ChordsInstrument
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
 class AllDiagramBuildTest {
 
-    private val horizontalGuitarBuilder = ChordDiagramBuilder(ChordsInstrument.GUITAR)
-    private val horizontalUkuleleBuilder = ChordDiagramBuilder(ChordsInstrument.UKULELE)
-    private val horizontalMandolinBuilder = ChordDiagramBuilder(ChordsInstrument.MANDOLIN)
-    private val verticalGuitarBuilder = ChordDiagramBuilder(ChordsInstrument.GUITAR)
-    private val verticalUkuleleBuilder = ChordDiagramBuilder(ChordsInstrument.UKULELE)
-    private val verticalMandolinBuilder = ChordDiagramBuilder(ChordsInstrument.MANDOLIN)
+    private val horizontalGuitarBuilder = ChordTextDiagramBuilder(ChordsInstrument.GUITAR)
+    private val horizontalUkuleleBuilder = ChordTextDiagramBuilder(ChordsInstrument.UKULELE)
+    private val horizontalMandolinBuilder = ChordTextDiagramBuilder(ChordsInstrument.MANDOLIN)
+    private val verticalGuitarBuilder = ChordTextDiagramBuilder(ChordsInstrument.GUITAR)
+    private val verticalUkuleleBuilder = ChordTextDiagramBuilder(ChordsInstrument.UKULELE)
+    private val verticalMandolinBuilder = ChordTextDiagramBuilder(ChordsInstrument.MANDOLIN)
 
     @Test
     fun test_all_guitar_diagrams_build() {
