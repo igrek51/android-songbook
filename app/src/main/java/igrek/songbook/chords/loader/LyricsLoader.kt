@@ -92,7 +92,7 @@ class LyricsLoader(
             toNotation == originalSongNotation && chordsTransposerManager.transposedBy == 0 -> true
             else -> false
         }
-        ChordsRenderer(toNotation, songKey).formatLyrics(lyrics, originalModifiers)
+        ChordsRenderer(toNotation, songKey, preferencesState.forceSharpNotes).formatLyrics(lyrics, originalModifiers)
         transposedLyrics = lyrics
 
         arrangeLyrics()

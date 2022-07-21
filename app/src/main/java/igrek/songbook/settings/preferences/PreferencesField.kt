@@ -139,6 +139,8 @@ enum class PreferencesField constructor(
         )
     ),
 
+    ForceSharpNotes(false),
+
     ;
 
     constructor(defaultValue: String) : this(StringPreferenceType(defaultValue))

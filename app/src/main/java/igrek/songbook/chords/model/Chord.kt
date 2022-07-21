@@ -30,16 +30,21 @@ data class Chord (
         notation: ChordsNotation,
         key: MajorKey? = null,
         originalModifiers: Boolean = false,
+        forceSharps: Boolean = false,
     ): String {
+
         val forceModifier = when {
             originalModifiers -> originalModifier
             else -> null
         }
-        val note = indexToNote(noteIndex, key, forceModifier)
+
+        var note = indexToNote(noteIndex, key, forceModifier)
+        if (forceSharps)
+            note = convertToSharp(note)
+
         val baseNote = ChordNames.formatNoteName(notation, note, minor)
         return baseNote + suffix
     }
-
 }
 
 // A chord composed of multiple single notes, eg. Cadd9/G
@@ -52,9 +57,10 @@ data class CompoundChord(
         notation: ChordsNotation,
         key: MajorKey? = null,
         originalModifiers: Boolean = false,
+        forceSharps: Boolean = false,
     ): String {
-        val chord1String = chord1.format(notation, key, originalModifiers)
-        val chord2String = chord2.format(notation, key, originalModifiers)
+        val chord1String = chord1.format(notation, key, originalModifiers, forceSharps)
+        val chord2String = chord2.format(notation, key, originalModifiers, forceSharps)
         return chord1String + splitter + chord2String
     }
 

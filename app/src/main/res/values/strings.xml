@@ -527,4 +527,7 @@
     <string name="home_screen_enum_history">History</string>
     <string name="settings_home_screen">Home Screen (starting view)</string>
     <string name="home_screen_enum_last_song">Last song</string>
+    <string name="settings_force_sharp_chords">Force sharp notes</string>
+    <string name="settings_force_sharp_chords_hint">Always show sharp notes (C#, D#), avoiding flat notes (Db, Eb). Not applicable to "Bb".</string>
+    <string name="settings_chord_diagrams_section">Chord diagrams</string>
 </resources>

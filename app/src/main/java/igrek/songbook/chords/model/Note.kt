@@ -88,3 +88,15 @@ fun indexToNote(noteIndex: Int, key: MajorKey? = null, forceModifier: NoteModifi
         else -> throw RuntimeException("Unknown note index $noteIndex")
     }
 }
+
+fun convertToSharp(note: Note): Note {
+    return when(note) {
+        Note.D_FLAT -> Note.C_SHARP
+        Note.E_FLAT -> Note.D_SHARP
+        Note.G_FLAT -> Note.F_SHARP
+        Note.A_FLAT -> Note.G_SHARP
+        Note.B_FLAT -> Note.B_FLAT // keep this exception
+        Note.C_FLAT -> Note.B
+        else -> note
+    }
+}

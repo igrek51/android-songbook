@@ -9,6 +9,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.settings.chordsnotation.ChordsNotation
+import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.system.ClipboardManager
 
 class ChordsEditorTransformer(
@@ -17,9 +18,11 @@ class ChordsEditorTransformer(
     private val textEditor: ITextEditor,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     clipboardManager: LazyInject<ClipboardManager> = appFactory.clipboardManager,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val clipboardManager by LazyExtractor(clipboardManager)
+    private val preferencesState by LazyExtractor(preferencesState)
 
     private var clipboard: String? = null
 
@@ -171,7 +174,7 @@ class ChordsEditorTransformer(
     }
 
     private fun convertFromNotation(fromNotation: ChordsNotation) {
-        val converter = ChordsNotationConverter(fromNotation, chordsNotation)
+        val converter = ChordsNotationConverter(fromNotation, chordsNotation, preferencesState.forceSharpNotes)
         val converted = converter.convertLyrics(textEditor.getText())
         textEditor.setText(converted)
     }

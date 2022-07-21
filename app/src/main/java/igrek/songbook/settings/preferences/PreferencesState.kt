@@ -51,6 +51,7 @@ class PreferencesState(
     var mediaButtonBehaviour: MediaButtonBehaviours by PreferenceDelegate(PreferencesField.MediaButtonBehaviour)
     var purchasedAdFree: Boolean by PreferenceDelegate(PreferencesField.PurchasedAdFree)
     var homeScreen: HomeScreenEnum by PreferenceDelegate(PreferencesField.HomeScreen)
+    var forceSharpNotes: Boolean by PreferenceDelegate(PreferencesField.ForceSharpNotes)
 
 }
 

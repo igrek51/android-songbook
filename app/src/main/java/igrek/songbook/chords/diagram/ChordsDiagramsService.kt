@@ -57,7 +57,7 @@ class ChordsDiagramsService(
     private fun chordGraphs(typedChord: String): String {
         val instrument = chordsInstrumentService.instrument
         val diagramBuilder = ChordDiagramBuilder(instrument, preferencesState.chordDiagramStyle)
-        val toEnglishConverter = ChordsNotationConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH)
+        val toEnglishConverter = ChordsNotationConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH, preferencesState.forceSharpNotes)
         val engChord: String = toEnglishConverter.convertChordFragments(typedChord)
         val chordDiagramCodes = getChordDiagrams(instrument)
         return chordDiagramCodes[engChord]
@@ -160,7 +160,7 @@ class ChordsDiagramsService(
             uiInfoService.showInfo(R.string.chord_diagram_not_found)
             return
         }
-        val toEnglishConverter = ChordsNotationConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH)
+        val toEnglishConverter = ChordsNotationConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH, preferencesState.forceSharpNotes)
         val engChord = toEnglishConverter.convertChordFragments(typedChordName)
         val chordDiagramCodes = getChordDiagrams(chordsInstrumentService.instrument)
         if (engChord !in chordDiagramCodes) {

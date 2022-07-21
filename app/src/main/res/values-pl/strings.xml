@@ -500,4 +500,7 @@
     <string name="home_screen_enum_history">Historia</string>
     <string name="settings_home_screen">Ekran startowy</string>
     <string name="home_screen_enum_last_song">Ostatnia piosenka</string>
+    <string name="settings_force_sharp_chords">Wymuszaj krzyżyki</string>
+    <string name="settings_force_sharp_chords_hint">Zawsze pokazuj dźwięki z krzyżykami (C#, D#), unikając bemoli (Db, Eb). Nie dotyczy "Bb".</string>
+    <string name="settings_chord_diagrams_section">Diagramy akordów</string>
 </resources>

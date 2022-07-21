@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.TextView
 import igrek.songbook.R
 import igrek.songbook.chords.loader.LyricsLoader
+import igrek.songbook.chords.model.convertToSharp
 import igrek.songbook.chords.syntax.ChordNames
 import igrek.songbook.chords.syntax.MajorKey
 import igrek.songbook.info.UiResourceService
@@ -90,8 +91,17 @@ class QuickMenuTranspose(
 
     private fun buildSongKeyName(key: MajorKey): String {
         val notation = preferencesState.chordsNotation
-        val majorNoteName = ChordNames.formatNoteName(notation, key.baseMajorNote, false)
-        val minorNoteName = ChordNames.formatNoteName(notation, key.baseMinorNote, true)
+        val forceSharps = preferencesState.forceSharpNotes
+        val baseMajorNote = when(forceSharps) {
+            true -> convertToSharp(key.baseMajorNote)
+            false -> key.baseMajorNote
+        }
+        val baseMinorNote = when(forceSharps) {
+            true -> convertToSharp(key.baseMinorNote)
+            false -> key.baseMinorNote
+        }
+        val majorNoteName = ChordNames.formatNoteName(notation, baseMajorNote, false)
+        val minorNoteName = ChordNames.formatNoteName(notation, baseMinorNote, true)
         return "$majorNoteName / $minorNoteName"
     }
 

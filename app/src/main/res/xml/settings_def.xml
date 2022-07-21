@@ -21,11 +21,18 @@
             android:title="@string/settings_chords_notation"
             android:summary="%s"
             app:iconSpaceReserved="false"/>
+        <SwitchPreference
+            android:key="forceSharpChords"
+            android:title="@string/settings_force_sharp_chords"
+            android:summary="@string/settings_force_sharp_chords_hint"
+            app:iconSpaceReserved="false" />
         <ListPreference
             android:key="chordsDisplayStyle"
             android:title="@string/settings_chords_display_style"
             android:summary="%s"
             app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/settings_chord_diagrams_section">
         <ListPreference
             android:key="chordsInstrument"
             android:title="@string/settings_chords_instrument"

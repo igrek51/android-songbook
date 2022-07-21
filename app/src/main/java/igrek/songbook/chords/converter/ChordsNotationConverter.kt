@@ -11,13 +11,14 @@ import igrek.songbook.settings.chordsnotation.ChordsNotation
 class ChordsNotationConverter(
     private val fromNotation: ChordsNotation,
     private val toNotation: ChordsNotation,
+    private val forceSharps: Boolean = false,
 ) {
 
     fun convertLyrics(input: String, originalModifiers: Boolean = false): String {
         val lyrics = LyricsExtractor().parseLyrics(input)
         ChordParser(fromNotation).parseAndFillChords(lyrics)
         val key = KeyDetector().detectKey(lyrics)
-        ChordsRenderer(toNotation, key).formatLyrics(lyrics, originalModifiers)
+        ChordsRenderer(toNotation, key, forceSharps).formatLyrics(lyrics, originalModifiers)
         return lyrics.displayString()
     }
 
@@ -25,7 +26,7 @@ class ChordsNotationConverter(
         val unknowns = mutableSetOf<String>()
         val chordFragments = ChordParser(fromNotation).parseSingleChordFragments(chord, unknowns)
         val lyricsFragment = LyricsFragment(chord, LyricsTextType.CHORDS, chordFragments=chordFragments)
-        ChordsRenderer(toNotation).renderLyricsFragment(lyricsFragment, originalModifiers)
+        ChordsRenderer(toNotation, null, forceSharps).renderLyricsFragment(lyricsFragment, originalModifiers)
         return lyricsFragment.text
     }
 

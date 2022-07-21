@@ -319,6 +319,13 @@ class SettingsFragment(
             }
         )
 
+        setupSwitchPreference("forceSharpChords",
+            onLoad = { preferencesState.forceSharpNotes },
+            onSave = { value: Boolean ->
+                preferencesState.forceSharpNotes = value
+            }
+        )
+
         setupListPreference("mediaButtonBehaviour",
             mediaButtonService.mediaButtonBehavioursEntries(),
             onLoad = { preferencesState.mediaButtonBehaviour.id.toString() },
