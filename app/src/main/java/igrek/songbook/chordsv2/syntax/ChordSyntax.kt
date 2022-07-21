@@ -1,4 +1,4 @@
-package igrek.songbook.chords.syntax
+package igrek.songbook.chordsv2.syntax
 
 val longestChordComparator = Comparator { lhs: String, rhs: String ->
     if (rhs.length != lhs.length) {
@@ -9,10 +9,12 @@ val longestChordComparator = Comparator { lhs: String, rhs: String ->
 }
 
 // these delimiters split chords irrespectively (at any time)
-val chordsPrimaryDelimiters = setOf(" ", ",", "\n").toTypedArray()
+val compoundChordsDelimiters = setOf(" ", ",", "\n").toTypedArray()
 // these delimiters may split chords but may be a part of chords as well
-val singleChordsDelimiters = setOf("(", ")", "-", "/").toTypedArray()
-val chordsAllDelimiters = chordsPrimaryDelimiters + singleChordsDelimiters
+val singleChordsDelimiters = setOf(" ", ",", "\n", "/", "(", ")", "-").toTypedArray()
+
+// split compound chord, keeping delimiters as result parts
+val regexSplitSingleChordsWithDelimiters = Regex("""(?<=[ ,\n/()\-])|(?=[ ,\n/()\-])""")
 
 val chordsGroupRegex = Regex("""\[((.|\n)+?)]""")
 val singleChordsSplitRegex = Regex("""(.*?)([ ,\n/()\-])""")

@@ -9,8 +9,8 @@ import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
 class ChordsConverter(
-        fromNotation: ChordsNotation,
-        private val toNotation: ChordsNotation
+    fromNotation: ChordsNotation,
+    private val toNotation: ChordsNotation,
 ) {
 
     private val chordNameProvider = ChordNameProvider()

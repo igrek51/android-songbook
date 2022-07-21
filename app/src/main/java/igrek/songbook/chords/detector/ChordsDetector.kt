@@ -8,9 +8,6 @@ class ChordsDetector(notation: ChordsNotation? = null) {
 
     private val chordNameProvider = ChordNameProvider()
 
-    var detectedChords = mutableListOf<String>()
-        private set
-
     private val falseFriends: Set<String> by lazy {
         when {
             notation != null -> chordNameProvider.falseFriends(notation)

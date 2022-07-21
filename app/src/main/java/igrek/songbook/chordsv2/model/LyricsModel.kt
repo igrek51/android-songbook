@@ -1,12 +1,11 @@
-package igrek.songbook.chords.lyrics.model
+package igrek.songbook.chordsv2.model
 
 import com.google.common.base.Joiner
+
 
 data class LyricsModel(
     val lines: List<LyricsLine> = listOf(),
 ) {
-    constructor(vararg lines: LyricsLine) : this(lines.toList())
-
     override fun toString(): String {
         return Joiner.on("\n").join(lines)
     }
@@ -15,19 +14,12 @@ data class LyricsModel(
 data class LyricsLine(
     val fragments: List<LyricsFragment> = listOf(),
 ) {
-    constructor(vararg fragments: LyricsFragment) : this(fragments.toList())
-
     override fun toString(): String {
         return Joiner.on("").join(fragments)
     }
 
-    fun isBlank(): Boolean {
-        return fragments.all { fragment -> fragment.text.isBlank() }
-    }
-
-    fun maxRightX(): Float {
-        return fragments.maxOfOrNull { it.rightX } ?: 0f
-    }
+    val isBlank: Boolean = fragments.all { fragment -> fragment.text.isBlank() }
+    val maxRightX: Float = fragments.maxOfOrNull { it.rightX } ?: 0f
 }
 
 data class LyricsFragment(
@@ -35,8 +27,8 @@ data class LyricsFragment(
     val type: LyricsTextType,
     var x: Float = 0f,
     var width: Float = 0f,
+    var chordFragments: List<ChordFragment> = listOf(),
 ) {
-
     override fun toString(): String {
         val txt = when (type) {
             LyricsTextType.REGULAR_TEXT -> text
@@ -47,7 +39,7 @@ data class LyricsFragment(
         return "($txt,x=$x,width=$width)"
     }
 
-    val rightX get() = x + width
+    val rightX: Float = x + width
 
     companion object {
         val lineWrapper = LyricsFragment(
@@ -56,21 +48,45 @@ data class LyricsFragment(
             width = 0f
         )
 
-        fun Text(text: String, x: Float = 0f, width: Float = 0f): LyricsFragment {
+        fun text(text: String, x: Float = 0f, width: Float = 0f): LyricsFragment {
             return LyricsFragment(text, LyricsTextType.REGULAR_TEXT, x = x, width = width)
         }
 
-        fun Chord(text: String, x: Float = 0f, width: Float = 0f): LyricsFragment {
+        fun chords(text: String, x: Float = 0f, width: Float = 0f): LyricsFragment {
             return LyricsFragment(text, LyricsTextType.CHORDS, x = x, width = width)
         }
     }
 }
+
+// A chord composed of multiple single chords, eg. Cadd9/G
+data class CompoundChord(
+    var text: String,
+    var chordFragments: List<ChordFragment> = listOf(),
+)
+
+data class ChordFragment(
+    var text: String,
+    val type: ChordFragmentType,
+    var x: Float = 0f,
+    var width: Float = 0f,
+    val chord: Chord? = null,
+) {
+    override fun toString(): String {
+        return text
+    }
+}
+
 
 enum class LyricsTextType {
     REGULAR_TEXT,
     CHORDS,
     COMMENT,
     LINEWRAPPER,
+}
+
+enum class ChordFragmentType {
+    CHORD,
+    CHORD_SPLITTER,
 }
 
 const val lineWrapperChar = '\u21B5'

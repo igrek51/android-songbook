@@ -1,16 +1,16 @@
-package igrek.songbook.chords.lyrics
+package igrek.songbook.chordsv2.lyrics
 
-import igrek.songbook.chords.lyrics.model.LyricsFragment
-import igrek.songbook.chords.lyrics.model.LyricsLine
-import igrek.songbook.chords.lyrics.model.LyricsModel
-import igrek.songbook.chords.lyrics.model.LyricsTextType
+import igrek.songbook.chordsv2.model.LyricsFragment
+import igrek.songbook.chordsv2.model.LyricsLine
+import igrek.songbook.chordsv2.model.LyricsModel
+import igrek.songbook.chordsv2.model.LyricsTextType
 import java.util.concurrent.atomic.AtomicBoolean
 
 class LyricsParser(
     val trimWhitespaces: Boolean = true,
 ) {
 
-    fun parseContent(content: String): LyricsModel {
+    fun parseLyrics(content: String): LyricsModel {
         val normalized = if (trimWhitespaces) normalizeContent(content) else content
         val rawLines = normalized.lines().dropLastWhile { it.isEmpty() }
         return parseLines(rawLines)
@@ -18,9 +18,9 @@ class LyricsParser(
 
     private fun normalizeContent(content: String): String {
         return content
-                .replace("\t", " ")
-                .replace("\u00A0", " ") // no-break space
-                .trim()
+            .replace("\t", " ")
+            .replace("\u00A0", " ") // no-break space
+            .trim()
     }
 
     private fun parseLines(rawLines: List<String>): LyricsModel {
@@ -29,14 +29,14 @@ class LyricsParser(
         val lines = rawLines.map { rawLine ->
             val line = if (trimWhitespaces) rawLine.trim() else rawLine
             parseLine(line, bracket, brace)
-        }.dropLastWhile { line -> line.isBlank() }
+        }.dropLastWhile { line -> line.isBlank }
         return LyricsModel(lines = lines)
     }
 
     private fun parseLine(
         rawLine: String,
         bracket: AtomicBoolean,
-        brace: AtomicBoolean
+        brace: AtomicBoolean,
     ): LyricsLine {
         val fragments = mutableListOf<LyricsFragment>()
         var frameStart = 0

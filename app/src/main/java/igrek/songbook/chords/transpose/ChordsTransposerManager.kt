@@ -83,8 +83,7 @@ class ChordsTransposerManager(
 
     private fun getSemitonesDisplayName(transposed: Int): String {
         val absTransposed = if (transposed >= 0) transposed else -transposed
-        val stringResId: Int
-        stringResId = when {
+        val stringResId: Int = when {
             absTransposed == 0 -> R.string.transpose_0_semitones
             absTransposed == 1 -> R.string.transpose_1_semitones
             absTransposed <= 4 -> // 2,3,4
