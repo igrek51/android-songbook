@@ -1,6 +1,6 @@
-Songs lyrics viewer with chords toolkit for guitarists and musicians
+Songs lyrics viewer with chords toolkit for musicians, guitarists and pianists
 
-Songbook is a songs lyrics viewer with chords toolkit for guitarists and musicians.
+Songbook is a songs lyrics viewer with chords toolkit for musicians, guitarists and pianists.
 
 Our chief weapons are:
 - Songs lyrics viewer with highlighted chords
@@ -9,7 +9,7 @@ Our chief weapons are:
 - Adding custom songs with advanced chords editor
 - Playlists / setlists with songs
 - Sharing & Displaying songs on multiple devices at the same time via Bluetooth
-- Chord diagrams for guitar, ukulele and mandolin
+- Chord diagrams for guitar, ukulele, mandolin and piano
 - Songs database available offline as well as with online updates
 - Customizable displaying styles: chords among words, chords above lyrics or at the end of line
 - Several chords notations supported: English ("Am Bbm Bb B C Dm") and German ("a b B H C d"), Solfege ("Do Re Mi Fa")

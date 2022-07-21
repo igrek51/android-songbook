@@ -250,27 +250,38 @@ class MobileEnScreenshotMaker {
     }
 
     @Test
-    fun test_07_settings() {
-        // Settings
+    fun test_07_piano_diagram() {
+        // Knocking on Heaven's Door + bright + Ukulele diagram
         val preferencesState = appFactory.preferencesState.get()
 
         preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
-        preferencesState.colorScheme = ColorScheme.DARK
-        preferencesState.fontsize = 20f
+        preferencesState.colorScheme = ColorScheme.BRIGHT
+        preferencesState.fontsize = 17.6f
         preferencesState.chordsNotation = ChordsNotation.ENGLISH
         preferencesState.fontTypeface = FontTypeface.default
         preferencesState.chordsDisplayStyle = DisplayStyle.ChordsInline
+        preferencesState.chordsInstrument = ChordsInstrument.PIANO
         preferencesState.restoreTransposition = false
 
         // open nav drawer
         onView(withId(R.id.navMenuButton)).perform(click())
         onView(withId(R.id.nav_view)).check(matches(isDisplayed()))
         // open Search
-        onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.nav_settings))
+        onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.nav_search))
+        // type song name
+        onView(allOf(withClassName(endsWith("EditText")), withText(""))).perform(replaceText("Dust in the wind"))
         onView(isRoot()).perform(waitFor(500))
+        // choose song
+        onView(withText("Dust In The Wind - Kansas")).perform(click())
 
-        onView(withId(R.id.fragment_content)).perform(swipeUpABit(0.37f))
-        onView(isRoot()).perform(waitFor(500))
+        onView(withId(R.id.chordsHelpButton)).perform(click())
+        onView(withText("D/F#")).perform(click())
+
+        onView(withText("FIND")).perform(click())
+        onView(allOf(withClassName(endsWith("EditText")), withText(""))).perform(replaceText("Dsus4"))
+        onView(withText("FIND")).perform(click())
+
+        onView(isRoot()).perform(waitFor(100))
 
         ScreenshotCapture.takeScreenshot("07")
     }
@@ -307,6 +318,32 @@ class MobileEnScreenshotMaker {
         onView(withText(Matchers.containsString("Secret Cow Level"))).check(matches(isDisplayed()))
 
         ScreenshotCapture.takeScreenshot("08")
+    }
+
+    @Test
+    fun test_09_settings() {
+        // Settings
+        val preferencesState = appFactory.preferencesState.get()
+
+        preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
+        preferencesState.colorScheme = ColorScheme.DARK
+        preferencesState.fontsize = 20f
+        preferencesState.chordsNotation = ChordsNotation.ENGLISH
+        preferencesState.fontTypeface = FontTypeface.default
+        preferencesState.chordsDisplayStyle = DisplayStyle.ChordsInline
+        preferencesState.restoreTransposition = false
+
+        // open nav drawer
+        onView(withId(R.id.navMenuButton)).perform(click())
+        onView(withId(R.id.nav_view)).check(matches(isDisplayed()))
+        // open Search
+        onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.nav_settings))
+        onView(isRoot()).perform(waitFor(500))
+
+        onView(withId(R.id.fragment_content)).perform(swipeUpABit(0.37f))
+        onView(isRoot()).perform(waitFor(500))
+
+        ScreenshotCapture.takeScreenshot("09")
     }
 
 }

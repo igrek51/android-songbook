@@ -1,6 +1,6 @@
-Śpiewnik z tekstami piosenek i narzędziami do akordów dla gitarzystów i muzyków
+Śpiewnik z tekstami piosenek i narzędziami do akordów dla muzyków, gitarzystów i pianistów
 
-Songbook to śpiewnik z tekstami piosenek i narzędziami do akordów dla gitarzystów i muzyków.
+Songbook to śpiewnik z tekstami piosenek i narzędziami do akordów dla muzyków, gitarzystów i pianistów.
 
 Główne funkcje:
 - Przeglądanie tekstów piosenek z podświetlonymi akordami
@@ -9,7 +9,7 @@ Główne funkcje:
 - Dodawanie własnych piosenek z zaawansowanym edytorem akordów
 - Playlisty z piosenkami
 - Udostępnianie i wyświetlanie piosenek na wielu urządzeniach jednocześnie przez Bluetooth
-- Diagramy akordów dla gitary, ukulele i mandoliny
+- Diagramy akordów dla gitary, ukulele, mandoliny oraz na pianino
 - Baza piosenek (polskich i obcojęzycznych) w trybie offline oraz z aktualizacjami online
 - Wybór stylu wyświetlania akordów: pomiędzy słowami, akordy nad tekstem lub na końcu linii
 - Wsparcie dla kilku notacji akordów: Niemiecka ("a b B H C d"), Angielska ("Am Bbm Bb B C Dm"), Solfeż ("Do Re Mi Fa")

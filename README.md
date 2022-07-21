@@ -11,7 +11,7 @@ Our chief weapons are:
 - Adding custom songs with advanced chords editor
 - Playlists / setlists with songs
 - Sharing & Displaying songs on multiple devices at the same time via Bluetooth
-- Chord diagrams for guitar, ukulele and mandolin
+- Chord diagrams for guitar, ukulele, mandolin and piano
 - Songs database available offline as well as with online updates
 - Customizable displaying styles: chords among words, chords above lyrics or at the end of line
 - Several chords notations supported: English ("Am Bbm Bb B C Dm"), German ("a b B H C d"), Solfege ("Do Re Mi Fa")
