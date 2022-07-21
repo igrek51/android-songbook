@@ -142,17 +142,21 @@ class AutoscrollService(
         }
 
         songPreview?.let { songPreview ->
-            if (withWaiting) {
-                state = AutoscrollState.WAITING
-                eyeFocus = 0f
-                previousStepTime = System.currentTimeMillis()
-            } else {
-                state = AutoscrollState.SCROLLING
-                val eyeFocusPx = songPreview.scroll + songPreview.h / 2
-                eyeFocus = eyeFocusPx / songPreview.lineheightPx
+            if (songPreview.canScrollDown()) {
+                if (withWaiting) {
+                    state = AutoscrollState.WAITING
+                    eyeFocus = 0f
+                    previousStepTime = System.currentTimeMillis()
+                } else {
+                    state = AutoscrollState.SCROLLING
+                    val eyeFocusPx = songPreview.scroll + songPreview.h / 2
+                    eyeFocus = eyeFocusPx / songPreview.lineheightPx
+                }
+                timerHandler.postDelayed(timerRunnable, 0)
+            } else if (canCountdownToNextSong()) {
+                countdownToNextSong()
             }
-
-            timerHandler.postDelayed(timerRunnable, 0)
+            null
         }
 
         scrollStateSubject.onNext(state)
@@ -391,13 +395,25 @@ class AutoscrollService(
 
     private fun onAutoscrollStartUIEvent() {
         if (!isRunning) {
-            start()
-            uiInfoService.showInfoAction(
-                R.string.autoscroll_started,
-                actionResId = R.string.action_stop_autoscroll,
-            ) {
-                this.stop()
-                songPreview?.repaint()
+            songPreview?.let { songPreview ->
+                when {
+                    songPreview.canScrollDown() -> {
+                        start()
+                        uiInfoService.showInfoAction (
+                            R.string.autoscroll_started,
+                            actionResId = R.string.action_stop_autoscroll,
+                        ) {
+                            this.stop()
+                            songPreview.repaint()
+                        }
+                    }
+                    canCountdownToNextSong() -> {
+                        countdownToNextSong()
+                    }
+                    else -> {
+                        uiInfoService.showInfo(R.string.end_of_song_autoscroll_stopped)
+                    }
+                }
             }
         }
     }
