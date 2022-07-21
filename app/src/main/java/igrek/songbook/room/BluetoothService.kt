@@ -53,7 +53,12 @@ class BluetoothService(
     private val reusableSockets: MutableMap<String, BluetoothSocket> = mutableMapOf()
 
     fun deviceName(): String {
-        return bluetoothAdapter?.name.orEmpty()
+        return try {
+            bluetoothAdapter?.name.orEmpty()
+        } catch (e: SecurityException) {
+            enableBluetoothPermissions()
+            ""
+        }
     }
 
     fun scanRoomsAsync(): Deferred<Result<Pair<Channel<Room>, Channel<DiscoveryProgress>>>> {
@@ -177,9 +182,12 @@ class BluetoothService(
         // Coarse Location permission required to discover devices
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 1)
+                ActivityCompat.requestPermissions(activity, arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                ), 1)
             }
         }
+        enableBluetoothPermissions()
 
         if (bluetoothAdapter?.isEnabled == true)
             return
@@ -191,6 +199,15 @@ class BluetoothService(
         }
         if (!turnOnResult)
             throw LocalizedError(R.string.error_bluetooth_not_enabled)
+    }
+
+    private fun enableBluetoothPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {  // Android 12
+            ActivityCompat.requestPermissions(activity, arrayOf(
+                Manifest.permission.BLUETOOTH_SCAN,
+                Manifest.permission.BLUETOOTH_CONNECT,
+            ), 2)
+        }
     }
 
     fun connectToRoomSocketAsync(room: Room): Deferred<Result<BluetoothSocket>> {
