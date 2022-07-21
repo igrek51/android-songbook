@@ -11,7 +11,7 @@
     <string name="nav_about">O aplikacji</string>
     <string name="nav_contact">Kontakt</string>
     <string name="nav_help">Pomoc</string>
-    <string name="nav_screen_share">Udostępnianie ekranu</string>
+    <string name="nav_screen_share">Współdzielenie piosenek</string>
     <string name="nav_purchase">Sklep</string>
     <string name="ui_help_content">
         WYBÓR PIOSENKI:
@@ -434,7 +434,7 @@
     <string name="room_scanning_completed_found">Skanowanie zakończone. Znalezione pokoje: %s</string>
     <string name="room_empty_message_given">Nie podano wiadomości</string>
     <string name="room_current_song_waiting_master">Brak\nOtwórz piosenkę w dowolnym oknie, aby udostępnić ją innym.</string>
-    <string name="room_lobby_hint">Tylko właściciel pokoju może wybierać piosenki.</string>
+    <string name="room_lobby_hint">Pokój jest otwarty. Tylko właściciel pokoju może wybierać piosenki.</string>
     <string name="room_empty_room_list">Brak pokojów</string>
     <string name="room_no_chat_messages">Brak wiadomości</string>
     <string name="room_enter_message_hint">Wiadomość</string>
