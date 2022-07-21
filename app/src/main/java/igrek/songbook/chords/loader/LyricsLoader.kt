@@ -8,9 +8,10 @@ import igrek.songbook.chords.render.ChordsRenderer
 import igrek.songbook.chords.render.LyricsInflater
 import igrek.songbook.chords.model.LyricsModel
 import igrek.songbook.chords.parser.ChordParser
-import igrek.songbook.chords.parser.LyricsParser
+import igrek.songbook.chords.parser.LyricsExtractor
 import igrek.songbook.chords.syntax.MajorKey
 import igrek.songbook.chords.transpose.ChordsTransposer
+import igrek.songbook.chords.transpose.ChordsTransposerManager
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -36,8 +37,9 @@ class LyricsLoader(
     private var paint: Paint? = null
     private var originalSongNotation: ChordsNotation = ChordsNotation.default
     private var originalLyrics: LyricsModel = LyricsModel()
-    private var transposedLyrics: LyricsModel = LyricsModel()
-    var lyricsModel: LyricsModel = LyricsModel()
+    var transposedLyrics: LyricsModel = LyricsModel()
+        private set
+    var arrangedLyrics: LyricsModel = LyricsModel()
         private set
     var songKey: MajorKey = MajorKey.C_MAJOR
         private set
@@ -68,7 +70,7 @@ class LyricsLoader(
         originalLyrics = if (fileContent.isEmpty()) {
             LyricsModel()
         } else {
-            val lyrics = LyricsParser(trimWhitespaces = preferencesState.trimWhitespaces).parseLyrics(fileContent)
+            val lyrics = LyricsExtractor(trimWhitespaces = preferencesState.trimWhitespaces).parseLyrics(fileContent)
             ChordParser(srcNotation).parseAndFillChords(lyrics)
             lyrics
         }
@@ -100,7 +102,7 @@ class LyricsLoader(
         val displayStyle = lyricsThemeService.displayStyle
 
         val lyricsInflater = LyricsInflater(typeface, realFontsize)
-        val infaltedModel = lyricsInflater.inflateLyrics(lyrics)
+        val inflatedLyrics = lyricsInflater.inflateLyrics(lyrics)
 
         val lyricsWrapper = LyricsArranger(
             displayStyle,
@@ -108,7 +110,7 @@ class LyricsLoader(
             lyricsInflater.lengthMapper,
             preferencesState.horizontalScroll
         )
-        lyricsModel = lyricsWrapper.arrangeModel(infaltedModel)
+        arrangedLyrics = lyricsWrapper.arrangeModel(inflatedLyrics)
     }
 
     fun onPreviewSizeChange(screenW: Int, paint: Paint?) {

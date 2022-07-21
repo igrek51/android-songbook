@@ -3,7 +3,7 @@ package igrek.songbook.chords.transpose
 import igrek.songbook.chords.render.ChordsRenderer
 import igrek.songbook.chords.detect.KeyDetector
 import igrek.songbook.chords.parser.ChordParser
-import igrek.songbook.chords.parser.LyricsParser
+import igrek.songbook.chords.parser.LyricsExtractor
 import igrek.songbook.chords.syntax.MajorKey
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import org.assertj.core.api.Assertions.assertThat
@@ -14,7 +14,7 @@ class ChordsTransposerTest {
     @Test
     fun test_noTransposition() {
         val input = "a b c d [e f G Ab B C]"
-        val lyrics = LyricsParser().parseLyrics(input)
+        val lyrics = LyricsExtractor().parseLyrics(input)
         ChordParser(ChordsNotation.GERMAN).parseAndFillChords(lyrics)
 
         var transposedLyrics = ChordsTransposer().transposeLyrics(lyrics, 0)
@@ -36,7 +36,7 @@ class ChordsTransposerTest {
     @Test
     fun test_transposePlus1() {
         val input = "a b [e f G Ab B C]"
-        val lyrics = LyricsParser().parseLyrics(input)
+        val lyrics = LyricsExtractor().parseLyrics(input)
         ChordParser(ChordsNotation.GERMAN).parseAndFillChords(lyrics)
 
         val transposedLyrics = ChordsTransposer().transposeLyrics(lyrics, 1)
@@ -49,7 +49,7 @@ class ChordsTransposerTest {
     @Test
     fun test_transposeMinus1() {
         val input = "a b [f f# G# A H C#]"
-        val lyrics = LyricsParser().parseLyrics(input)
+        val lyrics = LyricsExtractor().parseLyrics(input)
         ChordParser(ChordsNotation.GERMAN).parseAndFillChords(lyrics)
 
         val transposedLyrics = ChordsTransposer().transposeLyrics(lyrics, -1)
@@ -62,7 +62,7 @@ class ChordsTransposerTest {
     @Test
     fun test_englishChordsTranpose() {
         val input = "a b [e f G Ab B C]"
-        val lyrics = LyricsParser().parseLyrics(input)
+        val lyrics = LyricsExtractor().parseLyrics(input)
         ChordParser(ChordsNotation.GERMAN).parseAndFillChords(lyrics)
 
         var transposedLyrics = ChordsTransposer().transposeLyrics(lyrics, 0)
@@ -81,7 +81,7 @@ class ChordsTransposerTest {
     @Test
     fun test_germanFisChordsTranpose() {
         val input = "a b [e f G7 G# B H]"
-        val lyrics = LyricsParser().parseLyrics(input)
+        val lyrics = LyricsExtractor().parseLyrics(input)
         ChordParser(ChordsNotation.GERMAN_IS).parseAndFillChords(lyrics)
 
         var transposedLyrics = ChordsTransposer().transposeLyrics(lyrics, 0)
@@ -98,7 +98,7 @@ class ChordsTransposerTest {
     }
 
     private fun quickTranspose(input: String, notation: ChordsNotation, t: Int): String {
-        val lyrics = LyricsParser().parseLyrics(input)
+        val lyrics = LyricsExtractor().parseLyrics(input)
         ChordParser(notation).parseAndFillChords(lyrics)
         val transposedLyrics = ChordsTransposer().transposeLyrics(lyrics, t)
         val originalKey = KeyDetector().detectKey(lyrics)
@@ -145,7 +145,7 @@ class ChordsTransposerTest {
 
     @Test
     fun test_convert_german_moll_to_english() {
-        val lyrics = LyricsParser().parseLyrics("[e]")
+        val lyrics = LyricsExtractor().parseLyrics("[e]")
         ChordParser(ChordsNotation.GERMAN).parseAndFillChords(lyrics)
         val transposedLyrics = ChordsTransposer().transposeLyrics(lyrics, 0)
         val newKey = KeyDetector().detectKey(transposedLyrics)

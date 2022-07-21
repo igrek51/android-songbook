@@ -1,6 +1,7 @@
-package igrek.songbook.chords.loader
+package igrek.songbook.chords.transpose
 
 import igrek.songbook.R
+import igrek.songbook.chords.loader.LyricsLoader
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.inject.LazyExtractor
@@ -26,9 +27,9 @@ class ChordsTransposerManager(
     private val songsRepository by LazyExtractor(songsRepository)
 
     var transposedBy = 0
-    val isTransposed: Boolean = transposedBy != 0
+    val isTransposed: Boolean get() = transposedBy != 0
 
-    val transposedByDisplayName: String = when {
+    val transposedByDisplayName: String get() = when {
         transposedBy > 0 ->"+$transposedBy ${getSemitonesDisplayName(transposedBy)}"
         else -> "$transposedBy ${getSemitonesDisplayName(transposedBy)}"
     }

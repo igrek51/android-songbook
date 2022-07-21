@@ -12,7 +12,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import igrek.songbook.R
-import igrek.songbook.chords.ChordsNotationConverter
+import igrek.songbook.chords.converter.ChordsNotationConverter
 import igrek.songbook.chords.detect.UniqueChordsFinder
 import igrek.songbook.chords.model.LyricsModel
 import igrek.songbook.info.UiInfoService

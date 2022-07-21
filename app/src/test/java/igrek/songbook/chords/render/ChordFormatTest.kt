@@ -2,7 +2,7 @@ package igrek.songbook.chords.render
 
 import igrek.songbook.chords.model.*
 import igrek.songbook.chords.parser.ChordParser
-import igrek.songbook.chords.parser.LyricsParser
+import igrek.songbook.chords.parser.LyricsExtractor
 import igrek.songbook.chords.syntax.MajorKey
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import org.assertj.core.api.Assertions
@@ -29,7 +29,7 @@ class ChordFormatTest {
 
     @Test
     fun test_parseAndFormatLyricsAndChords() {
-        val lyrics = LyricsParser().parseLyrics("""
+        val lyrics = LyricsExtractor().parseLyrics("""
         dupa [a F C7/G G]
         [D]next li[e]ne [C]
         
@@ -191,7 +191,7 @@ class ChordFormatTest {
 
     @Test
     fun test_formatWithKey() {
-        val lyrics = LyricsParser().parseLyrics("""text [D/Ab G#m]""".trimIndent())
+        val lyrics = LyricsExtractor().parseLyrics("""text [D/Ab G#m]""".trimIndent())
         ChordParser(ChordsNotation.ENGLISH).parseAndFillChords(lyrics)
         ChordsRenderer(ChordsNotation.ENGLISH, key = MajorKey.E_MAJOR).formatLyrics(lyrics)
 

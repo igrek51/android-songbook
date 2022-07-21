@@ -6,7 +6,7 @@ import igrek.songbook.chords.model.LyricsModel
 import igrek.songbook.chords.model.LyricsTextType
 import java.util.concurrent.atomic.AtomicBoolean
 
-class LyricsParser(
+class LyricsExtractor(
     val trimWhitespaces: Boolean = true,
 ) {
 

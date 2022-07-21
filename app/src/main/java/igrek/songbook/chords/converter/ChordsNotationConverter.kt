@@ -1,11 +1,11 @@
-package igrek.songbook.chords
+package igrek.songbook.chords.converter
 
 import igrek.songbook.chords.detect.KeyDetector
 import igrek.songbook.chords.render.ChordsRenderer
 import igrek.songbook.chords.model.LyricsFragment
 import igrek.songbook.chords.model.LyricsTextType
 import igrek.songbook.chords.parser.ChordParser
-import igrek.songbook.chords.parser.LyricsParser
+import igrek.songbook.chords.parser.LyricsExtractor
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
 class ChordsNotationConverter(
@@ -14,7 +14,7 @@ class ChordsNotationConverter(
 ) {
 
     fun convertLyrics(input: String, originalModifiers: Boolean = false): String {
-        val lyrics = LyricsParser().parseLyrics(input)
+        val lyrics = LyricsExtractor().parseLyrics(input)
         ChordParser(fromNotation).parseAndFillChords(lyrics)
         val key = KeyDetector().detectKey(lyrics)
         ChordsRenderer(toNotation, key).formatLyrics(lyrics, originalModifiers)

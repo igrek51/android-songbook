@@ -7,11 +7,11 @@ import igrek.songbook.chords.model.LyricsLine
 import igrek.songbook.chords.model.LyricsModel
 import igrek.songbook.chords.model.LyricsTextType
 
-class LyricsParserTest {
+class LyricsExtractorTest {
 
     @Test
     fun test_parse_lyrics_and_mark_chords() {
-        val model: LyricsModel = LyricsParser().parseLyrics("""
+        val model: LyricsModel = LyricsExtractor().parseLyrics("""
         dupa [a F C7/G(-A) G]
         [D]next li[e]ne [C]
         
@@ -48,7 +48,7 @@ class LyricsParserTest {
 
     @Test
     fun test_parse_many_brackets() {
-        val model = LyricsParser().parseLyrics("""
+        val model = LyricsExtractor().parseLyrics("""
         [[a ]]b[
         c
         ]
@@ -67,7 +67,7 @@ class LyricsParserTest {
 
     @Test
     fun test_parse_without_trimming() {
-        val model = LyricsParser(trimWhitespaces = false).parseLyrics("""
+        val model = LyricsExtractor(trimWhitespaces = false).parseLyrics("""
            a  [a]
         bcde
         """.trimIndent())
@@ -92,7 +92,7 @@ class LyricsParserTest {
 
     @Test
     fun test_parse_comments() {
-        val model = LyricsParser().parseLyrics(
+        val model = LyricsExtractor().parseLyrics(
             """
         {this is title}
         dupa [a]

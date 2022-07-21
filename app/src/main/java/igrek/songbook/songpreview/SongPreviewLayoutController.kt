@@ -261,7 +261,7 @@ class SongPreviewLayoutController(
             lyricsLoader.load(fileContent, w, paint, transposed, srcNotation)
 
             songPreview?.setFontSizes(lyricsThemeService.fontsize)
-            songPreview?.setLyricsModel(lyricsLoader.lyricsModel)
+            songPreview?.setLyricsModel(lyricsLoader.arrangedLyrics)
             resetOverlayScroll()
 
             autoscrollService.onLoad(it.songIdentifier())
@@ -275,7 +275,7 @@ class SongPreviewLayoutController(
     }
 
     fun onLyricsModelUpdated() {
-        songPreview?.setLyricsModel(lyricsLoader.lyricsModel)
+        songPreview?.setLyricsModel(lyricsLoader.arrangedLyrics)
         resetOverlayScroll()
         highlightPanelButtons()
     }
@@ -412,7 +412,7 @@ class SongPreviewLayoutController(
     }
 
     private fun showChordsGraphs() {
-        chordsDiagramsService.showLyricsChordsMenu(lyricsLoader.lyricsModel)
+        chordsDiagramsService.showLyricsChordsMenu(lyricsLoader.transposedLyrics)
     }
 
     fun scrollByStep(stepsDown: Int): Boolean {

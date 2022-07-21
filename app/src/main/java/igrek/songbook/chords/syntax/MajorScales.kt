@@ -25,6 +25,6 @@ enum class MajorKey(
     F_MAJOR(F, D, setOf(C, D, E, F, G, A, B_FLAT), -1), // F Major
     ;
 
-    val isSharpy: Boolean = this.sharpness > 0
-    val isFlatty: Boolean = this.sharpness < 0
+    val isSharpy: Boolean get() = this.sharpness > 0
+    val isFlatty: Boolean get() = this.sharpness < 0
 }

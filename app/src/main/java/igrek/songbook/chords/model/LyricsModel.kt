@@ -24,8 +24,8 @@ data class LyricsLine(
         return fragments.joinToString (separator = "") { it.displayString() }
     }
 
-    val isBlank: Boolean = fragments.all { fragment -> fragment.text.isBlank() }
-    val maxRightX: Float = fragments.maxOfOrNull { it.rightX } ?: 0f
+    val isBlank: Boolean get() = fragments.all { fragment -> fragment.text.isBlank() }
+    val maxRightX: Float get() = fragments.maxOfOrNull { it.rightX } ?: 0f
 }
 
 data class LyricsFragment(
@@ -54,7 +54,7 @@ data class LyricsFragment(
         }
     }
 
-    val rightX: Float = x + width
+    val rightX: Float get() = x + width
 
     companion object {
         val lineWrapper = LyricsFragment(

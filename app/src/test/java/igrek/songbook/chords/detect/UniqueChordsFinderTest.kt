@@ -1,7 +1,7 @@
 package igrek.songbook.chords.detect
 
 import igrek.songbook.chords.parser.ChordParser
-import igrek.songbook.chords.parser.LyricsParser
+import igrek.songbook.chords.parser.LyricsExtractor
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import org.assertj.core.api.Assertions
 import org.junit.Test
@@ -30,7 +30,7 @@ class UniqueChordsFinderTest {
             "[C F C G6add11 G6]",
         ).joinToString("\n")
 
-        val lyrics = LyricsParser().parseLyrics(input)
+        val lyrics = LyricsExtractor().parseLyrics(input)
         ChordParser(ChordsNotation.GERMAN).parseAndFillChords(lyrics)
 
         val uniqueChords = chordsFinder.findUniqueChordNamesInLyrics(lyrics)
