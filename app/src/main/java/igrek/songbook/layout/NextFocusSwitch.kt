@@ -2,15 +2,16 @@ package igrek.songbook.layout
 
 import android.view.KeyEvent
 import android.view.View
-import android.view.ViewGroup
 import igrek.songbook.info.logger.LoggerFactory.logger
 
-class NextFocusSwitch(
+
+class NextFocusSwitch (
     private val currentViewGetter: () -> View?,
-    private val nextRight: (Int) -> Int = { 0 },
-    private val nextLeft: (Int) -> Int = { 0 },
-    private val nextDown: (Int) -> Int = { 0 },
-    private val nextUp: (Int) -> Int = { 0 },
+    private val currentFocusGetter: () -> Int?,
+    private val nextLeft: (Int, View) -> Int = { _, _ -> 0 },
+    private val nextRight: (Int, View) -> Int = { _, _ -> 0 },
+    private val nextUp: (Int, View) -> Int = { _, _ -> 0 },
+    private val nextDown: (Int, View) -> Int = { _, _ -> 0 },
 ) {
 
     fun handleKey(keyCode: Int): Boolean {
@@ -39,31 +40,47 @@ class NextFocusSwitch(
         return false
     }
 
-    private fun moveToNextView(nextViewProvider: (Int) -> Int): Boolean {
+    private fun moveToNextView(nextViewProvider: (Int, View) -> Int): Boolean {
         val currentView: View = currentViewGetter() ?: return false
-        val focusView: View? = currentView.findFocus()
-        if (focusView == null) {
-            logger.warn("NextFocusSwitch: no sub view with focus")
-        }
-        val currentFocusId = focusView?.id ?: 0
+        val currentFocusId: Int = currentFocusGetter() ?: 0
 
-        val focusedViewName = focusView?.javaClass?.simpleName
-        logger.debug("NextFocusSwitch: current focus view id: $currentFocusId - $focusedViewName")
-
-        val nextViewId = nextViewProvider(currentFocusId)
+        val nextViewId = nextViewProvider(currentFocusId, currentView)
         if (nextViewId != 0 && nextViewId != currentFocusId) {
 
             val nextView: View? = currentView.findViewById(nextViewId)
             if (nextView == null) {
-                logger.warn("didnt find view $nextViewId ")
+                logger.warn("cant find next view with ID $nextViewId ")
             }
             nextView?.run {
 
-                val viewGroup = currentView as ViewGroup
-                viewGroup.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+//                val viewGroup = currentView as? ViewGroup
+//                viewGroup?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
 
-                requestFocus()
-                logger.debug("focus set to $nextViewId ")
+                val result = requestFocus()
+                if (!result) {
+                    logger.warn("requesting focus failed, focused: $isFocused, focusable: $isFocusable")
+                }
+
+
+//                var gainedFocus = false
+//                this.onFocusChangeListener = OnFocusChangeListener { v, hasFocus ->
+//                    if (hasFocus)
+//                        gainedFocus = true
+//                    if (v == this && !hasFocus && gainedFocus) {
+//                        viewGroup?.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+//                    }
+//                }
+
+                this.setOnKeyListener { _, keyCode, event ->
+                    if (event.action == KeyEvent.ACTION_DOWN) {
+                        if (this@NextFocusSwitch.handleKey(keyCode))
+                            return@setOnKeyListener true
+                    }
+                    return@setOnKeyListener false
+                }
+
+                val nextViewName = nextView.javaClass.simpleName
+                logger.debug("NextFocusSwitch: focus set to $nextViewId - $nextViewName")
                 return true
             }
         }

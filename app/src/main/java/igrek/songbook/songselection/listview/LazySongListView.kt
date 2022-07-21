@@ -12,6 +12,7 @@ import android.widget.AdapterView
 import android.widget.ListView
 import igrek.songbook.R
 import igrek.songbook.info.logger.LoggerFactory.logger
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.NextFocusSwitch
 import igrek.songbook.songselection.SongClickListener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
@@ -65,10 +66,29 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
                 logger.debug("NextFocusSwitch: currentViewGetter: selected focus view id: ${focusView?.id} - $focusedViewName")
                 focusView
             },
-            nextRight = { currentViewId -> R.id.itemSongMoreButton },
-            nextLeft = { currentViewId -> R.id.itemSongMoreButton },
-            nextUp = { currentViewId -> 0 },
-            nextDown = { currentViewId -> 0 },
+            currentFocusGetter = {
+                appFactory.activity.get().currentFocus?.id
+            },
+            nextLeft = { currentViewId: Int, currentView: View ->
+                (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                logger.debug("Block descendants set")
+
+//                this.setItemChecked(2, true)
+                this.requestFocusFromTouch()
+//                this.setSelection(2)
+
+                R.id.listItemSongTreeSongLayout
+            },
+            nextRight = { currentViewId: Int, currentView: View ->
+                (currentView as? ViewGroup)?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+                R.id.itemSongMoreButton
+            },
+            nextUp = { currentViewId: Int, currentView: View ->
+                0
+            },
+            nextDown = { currentViewId: Int, currentView: View ->
+                0
+            },
         )
 
         setOnKeyListener { _, keyCode, event ->
