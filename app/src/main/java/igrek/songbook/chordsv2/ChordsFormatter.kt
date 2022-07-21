@@ -5,33 +5,33 @@ import igrek.songbook.chordsv2.syntax.MajorKey
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
 class ChordsFormatter (
-    private val notation: ChordsNotation,
+    private val toNotation: ChordsNotation,
     private val key: MajorKey? = null,
 ) {
 
-    fun formatLyrics(lyrics: LyricsModel): LyricsModel {
+    fun formatLyrics(lyrics: LyricsModel, originalModifiers: Boolean = false): LyricsModel {
         lyrics.lines.forEach { line ->
-            line.fragments.forEach(::renderLyricsFragment)
+            line.fragments.forEach { renderLyricsFragment(it, originalModifiers) }
         }
         return lyrics
     }
 
-    private fun renderLyricsFragment(lyricsFragment: LyricsFragment) {
+    fun renderLyricsFragment(lyricsFragment: LyricsFragment, originalModifiers: Boolean = false) {
         if (lyricsFragment.type == LyricsTextType.CHORDS) {
             lyricsFragment.chordFragments.forEach { chordFragment: ChordFragment ->
-                renderChordFragment(chordFragment)
+                renderChordFragment(chordFragment, originalModifiers)
             }
             lyricsFragment.text = lyricsFragment.chordFragments.joinToString("") { it.text }
         }
     }
 
-    private fun renderChordFragment(chordFragment: ChordFragment) {
+    private fun renderChordFragment(chordFragment: ChordFragment, originalModifiers: Boolean) {
         when (chordFragment.type) {
             ChordFragmentType.SINGLE_CHORD -> {
-                chordFragment.text = chordFragment.singleChord!!.format(notation, key)
+                chordFragment.text = chordFragment.singleChord!!.format(toNotation, key, originalModifiers)
             }
             ChordFragmentType.COMPOUND_CHORD -> {
-                chordFragment.text = chordFragment.compoundChord!!.format(notation, key)
+                chordFragment.text = chordFragment.compoundChord!!.format(toNotation, key, originalModifiers)
             }
             else -> {}
         }

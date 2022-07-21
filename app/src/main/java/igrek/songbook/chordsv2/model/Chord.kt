@@ -23,10 +23,19 @@ data class Chord (
     var noteIndex: Int,
     val minor: Boolean = false,
     val suffix: String = "",
+    val originalModifier: NoteModifier = NoteModifier.NATURAL,
 ) {
 
-    fun format(notation: ChordsNotation, key: MajorKey? = null): String {
-        val note = indexToNote(noteIndex, key)
+    fun format(
+        notation: ChordsNotation,
+        key: MajorKey? = null,
+        originalModifiers: Boolean = false,
+    ): String {
+        val forceModifier = when {
+            originalModifiers -> originalModifier
+            else -> null
+        }
+        val note = indexToNote(noteIndex, key, forceModifier)
         val baseNote = ChordNames.formatNoteName(notation, note, minor)
         return baseNote + suffix
     }
@@ -39,9 +48,13 @@ data class CompoundChord(
     val splitter: String,
     val chord2: Chord,
 ) {
-    fun format(notation: ChordsNotation, key: MajorKey? = null): String {
-        val chord1String = chord1.format(notation, key)
-        val chord2String = chord2.format(notation, key)
+    fun format(
+        notation: ChordsNotation,
+        key: MajorKey? = null,
+        originalModifiers: Boolean = false,
+    ): String {
+        val chord1String = chord1.format(notation, key, originalModifiers)
+        val chord2String = chord2.format(notation, key, originalModifiers)
         return chord1String + splitter + chord2String
     }
 

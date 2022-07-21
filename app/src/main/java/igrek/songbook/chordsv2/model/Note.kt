@@ -36,39 +36,53 @@ enum class Note(val index: Int, val modifier: NoteModifier) {
 
 }
 
-fun indexToNote(noteIndex: Int, key: MajorKey? = null): Note {
+fun indexToNote(noteIndex: Int, key: MajorKey? = null, forceModifier: NoteModifier? = null): Note {
     return when (noteIndex) {
         0 -> Note.C
-        1 -> when (key?.isFlatty) {
-            true -> Note.D_FLAT
+        1 -> when {
+            forceModifier == NoteModifier.SHARP -> Note.C_SHARP
+            forceModifier == NoteModifier.FLAT -> Note.D_FLAT
+            key?.isFlatty == true -> Note.D_FLAT
             else -> Note.C_SHARP
         }
         2 -> Note.D
-        3 -> when (key?.isSharpy) {
-            true -> Note.D_SHARP
+        3 -> when {
+            forceModifier == NoteModifier.SHARP -> Note.D_SHARP
+            forceModifier == NoteModifier.FLAT -> Note.E_FLAT
+            key?.isSharpy == true -> Note.D_SHARP
             else -> Note.E_FLAT
         }
         4 -> Note.E
-        5 -> when (key) {
-            F_SHARP_MAJOR -> Note.E_SHARP
+        5 -> when {
+            forceModifier == NoteModifier.SHARP -> Note.E_SHARP
+            forceModifier == NoteModifier.NATURAL -> Note.F
+            key == F_SHARP_MAJOR -> Note.E_SHARP
             else -> Note.F
         }
-        6 -> when (key?.isFlatty) {
-            true -> Note.G_FLAT
+        6 -> when {
+            forceModifier == NoteModifier.SHARP -> Note.F_SHARP
+            forceModifier == NoteModifier.FLAT -> Note.G_FLAT
+            key?.isFlatty == true -> Note.G_FLAT
             else -> Note.F_SHARP
         }
         7 -> Note.G
-        8 -> when (key?.isSharpy) {
-            true -> Note.G_SHARP
+        8 -> when {
+            forceModifier == NoteModifier.SHARP -> Note.G_SHARP
+            forceModifier == NoteModifier.FLAT -> Note.A_FLAT
+            key?.isSharpy == true -> Note.G_SHARP
             else -> Note.A_FLAT
         }
         9 -> Note.A
-        10 -> when (key?.isSharpy) {
-            true -> Note.A_SHARP
+        10 -> when {
+            forceModifier == NoteModifier.SHARP -> Note.A_SHARP
+            forceModifier == NoteModifier.FLAT -> Note.B_FLAT
+            key == B_MAJOR || key == F_SHARP_MAJOR -> Note.A_SHARP
             else -> Note.B_FLAT
         }
-        11 -> when (key) {
-            F_SHARP_MAJOR -> Note.C_FLAT
+        11 -> when {
+            forceModifier == NoteModifier.FLAT -> Note.C_FLAT
+            forceModifier == NoteModifier.NATURAL -> Note.B
+            key == F_SHARP_MAJOR -> Note.C_FLAT
             else -> Note.B
         }
         else -> throw RuntimeException("Unknown note index $noteIndex")

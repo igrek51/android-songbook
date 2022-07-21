@@ -120,10 +120,10 @@ class ChordFormatTest {
                 ChordFragment(text="D/G#", type=ChordFragmentType.COMPOUND_CHORD, compoundChord = CompoundChord(
                     Chord(Note.D.index, false),
                     "/",
-                    Chord(Note.G_SHARP.index, false),
+                    Chord(Note.G_SHARP.index, false, "", originalModifier = NoteModifier.FLAT),
                 )),
                 ChordFragment(text=" ", type=ChordFragmentType.CHORD_SPLITTER),
-                ChordFragment(text="G#m", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.G_SHARP.index, true)),
+                ChordFragment(text="G#m", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.G_SHARP.index, true, "", NoteModifier.SHARP)),
             )),
         )))
 
@@ -134,10 +134,10 @@ class ChordFormatTest {
                 ChordFragment(text="D/Ab", type=ChordFragmentType.COMPOUND_CHORD, compoundChord = CompoundChord(
                     Chord(Note.D.index, false),
                     "/",
-                    Chord(Note.A_FLAT.index, false),
+                    Chord(Note.A_FLAT.index, false, "", originalModifier = NoteModifier.FLAT),
                 )),
                 ChordFragment(text=" ", type=ChordFragmentType.CHORD_SPLITTER),
-                ChordFragment(text="Abm", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.A_FLAT.index, true)),
+                ChordFragment(text="Abm", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.A_FLAT.index, true, "", originalModifier = NoteModifier.SHARP)),
             )),
         )))
     }
