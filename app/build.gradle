@@ -87,32 +87,32 @@ android {
         }
     }
     kotlinOptions {
-        freeCompilerArgs = ["-Xallow-result-return-type"]
+        freeCompilerArgs = ["-Xallow-result-return-type", "-Xopt-in=kotlin.RequiresOptIn"]
     }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     // Android
-    implementation 'androidx.appcompat:appcompat:1.4.2'
-    implementation 'androidx.annotation:annotation:1.4.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.annotation:annotation:1.5.0'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.activity:activity-ktx:1.5.0'
+    implementation 'androidx.activity:activity-ktx:1.6.0'
     implementation 'androidx.work:work-runtime:2.7.1'
     // Firebase
-    implementation 'com.google.firebase:firebase-analytics-ktx:21.1.0'
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.11'
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.1.1'
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.13'
     // Google APIs
     implementation('com.google.api-client:google-api-client-android:1.35.2') {
         exclude group: 'org.apache.httpcomponents'
     }
     implementation 'com.google.android.gms:play-services-basement:18.1.0'
-    implementation('com.google.android.gms:play-services-auth:20.2.0') {
+    implementation('com.google.android.gms:play-services-auth:20.3.0') {
     // AdMob
     implementation 'com.google.android.gms:play-services-ads:21.0.0'
     }
@@ -130,7 +130,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc'
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
@@ -151,7 +151,7 @@ dependencies {
     // JWT
     implementation 'com.auth0.android:jwtdecode:2.0.1'
     // Unit tests
-    testImplementation 'androidx.appcompat:appcompat:1.4.2'
+    testImplementation 'androidx.appcompat:appcompat:1.5.1'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:2.28.2'
     testImplementation 'org.assertj:assertj-core:3.23.1'

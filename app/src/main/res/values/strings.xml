@@ -522,5 +522,5 @@
     <string name="home_screen_enum_my_songs">My songs</string>
     <string name="home_screen_enum_favourites">Favourites</string>
     <string name="home_screen_enum_history">History</string>
-    <string name="settings_home_screen">Home Screen</string>
+    <string name="settings_home_screen">Home Screen (starting view)</string>
 </resources>
