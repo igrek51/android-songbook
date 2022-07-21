@@ -14,7 +14,7 @@
     <string name="nav_contact">Contact</string>
     <string name="nav_help">Help</string>
     <string name="nav_screen_share">Bluetooth Screen Share</string>
-    <string name="nav_purchase">Ad-free / Donate</string>
+    <string name="nav_purchase">Shop</string>
     <string name="ui_help_content">
         SONG SELECTION:
         \nYou can choose a song from a categories tree or search it by title or artist (by any word from name, uppercase doesn\'t matter).

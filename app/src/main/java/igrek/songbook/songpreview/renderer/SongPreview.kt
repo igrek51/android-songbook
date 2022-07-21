@@ -476,6 +476,8 @@ class SongPreview(
     }
 
     fun canScrollDown(): Boolean {
+        if (maxScroll <= 0)
+            return false
         return scroll < maxScroll
     }
 
