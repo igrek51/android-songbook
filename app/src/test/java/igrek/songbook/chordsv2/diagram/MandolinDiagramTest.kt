@@ -1,28 +1,29 @@
-package igrek.songbook.chords.diagram
+package igrek.songbook.chordsv2.diagram
 
 import igrek.songbook.settings.instrument.ChordsInstrument
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
-class UkuleleDiagramTest {
+class MandolinDiagramTest {
 
-    private val horizontalBuilder = ChordDiagramBuilder(ChordsInstrument.UKULELE, ChordDiagramStyle.Horizontal)
-    private val verticalBuilder = ChordDiagramBuilder(ChordsInstrument.UKULELE, ChordDiagramStyle.Vertical)
+    private val horizontalBuilder = ChordDiagramBuilder(ChordsInstrument.MANDOLIN, ChordDiagramStyle.Horizontal)
+    private val verticalBuilder = ChordDiagramBuilder(ChordsInstrument.MANDOLIN, ChordDiagramStyle.Vertical)
 
     @Test
     fun buildHorizontalDiagram() {
         assertThat(horizontalBuilder.buildDiagram("x,3,2,0")).isEqualTo("""
-                A 0|-|-|-|
-                E  |-|2|-|
-                C  |-|-|3|
+                E 0|-|-|-|
+                A  |-|2|-|
+                D  |-|-|3|
                 G x|-|-|-|
                 """.trimIndent())
     }
 
+
     @Test
     fun buildVerticalDiagram() {
         assertThat(verticalBuilder.buildDiagram("x,3,2,0")).isEqualTo("""
-                G C E A
+                G D A E
                 x     0
                 -------
                 | | | |

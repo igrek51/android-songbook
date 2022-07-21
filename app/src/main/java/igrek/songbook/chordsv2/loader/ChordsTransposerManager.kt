@@ -1,7 +1,6 @@
-package igrek.songbook.chords.transpose
+package igrek.songbook.chordsv2.loader
 
 import igrek.songbook.R
-import igrek.songbook.chordsv2.loader.LyricsLoader
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.inject.LazyExtractor

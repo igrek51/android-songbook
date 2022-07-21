@@ -11,8 +11,8 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.preference.*
 import igrek.songbook.R
 import igrek.songbook.billing.BillingLayoutController
-import igrek.songbook.chords.diagram.ChordDiagramStyle
-import igrek.songbook.chords.diagram.ChordsDiagramsService
+import igrek.songbook.chordsv2.diagram.ChordDiagramStyle
+import igrek.songbook.chordsv2.diagram.ChordsDiagramsService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.inject.LazyExtractor

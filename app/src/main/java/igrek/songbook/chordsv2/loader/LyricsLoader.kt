@@ -1,7 +1,6 @@
 package igrek.songbook.chordsv2.loader
 
 import android.graphics.Paint
-import igrek.songbook.chords.transpose.ChordsTransposerManager
 import igrek.songbook.chordsv2.arranger.LyricsArranger
 import igrek.songbook.chordsv2.detect.KeyDetector
 import igrek.songbook.chordsv2.model.LyricsCloner

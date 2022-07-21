@@ -1,4 +1,4 @@
-package igrek.songbook.chords.diagram
+package igrek.songbook.chordsv2.diagram
 
 class HorizontalDiagramRenderer : DiagramRenderer {
 

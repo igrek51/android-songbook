@@ -1,4 +1,4 @@
-package igrek.songbook.chords.diagram
+package igrek.songbook.chordsv2.diagram
 
 import igrek.songbook.settings.instrument.ChordsInstrument
 import kotlin.math.max

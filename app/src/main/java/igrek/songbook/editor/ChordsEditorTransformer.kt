@@ -1,9 +1,7 @@
 package igrek.songbook.editor
 
 import igrek.songbook.R
-import igrek.songbook.chords.converter.ChordsConverter
-import igrek.songbook.chords.detector.ChordsDetector
-import igrek.songbook.chords.syntax.ChordNameProvider
+import igrek.songbook.chordsv2.ChordsNotationConverter
 import igrek.songbook.chordsv2.parser.ChordParser
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.inject.LazyExtractor
@@ -27,17 +25,17 @@ class ChordsEditorTransformer(
 
     private fun transformLyrics(transformer: (String) -> String) {
         textEditor.getText()
-                .let { transformer.invoke(it) }
-                .let { textEditor.setText(it) }
+            .let { transformer.invoke(it) }
+            .let { textEditor.setText(it) }
     }
 
     private fun transformLines(transformer: (String) -> String) {
         textEditor.getText()
-                .lines()
-                .joinToString(separator = "\n") { line ->
-                    transformer.invoke(line)
-                }
-                .let { textEditor.setText(it) }
+            .lines()
+            .joinToString(separator = "\n") { line ->
+                transformer.invoke(line)
+            }
+            .let { textEditor.setText(it) }
     }
 
     private fun transformDoubleLines(input: String, transformer: (String, String) -> List<String>?): String {
@@ -64,10 +62,10 @@ class ChordsEditorTransformer(
 
     private fun transformChords(transformer: (String) -> String) {
         textEditor.getText()
-                .replace(Regex("""\[(.*?)]""")) { matchResult ->
-                    "[" + transformer.invoke(matchResult.groupValues[1]) + "]"
-                }
-                .let { textEditor.setText(it) }
+            .replace(Regex("""\[(.*?)]""")) { matchResult ->
+                "[" + transformer.invoke(matchResult.groupValues[1]) + "]"
+            }
+            .let { textEditor.setText(it) }
     }
 
     private fun setContentWithSelection(edited: String, selStart: Int, selEnd: Int) {
@@ -144,23 +142,18 @@ class ChordsEditorTransformer(
     }
 
     private fun validateChordsNotation(text: String) {
-        val detector = ChordsDetector(chordsNotation)
-        val chordNameProvider = ChordNameProvider()
-        val falseFriends: Set<String> = when {
-            chordsNotation != null -> chordNameProvider.falseFriends(chordsNotation)
-            else -> emptySet()
-        }
+        val chordParser = ChordParser(chordsNotation)
         text.replace(Regex("""\[((.|\n)+?)]""")) { matchResult ->
-            validateChordsGroup(matchResult.groupValues[1], detector, falseFriends)
+            validateChordsGroup(matchResult.groupValues[1], chordParser)
             ""
         }
     }
 
-    private fun validateChordsGroup(chordsGroup: String, detector: ChordsDetector, falseFriends: Set<String>) {
+    private fun validateChordsGroup(chordsGroup: String, chordParser: ChordParser) {
         val chords = chordsGroup.split(" ", "\n", "(", ")")
         chords.forEach { chord ->
             if (chord.isNotEmpty()) {
-                if (!detector.isWordAChord(chord) || chord in falseFriends) {
+                if (!chordParser.isWordAChord(chord)) {
                     val errorMessage = uiInfoService.resString(R.string.chords_unknown_chord, chord)
                     throw ChordsValidationError(errorMessage)
                 }
@@ -178,7 +171,7 @@ class ChordsEditorTransformer(
     }
 
     private fun convertFromNotation(fromNotation: ChordsNotation) {
-        val converter = ChordsConverter(fromNotation, chordsNotation ?: ChordsNotation.default)
+        val converter = ChordsNotationConverter(fromNotation, chordsNotation)
         val converted = converter.convertLyrics(textEditor.getText())
         textEditor.setText(converted)
     }
@@ -365,33 +358,33 @@ class ChordsEditorTransformer(
 
     fun reformatAndTrim(lyrics: String): String {
         return lyrics.lines()
-                .joinToString(separator = "\n") { line ->
-                    line.trim()
-                            .replace("\r\n", "\n")
-                            .replace("\r", "\n")
-                            .replace("\t", " ")
-                            .replace("\u00A0", " ")
-                            .replace("\uFFFD", "")
-                            .replace("|", " ")
-                            .replace(Regex("""\[+"""), "[")
-                            .replace(Regex("""]+"""), "]")
-                            .replace(Regex("""\[ +"""), "[")
-                            .replace(Regex(""" +]"""), "]")
-                            .replace(Regex("""\[]"""), "")
-                            .replace(Regex(""" {2} +"""), "  ") // max double spaces
-                            .replace(Regex("""] ?\["""), " ") // join adjacent chords
-                }
-                .replace(Regex("""(\S)\[([^\[\]]*?)](\s|$)""")) { matchResult ->
-                    // pad chords at the end of word: word[C]
-                    val groups = matchResult.groupValues
-                    "${groups[1]} [${groups[2]}]${groups[3]}"
-                }
-                .replaceWords(Regex("""  +"""), " ") // max 1 space in words
-                .replace("\r\n", "\n")
-                .replace("\r", "\n")
-                .replace(Regex("\n\n+"), "\n\n") // max 1 empty line
-                .replace(Regex("^\n+"), "")
-                .replace(Regex("\n+$"), "")
+            .joinToString(separator = "\n") { line ->
+                line.trim()
+                    .replace("\r\n", "\n")
+                    .replace("\r", "\n")
+                    .replace("\t", " ")
+                    .replace("\u00A0", " ")
+                    .replace("\uFFFD", "")
+                    .replace("|", " ")
+                    .replace(Regex("""\[+"""), "[")
+                    .replace(Regex("""]+"""), "]")
+                    .replace(Regex("""\[ +"""), "[")
+                    .replace(Regex(""" +]"""), "]")
+                    .replace(Regex("""\[]"""), "")
+                    .replace(Regex(""" {2} +"""), "  ") // max double spaces
+                    .replace(Regex("""] ?\["""), " ") // join adjacent chords
+            }
+            .replace(Regex("""(\S)\[([^\[\]]*?)](\s|$)""")) { matchResult ->
+                // pad chords at the end of word: word[C]
+                val groups = matchResult.groupValues
+                "${groups[1]} [${groups[2]}]${groups[3]}"
+            }
+            .replaceWords(Regex("""  +"""), " ") // max 1 space in words
+            .replace("\r\n", "\n")
+            .replace("\r", "\n")
+            .replace(Regex("\n\n+"), "\n\n") // max 1 empty line
+            .replace(Regex("^\n+"), "")
+            .replace(Regex("\n+$"), "")
     }
 
     private fun String.replaceWords(regex: Regex, replacement: String): String {
@@ -416,8 +409,8 @@ class ChordsEditorTransformer(
 
     fun transformRemoveDoubleEmptyLines(lyrics: String): String {
         return lyrics.replace("\r\n", "\n")
-                .replace("\r", "\n")
-                .replace(Regex("""\n[ \t\f]*\n"""), "\n")
+            .replace("\r", "\n")
+            .replace(Regex("""\n[ \t\f]*\n"""), "\n")
     }
 
     fun duplicateSelection() {

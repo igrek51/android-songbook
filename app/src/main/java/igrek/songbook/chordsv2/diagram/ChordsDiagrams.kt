@@ -1,4 +1,4 @@
-package igrek.songbook.chords.diagram
+package igrek.songbook.chordsv2.diagram
 
 // English chords
 val guitarChordsDiagrams: Map<String, List<String>> = mapOf(
