@@ -14,7 +14,7 @@ import androidx.appcompat.app.AlertDialog
 import igrek.songbook.R
 import igrek.songbook.chords.converter.ChordsConverter
 import igrek.songbook.chords.detector.UniqueChordsFinder
-import igrek.songbook.chords.lyrics.model.LyricsModel
+import igrek.songbook.chordsv2.model.LyricsModel
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
@@ -58,7 +58,7 @@ class ChordsDiagramsService(
 
     private fun findUniqueChords(crdModel: LyricsModel): Set<String> {
         val chordsFinder = UniqueChordsFinder(chordsInstrumentService.instrument)
-        return chordsFinder.findUniqueChordsInLyrics(crdModel)
+        return chordsFinder.findUniqueChordsInLyrics(igrek.songbook.chords.lyrics.model.LyricsModel())
     }
 
     private fun chordGraphs(chord: String): String {

@@ -1,7 +1,7 @@
 package igrek.songbook.chordsv2.arranger
 
 import igrek.songbook.chordsv2.arranger.wordwrap.LineWrapper
-import igrek.songbook.chordsv2.formatter.TypefaceLengthMapper
+import igrek.songbook.chordsv2.render.TypefaceLengthMapper
 import igrek.songbook.chordsv2.model.LyricsFragment
 import igrek.songbook.chordsv2.model.LyricsLine
 import igrek.songbook.chordsv2.model.LyricsTextType

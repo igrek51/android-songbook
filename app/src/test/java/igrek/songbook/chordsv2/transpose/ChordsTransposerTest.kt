@@ -1,6 +1,6 @@
 package igrek.songbook.chordsv2.transpose
 
-import igrek.songbook.chordsv2.formatter.ChordsFormatter
+import igrek.songbook.chordsv2.render.ChordsRenderer
 import igrek.songbook.chordsv2.detect.KeyDetector
 import igrek.songbook.chordsv2.parser.ChordParser
 import igrek.songbook.chordsv2.parser.LyricsParser
@@ -19,17 +19,17 @@ class ChordsTransposerTest {
 
         var transposedLyrics = ChordsTransposer().transposeLyrics(lyrics, 0)
         var key = KeyDetector().detectKey(transposedLyrics)
-        ChordsFormatter(ChordsNotation.GERMAN, key).formatLyrics(transposedLyrics)
+        ChordsRenderer(ChordsNotation.GERMAN, key).formatLyrics(transposedLyrics)
         assertThat(transposedLyrics.displayString()).isEqualTo(input)
 
         transposedLyrics = ChordsTransposer().transposeLyrics(lyrics, 12)
         key = KeyDetector().detectKey(transposedLyrics)
-        ChordsFormatter(ChordsNotation.GERMAN, key).formatLyrics(transposedLyrics)
+        ChordsRenderer(ChordsNotation.GERMAN, key).formatLyrics(transposedLyrics)
         assertThat(transposedLyrics.displayString()).isEqualTo(input)
 
         transposedLyrics = ChordsTransposer().transposeLyrics(lyrics, -12)
         key = KeyDetector().detectKey(transposedLyrics)
-        ChordsFormatter(ChordsNotation.GERMAN, key).formatLyrics(transposedLyrics)
+        ChordsRenderer(ChordsNotation.GERMAN, key).formatLyrics(transposedLyrics)
         assertThat(transposedLyrics.displayString()).isEqualTo(input)
     }
 
@@ -42,7 +42,7 @@ class ChordsTransposerTest {
         val transposedLyrics = ChordsTransposer().transposeLyrics(lyrics, 1)
         val key = KeyDetector().detectKey(transposedLyrics)
         println("Key is $key")
-        ChordsFormatter(ChordsNotation.GERMAN, key).formatLyrics(transposedLyrics)
+        ChordsRenderer(ChordsNotation.GERMAN, key).formatLyrics(transposedLyrics)
         assertThat(transposedLyrics.displayString()).isEqualTo("a b [f f# G# A H C#]")
     }
 
@@ -55,7 +55,7 @@ class ChordsTransposerTest {
         val transposedLyrics = ChordsTransposer().transposeLyrics(lyrics, -1)
         val key = KeyDetector().detectKey(transposedLyrics)
         println("Key is $key")
-        ChordsFormatter(ChordsNotation.GERMAN, key).formatLyrics(transposedLyrics)
+        ChordsRenderer(ChordsNotation.GERMAN, key).formatLyrics(transposedLyrics)
         assertThat(transposedLyrics.displayString()).isEqualTo("a b [e f G Ab B C]")
     }
 
@@ -68,13 +68,13 @@ class ChordsTransposerTest {
         var transposedLyrics = ChordsTransposer().transposeLyrics(lyrics, 0)
         var key = KeyDetector().detectKey(transposedLyrics)
         assertThat(key).isEqualTo(MajorKey.A_FLAT_MAJOR)
-        ChordsFormatter(ChordsNotation.ENGLISH, key).formatLyrics(transposedLyrics)
+        ChordsRenderer(ChordsNotation.ENGLISH, key).formatLyrics(transposedLyrics)
         assertThat(transposedLyrics.displayString()).isEqualTo("a b [Em Fm G Ab Bb C]")
 
         transposedLyrics = ChordsTransposer().transposeLyrics(lyrics, 1)
         key = KeyDetector().detectKey(transposedLyrics)
         assertThat(key).isEqualTo(MajorKey.A_MAJOR)
-        ChordsFormatter(ChordsNotation.ENGLISH, key).formatLyrics(transposedLyrics)
+        ChordsRenderer(ChordsNotation.ENGLISH, key).formatLyrics(transposedLyrics)
         assertThat(transposedLyrics.displayString()).isEqualTo("a b [Fm F#m G# A B C#]")
     }
 
@@ -87,13 +87,13 @@ class ChordsTransposerTest {
         var transposedLyrics = ChordsTransposer().transposeLyrics(lyrics, 0)
         var key = KeyDetector().detectKey(transposedLyrics)
         assertThat(key).isEqualTo(MajorKey.A_FLAT_MAJOR)
-        ChordsFormatter(ChordsNotation.GERMAN_IS, key).formatLyrics(transposedLyrics)
+        ChordsRenderer(ChordsNotation.GERMAN_IS, key).formatLyrics(transposedLyrics)
         assertThat(transposedLyrics.displayString()).isEqualTo("a b [e f G7 As B H]")
 
         transposedLyrics = ChordsTransposer().transposeLyrics(lyrics, 1)
         key = KeyDetector().detectKey(transposedLyrics)
         assertThat(key).isEqualTo(MajorKey.A_MAJOR)
-        ChordsFormatter(ChordsNotation.GERMAN_IS, key).formatLyrics(transposedLyrics)
+        ChordsRenderer(ChordsNotation.GERMAN_IS, key).formatLyrics(transposedLyrics)
         assertThat(transposedLyrics.displayString()).isEqualTo("a b [f fis Gis7 A H C]")
     }
 
@@ -104,7 +104,7 @@ class ChordsTransposerTest {
         val originalKey = KeyDetector().detectKey(lyrics)
         val newKey = KeyDetector().detectKey(transposedLyrics)
         println("Transposing from $originalKey to $newKey")
-        ChordsFormatter(notation, newKey).formatLyrics(transposedLyrics)
+        ChordsRenderer(notation, newKey).formatLyrics(transposedLyrics)
         return transposedLyrics.displayString()
     }
 
@@ -149,7 +149,7 @@ class ChordsTransposerTest {
         ChordParser(ChordsNotation.GERMAN).parseAndFillChords(lyrics)
         val transposedLyrics = ChordsTransposer().transposeLyrics(lyrics, 0)
         val newKey = KeyDetector().detectKey(transposedLyrics)
-        ChordsFormatter(ChordsNotation.ENGLISH, newKey).formatLyrics(transposedLyrics)
+        ChordsRenderer(ChordsNotation.ENGLISH, newKey).formatLyrics(transposedLyrics)
         assertThat(transposedLyrics.displayString()).isEqualTo("[Em]")
     }
 }

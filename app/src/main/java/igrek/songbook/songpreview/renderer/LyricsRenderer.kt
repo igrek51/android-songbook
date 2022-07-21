@@ -2,9 +2,9 @@ package igrek.songbook.songpreview.renderer
 
 import android.graphics.Typeface
 import android.os.Build
-import igrek.songbook.chords.lyrics.model.LyricsLine
-import igrek.songbook.chords.lyrics.model.LyricsModel
-import igrek.songbook.chords.lyrics.model.LyricsTextType
+import igrek.songbook.chordsv2.model.LyricsLine
+import igrek.songbook.chordsv2.model.LyricsModel
+import igrek.songbook.chordsv2.model.LyricsTextType
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.DisplayStyle
 import igrek.songbook.settings.theme.FontTypeface
@@ -12,7 +12,7 @@ import igrek.songbook.songpreview.renderer.canvas.Align
 
 class LyricsRenderer internal constructor(
     private val canvas: SongPreview,
-    private val lyricsModel: LyricsModel?,
+    private val lyricsModel: LyricsModel,
     fontTypeface: FontTypeface,
     colorScheme: ColorScheme,
     private val displayStyle: DisplayStyle,
@@ -75,7 +75,7 @@ class LyricsRenderer internal constructor(
      */
     fun drawFileContent(fontsize: Float, lineheight: Float) {
         canvas.setFontSize(fontsize)
-        lyricsModel?.lines?.forEachIndexed { lineIndex, line ->
+        lyricsModel.lines.forEachIndexed { lineIndex, line ->
             drawTextLine(line, canvas.scroll, canvas.scrollX, fontsize, lineheight, lineIndex)
         }
     }

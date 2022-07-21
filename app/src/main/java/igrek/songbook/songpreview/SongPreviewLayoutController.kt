@@ -17,7 +17,7 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import igrek.songbook.R
 import igrek.songbook.chords.diagram.ChordsDiagramsService
-import igrek.songbook.chords.lyrics.LyricsLoader
+import igrek.songbook.chordsv2.loader.LyricsLoader
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor

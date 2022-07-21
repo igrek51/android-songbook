@@ -5,7 +5,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.animation.OvershootInterpolator
 import androidx.recyclerview.widget.RecyclerView
-import igrek.songbook.chords.lyrics.model.LyricsModel
+import igrek.songbook.chordsv2.model.LyricsModel
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -41,7 +41,7 @@ class SongPreview(
     private val lyricsThemeService by LazyExtractor(lyricsThemeService)
     private val playlistService by LazyExtractor(playlistService)
 
-    private var lyricsModel: LyricsModel? = null
+    private var lyricsModel: LyricsModel = LyricsModel()
     var scroll: Float = 0f
         private set
     var scrollX: Float = 0f
@@ -101,10 +101,8 @@ class SongPreview(
         }
 
     private val textBottomY: SimpleCache<Float> = SimpleCache {
-        if (lyricsModel == null)
-            return@SimpleCache 0f
-        val lines = lyricsModel?.lines
-        if (lines.isNullOrEmpty())
+        val lines = lyricsModel.lines
+        if (lines.isEmpty())
             return@SimpleCache 0f
         val lineheight = lineheightPx
         lines.size * lineheight + lineheight
@@ -126,7 +124,7 @@ class SongPreview(
         }
 
     private val textRightX: SimpleCache<Float> = SimpleCache {
-        (lyricsModel?.lines?.maxOfOrNull { it.maxRightX() } ?: 0f) * fontsizePx
+        (lyricsModel.lines.maxOfOrNull { it.maxRightX } ?: 0f) * fontsizePx
     }
 
     val scrollThickness: Float
@@ -143,7 +141,7 @@ class SongPreview(
         startScrollX = 0f
         pointersDst0 = null
         fontsize0 = null
-        lyricsModel = null
+        lyricsModel = LyricsModel()
         textBottomY.invalidate()
         textRightX.invalidate()
     }
@@ -311,7 +309,7 @@ class SongPreview(
         }
     }
 
-    fun setLyricsModel(lyricsModel: LyricsModel?) {
+    fun setLyricsModel(lyricsModel: LyricsModel) {
         this.lyricsModel = lyricsModel
         textBottomY.invalidate()
         textRightX.invalidate()

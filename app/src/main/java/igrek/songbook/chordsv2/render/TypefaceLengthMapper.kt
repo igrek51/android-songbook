@@ -1,4 +1,4 @@
-package igrek.songbook.chordsv2.formatter
+package igrek.songbook.chordsv2.render
 
 import igrek.songbook.chordsv2.model.LyricsTextType
 

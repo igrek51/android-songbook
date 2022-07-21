@@ -1,4 +1,4 @@
-package igrek.songbook.chordsv2.formatter
+package igrek.songbook.chordsv2.render
 
 import igrek.songbook.chordsv2.model.*
 import igrek.songbook.chordsv2.parser.ChordParser
@@ -145,7 +145,7 @@ class ChordFormatTest {
             )
         ))
 
-        val formatter = ChordsFormatter(ChordsNotation.ENGLISH)
+        val formatter = ChordsRenderer(ChordsNotation.ENGLISH)
         formatter.formatLyrics(lyrics)
 
         Assertions.assertThat(lyrics.lines[0]).isEqualTo(
@@ -193,7 +193,7 @@ class ChordFormatTest {
     fun test_formatWithKey() {
         val lyrics = LyricsParser().parseLyrics("""text [D/Ab G#m]""".trimIndent())
         ChordParser(ChordsNotation.ENGLISH).parseAndFillChords(lyrics)
-        ChordsFormatter(ChordsNotation.ENGLISH, key = MajorKey.E_MAJOR).formatLyrics(lyrics)
+        ChordsRenderer(ChordsNotation.ENGLISH, key = MajorKey.E_MAJOR).formatLyrics(lyrics)
 
         Assertions.assertThat(lyrics.lines[0]).isEqualTo(
             LyricsLine(
@@ -232,7 +232,7 @@ class ChordFormatTest {
             )
         )
 
-        ChordsFormatter(ChordsNotation.ENGLISH, key = MajorKey.E_FLAT_MAJOR).formatLyrics(lyrics)
+        ChordsRenderer(ChordsNotation.ENGLISH, key = MajorKey.E_FLAT_MAJOR).formatLyrics(lyrics)
         Assertions.assertThat(lyrics.lines[0]).isEqualTo(
             LyricsLine(
                 listOf(

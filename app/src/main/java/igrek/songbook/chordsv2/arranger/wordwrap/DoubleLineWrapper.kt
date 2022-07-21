@@ -1,6 +1,6 @@
 package igrek.songbook.chordsv2.arranger.wordwrap
 
-import igrek.songbook.chordsv2.formatter.TypefaceLengthMapper
+import igrek.songbook.chordsv2.render.TypefaceLengthMapper
 
 class DoubleLineWrapper(
     private val screenWRelative: Float,

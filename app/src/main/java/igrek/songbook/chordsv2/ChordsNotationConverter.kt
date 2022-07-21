@@ -1,7 +1,7 @@
 package igrek.songbook.chordsv2
 
 import igrek.songbook.chordsv2.detect.KeyDetector
-import igrek.songbook.chordsv2.formatter.ChordsFormatter
+import igrek.songbook.chordsv2.render.ChordsRenderer
 import igrek.songbook.chordsv2.model.LyricsFragment
 import igrek.songbook.chordsv2.model.LyricsTextType
 import igrek.songbook.chordsv2.parser.ChordParser
@@ -17,7 +17,7 @@ class ChordsNotationConverter(
         val lyrics = LyricsParser().parseLyrics(input)
         ChordParser(fromNotation).parseAndFillChords(lyrics)
         val key = KeyDetector().detectKey(lyrics)
-        ChordsFormatter(toNotation, key).formatLyrics(lyrics, originalModifiers)
+        ChordsRenderer(toNotation, key).formatLyrics(lyrics, originalModifiers)
         return lyrics.displayString()
     }
 
@@ -25,7 +25,7 @@ class ChordsNotationConverter(
         val unknowns = mutableSetOf<String>()
         val chordFragments = ChordParser(fromNotation).parseSingleChordFragments(chord, unknowns)
         val lyricsFragment = LyricsFragment(chord, LyricsTextType.CHORDS, chordFragments=chordFragments)
-        ChordsFormatter(toNotation).renderLyricsFragment(lyricsFragment, originalModifiers)
+        ChordsRenderer(toNotation).renderLyricsFragment(lyricsFragment, originalModifiers)
         return lyricsFragment.text
     }
 

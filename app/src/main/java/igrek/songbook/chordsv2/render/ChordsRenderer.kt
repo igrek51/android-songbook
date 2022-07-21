@@ -1,10 +1,10 @@
-package igrek.songbook.chordsv2.formatter
+package igrek.songbook.chordsv2.render
 
 import igrek.songbook.chordsv2.model.*
 import igrek.songbook.chordsv2.syntax.MajorKey
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
-class ChordsFormatter (
+class ChordsRenderer (
     private val toNotation: ChordsNotation,
     private val key: MajorKey? = null,
 ) {
