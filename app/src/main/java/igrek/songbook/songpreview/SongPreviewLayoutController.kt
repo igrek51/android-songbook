@@ -1,8 +1,10 @@
 package igrek.songbook.songpreview
 
 import android.annotation.SuppressLint
+import android.graphics.ColorFilter
 import android.graphics.Paint
 import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -98,6 +100,7 @@ class SongPreviewLayoutController(
     private var autoscrollButton: ImageButton? = null
     private var setFavouriteButton: ImageButton? = null
     private var screenShareButton: ImageButton? = null
+    private val originalButtonBackgrounds: MutableMap<Int, Pair<ColorFilter, Drawable>> = mutableMapOf()
 
     val isQuickMenuVisible: Boolean
         get() = quickMenuTranspose.isVisible || quickMenuAutoscroll.isVisible
@@ -199,12 +202,14 @@ class SongPreviewLayoutController(
             text = currentSong?.displayName().orEmpty()
         }
 
-        transposeButton = layout.findViewById<ImageButton>(R.id.transposeButton)?.apply {
-            setOnClickListener { toggleTransposePanel() }
+        transposeButton = layout.findViewById<ImageButton>(R.id.transposeButton)?.also {
+            it.setOnClickListener { toggleTransposePanel() }
+            originalButtonBackgrounds[it.id] = it.colorFilter to it.background
         }
 
-        autoscrollButton = layout.findViewById<ImageButton>(R.id.autoscrollButton)?.apply {
-            setOnClickListener { toggleAutoscrollPanel() }
+        autoscrollButton = layout.findViewById<ImageButton>(R.id.autoscrollButton)?.also {
+            it.setOnClickListener { toggleAutoscrollPanel() }
+            originalButtonBackgrounds[it.id] = it.colorFilter to it.background
         }
 
         setFavouriteButton = layout.findViewById<ImageButton>(R.id.setFavouriteButton)?.apply {
@@ -316,6 +321,10 @@ class SongPreviewLayoutController(
         songPreview?.repaint()
     }
 
+    fun isTransposePanelVisible(): Boolean = quickMenuTranspose.isVisible
+
+    fun isAutoscrollPanelVisible(): Boolean = quickMenuAutoscroll.isVisible
+
     private fun goToBeginning() {
         resetOverlayScroll()
         if ((songPreview?.scroll ?: 0f) == 0f && !autoscrollService.isRunning) {
@@ -376,8 +385,13 @@ class SongPreviewLayoutController(
     }
 
     private fun unhighlightButton(button: ImageButton) {
-        button.clearColorFilter()
-        button.setBackgroundColor(ContextCompat.getColor(activity, R.color.colorPrimary))
+        originalButtonBackgrounds[button.id]?.let { original ->
+            button.colorFilter = original.first
+            button.background = original.second
+        } ?: run {
+            button.clearColorFilter()
+            button.setBackgroundColor(ContextCompat.getColor(activity, R.color.colorPrimary))
+        }
     }
 
     private fun toggleSongFavourite() {
@@ -419,9 +433,15 @@ class SongPreviewLayoutController(
         val lines = stepsDown * 1f
         val dy: Float = lines * (songPreview?.lineheightPx ?: 0f)
         overlayScrollView?.smoothScrollBy(0, dy.toInt())
-        if (stepsDown < 0 && (songPreview?.scroll ?: 0f) <= 0f)
-            return false
-        return true
+        return when {
+            stepsDown < 0 && !canScrollUp() -> false
+            stepsDown > 0 && !canScrollDown() -> false
+            else -> true
+        }
+    }
+
+    fun canScrollUp(): Boolean {
+        return (songPreview?.scroll ?: 0f) > 1f
     }
 
     fun canScrollDown(): Boolean {

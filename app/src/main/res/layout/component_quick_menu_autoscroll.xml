@@ -5,7 +5,9 @@
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingBottom="46dp">
+    android:paddingBottom="46dp"
+    android:descendantFocusability="afterDescendants"
+    >
 
     <androidx.cardview.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"

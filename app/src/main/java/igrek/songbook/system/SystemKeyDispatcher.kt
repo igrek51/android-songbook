@@ -119,23 +119,23 @@ class SystemKeyDispatcher(
     }
 
     private fun onArrowLeft(): Boolean {
+        if (nextFocusTraverser.moveToNextView(nextFocusTraverser::nextLeftView))
+            return true
+
         if (layoutController.isState(SongPreviewLayoutController::class))
             if (playlistService.goToNextOrPrevious(-1))
                 return true
-
-        if (nextFocusTraverser.moveToNextView(nextFocusTraverser::nextLeftView))
-            return true
 
         return false
     }
 
     private fun onArrowRight(): Boolean {
+        if (nextFocusTraverser.moveToNextView(nextFocusTraverser::nextRightView))
+            return true
+
         if (layoutController.isState(SongPreviewLayoutController::class))
             if (playlistService.goToNextOrPrevious(+1))
                 return true
-
-        if (nextFocusTraverser.moveToNextView(nextFocusTraverser::nextRightView))
-            return true
 
         return false
     }
