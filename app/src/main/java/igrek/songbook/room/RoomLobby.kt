@@ -9,12 +9,10 @@ import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.room.protocol.*
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.util.*
 
+@OptIn(DelicateCoroutinesApi::class)
 class RoomLobby(
         bluetoothService: LazyInject<BluetoothService> = appFactory.bluetoothService,
 ) {
@@ -34,7 +32,7 @@ class RoomLobby(
 
     var updateMembersCallback: (List<PeerClient>) -> Unit = {}
     var newChatMessageCallback: (ChatMessage) -> Unit = {}
-    var onOpenSong: (song: Song) -> Unit = {}
+    var onOpenSong: (song: Song, updated: Boolean) -> Unit = { _, _ -> }
     var onRoomLobbyIntroduced: (roomName: String, withPassword: Boolean) -> Unit = { _, _ -> }
     var onRoomWrongPassword: () -> Unit = {}
     var onRoomWelcomedSuccessfully: () -> Unit = {}
@@ -166,10 +164,12 @@ class RoomLobby(
             }
             is DisconnectMsg -> controller.onMasterDisconnect(null)
             is SelectSongMsg -> GlobalScope.launch {
-                currentSong = buildEphemeralSong(msg.song)
+                val newSong = buildEphemeralSong(msg.song)
+                val updated = !areSongsTheSame(currentSong, newSong)
+                currentSong = newSong
                 logger.info("fetched song: ${msg.song.categoryName} - ${msg.song.title}")
                 currentSong?.let {
-                    onOpenSong(it)
+                    onOpenSong(it, updated)
                 }
             }
             is RoomStatusMsg -> {
@@ -227,6 +227,15 @@ class RoomLobby(
                 chordsNotation = song.chordsNotation ?: ChordsNotation.default,
                 content = song.content.orEmpty(),
         )
+    }
+
+    private fun areSongsTheSame(oldSong: Song?, newSong: Song?): Boolean {
+        if (oldSong == null || newSong == null)
+            return false
+        return oldSong.title == newSong.title
+                && oldSong.content == newSong.content
+                && oldSong.customCategoryName == newSong.customCategoryName
+                && oldSong.chordsNotation == newSong.chordsNotation
     }
 
 }

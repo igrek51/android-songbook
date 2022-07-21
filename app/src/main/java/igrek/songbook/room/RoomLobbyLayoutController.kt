@@ -200,8 +200,15 @@ class RoomLobbyLayoutController(
         ))
     }
 
-    private fun onOpenSong(song: Song) {
-        if (isLayoutVisible() || layoutController.isState(SongPreviewLayoutController::class)) {
+    private fun onOpenSong(song: Song, updated: Boolean) {
+        val openSong = when {
+            isLayoutVisible() -> true
+            layoutController.isState(SongPreviewLayoutController::class) -> {
+                updated
+            }
+            else -> false
+        }
+        if (openSong) {
             GlobalScope.launch {
                 songOpener.openSongPreview(song)
             }
