@@ -195,4 +195,11 @@ class ChordsParserTest {
         val unkonwns = ChordParser(ChordsNotation.ENGLISH).parseAndFillChords(lyrics)
         assertThat(unkonwns).isEqualTo(setOf("a", "dupa"))
     }
+
+    @Test
+    fun test_parseGeneralChord() {
+        val chord: GeneralChord? = ChordParser(ChordsNotation.ENGLISH).parseGeneralChord("Caug7")
+        assertThat(chord?.baseChord?.noteIndex).isEqualTo(Note.C.index)
+        assertThat(chord?.baseChord?.suffix).isEqualTo("aug7")
+    }
 }

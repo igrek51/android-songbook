@@ -787,7 +787,7 @@ val allPianoChordsNames: Map<String, List<String>> by lazy {
     val notes = listOf(
         "C", "C#", "Db", "D", "D#", "Eb", "E", "E#", "F", "F#", "Gb", "G", "G#", "Ab", "A", "A#", "Bb", "B", "Cb",
     )
-    val suffixes = PianoChordDiagramBuilder.supportedSuffixes + ""
+    val suffixes = PianoChordDiagramBuilder.chordTypeSequences.keys
     val diagrams = hashMapOf<String, List<String>>()
     notes.forEach { note ->
         suffixes.forEach { suffix ->

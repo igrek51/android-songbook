@@ -22,7 +22,7 @@ import igrek.songbook.chords.model.LyricsModel
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
-import igrek.songbook.info.logger.LoggerFactory.logger
+import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -57,6 +57,8 @@ class ChordDiagramsService(
     private val chordsNotationService by LazyExtractor(chordsNotationService)
     private val preferencesState by LazyExtractor(preferencesState)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
+
+    private val logger = LoggerFactory.logger
 
     fun showLyricsChordsMenu(lyrics: LyricsModel) {
         val uniqueChords = UniqueChordsFinder().findUniqueChordNamesInLyrics(lyrics)

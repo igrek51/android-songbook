@@ -6,6 +6,7 @@ import android.graphics.Paint
 import igrek.songbook.chords.diagram.DrawableChordDiagramBuilder
 import igrek.songbook.chords.model.GeneralChord
 import igrek.songbook.chords.parser.ChordParser
+import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import java.lang.Integer.max
 
@@ -20,17 +21,22 @@ class PianoChordDiagramBuilder : DrawableChordDiagramBuilder {
     private val colorBlack: Int = (0xFF000000).toInt()
     private val colorMarked: Int = (0xFFBF5751).toInt()
 
+    private val logger = LoggerFactory.logger
+
     override fun buildDiagram(engChord: String): Bitmap? {
 
-        val chord: GeneralChord = ChordParser(ChordsNotation.ENGLISH).parseGeneralChord(engChord) ?: return null
+        val chord: GeneralChord? = ChordParser(ChordsNotation.ENGLISH).parseGeneralChord(engChord)
+        if (chord == null) {
+            logger.warn("$engChord is not a valid english chord")
+            return null
+        }
+        val markedNotes = evaluateChordNotes(chord)
+        if (markedNotes.isEmpty()) {
+            logger.warn("$engChord has unsupported suffix")
+            return null
+        }
 
-        val baseNoteIndex = chord.baseChord.noteIndex
-
-        val notes = setOf(0, 4, 6, 7)
-
-        val minNote = 0
-        val maxNote: Int = notes.maxOf { it }
-
+        val maxNote: Int = markedNotes.maxOf { it }
         val octaves: Int = max(1, (maxNote - 1) / 12 + 1)
         val whiteKeysVisible = octaves * 7 + 1
         val width = whiteKeysVisible * whiteKeyWidthPx
@@ -43,9 +49,25 @@ class PianoChordDiagramBuilder : DrawableChordDiagramBuilder {
         paint.color = colorWhite
         canvas.drawPaint(paint)
 
-        drawKeys(canvas, notes, octaves)
+        drawKeys(canvas, markedNotes, octaves)
 
         return bitmap
+    }
+
+    private fun evaluateChordNotes(chord: GeneralChord): Set<Int> {
+        val notes = mutableSetOf<Int>()
+        val baseNote = chord.baseChord.noteIndex
+        notes.add(baseNote)
+
+        var suffix = chord.baseChord.suffix
+        if (chord.baseChord.minor)
+           suffix = "m$suffix"
+
+        val sequence = chordTypeSequences[suffix] ?: return emptySet()
+        sequence.forEach { offset ->
+            notes.add(baseNote + offset)
+        }
+        return notes
     }
 
     private fun drawKeys(canvas: Canvas, markedNotes: Set<Int>, octaves: Int) {
@@ -99,7 +121,7 @@ class PianoChordDiagramBuilder : DrawableChordDiagramBuilder {
         val left = whiteKeyWidthPx * whiteIndex
         val right = left + whiteKeyWidthPx
         val top = 0
-        val bottom = diagramHeightPx
+        val bottom = diagramHeightPx - 1
         canvas.drawRect(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat(), paint)
     }
 
@@ -144,85 +166,58 @@ class PianoChordDiagramBuilder : DrawableChordDiagramBuilder {
     }
 
     companion object {
-        val supportedSuffixes = setOf(
-            "+",
-            "-",
-            "-5",
-            "-dur",
-            "-moll",
-            "0",
-            "11",
-            "11b9",
-            "13",
-            "13#11",
-            "13b9",
-            "2",
-            "4",
-            "4-3",
-            "5",
-            "5+",
-            "6",
-            "6+",
-            "6-",
-            "6-4",
-            "6add9",
-            "6add11",
-            "7",
-            "7#5",
-            "7#9",
-            "7(#5,#9)",
-            "7(#5,b9)",
-            "7(b5,#9)",
-            "7(b5,b9)",
-            "7+",
-            "7/5+",
-            "7/5-",
-            "7b5",
-            "7b9",
-            "7sus2",
-            "7sus4",
-            "9",
-            "9#5",
-            "9b5",
-            "9sus4",
-            "add11",
-            "add2",
-            "add9",
-            "aug",
-            "b",
-            "dim",
-            "dim7",
-            "m",
-            "m+",
-            "m11",
-            "m13",
-            "m5+",
-            "m6",
-            "m6+",
-            "m6add9",
-            "m7",
-            "M7",
-            "m7#5",
-            "m7+",
-            "m7/5-",
-            "m7b5",
-            "m9",
-            "madd2",
-            "madd9",
-            "maj11",
-            "maj13",
-            "maj13#11",
-            "maj7",
-            "maj7#5",
-            "maj7b5",
-            "maj9",
-            "maj9#11",
-            "mmaj7",
-            "mmaj9",
-            "sus2",
-            "sus2sus4",
-            "sus4",
-            "sus",
+        val chordTypeSequences: Map<String, List<Int>> = mapOf(
+            "" to listOf(0, 4, 7), // Major
+            "m" to listOf(0, 3, 7), // minor
+            "7" to listOf(0, 4, 7, 10),
+            "m7" to listOf(0, 3, 7, 10),
+            "maj7" to listOf(0, 4, 7, 11),
+            "6" to listOf(0, 4, 7, 9),
+            "5" to listOf(0, 7),
+            "sus2" to listOf(0, 2, 7),
+            "sus4" to listOf(0, 5, 7),
+            "dim" to listOf(0, 3, 6),
+            "0" to listOf(0, 3, 6),
+            "aug" to listOf(0, 4, 8),
+            "add2" to listOf(0, 2, 4, 7),
+            "mM7" to listOf(0, 3, 7, 11),
+            "mMaj7" to listOf(0, 3, 7, 11),
+            "m(M7)" to listOf(0, 3, 7, 11),
+            "m6" to listOf(0, 3, 7, 9),
+            "6/9" to listOf(0, 4, 7, 9, 14),
+            "6add9" to listOf(0, 4, 7, 9, 14),
+            "9" to listOf(0, 4, 7, 10, 14),
+            "m9" to listOf(0, 3, 7, 10, 14),
+            "maj9" to listOf(0, 4, 7, 11, 14),
+            "11" to listOf(0, 4, 7, 10, 14, 17),
+            "m11" to listOf(0, 3, 7, 10, 14, 17),
+            "13" to listOf(0, 4, 7, 10, 14, 17, 21),
+            "m13" to listOf(0, 3, 7, 10, 14, 17, 21),
+            "maj13" to listOf(0, 4, 7, 11, 14, 21),
+            "add9" to listOf(0, 4, 7, 14),
+            "add11" to listOf(0, 4, 7, 17),
+            "add4" to listOf(0, 4, 5, 7),
+            "7-5" to listOf(0, 4, 6, 10),
+            "7b5" to listOf(0, 4, 6, 10),
+            "7+5" to listOf(0, 4, 8, 10),
+            "7#5" to listOf(0, 4, 8, 10),
+            "7sus4" to listOf(0, 5, 7, 10),
+            "9sus4" to listOf(0, 5, 7, 10),
+            "dim7" to listOf(0, 3, 6, 9),
+            "07" to listOf(0, 3, 6, 9),
+            "m7b5" to listOf(0, 3, 6, 10),
+            "m7(b5)" to listOf(0, 3, 6, 10),
+            "m7-b5" to listOf(0, 3, 6, 10),
+            "aug" to listOf(0, 4, 8),
+            "+" to listOf(0, 4, 8),
+            "aug7" to listOf(0, 4, 8, 10),
+            "+7" to listOf(0, 4, 8, 10),
+            "7+" to listOf(0, 4, 8, 10),
+            "7#5" to listOf(0, 4, 8, 10),
+            "mM9" to listOf(0, 3, 7, 11, 14),
+            "mMaj9" to listOf(0, 3, 7, 11, 14),
+            "m6/9" to listOf(0, 3, 7, 9, 14),
+            "m6add9" to listOf(0, 3, 7, 9, 14),
         )
     }
 
