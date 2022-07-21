@@ -40,7 +40,7 @@ data class Chord (
 
         var note = indexToNote(noteIndex, key, forceModifier)
         if (forceSharps)
-            note = convertToSharp(note)
+            note = convertToSharp(note, notation)
 
         val baseNote = ChordNames.formatNoteName(notation, note, minor)
         return baseNote + suffix

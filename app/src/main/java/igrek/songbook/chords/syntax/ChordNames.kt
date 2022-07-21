@@ -28,7 +28,7 @@ class ChordNames {
                 listOf("D"),
                 listOf("Dis", "Eb", "Es", "D#"),
                 listOf("E"),
-                listOf("F", "E#", "Eis"),
+                listOf("F", "Eis", "E#"),
                 listOf("Fis", "Gb", "Ges", "F#"),
                 listOf("G"),
                 listOf("Gis", "Ab", "As", "G#"),
@@ -49,6 +49,34 @@ class ChordNames {
                 listOf("A"),
                 listOf("Bb", "A#"),
                 listOf("B", "Cb"),
+            ),
+            ChordsNotation.DUTCH to listOf(
+                listOf("C"),
+                listOf("Cis", "Des", "C#", "Db"),
+                listOf("D"),
+                listOf("Dis", "Es", "D#", "Eb"),
+                listOf("E"),
+                listOf("F", "Eis", "E#"),
+                listOf("Fis", "Ges", "F#", "Gb"),
+                listOf("G"),
+                listOf("Gis", "As", "G#", "Ab"),
+                listOf("A"),
+                listOf("Bes", "Ais", "Bb", "A#"),
+                listOf("B", "Ces", "Cb"),
+            ),
+            ChordsNotation.JAPANESE to listOf(
+                listOf("Ha"),
+                listOf("Ei-ha", "Hen-ni"),
+                listOf("Ni"),
+                listOf("Ei-ni", "Hen-ho"),
+                listOf("Ho"),
+                listOf("He", "Ei-ho"),
+                listOf("Ei-he", "Hen-to"),
+                listOf("To"),
+                listOf("Ei-to", "Hen-i"),
+                listOf("I"),
+                listOf("Hen-ro", "Ei-i"),
+                listOf("Ro", "Hen-ha"),
             ),
             ChordsNotation.SOLFEGE to listOf(
                 listOf("Do", "DO"),
@@ -109,6 +137,34 @@ class ChordNames {
                 listOf("Bbm", "A#m"),
                 listOf("Bm", "Cbm"),
             ),
+            ChordsNotation.DUTCH to listOf(
+                listOf("Cm"),
+                listOf("Cism", "Desm", "C#m", "Dbm"),
+                listOf("Dm"),
+                listOf("Dism", "Esm", "D#m", "Ebm"),
+                listOf("Em"),
+                listOf("Fm", "Eism", "E#m"),
+                listOf("Fism", "Gesm", "F#m", "Gbm"),
+                listOf("Gm"),
+                listOf("Gism", "Asm", "G#m", "Abm"),
+                listOf("Am"),
+                listOf("Besm", "Aism", "Bbm", "A#m"),
+                listOf("Bm", "Cesm", "Cbm"),
+            ),
+            ChordsNotation.JAPANESE to listOf(
+                listOf("Ham"),
+                listOf("Ei-ham", "Hen-nim"),
+                listOf("Nim"),
+                listOf("Ei-nim", "Hen-hom"),
+                listOf("Hom"),
+                listOf("Hem", "Ei-hom"),
+                listOf("Ei-hem", "Hen-tom"),
+                listOf("Tom"),
+                listOf("Ei-tom", "Hen-im"),
+                listOf("Im"),
+                listOf("Hen-rom", "Ei-im"),
+                listOf("Rom", "Hen-ham"),
+            ),
             ChordsNotation.SOLFEGE to listOf(
                 listOf("Dom", "DOm"),
                 listOf("Do#m", "DO#m", "Rebm", "REbm"),
@@ -138,6 +194,14 @@ class ChordNames {
                 "C#", "D#", "E#", "F#", "G#", "A#",
                 "C#m", "D#m", "E#m", "F#m", "G#m", "A#m",
             ),
+            ChordsNotation.DUTCH to setOf(
+                "C#", "Cis", "D#", "Dis", "E#", "Eis", "F#", "Fis", "G#", "Gis", "A#", "Ais",
+                "C#m", "Cism", "D#m", "Dism", "E#m", "Eism", "F#m", "Fism", "G#m", "Gism", "A#m", "Aism",
+            ),
+            ChordsNotation.JAPANESE to setOf(
+                "Ei-ha", "Ei-ni", "Ei-ho", "Ei-he", "Ei-to", "Ei-i",
+                "Ei-ham", "Ei-nim", "Ei-hom", "Ei-hem", "Ei-tom", "Ei-im",
+            ),
             ChordsNotation.SOLFEGE to setOf(
                 "Do#", "DO#", "Re#", "RE#", "Mi#", "MI#", "Fa#", "FA#", "Sol#", "SOL#", "La#", "LA#",
                 "Do#m", "DO#m", "Re#m", "RE#m", "Mi#m", "MI#m", "Fa#m", "FA#m", "Sol#m", "SOL#m", "La#m", "LA#m",
@@ -156,6 +220,14 @@ class ChordNames {
             ChordsNotation.ENGLISH to setOf(
                 "Db", "Eb", "Gb", "Ab", "Bb", "Cb",
                 "Dbm", "Ebm", "Gbm", "Abm", "Bbm", "Cbm",
+            ),
+            ChordsNotation.DUTCH to setOf(
+                "Db", "Des", "Eb", "Es", "Gb", "Ges", "Ab", "As", "Bb", "Bes", "Cb", "Ces",
+                "Dbm", "Desm", "Ebm", "Esm", "Gbm", "Gesm", "Abm", "Asm", "Bbm", "Besm", "Cbm", "Cesm",
+            ),
+            ChordsNotation.JAPANESE to setOf(
+                "Hen-ni", "Hen-ho", "Hen-to", "Hen-i", "Hen-ro", "Hen-ha",
+                "Hen-nim", "Hen-hom", "Hen-tom", "Hen-im", "Hen-rom", "Hen-ham",
             ),
             ChordsNotation.SOLFEGE to setOf(
                 "Reb", "REb", "Mib", "MIb", "Solb", "SOLb", "Lab", "LAb", "Sib", "SIb", "Dob", "DOb",
@@ -177,10 +249,8 @@ class ChordNames {
                 "cb", "c#b", "dbb", "desb", "cisb", "d#b", "ebb", "esb", "disb", "fb", "f#b", "gbb", "gesb", "fisb", "g#b", "abb", "asb", "gisb", "bb", "a#b", "aisb", "hb",
                 "cm", "c#m", "dbm", "desm", "cism", "dm", "d#m", "ebm", "esm", "dism", "em", "fm", "f#m", "gbm", "gesm", "fism", "gm", "g#m", "abm", "asm", "gism", "am", "bm", "a#m", "aism", "hm",
             ),
-            ChordsNotation.ENGLISH to setOf(
-            ),
-            ChordsNotation.SOLFEGE to setOf(
-            ),
+            ChordsNotation.ENGLISH to setOf(),
+            ChordsNotation.SOLFEGE to setOf(),
         )
 
         fun formatNoteName(notation: ChordsNotation, note: Note, minor: Boolean): String {
@@ -294,6 +364,60 @@ class ChordNames {
                         Note.B_FLAT -> "Bb"
                         Note.B -> "B"
                         Note.C_FLAT -> "Cb"
+                    }
+                    when (minor) {
+                        false -> baseNote
+                        true -> baseNote + "m"
+                    }
+                }
+                ChordsNotation.DUTCH -> {
+                    val baseNote = when (note) {
+                        Note.C -> "C"
+                        Note.C_SHARP -> "Cis"
+                        Note.D_FLAT -> "Des"
+                        Note.D -> "D"
+                        Note.D_SHARP -> "Dis"
+                        Note.E_FLAT -> "Es"
+                        Note.E -> "E"
+                        Note.E_SHARP -> "Eis"
+                        Note.F -> "F"
+                        Note.F_SHARP -> "Fis"
+                        Note.G_FLAT -> "Ges"
+                        Note.G -> "G"
+                        Note.G_SHARP -> "Gis"
+                        Note.A_FLAT -> "Aa"
+                        Note.A -> "A"
+                        Note.A_SHARP -> "Ais"
+                        Note.B_FLAT -> "Bes"
+                        Note.B -> "B"
+                        Note.C_FLAT -> "Ces"
+                    }
+                    when (minor) {
+                        false -> baseNote
+                        true -> baseNote + "m"
+                    }
+                }
+                ChordsNotation.JAPANESE -> {
+                    val baseNote = when (note) {
+                        Note.C -> "Ha"
+                        Note.C_SHARP -> "Ei-ha"
+                        Note.D_FLAT -> "Hen-ni"
+                        Note.D -> "Ni"
+                        Note.D_SHARP -> "Ei-ni"
+                        Note.E_FLAT -> "Hen-ho"
+                        Note.E -> "Ho"
+                        Note.E_SHARP -> "Ei-ho"
+                        Note.F -> "He"
+                        Note.F_SHARP -> "Ei-he"
+                        Note.G_FLAT -> "Hen-to"
+                        Note.G -> "To"
+                        Note.G_SHARP -> "Ei-to"
+                        Note.A_FLAT -> "Hen-i"
+                        Note.A -> "I"
+                        Note.A_SHARP -> "Ei-i"
+                        Note.B_FLAT -> "Hen-ro"
+                        Note.B -> "Ro"
+                        Note.C_FLAT -> "Hen-ha"
                     }
                     when (minor) {
                         false -> baseNote

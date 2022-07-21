@@ -11,9 +11,9 @@ import igrek.songbook.settings.preferences.PreferencesState
 import java.util.*
 
 class ChordsNotationService(
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
-        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val appLanguageService by LazyExtractor(appLanguageService)
@@ -26,8 +26,23 @@ class ChordsNotationService(
         }
 
     private val germanNotationLangs = setOf(
-            "pl", "de", "da", "sv", "nb", "nn", "is", "et",
-            "sr", "hr", "bs", "sl", "sk", "cs", "hu"
+        "pl", // Poland
+        "de", // German - Austria, Germany
+        "da", // Denmark
+        "sv", // Swedish
+        "no", // Norwegian
+        "nb", // Norwegian - Bokml
+        "nn", // Norwegian Nynorsk
+        "is", // Icelandic
+        "et", // Estonian
+        "fi", // Finnish
+        "sr", // Serbian
+        "hr", // Croatian
+        "bs", // Bosnian
+        "sl", // Slovenian
+        "sk", // Slovak
+        "cs", // Czech
+        "hu", // Hungarian
     )
 
     fun setDefaultChordsNotation() {
@@ -36,7 +51,7 @@ class ChordsNotationService(
         val current: Locale = appLanguageService.getCurrentLocale()
         val lang = current.language
 
-        chordsNotation = if (germanNotationLangs.contains(lang)) {
+        chordsNotation = if (lang in germanNotationLangs) {
             ChordsNotation.GERMAN
         } else {
             ChordsNotation.ENGLISH

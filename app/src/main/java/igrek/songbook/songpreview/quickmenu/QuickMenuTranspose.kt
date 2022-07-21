@@ -93,11 +93,11 @@ class QuickMenuTranspose(
         val notation = preferencesState.chordsNotation
         val forceSharps = preferencesState.forceSharpNotes
         val baseMajorNote = when(forceSharps) {
-            true -> convertToSharp(key.baseMajorNote)
+            true -> convertToSharp(key.baseMajorNote, notation)
             false -> key.baseMajorNote
         }
         val baseMinorNote = when(forceSharps) {
-            true -> convertToSharp(key.baseMinorNote)
+            true -> convertToSharp(key.baseMinorNote, notation)
             false -> key.baseMinorNote
         }
         val majorNoteName = ChordNames.formatNoteName(notation, baseMajorNote, false)
