@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
+import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -124,10 +125,8 @@ class SongsUpdater(
                 }
             }
         } catch (e: Throwable) {
-            logger.error("Failed saving new db: ${e.message}")
-            Handler(Looper.getMainLooper()).post {
-                uiInfoService.showInfo(R.string.connection_error, indefinite = true)
-            }
+            logger.error("Downloading new database failed: ${e.message}")
+            UiErrorHandler().handleError(RuntimeException("Downloading new database failed: ${e.message}"), R.string.error_communication_breakdown)
         }
     }
 
@@ -152,9 +151,7 @@ class SongsUpdater(
 
     private fun onErrorReceived(errorMessage: String?) {
         logger.error("Connection error: $errorMessage")
-        Handler(Looper.getMainLooper()).post {
-            uiInfoService.showInfo(R.string.connection_error, indefinite = true)
-        }
+        UiErrorHandler().handleError(RuntimeException("Connection error: $errorMessage"), R.string.error_communication_breakdown)
     }
 
     private fun showUpdateIsAvailable() {
