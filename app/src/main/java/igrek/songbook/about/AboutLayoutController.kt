@@ -41,10 +41,10 @@ class AboutLayoutController(
         val title = uiResourceService.resString(R.string.nav_about)
 
         val variant = when {
-            BuildConfig.DEBUG -> " debug"
-            else -> ""
+            BuildConfig.DEBUG -> "debug "
+            else -> "release "
         }
-        val appVersionLong = "$appVersionCode ${buildDate}$variant"
+        val appVersionLong = "${variant}$appVersionCode $buildDate"
         val message = uiResourceService.resString(R.string.ui_about_content, appVersionName, appVersionLong, dbVersionNumber)
 
         showDialogWithActions(title, message)

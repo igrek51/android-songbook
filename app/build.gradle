@@ -18,7 +18,7 @@ def getVersionCode = { ->
 def getVersionName = { ->
     def stdout = new ByteArrayOutputStream()
     exec {
-        commandLine 'git', 'describe', '--tags', '--dirty'
+        commandLine 'git', 'describe', '--long', '--tags', '--dirty', '--always'
         standardOutput = stdout
     }
     return stdout.toString().trim()
@@ -26,7 +26,6 @@ def getVersionName = { ->
 
 android {
     compileSdkVersion 31
-
     defaultConfig {
         applicationId "igrek.songbook"
         minSdkVersion 19
@@ -36,12 +35,26 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
+    signingConfigs {
+        release {
+            def propsFile = rootProject.file('.keystore.properties')
+            if (propsFile.exists()) {
+                def props = new Properties()
+                props.load(new FileInputStream(propsFile))
+                storeFile = file(props['storeFile'])
+                storePassword = props['storePassword']
+                keyAlias = props['keyAlias']
+                keyPassword = props['keyPassword']
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "java.util.Date", "BUILD_DATE", "new java.util.Date(" + System.currentTimeMillis() + "L)"
+            signingConfig signingConfigs.release
         }
         debug {
             minifyEnabled false
@@ -91,7 +104,7 @@ dependencies {
     implementation 'androidx.activity:activity-ktx:1.5.0'
     implementation 'androidx.work:work-runtime:2.7.1'
     // Firebase
-    implementation 'com.google.firebase:firebase-analytics-ktx:21.0.0'
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.1.0'
     implementation 'com.google.firebase:firebase-crashlytics:18.2.11'
     // Google APIs
     implementation('com.google.api-client:google-api-client-android:1.35.2') {
@@ -146,7 +159,7 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.4.0'
-    androidTestImplementation 'org.mockito:mockito-core:2.22.0'
+    androidTestImplementation 'org.mockito:mockito-core:2.28.2'
     androidTestImplementation 'org.mockito:mockito-android:2.22.0'
-    androidTestImplementation 'org.assertj:assertj-core:3.16.1'
+    androidTestImplementation 'org.assertj:assertj-core:3.23.1'
 }
