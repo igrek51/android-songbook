@@ -7,6 +7,7 @@ import android.text.InputType
 import android.view.LayoutInflater
 import android.widget.EditText
 import android.widget.TextView
+import android.view.WindowManager.LayoutParams
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.auth0.android.jwt.JWT
@@ -221,7 +222,9 @@ class SecretCommandService(
         dlgAlert.setPositiveButton(actionCheck) { _, _ -> commandAttempt(input.text.toString()) }
         dlgAlert.setNegativeButton(uiResourceService.resString(R.string.action_cancel)) { _, _ -> }
         dlgAlert.setCancelable(true)
-        dlgAlert.create().show()
+        val dialog = dlgAlert.create()
+        dialog.window?.setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
 
         input.requestFocus()
         Handler(Looper.getMainLooper()).post {

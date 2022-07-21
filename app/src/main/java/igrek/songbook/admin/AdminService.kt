@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Handler
 import android.os.Looper
 import android.text.InputType
+import android.view.WindowManager
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import igrek.songbook.R
@@ -101,7 +102,9 @@ class AdminService(
         }
         dlgAlert.setNegativeButton(uiResourceService.resString(R.string.action_cancel)) { _, _ -> }
         dlgAlert.setCancelable(true)
-        dlgAlert.create().show()
+        val dialog = dlgAlert.create()
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
 
         input.requestFocus()
         Handler(Looper.getMainLooper()).post {
@@ -125,7 +128,9 @@ class AdminService(
         }
         dlgAlert.setNegativeButton(uiResourceService.resString(R.string.action_cancel)) { _, _ -> }
         dlgAlert.setCancelable(true)
-        dlgAlert.create().show()
+        val dialog = dlgAlert.create()
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        dialog.show()
 
         input.requestFocus()
         Handler(Looper.getMainLooper()).post {

@@ -14,12 +14,8 @@ class SoftKeyboardService(
 ) {
     private val activity by LazyExtractor(appCompatActivity)
 
-    private val imm: InputMethodManager?
+    private val imm: InputMethodManager? = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
     private val logger = LoggerFactory.logger
-
-    init {
-        imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-    }
 
     fun hideSoftKeyboard(view: View?) {
         if (imm == null) {
