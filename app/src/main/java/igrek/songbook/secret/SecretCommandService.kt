@@ -13,6 +13,7 @@ import com.auth0.android.jwt.JWT
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.admin.AdminService
+import igrek.songbook.billing.BillingLayoutController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.analytics.CrashlyticsLogger
@@ -21,12 +22,14 @@ import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.ad.AdService
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.system.PermissionService
 import igrek.songbook.system.SoftKeyboardService
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -34,18 +37,20 @@ import java.io.BufferedReader
 import java.io.File
 
 
+@OptIn(DelicateCoroutinesApi::class)
 class SecretCommandService(
-        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-        softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
-        preferencesService: LazyInject<PreferencesService> = appFactory.preferencesService,
-        adminService: LazyInject<AdminService> = appFactory.adminService,
-        adService: LazyInject<AdService> = appFactory.adService,
-        permissionService: LazyInject<PermissionService> = appFactory.permissionService,
-        localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
-        activityController: LazyInject<ActivityController> = appFactory.activityController,
+    appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
+    preferencesService: LazyInject<PreferencesService> = appFactory.preferencesService,
+    adminService: LazyInject<AdminService> = appFactory.adminService,
+    adService: LazyInject<AdService> = appFactory.adService,
+    permissionService: LazyInject<PermissionService> = appFactory.permissionService,
+    localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
+    activityController: LazyInject<ActivityController> = appFactory.activityController,
+    layoutController: LazyInject<LayoutController> = appFactory.layoutController,
 ) {
     private val activity by LazyExtractor(appCompatActivity)
     private val uiResourceService by LazyExtractor(uiResourceService)
@@ -58,79 +63,91 @@ class SecretCommandService(
     private val permissionService by LazyExtractor(permissionService)
     private val localDbService by LazyExtractor(localDbService)
     private val activityController by LazyExtractor(activityController)
+    private val layoutController by LazyExtractor(layoutController)
 
     private val logger = LoggerFactory.logger
 
     private val cmdRules: List<CommandRule> by lazy {
         listOf(
-                CommandRule({
-                    it.matches("^m[ou]+$".toRegex())
-                }) { showCowSuperPowers() },
-                SimplifiedKeyRule("dupa", "okon") { showCowSuperPowers() },
-                SimplifiedKeyRule("lich", "lisz") { toast("\"Trup tu tupta...\"") },
+            CommandRule({
+                it.matches("^m[ou]+$".toRegex())
+            }) { showCowSuperPowers() },
+            SimplifiedKeyRule("dupa", "okon") { showCowSuperPowers() },
 
-                SimplifiedKeyRule("engineer", "inzynier") { unlockSongs("engineer") },
+            SimplifiedKeyRule("engineer", "inzynier") { unlockSongs("engineer") },
 
-                ExactKeyRule("reset") {
-                    this.songsRepository.factoryReset()
-                    this.preferencesService.clear()
-                },
-                ExactKeyRule("reset config") { this.preferencesService.clear() },
-                ExactKeyRule("reset db") { this.songsRepository.factoryReset() },
-                ExactKeyRule("reset db general") {
-                    this.songsRepository.resetGeneralData()
-                    this.songsRepository.reloadSongsDb()
-                },
-                ExactKeyRule("reset db user") {
-                    this.songsRepository.resetUserData()
-                    this.songsRepository.reloadSongsDb()
-                },
-                ExactKeyRule("reload db user") {
-                    this.songsRepository.reloadSongsDb()
-                },
+            ExactKeyRule("reset") {
+                this.songsRepository.factoryReset()
+                this.preferencesService.clear()
+            },
+            ExactKeyRule("reset config") { this.preferencesService.clear() },
+            ExactKeyRule("reset db") { this.songsRepository.factoryReset() },
+            ExactKeyRule("reset db general") {
+                this.songsRepository.resetGeneralData()
+                this.songsRepository.reloadSongsDb()
+            },
+            ExactKeyRule("reset db user") {
+                this.songsRepository.resetUserData()
+                this.songsRepository.reloadSongsDb()
+            },
+            ExactKeyRule("reload db user") {
+                this.songsRepository.reloadSongsDb()
+            },
 
-                ExactKeyRule("firebase crashme") {
-                    logger.error(IllegalArgumentException("real reason"))
-                    throw RuntimeException("deliberate disaster")
-                },
-                ExactKeyRule("firebase error") {
-                    logger.error(IllegalArgumentException("real reason"))
-                    logger.error("error log")
-                    CrashlyticsLogger().sendCrashlytics()
-                },
+            ExactKeyRule("firebase crashme") {
+                logger.error(IllegalArgumentException("real reason"))
+                throw RuntimeException("deliberate disaster")
+            },
+            ExactKeyRule("firebase error") {
+                logger.error(IllegalArgumentException("real reason"))
+                logger.error("error log")
+                CrashlyticsLogger().sendCrashlytics()
+            },
 
-                ExactKeyRule("ad show") { this.adService.enableAds() },
+            ExactKeyRule("ad show") { this.adService.enableAds() },
 
-                ExactKeyRule("grant permission files") {
-                    this.permissionService.isStoragePermissionGranted
-                },
+            ExactKeyRule("grant permission files") {
+                this.permissionService.isStoragePermissionGranted
+            },
 
-                CommandRule({ it.trim().matches(encodedSecretRegex) }) {
-                    decodeSecretKeys(it)
-                },
+            CommandRule({ it.trim().matches(encodedSecretRegex) }) {
+                decodeSecretKeys(it)
+            },
 
-                SubCommandRule("hush", ::hashedCommand),
+            SubCommandRule("hush", ::hashedCommand),
 
-                SubCommandRule("shell") { shellCommand(it, showStdout = false) },
-                SubCommandRule("shellout") { shellCommand(it, showStdout = true) },
+            SubCommandRule("shell") { shellCommand(it, showStdout = false) },
+            SubCommandRule("shellout") { shellCommand(it, showStdout = true) },
 
-                SubCommandRule("unlock", ::unlockSongs),
+            SubCommandRule("unlock", ::unlockSongs),
 
-                SubCommandRule("backup export local", ::backupDataFiles),
-                SubCommandRule("backup import local", ::restoreDataFiles),
+            SubCommandRule("backup export local", ::backupDataFiles),
+            SubCommandRule("backup import local", ::restoreDataFiles),
 
-                SubCommandRule("login") { key: String ->
-                    this.adminService.loginAdmin(key)
-                },
+            SubCommandRule("login") { key: String ->
+                this.adminService.loginAdmin(key)
+            },
 
-                ExactKeyRule("exit now") {
-                    GlobalScope.launch(Dispatchers.Main) {
-                        toast("exiting...")
-                        this@SecretCommandService.activityController.quit()
-                    }
-                },
+            ExactKeyRule("goto shop") {
+                this.layoutController.showLayout(BillingLayoutController::class)
+            },
+
+            ExactKeyRule("exit now") {
+                GlobalScope.launch(Dispatchers.Main) {
+                    toast("exiting...")
+                    this@SecretCommandService.activityController.quit()
+                }
+            },
         )
     }
+
+    private val hashedCommands: Map<String, () -> Unit> by lazy {
+        mapOf(
+            "5581b03c159338d1e17cdc04c424788209a4c52cfa65c981af93de3a0600a427" to { disableAds() }
+        )
+    }
+
+    private val encodedSecretRegex = Regex("""---SONGBOOK-KEY---([\S\s]+?)---SONGBOOK-KEY---""")
 
     private fun backupDataFiles(cmd: String) {
         SafeExecutor {
@@ -155,8 +172,6 @@ class SecretCommandService(
             toast("File copied from $localSrcFile to $localDstFile")
         }
     }
-
-    private val encodedSecretRegex = Regex("""---SONGBOOK-KEY---([\S\s]+?)---SONGBOOK-KEY---""")
 
     private fun decodeSecretKeys(key: String) {
         val match = encodedSecretRegex.matchEntire(key.trim())
@@ -189,12 +204,6 @@ class SecretCommandService(
                 }
             }
         }
-    }
-
-    private val hashedCommands: Map<String, () -> Unit> by lazy {
-        mapOf(
-                "5581b03c159338d1e17cdc04c424788209a4c52cfa65c981af93de3a0600a427" to { disableAds() }
-        )
     }
 
     fun showUnlockAlert() {
@@ -331,13 +340,13 @@ class SecretCommandService(
     private fun unlockSongs(key: String) {
         logger.info("unlocking songs with key $key")
         val toUnlock = songsRepository.publicSongsRepo.songs.get()
-                .filter { s -> s.lockPassword == key }
+            .filter { s -> s.lockPassword == key }
         toUnlock.forEach { s ->
             s.locked = false
         }
         songsRepository.unlockedSongsDao.unlockKey(key)
         val unlocked = songsRepository.publicSongsRepo.songs.get()
-                .filter { s -> s.lockPassword == key }.count()
+            .count { s -> s.lockPassword == key }
         val message = uiResourceService.resString(R.string.unlock_new_songs_unlocked, unlocked)
         uiInfoService.showToast(message)
     }
