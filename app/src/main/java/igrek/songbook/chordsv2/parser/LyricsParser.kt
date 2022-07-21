@@ -1,4 +1,4 @@
-package igrek.songbook.chordsv2.lyrics
+package igrek.songbook.chordsv2.parser
 
 import igrek.songbook.chordsv2.model.LyricsFragment
 import igrek.songbook.chordsv2.model.LyricsLine

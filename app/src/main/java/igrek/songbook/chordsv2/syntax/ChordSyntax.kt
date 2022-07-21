@@ -1,13 +1,5 @@
 package igrek.songbook.chordsv2.syntax
 
-val longestChordComparator = Comparator { lhs: String, rhs: String ->
-    if (rhs.length != lhs.length) {
-        rhs.length - lhs.length
-    } else {
-        lhs.compareTo(rhs)
-    }
-}
-
 // these delimiters split chords irrespectively (at any time)
 val compoundChordsDelimiters = setOf(" ", "\n").toTypedArray()
 // these delimiters may split chords but may be a part of chords as well

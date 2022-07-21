@@ -72,8 +72,7 @@ data class ChordFragment(
     var width: Float = 0f,
     val singleChord: Chord? = null,
     val compoundChord: CompoundChord? = null,
-) {
-}
+)
 
 enum class ChordFragmentType {
     SINGLE_CHORD,

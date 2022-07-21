@@ -1,4 +1,4 @@
-package igrek.songbook.chordsv2.lyrics
+package igrek.songbook.chordsv2.parser
 
 import igrek.songbook.chordsv2.model.*
 import igrek.songbook.chordsv2.syntax.*
@@ -15,10 +15,10 @@ class ChordParser(
 
         // recognize basic chord (without suffixes)
         minorChordToNoteIndex[chord]?.let { noteIndex: Int ->
-            return Chord(noteIndex=noteIndex, minor=true, displayText=chord)
+            return Chord(noteIndex=noteIndex, minor=true, displayText=chord, noteModifier = getNoteModifier(chord))
         }
         baseChordToNoteIndex[chord]?.let { noteIndex: Int ->
-            return Chord(noteIndex=noteIndex, minor=false, displayText=chord)
+            return Chord(noteIndex=noteIndex, minor=false, displayText=chord, noteModifier = getNoteModifier(chord))
         }
 
         // recognize base chord + suffix
@@ -26,14 +26,14 @@ class ChordParser(
             if (chord.startsWith(baseName)) {
                 val suffix = chord.drop(baseName.length)
                 if (suffix in chordSuffixes)
-                    return Chord(noteIndex=noteIndex, minor=true, suffix=suffix, displayText=chord)
+                    return Chord(noteIndex=noteIndex, minor=true, suffix=suffix, displayText=chord, noteModifier = getNoteModifier(baseName))
             }
         }
         baseChordToNoteIndex.forEach { (baseName: String, noteIndex: Int) ->
             if (chord.startsWith(baseName)) {
                 val suffix = chord.drop(baseName.length)
                 if (suffix in chordSuffixes)
-                    return Chord(noteIndex=noteIndex, minor=false, suffix=suffix, displayText=chord)
+                    return Chord(noteIndex=noteIndex, minor=false, suffix=suffix, displayText=chord, noteModifier = getNoteModifier(baseName))
             }
         }
         return null
@@ -188,6 +188,22 @@ class ChordParser(
             }
         }
         allNames.toSortedMap(longestChordComparator)
+    }
+
+    private fun getNoteModifier(note: String): NoteModifier {
+        return when (note) {
+            in ChordNames.sharpNotes[notation]!! -> NoteModifier.SHARP
+            in ChordNames.flatNotes[notation]!! -> NoteModifier.FLAT
+            else -> NoteModifier.NATURAL
+        }
+    }
+
+    private val longestChordComparator = Comparator { lhs: String, rhs: String ->
+        if (rhs.length != lhs.length) {
+            rhs.length - lhs.length
+        } else {
+            lhs.compareTo(rhs)
+        }
     }
 
 }

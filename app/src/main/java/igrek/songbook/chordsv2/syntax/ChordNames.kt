@@ -6,7 +6,7 @@ import igrek.songbook.settings.chordsnotation.ChordsNotation
 class ChordNames {
     companion object {
 
-        val baseNoteNames: Map<ChordsNotation, List<List<String>>> = hashMapOf(
+        val baseNoteNames: Map<ChordsNotation, List<List<String>>> = mapOf(
             ChordsNotation.GERMAN to listOf(
                 listOf("C"),
                 listOf("C#", "Db", "Des", "Cis"),
@@ -65,7 +65,7 @@ class ChordNames {
             ),
         )
 
-        val minorChordNames: Map<ChordsNotation, List<List<String>>> = hashMapOf(
+        val minorChordNames: Map<ChordsNotation, List<List<String>>> = mapOf(
             ChordsNotation.GERMAN to listOf(
                 listOf("c"),
                 listOf("c#", "db", "des", "cis"),
@@ -121,6 +121,44 @@ class ChordNames {
                 listOf("Lam", "LAm"),
                 listOf("Sibm", "SIbm", "La#m", "LA#m"),
                 listOf("Sim", "SIm"),
+            ),
+        )
+
+        val sharpNotes: Map<ChordsNotation, Set<String>> = mapOf(
+            ChordsNotation.GERMAN to setOf(
+                "C#", "Cis", "D#", "Dis", "F#", "Fis", "G#", "Gis", "A#", "Ais",
+                "c#", "cis", "d#", "dis", "f#", "fis", "g#", "gis", "a#", "ais",
+            ),
+            ChordsNotation.GERMAN_IS to setOf(
+                "C#", "Cis", "D#", "Dis", "F#", "Fis", "G#", "Gis", "A#", "Ais",
+                "c#", "cis", "d#", "dis", "f#", "fis", "g#", "gis", "a#", "ais",
+            ),
+            ChordsNotation.ENGLISH to setOf(
+                "C#", "D#", "F#", "G#", "A#",
+                "C#m", "D#m", "F#m", "G#m", "A#m",
+            ),
+            ChordsNotation.SOLFEGE to setOf(
+                "Do#", "DO#", "Re#", "RE#", "Fa#", "FA#", "Sol#", "SOL#", "La#", "LA#",
+                "Do#m", "DO#m", "Re#m", "RE#m", "Fa#m", "FA#m", "Sol#m", "SOL#m", "La#m", "LA#m",
+            ),
+        )
+
+        val flatNotes: Map<ChordsNotation, Set<String>> = mapOf(
+            ChordsNotation.GERMAN to setOf(
+                "Db", "Des", "Eb", "Es", "Gb", "Ges", "Ab", "As", "B",
+                "db", "des", "eb", "es", "gb", "ges", "ab", "as", "b",
+            ),
+            ChordsNotation.GERMAN_IS to setOf(
+                "Db", "Des", "Eb", "Es", "Gb", "Ges", "Ab", "As", "B",
+                "db", "des", "eb", "es", "gb", "ges", "ab", "as", "b",
+            ),
+            ChordsNotation.ENGLISH to setOf(
+                "Db", "Eb", "Gb", "Ab", "Bb",
+                "Dbm", "Ebm", "Gbm", "Abm", "Bbm",
+            ),
+            ChordsNotation.SOLFEGE to setOf(
+                "Reb", "REb", "Mib", "MIb", "Solb", "SOLb", "Lab", "LAb", "Sib", "SIb",
+                "Rebm", "REbm", "Mibm", "MIbm", "Solbm", "SOLbm", "Labm", "LAbm", "Sibm", "SIbm",
             ),
         )
 

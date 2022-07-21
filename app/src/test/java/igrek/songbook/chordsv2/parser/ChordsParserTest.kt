@@ -1,13 +1,9 @@
-package igrek.songbook.chordsv2.lyrics
+package igrek.songbook.chordsv2.parser
 
-import igrek.songbook.chordsv2.model.Chord
-import igrek.songbook.chordsv2.model.ChordFragment
-import igrek.songbook.chordsv2.model.ChordFragmentType
-import igrek.songbook.chordsv2.model.CompoundChord
+import igrek.songbook.chordsv2.model.*
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 
@@ -16,39 +12,31 @@ class ChordsParserTest {
     @Test
     fun test_recognize_major() {
         val parser = ChordParser(ChordsNotation.GERMAN)
-        assertRecognizeSingleChord(parser, "C", Chord(0, false, ""))
-        assertRecognizeSingleChord(parser, "C#", Chord(1, false, ""))
-        assertRecognizeSingleChord(parser, "D", Chord(2, false, ""))
-        assertThat(parser.recognizeSingleChord("C#add9")).isNotNull
+        assertThat(parser.recognizeSingleChord("C")).isEqualTo(Chord(0, false, "", "C"))
+        assertThat(parser.recognizeSingleChord("C#")).isEqualTo(Chord(1, false, "", "C#", noteModifier = NoteModifier.SHARP))
+        assertThat(parser.recognizeSingleChord("D")).isEqualTo(Chord(2, false, "", "D"))
+        assertThat(parser.recognizeSingleChord("C#add9")).isEqualTo(Chord(1, false, "add9", "C#add9", noteModifier = NoteModifier.SHARP))
 
-        assertRecognizeSingleChord(parser, "Csus4", Chord(0, false, "sus4"))
-        assertRecognizeSingleChord(parser, "C#sus4", Chord(1, false, "sus4"))
-        assertRecognizeSingleChord(parser, "Dsus4", Chord(2, false, "sus4"))
+        assertThat(parser.recognizeSingleChord("Csus4")).isEqualTo(Chord(0, false, "sus4", "Csus4"))
+        assertThat(parser.recognizeSingleChord("C#sus4")).isEqualTo(Chord(1, false, "sus4", "C#sus4", noteModifier = NoteModifier.SHARP))
+        assertThat(parser.recognizeSingleChord("Dsus4")).isEqualTo(Chord(2, false, "sus4", "Dsus4"))
 
         assertNull(parser.recognizeSingleChord("dupa"))
-    }
-
-    private fun assertRecognizeSingleChord(parser: ChordParser, name: String, expectedChord: Chord) {
-        val chord = parser.recognizeSingleChord(name)
-        assertNotNull(chord)
-        assertThat(chord.noteIndex).isEqualTo(expectedChord.noteIndex)
-        assertThat(chord.minor).isEqualTo(expectedChord.minor)
-        assertThat(chord.suffix).isEqualTo(expectedChord.suffix)
     }
 
     @Test
     fun test_recognize_minor() {
         val parser = ChordParser(ChordsNotation.GERMAN)
-        assertRecognizeSingleChord(parser, "c", Chord(0, true, ""))
-        assertRecognizeSingleChord(parser, "c#", Chord(1, true, ""))
-        assertRecognizeSingleChord(parser, "d", Chord(2, true, ""))
+        assertThat(parser.recognizeSingleChord("c")).isEqualTo(Chord(0, true, "", "c"))
+        assertThat(parser.recognizeSingleChord("c#")).isEqualTo(Chord(1, true, "", "c#", noteModifier = NoteModifier.SHARP))
+        assertThat(parser.recognizeSingleChord("d")).isEqualTo(Chord(2, true, "", "d"))
 
-        assertRecognizeSingleChord(parser, "csus4", Chord(0, true, "sus4"))
-        assertRecognizeSingleChord(parser, "c#sus4", Chord(1, true, "sus4"))
-        assertRecognizeSingleChord(parser, "dsus4", Chord(2, true, "sus4"))
+        assertThat(parser.recognizeSingleChord("csus4")).isEqualTo(Chord(0, true, "sus4", "csus4"))
+        assertThat(parser.recognizeSingleChord("c#sus4")).isEqualTo(Chord(1, true, "sus4", "c#sus4", noteModifier = NoteModifier.SHARP))
+        assertThat(parser.recognizeSingleChord("dsus4")).isEqualTo(Chord(2, true, "sus4", "dsus4"))
 
-        assertRecognizeSingleChord(parser, "dis", Chord(3, true, ""))
-        assertRecognizeSingleChord(parser, "es", Chord(3, true, ""))
+        assertThat(parser.recognizeSingleChord("dis")).isEqualTo(Chord(3, true, "", "dis", noteModifier = NoteModifier.SHARP))
+        assertThat(parser.recognizeSingleChord("es")).isEqualTo(Chord(3, true, "", "es", noteModifier = NoteModifier.FLAT))
 
         assertNull(parser.recognizeSingleChord("dupa"))
     }
@@ -56,21 +44,21 @@ class ChordsParserTest {
     @Test
     fun test_detect_fmaj7() {
         val parser = ChordParser(ChordsNotation.ENGLISH)
-        assertRecognizeSingleChord(parser, "Fmaj7", Chord(5, false, "maj7"))
-        assertRecognizeSingleChord(parser, "Fm", Chord(5, true, ""))
+        assertThat(parser.recognizeSingleChord("Fmaj7")).isEqualTo(Chord(5, false, "maj7", "Fmaj7"))
+        assertThat(parser.recognizeSingleChord("Fm")).isEqualTo(Chord(5, true, "", "Fm"))
     }
 
     @Test
     fun test_c_plus() {
         val parser = ChordParser(ChordsNotation.GERMAN)
-        assertRecognizeSingleChord(parser, "C+", Chord(0, false, "+"))
+        assertThat(parser.recognizeSingleChord("C+")).isEqualTo(Chord(0, false, "+", "C+"))
         assertThat(parser.recognizeSingleChord("C+")).isNotNull
     }
 
     @Test
     fun test_c_minus() {
         val parser = ChordParser(ChordsNotation.GERMAN)
-        assertRecognizeSingleChord(parser, "C-", Chord(0, false, "-"))
+        assertThat(parser.recognizeSingleChord("C-")).isEqualTo(Chord(0, false, "-", "C-"))
         assertThat(parser.recognizeSingleChord("C-")).isNotNull
     }
 
@@ -113,7 +101,9 @@ class ChordsParserTest {
         val parser = ChordParser(ChordsNotation.GERMAN)
         assertThat(parser.recognizeSingleChord("Fmaj7")).isNotNull
         assertThat(parser.recognizeSingleChord("G#maj7-F")).isNull()
-        assertThat(parser.recognizeCompoundChord("G#maj7-F")).isNotNull
+        assertThat(parser.recognizeCompoundChord("G#maj7-F")).isEqualTo(CompoundChord(
+            "G#maj7-F", Chord(8, false, "maj7", "G#maj7", noteModifier = NoteModifier.SHARP), "-", Chord(5, false, "", "F")
+        ))
     }
 
     @Test
@@ -132,10 +122,10 @@ class ChordsParserTest {
     fun test_detect_english_minor() {
         val parser = ChordParser(ChordsNotation.ENGLISH)
         assertThat(parser.recognizeSingleChord("Cm")).isNotNull
-        assertRecognizeSingleChord(parser, "Dm", Chord(2, true, ""))
-        assertRecognizeSingleChord(parser, "Dmmaj7", Chord(2, true, "maj7"))
-        assertRecognizeSingleChord(parser, "Dmaj7", Chord(2, false, "maj7"))
-        assertRecognizeSingleChord(parser, "D", Chord(2, false, ""))
+        assertThat(parser.recognizeSingleChord("Dm")).isEqualTo(Chord(2, true, "", "Dm"))
+        assertThat(parser.recognizeSingleChord("Dmmaj7")).isEqualTo(Chord(2, true, "maj7", "Dmmaj7"))
+        assertThat(parser.recognizeSingleChord("Dmaj7")).isEqualTo(Chord(2, false, "maj7", "Dmaj7"))
+        assertThat(parser.recognizeSingleChord("D")).isEqualTo(Chord(2, false, "", "D"))
     }
 
     @Test
@@ -150,11 +140,12 @@ class ChordsParserTest {
     fun test_g6add11() {
         val parser = ChordParser(ChordsNotation.GERMAN)
         assertThat(parser.recognizeSingleChord("G6add11")).isNotNull
-        assertRecognizeSingleChord(parser, "G6add11",
+        assertThat(parser.recognizeSingleChord("G6add11")).isEqualTo(
             Chord(
                 noteIndex = 7,
                 minor = false,
-                suffix = "6add11"
+                suffix = "6add11",
+                displayText = "G6add11",
             )
         )
     }
@@ -169,12 +160,12 @@ class ChordsParserTest {
     @Test
     fun test_detect_solfege() {
         val parser = ChordParser(ChordsNotation.SOLFEGE)
-        assertRecognizeSingleChord(parser, "Do", Chord(0, false, ""))
-        assertRecognizeSingleChord(parser, "Dom", Chord(0, true, ""))
-        assertRecognizeSingleChord(parser, "DOm", Chord(0, true, ""))
-        assertRecognizeSingleChord(parser, "Do#m", Chord(1, true, ""))
-        assertRecognizeSingleChord(parser, "Re", Chord(2, false, ""))
-        assertRecognizeSingleChord(parser, "Mibmaj7", Chord(3, false, "maj7"))
+        assertThat(parser.recognizeSingleChord("Do")).isEqualTo(Chord(0, false, "", "Do"))
+        assertThat(parser.recognizeSingleChord("Dom")).isEqualTo(Chord(0, true, "", "Dom"))
+        assertThat(parser.recognizeSingleChord("DOm")).isEqualTo(Chord(0, true, "", "DOm"))
+        assertThat(parser.recognizeSingleChord("Do#m")).isEqualTo(Chord(1, true, "", "Do#m", noteModifier = NoteModifier.SHARP))
+        assertThat(parser.recognizeSingleChord("Re")).isEqualTo(Chord(2, false, "", "Re"))
+        assertThat(parser.recognizeSingleChord("Mibmaj7")).isEqualTo(Chord(3, false, "maj7", "Mibmaj7", noteModifier = NoteModifier.FLAT))
     }
 
     @Test
@@ -187,7 +178,7 @@ class ChordsParserTest {
         assertThat(unknowns).contains("dupa")
         assertThat(fragments).hasSize(9)
         assertThat(fragments[0]).isEqualTo(ChordFragment("Cmaj7/G#", ChordFragmentType.COMPOUND_CHORD, compoundChord = CompoundChord(
-            "Cmaj7/G#", Chord(0, false, "maj7", "Cmaj7"), "/", Chord(8, false, "", "G#")
+            "Cmaj7/G#", Chord(0, false, "maj7", "Cmaj7"), "/", Chord(8, false, "", "G#", noteModifier = NoteModifier.SHARP)
         )))
         assertThat(fragments[1]).isEqualTo(ChordFragment(" (", ChordFragmentType.CHORD_SPLITTER))
         assertThat(fragments[2]).isEqualTo(ChordFragment("D", ChordFragmentType.SINGLE_CHORD, singleChord = Chord(2, false, "", "D")))

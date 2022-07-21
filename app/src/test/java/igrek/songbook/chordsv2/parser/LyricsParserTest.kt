@@ -1,4 +1,4 @@
-package igrek.songbook.chordsv2.lyrics
+package igrek.songbook.chordsv2.parser
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test

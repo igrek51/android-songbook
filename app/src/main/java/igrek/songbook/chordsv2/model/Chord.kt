@@ -40,9 +40,3 @@ data class Chord (
     }
 
 }
-
-enum class NoteModifier {
-    SHARP,
-    NATURAL,
-    FLAT,
-}
