@@ -28,6 +28,7 @@ class PreferencesState(
     var autoscrollSpeedAutoAdjustment: Boolean by PreferenceDelegate(PreferencesField.AutoscrollSpeedAutoAdjustment)
     var autoscrollSpeedVolumeKeys: Boolean by PreferenceDelegate(PreferencesField.AutoscrollSpeedVolumeKeys)
     var randomFavouriteSongsOnly: Boolean by PreferenceDelegate(PreferencesField.RandomFavouriteSongsOnly)
+    var randomPlaylistSongs: Boolean by PreferenceDelegate(PreferencesField.RandomPlaylistSongs)
     var customSongsGroupCategories: Boolean by PreferenceDelegate(PreferencesField.CustomSongsGroupCategories)
     var restoreTransposition: Boolean by PreferenceDelegate(PreferencesField.RestoreTransposition)
     var chordsInstrument: ChordsInstrument by PreferenceDelegate(PreferencesField.ChordsInstrument)

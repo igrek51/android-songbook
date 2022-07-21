@@ -5,24 +5,24 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.playlist.PlaylistLayoutController
+import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.settings.buttons.MediaButtonBehaviours
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 
 class SystemKeyDispatcher(
-        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
-        autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
-        songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
-        playlistLayoutController: LazyInject<PlaylistLayoutController> = appFactory.playlistLayoutController,
-        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+    autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
+    songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
 ) {
     private val layoutController by LazyExtractor(layoutController)
     private val autoscrollService by LazyExtractor(autoscrollService)
     private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
-    private val playlistLayoutController by LazyExtractor(playlistLayoutController)
     private val preferencesState by LazyExtractor(preferencesState)
+    private val playlistService by LazyExtractor(playlistService)
 
     fun onKeyDown(keyCode: Int): Boolean {
         when (keyCode) {
@@ -104,14 +104,14 @@ class SystemKeyDispatcher(
     private fun onArrowLeft(): Boolean {
         if (!layoutController.isState(SongPreviewLayoutController::class))
             return false
-        playlistLayoutController.goToNextOrPrevious(-1)
+        playlistService.goToNextOrPrevious(-1)
         return true
     }
 
     private fun onArrowRight(): Boolean {
         if (!layoutController.isState(SongPreviewLayoutController::class))
             return false
-        playlistLayoutController.goToNextOrPrevious(+1)
+        playlistService.goToNextOrPrevious(+1)
         return true
     }
 
@@ -126,13 +126,13 @@ class SystemKeyDispatcher(
                 songPreviewLayoutController.scrollByStep(+1)
             }
             MediaButtonBehaviours.NEXT_SONG -> {
-                playlistLayoutController.goToNextOrPrevious(+1)
+                playlistService.goToNextOrPrevious(+1)
             }
             MediaButtonBehaviours.SCROLL_DOWN_NEXT_SONG -> {
                 if (songPreviewLayoutController.canScrollDown()) {
                     songPreviewLayoutController.scrollByStep(+1)
                 } else {
-                    playlistLayoutController.goToNextOrPrevious(+1)
+                    playlistService.goToNextOrPrevious(+1)
                 }
             }
         }

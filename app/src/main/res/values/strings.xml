@@ -511,4 +511,6 @@
     <string name="settings_autoscroll_show_eye_focus_zone_hint">Display the progress and state of autoscroll by indicating the eye-focus zone</string>
     <string name="settings_autoscroll_restore_speed">Individual autoscroll speed</string>
     <string name="settings_autoscroll_restore_speed_hint">Remember and restore autoscroll speed for each song</string>
+    <string name="settings_random_playlist_songs">Random playlist song</string>
+    <string name="settings_random_playlist_songs_hint">\"Random song\" shuffles a song from an opened playlist if there\'s a chosen one.</string>
 </resources>

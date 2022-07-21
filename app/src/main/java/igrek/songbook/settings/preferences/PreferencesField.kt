@@ -50,6 +50,8 @@ enum class PreferencesField constructor(
 
     RandomFavouriteSongsOnly(false),
 
+    RandomPlaylistSongs(false),
+
     CustomSongsGroupCategories(false),
 
     RestoreTransposition(true),

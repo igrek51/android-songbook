@@ -211,6 +211,13 @@ class SettingsFragment(
                 }
         )
 
+        setupSwitchPreference("randomPlaylistSongs",
+                onLoad = { preferencesState.randomPlaylistSongs },
+                onSave = { value: Boolean ->
+                    preferencesState.randomPlaylistSongs = value
+                }
+        )
+
         setupMultiListPreference("filterLanguages",
                 appLanguageService.languageFilterEntries(),
                 onLoad = {

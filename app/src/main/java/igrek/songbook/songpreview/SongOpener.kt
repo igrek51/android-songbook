@@ -13,6 +13,7 @@ import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.history.OpenedSong
+import igrek.songbook.persistence.user.playlist.Playlist
 import igrek.songbook.room.RoomLobby
 
 open class SongOpener(
@@ -28,8 +29,12 @@ open class SongOpener(
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val roomLobby by LazyExtractor(roomLobby)
 
-    fun openSongPreview(song: Song) {
+    var playlist: Playlist? = null
+        private set
+
+    fun openSongPreview(song: Song, playlist: Playlist? = null) {
         logger.info("Opening song: $song")
+        this.playlist = playlist
         songPreviewLayoutController.currentSong = song
         layoutController.showLayout(SongPreviewLayoutController::class)
         songsRepository.openHistoryDao.registerOpenedSong(song.id, song.namespace)
@@ -46,6 +51,7 @@ open class SongOpener(
     }
 
     fun openLastSong() {
+        this.playlist = null
         val currentSong = songPreviewLayoutController.currentSong
         if (currentSong != null) {
             layoutController.showLayout(SongPreviewLayoutController::class)
@@ -65,5 +71,9 @@ open class SongOpener(
         }
 
         uiInfoService.showInfo(R.string.no_last_song)
+    }
+
+    fun isPlaylistOpen(): Boolean {
+        return playlist != null
     }
 }

@@ -152,6 +152,11 @@
             android:title="@string/settings_random_favourite"
             android:summary="@string/settings_random_favourite_hint"
             app:iconSpaceReserved="false" />
+        <SwitchPreference
+            android:key="randomPlaylistSongs"
+            android:title="@string/settings_random_playlist_songs"
+            android:summary="@string/settings_random_playlist_songs_hint"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_sync">

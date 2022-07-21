@@ -11,7 +11,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.repository.SongsRepository
-import igrek.songbook.playlist.PlaylistLayoutController
+import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.renderer.SongPreview
@@ -26,13 +26,13 @@ import java.util.concurrent.TimeUnit
 class AutoscrollService(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
-    playlistLayoutController: LazyInject<PlaylistLayoutController> = appFactory.playlistLayoutController,
+    playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val songPreviewController by LazyExtractor(songPreviewLayoutController)
-    private val playlistLayoutController by LazyExtractor(playlistLayoutController)
+    private val playlistService by LazyExtractor(playlistService)
     private val preferencesState by LazyExtractor(preferencesState)
     private val songsRepository by LazyExtractor(songsRepository)
 
@@ -294,7 +294,7 @@ class AutoscrollService(
                         state = AutoscrollState.OFF
                         // Turn on autoscroll again in next song
                         startAutoscrollOnNextSong = true
-                        playlistLayoutController.goToNextOrPrevious(+1)
+                        playlistService.goToNextOrPrevious(+1)
                     } else {
                         val delay = remainingTimeMs.limitTo(1000)
                         onCountdownToNextSongRemainingTime(remainingTimeMs)
@@ -403,7 +403,7 @@ class AutoscrollService(
                 when {
                     songPreview.canScrollDown() -> {
                         start()
-                        uiInfoService.showInfoAction (
+                        uiInfoService.showInfoAction(
                             R.string.autoscroll_started,
                             actionResId = R.string.action_stop_autoscroll,
                         ) {
@@ -441,7 +441,7 @@ class AutoscrollService(
     }
 
     private fun canCountdownToNextSong(): Boolean {
-        return preferencesState.autoscrollForwardNextSong && playlistLayoutController.hasNextSong()
+        return preferencesState.autoscrollForwardNextSong && playlistService.hasNextSong()
     }
 
     private fun countdownToNextSong() {
@@ -482,7 +482,10 @@ class AutoscrollService(
     private fun persistIndividualSongSpeed() {
         if (preferencesState.autoscrollIndividualSpeed) {
             currentSongIdentifier?.let { currentSongIdentifier ->
-                songsRepository.songTweakDao.setSongAutoscrollSpeed(currentSongIdentifier, autoscrollSpeed)
+                songsRepository.songTweakDao.setSongAutoscrollSpeed(
+                    currentSongIdentifier,
+                    autoscrollSpeed
+                )
             }
         }
     }

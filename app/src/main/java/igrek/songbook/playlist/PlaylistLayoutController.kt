@@ -18,7 +18,6 @@ import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.layout.dialog.InputDialogBuilder
 import igrek.songbook.layout.list.ListItemClickListener
-import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
@@ -26,7 +25,6 @@ import igrek.songbook.persistence.user.playlist.Playlist
 import igrek.songbook.playlist.list.PlaylistListItem
 import igrek.songbook.playlist.list.PlaylistListView
 import igrek.songbook.songpreview.SongOpener
-import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.listview.ListScrollPosition
 import igrek.songbook.songselection.tree.NoParentItemException
@@ -41,7 +39,6 @@ class PlaylistLayoutController(
     contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     songOpener: LazyInject<SongOpener> = appFactory.songOpener,
-    songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
 ) : InflatedLayout(
         _layoutResourceId = R.layout.screen_playlists
 ), ListItemClickListener<PlaylistListItem> {
@@ -51,7 +48,6 @@ class PlaylistLayoutController(
     private val contextMenuBuilder by LazyExtractor(contextMenuBuilder)
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val songOpener by LazyExtractor(songOpener)
-    private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
 
     private var itemsListView: PlaylistListView? = null
     private var addPlaylistButton: ImageButton? = null
@@ -60,7 +56,6 @@ class PlaylistLayoutController(
     private var goBackButton: ImageButton? = null
 
     private var playlist: Playlist? = null
-
     private var storedScroll: ListScrollPosition? = null
     private var subscriptions = mutableListOf<Disposable>()
 
@@ -179,7 +174,7 @@ class PlaylistLayoutController(
     override fun onItemClick(item: PlaylistListItem) {
         storedScroll = itemsListView?.currentScrollPosition
         if (item.song != null) {
-            songOpener.openSongPreview(item.song)
+            songOpener.openSongPreview(item.song, playlist=playlist)
         } else if (item.playlist != null) {
             playlist = item.playlist
             updateItemsList()
@@ -253,41 +248,4 @@ class PlaylistLayoutController(
         return items
     }
 
-    fun goToNextOrPrevious(next: Int) {
-        val currentSong = songPreviewLayoutController.currentSong ?: return
-        val playlist = playlist ?: return
-        val songIndex = findSongInPlaylist(currentSong, playlist)
-        if (songIndex == -1)
-            return
-        val nextIndex = songIndex + next
-        if (nextIndex < 0) {
-            uiInfoService.showToast(R.string.playlist_at_beginning)
-            return
-        }
-        if (nextIndex >= playlist.songs.size) {
-            uiInfoService.showToast(R.string.playlist_at_end)
-            return
-        }
-        val nextPlaylistSong = playlist.songs[nextIndex]
-        val namespace = when {
-            nextPlaylistSong.custom -> SongNamespace.Custom
-            else -> SongNamespace.Public
-        }
-        val songId = SongIdentifier(nextPlaylistSong.songId, namespace)
-        val nextSong = songsRepository.allSongsRepo.songFinder.find(songId) ?: return
-        songOpener.openSongPreview(nextSong)
-    }
-
-    fun hasNextSong(): Boolean {
-        val currentSong = songPreviewLayoutController.currentSong ?: return false
-        val playlist = playlist ?: return false
-        val songIndex = findSongInPlaylist(currentSong, playlist)
-        if (songIndex == -1)
-            return false
-        return songIndex + 1 < playlist.songs.size
-    }
-
-    private fun findSongInPlaylist(song: Song, playlist: Playlist): Int {
-        return playlist.songs.indexOfFirst { s -> s.songId == song.id && s.custom == song.isCustom() }
-    }
 }

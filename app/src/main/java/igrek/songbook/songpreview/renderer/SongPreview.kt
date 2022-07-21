@@ -9,7 +9,7 @@ import igrek.songbook.chords.lyrics.model.LyricsModel
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import igrek.songbook.playlist.PlaylistLayoutController
+import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.SongPreviewLayoutController
@@ -31,7 +31,7 @@ class SongPreview(
     quickMenuAutoscroll: LazyInject<QuickMenuAutoscroll> = appFactory.quickMenuAutoscroll,
     windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
     lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
-    playlistLayoutController: LazyInject<PlaylistLayoutController> = appFactory.playlistLayoutController,
+    playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
 ) : BaseCanvasView(context), View.OnTouchListener {
     private val songPreviewController by LazyExtractor(songPreviewLayoutController)
     private val autoscroll by LazyExtractor(autoscrollService)
@@ -39,7 +39,7 @@ class SongPreview(
     private val quickMenuAutoscroll by LazyExtractor(quickMenuAutoscroll)
     private val windowManagerService by LazyExtractor(windowManagerService)
     private val lyricsThemeService by LazyExtractor(lyricsThemeService)
-    private val playlistLayoutController by LazyExtractor(playlistLayoutController)
+    private val playlistService by LazyExtractor(playlistService)
 
     private var lyricsModel: LyricsModel? = null
     var scroll: Float = 0f
@@ -269,9 +269,9 @@ class SongPreview(
                 val adx = abs(dx)
                 if (adx > GESTURE_HORIZONTAL_SWIPE * w) {
                     if (dx > 0) {
-                        playlistLayoutController.goToNextOrPrevious(-1)
+                        playlistService.goToNextOrPrevious(-1)
                     } else {
-                        playlistLayoutController.goToNextOrPrevious(+1)
+                        playlistService.goToNextOrPrevious(+1)
                     }
                 }
             }

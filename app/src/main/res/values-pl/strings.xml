@@ -484,4 +484,6 @@
     <string name="settings_autoscroll_show_eye_focus_zone_hint">Wyświetlaj postęp i stan autoprzewijania, pokazując strefę skupienia wzroku</string>
     <string name="settings_autoscroll_restore_speed">Indywidualna szybkość autoprzewijania</string>
     <string name="settings_autoscroll_restore_speed_hint">Zapamiętuj i przywracaj szybkość autoprzewijania dla każdej piosenki</string>
+    <string name="settings_random_playlist_songs">Losowanie playlisty</string>
+    <string name="settings_random_playlist_songs_hint">\"Losowa piosenka\" losuje piosenkę z otwartej playlisty, jeśli playlista jest wybrana.</string>
 </resources>
