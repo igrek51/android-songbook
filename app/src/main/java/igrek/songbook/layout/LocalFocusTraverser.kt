@@ -5,7 +5,7 @@ import android.view.View
 import igrek.songbook.info.logger.LoggerFactory.logger
 
 
-class NextFocusSwitch (
+class LocalFocusTraverser(
     private val currentViewGetter: () -> View?,
     private val currentFocusGetter: () -> Int?,
     private val nextLeft: (Int, View) -> Int = { _, _ -> 0 },
@@ -51,37 +51,24 @@ class NextFocusSwitch (
             if (nextView == null) {
                 logger.warn("cant find next view with ID $nextViewId ")
             }
-            nextView?.run {
+            nextView?.let {
+                val nextViewName = it.javaClass.simpleName
 
-//                val viewGroup = currentView as? ViewGroup
-//                viewGroup?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+                val result = it.requestFocusFromTouch()
+                if (!result)
+                    logger.warn("requesting focus failed for $nextViewId - $nextViewName")
 
-                val result = requestFocus()
-                if (!result) {
-                    logger.warn("requesting focus failed, focused: $isFocused, focusable: $isFocusable")
-                }
-
-
-//                var gainedFocus = false
-//                this.onFocusChangeListener = OnFocusChangeListener { v, hasFocus ->
-//                    if (hasFocus)
-//                        gainedFocus = true
-//                    if (v == this && !hasFocus && gainedFocus) {
-//                        viewGroup?.descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
-//                    }
-//                }
-
-                this.setOnKeyListener { _, keyCode, event ->
+                it.setOnKeyListener { _, keyCode, event ->
                     if (event.action == KeyEvent.ACTION_DOWN) {
-                        if (this@NextFocusSwitch.handleKey(keyCode))
+                        if (this@LocalFocusTraverser.handleKey(keyCode))
                             return@setOnKeyListener true
                     }
                     return@setOnKeyListener false
                 }
 
-                val nextViewName = nextView.javaClass.simpleName
-                logger.debug("NextFocusSwitch: focus set to $nextViewId - $nextViewName")
-                return true
+                if (result)
+                    logger.debug("focus set to $nextViewId - $nextViewName")
+                return result
             }
         }
         return false

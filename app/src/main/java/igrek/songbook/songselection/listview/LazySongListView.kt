@@ -13,7 +13,7 @@ import android.widget.ListView
 import igrek.songbook.R
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.appFactory
-import igrek.songbook.layout.NextFocusSwitch
+import igrek.songbook.layout.LocalFocusTraverser
 import igrek.songbook.songselection.SongClickListener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.tree.SongTreeItem
@@ -59,7 +59,7 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
         isFocusable = true
         descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
 
-        val focusSwitch = NextFocusSwitch(
+        val localFocus = LocalFocusTraverser(
             currentViewGetter = {
                 val focusView: View? = this.selectedView
                 val focusedViewName = focusView?.javaClass?.simpleName
@@ -71,29 +71,36 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
             },
             nextLeft = { currentViewId: Int, currentView: View ->
                 (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
-                logger.debug("Block descendants set")
-
-//                this.setItemChecked(2, true)
                 this.requestFocusFromTouch()
-//                this.setSelection(2)
 
                 R.id.listItemSongTreeSongLayout
             },
             nextRight = { currentViewId: Int, currentView: View ->
                 (currentView as? ViewGroup)?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+
                 R.id.itemSongMoreButton
             },
             nextUp = { currentViewId: Int, currentView: View ->
-                0
+                (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                this.requestFocusFromTouch()
+
+//                val upView = adapter?.getView(5, null, this)
+//                upView?.isFocusableInTouchMode = true
+//                upView?.requestFocusFromTouch()
+
+                R.id.listItemSongTreeSongLayout
             },
             nextDown = { currentViewId: Int, currentView: View ->
+                (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                this.requestFocusFromTouch()
+
                 0
             },
         )
 
         setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN) {
-                if (focusSwitch.handleKey(keyCode))
+                if (localFocus.handleKey(keyCode))
                     return@setOnKeyListener true
             }
             return@setOnKeyListener false
