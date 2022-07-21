@@ -188,4 +188,11 @@ class ChordsParserTest {
         assertThat(fragments[7]).isEqualTo(ChordFragment(")   ", ChordFragmentType.CHORD_SPLITTER))
         assertThat(fragments[8]).isEqualTo(ChordFragment("dupa", ChordFragmentType.UNKNOWN_CHORD))
     }
+
+    @Test
+    fun test_parseAndFillChordsUnknowns() {
+        val lyrics = LyricsExtractor().parseLyrics("""[a Cm dupa]""")
+        val unkonwns = ChordParser(ChordsNotation.ENGLISH).parseAndFillChords(lyrics)
+        assertThat(unkonwns).isEqualTo(setOf("a", "dupa"))
+    }
 }

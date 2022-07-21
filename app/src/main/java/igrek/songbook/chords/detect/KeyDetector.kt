@@ -26,16 +26,20 @@ class KeyDetector {
     private fun assessKeyMatchScore(key: MajorKey, uniqueNotes: Set<Int>, majorChordNotes: Set<Int>, minorChordNotes: Set<Int>): Int {
 
         val notesIntersection = majorKeyNoteIndexes[key]!!.intersect(uniqueNotes)
-        val notesIntersectionScore = (2 * notesIntersection.size - uniqueNotes.size) * 100
+        val notesIntersectionScore = (2 * notesIntersection.size - uniqueNotes.size) * 1000
 
-        val hasMajorChord = key.baseMajorNote.index in majorChordNotes
-        val hasMinorChord = key.baseMinorNote.index in minorChordNotes
-        val baseChordsScore = hasMajorChord.toInt() * 10 + hasMinorChord.toInt() * 10
+        val hasTonic = (key.tonic() in majorChordNotes).toInt() // major I
+        val hasSubmediant = (key.submediant() in minorChordNotes).toInt() // minor (vi)
+        val hasDominant = (key.dominant() in majorChordNotes).toInt() // V
+        val hasSubdominant = (key.subdominant() in majorChordNotes).toInt() // IV
+        val hasMediant = (key.mediant() in minorChordNotes).toInt() // iii
+        val hasSupertonic = (key.supertonic() in minorChordNotes).toInt() // ii
+        val scaleDegreeScore = hasTonic * 500 + hasSubmediant * 250 + hasDominant * 125 + hasSubdominant * 50 + hasMediant * 10 + hasSupertonic * 10
 
         val sharpnessAbs = majorKeySharpnessAbs[key]!!
         val sharpnessScore = -sharpnessAbs // take key with less sharps/flats
 
-        return notesIntersectionScore + baseChordsScore + sharpnessScore
+        return notesIntersectionScore + scaleDegreeScore + sharpnessScore
     }
 
     private val majorKeyNoteIndexes: Map<MajorKey, Set<Int>> by lazy {

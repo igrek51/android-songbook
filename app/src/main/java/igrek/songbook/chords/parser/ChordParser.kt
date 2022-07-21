@@ -79,7 +79,7 @@ class ChordParser(
         return null
     }
 
-    fun parseAndFillChords(lyrics: LyricsModel): Pair<LyricsModel, Set<String>> {
+    fun parseAndFillChords(lyrics: LyricsModel): Set<String> {
         val unknowns = mutableSetOf<String>()
 
         lyrics.lines.forEach { line ->
@@ -90,7 +90,7 @@ class ChordParser(
             }
         }
 
-        return lyrics to unknowns
+        return unknowns
     }
 
     fun parseChordFragments(

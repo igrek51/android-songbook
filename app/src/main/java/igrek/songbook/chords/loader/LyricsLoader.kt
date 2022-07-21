@@ -12,6 +12,7 @@ import igrek.songbook.chords.parser.LyricsExtractor
 import igrek.songbook.chords.syntax.MajorKey
 import igrek.songbook.chords.transpose.ChordsTransposer
 import igrek.songbook.chords.transpose.ChordsTransposerManager
+import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -32,6 +33,7 @@ class LyricsLoader(
     private val windowManagerService by LazyExtractor(windowManagerService)
     private val preferencesState by LazyExtractor(preferencesState)
 
+    private val logger = LoggerFactory.logger
     private val chordsTransposerManager = ChordsTransposerManager()
     private var screenW = 0
     private var paint: Paint? = null
@@ -71,7 +73,10 @@ class LyricsLoader(
             LyricsModel()
         } else {
             val lyrics = LyricsExtractor(trimWhitespaces = preferencesState.trimWhitespaces).parseLyrics(fileContent)
-            ChordParser(srcNotation).parseAndFillChords(lyrics)
+            val unknownChords = ChordParser(srcNotation).parseAndFillChords(lyrics)
+            unknownChords.takeIf { it.isNotEmpty() }?.let {
+                logger.warn("Unknown chords: ${unknownChords.joinToString(", ")}")
+            }
             lyrics
         }
 

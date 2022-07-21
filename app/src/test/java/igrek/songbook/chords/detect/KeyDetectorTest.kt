@@ -39,10 +39,10 @@ class KeyDetectorTest {
 
     @Test
     fun test_detectDMajorKey() {
-        val lyrics = LyricsExtractor().parseLyrics("[F# E D A]")
+        val lyrics = LyricsExtractor().parseLyrics("[E D A]")
         ChordParser(ChordsNotation.ENGLISH).parseAndFillChords(lyrics)
         val key = KeyDetector().detectKey(lyrics)
-        Assertions.assertThat(key).isEqualTo(MajorKey.D_MAJOR)
+        Assertions.assertThat(key).isEqualTo(MajorKey.A_MAJOR)
     }
 
     @Test
@@ -79,6 +79,14 @@ class KeyDetectorTest {
         ChordParser(ChordsNotation.ENGLISH).parseAndFillChords(lyrics)
         val key = KeyDetector().detectKey(lyrics)
         Assertions.assertThat(key).isEqualTo(MajorKey.B_FLAT_MAJOR)
+    }
+
+    @Test
+    fun test_favourDominantChords() {
+        val lyrics = LyricsExtractor().parseLyrics("[G D C G]")
+        ChordParser(ChordsNotation.ENGLISH).parseAndFillChords(lyrics)
+        val key = KeyDetector().detectKey(lyrics)
+        Assertions.assertThat(key).isEqualTo(MajorKey.G_MAJOR)
     }
 
     @Test
