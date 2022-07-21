@@ -20,7 +20,7 @@ class ChordsFormatter (
             lyricsFragment.chordFragments.forEach { chordFragment: ChordFragment ->
                 renderChordFragment(chordFragment)
             }
-            lyricsFragment.text = lyricsFragment.chordFragments.joinToString("")
+            lyricsFragment.text = lyricsFragment.chordFragments.joinToString("") { it.text }
         }
     }
 

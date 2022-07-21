@@ -32,7 +32,7 @@ data class LyricsFragment(
     override fun toString(): String {
         val txt = when (type) {
             LyricsTextType.REGULAR_TEXT -> text
-            LyricsTextType.CHORDS -> "[$text]"
+            LyricsTextType.CHORDS -> "[$text($chordFragments)]"
             LyricsTextType.COMMENT -> "{$text}"
             LyricsTextType.LINEWRAPPER -> lineWrapperChar.toString()
         }

@@ -1,6 +1,8 @@
 package igrek.songbook.chordsv2
 
 import igrek.songbook.chordsv2.model.*
+import igrek.songbook.chordsv2.parser.ChordParser
+import igrek.songbook.chordsv2.parser.LyricsParser
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -25,6 +27,83 @@ class ChordFormatTest {
         assertThat(Chord(1, false, "").format(ChordsNotation.ENGLISH)).isEqualTo("C#")
     }
 
+    @Test
+    fun test_parseAndFormatLyricsAndChords() {
+        val lyrics = LyricsParser().parseLyrics("""
+        dupa [a F C7/G G]
+        [D]next li[e]ne [C]
+        
+           next [a]verse [G]    
+        without chords
+        
+        
+        """.trimIndent())
 
+        val chordParser = ChordParser(ChordsNotation.GERMAN)
+        chordParser.parseAndFillChords(lyrics)
+
+        assertThat(lyrics.lines).hasSize(5)
+        assertThat(lyrics.lines).isEqualTo(listOf(
+            LyricsLine(listOf(
+                LyricsFragment(text = "dupa ", type = LyricsTextType.REGULAR_TEXT),
+                LyricsFragment(text = "a F C7/G G", type = LyricsTextType.CHORDS, chordFragments = listOf(
+                    ChordFragment(text="a", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.A.noteIndex, true)),
+                    ChordFragment(text=" ", type=ChordFragmentType.CHORD_SPLITTER),
+                    ChordFragment(text="F", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.F.noteIndex, false)),
+                    ChordFragment(text=" ", type=ChordFragmentType.CHORD_SPLITTER),
+                    ChordFragment(text="C7/G", type=ChordFragmentType.COMPOUND_CHORD, compoundChord = CompoundChord(
+                        Chord(Note.C.noteIndex, false, "7"), "/",  Chord(Note.G.noteIndex, false),
+                    )),
+                    ChordFragment(text=" ", type=ChordFragmentType.CHORD_SPLITTER),
+                    ChordFragment(text="G", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.G.noteIndex, false)),
+                )),
+            )),
+            LyricsLine(listOf(
+                LyricsFragment(text = "D", type = LyricsTextType.CHORDS, chordFragments = listOf(
+                    ChordFragment(text="D", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.D.noteIndex, false)),
+                )),
+                LyricsFragment(text = "next li", type = LyricsTextType.REGULAR_TEXT),
+                LyricsFragment(text = "e", type = LyricsTextType.CHORDS, chordFragments = listOf(
+                    ChordFragment(text="e", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.E.noteIndex, true)),
+                )),
+                LyricsFragment(text = "ne ", type = LyricsTextType.REGULAR_TEXT),
+                LyricsFragment(text = "C", type = LyricsTextType.CHORDS, chordFragments = listOf(
+                    ChordFragment(text="C", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.C.noteIndex, false)),
+                )),
+            )),
+            LyricsLine(listOf()),
+            LyricsLine(listOf(
+                LyricsFragment(text = "next ", type = LyricsTextType.REGULAR_TEXT),
+                LyricsFragment(text = "a", type = LyricsTextType.CHORDS, chordFragments = listOf(
+                    ChordFragment(text="a", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.A.noteIndex, true)),
+                )),
+                LyricsFragment(text = "verse ", type = LyricsTextType.REGULAR_TEXT),
+                LyricsFragment(text = "G", type = LyricsTextType.CHORDS, chordFragments = listOf(
+                    ChordFragment(text="G", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.G.noteIndex, false)),
+                )),
+            )),
+            LyricsLine(listOf(
+                LyricsFragment(text = "without chords", type = LyricsTextType.REGULAR_TEXT),
+            ))
+        ))
+
+        val formatter = ChordsFormatter(ChordsNotation.ENGLISH)
+        formatter.formatLyrics(lyrics)
+
+        assertThat(lyrics.lines[0]).isEqualTo(LyricsLine(listOf(
+            LyricsFragment(text = "dupa ", type = LyricsTextType.REGULAR_TEXT),
+            LyricsFragment(text = "Am F C7/G G", type = LyricsTextType.CHORDS, chordFragments = listOf(
+                ChordFragment(text="Am", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.A.noteIndex, true)),
+                ChordFragment(text=" ", type=ChordFragmentType.CHORD_SPLITTER),
+                ChordFragment(text="F", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.F.noteIndex, false)),
+                ChordFragment(text=" ", type=ChordFragmentType.CHORD_SPLITTER),
+                ChordFragment(text="C7/G", type=ChordFragmentType.COMPOUND_CHORD, compoundChord = CompoundChord(
+                    Chord(Note.C.noteIndex, false, "7"), "/",  Chord(Note.G.noteIndex, false),
+                )),
+                ChordFragment(text=" ", type=ChordFragmentType.CHORD_SPLITTER),
+                ChordFragment(text="G", type=ChordFragmentType.SINGLE_CHORD, singleChord=Chord(Note.G.noteIndex, false)),
+            )),
+        )))
+    }
 
 }
