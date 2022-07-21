@@ -45,6 +45,10 @@ class LocalFocusTraverser(
         val currentFocusId: Int = currentFocusGetter() ?: 0
 
         val nextViewId = nextViewProvider(currentFocusId, currentView)
+
+        if (nextViewId == -1)
+            return true
+
         if (nextViewId != 0 && nextViewId != currentFocusId) {
 
             val nextView: View? = currentView.findViewById(nextViewId)

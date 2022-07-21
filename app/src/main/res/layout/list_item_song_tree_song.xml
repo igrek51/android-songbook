@@ -6,9 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:clickable="false"
     android:descendantFocusability="blocksDescendants"
     android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:clickable="false"
     >
 
     <ImageView
@@ -20,8 +21,9 @@
         android:layout_marginLeft="2dp"
         android:layout_marginStart="2dp"
         android:background="@drawable/note"
-        android:clickable="false"
         android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:clickable="false"
         android:scaleType="fitCenter" />
 
     <TextView
@@ -40,8 +42,9 @@
         android:layout_toStartOf="@+id/itemSongMoreButton"
         android:gravity="start|center_vertical"
         android:text=""
-        android:clickable="false"
         android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:clickable="false"
         android:textSize="16sp" />
 
 
@@ -58,6 +61,8 @@
         android:adjustViewBounds="true"
         android:background="?android:selectableItemBackground"
         android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:clickable="true"
         android:padding="4dp"
         android:scaleType="centerInside"
         android:src="@drawable/more" />

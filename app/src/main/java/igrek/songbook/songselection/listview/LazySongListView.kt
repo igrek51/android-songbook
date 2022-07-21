@@ -84,11 +84,16 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
                 (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
                 this.requestFocusFromTouch()
 
-//                val upView = adapter?.getView(5, null, this)
-//                upView?.isFocusableInTouchMode = true
-//                upView?.requestFocusFromTouch()
-
-                R.id.listItemSongTreeSongLayout
+                when {
+                    currentViewId == R.id.itemSongMoreButton -> -1
+                    this.selectedItemPosition == 0 -> {
+                        appFactory.activity.get().findViewById<View>(R.id.navMenuButton)?.run {
+                            requestFocusFromTouch()
+                        }
+                        -1
+                    }
+                    else -> 0
+                }
             },
             nextDown = { currentViewId: Int, currentView: View ->
                 (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
