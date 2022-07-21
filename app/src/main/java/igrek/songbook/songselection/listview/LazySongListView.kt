@@ -4,11 +4,13 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
+import android.view.KeyEvent
 import android.view.View
 import android.widget.AbsListView
 import android.widget.AdapterView
 import android.widget.ListView
 import igrek.songbook.info.logger.LoggerFactory.logger
+import igrek.songbook.inject.appFactory
 import igrek.songbook.songselection.SongClickListener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.tree.SongTreeItem
@@ -52,6 +54,27 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
         setOnScrollListener(this)
         itemsCanFocus = true
         isFocusable = true
+        this.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN) {
+                when (keyCode) {
+                    KeyEvent.KEYCODE_DPAD_UP,
+                    KeyEvent.KEYCODE_DPAD_DOWN,
+                    KeyEvent.KEYCODE_DPAD_LEFT,
+                    KeyEvent.KEYCODE_MEDIA_REWIND,
+                    KeyEvent.KEYCODE_MEDIA_PREVIOUS,
+                    KeyEvent.KEYCODE_MEDIA_SKIP_BACKWARD,
+                    KeyEvent.KEYCODE_MEDIA_STEP_BACKWARD,
+                    KeyEvent.KEYCODE_DPAD_RIGHT,
+                    KeyEvent.KEYCODE_MEDIA_FAST_FORWARD,
+                    KeyEvent.KEYCODE_MEDIA_NEXT,
+                    KeyEvent.KEYCODE_MEDIA_SKIP_FORWARD,
+                    KeyEvent.KEYCODE_MEDIA_STEP_FORWARD -> {
+                        return@setOnKeyListener appFactory.systemKeyDispatcher.get().onKeyDown(keyCode)
+                    }
+                }
+            }
+            return@setOnKeyListener false
+        }
         scrollState = OnScrollListener.SCROLL_STATE_IDLE
     }
 
