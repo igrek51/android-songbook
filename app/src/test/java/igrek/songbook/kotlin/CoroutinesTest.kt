@@ -44,28 +44,28 @@ class CoroutinesTest {
         check(counter.get() == 100L)
     }
 
-    @Ignore
-    @Test
-    fun deadlockOnBlockingMainDispatcher() {
-        println("starting")
-        runBlocking(Dispatchers.Main) {
-            println("entered")
-        }
-        println("exited")
-    }
-
-    @Ignore
-    @Test
-    fun deadlockOnMainContextInsideBlocking() {
-        println("entering runBlocking 1")
-        runBlocking { // or Dispatchers.IO
-            println("changing context")
-            withContext(Dispatchers.Main) {
-                println("entered")
-            }
-        }
-        println("exited runblocking 1")
-    }
+//    @Ignore
+//    @Test
+//    fun deadlockOnBlockingMainDispatcher() {
+//        println("starting")
+//        runBlocking(Dispatchers.Main) {
+//            println("entered")
+//        }
+//        println("exited")
+//    }
+//
+//    @Ignore
+//    @Test
+//    fun deadlockOnMainContextInsideBlocking() {
+//        println("entering runBlocking 1")
+//        runBlocking { // or Dispatchers.IO
+//            println("changing context")
+//            withContext(Dispatchers.Main) {
+//                println("entered")
+//            }
+//        }
+//        println("exited runblocking 1")
+//    }
 
     @Test
     fun exceptionInSuspendFunction() {
