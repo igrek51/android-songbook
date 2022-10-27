@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import igrek.songbook.R
 import igrek.songbook.custom.CustomSongsListLayoutController
+import igrek.songbook.custom.EditSongLayoutController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
@@ -12,6 +13,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.playlist.PlaylistLayoutController
+import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.top.TopSongsLayoutController
 
@@ -21,12 +23,14 @@ class GlobalFocusTraverser(
     navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
     songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
 ) {
     private val activity by LazyExtractor(activity)
     private val layoutController by LazyExtractor(layoutController)
     private val navigationMenuController by LazyExtractor(navigationMenuController)
     private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
     private val uiInfoService by LazyExtractor(uiInfoService)
+    private val playlistService by LazyExtractor(playlistService)
 
     private val debugMode: Boolean = true
 
@@ -68,27 +72,30 @@ class GlobalFocusTraverser(
         }
 
         return when {
-            layoutController.isState(SongPreviewLayoutController::class) -> when (currentViewId) {
-                R.id.main_content, R.id.overlayScrollView -> 0
-                R.id.navMenuButton -> R.id.songInfoButton
-                R.id.songInfoButton -> R.id.chordsHelpButton
-                R.id.chordsHelpButton -> R.id.setFavouriteButton
-                R.id.setFavouriteButton -> R.id.transposeButton
-                R.id.transposeButton -> R.id.autoscrollButton
-                R.id.autoscrollButton -> when {
-                    activity.findViewById<View>(R.id.screenShareButton)?.isVisible == true -> R.id.screenShareButton
-                    else -> R.id.moreActionsButton
+            layoutController.isState(SongPreviewLayoutController::class) -> when {
+                playlistService.goToNextOrPrevious(+1) -> -1
+                else -> when (currentViewId) {
+                    R.id.main_content, R.id.overlayScrollView -> R.id.navMenuButton
+                    R.id.navMenuButton -> R.id.songInfoButton
+                    R.id.songInfoButton -> R.id.chordsHelpButton
+                    R.id.chordsHelpButton -> R.id.setFavouriteButton
+                    R.id.setFavouriteButton -> R.id.transposeButton
+                    R.id.transposeButton -> R.id.autoscrollButton
+                    R.id.autoscrollButton -> when {
+                        activity.findViewById<View>(R.id.screenShareButton)?.isVisible == true -> R.id.screenShareButton
+                        else -> R.id.moreActionsButton
+                    }
+                    R.id.screenShareButton -> R.id.moreActionsButton
+                    R.id.autoscrollToggleButton -> R.id.speedPlusButton
+                    R.id.speedMinusButton -> R.id.speedSeekbar
+                    R.id.speedSeekbar -> R.id.speedPlusButton
+                    R.id.transposeM5Button -> R.id.transposeM1Button
+                    R.id.transposeM1Button -> R.id.transpose0Button
+                    R.id.transpose0Button -> R.id.transposeP1Button
+                    R.id.transposeP1Button -> R.id.transposeP5Button
+                    R.id.transposeP5Button -> R.id.transposeP5Button
+                    else -> 0
                 }
-                R.id.screenShareButton -> R.id.moreActionsButton
-                R.id.autoscrollToggleButton -> R.id.speedPlusButton
-                R.id.speedMinusButton -> R.id.speedSeekbar
-                R.id.speedSeekbar -> R.id.speedPlusButton
-                R.id.transposeM5Button -> R.id.transposeM1Button
-                R.id.transposeM1Button -> R.id.transpose0Button
-                R.id.transpose0Button -> R.id.transposeP1Button
-                R.id.transposeP1Button -> R.id.transposeP5Button
-                R.id.transposeP5Button -> R.id.transposeP5Button
-                else -> 0
             }
             currentViewId == R.id.main_content -> R.id.navMenuButton
             currentViewId == R.id.navMenuButton -> when {
@@ -135,31 +142,34 @@ class GlobalFocusTraverser(
         }
 
         return when {
-            layoutController.isState(SongPreviewLayoutController::class) -> when (currentViewId) {
-                R.id.main_content, R.id.overlayScrollView -> 0
-                R.id.navMenuButton -> {
-                    navigationMenuController.navDrawerShow()
-                    -1
+            layoutController.isState(SongPreviewLayoutController::class) -> when {
+                playlistService.goToNextOrPrevious(-1) -> -1
+                else -> when (currentViewId) {
+                    R.id.main_content, R.id.overlayScrollView -> R.id.navMenuButton
+                    R.id.navMenuButton -> {
+                        navigationMenuController.navDrawerShow()
+                        -1
+                    }
+                    R.id.moreActionsButton -> when {
+                        activity.findViewById<View>(R.id.screenShareButton)?.isVisible == true -> R.id.screenShareButton
+                        else -> R.id.autoscrollButton
+                    }
+                    R.id.screenShareButton -> R.id.autoscrollButton
+                    R.id.autoscrollButton -> R.id.transposeButton
+                    R.id.transposeButton -> R.id.setFavouriteButton
+                    R.id.setFavouriteButton -> R.id.chordsHelpButton
+                    R.id.chordsHelpButton -> R.id.songInfoButton
+                    R.id.songInfoButton -> R.id.navMenuButton
+                    R.id.autoscrollToggleButton -> R.id.speedMinusButton
+                    R.id.speedPlusButton -> R.id.speedSeekbar
+                    R.id.speedSeekbar -> R.id.speedMinusButton
+                    R.id.transposeP5Button -> R.id.transposeP1Button
+                    R.id.transposeP1Button -> R.id.transpose0Button
+                    R.id.transpose0Button -> R.id.transposeM1Button
+                    R.id.transposeM1Button -> R.id.transposeM5Button
+                    R.id.transposeM5Button -> R.id.transposeM5Button
+                    else -> R.id.navMenuButton
                 }
-                R.id.moreActionsButton -> when {
-                    activity.findViewById<View>(R.id.screenShareButton)?.isVisible == true -> R.id.screenShareButton
-                    else -> R.id.autoscrollButton
-                }
-                R.id.screenShareButton -> R.id.autoscrollButton
-                R.id.autoscrollButton -> R.id.transposeButton
-                R.id.transposeButton -> R.id.setFavouriteButton
-                R.id.setFavouriteButton -> R.id.chordsHelpButton
-                R.id.chordsHelpButton -> R.id.songInfoButton
-                R.id.songInfoButton -> R.id.navMenuButton
-                R.id.autoscrollToggleButton -> R.id.speedMinusButton
-                R.id.speedPlusButton -> R.id.speedSeekbar
-                R.id.speedSeekbar -> R.id.speedMinusButton
-                R.id.transposeP5Button -> R.id.transposeP1Button
-                R.id.transposeP1Button -> R.id.transpose0Button
-                R.id.transpose0Button -> R.id.transposeM1Button
-                R.id.transposeM1Button -> R.id.transposeM5Button
-                R.id.transposeM5Button -> R.id.transposeM5Button
-                else -> R.id.navMenuButton
             }
             currentViewId == R.id.main_content -> R.id.navMenuButton
             currentViewId == R.id.navMenuButton -> {
@@ -210,16 +220,25 @@ class GlobalFocusTraverser(
         return when {
             layoutController.isState(SongPreviewLayoutController::class) -> when (currentViewId) {
                 R.id.main_content, R.id.overlayScrollView -> when {
-                    songPreviewLayoutController.canScrollDown() -> 0
+                    songPreviewLayoutController.isTransposePanelVisible() -> R.id.transpose0Button
+                    songPreviewLayoutController.isAutoscrollPanelVisible() -> R.id.autoscrollToggleButton
+                    songPreviewLayoutController.canScrollDown() -> {
+                        songPreviewLayoutController.scrollByStep(+1)
+                        -1
+                    }
                     else -> {
                         songPreviewLayoutController.scrollByStep(+1)
                         R.id.navMenuButton
                     }
                 }
+                R.id.navMenuButton -> {
+                    songPreviewLayoutController.scrollByStep(+1)
+                    R.id.main_content
+                }
                 R.id.songInfoButton, R.id.chordsHelpButton, R.id.setFavouriteButton,
                 R.id.transposeButton, R.id.autoscrollButton, R.id.screenShareButton, R.id.moreActionsButton -> when {
-                    activity.findViewById<View>(R.id.transpose0Button)?.isVisible == true && songPreviewLayoutController.isTransposePanelVisible() -> R.id.transpose0Button
-                    activity.findViewById<View>(R.id.autoscrollToggleButton)?.isVisible == true && songPreviewLayoutController.isAutoscrollPanelVisible() -> R.id.autoscrollToggleButton
+                    songPreviewLayoutController.isTransposePanelVisible() -> R.id.transpose0Button
+                    songPreviewLayoutController.isAutoscrollPanelVisible() -> R.id.autoscrollToggleButton
                     songPreviewLayoutController.canScrollDown() -> R.id.main_content
                     else -> {
                         songPreviewLayoutController.scrollByStep(+1)
@@ -236,6 +255,7 @@ class GlobalFocusTraverser(
                 layoutController.isState(PlaylistLayoutController::class) -> R.id.playlistListView
                 else -> 0
             }
+            layoutController.isState(EditSongLayoutController::class) && currentViewId == R.id.tooltipEditChordsLyricsInfo -> R.id.songContentEdit
             else -> 0
         }
     }
@@ -250,10 +270,21 @@ class GlobalFocusTraverser(
         return when {
             layoutController.isState(SongPreviewLayoutController::class) -> when (currentViewId) {
                 R.id.main_content, R.id.overlayScrollView -> when {
-                    songPreviewLayoutController.canScrollUp() -> 0
-                    else -> R.id.navMenuButton
+                    songPreviewLayoutController.isTransposePanelVisible() -> R.id.transpose0Button
+                    songPreviewLayoutController.isAutoscrollPanelVisible() -> R.id.autoscrollToggleButton
+                    songPreviewLayoutController.canScrollUp() -> {
+                        songPreviewLayoutController.scrollByStep(-1)
+                        -1
+                    }
+                    else -> {
+                        songPreviewLayoutController.scrollByStep(-1)
+                        R.id.navMenuButton
+                    }
                 }
-                R.id.navMenuButton -> R.id.navMenuButton
+                R.id.navMenuButton -> {
+                    songPreviewLayoutController.scrollByStep(-1)
+                    R.id.navMenuButton
+                }
                 R.id.songInfoButton, R.id.chordsHelpButton, R.id.setFavouriteButton,
                 R.id.transposeButton, R.id.autoscrollButton, R.id.screenShareButton, R.id.moreActionsButton -> R.id.navMenuButton
                 R.id.transposeM5Button, R.id.transposeM1Button, R.id.transpose0Button,
@@ -264,6 +295,7 @@ class GlobalFocusTraverser(
             }
             currentViewId == R.id.main_content -> R.id.navMenuButton
             currentViewId == R.id.navMenuButton -> R.id.navMenuButton
+            layoutController.isState(EditSongLayoutController::class) && currentViewId == R.id.songContentEdit -> R.id.tooltipEditChordsLyricsInfo
             else -> 0
         }
     }

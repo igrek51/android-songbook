@@ -100,20 +100,12 @@ class SystemKeyDispatcher(
         if (nextFocusTraverser.moveToNextView(nextFocusTraverser::nextUpView))
             return true
 
-        if (layoutController.isState(SongPreviewLayoutController::class))
-            if (songPreviewLayoutController.scrollByStep(-1))
-                return true
-
         return false
     }
 
     private fun onArrowDown(): Boolean {
         if (nextFocusTraverser.moveToNextView(nextFocusTraverser::nextDownView))
             return true
-
-        if (layoutController.isState(SongPreviewLayoutController::class))
-            if (songPreviewLayoutController.scrollByStep(+1))
-                return true
 
         return false
     }
@@ -122,20 +114,12 @@ class SystemKeyDispatcher(
         if (nextFocusTraverser.moveToNextView(nextFocusTraverser::nextLeftView))
             return true
 
-        if (layoutController.isState(SongPreviewLayoutController::class))
-            if (playlistService.goToNextOrPrevious(-1))
-                return true
-
         return false
     }
 
     private fun onArrowRight(): Boolean {
         if (nextFocusTraverser.moveToNextView(nextFocusTraverser::nextRightView))
             return true
-
-        if (layoutController.isState(SongPreviewLayoutController::class))
-            if (playlistService.goToNextOrPrevious(+1))
-                return true
 
         return false
     }
