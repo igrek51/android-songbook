@@ -9,8 +9,8 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 
 class ContextMenuBuilder(
-        activity: LazyInject<Activity> = appFactory.activity,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    activity: LazyInject<Activity> = appFactory.activity,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
 ) {
     private val activity by LazyExtractor(activity)
     private val uiResourceService by LazyExtractor(uiResourceService)

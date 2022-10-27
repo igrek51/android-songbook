@@ -4,9 +4,14 @@ package igrek.songbook.custom
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -36,10 +41,14 @@ import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.listview.ListScrollPosition
 import igrek.songbook.songselection.tree.NoParentItemException
+import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.locale.InsensitiveNameComparator
+import igrek.songbook.system.locale.StringSimplifier
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import io.reactivex.subjects.PublishSubject
 import kotlinx.serialization.json.Json
+import java.util.concurrent.TimeUnit
 
 class CustomSongsListLayoutController(
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
@@ -53,6 +62,7 @@ class CustomSongsListLayoutController(
     importFileChooser: LazyInject<ImportFileChooser> = appFactory.allSongsImportFileChooser,
     songImportFileChooser: LazyInject<SongImportFileChooser> = appFactory.songImportFileChooser,
     settingsEnumService: LazyInject<SettingsEnumService> = appFactory.settingsEnumService,
+    softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
 ) : InflatedLayout(
     _layoutResourceId = R.layout.screen_custom_songs
 ), ListItemClickListener<CustomSongListItem> {
@@ -67,36 +77,80 @@ class CustomSongsListLayoutController(
     private val importFileChooser by LazyExtractor(importFileChooser)
     private val songImportFileChooser by LazyExtractor(songImportFileChooser)
     private val settingsEnumService by LazyExtractor(settingsEnumService)
+    private val softKeyboardService by LazyExtractor(softKeyboardService)
 
     private var itemsListView: CustomSongListView? = null
     private var goBackButton: ImageButton? = null
     private var storedScroll: ListScrollPosition? = null
     private var tabTitleLabel: TextView? = null
     private var emptyListLabel: TextView? = null
+    private var customSearchBarLayout: FrameLayout? = null
+    private var searchFilterEdit: EditText? = null
+    private var searchFilterClearButton: ImageButton? = null
+    private var searchSongButton: ImageButton? = null
+    private var addCustomSongButton: ImageButton? = null
+    private var moreActionsButton: ImageButton? = null
+    private var songsSortButton: ImageButton? = null
 
     private var customCategory: CustomCategory? = null
     private var sortPicker: SinglePicker<CustomSongsOrdering>? = null
+    private var searchingOn: Boolean = false
+    private var itemNameFilter: String? = null
+    private var searchFilterSubject: PublishSubject<String> = PublishSubject.create()
     private var subscriptions = mutableListOf<Disposable>()
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
 
-        layout.findViewById<ImageButton>(R.id.addCustomSongButton)?.setOnClickListener {
-            addCustomSong()
-        }
-
-        layout.findViewById<ImageButton>(R.id.moreActionsButton)?.setOnClickListener {
-            showMoreActions()
-        }
-
         tabTitleLabel = layout.findViewById(R.id.tabTitleLabel)
         emptyListLabel = layout.findViewById(R.id.emptyListLabel)
+        customSearchBarLayout = layout.findViewById(R.id.customSearchBarLayout)
+
+        searchFilterEdit = layout.findViewById<EditText>(R.id.searchFilterEdit)?.apply {
+            addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {}
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    searchFilterSubject.onNext(s.toString())
+                }
+            })
+
+            if (isFilterSet()) {
+                setText(itemNameFilter, TextView.BufferType.EDITABLE)
+            }
+
+            setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus)
+                    softKeyboardService.hideSoftKeyboard(this)
+            }
+
+            setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    clearFocus()
+                    softKeyboardService.hideSoftKeyboard(this)
+                    return@setOnEditorActionListener true
+                }
+                false
+            }
+        }
+
+        addCustomSongButton = layout.findViewById<ImageButton>(R.id.addCustomSongButton)?.also {
+            it.setOnClickListener {
+                addCustomSong()
+            }
+        }
+
+        moreActionsButton = layout.findViewById<ImageButton>(R.id.moreActionsButton)?.also {
+            it.setOnClickListener {
+                showMoreActions()
+            }
+        }
 
         goBackButton = layout.findViewById<ImageButton>(R.id.goBackButton)?.also {
             it.setOnClickListener { goUp() }
         }
 
-        layout.findViewById<ImageButton>(R.id.songsSortButton)?.apply {
+        songsSortButton = layout.findViewById<ImageButton>(R.id.songsSortButton)?.apply {
             val title = uiResourceService.resString(R.string.song_list_ordering)
             sortPicker = SinglePicker(
                 activity,
@@ -106,6 +160,7 @@ class CustomSongsListLayoutController(
             ) { selectedSorting ->
                 if (settingsEnumService.preferencesState.customSongsOrdering != selectedSorting) {
                     settingsEnumService.preferencesState.customSongsOrdering = selectedSorting
+                    updateHeader()
                     updateItemsList()
                 }
             }
@@ -114,14 +169,33 @@ class CustomSongsListLayoutController(
             }
         }
 
+        searchSongButton = layout.findViewById<ImageButton>(R.id.searchSongButton)?.also {
+            it.setOnClickListener {
+                searchingOn = true
+                updateHeader()
+                updateItemsList()
+                searchFilterEdit?.requestFocus()
+                Handler(Looper.getMainLooper()).post {
+                    softKeyboardService.showSoftKeyboard(searchFilterEdit)
+                }
+            }
+        }
+
+        searchFilterClearButton = layout.findViewById<ImageButton>(R.id.searchFilterClearButton)?.also {
+            it.setOnClickListener {
+                onClearFilterClicked()
+            }
+        }
+
         itemsListView = layout.findViewById(R.id.itemsListView)
         itemsListView!!.init(activity as Context, this)
+        updateHeader()
         updateItemsList()
 
         val localFocus = LocalFocusTraverser(
             currentViewGetter = { itemsListView?.selectedView },
             currentFocusGetter = { appFactory.activity.get().currentFocus?.id },
-            preNextFocus = { currentFocusId: Int, currentView: View ->
+            preNextFocus = { _: Int, _: View ->
                 when {
                     appFactory.navigationMenuController.get().isDrawerShown() -> R.id.nav_view
                     else -> 0
@@ -188,12 +262,43 @@ class CustomSongsListLayoutController(
 
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
+        subscriptions.add(searchFilterSubject
+            .debounce(400, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                setSongFilter(searchFilterEdit?.text?.toString())
+            }, UiErrorHandler::handleError))
         subscriptions.add(songsRepository.dbChangeSubject
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 if (isLayoutVisible())
                     updateItemsList()
             }, UiErrorHandler::handleError))
+    }
+
+    private fun isFilterSet(): Boolean {
+        if (itemNameFilter.isNullOrEmpty())
+            return false
+        return (itemNameFilter?.length ?: 0) >= 3
+    }
+
+    private fun setSongFilter(itemNameFilter: String?) {
+        this.itemNameFilter = itemNameFilter
+        if (itemNameFilter == null)
+            searchFilterEdit?.setText("", TextView.BufferType.EDITABLE)
+        storedScroll = null
+        updateItemsList()
+    }
+
+    private fun onClearFilterClicked() {
+        if (!itemNameFilter.isNullOrEmpty()) {
+            setSongFilter(null)
+        } else {
+            softKeyboardService.hideSoftKeyboard(searchFilterEdit)
+            searchingOn = false
+            updateItemsList()
+        }
+        updateHeader()
     }
 
     private fun showMoreActions() {
@@ -231,7 +336,7 @@ class CustomSongsListLayoutController(
 
     private fun importCustomSongs() {
         ConfirmDialogBuilder().confirmAction(uiInfoService.resString(R.string.custom_songs_mass_import_hint)) {
-            importFileChooser.importFile() { content: String, _ ->
+            importFileChooser.importFile { content: String, _ ->
                 val json = Json {
                     ignoreUnknownKeys = true
                     allowStructuredMapKeys = true
@@ -250,12 +355,62 @@ class CustomSongsListLayoutController(
         customSongService.showAddSongScreen()
     }
 
-    private fun updateItemsList() {
+    private fun updateHeader() {
         val groupingEnabled = settingsEnumService.preferencesState.customSongsOrdering == CustomSongsOrdering.GROUP_CATEGORIES
         if (!groupingEnabled)
             customCategory = null
 
+        val customSongsTitle = uiResourceService.resString(R.string.nav_custom_song)
+        tabTitleLabel?.text = when {
+            customCategory != null && groupingEnabled -> "$customSongsTitle: ${customCategory?.name}"
+            else -> customSongsTitle
+        }
+
+        goBackButton?.visibility = when {
+            customCategory != null && groupingEnabled -> View.VISIBLE
+            else -> View.GONE
+        }
+
+        customSearchBarLayout?.visibility = when {
+            searchingOn -> View.VISIBLE
+            else -> View.GONE
+        }
+        tabTitleLabel?.visibility = when {
+            !searchingOn -> View.VISIBLE
+            else -> View.GONE
+        }
+        songsSortButton?.visibility = when {
+            !searchingOn -> View.VISIBLE
+            else -> View.GONE
+        }
+        searchSongButton?.visibility = when {
+            !searchingOn -> View.VISIBLE
+            else -> View.GONE
+        }
+        addCustomSongButton?.visibility = when {
+            !searchingOn -> View.VISIBLE
+            else -> View.GONE
+        }
+        moreActionsButton?.visibility = when {
+            !searchingOn -> View.VISIBLE
+            else -> View.GONE
+        }
+    }
+
+    private fun updateItemsList() {
+        val groupingEnabled = settingsEnumService.preferencesState.customSongsOrdering == CustomSongsOrdering.GROUP_CATEGORIES
+        if (!groupingEnabled)
+            customCategory = null
+        val filtering = isFilterSet()
+
         val songItems: List<CustomSongListItem> = when {
+
+            filtering -> {
+                songsRepository.customSongsRepo.songs.get()
+                    .filter { song -> songMatchesNameFilter(song, itemNameFilter) }
+                    .sortSongs()
+                    .map { CustomSongListItem(song = it) }
+            }
 
             groupingEnabled && customCategory == null -> {
                 val locale = appLanguageService.getCurrentLocale()
@@ -280,6 +435,7 @@ class CustomSongsListLayoutController(
                     .sortSongs()
                     .map { CustomSongListItem(song = it) }
             }
+
         }
         itemsListView?.items = songItems
 
@@ -289,19 +445,8 @@ class CustomSongsListLayoutController(
             }
         }
 
-        val customSongsTitle = uiResourceService.resString(R.string.nav_custom_song)
-        tabTitleLabel?.text = when {
-            customCategory != null && groupingEnabled -> "$customSongsTitle: ${customCategory?.name}"
-            else -> customSongsTitle
-        }
-
-        emptyListLabel!!.visibility = when {
-            itemsListView!!.count == 0 -> View.VISIBLE
-            else -> View.GONE
-        }
-
-        goBackButton?.visibility = when {
-            customCategory != null && groupingEnabled -> View.VISIBLE
+        emptyListLabel?.visibility = when (itemsListView?.count) {
+            0 -> View.VISIBLE
             else -> View.GONE
         }
     }
@@ -334,17 +479,32 @@ class CustomSongsListLayoutController(
         }
     }
 
+    private fun songMatchesNameFilter(song: Song, nameFilter: String?): Boolean {
+        if (nameFilter.isNullOrBlank())
+            return true
+        val fullSongName: String = song.displayName()
+        // must contain every part
+        val input = StringSimplifier.simplify(fullSongName).trim()
+        return nameFilter.split(" ")
+            .all { part -> input.contains(StringSimplifier.simplify(part)) }
+    }
+
     override fun onItemClick(item: CustomSongListItem) {
         storedScroll = itemsListView?.currentScrollPosition
         if (item.song != null) {
             songOpener.openSongPreview(item.song)
         } else if (item.customCategory != null) {
             customCategory = item.customCategory
+            updateHeader()
             updateItemsList()
         }
     }
 
     override fun onBackClicked() {
+        if (searchingOn) {
+            onClearFilterClicked()
+            return
+        }
         goUp()
     }
 
@@ -353,6 +513,7 @@ class CustomSongsListLayoutController(
             if (customCategory == null)
                 throw NoParentItemException()
             customCategory = null
+            updateHeader()
             updateItemsList()
         } catch (e: NoParentItemException) {
             layoutController.showPreviousLayoutOrQuit()

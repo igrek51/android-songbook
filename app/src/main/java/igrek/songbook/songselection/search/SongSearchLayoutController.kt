@@ -35,14 +35,14 @@ import java.util.concurrent.TimeUnit
 
 
 class SongSearchLayoutController(
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-        songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
-        songOpener: LazyInject<SongOpener> = appFactory.songOpener,
-        softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
-        songTreeLayoutController: LazyInject<SongTreeLayoutController> = appFactory.songTreeLayoutController,
-        sendMessageService: LazyInject<SendMessageService> = appFactory.sendMessageService,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
+    songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+    softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
+    songTreeLayoutController: LazyInject<SongTreeLayoutController> = appFactory.songTreeLayoutController,
+    sendMessageService: LazyInject<SendMessageService> = appFactory.sendMessageService,
 ) : InflatedLayout(
-        _layoutResourceId = R.layout.screen_song_search
+    _layoutResourceId = R.layout.screen_song_search
 ), SongClickListener {
     private val songsRepository by LazyExtractor(songsRepository)
     private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
@@ -177,7 +177,7 @@ class SongSearchLayoutController(
     private fun isFilterSet(): Boolean {
         if (itemNameFilter.isNullOrEmpty())
             return false
-        return itemNameFilter?.length ?: 0 >= 3
+        return (itemNameFilter?.length ?: 0) >= 3
     }
 
     override fun onBackClicked() {

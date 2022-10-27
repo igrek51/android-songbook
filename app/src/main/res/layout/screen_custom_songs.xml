@@ -84,6 +84,45 @@
                     android:text="@string/nav_custom_song"
                     android:textSize="18sp" />
 
+                <FrameLayout
+                    android:id="@+id/customSearchBarLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true">
+
+                    <android.widget.EditText
+                        android:id="@+id/searchFilterEdit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start|center_vertical"
+                        android:gravity="start|center_vertical"
+                        android:hint="@string/song_search_edit_hint"
+                        android:imeOptions="actionSearch|flagNoExtractUi"
+                        android:inputType="text"
+                        android:paddingBottom="16dp"
+                        android:paddingTop="16dp"
+                        android:scrollbars="vertical"
+                        />
+
+                    <ImageButton
+                        android:id="@+id/searchFilterClearButton"
+                        android:layout_width="48dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="end|center_vertical"
+                        android:layout_marginEnd="0dp"
+                        android:layout_marginRight="0dp"
+                        android:adjustViewBounds="true"
+                        android:background="?android:selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:focusableInTouchMode="false"
+                        android:padding="8dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/close"/>
+                </FrameLayout>
+
                 <ImageButton
                     android:id="@+id/songsSortButton"
                     android:layout_width="48dp"
@@ -99,6 +138,22 @@
                     android:padding="8dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/tune" />
+
+                <ImageButton
+                    android:id="@+id/searchSongButton"
+                    android:layout_width="48dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginRight="0dp"
+                    android:adjustViewBounds="true"
+                    android:background="?android:selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    android:padding="8dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/search" />
 
                 <ImageButton
                     android:id="@+id/addCustomSongButton"
