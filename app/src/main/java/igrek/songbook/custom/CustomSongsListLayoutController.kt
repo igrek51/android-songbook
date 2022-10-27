@@ -88,7 +88,6 @@ class CustomSongsListLayoutController(
     private var searchFilterEdit: EditText? = null
     private var searchFilterClearButton: ImageButton? = null
     private var searchSongButton: ImageButton? = null
-    private var addCustomSongButton: ImageButton? = null
     private var moreActionsButton: ImageButton? = null
     private var songsSortButton: ImageButton? = null
 
@@ -131,12 +130,6 @@ class CustomSongsListLayoutController(
                     return@setOnEditorActionListener true
                 }
                 false
-            }
-        }
-
-        addCustomSongButton = layout.findViewById<ImageButton>(R.id.addCustomSongButton)?.also {
-            it.setOnClickListener {
-                addCustomSong()
             }
         }
 
@@ -303,6 +296,9 @@ class CustomSongsListLayoutController(
 
     private fun showMoreActions() {
         ContextMenuBuilder().showContextMenu(mutableListOf(
+            ContextMenuBuilder.Action(R.string.action_create_new_custom_song) {
+                addCustomSong()
+            },
             ContextMenuBuilder.Action(R.string.import_content_from_file) {
                 importOneSong()
             },
@@ -384,10 +380,6 @@ class CustomSongsListLayoutController(
             else -> View.GONE
         }
         searchSongButton?.visibility = when {
-            !searchingOn -> View.VISIBLE
-            else -> View.GONE
-        }
-        addCustomSongButton?.visibility = when {
             !searchingOn -> View.VISIBLE
             else -> View.GONE
         }

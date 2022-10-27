@@ -250,7 +250,7 @@
     <string name="paste_empty">No text to paste</string>
     <string name="selected_text_copied">Selection copied: %s</string>
     <string name="no_text_selected">No text selected</string>
-    <string name="edit_song_chords_notation">Song chords notation:</string>
+    <string name="edit_song_chords_notation">Chords notation:</string>
     <string name="edit_song_undo">Undo</string>
     <string name="chords_editor_reformat_trim">Reformat</string>
     <string name="chords_editor_move_chords_to_right">Move chords from upper line to the right</string>
@@ -539,4 +539,5 @@
     <string name="song_sorting_by_latest">Sort by latest</string>
     <string name="song_sorting_by_oldest">Sort by oldest</string>
     <string name="song_sorting_group_categories">Group by artists</string>
+    <string name="action_create_new_custom_song">➕ New song</string>
 </resources>

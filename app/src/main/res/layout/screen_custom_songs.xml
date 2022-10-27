@@ -124,22 +124,6 @@
                 </FrameLayout>
 
                 <ImageButton
-                    android:id="@+id/songsSortButton"
-                    android:layout_width="48dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|center_vertical"
-                    android:layout_marginEnd="0dp"
-                    android:layout_marginRight="0dp"
-                    android:adjustViewBounds="true"
-                    android:background="?android:selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:focusableInTouchMode="false"
-                    android:padding="8dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/tune" />
-
-                <ImageButton
                     android:id="@+id/searchSongButton"
                     android:layout_width="48dp"
                     android:layout_height="wrap_content"
@@ -156,7 +140,7 @@
                     android:src="@drawable/search" />
 
                 <ImageButton
-                    android:id="@+id/addCustomSongButton"
+                    android:id="@+id/songsSortButton"
                     android:layout_width="48dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"
@@ -169,7 +153,7 @@
                     android:focusableInTouchMode="false"
                     android:padding="8dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/add" />
+                    android:src="@drawable/tune" />
 
                 <ImageButton
                     android:id="@+id/moreActionsButton"

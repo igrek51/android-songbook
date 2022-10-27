@@ -164,12 +164,19 @@ class GlobalFocusTraverser(
             layoutController.isState(CustomSongsListLayoutController::class) -> when (currentViewId) {
                 R.id.navMenuButton -> when {
                     activity.findViewById<View>(R.id.goBackButton)?.isVisible == true -> R.id.goBackButton
-                    activity.findViewById<View>(R.id.languageFilterButton)?.isVisible == true -> R.id.languageFilterButton
+                    activity.findViewById<View>(R.id.searchSongButton)?.isVisible == true -> R.id.searchSongButton
+                    activity.findViewById<View>(R.id.searchFilterEdit)?.isVisible == true -> R.id.searchFilterEdit
                     else -> 0
                 }
-                R.id.goBackButton -> R.id.languageFilterButton
-                R.id.languageFilterButton -> R.id.addCustomSongButton
-                R.id.addCustomSongButton -> R.id.moreActionsButton
+                R.id.goBackButton -> when {
+                    activity.findViewById<View>(R.id.searchSongButton)?.isVisible == true -> R.id.searchSongButton
+                    activity.findViewById<View>(R.id.searchFilterEdit)?.isVisible == true -> R.id.searchFilterEdit
+                    else -> 0
+                }
+                R.id.searchSongButton -> R.id.songsSortButton
+                R.id.songsSortButton -> R.id.moreActionsButton
+                R.id.searchFilterEdit -> R.id.searchFilterClearButton
+                R.id.searchFilterClearButton -> R.id.searchFilterClearButton
                 else -> 0
             }
             layoutController.isState(PlaylistLayoutController::class) -> when (currentViewId) {
@@ -234,9 +241,14 @@ class GlobalFocusTraverser(
                 -1
             }
             layoutController.isState(CustomSongsListLayoutController::class) -> when (currentViewId) {
-                R.id.moreActionsButton -> R.id.addCustomSongButton
-                R.id.addCustomSongButton -> R.id.languageFilterButton
-                R.id.languageFilterButton -> when {
+                R.id.moreActionsButton -> R.id.songsSortButton
+                R.id.songsSortButton -> R.id.searchSongButton
+                R.id.searchSongButton -> when {
+                    activity.findViewById<View>(R.id.goBackButton)?.isVisible == true -> R.id.goBackButton
+                    else -> R.id.navMenuButton
+                }
+                R.id.searchFilterClearButton -> R.id.searchFilterEdit
+                R.id.searchFilterEdit -> when {
                     activity.findViewById<View>(R.id.goBackButton)?.isVisible == true -> R.id.goBackButton
                     else -> R.id.navMenuButton
                 }
@@ -319,7 +331,7 @@ class GlobalFocusTraverser(
                 else -> 0
             }
             layoutController.isState(CustomSongsListLayoutController::class) -> when (currentViewId) {
-                R.id.navMenuButton, R.id.goBackButton, R.id.songsSortButton, R.id.addCustomSongButton, R.id.moreActionsButton -> R.id.itemsListView
+                R.id.navMenuButton, R.id.goBackButton, R.id.searchFilterEdit, R.id.searchFilterClearButton, R.id.searchSongButton, R.id.songsSortButton, R.id.moreActionsButton -> R.id.itemsListView
                 else -> 0
             }
             layoutController.isState(EditSongLayoutController::class) -> when (currentViewId) {
