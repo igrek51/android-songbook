@@ -25,5 +25,5 @@ Songbook jest narzędziem skupionym na gitarzystach, pianistach i innych muzykac
 Śpiewnik gitarowy posiada wiele piosenek z akordami, a w tym piosenki polskich artystów, piosenki ogniskowe, harcerskie, żołnierskie, polskie kolędy, szanty oraz wiele innych.
 Baza aplikacji może być łatwo rozszerzana o własne piosenki użytkowników.
 
-Więcej wskazówek i informacji na https://igrek51.github.io/android-songbook
+Sprawdź dokumentację dla użytkowników na https://igrek51.github.io/android-songbook
 oraz https://github.com/igrek51/android-songbook
