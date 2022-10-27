@@ -3,7 +3,7 @@ package igrek.songbook.kotlin
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class NullStringTest {
+class StringTest {
 
     @Test
     fun test_null_stringer() {

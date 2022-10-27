@@ -1,7 +1,9 @@
 package igrek.songbook.info
 
 import android.app.Activity
+import android.text.method.LinkMovementMethod
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -138,12 +140,13 @@ open class UiInfoService(
     }
 
     fun dialogThreeChoices(
-            titleResId: Int = 0, title: String = "",
-            messageResId: Int = 0, message: String = "",
-            positiveButton: Int = 0, positiveAction: () -> Unit = {},
-            negativeButton: Int = 0, negativeAction: () -> Unit = {},
-            neutralButton: Int = 0, neutralAction: () -> Unit = {},
-            postProcessor: (AlertDialog) -> Unit = {},
+        titleResId: Int = 0, title: String = "",
+        messageResId: Int = 0, message: CharSequence = "",
+        positiveButton: Int = 0, positiveAction: () -> Unit = {},
+        negativeButton: Int = 0, negativeAction: () -> Unit = {},
+        neutralButton: Int = 0, neutralAction: () -> Unit = {},
+        postProcessor: (AlertDialog) -> Unit = {},
+        richMessage: Boolean = false,
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             val alertBuilder = AlertDialog.Builder(activity)
@@ -183,6 +186,10 @@ open class UiInfoService(
             postProcessor.invoke(alertDialog)
             if (!activity.isFinishing) {
                 alertDialog.show()
+            }
+            if (richMessage) {
+                val textView = alertDialog.findViewById<TextView>(android.R.id.message)
+                textView?.movementMethod = LinkMovementMethod.getInstance()
             }
         }
     }

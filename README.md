@@ -44,4 +44,4 @@ Please give it a ⭐️⭐️⭐️⭐️⭐️ star.
 
 ## Documentation
 
-See [https://igrek51.github.io/android-songbook](https://igrek51.github.io/android-songbook) for more guides and docs.
+Find more guides and documentation at [https://igrek51.github.io/android-songbook](https://igrek51.github.io/android-songbook).

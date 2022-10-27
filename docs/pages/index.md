@@ -3,9 +3,11 @@
 [![GitHub version (latest SemVer)](https://img.shields.io/github/v/tag/igrek51/android-songbook?label=github&sort=semver)](https://github.com/igrek51/android-songbook)
 [![Github Pages](https://img.shields.io/badge/docs-github.io-blue)](https://igrek51.github.io/android-songbook)
 
+![](./assets/banner.png)
+
 Songs lyrics viewer with chords toolkit for musicians, guitarists and pianists
 
-## Main features
+## Features
 Our chief weapons are:
 
 - Displaying song lyrics with highlighted chords
@@ -32,10 +34,11 @@ It has many songs with chords on board and its database can be easily extended w
 
 Example application screenshots:
 
-| ![](./assets/screenshots-mobile-en/01.png) | ![](./assets/screenshots-mobile-en/02.png) | ![](./assets/screenshots-mobile-en/03.png) |
-|---|---|---|
-| ![](./assets/screenshots-mobile-en/04.png) | ![](./assets/screenshots-mobile-en/05.png) | ![](./assets/screenshots-mobile-en/06.png) |
-| ![](./assets/screenshots-mobile-en/07.png) | ![](./assets/screenshots-mobile-en/08.png) |  |
+| [![](./assets/screenshots-mobile-en/01.png)](./assets/screenshots-mobile-en/01.png) | [![](./assets/screenshots-mobile-en/02.png)](./assets/screenshots-mobile-en/02.png) |
+|---|---|
+| [![](./assets/screenshots-mobile-en/03.png)](./assets/screenshots-mobile-en/03.png) | [![](./assets/screenshots-mobile-en/04.png)](./assets/screenshots-mobile-en/04.png) |
+| [![](./assets/screenshots-mobile-en/05.png)](./assets/screenshots-mobile-en/05.png) | [![](./assets/screenshots-mobile-en/06.png)](./assets/screenshots-mobile-en/06.png) |
+| [![](./assets/screenshots-mobile-en/07.png)](./assets/screenshots-mobile-en/07.png) | [![](./assets/screenshots-mobile-en/08.png)](./assets/screenshots-mobile-en/08.png) |
 
 ## Available on Google Play
 

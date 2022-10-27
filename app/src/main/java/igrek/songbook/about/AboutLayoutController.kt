@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.HtmlCompat
 import igrek.songbook.BuildConfig
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
@@ -19,12 +20,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class AboutLayoutController(
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
-        secretCommandService: LazyInject<SecretCommandService> = appFactory.secretCommandService,
-        packageInfoService: LazyInject<PackageInfoService> = appFactory.packageInfoService,
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+    secretCommandService: LazyInject<SecretCommandService> = appFactory.secretCommandService,
+    packageInfoService: LazyInject<PackageInfoService> = appFactory.packageInfoService,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
 ) {
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val activity by LazyExtractor(appCompatActivity)
@@ -41,31 +42,33 @@ class AboutLayoutController(
         val title = uiResourceService.resString(R.string.nav_about)
 
         val variant = when {
-            BuildConfig.DEBUG -> "debug "
-            else -> "release "
+            BuildConfig.DEBUG -> "debug"
+            else -> "release"
         }
-        val appVersionLong = "${variant}$appVersionCode $buildDate"
+        val appVersionLong = "$variant $appVersionCode $buildDate"
         val message = uiResourceService.resString(R.string.ui_about_content, appVersionName, appVersionLong, dbVersionNumber)
+        val spannedMessage = HtmlCompat.fromHtml(message, HtmlCompat.FROM_HTML_MODE_LEGACY)
 
-        showDialogWithActions(title, message)
-    }
-
-    private fun showDialogWithActions(title: String, message: String) {
         // set button almost hidden by setting color
         val postProcessor = { alertDialog: AlertDialog ->
             alertDialog.setOnShowListener {
                 alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL)
-                        .setTextColor(uiResourceService.getColor(R.color.unlockAction))
+                    .setTextColor(uiResourceService.getColor(R.color.unlockAction))
             }
         }
         uiInfoService.dialogThreeChoices(
-                title = title,
-                message = message,
-                positiveButton = R.string.action_info_ok, positiveAction = {},
-                negativeButton = R.string.action_rate_app, negativeAction = { this.openInGoogleStore() },
-                neutralButton = R.string.action_secret, neutralAction = { secretCommandService.showUnlockAlert() },
-                postProcessor = postProcessor,
+            title = title,
+            message = spannedMessage,
+            positiveButton = R.string.action_info_ok, positiveAction = {},
+            negativeButton = R.string.action_rate_app, negativeAction = { this.openInGoogleStore() },
+            neutralButton = R.string.action_secret, neutralAction = { secretCommandService.showUnlockAlert() },
+            postProcessor = postProcessor,
+            richMessage = true,
         )
+    }
+
+    fun showUIHelp() {
+        uiInfoService.dialog(R.string.nav_help, R.string.ui_help_content)
     }
 
     private fun openInGoogleStore() {

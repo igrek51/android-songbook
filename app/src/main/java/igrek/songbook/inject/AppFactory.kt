@@ -5,15 +5,14 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.about.AboutLayoutController
-import igrek.songbook.about.HelpLayoutController
 import igrek.songbook.activity.*
 import igrek.songbook.admin.AdminCategoryManager
 import igrek.songbook.admin.AdminService
 import igrek.songbook.admin.SongRankService
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.admin.antechamber.AntechamberService
-import igrek.songbook.billing.BillingService
 import igrek.songbook.billing.BillingLayoutController
+import igrek.songbook.billing.BillingService
 import igrek.songbook.chords.diagram.ChordDiagramsService
 import igrek.songbook.chords.loader.LyricsLoader
 import igrek.songbook.custom.*
@@ -23,8 +22,8 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
-import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.GlobalFocusTraverser
+import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.ad.AdService
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
@@ -105,7 +104,6 @@ class AppFactory(
     val songSearchLayoutController = SingletonInject { SongSearchLayoutController() }
     val aboutLayoutController = SingletonInject { AboutLayoutController() }
     val contactLayoutController = SingletonInject { ContactLayoutController() }
-    val helpLayoutController = SingletonInject { HelpLayoutController() }
     val localDbService = SingletonInject { LocalDbService() }
     val songsRepository = SingletonInject { SongsRepository() }
     val permissionService = SingletonInject { PermissionService() }

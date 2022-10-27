@@ -8,7 +8,7 @@
     <string name="nav_random_song">Losowa piosenka</string>
     <string name="nav_settings">Ustawienia</string>
     <string name="nav_exit">Wyjście</string>
-    <string name="nav_about">O aplikacji</string>
+    <string name="nav_about">Informacje</string>
     <string name="nav_contact">Kontakt</string>
     <string name="nav_help">Pomoc</string>
     <string name="nav_screen_share">Współdzielenie piosenek</string>
@@ -50,16 +50,20 @@
         \nSongbook pozwala na publikowanie dodanych przez Ciebie piosenek i współdzielenie ich z pozostałymi użytkownikami.
         \nMożesz także zaproponować poprawkę w akordach lub tekście piosenek, jeśli odnajdziesz jakieś błędy.
     </string>
-    <string name="ui_about_content" formatted="false">
-        Wersja aplikacji: %s (%s)
-        \nWersja bazy piosenek: %s
-        \n
-        \nAUTOR:
-        \nIreneusz Szulc
-        \n
-        \nWYKORZYSTANE BIBLIOTEKI I NARZĘDZIA:
-        \nAndroid SDK, Apache Commons, Firebase Analytics, Google Play Services, Gradle, Guava, Jackson, Java, JWT, Kotlin, Material Design icons, OkHttp, Protobuf, RxAndroid, RxKotlin, SQLite
-    </string>
+    <string name="ui_about_content" formatted="false"><![CDATA[
+        Wersja aplikacji: <b>%s</b> (%s)
+        <br>Wersja bazy piosenek: %s
+        <br>
+        <br><b>AUTOR</b>:
+        <br>Ireneusz Szulc
+        <br>
+        <br><b>WYKORZYSTANE BIBLIOTEKI I NARZĘDZIA</b>:
+        <br>Android SDK, Apache Commons, Firebase Analytics, Google Play Services, Gradle, Guava, Jackson, Java, JWT, Kotlin, Material Design icons, OkHttp, Protobuf, RxAndroid, RxKotlin, SQLite
+        <br>
+        <br><a href=\"https://igrek51.github.io/android-songbook\">Wskazówki i dokumentacja</a>
+        <br>
+        <br><a href=\"https://github.com/igrek51/android-songbook\">Projekt Songbook na GitHubie</a>
+    ]]></string>
     <string name="action_info_ok">OK</string>
     <string name="action_secret">\?\?\?</string>
     <string name="action_check_secret">OK</string>

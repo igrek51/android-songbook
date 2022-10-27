@@ -51,16 +51,20 @@
         \nSongbook allows you to publish your custom songs and share it along all the other users.
         \nYou can also suggest improving some chords or lyrics, if you have noticed some bugs.
     </string>
-    <string name="ui_about_content" formatted="false">
-        Application version: %s (%s)
-        \nSongs database version: %s
-        \n
-        \nAUTHOR:
-        \nigrek51 - Ireneusz Szulc
-        \n
-        \nUSED LIBRARIES &amp; TOOLS:
-        \nAndroid SDK, Apache Commons, Firebase Analytics, Google Play Services, Gradle, Guava, Jackson, Java, JWT, Kotlin, Material Design icons, OkHttp, Protobuf, RxAndroid, RxKotlin, SQLite
-    </string>
+    <string name="ui_about_content" formatted="false"><![CDATA[
+        Application version: <b>%s</b> (%s)
+        <br>Songs database version: %s
+        <br>
+        <br><b>AUTHOR</b>:
+        <br>igrek51 - Ireneusz Szulc
+        <br>
+        <br><b>USED LIBRARIES &amp; TOOLS</b>:
+        <br>Android SDK, Apache Commons, Firebase Analytics, Google Play Services, Gradle, Guava, Jackson, Java, JWT, Kotlin, Material Design icons, OkHttp, Protobuf, RxAndroid, RxKotlin, SQLite
+        <br>
+        <br><a href=\"https://igrek51.github.io/android-songbook\">Guides and Documentation</a>
+        <br>
+        <br><a href=\"https://github.com/igrek51/android-songbook\">Songbook Project on GitHub</a>
+    ]]></string>
     <string name="action_info_ok">OK</string>
     <string name="action_secret">\?\?\?</string>
     <string name="action_check_secret">OK</string>

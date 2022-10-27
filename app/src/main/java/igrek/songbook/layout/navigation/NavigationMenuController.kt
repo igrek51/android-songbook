@@ -11,7 +11,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
 import igrek.songbook.R
 import igrek.songbook.about.AboutLayoutController
-import igrek.songbook.about.HelpLayoutController
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.billing.BillingLayoutController
@@ -43,13 +42,11 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.util.*
 
 @OptIn(DelicateCoroutinesApi::class)
 class NavigationMenuController(
     activity: LazyInject<Activity> = appFactory.activity,
     activityController: LazyInject<ActivityController> = appFactory.activityController,
-    helpLayoutController: LazyInject<HelpLayoutController> = appFactory.helpLayoutController,
     aboutLayoutController: LazyInject<AboutLayoutController> = appFactory.aboutLayoutController,
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
     songsUpdater: LazyInject<SongsUpdater> = appFactory.songsUpdater,
@@ -62,7 +59,6 @@ class NavigationMenuController(
 ) {
     private val activity by LazyExtractor(activity)
     private val activityController by LazyExtractor(activityController)
-    private val helpLayoutController by LazyExtractor(helpLayoutController)
     private val aboutLayoutController by LazyExtractor(aboutLayoutController)
     private val layoutController by LazyExtractor(layoutController)
     private val songsUpdater by LazyExtractor(songsUpdater)
@@ -149,7 +145,7 @@ class NavigationMenuController(
         val navHelpButton = menuItem?.actionView?.findViewById<ImageButton>(R.id.navHelpButton)
         navHelpButton?.setOnClickListener {
             closeDrawerAndCallAction {
-                helpLayoutController.showUIHelp()
+                aboutLayoutController.showUIHelp()
             }
         }
         if (navHelpButton == null)
