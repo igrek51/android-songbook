@@ -40,10 +40,11 @@ import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.listview.ListScrollPosition
+import igrek.songbook.songselection.search.SongSearchFilter
+import igrek.songbook.songselection.search.sortSongsByFilterRelevance
 import igrek.songbook.songselection.tree.NoParentItemException
 import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.locale.InsensitiveNameComparator
-import igrek.songbook.system.locale.StringSimplifier
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
@@ -398,9 +399,10 @@ class CustomSongsListLayoutController(
         val songItems: List<CustomSongListItem> = when {
 
             filtering -> {
+                val songFilter = SongSearchFilter(itemNameFilter.orEmpty())
                 songsRepository.customSongsRepo.songs.get()
-                    .filter { song -> songMatchesNameFilter(song, itemNameFilter) }
-                    .sortSongs()
+                    .filter { song -> songFilter.matchSong(song) }
+                    .sortSongsByFilterRelevance(songFilter)
                     .map { CustomSongListItem(song = it) }
             }
 
@@ -429,7 +431,7 @@ class CustomSongsListLayoutController(
             }
 
         }
-        itemsListView?.items = songItems
+        itemsListView?.items = songItems.toList()
 
         if (storedScroll != null) {
             Handler(Looper.getMainLooper()).post {
@@ -443,7 +445,7 @@ class CustomSongsListLayoutController(
         }
     }
 
-    private fun List<Song>.sortSongs(): List<Song> {
+    private fun Iterable<Song>.sortSongs(): List<Song> {
         val locale = appLanguageService.getCurrentLocale()
         return when (settingsEnumService.preferencesState.customSongsOrdering) {
             CustomSongsOrdering.SORT_BY_TITLE, CustomSongsOrdering.GROUP_CATEGORIES -> {
@@ -469,16 +471,6 @@ class CustomSongsListLayoutController(
                 ))
             }
         }
-    }
-
-    private fun songMatchesNameFilter(song: Song, nameFilter: String?): Boolean {
-        if (nameFilter.isNullOrBlank())
-            return true
-        val fullSongName: String = song.displayName()
-        // must contain every part
-        val input = StringSimplifier.simplify(fullSongName).trim()
-        return nameFilter.split(" ")
-            .all { part -> input.contains(StringSimplifier.simplify(part)) }
     }
 
     override fun onItemClick(item: CustomSongListItem) {

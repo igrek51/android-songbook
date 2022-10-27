@@ -124,8 +124,18 @@ class GlobalFocusTraverser(
 
     fun nextRightView(currentViewId: Int): Int {
         if (navigationMenuController.isDrawerShown()) {
-            navigationMenuController.navDrawerHide()
-            return R.id.navMenuButton
+            return when (currentViewId) {
+                R.id.nav_custom_songs -> {
+                    R.id.navAddCustomSongButton
+                }
+                R.id.nav_about -> {
+                    R.id.navHelpButton
+                }
+                else -> {
+                    navigationMenuController.navDrawerHide()
+                    R.id.navMenuButton
+                }
+            }
         }
 
         return when {
@@ -202,6 +212,9 @@ class GlobalFocusTraverser(
         if (navigationMenuController.isDrawerShown()) {
             when (currentViewId) {
                 R.id.navMenuButton, R.id.itemsList, R.id.itemsListView, R.id.main_content -> return R.id.nav_view
+                R.id.nav_top_songs -> return R.id.nav_top_songs
+                R.id.navAddCustomSongButton -> return R.id.nav_custom_songs
+                R.id.navHelpButton -> return R.id.nav_about
             }
         }
 

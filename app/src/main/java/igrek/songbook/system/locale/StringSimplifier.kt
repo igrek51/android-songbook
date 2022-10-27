@@ -6,21 +6,19 @@ class StringSimplifier {
 
     companion object {
 
-        private val locale = Locale("pl", "PL")
-        private val specialCharsMapping = mutableMapOf<Char, Char>()
+        val locale = Locale("pl", "PL")
 
-        init {
-            // special polish letters transformation
-            specialCharsMapping['ą'] = 'a'
-            specialCharsMapping['ż'] = 'z'
-            specialCharsMapping['ś'] = 's'
-            specialCharsMapping['ź'] = 'z'
-            specialCharsMapping['ę'] = 'e'
-            specialCharsMapping['ć'] = 'c'
-            specialCharsMapping['ń'] = 'n'
-            specialCharsMapping['ó'] = 'o'
-            specialCharsMapping['ł'] = 'l'
-        }
+        private val specialCharsMapping: Map<Char, Char> = mapOf(
+            'ą' to 'a',
+            'ż' to 'z',
+            'ś' to 's',
+            'ź' to 'z',
+            'ę' to 'e',
+            'ć' to 'c',
+            'ń' to 'n',
+            'ó' to 'o',
+            'ł' to 'l',
+        )
 
         fun simplify(s: String): String {
             var s2 = s.lowercase(locale).replace("'", "")

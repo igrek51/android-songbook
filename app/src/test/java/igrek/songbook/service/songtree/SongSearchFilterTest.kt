@@ -5,11 +5,11 @@ import igrek.songbook.persistence.general.model.Category
 import igrek.songbook.persistence.general.model.CategoryType
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongStatus
-import igrek.songbook.songselection.search.SongTreeFilter
+import igrek.songbook.songselection.search.SongSearchFilter
 import igrek.songbook.songselection.tree.SongTreeItem
 import org.junit.Test
 
-class SongTreeFilterTest {
+class SongSearchFilterTest {
 
     @Test
     fun test_matchesNameFilter() {
@@ -27,16 +27,16 @@ class SongTreeFilterTest {
         assertThat(songItem.song!!.displayName())
                 .isEqualTo("Jolka jolka ążśźęćół ĄĄŻŚŹĘĆ Żółć Łódź - Budka suflera")
 
-        assertThat(SongTreeFilter("Budka").songMatchesNameFilter(songItem)).isTrue()
-        assertThat(SongTreeFilter("budka").songMatchesNameFilter(songItem)).isTrue()
-        assertThat(SongTreeFilter("uFL udK").songMatchesNameFilter(songItem)).isTrue()
-        assertThat(SongTreeFilter("jolka suflera").songMatchesNameFilter(songItem)).isTrue()
-        assertThat(SongTreeFilter("dupka").songMatchesNameFilter(songItem)).isFalse()
-        assertThat(SongTreeFilter("dupka suflera").songMatchesNameFilter(songItem)).isFalse()
+        assertThat(SongSearchFilter("Budka").matchSong(songItem.song!!)).isTrue()
+        assertThat(SongSearchFilter("budka").matchSong(songItem.song!!)).isTrue()
+        assertThat(SongSearchFilter("uFL udK").matchSong(songItem.song!!)).isTrue()
+        assertThat(SongSearchFilter("jolka suflera").matchSong(songItem.song!!)).isTrue()
+        assertThat(SongSearchFilter("dupka").matchSong(songItem.song!!)).isFalse()
+        assertThat(SongSearchFilter("dupka suflera").matchSong(songItem.song!!)).isFalse()
         // polish letters
-        assertThat(SongTreeFilter("żółć łÓDŹ").songMatchesNameFilter(songItem)).isTrue()
-        assertThat(SongTreeFilter("zolc").songMatchesNameFilter(songItem)).isTrue()
-        assertThat(SongTreeFilter("azszecol aazszec lodz zolc").songMatchesNameFilter(songItem))
+        assertThat(SongSearchFilter("żółć łÓDŹ").matchSong(songItem.song!!)).isTrue()
+        assertThat(SongSearchFilter("zolc").matchSong(songItem.song!!)).isTrue()
+        assertThat(SongSearchFilter("azszecol aazszec lodz zolc").matchSong(songItem.song!!))
                 .isTrue()
     }
 
@@ -51,6 +51,6 @@ class SongTreeFilterTest {
                 status = SongStatus.PUBLISHED
         ))
 
-        assertThat(SongTreeFilter("d'upa hes").songMatchesNameFilter(songItem)).isTrue()
+        assertThat(SongSearchFilter("d'upa hes").matchSong(songItem.song!!)).isTrue()
     }
 }

@@ -4,14 +4,12 @@ package igrek.songbook.settings.language
 import android.app.Activity
 import android.os.Build
 import igrek.songbook.info.UiResourceService
-import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.preferences.PreferencesState
 import java.util.*
-import kotlin.collections.LinkedHashMap
 
 class AppLanguageService(
         activity: LazyInject<Activity> = appFactory.activity,
@@ -29,8 +27,6 @@ class AppLanguageService(
         set(value) {
             preferencesState.appLanguage = value
         }
-
-    private val logger = LoggerFactory.logger
 
     var selectedSongLanguages: Set<SongLanguage>
         get() {
@@ -52,11 +48,7 @@ class AppLanguageService(
         // Change locale settings in the app.
         val dm = res.displayMetrics
         val conf = res.configuration
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            conf.setLocale(Locale(langCode.lowercase()))
-        } else {
-            conf.locale = Locale(langCode.lowercase())
-        }
+        conf.setLocale(Locale(langCode.lowercase()))
         res.updateConfiguration(conf, dm)
     }
 
@@ -104,26 +96,6 @@ class AppLanguageService(
                     map[lang.langCode] = langDisplayName
                 }
         return map
-    }
-
-    fun lanugages2String(languages: List<SongLanguage>): String {
-        return languages.joinToString(separator = ";") { language -> language.langCode }
-    }
-
-    private fun string2Languages(languagesStr: String): List<SongLanguage> {
-        if (languagesStr.isEmpty())
-            return mutableListOf()
-        val languages = mutableListOf<SongLanguage>()
-        val languagesParts = languagesStr.split(";")
-        for (languageCode in languagesParts) {
-            val lang = SongLanguage.parseByLangCode(languageCode)
-            if (lang == null) {
-                logger.warn("unknown language code: $languageCode")
-                continue
-            }
-            languages.add(lang)
-        }
-        return languages
     }
 
     fun setSelectedSongLanguageCodes(languageCodes: Set<String>) {

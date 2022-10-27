@@ -26,8 +26,8 @@ import igrek.songbook.songselection.listview.LazySongListView
 import igrek.songbook.songselection.listview.ListScrollPosition
 import igrek.songbook.songselection.tree.SongTreeItem
 import igrek.songbook.songselection.tree.SongTreeLayoutController
-import igrek.songbook.songselection.tree.SongTreeSorter
 import igrek.songbook.system.SoftKeyboardService
+import igrek.songbook.system.locale.StringSimplifier
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
@@ -55,7 +55,7 @@ class SongSearchLayoutController(
     private var searchFilterEdit: EditText? = null
     private var emptySearchButton: Button? = null
     private var searchFilterSubject: PublishSubject<String> = PublishSubject.create()
-    private var itemNameFilter: String? = null
+    private var itemFilter: String? = null
     private var storedScroll: ListScrollPosition? = null
     private var subscriptions = mutableListOf<Disposable>()
 
@@ -78,7 +78,7 @@ class SongSearchLayoutController(
             })
 
             if (isFilterSet()) {
-                setText(itemNameFilter, TextView.BufferType.EDITABLE)
+                setText(itemFilter, TextView.BufferType.EDITABLE)
             }
 
             setOnFocusChangeListener { _, hasFocus ->
@@ -128,8 +128,7 @@ class SongSearchLayoutController(
 
     private fun updateItemsList() {
         val items: MutableList<SongTreeItem> = getSongItems(songsRepository.allSongsRepo)
-        val sortedItems = SongTreeSorter().sort(items)
-        itemsListView?.setItems(sortedItems)
+        itemsListView?.setItems(items)
 
         // restore Scroll Position
         if (storedScroll != null) {
@@ -143,7 +142,7 @@ class SongSearchLayoutController(
     }
 
     private fun setSongFilter(itemNameFilter: String?) {
-        this.itemNameFilter = itemNameFilter
+        this.itemFilter = itemNameFilter
         if (itemNameFilter == null)
             searchFilterEdit?.setText("", TextView.BufferType.EDITABLE)
         storedScroll = null
@@ -153,31 +152,30 @@ class SongSearchLayoutController(
     private fun getSongItems(songsRepo: AllSongsRepository): MutableList<SongTreeItem> {
         if (!isFilterSet()) { // no filter
             return songsRepo.songs.get()
-                    .asSequence()
+                    .sortedBy { it.displayName().lowercase(StringSimplifier.locale) }
                     .map { song -> SongSearchItem.song(song) }
                     .toMutableList()
         } else {
-            val songNameFilter = SongTreeFilter(itemNameFilter)
+            val songFilter = SongSearchFilter(itemFilter.orEmpty())
             // filter songs
             val songsSequence = songsRepo.songs.get()
-                    .asSequence()
+                    .filter { song -> songFilter.matchSong(song) }
+                    .sortSongsByFilterRelevance(songFilter)
                     .map { song -> SongSearchItem.song(song) }
-                    .filter { item -> songNameFilter.songMatchesNameFilter(item) }
             // filter categories
             val categoriesSequence = songsRepo.categories.get()
-                    .asSequence()
+                    .filter { category -> songFilter.matchCategory(category) }
                     .map { category -> SongTreeItem.category(category) }
-                    .filter { item -> songNameFilter.categoryMatchesNameFilter(item) }
             // display union
-            return songsSequence.plus(categoriesSequence)
+            return categoriesSequence.plus(songsSequence)
                     .toMutableList()
         }
     }
 
     private fun isFilterSet(): Boolean {
-        if (itemNameFilter.isNullOrEmpty())
+        if (itemFilter.isNullOrEmpty())
             return false
-        return (itemNameFilter?.length ?: 0) >= 3
+        return (itemFilter?.length ?: 0) >= 3
     }
 
     override fun onBackClicked() {
