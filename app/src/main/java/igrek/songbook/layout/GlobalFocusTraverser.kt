@@ -46,7 +46,7 @@ class GlobalFocusTraverser(
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val playlistService by LazyExtractor(playlistService)
 
-    private val debugMode: Boolean = true
+    private val debugMode: Boolean = false
 
     fun moveToNextView(nextViewProvider: (Int) -> Int): Boolean {
         val currentFocusId = activity.currentFocus?.id ?: 0

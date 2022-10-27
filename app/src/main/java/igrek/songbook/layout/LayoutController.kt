@@ -4,6 +4,7 @@ import android.app.Activity
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.transition.Fade
 import androidx.transition.Scene
@@ -176,6 +177,14 @@ class LayoutController(
 
     private fun postInitLayout(currentLayout: MainLayout) {
         adService.updateAdBanner(currentLayout)
+
+        if (activityController.isAndroidTv()) {
+            activity.findViewById<ImageButton>(R.id.navMenuButton)?.let {
+                it.isFocusableInTouchMode = true
+                it.requestFocusFromTouch()
+                it.isFocusableInTouchMode = false
+            }
+        }
     }
 
     fun showPreviousLayoutOrQuit() {

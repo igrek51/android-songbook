@@ -51,14 +51,16 @@ class ActivityController(
 
     fun onStart() {
         if (initialized) {
-            logger.debug("starting activity...")
+            val activityName = activity::class.simpleName
+            logger.debug("starting $activityName...")
             userDataDao.requestSave(false)
         }
     }
 
     fun onStop() {
         if (initialized) {
-            logger.debug("stopping activity...")
+            val activityName = activity::class.simpleName
+            logger.debug("stopping $activityName...")
             preferencesService.saveAll()
             userDataDao.requestSave(true)
         }
@@ -77,6 +79,11 @@ class ActivityController(
         startMain.addCategory(Intent.CATEGORY_HOME)
         startMain.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         activity.startActivity(startMain)
+    }
+
+    fun isAndroidTv(): Boolean {
+        val activityName = activity::class.simpleName
+        return activityName == TvActivity::class.simpleName
     }
 
 }

@@ -18,8 +18,9 @@ import igrek.songbook.util.RetryDelayed
 
 
 open class MainActivity(
-        mainActivityData: LazyInject<MainActivityData> = appFactory.activityData,
+    mainActivityData: LazyInject<MainActivityData> = appFactory.activityData,
 ) : AppCompatActivity() {
+
     private var activityData by LazyExtractor(mainActivityData)
 
     private val logger: Logger = LoggerFactory.logger
@@ -95,5 +96,4 @@ open class MainActivity(
         activityData.activityResultDispatcher.onActivityResult(requestCode, resultCode, data)
         super.onActivityResult(requestCode, resultCode, data)
     }
-
 }

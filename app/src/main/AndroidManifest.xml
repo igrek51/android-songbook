@@ -41,16 +41,25 @@
         <activity
             android:name=".activity.SplashScreenActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|navigation"
-            android:label="@string/app_name"
             android:resizeableActivity="true"
             android:exported="true"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.TvSplashScreenActivity"
+            android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|navigation"
+            android:resizeableActivity="true"
+            android:exported="true"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
@@ -58,7 +67,6 @@
         <activity
             android:name=".activity.SharedSongOpenActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|navigation"
-            android:label="@string/app_name"
             android:resizeableActivity="true"
             android:exported="true"
             android:theme="@style/SplashTheme">
@@ -77,7 +85,13 @@
         <activity
             android:name=".activity.MainActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|navigation"
-            android:label="@string/app_name"
+            android:resizeableActivity="true"
+            android:theme="@style/AppTheme"
+            android:launchMode="singleInstance" />
+
+        <activity
+            android:name=".activity.TvActivity"
+            android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|navigation"
             android:resizeableActivity="true"
             android:theme="@style/AppTheme"
             android:launchMode="singleInstance" />

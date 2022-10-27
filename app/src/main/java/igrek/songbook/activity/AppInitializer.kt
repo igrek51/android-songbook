@@ -100,7 +100,8 @@ class AppInitializer(
                 postInit()
             }
 
-            logger.info("Application has been initialized.")
+            val activityName = activity::class.simpleName
+            logger.info("Application has been initialized ($activityName)")
         }
     }
 

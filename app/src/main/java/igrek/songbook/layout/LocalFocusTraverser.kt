@@ -21,7 +21,7 @@ class LocalFocusTraverser(
 ) {
     private val activity by LazyExtractor(activity)
 
-    private val debugMode: Boolean = true
+    private val debugMode: Boolean = false
 
     fun handleKey(keyCode: Int): Boolean {
         when (keyCode) {
