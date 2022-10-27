@@ -5,6 +5,7 @@ import android.util.DisplayMetrics
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.allViews
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.AdRequest.*
 import igrek.songbook.BuildConfig
@@ -92,6 +93,14 @@ class AdService(
         requestAdViewSubject.onNext(true)
     }
 
+    fun focusAdBanner(): Boolean {
+        val adViewContainer: FrameLayout? = activity.findViewById(R.id.ad_view_container)
+        if (adViewContainer?.visibility != View.VISIBLE)
+            return false
+        adViewContainer.allViews.first().requestFocusFromTouch()
+        return true
+    }
+
     @Suppress("DEPRECATION")
     private fun requestAdRefresh() {
         logger.debug("initializing ad banner")
@@ -135,13 +144,13 @@ class AdService(
 
         val density = outMetrics.density
 
-        var adWidthPixels = adViewContainer?.width?.toFloat() ?: 0f
-        if (adWidthPixels == 0f) {
-            adWidthPixels = outMetrics.widthPixels.toFloat()
+        var adContainerWidthPixels = adViewContainer?.width?.toFloat() ?: 0f
+        if (adContainerWidthPixels == 0f) {
+            adContainerWidthPixels = outMetrics.widthPixels.toFloat()
         }
 
-        val adWidth = (adWidthPixels / density).toInt()
-        val adSize: AdSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adWidth)
+        val adContainerWidthDp = (adContainerWidthPixels / density).toInt()
+        val adSize: AdSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adContainerWidthDp)
 
         val adUnitResId = when {
             testingMode -> R.string.adaptive_banner_ad_unit_id_test

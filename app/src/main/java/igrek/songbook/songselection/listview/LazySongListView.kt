@@ -113,7 +113,14 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
                         this.requestFocusFromTouch()
                     }
                 }
-                0
+                when {
+                    currentFocusId == R.id.itemSongMoreButton -> -1
+                    this.selectedItemPosition == this.count - 1 -> {
+                        val focusResult = appFactory.adService.get().focusAdBanner()
+                        if (focusResult) -1 else 0
+                    }
+                    else -> 0
+                }
             },
         )
         setOnKeyListener { _, keyCode, event ->
