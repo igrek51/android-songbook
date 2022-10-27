@@ -87,7 +87,7 @@ class NavigationMenuController(
         actionsMap[R.id.nav_custom_songs] = { layoutController.showLayout(CustomSongsListLayoutController::class) }
         actionsMap[R.id.nav_random_song] = { randomSongOpener.openRandomSong() }
         actionsMap[R.id.nav_settings] = { layoutController.showLayout(SettingsLayoutController::class) }
-        actionsMap[R.id.nav_about] = { aboutLayoutController.showAbout() }
+        actionsMap[R.id.nav_manual] = { aboutLayoutController.showManual() }
         actionsMap[R.id.nav_exit] = { activityController.quit() }
         actionsMap[R.id.nav_contact] = { layoutController.showLayout(ContactLayoutController::class) }
         actionsMap[R.id.nav_missing_song] = { sendMessageService.requestMissingSong() }
@@ -141,15 +141,15 @@ class NavigationMenuController(
         if (navAddCustomSongButton == null)
             logger.error("Navigation button not found: navAddCustomSongButton")
 
-        menuItem = navigationView?.menu?.findItem(R.id.nav_about)
-        val navHelpButton = menuItem?.actionView?.findViewById<ImageButton>(R.id.navHelpButton)
-        navHelpButton?.setOnClickListener {
+        menuItem = navigationView?.menu?.findItem(R.id.nav_manual)
+        val navAboutButton = menuItem?.actionView?.findViewById<ImageButton>(R.id.navAboutButton)
+        navAboutButton?.setOnClickListener {
             closeDrawerAndCallAction {
-                aboutLayoutController.showUIHelp()
+                aboutLayoutController.showAbout()
             }
         }
-        if (navHelpButton == null)
-            logger.error("Navigation button not found: navHelpButton")
+        if (navAboutButton == null)
+            logger.error("Navigation button not found: navAboutButton")
     }
 
     private fun closeDrawerAndCallAction(action: () -> Unit) {

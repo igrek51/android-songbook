@@ -69,8 +69,8 @@ class AboutLayoutController(
         )
     }
 
-    fun showUIHelp() {
-        webviewLayoutController.openUrl("https://igrek51.github.io/android-songbook/quick-guide/")
+    fun showManual() {
+        webviewLayoutController.openUrlUserGuide()
     }
 
     private fun openInGoogleStore() {

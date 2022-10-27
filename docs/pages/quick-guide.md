@@ -107,7 +107,8 @@ To add a new one, click the :material-plus: icon in the main navigation menu.
 Add your lyrics as a simple text with chords in **square brackets**.
 Find out more about [Chord Format Specification](./chord-format.md).
 
-There are many useful tools in [**Chords Editor**](./chords-editor.md), which make the editing easier.
+There are many useful tools in [**Chords Editor**](./chords-editor.md),
+which make the editing easier.
 
 !!! tip
     If you prefer to edit your own songs on a desktop computer in a **TXT** file,

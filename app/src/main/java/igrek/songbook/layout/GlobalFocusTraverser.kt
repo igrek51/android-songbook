@@ -128,8 +128,8 @@ class GlobalFocusTraverser(
                 R.id.nav_custom_songs -> {
                     R.id.navAddCustomSongButton
                 }
-                R.id.nav_about -> {
-                    R.id.navHelpButton
+                R.id.nav_manual -> {
+                    R.id.navAboutButton
                 }
                 else -> {
                     navigationMenuController.navDrawerHide()
@@ -229,7 +229,7 @@ class GlobalFocusTraverser(
                 R.id.navMenuButton, R.id.itemsList, R.id.itemsListView, R.id.main_content -> return R.id.nav_view
                 R.id.nav_top_songs -> return R.id.nav_top_songs
                 R.id.navAddCustomSongButton -> return R.id.nav_custom_songs
-                R.id.navHelpButton -> return R.id.nav_about
+                R.id.navAboutButton -> return R.id.nav_manual
             }
         }
 

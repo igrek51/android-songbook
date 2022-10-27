@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import igrek.songbook.R
+import igrek.songbook.about.WebviewLayoutController
 import igrek.songbook.admin.AdminService
 import igrek.songbook.editor.ChordsEditorLayoutController
 import igrek.songbook.info.UiInfoService
@@ -43,6 +44,7 @@ class EditSongLayoutController(
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
     adminService: LazyInject<AdminService> = appFactory.adminService,
     globalFocusTraverser: LazyInject<GlobalFocusTraverser> = appFactory.globalFocusTraverser,
+    webviewLayoutController: LazyInject<WebviewLayoutController> = appFactory.webviewLayoutController,
 ) : InflatedLayout(
         _layoutResourceId = R.layout.screen_custom_song_details
 ) {
@@ -58,6 +60,7 @@ class EditSongLayoutController(
     private val songsRepository by LazyExtractor(songsRepository)
     private val adminService by LazyExtractor(adminService)
     private val globalFocusTraverser by LazyExtractor(globalFocusTraverser)
+    private val webviewLayoutController by LazyExtractor(webviewLayoutController)
 
     private var songTitleEdit: EditText? = null
     private var songContentEdit: EditText? = null
@@ -88,7 +91,7 @@ class EditSongLayoutController(
 
         layout.findViewById<ImageButton>(R.id.tooltipEditChordsLyricsInfo)?.let {
             it.setOnClickListener {
-                uiInfoService.showTooltip(R.string.chords_editor_hint)
+                webviewLayoutController.openUrlChordFormat()
             }
             globalFocusTraverser.setUpDownKeyListener(it)
         }
@@ -96,7 +99,7 @@ class EditSongLayoutController(
         songContentEdit = layout.findViewById<EditText>(R.id.songContentEdit)?.also {
             it.setText(songContent.orEmpty())
             it.setOnClickListener { openInChordsEditor() }
-            it.setOnEditorActionListener { v, actionId, event ->
+            it.setOnEditorActionListener { _, _, event ->
                 when (event.action) {
                     KeyEvent.ACTION_DOWN -> {
                         openInChordsEditor()
@@ -188,8 +191,6 @@ class EditSongLayoutController(
         chordsEditorLayoutController.chordsNotation = chordsNotation
         chordsEditorLayoutController.loadContent = songContentEdit?.text.toString()
         layoutController.showLayout(ChordsEditorLayoutController::class)
-
-        customSongService.showEditorHintsIfNeeded()
     }
 
     private fun importContentFromFile() {

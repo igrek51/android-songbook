@@ -8,8 +8,8 @@ There are many useful tools in chords editor, which make the editing easier:
 - `Undo`: revert last changes
 - `Line`: select whole line or next lines
 - `Duplicate`: duplicate selection
-- `Reformat`: Reformat and rearrange to standard chords format
-- `Validate`: Validate chords
+- `Reformat`: Reformat and rearrange to **standard chords format**, eg. by removing redundant whitespaces
+- `Validate`: Validate chords if it adheres to the Formatting standard (eg. whether the brackets are closed properly).
 - `Detect chords`: Find and mark chords automatically based on the chosen chords notation but keeping their original horizontal position (aligned with spaces) by removing 2 redundant spaces for each inserted `[ ]` characters.
 - `Transform`: Open menu with more transformations
 - `Move chords from upper line to matching words`: merge each two lines by moving chords (aligned with spaces) from upper line to lower line with lyrics, moving them to matching words they are above.

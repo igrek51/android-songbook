@@ -14,6 +14,7 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import igrek.songbook.R
+import igrek.songbook.about.WebviewLayoutController
 import igrek.songbook.custom.EditSongLayoutController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -41,6 +42,7 @@ class ChordsEditorLayoutController(
     softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
     contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    webviewLayoutController: LazyInject<WebviewLayoutController> = appFactory.webviewLayoutController,
 ) : MainLayout {
     private val layoutController by LazyExtractor(layoutController)
     private val uiInfoService by LazyExtractor(uiInfoService)
@@ -51,6 +53,7 @@ class ChordsEditorLayoutController(
     private val softKeyboardService by LazyExtractor(softKeyboardService)
     private val contextMenuBuilder by LazyExtractor(contextMenuBuilder)
     private val preferencesState by LazyExtractor(preferencesState)
+    private val webviewLayoutController by LazyExtractor(webviewLayoutController)
 
     private var contentEdit: EditText? = null
     private var layout: View? = null
@@ -86,7 +89,7 @@ class ChordsEditorLayoutController(
 
         val tooltipEditChordsLyricsInfo = layout.findViewById<ImageButton>(R.id.tooltipEditChordsLyricsInfo)
         tooltipEditChordsLyricsInfo.setOnClickListener {
-            uiInfoService.showTooltip(R.string.chords_editor_hint)
+            webviewLayoutController.openUrlChordFormat()
         }
 
         contentEdit = layout.findViewById<EditText>(R.id.songContentEdit)?.also {

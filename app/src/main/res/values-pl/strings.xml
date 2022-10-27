@@ -9,6 +9,7 @@
     <string name="nav_settings">Ustawienia</string>
     <string name="nav_exit">Wyjście</string>
     <string name="nav_about">Informacje</string>
+    <string name="nav_manual">Pomoc</string>
     <string name="nav_contact">Kontakt</string>
     <string name="nav_help">Pomoc</string>
     <string name="nav_screen_share">Współdzielenie piosenek</string>

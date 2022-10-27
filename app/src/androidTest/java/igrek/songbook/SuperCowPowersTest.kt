@@ -1,15 +1,16 @@
 package igrek.songbook
 
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.NavigationViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
 import igrek.songbook.activity.MainActivity
 import igrek.songbook.test.ScreenshotCapture
+import igrek.songbook.test.waitFor
 import org.hamcrest.Matchers.*
 import org.junit.Rule
 import org.junit.Test
@@ -34,7 +35,10 @@ class SuperCowPowersTest {
         onView(withId(R.id.navMenuButton)).perform(click())
         onView(withId(R.id.nav_view)).check(matches(isDisplayed()))
         // open about
-        onView(withId(R.id.nav_view)).perform(NavigationViewActions.navigateTo(R.id.nav_about))
+        onView(withId(R.id.nav_view)).perform(ViewActions.swipeUp())
+        onView(isRoot()).perform(waitFor(300))
+        onView(withId(R.id.navAboutButton)).check(matches(isDisplayed()))
+        onView(withId(R.id.navAboutButton)).perform(click())
         onView(withText(R.string.nav_about)).check(matches(isDisplayed()))
         // click ???
         onView(withId(android.R.id.button3)).check(matches(withText(R.string.action_secret)))

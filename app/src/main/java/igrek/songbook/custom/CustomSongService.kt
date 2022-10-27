@@ -112,10 +112,4 @@ class CustomSongService(
         }
         return newSong
     }
-
-    fun showEditorHintsIfNeeded() {
-        if (songsRepository.customSongsRepo.songs.get().isEmpty()) {
-            uiInfoService.showTooltip(R.string.chords_editor_hint)
-        }
-    }
 }

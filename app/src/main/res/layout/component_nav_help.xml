@@ -7,7 +7,7 @@
     android:layout_gravity="end|center_vertical">
 
     <ImageButton
-        android:id="@+id/navHelpButton"
+        android:id="@+id/navAboutButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="end|center_vertical"
@@ -19,6 +19,6 @@
         android:focusableInTouchMode="false"
         android:padding="12dp"
         android:scaleType="centerInside"
-        android:src="@drawable/help"/>
+        android:src="@drawable/info"/>
 
 </FrameLayout>
