@@ -53,6 +53,7 @@ class PreferencesState(
     var homeScreen: HomeScreenEnum by PreferenceDelegate(PreferencesField.HomeScreen)
     var forceSharpNotes: Boolean by PreferenceDelegate(PreferencesField.ForceSharpNotes)
     var customSongsOrdering: CustomSongsOrdering by PreferenceDelegate(PreferencesField.CustomSongsOrdering)
+    var songLyricsSearch: Boolean by PreferenceDelegate(PreferencesField.SongLyricsSearch)
 
 }
 

@@ -87,7 +87,7 @@
     <string name="end_of_song_autoscroll_stopped">End of song</string>
     <string name="song_category_others">Others</string>
     <string name="song_category_custom">My songs</string>
-    <string name="song_search_edit_hint">Song title or artist</string>
+    <string name="song_search_edit_hint">Title, artist or lyrics</string>
     <string name="unlock_key_invalid">Key is not valid, try again.</string>
     <string name="unlock_new_songs_unlocked">Songs unlocked: %d</string>
     <string name="settings_scroll_initial_pause">Autoscroll initial delay: %s s</string>
@@ -392,7 +392,7 @@
     <string name="chords_editor_select_line">Line</string>
     <string name="chords_editor_unmark_chords">Unmark chords</string>
     <string name="chords_editor_detect_chords_keeping_indent">Mark chords (not preserving indentation)</string>
-    <string name="settings_chords_editor_typeface">Song Editor font typeface</string>
+    <string name="settings_chords_editor_typeface">Font typeface in Song Editor</string>
     <string name="settings_keep_screen_on">Screen always on</string>
     <string name="settings_keep_screen_on_hint">Keep display always on when a song is opened</string>
     <string name="select_file_to_export">Save file</string>
@@ -488,7 +488,7 @@
     <string name="media_button_behaviour_scroll_down">Scroll down</string>
     <string name="media_button_behaviour_next_song">Go to next song</string>
     <string name="media_button_behaviour_nothing">Do nothing</string>
-    <string name="settings_buttons_section">Buttons</string>
+    <string name="settings_buttons_section">Buttons Controls</string>
     <string name="billing_ad_free_info">Buy \"Ad-free\" to remove the advertisement banner in the application once and for all (one time payment).</string>
     <string name="billing_buy_ad_free">Buy Ad-Free</string>
     <string name="billing_restore_pruchases">Restore your purchases</string>
@@ -538,4 +538,6 @@
     <string name="song_sorting_by_oldest">Sort by oldest</string>
     <string name="song_sorting_group_categories">Group by artists</string>
     <string name="action_create_new_custom_song">➕ New song</string>
+    <string name="settings_songLyricsSearch">Full-text search by words</string>
+    <string name="settings_songLyricsSearch_hint">Search songs by excerpt from lyrics (slower)</string>
 </resources>

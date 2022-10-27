@@ -86,7 +86,7 @@
     <string name="end_of_song_autoscroll_stopped">Koniec piosenki</string>
     <string name="song_category_others">Inne</string>
     <string name="song_category_custom">Moje piosenki</string>
-    <string name="song_search_edit_hint">Tytuł piosenki lub artysta</string>
+    <string name="song_search_edit_hint">Tytuł, artysta lub fragment piosenki</string>
     <string name="unlock_key_invalid">Hasło niepoprawne, próbuj dalej.</string>
     <string name="unlock_new_songs_unlocked">Odblokowano piosenki: %d</string>
     <string name="settings_scroll_initial_pause">Opóźnienie autoprzewijania: %s s</string>
@@ -367,7 +367,7 @@
     <string name="chords_editor_select_line">Linia</string>
     <string name="chords_editor_unmark_chords">Odznacz akordy</string>
     <string name="chords_editor_detect_chords_keeping_indent">Zaznacz akordy (nie zachowując wcięć)</string>
-    <string name="settings_chords_editor_typeface">Krój czcionki edytora piosenek</string>
+    <string name="settings_chords_editor_typeface">Krój czcionki w edytorze piosenek</string>
     <string name="settings_keep_screen_on">Zawsze włączony ekran</string>
     <string name="settings_keep_screen_on_hint">Utrzymuj niegasnący wyświetlacz na podglądzie piosenki</string>
     <string name="select_file_to_export">Zapisz plik</string>
@@ -461,7 +461,7 @@
     <string name="media_button_behaviour_scroll_down">Przewiń w dół</string>
     <string name="media_button_behaviour_next_song">Przejdź do następnej piosenki</string>
     <string name="media_button_behaviour_nothing">Nie rób nic</string>
-    <string name="settings_buttons_section">Przyciski</string>
+    <string name="settings_buttons_section">Sterowanie przyciskami</string>
     <string name="billing_ad_free_info">Kup \"Brak reklam\", aby usunąć banner z reklamami w aplikacji, raz na zawsze (jednorazowa płatność).</string>
     <string name="billing_buy_ad_free">Wykup Brak reklam</string>
     <string name="billing_restore_pruchases">Wczytaj poprzednie zakupy</string>
@@ -511,4 +511,6 @@
     <string name="song_sorting_by_oldest">Sortuj od najstarszych</string>
     <string name="song_sorting_group_categories">Grupuj wg artysty</string>
     <string name="action_create_new_custom_song">➕ Nowa piosenka</string>
+    <string name="settings_songLyricsSearch">Wyszukiwanie po fragmencie tekstu</string>
+    <string name="settings_songLyricsSearch_hint">Szukaj piosenek zawierających słowa tekstu (wolniejsze)</string>
 </resources>

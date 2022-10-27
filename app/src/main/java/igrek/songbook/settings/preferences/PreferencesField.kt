@@ -147,6 +147,8 @@ enum class PreferencesField constructor(
 
     ForceSharpNotes(false),
 
+    SongLyricsSearch(true),
+
     ;
 
     constructor(defaultValue: String) : this(StringPreferenceType(defaultValue))

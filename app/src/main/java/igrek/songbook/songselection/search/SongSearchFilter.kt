@@ -4,11 +4,15 @@ import igrek.songbook.persistence.general.model.Category
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.system.locale.StringSimplifier
 
-class SongSearchFilter(private val filterStr: String) {
+class SongSearchFilter(
+    private val filterStr: String,
+    private val fullTextSearch: Boolean = true,
+) {
 
-    private val filterParts: List<String> = filterStr
+    private val simplifiedFilter: String = StringSimplifier.simplify(filterStr).trim()
+    private val filterParts: List<String> = simplifiedFilter
         .split(" ")
-        .map { StringSimplifier.simplify(it).trim() }
+        .map { it.trim() }
         .filter { it.isNotBlank() }
 
     fun matchSong(song: Song): Boolean {
@@ -18,7 +22,7 @@ class SongSearchFilter(private val filterStr: String) {
         if (containsEveryFilterPart(song.displayName()))
             return true
 
-        if (filterStr.length >= 4)
+        if (fullTextSearch && filterStr.length >= 4)
             if (containsEveryFilterPart(song.content.orEmpty()))
                 return true
 
@@ -42,7 +46,7 @@ class SongSearchFilter(private val filterStr: String) {
         if (filterStr.isBlank())
             return 0
 
-        if (song.title.startsWith(filterStr))
+        if (StringSimplifier.simplify(song.title).startsWith(simplifiedFilter))
             return 1000
 
         if (containsEveryFilterPart(song.title))
@@ -51,7 +55,7 @@ class SongSearchFilter(private val filterStr: String) {
         if (containsEveryFilterPart(song.displayName()))
             return 10
 
-        if (filterStr.length >= 4)
+        if (fullTextSearch && filterStr.length >= 4)
             if (containsEveryFilterPart(song.content.orEmpty()))
                 return 1
 

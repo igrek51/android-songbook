@@ -19,6 +19,7 @@ import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.persistence.repository.AllSongsRepository
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.send.SendMessageService
+import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.SongClickListener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
@@ -41,6 +42,7 @@ class SongSearchLayoutController(
     softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
     songTreeLayoutController: LazyInject<SongTreeLayoutController> = appFactory.songTreeLayoutController,
     sendMessageService: LazyInject<SendMessageService> = appFactory.sendMessageService,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) : InflatedLayout(
     _layoutResourceId = R.layout.screen_song_search
 ), SongClickListener {
@@ -50,6 +52,7 @@ class SongSearchLayoutController(
     private val softKeyboardService by LazyExtractor(softKeyboardService)
     private val songTreeLayoutController by LazyExtractor(songTreeLayoutController)
     private val sendMessageService by LazyExtractor(sendMessageService)
+    private val preferencesState by LazyExtractor(preferencesState)
 
     private var itemsListView: LazySongListView? = null
     private var searchFilterEdit: EditText? = null
@@ -156,7 +159,7 @@ class SongSearchLayoutController(
                     .map { song -> SongSearchItem.song(song) }
                     .toMutableList()
         } else {
-            val songFilter = SongSearchFilter(itemFilter.orEmpty())
+            val songFilter = SongSearchFilter(itemFilter.orEmpty(), preferencesState.songLyricsSearch)
             // filter songs
             val songsSequence = songsRepo.songs.get()
                     .filter { song -> songFilter.matchSong(song) }

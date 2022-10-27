@@ -317,6 +317,13 @@ class SettingsFragment(
             }
         )
 
+        setupSwitchPreference("songLyricsSearch",
+            onLoad = { preferencesState.songLyricsSearch },
+            onSave = { value: Boolean ->
+                preferencesState.songLyricsSearch = value
+            }
+        )
+
         setupListPreference("mediaButtonBehaviour",
             mediaButtonService.mediaButtonBehavioursEntries(),
             onLoad = { preferencesState.mediaButtonBehaviour.id.toString() },

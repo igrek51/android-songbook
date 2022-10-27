@@ -37,6 +37,7 @@ import igrek.songbook.persistence.user.custom.CustomSongsDb
 import igrek.songbook.settings.enums.CustomSongsOrdering
 import igrek.songbook.settings.enums.SettingsEnumService
 import igrek.songbook.settings.language.AppLanguageService
+import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.listview.ListScrollPosition
@@ -64,6 +65,7 @@ class CustomSongsListLayoutController(
     songImportFileChooser: LazyInject<SongImportFileChooser> = appFactory.songImportFileChooser,
     settingsEnumService: LazyInject<SettingsEnumService> = appFactory.settingsEnumService,
     softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) : InflatedLayout(
     _layoutResourceId = R.layout.screen_custom_songs
 ), ListItemClickListener<CustomSongListItem> {
@@ -79,6 +81,7 @@ class CustomSongsListLayoutController(
     private val songImportFileChooser by LazyExtractor(songImportFileChooser)
     private val settingsEnumService by LazyExtractor(settingsEnumService)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
+    private val preferencesState by LazyExtractor(preferencesState)
 
     private var itemsListView: CustomSongListView? = null
     private var goBackButton: ImageButton? = null
@@ -399,7 +402,7 @@ class CustomSongsListLayoutController(
         val songItems: List<CustomSongListItem> = when {
 
             filtering -> {
-                val songFilter = SongSearchFilter(itemNameFilter.orEmpty())
+                val songFilter = SongSearchFilter(itemNameFilter.orEmpty(), preferencesState.songLyricsSearch)
                 songsRepository.customSongsRepo.songs.get()
                     .filter { song -> songFilter.matchSong(song) }
                     .sortSongsByFilterRelevance(songFilter)

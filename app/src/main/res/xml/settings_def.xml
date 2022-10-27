@@ -67,14 +67,14 @@
             android:summary="@string/settings_horizontalScroll_hint"
             app:iconSpaceReserved="false" />
         <SwitchPreference
-            android:key="trimWhitespaces"
-            android:title="@string/settings_trim_whitespaces"
-            android:summary="@string/settings_trim_whitespaces_hint"
-            app:iconSpaceReserved="false" />
-        <SwitchPreference
             android:key="keepScreenOn"
             android:title="@string/settings_keep_screen_on"
             android:summary="@string/settings_keep_screen_on_hint"
+            app:iconSpaceReserved="false" />
+        <SwitchPreference
+            android:key="trimWhitespaces"
+            android:title="@string/settings_trim_whitespaces"
+            android:summary="@string/settings_trim_whitespaces_hint"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
@@ -142,6 +142,11 @@
             android:key="filterLanguages"
             android:title="@string/settings_filter_languages"
             android:summary="%s"
+            app:iconSpaceReserved="false" />
+        <SwitchPreference
+            android:key="songLyricsSearch"
+            android:title="@string/settings_songLyricsSearch"
+            android:summary="@string/settings_songLyricsSearch_hint"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
