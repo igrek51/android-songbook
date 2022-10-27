@@ -73,6 +73,13 @@ Song lyrics with [chords] in the same line
 [C]Example [G#]text [C G# A7 F#maj7]
 [C]So, so you think you can [D]tell
 Smoke on the water [C G#]
+
+Never gonna [G]give you [A]up
+Never gonna [F#m]let you [Bm]down
+Never gonna [G]run [A]around and [F#]desert [Bm]you
+Never gonna [G]make you [A]cry
+Never gonna [F#m]say good[Bm]bye
+Never gonna [G]tell [A]a lie and [F#]hurt [Bm]you
 ```
 
 ## Displaying style benefits

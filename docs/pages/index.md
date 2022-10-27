@@ -7,26 +7,28 @@
 
 Songs lyrics viewer with chords toolkit for musicians, guitarists and pianists
 
+See [Quick User Guide](./quick-guide.md) to get familiar with *Songbook*.
+
 ## Features
 Our chief weapons are:
 
 - Displaying song lyrics with highlighted chords
-- Chords transposition (any song to any key)
-- Auto scrolling while playing
-- Adding custom songs with advanced chords editor
+- [Chords transposition](./transpose.md) (any song to any key)
+- [Auto scrolling while playing](./autoscroll.md)
+- [Adding custom songs with advanced chords editor](./chords-editor.md)
 - Playlists / setlists with songs
-- Chord diagrams for guitar, ukulele, mandolin and piano
-- Sharing & Displaying songs on multiple devices at the same time via Bluetooth
-- Several chords notations supported: English ("Am Bbm Bb B C Dm"), German ("a b B H C d"), Solfege ("Do Re Mi Fa")
-- Customizable chord displaying styles
+- [Chord diagrams](./chord-diagrams.md) for guitar, ukulele, mandolin and piano
+- [Sharing & Displaying songs on multiple devices at the same time via Bluetooth](./bluetooth-sharing.md)
+- [Several chords notations supported](./chords-notations.md): English (`Am Bbm Bb B C Dm`), German (`a b B H C d`), Solfege (`Do Re Mi Fa`)
+- [Customizable chord displaying styles](./displaying-styles.md)
 - Automatic chords detection, detecting a song key
 - Custom songs & settings synchronization between many devices, back-ups & restoring all application data
 - Sharing songs by link
 - Always-on display while playing
 - Importing & Exporting songs from / to files or Google Drive
-- Controls with keyboard arrow keys, D-pad, headset button or external pedal
+- [Controls](./controls.md) with keyboard arrow keys, D-pad, headset button or external pedal
 
-Songbook is a tool focused on guitarists, pianists and other musicians, but it also can be used just to view the songs lyrics on mobile devices.
+Songbook is a tool focused on guitarists, pianists and other musicians,but it also can be used just to view the songs lyrics on mobile devices.
 It has many songs with chords on board and its database can be easily extended with your own songs.
 
 ## Demo
