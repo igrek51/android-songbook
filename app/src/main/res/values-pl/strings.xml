@@ -66,6 +66,7 @@
         <br>Android SDK, Apache Commons, Firebase Analytics, Google Play Services, Gradle, Guava, Jackson, Java, JWT, Kotlin, Material Design icons, OkHttp, Protobuf, RxAndroid, RxKotlin, SQLite
     ]]></string>
     <string name="action_info_ok">OK</string>
+    <string name="action_info_yes">Tak</string>
     <string name="action_secret">\?\?\?</string>
     <string name="action_check_secret">OK</string>
     <string name="action_cancel">Anuluj</string>
@@ -518,4 +519,8 @@
     <string name="action_create_new_custom_song">➕ Nowa piosenka</string>
     <string name="settings_songLyricsSearch">Wyszukiwanie po fragmencie tekstu</string>
     <string name="settings_songLyricsSearch_hint">Szukaj piosenek zawierających słowa tekstu (wolniejsze)</string>
+    <string name="manual_first_time">Pierwszy raz?</string>
+    <string name="manual_confirm_opening_manual">Czy chcesz zobaczyć krótki Przewodnik po funkcjonalnościach Songbooka?</string>
+    <string name="prompt_rate_app_title">Podoba Ci się Songbook?</string>
+    <string name="prompt_rate_app_body">Czy oceniłbyś Songbooka na 5 gwiazdek ⭐️⭐️⭐️⭐️⭐️?</string>
 </resources>

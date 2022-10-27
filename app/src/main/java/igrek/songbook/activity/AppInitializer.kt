@@ -3,12 +3,13 @@ package igrek.songbook.activity
 
 import android.app.Activity
 import android.content.Intent
-import android.view.View
 import igrek.songbook.BuildConfig
 import igrek.songbook.R
+import igrek.songbook.about.AboutLayoutController
 import igrek.songbook.admin.AdminService
 import igrek.songbook.custom.SongImportFileChooser
 import igrek.songbook.custom.share.ShareSongService
+import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -43,6 +44,8 @@ class AppInitializer(
     shareSongService: LazyInject<ShareSongService> = appFactory.shareSongService,
     songImportFileChooser: LazyInject<SongImportFileChooser> = appFactory.songImportFileChooser,
     songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+    aboutLayoutController: LazyInject<AboutLayoutController> = appFactory.aboutLayoutController,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
 ) {
     private val windowManagerService by LazyExtractor(windowManagerService)
     private val layoutController by LazyExtractor(layoutController)
@@ -58,6 +61,8 @@ class AppInitializer(
     private val shareSongService by LazyExtractor(shareSongService)
     private val songImportFileChooser by LazyExtractor(songImportFileChooser)
     private val songOpener by LazyExtractor(songOpener)
+    private val aboutLayoutController by LazyExtractor(aboutLayoutController)
+    private val uiInfoService by LazyExtractor(uiInfoService)
 
     private val logger = LoggerFactory.logger
     private val debugInitEnabled = false
@@ -92,9 +97,9 @@ class AppInitializer(
                 adminService.init()
                 if (isRunningFirstTime())
                     firstRunInit()
+                if (preferencesState.appExecutionCount == 50L)
+                    promptRateApp()
                 reportExecution()
-
-                activity.findViewById<View>(R.id.navMenuButton)?.requestFocus()
 
                 activityController.initialized = true
                 postInit()
@@ -122,6 +127,7 @@ class AppInitializer(
     private fun firstRunInit() {
         logger.debug("First run init")
         chordsNotationService.setDefaultChordsNotation()
+        aboutLayoutController.showFirstTimeManualDialog()
     }
 
     private fun debugInit() {
@@ -139,6 +145,15 @@ class AppInitializer(
 
     private fun getStartingScreen(): KClass<out MainLayout> {
         return preferencesState.homeScreen.layoutClass
+    }
+
+    private fun promptRateApp() {
+        uiInfoService.dialogThreeChoices(
+            titleResId = R.string.prompt_rate_app_title,
+            messageResId = R.string.prompt_rate_app_body,
+            negativeButton = R.string.action_cancel, negativeAction = {},
+            positiveButton = R.string.action_info_yes, positiveAction = { aboutLayoutController.openInGoogleStore() }
+        )
     }
 
 }

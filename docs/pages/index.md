@@ -2,8 +2,9 @@
 
 # Songbook
 
-[![GitHub version (latest SemVer)](https://img.shields.io/github/v/tag/igrek51/android-songbook?label=github&sort=semver)](https://github.com/igrek51/android-songbook)
+[![GitHub version (latest SemVer)](https://img.shields.io/github/v/tag/igrek51/android-songbook?label=GitHub&sort=semver)](https://github.com/igrek51/android-songbook)
 [![Github Pages](https://img.shields.io/badge/docs-github.io-blue)](https://igrek51.github.io/android-songbook)
+[![Google Play](https://img.shields.io/badge/Google%20Play-igrek.songbook-blue)](https://play.google.com/store/apps/details?id=igrek.songbook)
 
 Songs lyrics viewer with chords toolkit for musicians, guitarists and pianists
 

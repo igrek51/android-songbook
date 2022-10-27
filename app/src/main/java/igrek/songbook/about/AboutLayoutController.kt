@@ -73,7 +73,16 @@ class AboutLayoutController(
         webviewLayoutController.openUrlUserGuide()
     }
 
-    private fun openInGoogleStore() {
+    fun showFirstTimeManualDialog() {
+        uiInfoService.dialogThreeChoices(
+            titleResId = R.string.manual_first_time,
+            messageResId = R.string.manual_confirm_opening_manual,
+            negativeButton = R.string.action_cancel, negativeAction = {},
+            positiveButton = R.string.action_info_yes, positiveAction = { showManual() }
+        )
+    }
+
+    fun openInGoogleStore() {
         val uri = Uri.parse("market://details?id=" + activity.packageName)
         val goToMarket = Intent(Intent.ACTION_VIEW, uri)
         // To count with Play market backstack, After pressing back button,
