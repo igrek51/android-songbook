@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.about.AboutLayoutController
+import igrek.songbook.about.WebviewLayoutController
 import igrek.songbook.activity.*
 import igrek.songbook.admin.AdminCategoryManager
 import igrek.songbook.admin.AdminService
@@ -162,4 +163,5 @@ class AppFactory(
     val homeScreenEnumService = SingletonInject { HomeScreenEnumService() }
     val settingsEnumService = SingletonInject { SettingsEnumService() }
     val globalFocusTraverser = SingletonInject { GlobalFocusTraverser() }
+    val webviewLayoutController = SingletonInject { WebviewLayoutController() }
 }

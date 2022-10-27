@@ -6,8 +6,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.KeyEvent
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.preference.*
@@ -20,7 +18,6 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.layout.LocalFocusTraverser
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.settings.buttons.MediaButtonBehaviours
 import igrek.songbook.settings.buttons.MediaButtonService

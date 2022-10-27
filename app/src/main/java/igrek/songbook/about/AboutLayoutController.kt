@@ -26,6 +26,7 @@ class AboutLayoutController(
     packageInfoService: LazyInject<PackageInfoService> = appFactory.packageInfoService,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    webviewLayoutController: LazyInject<WebviewLayoutController> = appFactory.webviewLayoutController,
 ) {
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val activity by LazyExtractor(appCompatActivity)
@@ -33,6 +34,7 @@ class AboutLayoutController(
     private val packageInfoService by LazyExtractor(packageInfoService)
     private val songsRepository by LazyExtractor(songsRepository)
     private val uiInfoService by LazyExtractor(uiInfoService)
+    private val webviewLayoutController by LazyExtractor(webviewLayoutController)
 
     fun showAbout() {
         val appVersionName = packageInfoService.versionName
@@ -68,7 +70,7 @@ class AboutLayoutController(
     }
 
     fun showUIHelp() {
-        uiInfoService.dialog(R.string.nav_help, R.string.ui_help_content)
+        webviewLayoutController.openUrl("https://igrek51.github.io/android-songbook/quick-guide/")
     }
 
     private fun openInGoogleStore() {
