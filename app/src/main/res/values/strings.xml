@@ -459,7 +459,7 @@
     <string name="room_host">Owner</string>
     <string name="room_confirm_leave_lobby">You are about to leave lobby. Do you really want to disconnect?</string>
     <string name="room_scanning_progress">Scanning all devices in proximity… %s</string>
-    <string name="screen_share_feature_hint">Screen Sharing allows you to display the same songs on many devices using Bluetooth (that also requires location access to scan nearby devices). Create a room so that your friends could join it. Then every song the owner chooses will be displayed on all devices connected to a room.</string>
+    <string name="screen_share_feature_hint">Screen Sharing allows you to display the same songs on many devices using Bluetooth (that also requires location access to scan nearby devices). Create a room so that your friends could join it. Then every song the owner chooses will be broadcasted and displayed on all devices connected to a room.</string>
     <string name="room_current_song">Current song: </string>
     <string name="room_current_song_waiting">Not selected - waiting…</string>
     <string name="room_chat">Chat:</string>
