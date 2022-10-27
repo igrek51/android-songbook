@@ -39,7 +39,7 @@
                 android:background="?android:selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                android:focusableInTouchMode="true"
+                android:focusableInTouchMode="false"
                 android:padding="8dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/menu" />
@@ -65,7 +65,7 @@
                 android:background="?android:selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                android:focusableInTouchMode="true"
+                android:focusableInTouchMode="false"
                 android:padding="8dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/sync" />

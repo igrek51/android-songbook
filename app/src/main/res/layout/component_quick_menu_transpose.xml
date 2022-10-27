@@ -60,7 +60,7 @@
                     android:paddingBottom="20dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:focusableInTouchMode="true" />
+                    android:focusableInTouchMode="false" />
 
                 <Button
                     android:id="@+id/transposeM1Button"
@@ -73,7 +73,7 @@
                     android:paddingBottom="20dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:focusableInTouchMode="true" />
+                    android:focusableInTouchMode="false" />
 
                 <Button
                     android:id="@+id/transpose0Button"
@@ -86,7 +86,7 @@
                     android:paddingBottom="20dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:focusableInTouchMode="true" />
+                    android:focusableInTouchMode="false" />
 
                 <Button
                     android:id="@+id/transposeP1Button"
@@ -99,7 +99,7 @@
                     android:paddingBottom="20dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:focusableInTouchMode="true" />
+                    android:focusableInTouchMode="false" />
 
                 <Button
                     android:id="@+id/transposeP5Button"
@@ -112,7 +112,7 @@
                     android:paddingBottom="20dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:focusableInTouchMode="true" />
+                    android:focusableInTouchMode="false" />
 
             </LinearLayout>
 

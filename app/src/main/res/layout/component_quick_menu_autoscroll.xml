@@ -42,7 +42,7 @@
                     android:text="@string/start_autoscroll"
                     android:clickable="true"
                     android:focusable="true"
-                    android:focusableInTouchMode="true"
+                    android:focusableInTouchMode="false"
                     />
             </LinearLayout>
 
@@ -71,7 +71,7 @@
                     android:background="?android:selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:focusableInTouchMode="true"
+                    android:focusableInTouchMode="false"
                     android:scaleType="fitCenter"
                     android:src="@drawable/remove_circle"/>
 
@@ -84,7 +84,7 @@
                     android:layout_weight="1"
                     android:max="100000"
                     android:focusable="true"
-                    android:focusableInTouchMode="true"
+                    android:focusableInTouchMode="false"
                     />
 
                 <ImageButton
@@ -97,7 +97,7 @@
                     android:background="?android:selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:focusableInTouchMode="true"
+                    android:focusableInTouchMode="false"
                     android:scaleType="fitCenter"
                     android:src="@drawable/circle_add"/>
             </LinearLayout>

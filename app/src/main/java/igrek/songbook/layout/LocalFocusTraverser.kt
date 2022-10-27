@@ -78,7 +78,12 @@ class LocalFocusTraverser(
             nextView?.let {
                 val nextViewClass = it.javaClass.simpleName
 
+                if (it.isClickable)
+                    it.isFocusableInTouchMode = true
                 val result = it.requestFocusFromTouch()
+                if (it.isClickable)
+                    it.isFocusableInTouchMode = false
+
                 if (!result && debugMode && nextViewId > 0) {
                     val nextResourceName = activity.resources.getResourceName(nextViewId)
                     logger.warn("requesting focus failed for $nextResourceName - $nextViewClass")

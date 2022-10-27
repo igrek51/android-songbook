@@ -55,7 +55,7 @@
                         android:background="?android:selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:focusableInTouchMode="true"
+                        android:focusableInTouchMode="false"
                         android:scaleType="centerInside"
                         android:src="@drawable/menu"/>
 
@@ -69,7 +69,7 @@
                         android:background="?android:selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:focusableInTouchMode="true"
+                        android:focusableInTouchMode="false"
                         android:scaleType="centerInside"
                         android:src="@drawable/info" />
 
@@ -83,7 +83,7 @@
                         android:background="?android:selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:focusableInTouchMode="true"
+                        android:focusableInTouchMode="false"
                         android:scaleType="centerInside"
                         android:src="@drawable/grid"
                         />
@@ -98,7 +98,7 @@
                         android:background="?android:selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:focusableInTouchMode="true"
+                        android:focusableInTouchMode="false"
                         android:scaleType="centerInside"
                         android:src="@drawable/star_border"
                         />
@@ -113,7 +113,7 @@
                         android:background="?android:selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:focusableInTouchMode="true"
+                        android:focusableInTouchMode="false"
                         android:scaleType="centerInside"
                         android:src="@drawable/transpose"
                         />
@@ -128,7 +128,7 @@
                         android:background="?android:selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:focusableInTouchMode="true"
+                        android:focusableInTouchMode="false"
                         android:scaleType="centerInside"
                         android:src="@drawable/scroll1"
                         />
@@ -143,7 +143,7 @@
                         android:background="?android:selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:focusableInTouchMode="true"
+                        android:focusableInTouchMode="false"
                         android:scaleType="centerInside"
                         android:src="@drawable/bluetooth"
                         />
@@ -158,7 +158,7 @@
                         android:background="?android:selectableItemBackground"
                         android:clickable="true"
                         android:focusable="true"
-                        android:focusableInTouchMode="true"
+                        android:focusableInTouchMode="false"
                         android:scaleType="centerInside"
                         android:src="@drawable/more"
                         />

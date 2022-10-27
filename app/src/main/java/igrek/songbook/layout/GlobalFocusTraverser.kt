@@ -64,7 +64,13 @@ class GlobalFocusTraverser(
 
         if (nextViewId != 0 && nextViewId != currentFocusId) {
             activity.findViewById<View>(nextViewId)?.let {
+
+                if (it.isClickable)
+                    it.isFocusableInTouchMode = true
                 val result = it.requestFocusFromTouch()
+                if (it.isClickable)
+                    it.isFocusableInTouchMode = false
+
                 if (debugMode && nextViewId > 0) {
                     val nextViewClass = it.javaClass.simpleName
                     val nextResourceName = activity.resources.getResourceName(nextViewId)

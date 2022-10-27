@@ -38,7 +38,7 @@
                 android:background="?android:selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                android:focusableInTouchMode="true"
+                android:focusableInTouchMode="false"
                 android:padding="8dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/menu"
@@ -54,7 +54,7 @@
                 android:background="?android:selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
-                android:focusableInTouchMode="true"
+                android:focusableInTouchMode="false"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
                 android:paddingTop="8dp"
@@ -90,7 +90,7 @@
                     android:background="?android:selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:focusableInTouchMode="true"
+                    android:focusableInTouchMode="false"
                     android:padding="8dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/save" />
@@ -106,7 +106,7 @@
                     android:background="?android:selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:focusableInTouchMode="true"
+                    android:focusableInTouchMode="false"
                     android:padding="8dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/more" />
@@ -176,7 +176,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:focusable="true"
-                android:focusableInTouchMode="true"
+                android:focusableInTouchMode="false"
                 />
 
             <RelativeLayout
@@ -210,7 +210,7 @@
                     android:background="?android:selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:focusableInTouchMode="true"
+                    android:focusableInTouchMode="false"
                     android:padding="4dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/help"
@@ -229,7 +229,7 @@
                 android:minHeight="240dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:focusableInTouchMode="true"
+                android:focusableInTouchMode="false"
                 android:padding="8dp"
                 android:inputType="none"
                 android:text=""/>
