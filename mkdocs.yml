@@ -44,3 +44,4 @@ extra:
 
 nav:
   - Home: index.md
+  - User Guide: help.md
