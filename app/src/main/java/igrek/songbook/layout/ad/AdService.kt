@@ -16,6 +16,7 @@ import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import igrek.songbook.layout.GlobalFocusTraverser
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songpreview.SongPreviewLayoutController
@@ -27,9 +28,11 @@ import java.util.concurrent.TimeUnit
 class AdService(
     appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    globalFocusTraverser: LazyInject<GlobalFocusTraverser> = appFactory.globalFocusTraverser,
 ) {
     private val activity by LazyExtractor(appCompatActivity)
     private val preferencesState by LazyExtractor(preferencesState)
+    private val globalFocusTraverser by LazyExtractor(globalFocusTraverser)
 
     private var testingMode = BuildConfig.DEBUG
     private val requestAdViewSubject = PublishSubject.create<Boolean>()
@@ -50,13 +53,6 @@ class AdService(
         } catch (t: Throwable) {
             logger.error("AdMob initialization failed", t)
         }
-    }
-
-    private fun setTagForChildDirectedTreatment() {
-        val conf = RequestConfiguration.Builder()
-                .setTagForChildDirectedTreatment(RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE)
-                .build()
-        MobileAds.setRequestConfiguration(conf)
     }
 
     fun updateAdBanner(currentLayout: MainLayout) {
@@ -98,6 +94,7 @@ class AdService(
         if (adViewContainer?.visibility != View.VISIBLE)
             return false
         adViewContainer.allViews.first().requestFocusFromTouch()
+        logger.debug("Focus set to Ad banner")
         return true
     }
 
@@ -152,12 +149,21 @@ class AdService(
         val adContainerWidthDp = (adContainerWidthPixels / density).toInt()
         val adSize: AdSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adContainerWidthDp)
 
+        adView.setAdSize(adSize)
         val adUnitResId = when {
             testingMode -> R.string.adaptive_banner_ad_unit_id_test
             else -> R.string.adaptive_banner_ad_unit_id_prod
         }
         adView.adUnitId = activity.getString(adUnitResId)
-        adView.setAdSize(adSize)
+        adView.isClickable = true
+        adView.isFocusable = true
+
+        adView.setOnClickListener {
+            adView.adListener.onAdClicked()
+            adView.adListener.onAdOpened()
+        }
+
+        globalFocusTraverser.setUpDownKeyListener(adView)
 
         val adRequest = Builder().build()
         adView.loadAd(adRequest)
