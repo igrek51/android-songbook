@@ -52,12 +52,12 @@ nav:
     - Transpose: transpose.md
     - Autoscroll: autoscroll.md
     - Chord diagrams: chord-diagrams.md
-    - Bluetooth Sharing: bluetooth-sharing.md
-    - Chords Notations: chords-notations.md
     - Displaying Styles: displaying-styles.md
-    - Sharing by link: sharing-by-link.md
+    - Chords Notations: chords-notations.md
     - Controls: controls.md
+    - Bluetooth Sharing: bluetooth-sharing.md
   - Custom Songs:
     - Chord Format Specification: chord-format.md
     - Chords Editor: chords-editor.md
     - Contributing: contributing.md
+    - Sharing by Link: sharing-by-link.md

@@ -1,4 +1,4 @@
-# Sharing by link
+# Sharing by Link
 
 You can share any song (including your custom songs) by link.
 

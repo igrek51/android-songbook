@@ -1,5 +1,5 @@
 # Transpose
-![](./assets/screenshots-mobile-en/02.png){ width="30%" }
+![](./assets/screenshots-mobile-en/02.png){ width="50%" }
 
 You can transpose the chords from any song to any key.
 Click transposing icon on top action bar to show transposing panel.

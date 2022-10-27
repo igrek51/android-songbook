@@ -1,6 +1,6 @@
 # Chords Editor
 
-![](./assets/screenshots-mobile-en/04.png){ width="30%" }
+![](./assets/screenshots-mobile-en/04.png){ width="50%" }
 
 ## Tools
 There are many useful tools in chords editor, which make the editing easier:

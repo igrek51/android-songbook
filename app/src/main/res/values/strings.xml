@@ -334,7 +334,7 @@
     <string name="publish_song_title_field">Song title</string>
     <string name="publish_song_artist_field">Artist / Category name</string>
     <string name="publish_song_content_field">Song with chords</string>
-    <string name="missing_song_description">Here you can propose adding a new song to database, if you feel that some song is missing. It would be great if you\'d like to send your song with chords as well (using \"Publish\" action on custom songs). Write your song in a manner \"Artist - Title\".</string>
+    <string name="missing_song_description">Here you can propose filling the gaps in a database, if you feel that some song is missing. It would be great if you\'d like to send your song with chords as well (using \"Publish\" action on custom songs). Write your song in a manner \"Artist - Title\".</string>
     <string name="missing_song_titles">Artist - Title</string>
     <string name="missing_song_title_invalid_format">Invalid format. Try: \"Artist - Title\"</string>
     <string name="dialog_warning">Warning</string>
