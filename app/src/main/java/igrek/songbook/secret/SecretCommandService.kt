@@ -80,6 +80,7 @@ class SecretCommandService(
             ExactKeyRule("reset") {
                 this.songsRepository.factoryReset()
                 this.preferencesService.clear()
+                logger.debug("Factory reset done")
             },
             ExactKeyRule("reset config") { this.preferencesService.clear() },
             ExactKeyRule("reset db") { this.songsRepository.factoryReset() },

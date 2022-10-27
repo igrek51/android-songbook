@@ -106,7 +106,7 @@ class AppInitializer(
             }
 
             val activityName = activity::class.simpleName
-            logger.info("Application has been initialized ($activityName)")
+            logger.info("Application has been initialized ($activityName, execution #${preferencesState.appExecutionCount})")
         }
     }
 
