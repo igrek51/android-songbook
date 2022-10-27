@@ -3,7 +3,9 @@ package igrek.songbook.activity
 
 import android.app.Activity
 import android.content.Intent
+import android.view.View
 import igrek.songbook.BuildConfig
+import igrek.songbook.R
 import igrek.songbook.admin.AdminService
 import igrek.songbook.custom.SongImportFileChooser
 import igrek.songbook.custom.share.ShareSongService
@@ -91,6 +93,8 @@ class AppInitializer(
                 if (isRunningFirstTime())
                     firstRunInit()
                 reportExecution()
+
+                activity.findViewById<View>(R.id.navMenuButton)?.requestFocus()
 
                 activityController.initialized = true
                 postInit()
