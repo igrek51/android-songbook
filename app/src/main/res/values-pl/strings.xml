@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nav_categories_list">Kategorie</string>
+    <string name="nav_categories_list">Wykonawcy</string>
     <string name="nav_search_song">Szukaj</string>
     <string name="nav_favourites_song">Ulubione</string>
     <string name="nav_update_songs">Aktualizuj piosenki</string>
@@ -489,7 +489,6 @@
     <string name="settings_autoscroll_restore_speed_hint">Zapamiętuj i przywracaj szybkość autoprzewijania dla każdej piosenki</string>
     <string name="settings_random_playlist_songs">Losowanie z playlisty</string>
     <string name="settings_random_playlist_songs_hint">Akcja \"Losowa piosenka\" losuje piosenkę z aktualnie otwartej playlisty.</string>
-    <string name="nav_add_custom_song">Nowa piosenka</string>
     <string name="home_screen_enum_top">Top lista</string>
     <string name="home_screen_enum_categories">Kategorie</string>
     <string name="home_screen_enum_search">Szukaj</string>

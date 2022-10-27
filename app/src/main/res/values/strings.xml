@@ -3,7 +3,7 @@
     <string name="app_name_nav" translatable="false">Songbook</string>
     <string name="adaptive_banner_ad_unit_id_test" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
     <string name="adaptive_banner_ad_unit_id_prod" translatable="false">ca-app-pub-8517210898119735/5760576809</string>
-    <string name="nav_categories_list">Categories</string>
+    <string name="nav_categories_list">Artists</string>
     <string name="nav_search_song">Search</string>
     <string name="nav_favourites_song">Favourites</string>
     <string name="nav_update_songs">Update songs</string>
@@ -516,7 +516,6 @@
     <string name="settings_autoscroll_restore_speed_hint">Remember and restore autoscroll speed for each song</string>
     <string name="settings_random_playlist_songs">Random playlist song</string>
     <string name="settings_random_playlist_songs_hint">\"Random song\" option shuffles a song from an opened playlist if there\'s a chosen one.</string>
-    <string name="nav_add_custom_song">New song</string>
     <string name="home_screen_enum_top">Top songs</string>
     <string name="home_screen_enum_categories">Categories</string>
     <string name="home_screen_enum_search">Search</string>

@@ -63,7 +63,7 @@ class UserDataDao(
         preferencesDao = PreferencesDao(path)
         songTweakDao = SongTweakDao(path)
 
-        logger.debug("user data reloaded")
+        logger.debug("User data reloaded")
     }
 
     @Synchronized
@@ -77,7 +77,7 @@ class UserDataDao(
         transposeDao.save()
         preferencesDao.save()
         songTweakDao.save()
-        logger.info("user data saved")
+        logger.info("User data saved")
     }
 
     fun factoryReset() {

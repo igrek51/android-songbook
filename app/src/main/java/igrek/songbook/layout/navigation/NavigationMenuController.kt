@@ -3,7 +3,9 @@ package igrek.songbook.layout.navigation
 import android.app.Activity
 import android.os.Handler
 import android.os.Looper
+import android.view.MenuItem
 import android.view.View
+import android.widget.ImageButton
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
@@ -87,10 +89,8 @@ class NavigationMenuController(
         actionsMap[R.id.nav_playlists] = { layoutController.showLayout(PlaylistLayoutController::class) }
         actionsMap[R.id.nav_update_db] = { songsUpdater.updateSongsDb(forced = true) }
         actionsMap[R.id.nav_custom_songs] = { layoutController.showLayout(CustomSongsListLayoutController::class) }
-        actionsMap[R.id.nav_add_custom_song] = { customSongService.showAddSongScreen() }
         actionsMap[R.id.nav_random_song] = { randomSongOpener.openRandomSong() }
         actionsMap[R.id.nav_settings] = { layoutController.showLayout(SettingsLayoutController::class) }
-        actionsMap[R.id.nav_help] = { helpLayoutController.showUIHelp() }
         actionsMap[R.id.nav_about] = { aboutLayoutController.showAbout() }
         actionsMap[R.id.nav_exit] = { activityController.quit() }
         actionsMap[R.id.nav_contact] = { layoutController.showLayout(ContactLayoutController::class) }
@@ -109,6 +109,8 @@ class NavigationMenuController(
         drawerLayout = activity.findViewById(R.id.drawer_layout)
         navigationView = activity.findViewById(R.id.nav_view)
 
+        bindCustomButtonActions()
+
         navigationView?.setNavigationItemSelectedListener { menuItem ->
             GlobalScope.launch(Dispatchers.Main) {
                 // set item as selected to persist highlight
@@ -126,23 +128,59 @@ class NavigationMenuController(
                 } else {
                     logger.warn("unknown navigation item has been selected.")
                 }
-
-                Handler(Looper.getMainLooper()).postDelayed({
-                    // unhighlight all menu items
-                    navigationView?.let { navigationView ->
-                        for (id1 in 0 until navigationView.menu.size())
-                            navigationView.menu.getItem(id1).isChecked = false
-                    }
-                }, 500)
+                unhighlightMenuItems()
             }
             true
         }
+    }
+
+    private fun bindCustomButtonActions() {
+        var menuItem: MenuItem? = navigationView?.menu?.findItem(R.id.nav_custom_songs)
+        val navAddCustomSongButton = menuItem?.actionView?.findViewById<ImageButton>(R.id.navAddCustomSongButton)
+        navAddCustomSongButton?.setOnClickListener {
+            closeDrawerAndCallAction {
+                customSongService.showAddSongScreen()
+            }
+        }
+        if (navAddCustomSongButton == null)
+            logger.error("Navigation button not found: navAddCustomSongButton")
+
+        menuItem = navigationView?.menu?.findItem(R.id.nav_about)
+        val navHelpButton = menuItem?.actionView?.findViewById<ImageButton>(R.id.navHelpButton)
+        navHelpButton?.setOnClickListener {
+            closeDrawerAndCallAction {
+                helpLayoutController.showUIHelp()
+            }
+        }
+        if (navHelpButton == null)
+            logger.error("Navigation button not found: navHelpButton")
+    }
+
+    private fun closeDrawerAndCallAction(action: () -> Unit) {
+        drawerLayout?.closeDrawers()
+        // postpone action - smoother navigation hide
+        Handler(Looper.getMainLooper()).post {
+            SafeExecutor {
+                action.invoke()
+            }
+        }
+        unhighlightMenuItems()
+    }
+
+    private fun unhighlightMenuItems() {
+        Handler(Looper.getMainLooper()).postDelayed({
+            navigationView?.let { navigationView ->
+                for (id1 in 0 until navigationView.menu.size())
+                    navigationView.menu.getItem(id1).isChecked = false
+            }
+        }, 500)
     }
 
     fun setAdminMenu() {
         navigationView?.let {
             it.menu.clear()
             it.inflateMenu(R.menu.menu_nav_admin)
+            init()
         }
     }
 
