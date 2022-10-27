@@ -43,6 +43,7 @@ class PlaylistLayoutController(
     contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+    playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
 ) : InflatedLayout(
         _layoutResourceId = R.layout.screen_playlists
 ), ListItemClickListener<PlaylistListItem> {
@@ -52,6 +53,7 @@ class PlaylistLayoutController(
     private val contextMenuBuilder by LazyExtractor(contextMenuBuilder)
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val songOpener by LazyExtractor(songOpener)
+    private val playlistService by LazyExtractor(playlistService)
 
     private var itemsListView: PlaylistListView? = null
     private var addPlaylistButton: ImageButton? = null
@@ -69,7 +71,7 @@ class PlaylistLayoutController(
         itemsListView = layout.findViewById(R.id.playlistListView)
 
         addPlaylistButton = layout.findViewById(R.id.addPlaylistButton)
-        addPlaylistButton?.setOnClickListener { addPlaylist() }
+        addPlaylistButton?.setOnClickListener { playlistService.addNewPlaylist() }
 
         playlistTitleLabel = layout.findViewById(R.id.playlistTitleLabel)
         emptyListLabel = layout.findViewById(R.id.emptyListLabel)
@@ -83,7 +85,7 @@ class PlaylistLayoutController(
         val localFocus = LocalFocusTraverser(
             currentViewGetter = { itemsListView?.selectedView },
             currentFocusGetter = { appFactory.activity.get().currentFocus?.id },
-            preNextFocus = { currentFocusId: Int, currentView: View ->
+            preNextFocus = { _: Int, _: View ->
                 when {
                     appFactory.navigationMenuController.get().isDrawerShown() -> R.id.nav_view
                     else -> 0
@@ -169,13 +171,6 @@ class PlaylistLayoutController(
                     if (isLayoutVisible())
                         updateItemsList()
                 }, UiErrorHandler::handleError))
-    }
-
-    private fun addPlaylist() {
-        InputDialogBuilder().input(R.string.new_playlist_name, null) { name ->
-            val playlist = Playlist(0, name)
-            songsRepository.playlistDao.savePlaylist(playlist)
-        }
     }
 
     private fun updateItemsList() {

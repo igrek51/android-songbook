@@ -275,7 +275,7 @@
     <string name="nav_playlists">Playlisty</string>
     <string name="empty_playlists">Brak playlist. Utwórz własne playlisty, jak np.:\n\"Do nauki\",\n\"Ognisko\",\n\"Setlista na koncert\",\n\"Fingerstyle\"</string>
     <string name="action_add_to_playlist">▶️ Dodaj do playlisty</string>
-    <string name="no_playlists_to_add">Nie znaleziono żadnej playlisty. Najpierw utwórz playlistę.</string>
+    <string name="no_playlists_to_add">Nie znaleziono żadnej playlisty. Utwórz playlistę.</string>
     <string name="choose_playlist">Wybierz playlistę</string>
     <string name="song_added_to_playlist" formatted="false">Dodano piosenkę \"%s\" do playlisty \"%s\"</string>
     <string name="song_already_on_playlist" formatted="false">Piosenka \"%s\" jest już na playliście \"%s\"</string>

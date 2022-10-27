@@ -6,6 +6,7 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
+import igrek.songbook.layout.dialog.InputDialogBuilder
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
@@ -27,19 +28,32 @@ class PlaylistService(
     private val songOpener by LazyExtractor(songOpener)
     private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
 
+    fun addNewPlaylist(onSuccess: (Playlist) -> Unit = {}) {
+        InputDialogBuilder().input(R.string.new_playlist_name, null) { name ->
+            if (name.isNotBlank()) {
+                val playlist = Playlist(0, name)
+                songsRepository.playlistDao.savePlaylist(playlist)
+                onSuccess(playlist)
+            }
+        }
+    }
+
     fun showAddSongToPlaylistDialog(song: Song) {
         val playlists = songsRepository.playlistDao.playlistDb.playlists
         if (playlists.isEmpty()) {
-            uiInfoService.showInfo(R.string.no_playlists_to_add)
+            uiInfoService.showToast(R.string.no_playlists_to_add)
+            addNewPlaylist { playlist ->
+                addSongToPlaylist(playlist, song)
+            }
             return
         }
 
         val actions = mutableListOf<ContextMenuBuilder.Action>()
 
-        playlists.forEach { p ->
-            val name = p.name
+        playlists.forEach { playlist ->
+            val name = playlist.name
             val action = ContextMenuBuilder.Action(name) {
-                addSongToPlaylist(p, song)
+                addSongToPlaylist(playlist, song)
             }
             actions.add(action)
         }

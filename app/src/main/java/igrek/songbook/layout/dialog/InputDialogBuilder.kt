@@ -21,9 +21,9 @@ import kotlinx.coroutines.launch
 
 @OptIn(DelicateCoroutinesApi::class)
 class InputDialogBuilder(
-        activity: LazyInject<Activity> = appFactory.activity,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
+    activity: LazyInject<Activity> = appFactory.activity,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
 ) {
     private val activity by LazyExtractor(activity)
     private val uiResourceService by LazyExtractor(uiResourceService)
