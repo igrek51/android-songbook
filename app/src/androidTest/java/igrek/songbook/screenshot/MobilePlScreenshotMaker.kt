@@ -158,7 +158,7 @@ class MobilePlScreenshotMaker {
         onView(withText(R.string.action_song_copy)).perform(click())
         // Edit
         onView(isRoot()).perform(waitFor(200))
-        onView(withText(R.string.action_song_edit)).perform(click())
+        onView(withText(R.string.song_copied_edit_it)).perform(click())
         // Open editor
         onView(withId(R.id.songContentEdit)).check(matches(isDisplayed()))
         onView(withId(R.id.songContentEdit)).perform(scrollTo(), click())
@@ -262,7 +262,7 @@ class MobilePlScreenshotMaker {
         onView(withText("Dust In The Wind - Kansas")).perform(click())
 
         onView(withId(R.id.chordsHelpButton)).perform(click())
-        onView(withText("D/F#")).perform(click())
+        onView(withText("D/F#")).perform(scrollTo(), click())
 
         onView(withText("ZNAJDŹ")).perform(click())
         onView(allOf(withClassName(endsWith("EditText")), withText(""))).perform(replaceText("Dsus4"))
