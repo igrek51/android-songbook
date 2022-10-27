@@ -51,7 +51,7 @@
         \nMożesz także zaproponować poprawkę w akordach lub tekście piosenek, jeśli odnajdziesz jakieś błędy.
     </string>
     <string name="ui_about_content" formatted="false">
-        \nWersja aplikacji: %s (%s)
+        Wersja aplikacji: %s (%s)
         \nWersja bazy piosenek: %s
         \n
         \nAUTOR:
