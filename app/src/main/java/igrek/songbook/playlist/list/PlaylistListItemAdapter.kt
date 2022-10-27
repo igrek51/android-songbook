@@ -86,9 +86,6 @@ class PlaylistListItemAdapter internal constructor(
         itemMoreButton.setOnClickListener { onClickListener.onMoreActions(item) }
 
         val moveButton = itemView.findViewById<ImageButton>(R.id.itemMoveButton)
-        moveButton.isFocusableInTouchMode = false
-        moveButton.isFocusable = false
-        moveButton.isClickable = false
         moveButton.setOnTouchListener { _, event ->
             event.source = 777 // from moveButton
             when (event.action) {

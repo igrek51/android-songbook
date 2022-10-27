@@ -93,14 +93,15 @@ class PlaylistLayoutController(
             },
             nextLeft = { currentFocusId: Int, currentView: View ->
                 when (currentFocusId) {
-                    R.id.itemSongMoreButton, R.id.itemMoreButton, R.id.playlistListView -> {
+                    R.id.itemMoreButton, R.id.playlistListView, R.id.itemMoveButton -> {
                         (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
                         itemsListView?.requestFocusFromTouch()
                     }
                 }
                 when {
-                    currentFocusId == R.id.itemSongMoreButton -> -1
+                    currentFocusId == R.id.itemSongMoreButton -> R.id.itemMoveButton
                     currentFocusId == R.id.itemMoreButton -> -1
+                    currentFocusId == R.id.itemMoveButton -> -1
                     currentFocusId == R.id.playlistListView && playlist != null -> R.id.goBackButton
                     currentFocusId == R.id.main_content && playlist != null -> R.id.goBackButton
                     currentFocusId == R.id.playlistListView && playlist == null -> R.id.navMenuButton
@@ -109,20 +110,28 @@ class PlaylistLayoutController(
             },
             nextRight = { currentFocusId: Int, currentView: View ->
                 when {
-                    currentFocusId == R.id.playlistListView && currentView.findViewById<View>(R.id.itemSongMoreButton)?.isVisible == true -> {
-                        (currentView as? ViewGroup)?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
-                        R.id.itemSongMoreButton
+                    currentFocusId == R.id.playlistListView -> when {
+                        currentView.findViewById<View>(R.id.itemMoveButton)?.isVisible == true -> {
+                            (currentView as? ViewGroup)?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+                            R.id.itemMoveButton
+                        }
+                        currentView.findViewById<View>(R.id.itemSongMoreButton)?.isVisible == true -> {
+                            (currentView as? ViewGroup)?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+                            R.id.itemSongMoreButton
+                        }
+                        currentView.findViewById<View>(R.id.itemMoreButton)?.isVisible == true -> {
+                            (currentView as? ViewGroup)?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+                            R.id.itemMoreButton
+                        }
+                        else -> 0
                     }
-                    currentFocusId == R.id.playlistListView && currentView.findViewById<View>(R.id.itemMoreButton)?.isVisible == true -> {
-                        (currentView as? ViewGroup)?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
-                        R.id.itemMoreButton
-                    }
+                    currentFocusId == R.id.itemMoveButton -> R.id.itemSongMoreButton
                     else -> 0
                 }
             },
             nextUp = { currentFocusId: Int, currentView: View ->
                 when (currentFocusId) {
-                    R.id.itemSongMoreButton, R.id.itemMoreButton, R.id.playlistListView -> {
+                    R.id.itemSongMoreButton, R.id.itemMoreButton, R.id.playlistListView, R.id.itemMoveButton -> {
                         (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
                         itemsListView?.requestFocusFromTouch()
                     }
@@ -141,7 +150,7 @@ class PlaylistLayoutController(
             },
             nextDown = { currentFocusId: Int, currentView: View ->
                 when (currentFocusId) {
-                    R.id.itemSongMoreButton, R.id.itemMoreButton, R.id.playlistListView -> {
+                    R.id.itemSongMoreButton, R.id.itemMoreButton, R.id.playlistListView, R.id.itemMoveButton -> {
                         (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
                         itemsListView?.requestFocusFromTouch()
                     }
