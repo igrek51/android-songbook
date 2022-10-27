@@ -2,10 +2,14 @@
 /.gradle
 /local.properties
 /.idea/
+.vscode
 .DS_Store
 /build
 /captures
 .externalNativeBuild
 app/.attach_pid*
+
 /.keystore.properties
 /app/songbook.jks
+
+/venv
