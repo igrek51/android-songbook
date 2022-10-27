@@ -11,12 +11,16 @@ Pinch with two fingers to change the font size.
 You can select your favourite chords notation in settings.
 Default chords notation had been automatically set depending on your system language.
 
+![](./assets/screenshots-mobile-en/01.png){ width="30%" }
+
 ## Transposing
 You can transpose the chords from any song to any key.
 Click transposing icon on top action bar to show transposing panel.
 
 - `-5`, `-1`, `+1`, `+5` buttons to transpose by particular number of semitones.
 - `0` button restores original key.
+
+![](./assets/screenshots-mobile-en/02.png){ width="30%" }
 
 ## Autoscroll
 Click autoscroll icon on top action bar to show autoscroll panel.
@@ -31,6 +35,8 @@ Scrolling up or down manually, while autoscrolling is enabled, causes autoscroll
 
 Double click on screen to toggle autoscrolling. Clicking once again will turn it off.
 
+![](./assets/screenshots-mobile-en/03.png){ width="30%" }
+
 ## Custom Songs
 You can view your custom songs by clicking "My songs" in the main menu.
 To add a new one, click the plus icon.
@@ -38,6 +44,8 @@ To add a new one, click the plus icon.
 Add your lyrics as a simple text with chords in square brackets.
 
 There are many useful tools in chords editor, which make the editing easier.
+
+![](./assets/screenshots-mobile-en/04.png){ width="30%" }
 
 ## Social Contributing
 Songbook allows you to publish your custom songs and share it along all the other users.

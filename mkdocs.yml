@@ -2,7 +2,7 @@ site_name: Songbook
 repo_name: igrek51/android-songbook
 repo_url: https://github.com/igrek51/android-songbook
 site_author: igrek51
-docs_dir: docs/mkdocs
+docs_dir: docs/pages
 edit_uri: ''
 theme:
   name: material
@@ -34,6 +34,7 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
+  - attr_list
 plugins:
   - search
 extra:

@@ -1,5 +1,8 @@
 # Songbook
 
+[![GitHub version (latest SemVer)](https://img.shields.io/github/v/tag/igrek51/android-songbook?label=github&sort=semver)](https://github.com/igrek51/android-songbook)
+[![Github Pages](https://img.shields.io/badge/docs-github.io-blue)](https://igrek51.github.io/android-songbook)
+
 Songs lyrics viewer with chords toolkit for musicians, guitarists and pianists
 
 ## Main features
@@ -29,11 +32,12 @@ It has many songs with chords on board and its database can be easily extended w
 
 Example application screenshots:
 
-| ![](https://raw.githubusercontent.com/igrek51/android-songbook/master/docs/screenshots/mobile/en/01.png) | ![](https://raw.githubusercontent.com/igrek51/android-songbook/master/docs/screenshots/mobile/en/02.png) | ![](https://raw.githubusercontent.com/igrek51/android-songbook/master/docs/screenshots/mobile/en/03.png) |
+| ![](./assets/screenshots-mobile-en/01.png) | ![](./assets/screenshots-mobile-en/02.png) | ![](./assets/screenshots-mobile-en/03.png) |
 |---|---|---|
-| ![](https://raw.githubusercontent.com/igrek51/android-songbook/master/docs/screenshots/mobile/en/04.png) | ![](https://raw.githubusercontent.com/igrek51/android-songbook/master/docs/screenshots/mobile/en/05.png) | ![](https://raw.githubusercontent.com/igrek51/android-songbook/master/docs/screenshots/mobile/en/06.png) |
-| ![](https://raw.githubusercontent.com/igrek51/android-songbook/master/docs/screenshots/mobile/en/07.png) | ![](https://raw.githubusercontent.com/igrek51/android-songbook/master/docs/screenshots/mobile/en/08.png) |  |
+| ![](./assets/screenshots-mobile-en/04.png) | ![](./assets/screenshots-mobile-en/05.png) | ![](./assets/screenshots-mobile-en/06.png) |
+| ![](./assets/screenshots-mobile-en/07.png) | ![](./assets/screenshots-mobile-en/08.png) |  |
 
 ## Available on Google Play
 
-Songbook is available on [Google Play](https://play.google.com/store/apps/details?id=igrek.songbook)
+Songbook is available on [Google Play](https://play.google.com/store/apps/details?id=igrek.songbook) for free.
+Please give it a ⭐️⭐️⭐️⭐️⭐️ star.

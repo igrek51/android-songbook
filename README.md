@@ -1,5 +1,8 @@
 # Songbook
 
+[![GitHub version (latest SemVer)](https://img.shields.io/github/v/tag/igrek51/android-songbook?label=github&sort=semver)](https://github.com/igrek51/android-songbook)
+[![Github Pages](https://img.shields.io/badge/docs-github.io-blue)](https://igrek51.github.io/android-songbook)
+
 Songs lyrics viewer with chords toolkit for musicians, guitarists and pianists
 
 ## Main features
@@ -36,4 +39,9 @@ Example application screenshots:
 
 ## Available on Google Play
 
-Songbook is available on [Google Play](https://play.google.com/store/apps/details?id=igrek.songbook)
+Songbook is available on [Google Play](https://play.google.com/store/apps/details?id=igrek.songbook) for free.
+Please give it a ⭐️⭐️⭐️⭐️⭐️ star.
+
+## Documentation
+
+See [https://igrek51.github.io/android-songbook](https://igrek51.github.io/android-songbook) for more guides and docs.
