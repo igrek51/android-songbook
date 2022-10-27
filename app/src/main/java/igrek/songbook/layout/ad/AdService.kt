@@ -10,6 +10,7 @@ import com.google.android.gms.ads.*
 import com.google.android.gms.ads.AdRequest.*
 import igrek.songbook.BuildConfig
 import igrek.songbook.R
+import igrek.songbook.activity.ActivityController
 import igrek.songbook.editor.ChordsEditorLayoutController
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.LoggerFactory.logger
@@ -29,10 +30,12 @@ class AdService(
     appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
     globalFocusTraverser: LazyInject<GlobalFocusTraverser> = appFactory.globalFocusTraverser,
+    activityController: LazyInject<ActivityController> = appFactory.activityController,
 ) {
     private val activity by LazyExtractor(appCompatActivity)
     private val preferencesState by LazyExtractor(preferencesState)
     private val globalFocusTraverser by LazyExtractor(globalFocusTraverser)
+    private val activityController by LazyExtractor(activityController)
 
     private var testingMode = BuildConfig.DEBUG
     private val requestAdViewSubject = PublishSubject.create<Boolean>()
@@ -74,6 +77,7 @@ class AdService(
             ChordsEditorLayoutController::class.isInstance(currentLayout) -> false
             preferencesState.adsStatus == 1L -> false
             preferencesState.purchasedAdFree -> false
+            activityController.isAndroidTv() -> false
             else -> true
         }
     }

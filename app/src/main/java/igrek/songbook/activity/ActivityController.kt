@@ -13,10 +13,10 @@ import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.system.WindowManagerService
 
 class ActivityController(
-        windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
-        activity: LazyInject<Activity> = appFactory.activity,
-        preferencesService: LazyInject<PreferencesService> = appFactory.preferencesService,
-        userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
+    windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
+    activity: LazyInject<Activity> = appFactory.activity,
+    preferencesService: LazyInject<PreferencesService> = appFactory.preferencesService,
+    userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
 ) {
     private val windowManagerService by LazyExtractor(windowManagerService)
     private val activity by LazyExtractor(activity)
