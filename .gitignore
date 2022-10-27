@@ -13,3 +13,4 @@ app/.attach_pid*
 /app/songbook.jks
 
 /venv
+/site
