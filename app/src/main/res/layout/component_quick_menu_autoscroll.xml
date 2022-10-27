@@ -16,8 +16,6 @@
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_margin="4dp"
-        android:clickable="true"
-        android:focusable="true"
         android:gravity="bottom|center_horizontal"
         android:padding="4dp"
         card_view:cardCornerRadius="4dp"
@@ -27,16 +25,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="0dp"
-            android:clickable="true"
-            android:focusable="true"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
-                android:clickable="true"
-                android:focusable="true"
                 android:orientation="horizontal"
                 android:padding="0dp">
 
@@ -46,6 +40,9 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="0dp"
                     android:text="@string/start_autoscroll"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     />
             </LinearLayout>
 
@@ -54,8 +51,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
-                android:clickable="true"
-                android:focusable="true"
                 android:text="@string/settings_autoscroll_speed"
                 android:textAlignment="center"/>
 
@@ -63,8 +58,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
-                android:clickable="true"
-                android:focusable="true"
                 android:orientation="horizontal"
                 android:padding="0dp">
 
@@ -78,6 +71,7 @@
                     android:background="?android:selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:scaleType="fitCenter"
                     android:src="@drawable/remove_circle"/>
 
@@ -88,7 +82,10 @@
                     android:layout_gravity="center"
                     android:layout_margin="0dp"
                     android:layout_weight="1"
-                    android:max="100000"/>
+                    android:max="100000"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    />
 
                 <ImageButton
                     android:id="@+id/speedPlusButton"
@@ -100,6 +97,7 @@
                     android:background="?android:selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:scaleType="fitCenter"
                     android:src="@drawable/circle_add"/>
             </LinearLayout>

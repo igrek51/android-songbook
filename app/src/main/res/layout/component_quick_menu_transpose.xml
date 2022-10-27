@@ -57,7 +57,10 @@
                     android:layout_weight="1"
                     android:text="@string/transpose_minus_5"
                     android:paddingTop="20dp"
-                    android:paddingBottom="20dp" />
+                    android:paddingBottom="20dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true" />
 
                 <Button
                     android:id="@+id/transposeM1Button"
@@ -67,7 +70,10 @@
                     android:layout_weight="1"
                     android:text="@string/transpose_minus_1"
                     android:paddingTop="20dp"
-                    android:paddingBottom="20dp" />
+                    android:paddingBottom="20dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true" />
 
                 <Button
                     android:id="@+id/transpose0Button"
@@ -77,7 +83,10 @@
                     android:layout_weight="1"
                     android:text="@string/transpose_zero"
                     android:paddingTop="20dp"
-                    android:paddingBottom="20dp" />
+                    android:paddingBottom="20dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true" />
 
                 <Button
                     android:id="@+id/transposeP1Button"
@@ -87,7 +96,10 @@
                     android:layout_weight="1"
                     android:text="@string/transpose_plus_1"
                     android:paddingTop="20dp"
-                    android:paddingBottom="20dp" />
+                    android:paddingBottom="20dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true" />
 
                 <Button
                     android:id="@+id/transposeP5Button"
@@ -97,7 +109,10 @@
                     android:layout_weight="1"
                     android:text="@string/transpose_plus_5"
                     android:paddingTop="20dp"
-                    android:paddingBottom="20dp" />
+                    android:paddingBottom="20dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true" />
 
             </LinearLayout>
 

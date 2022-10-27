@@ -60,9 +60,9 @@
         android:layout_marginRight="4dp"
         android:adjustViewBounds="true"
         android:background="?android:selectableItemBackground"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
         android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:padding="4dp"
         android:scaleType="centerInside"
         android:src="@drawable/more" />

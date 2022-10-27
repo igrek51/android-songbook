@@ -38,6 +38,7 @@
                 android:background="?android:selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:padding="8dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/menu"
@@ -53,6 +54,7 @@
                 android:background="?android:selectableItemBackground"
                 android:clickable="true"
                 android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:paddingLeft="4dp"
                 android:paddingRight="4dp"
                 android:paddingTop="8dp"
@@ -88,6 +90,7 @@
                     android:background="?android:selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:padding="8dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/save" />
@@ -103,6 +106,7 @@
                     android:background="?android:selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:padding="8dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/more" />
@@ -170,12 +174,18 @@
             <Spinner
                 android:id="@+id/songChordNotationSpinner"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp">
+                android:layout_margin="8dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                >
 
                 <TextView
                     android:id="@+id/editChordsLyricsInfo"
@@ -202,6 +212,7 @@
                     android:background="?android:selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:padding="4dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/help"
@@ -218,8 +229,9 @@
                 android:gravity="top"
                 android:hint="@string/import_song_content_hint"
                 android:minHeight="240dp"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
+                android:clickable="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:padding="8dp"
                 android:inputType="none"
                 android:text=""/>

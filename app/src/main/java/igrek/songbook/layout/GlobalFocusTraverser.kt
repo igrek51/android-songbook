@@ -4,8 +4,10 @@ import android.app.Activity
 import android.view.View
 import androidx.core.view.isVisible
 import igrek.songbook.R
+import igrek.songbook.billing.BillingLayoutController
 import igrek.songbook.custom.CustomSongsListLayoutController
 import igrek.songbook.custom.EditSongLayoutController
+import igrek.songbook.editor.ChordsEditorLayoutController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
@@ -14,8 +16,19 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.playlist.PlaylistLayoutController
 import igrek.songbook.playlist.PlaylistService
+import igrek.songbook.room.RoomListLayoutController
+import igrek.songbook.room.RoomLobbyLayoutController
+import igrek.songbook.send.ContactLayoutController
+import igrek.songbook.send.MissingSongLayoutController
+import igrek.songbook.send.PublishSongLayoutController
+import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.songpreview.SongPreviewLayoutController
+import igrek.songbook.songselection.favourite.FavouritesLayoutController
+import igrek.songbook.songselection.history.OpenHistoryLayoutController
+import igrek.songbook.songselection.latest.LatestSongsLayoutController
+import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.top.TopSongsLayoutController
+import igrek.songbook.songselection.tree.SongTreeLayoutController
 
 class GlobalFocusTraverser(
     activity: LazyInject<Activity> = appFactory.activity,
@@ -251,8 +264,22 @@ class GlobalFocusTraverser(
             currentViewId == R.id.main_content -> R.id.navMenuButton
             currentViewId == R.id.navMenuButton -> when {
                 layoutController.isState(TopSongsLayoutController::class) -> R.id.itemsList
+                layoutController.isState(SongTreeLayoutController::class) -> R.id.itemsList
+                layoutController.isState(SongSearchLayoutController::class) -> R.id.itemsList
+                layoutController.isState(LatestSongsLayoutController::class) -> R.id.itemsList
                 layoutController.isState(CustomSongsListLayoutController::class) -> R.id.itemsListView
+                layoutController.isState(EditSongLayoutController::class) -> R.id.songTitleEdit
+                layoutController.isState(ChordsEditorLayoutController::class) -> R.id.transformChordsButton
+                layoutController.isState(FavouritesLayoutController::class) -> R.id.itemsList
                 layoutController.isState(PlaylistLayoutController::class) -> R.id.playlistListView
+                layoutController.isState(OpenHistoryLayoutController::class) -> R.id.itemsList
+                layoutController.isState(MissingSongLayoutController::class) -> R.id.missingSongMessageEdit
+                layoutController.isState(PublishSongLayoutController::class) -> R.id.publishSongTitleEdit
+                layoutController.isState(RoomListLayoutController::class) -> R.id.myNameEditText
+                layoutController.isState(RoomLobbyLayoutController::class) -> R.id.openSelectedSongButton
+                layoutController.isState(BillingLayoutController::class) -> R.id.billingBuyAdFree
+                layoutController.isState(ContactLayoutController::class) -> R.id.contactSubjectEdit
+                layoutController.isState(SettingsLayoutController::class) -> R.id.fragment_content
                 else -> 0
             }
             layoutController.isState(EditSongLayoutController::class) && currentViewId == R.id.tooltipEditChordsLyricsInfo -> R.id.songContentEdit
