@@ -52,15 +52,14 @@
         \nYou can also suggest improving some chords or lyrics, if you have noticed some bugs.
     </string>
     <string name="ui_about_content" formatted="false">
-        Songbook
         \nApplication version: %s (%s)
-        \nSongs database version: v%s
+        \nSongs database version: %s
         \n
         \nAUTHOR:
         \nigrek51 - Ireneusz Szulc
         \n
         \nUSED LIBRARIES &amp; TOOLS:
-        \nAndroid SDK, Apache Commons, AssertJ, Espresso, Firebase Analytics, Google API, Gradle, Guava, Jackson, Java, jUnit, Kotlin, Material Design icons, Mockito, OkHttp, Protobuf, RxAndroid, RxKotlin, SQLite
+        \nAndroid SDK, Apache Commons, Firebase Analytics, Google Play Services, Gradle, Guava, Jackson, Java, JWT, Kotlin, Material Design icons, OkHttp, Protobuf, RxAndroid, RxKotlin, SQLite
     </string>
     <string name="action_info_ok">OK</string>
     <string name="action_secret">\?\?\?</string>

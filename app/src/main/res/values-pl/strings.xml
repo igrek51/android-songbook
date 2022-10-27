@@ -51,15 +51,14 @@
         \nMożesz także zaproponować poprawkę w akordach lub tekście piosenek, jeśli odnajdziesz jakieś błędy.
     </string>
     <string name="ui_about_content" formatted="false">
-        Songbook
         \nWersja aplikacji: %s (%s)
-        \nWersja bazy piosenek: v%s
+        \nWersja bazy piosenek: %s
         \n
         \nAUTOR:
         \nIreneusz Szulc
         \n
         \nWYKORZYSTANE BIBLIOTEKI I NARZĘDZIA:
-        \nAndroid SDK, Apache Commons, AssertJ, Espresso, Firebase Analytics, Google API, Gradle, Guava, Jackson, Java, jUnit, Kotlin, Material Design icons, Mockito, OkHttp, Protobuf, RxAndroid, RxKotlin, SQLite
+        \nAndroid SDK, Apache Commons, Firebase Analytics, Google Play Services, Gradle, Guava, Jackson, Java, JWT, Kotlin, Material Design icons, OkHttp, Protobuf, RxAndroid, RxKotlin, SQLite
     </string>
     <string name="action_info_ok">OK</string>
     <string name="action_secret">\?\?\?</string>
