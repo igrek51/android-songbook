@@ -1,6 +1,7 @@
 package igrek.songbook.layout
 
 import android.app.Activity
+import android.view.KeyEvent
 import android.view.View
 import androidx.core.view.isVisible
 import igrek.songbook.R
@@ -76,6 +77,43 @@ class GlobalFocusTraverser(
             }
         }
         return false
+    }
+
+    fun handleKey(keyCode: Int): Boolean {
+        when (keyCode) {
+            KeyEvent.KEYCODE_DPAD_UP -> {
+                return moveToNextView(::nextUpView)
+            }
+            KeyEvent.KEYCODE_DPAD_DOWN -> {
+                return moveToNextView(::nextDownView)
+            }
+            KeyEvent.KEYCODE_DPAD_LEFT,
+            KeyEvent.KEYCODE_MEDIA_REWIND,
+            KeyEvent.KEYCODE_MEDIA_PREVIOUS,
+            KeyEvent.KEYCODE_MEDIA_SKIP_BACKWARD,
+            KeyEvent.KEYCODE_MEDIA_STEP_BACKWARD -> {
+                return moveToNextView(::nextLeftView)
+            }
+            KeyEvent.KEYCODE_DPAD_RIGHT,
+            KeyEvent.KEYCODE_MEDIA_FAST_FORWARD,
+            KeyEvent.KEYCODE_MEDIA_NEXT,
+            KeyEvent.KEYCODE_MEDIA_SKIP_FORWARD,
+            KeyEvent.KEYCODE_MEDIA_STEP_FORWARD -> {
+                return moveToNextView(::nextRightView)
+            }
+        }
+        return false
+    }
+
+    fun setUpDownKeyListener(view: View) {
+        view.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN) {
+                if (keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode == KeyEvent.KEYCODE_DPAD_DOWN)
+                    if (this.handleKey(keyCode))
+                        return@setOnKeyListener true
+            }
+            return@setOnKeyListener false
+        }
     }
 
     fun nextRightView(currentViewId: Int): Int {
@@ -262,27 +300,78 @@ class GlobalFocusTraverser(
                 else -> 0
             }
             currentViewId == R.id.main_content -> R.id.navMenuButton
-            currentViewId == R.id.navMenuButton -> when {
-                layoutController.isState(TopSongsLayoutController::class) -> R.id.itemsList
-                layoutController.isState(SongTreeLayoutController::class) -> R.id.itemsList
-                layoutController.isState(SongSearchLayoutController::class) -> R.id.itemsList
-                layoutController.isState(LatestSongsLayoutController::class) -> R.id.itemsList
-                layoutController.isState(CustomSongsListLayoutController::class) -> R.id.itemsListView
-                layoutController.isState(EditSongLayoutController::class) -> R.id.songTitleEdit
-                layoutController.isState(ChordsEditorLayoutController::class) -> R.id.transformChordsButton
-                layoutController.isState(FavouritesLayoutController::class) -> R.id.itemsList
-                layoutController.isState(PlaylistLayoutController::class) -> R.id.playlistListView
-                layoutController.isState(OpenHistoryLayoutController::class) -> R.id.itemsList
-                layoutController.isState(MissingSongLayoutController::class) -> R.id.missingSongMessageEdit
-                layoutController.isState(PublishSongLayoutController::class) -> R.id.publishSongTitleEdit
-                layoutController.isState(RoomListLayoutController::class) -> R.id.myNameEditText
-                layoutController.isState(RoomLobbyLayoutController::class) -> R.id.openSelectedSongButton
-                layoutController.isState(BillingLayoutController::class) -> R.id.billingBuyAdFree
-                layoutController.isState(ContactLayoutController::class) -> R.id.contactSubjectEdit
-                layoutController.isState(SettingsLayoutController::class) -> R.id.fragment_content
+            layoutController.isState(TopSongsLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton, R.id.languageFilterButton, R.id.searchSongButton -> R.id.itemsList
                 else -> 0
             }
-            layoutController.isState(EditSongLayoutController::class) && currentViewId == R.id.tooltipEditChordsLyricsInfo -> R.id.songContentEdit
+            layoutController.isState(SongTreeLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton, R.id.goBackButton, R.id.languageFilterButton, R.id.searchSongButton -> R.id.itemsList
+                else -> 0
+            }
+            layoutController.isState(SongSearchLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton, R.id.searchFilterEdit, R.id.searchFilterClearButton -> R.id.itemsList
+                else -> 0
+            }
+            layoutController.isState(CustomSongsListLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton, R.id.goBackButton, R.id.songsSortButton, R.id.addCustomSongButton, R.id.moreActionsButton -> R.id.itemsListView
+                else -> 0
+            }
+            layoutController.isState(EditSongLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton, R.id.goBackButton, R.id.saveSongButton, R.id.moreActionsButton -> R.id.songTitleEdit
+                R.id.songTitleEdit -> R.id.customCategoryNameEdit
+                R.id.customCategoryNameEdit -> R.id.songChordNotationSpinner
+                R.id.songChordNotationSpinner -> R.id.tooltipEditChordsLyricsInfo
+                R.id.tooltipEditChordsLyricsInfo -> R.id.songContentEdit
+                else -> 0
+            }
+            layoutController.isState(ChordsEditorLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton -> R.id.transformChordsButton
+                else -> 0
+            }
+            layoutController.isState(LatestSongsLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton -> R.id.itemsList
+                else -> 0
+            }
+            layoutController.isState(FavouritesLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton -> R.id.itemsList
+                else -> 0
+            }
+            layoutController.isState(PlaylistLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton, R.id.goBackButton, R.id.addPlaylistButton -> R.id.playlistListView
+                else -> 0
+            }
+            layoutController.isState(OpenHistoryLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton -> R.id.itemsList
+                else -> 0
+            }
+            layoutController.isState(MissingSongLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton -> R.id.missingSongMessageEdit
+                else -> 0
+            }
+            layoutController.isState(PublishSongLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton -> R.id.publishSongTitleEdit
+                else -> 0
+            }
+            layoutController.isState(RoomListLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton, R.id.moreActionsButton -> R.id.myNameEditText
+                else -> 0
+            }
+            layoutController.isState(RoomLobbyLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton -> R.id.openSelectedSongButton
+                else -> 0
+            }
+            layoutController.isState(BillingLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton -> R.id.billingBuyAdFree
+                else -> 0
+            }
+            layoutController.isState(ContactLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton -> R.id.contactSubjectEdit
+                else -> 0
+            }
+            layoutController.isState(SettingsLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton -> R.id.fragment_content
+                else -> 0
+            }
             else -> 0
         }
     }
@@ -322,7 +411,63 @@ class GlobalFocusTraverser(
             }
             currentViewId == R.id.main_content -> R.id.navMenuButton
             currentViewId == R.id.navMenuButton -> R.id.navMenuButton
-            layoutController.isState(EditSongLayoutController::class) && currentViewId == R.id.songContentEdit -> R.id.tooltipEditChordsLyricsInfo
+
+            layoutController.isState(EditSongLayoutController::class) -> when (currentViewId) {
+                R.id.songContentEdit -> R.id.tooltipEditChordsLyricsInfo
+                R.id.tooltipEditChordsLyricsInfo -> R.id.songChordNotationSpinner
+                R.id.songChordNotationSpinner -> R.id.customCategoryNameEdit
+                R.id.customCategoryNameEdit -> R.id.songTitleEdit
+                R.id.songTitleEdit -> R.id.navMenuButton
+                else -> 0
+            }
+            layoutController.isState(ChordsEditorLayoutController::class) -> when (currentViewId) {
+                R.id.transformChordsButton -> R.id.navMenuButton
+                else -> 0
+            }
+            layoutController.isState(LatestSongsLayoutController::class) -> when (currentViewId) {
+                R.id.itemsList -> R.id.navMenuButton
+                else -> 0
+            }
+            layoutController.isState(FavouritesLayoutController::class) -> when (currentViewId) {
+                R.id.itemsList -> R.id.navMenuButton
+                else -> 0
+            }
+            layoutController.isState(PlaylistLayoutController::class) -> when (currentViewId) {
+                R.id.playlistListView -> R.id.navMenuButton
+                else -> 0
+            }
+            layoutController.isState(OpenHistoryLayoutController::class) -> when (currentViewId) {
+                R.id.itemsList -> R.id.navMenuButton
+                else -> 0
+            }
+            layoutController.isState(MissingSongLayoutController::class) -> when (currentViewId) {
+                R.id.missingSongMessageEdit -> R.id.navMenuButton
+                else -> 0
+            }
+            layoutController.isState(PublishSongLayoutController::class) -> when (currentViewId) {
+                R.id.publishSongTitleEdit -> R.id.navMenuButton
+                else -> 0
+            }
+            layoutController.isState(RoomListLayoutController::class) -> when (currentViewId) {
+                R.id.myNameEditText -> R.id.navMenuButton
+                else -> 0
+            }
+            layoutController.isState(RoomLobbyLayoutController::class) -> when (currentViewId) {
+                R.id.openSelectedSongButton -> R.id.navMenuButton
+                else -> 0
+            }
+            layoutController.isState(BillingLayoutController::class) -> when (currentViewId) {
+                R.id.billingBuyAdFree -> R.id.navMenuButton
+                else -> 0
+            }
+            layoutController.isState(ContactLayoutController::class) -> when (currentViewId) {
+                R.id.contactSubjectEdit -> R.id.navMenuButton
+                else -> 0
+            }
+            layoutController.isState(SettingsLayoutController::class) -> when (currentViewId) {
+                R.id.fragment_content -> R.id.navMenuButton
+                else -> 0
+            }
             else -> 0
         }
     }

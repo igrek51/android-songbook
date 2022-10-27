@@ -1,5 +1,6 @@
 package igrek.songbook.custom
 
+import android.view.KeyEvent
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.EditText
@@ -14,6 +15,7 @@ import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import igrek.songbook.layout.GlobalFocusTraverser
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
@@ -40,6 +42,7 @@ class EditSongLayoutController(
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
     adminService: LazyInject<AdminService> = appFactory.adminService,
+    globalFocusTraverser: LazyInject<GlobalFocusTraverser> = appFactory.globalFocusTraverser,
 ) : InflatedLayout(
         _layoutResourceId = R.layout.screen_custom_song_details
 ) {
@@ -54,6 +57,7 @@ class EditSongLayoutController(
     private val preferencesState by LazyExtractor(preferencesState)
     private val songsRepository by LazyExtractor(songsRepository)
     private val adminService by LazyExtractor(adminService)
+    private val globalFocusTraverser by LazyExtractor(globalFocusTraverser)
 
     private var songTitleEdit: EditText? = null
     private var songContentEdit: EditText? = null
@@ -82,22 +86,37 @@ class EditSongLayoutController(
             showMoreActions()
         })
 
-        layout.findViewById<ImageButton>(R.id.tooltipEditChordsLyricsInfo).setOnClickListener {
-            uiInfoService.showTooltip(R.string.chords_editor_hint)
+        layout.findViewById<ImageButton>(R.id.tooltipEditChordsLyricsInfo)?.let {
+            it.setOnClickListener {
+                uiInfoService.showTooltip(R.string.chords_editor_hint)
+            }
+            globalFocusTraverser.setUpDownKeyListener(it)
         }
 
         songContentEdit = layout.findViewById<EditText>(R.id.songContentEdit)?.also {
             it.setText(songContent.orEmpty())
             it.setOnClickListener { openInChordsEditor() }
+            it.setOnEditorActionListener { v, actionId, event ->
+                when (event.action) {
+                    KeyEvent.ACTION_DOWN -> {
+                        openInChordsEditor()
+                        true
+                    }
+                    else -> false
+                }
+            }
+            globalFocusTraverser.setUpDownKeyListener(it)
         }
 
         songTitleEdit = layout.findViewById<EditText>(R.id.songTitleEdit)?.also {
             it.setText(songTitle.orEmpty())
+            globalFocusTraverser.setUpDownKeyListener(it)
         }
 
         customCategoryNameEdit = layout.findViewById<AppCompatAutoCompleteTextView>(R.id.customCategoryNameEdit)?.apply {
             setText(customCategoryName.orEmpty())
             threshold = 1
+            globalFocusTraverser.setUpDownKeyListener(this)
         }
         updateCategoryAutocompleter()
 
@@ -108,6 +127,7 @@ class EditSongLayoutController(
                 chordsNotationDisplayNames = chordsNotationService.chordsNotationDisplayNames
         ).also {
             it.selectedNotation = songChordsNotation ?: preferencesState.chordsNotation
+            globalFocusTraverser.setUpDownKeyListener(it.spinner)
         }
 
         subscriptions.forEach { s -> s.dispose() }

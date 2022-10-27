@@ -22,7 +22,7 @@ class ChordNotationSpinner(
             selectEntity(value)
         }
 
-    private val spinner: Spinner = layout.findViewById(spinnerId)
+    val spinner: Spinner = layout.findViewById(spinnerId)
 
     private var internalValue: ChordsNotation = ChordsNotation.default
 
