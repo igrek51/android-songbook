@@ -231,6 +231,13 @@ class TreeListReorder(private val listView: PlaylistListView) {
         itemDraggingStarted(position, itemView)
     }
 
+    fun onItemMoveClicked(position: Int) {
+        if (position + 1 >= (listView.items?.size ?: 0))
+            return
+        listView.itemMoved(position, 1)
+        listView.invalidate()
+    }
+
     fun onItemMoveButtonReleased() {
         itemDraggingStopped()
     }

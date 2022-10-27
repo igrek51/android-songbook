@@ -104,6 +104,9 @@ class PlaylistListItemAdapter internal constructor(
             }
             return@setOnTouchListener false
         }
+        moveButton.setOnClickListener {
+            listView.reorder?.onItemMoveClicked(position)
+        }
 
         return itemView
     }
