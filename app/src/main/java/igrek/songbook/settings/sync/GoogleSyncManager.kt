@@ -2,6 +2,8 @@ package igrek.songbook.settings.sync
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -213,14 +215,25 @@ class GoogleSyncManager(
         client.signOut().addOnCompleteListener {
             val signInIntent = client.signInIntent
             if (signInIntent.action == null) {
-                logger.warn("Google SignInt intent action is null")
+                logger.warn("Google SignIn intent action is null")
                 signInIntent.action = "com.google.android.gms.auth.GOOGLE_SIGN_IN"
+            }
+            if (!isIntentCallable(signInIntent)) {
+                logger.warn("Intent is not callable: $signInIntent")
             }
             // The result of the sign-in Intent is handled in onActivityResult.
             activityResultDispatcher.startActivityForResult(signInIntent) { resultCode: Int, data: Intent? ->
                 handleSignInResult(data, resultCode, onSignIn)
             }
         }
+    }
+
+    private fun isIntentCallable(intent: Intent): Boolean {
+        val list: List<ResolveInfo> = activity.packageManager.queryIntentActivities(
+            intent,
+            PackageManager.MATCH_DEFAULT_ONLY,
+        )
+        return list.isNotEmpty()
     }
 
     fun signOut() {
