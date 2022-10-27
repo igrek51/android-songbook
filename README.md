@@ -37,6 +37,12 @@ Example application screenshots:
 | ![](https://raw.githubusercontent.com/igrek51/android-songbook/master/docs/screenshots/mobile/en/04.png) | ![](https://raw.githubusercontent.com/igrek51/android-songbook/master/docs/screenshots/mobile/en/05.png) | ![](https://raw.githubusercontent.com/igrek51/android-songbook/master/docs/screenshots/mobile/en/06.png) |
 | ![](https://raw.githubusercontent.com/igrek51/android-songbook/master/docs/screenshots/mobile/en/07.png) | ![](https://raw.githubusercontent.com/igrek51/android-songbook/master/docs/screenshots/mobile/en/08.png) |  |
 
+| [![](./docs/screenshots/mobile/en/01.png)](./docs/screenshots/mobile/en/01.png) | [![](./docs/screenshots/mobile/en/02.png)](./docs/screenshots/mobile/en/02.png) |
+|---|---|
+| [![](./docs/screenshots/mobile/en/03.png)](./docs/screenshots/mobile/en/03.png) | [![](./docs/screenshots/mobile/en/04.png)](./docs/screenshots/mobile/en/04.png) |
+| [![](./docs/screenshots/mobile/en/05.png)](./docs/screenshots/mobile/en/05.png) | [![](./docs/screenshots/mobile/en/06.png)](./docs/screenshots/mobile/en/06.png) |
+| [![](./docs/screenshots/mobile/en/07.png)](./docs/screenshots/mobile/en/07.png) | [![](./docs/screenshots/mobile/en/08.png)](./docs/screenshots/mobile/en/08.png) |
+
 ## Available on Google Play
 
 Songbook is available on [Google Play](https://play.google.com/store/apps/details?id=igrek.songbook) for free.
