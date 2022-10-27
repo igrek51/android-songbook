@@ -1,10 +1,12 @@
-# User Guide
+# Quick User Guide
 
 ## Song Selection
 You can choose a song from the categories tree or search it by title, artist or lyrics fragment
 (by any word, uppercase doesn't matter).
 
 ## Song Preview
+**Songbook** displays song lyrics with highlighted chords
+
 On a song preview the display is always on.
 Pinch with two fingers to change the font size.
 
@@ -48,5 +50,5 @@ There are many useful tools in chords editor, which make the editing easier.
 ![](./assets/screenshots-mobile-en/04.png){ width="30%" }
 
 ## Social Contributing
-Songbook allows you to publish your custom songs and share it along all the other users.
+Songbook allows you to publish your custom songs and share it along the other people.
 You can also suggest improving some chords or lyrics, if you have noticed some bugs.

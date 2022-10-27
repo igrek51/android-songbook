@@ -35,6 +35,8 @@ markdown_extensions:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
   - attr_list
+  - toc:
+      permalink: true
 plugins:
   - search
 extra:
@@ -44,5 +46,20 @@ extra:
       name: Songbook on GitHub
 
 nav:
-  - Home: index.md
-  - User Guide: help.md
+  - About: index.md
+  - Quick User Guide: quick-guide.md
+  - Features:
+    - Transpose: transpose.md
+    - Autoscroll: autoscroll.md
+    - Playlists: playlists.md
+    - Chord diagrams: chord-diagrams.md
+    - Bluetooth Sharing: bluetooth-sharing.md
+    - Chords Notations: chords-notations.md
+    - Displaying Styles: displaying-styles.md
+    - Sharing by link: sharing-by-link.md
+    - Controls: controls.md
+    - Search Engine: search-engine.md
+  - Custom Songs:
+    - Chord Format Specification: chord-format.md
+    - Chords Editor: chords-editor.md
+    - Contributing: contributing.md

@@ -1,9 +1,9 @@
+![](./assets/banner.png)
+
 # Songbook
 
 [![GitHub version (latest SemVer)](https://img.shields.io/github/v/tag/igrek51/android-songbook?label=github&sort=semver)](https://github.com/igrek51/android-songbook)
 [![Github Pages](https://img.shields.io/badge/docs-github.io-blue)](https://igrek51.github.io/android-songbook)
-
-![](./assets/banner.png)
 
 Songs lyrics viewer with chords toolkit for musicians, guitarists and pianists
 

@@ -5,7 +5,7 @@
 
 Songs lyrics viewer with chords toolkit for musicians, guitarists and pianists
 
-## Main features
+## Features
 Our chief weapons are:
 
 - Displaying song lyrics with highlighted chords
