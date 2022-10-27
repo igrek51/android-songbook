@@ -32,11 +32,6 @@ It has many songs with chords on board and its database can be easily extended w
 
 Example application screenshots:
 
-| ![](https://raw.githubusercontent.com/igrek51/android-songbook/master/docs/screenshots/mobile/en/01.png) | ![](https://raw.githubusercontent.com/igrek51/android-songbook/master/docs/screenshots/mobile/en/02.png) | ![](https://raw.githubusercontent.com/igrek51/android-songbook/master/docs/screenshots/mobile/en/03.png) |
-|---|---|---|
-| ![](https://raw.githubusercontent.com/igrek51/android-songbook/master/docs/screenshots/mobile/en/04.png) | ![](https://raw.githubusercontent.com/igrek51/android-songbook/master/docs/screenshots/mobile/en/05.png) | ![](https://raw.githubusercontent.com/igrek51/android-songbook/master/docs/screenshots/mobile/en/06.png) |
-| ![](https://raw.githubusercontent.com/igrek51/android-songbook/master/docs/screenshots/mobile/en/07.png) | ![](https://raw.githubusercontent.com/igrek51/android-songbook/master/docs/screenshots/mobile/en/08.png) |  |
-
 | [![](./docs/screenshots/mobile/en/01.png)](./docs/screenshots/mobile/en/01.png) | [![](./docs/screenshots/mobile/en/02.png)](./docs/screenshots/mobile/en/02.png) |
 |---|---|
 | [![](./docs/screenshots/mobile/en/03.png)](./docs/screenshots/mobile/en/03.png) | [![](./docs/screenshots/mobile/en/04.png)](./docs/screenshots/mobile/en/04.png) |
