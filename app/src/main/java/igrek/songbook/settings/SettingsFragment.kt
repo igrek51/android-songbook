@@ -6,6 +6,8 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.KeyEvent
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.preference.*
@@ -18,16 +20,17 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
+import igrek.songbook.layout.LocalFocusTraverser
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.settings.buttons.MediaButtonBehaviours
 import igrek.songbook.settings.buttons.MediaButtonService
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
+import igrek.songbook.settings.enums.ChordsInstrument
+import igrek.songbook.settings.enums.CustomSongsOrdering
 import igrek.songbook.settings.enums.SettingsEnumService
 import igrek.songbook.settings.homescreen.HomeScreenEnum
 import igrek.songbook.settings.homescreen.HomeScreenEnumService
-import igrek.songbook.settings.enums.ChordsInstrument
-import igrek.songbook.settings.enums.CustomSongsOrdering
 import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesState
@@ -88,6 +91,7 @@ class SettingsFragment(
     }
 
     private fun lateInit() {
+
         setupListPreference("applicationLanguage",
             appLanguageService.languageStringEntries(),
             onLoad = { preferencesState.appLanguage.langCode },

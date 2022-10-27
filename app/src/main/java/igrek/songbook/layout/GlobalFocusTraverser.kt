@@ -323,8 +323,7 @@ class GlobalFocusTraverser(
             when (currentViewId) {
                 R.id.navMenuButton, R.id.itemsList, R.id.itemsListView, R.id.main_content -> return R.id.nav_view
             }
-        }
-        if (uiInfoService.isSnackbarShown()) {
+        } else if (uiInfoService.isSnackbarShown()) {
             if (uiInfoService.focusSnackBar())
                 return -1
         }
