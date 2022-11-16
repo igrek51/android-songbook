@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <group
         android:id="@+id/nav_group1"
@@ -29,8 +28,7 @@
             android:id="@+id/nav_custom_songs"
             android:icon="@drawable/edit"
             android:title="@string/nav_custom_song"
-            app:actionLayout="@layout/component_nav_custom_song"
-            />
+            app:actionLayout="@layout/component_nav_custom_song" />
         <item
             android:id="@+id/nav_playlists"
             android:icon="@drawable/playlist"
@@ -91,8 +89,7 @@
             android:id="@+id/nav_manual"
             android:icon="@drawable/help"
             android:title="@string/nav_manual"
-            app:actionLayout="@layout/component_nav_help"
-            />
+            app:actionLayout="@layout/component_nav_help" />
         <item
             android:id="@+id/nav_exit"
             android:icon="@drawable/close"

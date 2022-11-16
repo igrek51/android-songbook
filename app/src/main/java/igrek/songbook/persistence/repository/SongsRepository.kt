@@ -23,9 +23,9 @@ import igrek.songbook.util.lookup.SimpleCache
 import io.reactivex.subjects.PublishSubject
 
 class SongsRepository(
-        localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
-        userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
+    userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
 ) {
     private val localDbService by LazyExtractor(localDbService)
     private val userDataDao by LazyExtractor(userDataDao)
@@ -35,17 +35,18 @@ class SongsRepository(
 
     var dbChangeSubject: PublishSubject<Boolean> = PublishSubject.create()
 
-    var publicSongsRepo: PublicSongsRepository = PublicSongsRepository(0, SimpleCache.emptyList(), SimpleCache.emptyList())
+    var publicSongsRepo: PublicSongsRepository =
+        PublicSongsRepository(0, SimpleCache.emptyList(), SimpleCache.emptyList())
     var customSongsRepo: CustomSongsRepository = CustomSongsRepository(
-            SimpleCache.emptyList(),
-            SimpleCache.emptyList(),
-            allCustomCategory = Category(
-                    id = CategoryType.CUSTOM.id,
-                    type = CategoryType.CUSTOM,
-                    name = null,
-                    custom = false,
-                    songs = mutableListOf()
-            )
+        SimpleCache.emptyList(),
+        SimpleCache.emptyList(),
+        allCustomCategory = Category(
+            id = CategoryType.CUSTOM.id,
+            type = CategoryType.CUSTOM,
+            name = null,
+            custom = false,
+            songs = mutableListOf()
+        )
     )
     var allSongsRepo: AllSongsRepository = AllSongsRepository(publicSongsRepo, customSongsRepo)
     private var publicSongsDao: PublicSongsDao? = null
@@ -134,7 +135,7 @@ class SongsRepository(
         val dbFile = localDbService.songsDbFile
         publicSongsDao = PublicSongsDao(dbFile)
         val versionNumber = publicSongsDao?.readDbVersionNumber()
-                ?: throw RuntimeException("invalid local songs database format")
+            ?: throw RuntimeException("invalid local songs database format")
         publicSongsDao!!.verifyDbVersion(versionNumber)
         return versionNumber
     }

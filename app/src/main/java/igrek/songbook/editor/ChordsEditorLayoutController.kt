@@ -87,7 +87,8 @@ class ChordsEditorLayoutController(
             onBackClicked()
         })
 
-        val tooltipEditChordsLyricsInfo = layout.findViewById<ImageButton>(R.id.tooltipEditChordsLyricsInfo)
+        val tooltipEditChordsLyricsInfo =
+            layout.findViewById<ImageButton>(R.id.tooltipEditChordsLyricsInfo)
         tooltipEditChordsLyricsInfo.setOnClickListener {
             webviewLayoutController.openUrlChordFormat()
         }
@@ -96,7 +97,12 @@ class ChordsEditorLayoutController(
             textEditor = EditTextTextEditor(it)
             it.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {}
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
                     if (start == 0 && count == s?.length) {
                         return // skip in order not to save undo / transforming operations again
                     }
@@ -114,7 +120,13 @@ class ChordsEditorLayoutController(
         buttonOnClick(R.id.addChordSplitterButton) { transformer?.addChordSplitter() }
         buttonOnClick(R.id.copyButton) { transformer?.onCopyClick() }
         buttonOnClick(R.id.pasteButton) { transformer?.onPasteClick() }
-        buttonOnClick(R.id.detectChordsButton) { wrapHistoryContext { transformer?.detectChords(keepIndentation = true) } }
+        buttonOnClick(R.id.detectChordsButton) {
+            wrapHistoryContext {
+                transformer?.detectChords(
+                    keepIndentation = true
+                )
+            }
+        }
         buttonOnClick(R.id.undoChordsButton) { undoChange() }
         buttonOnClick(R.id.transformChordsButton) { showTransformMenu() }
         buttonOnClick(R.id.moveLeftButton) { moveCursor(-1) }
@@ -153,36 +165,36 @@ class ChordsEditorLayoutController(
 
     private fun showTransformMenu() {
         val actions = listOf(
-                ContextMenuBuilder.Action(R.string.chords_editor_detect_and_move_chords_to_words) {
-                    wrapHistoryContext { transformer?.detectAndMoveChordsAboveToInline() }
-                },
-                ContextMenuBuilder.Action(R.string.chords_editor_move_chords_above_to_inline) {
-                    wrapHistoryContext { transformer?.moveChordsAboveToInline() }
-                },
-                ContextMenuBuilder.Action(R.string.chords_editor_move_chords_to_right) {
-                    wrapHistoryContext { transformer?.moveChordsAboveToRight() }
-                },
-                ContextMenuBuilder.Action(R.string.chords_editor_align_misplaced_chords) {
-                    wrapHistoryContext { transformer?.alignMisplacedChords() }
-                },
-                ContextMenuBuilder.Action(R.string.chords_editor_convert_from_notation) {
-                    wrapHistoryContext { transformer?.convertFromOtherNotationDialog() }
-                },
-                ContextMenuBuilder.Action(R.string.chords_editor_remove_double_empty_lines) {
-                    wrapHistoryContext { transformer?.removeDoubleEmptyLines() }
-                },
-                ContextMenuBuilder.Action(R.string.chords_editor_remove_bracket_content) {
-                    wrapHistoryContext { transformer?.removeBracketsContent() }
-                },
-                ContextMenuBuilder.Action(R.string.chords_editor_unmark_chords) {
-                    wrapHistoryContext { transformer?.unmarkChords() }
-                },
-                ContextMenuBuilder.Action(R.string.chords_editor_fis_to_sharp) {
-                    wrapHistoryContext { transformer?.chordsFisTofSharp() }
-                },
-                ContextMenuBuilder.Action(R.string.chords_editor_detect_chords_keeping_indent) {
-                    wrapHistoryContext { transformer?.detectChords(keepIndentation = false) }
-                },
+            ContextMenuBuilder.Action(R.string.chords_editor_detect_and_move_chords_to_words) {
+                wrapHistoryContext { transformer?.detectAndMoveChordsAboveToInline() }
+            },
+            ContextMenuBuilder.Action(R.string.chords_editor_move_chords_above_to_inline) {
+                wrapHistoryContext { transformer?.moveChordsAboveToInline() }
+            },
+            ContextMenuBuilder.Action(R.string.chords_editor_move_chords_to_right) {
+                wrapHistoryContext { transformer?.moveChordsAboveToRight() }
+            },
+            ContextMenuBuilder.Action(R.string.chords_editor_align_misplaced_chords) {
+                wrapHistoryContext { transformer?.alignMisplacedChords() }
+            },
+            ContextMenuBuilder.Action(R.string.chords_editor_convert_from_notation) {
+                wrapHistoryContext { transformer?.convertFromOtherNotationDialog() }
+            },
+            ContextMenuBuilder.Action(R.string.chords_editor_remove_double_empty_lines) {
+                wrapHistoryContext { transformer?.removeDoubleEmptyLines() }
+            },
+            ContextMenuBuilder.Action(R.string.chords_editor_remove_bracket_content) {
+                wrapHistoryContext { transformer?.removeBracketsContent() }
+            },
+            ContextMenuBuilder.Action(R.string.chords_editor_unmark_chords) {
+                wrapHistoryContext { transformer?.unmarkChords() }
+            },
+            ContextMenuBuilder.Action(R.string.chords_editor_fis_to_sharp) {
+                wrapHistoryContext { transformer?.chordsFisTofSharp() }
+            },
+            ContextMenuBuilder.Action(R.string.chords_editor_detect_chords_keeping_indent) {
+                wrapHistoryContext { transformer?.detectChords(keepIndentation = false) }
+            },
         )
         contextMenuBuilder.showContextMenu(R.string.edit_song_transform_chords, actions)
     }

@@ -15,13 +15,15 @@ import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.layout.list.ListItemClickListener
 import igrek.songbook.songselection.listview.ListScrollPosition
 
-class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+class PlaylistListView : ListView, AdapterView.OnItemClickListener,
+    AdapterView.OnItemLongClickListener {
 
     var adapter: PlaylistListItemAdapter? = null
     var scrollHandler: TreeListScrollHandler? = null
         private set
     val reorder: TreeListReorder? = TreeListReorder(this)
     private var onClickListener: ListItemClickListener<PlaylistListItem>? = null
+
     /** view index -> view height  */
     private val itemHeights = SparseIntArray()
     private lateinit var onMove: (Int, Int) -> List<PlaylistListItem>?
@@ -49,11 +51,19 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.
 
     constructor(context: Context) : super(context)
 
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle)
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(
+        context,
+        attrs,
+        defStyle
+    )
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
-    fun init(context: Context, onClickListener: ListItemClickListener<PlaylistListItem>, onMove: (Int, Int) -> List<PlaylistListItem>?) {
+    fun init(
+        context: Context,
+        onClickListener: ListItemClickListener<PlaylistListItem>,
+        onMove: (Int, Int) -> List<PlaylistListItem>?
+    ) {
         this.onClickListener = onClickListener
         this.onMove = onMove
         onItemClickListener = this
@@ -76,7 +86,12 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener, AdapterView.
             onClickListener!!.onItemClick(item!!)
     }
 
-    override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
+    override fun onItemLongClick(
+        parent: AdapterView<*>,
+        view: View,
+        position: Int,
+        id: Long
+    ): Boolean {
         val item = adapter!!.getItem(position)
         if (onClickListener != null)
             onClickListener!!.onItemLongClick(item!!)

@@ -10,7 +10,7 @@ import igrek.songbook.inject.appFactory
 
 
 open class ClipboardManager(
-        activity: LazyInject<Activity> = appFactory.activity,
+    activity: LazyInject<Activity> = appFactory.activity,
 ) {
     private val activity by LazyExtractor(activity)
 
@@ -22,7 +22,10 @@ open class ClipboardManager(
 
     fun getFromSystemClipboard(): String? {
         val clipboard = activity.getSystemService(Activity.CLIPBOARD_SERVICE) as ClipboardManager
-        if (clipboard.hasPrimaryClip() && clipboard.primaryClipDescription?.hasMimeType(MIMETYPE_TEXT_PLAIN) == true) {
+        if (clipboard.hasPrimaryClip() && clipboard.primaryClipDescription?.hasMimeType(
+                MIMETYPE_TEXT_PLAIN
+            ) == true
+        ) {
             val item = clipboard.primaryClip?.getItemAt(0) ?: return null
             return item.text?.toString()
         }

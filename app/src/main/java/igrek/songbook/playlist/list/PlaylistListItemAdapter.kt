@@ -14,13 +14,12 @@ import igrek.songbook.R
 import igrek.songbook.layout.list.ListItemClickListener
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.user.playlist.Playlist
-import java.util.*
 
 class PlaylistListItemAdapter internal constructor(
-        context: Context,
-        _dataSource: List<PlaylistListItem>?,
-        private val onClickListener: ListItemClickListener<PlaylistListItem>,
-        private val listView: PlaylistListView
+    context: Context,
+    _dataSource: List<PlaylistListItem>?,
+    private val onClickListener: ListItemClickListener<PlaylistListItem>,
+    private val listView: PlaylistListView
 ) : ArrayAdapter<PlaylistListItem>(context, 0, ArrayList()) {
 
     var dataSource: List<PlaylistListItem>? = null
@@ -66,7 +65,11 @@ class PlaylistListItemAdapter internal constructor(
         return itemView
     }
 
-    private fun createPlaylistView(item: PlaylistListItem, playlist: Playlist, parent: ViewGroup): View {
+    private fun createPlaylistView(
+        item: PlaylistListItem,
+        playlist: Playlist,
+        parent: ViewGroup
+    ): View {
         val itemView = inflater.inflate(R.layout.list_item_playlist_group, parent, false)
         val itemTitleLabel = itemView.findViewById<TextView>(R.id.itemTitleLabel)
         itemTitleLabel.text = playlist.name
@@ -77,7 +80,12 @@ class PlaylistListItemAdapter internal constructor(
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun createSongView(item: PlaylistListItem, song: Song, parent: ViewGroup, position: Int): View {
+    private fun createSongView(
+        item: PlaylistListItem,
+        song: Song,
+        parent: ViewGroup,
+        position: Int
+    ): View {
         val itemView = inflater.inflate(R.layout.list_item_playlist_song, parent, false)
         val itemTitleLabel = itemView.findViewById<TextView>(R.id.itemTitleLabel)
         itemTitleLabel.text = song.displayName()
@@ -91,14 +99,14 @@ class PlaylistListItemAdapter internal constructor(
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     listView.reorder
-                            ?.onItemMoveButtonPressed(position, itemView, event.y + moveButton.top)
+                        ?.onItemMoveButtonPressed(position, itemView, event.y + moveButton.top)
                     return@setOnTouchListener false
                 }
                 MotionEvent.ACTION_MOVE ->
                     return@setOnTouchListener false
                 MotionEvent.ACTION_UP -> {
                     listView.reorder
-                            ?.onItemMoveButtonReleased()
+                        ?.onItemMoveButtonReleased()
                     return@setOnTouchListener true
                 }
             }

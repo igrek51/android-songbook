@@ -5,10 +5,10 @@ import android.os.Looper
 import igrek.songbook.info.logger.LoggerFactory
 
 class RetryDelayed(
-        private val retries: Int,
-        private val delayMs: Long,
-        private val errorType: Class<out Throwable>,
-        private val action: () -> Unit
+    private val retries: Int,
+    private val delayMs: Long,
+    private val errorType: Class<out Throwable>,
+    private val action: () -> Unit
 ) {
     private var attempt = 0
 

@@ -13,8 +13,8 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 class LocalDbService(
-        activity: LazyInject<Activity> = appFactory.activity,
-        permissionService: LazyInject<PermissionService> = appFactory.permissionService,
+    activity: LazyInject<Activity> = appFactory.activity,
+    permissionService: LazyInject<PermissionService> = appFactory.permissionService,
 ) {
     private val activity by LazyExtractor(activity)
     private val permissionService by LazyExtractor(permissionService)

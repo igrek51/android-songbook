@@ -14,11 +14,11 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 
 class TitleBarView(
-        context: Context?,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0,
-        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
-        navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
+    context: Context?,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0,
+    appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+    navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
 ) : RelativeLayout(context, attrs, defStyleAttr) {
     private val activity by LazyExtractor(appCompatActivity)
     private val navigationMenuController by LazyExtractor(navigationMenuController)
@@ -27,7 +27,13 @@ class TitleBarView(
 
     constructor(context: Context?) : this(context, null)
     constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : this(context, attrs, defStyleAttr, appFactory.appCompatActivity, appFactory.navigationMenuController)
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        context,
+        attrs,
+        defStyleAttr,
+        appFactory.appCompatActivity,
+        appFactory.navigationMenuController
+    )
 
     init {
         parseAttrs(attrs)

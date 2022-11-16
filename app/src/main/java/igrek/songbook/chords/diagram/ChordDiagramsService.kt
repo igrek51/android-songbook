@@ -83,7 +83,11 @@ class ChordDiagramsService(
 
                 val instrument = preferencesState.chordsInstrument
                 val instrumentName = uiResourceService.resString(instrument.displayNameResId)
-                val title = uiResourceService.resString(R.string.chord_diagrams_versions, typedChord, instrumentName)
+                val title = uiResourceService.resString(
+                    R.string.chord_diagrams_versions,
+                    typedChord,
+                    instrumentName,
+                )
 
                 val alertBuilder = AlertDialog.Builder(activity)
                 alertBuilder.setTitle(title)
@@ -99,7 +103,8 @@ class ChordDiagramsService(
                     showFindChordByNameMenu()
                 }
 
-                val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                val inflater =
+                    activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
                 val diagramView = when (preferencesState.chordsInstrument) {
                     ChordsInstrument.PIANO -> inflateDrawableChordDiagramView(typedChord, inflater)
@@ -160,7 +165,8 @@ class ChordDiagramsService(
     private fun hasChordDiagram(typedChordName: String): Boolean {
         return when (preferencesState.chordsInstrument) {
             ChordsInstrument.PIANO -> {
-                val chord: GeneralChord? = ChordParser(chordsNotationService.chordsNotation).parseGeneralChord(typedChordName)
+                val chord: GeneralChord? =
+                    ChordParser(chordsNotationService.chordsNotation).parseGeneralChord(typedChordName)
                 if (chord == null) {
                     false
                 } else {
@@ -168,7 +174,11 @@ class ChordDiagramsService(
                 }
             }
             else -> {
-                val toEnglishConverter = ChordsNotationConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH, false)
+                val toEnglishConverter = ChordsNotationConverter(
+                    chordsNotationService.chordsNotation,
+                    ChordsNotation.ENGLISH,
+                    false,
+                )
                 val engChord = toEnglishConverter.convertChordFragments(typedChordName)
                 val chordDiagramCodes = getChordDiagramCodes(preferencesState.chordsInstrument)
                 engChord in chordDiagramCodes
@@ -189,7 +199,11 @@ class ChordDiagramsService(
         val diagramView = inflater.inflate(R.layout.component_chord_text_diagrams, null, false)
         val diagramContent = diagramView.findViewById<TextView>(R.id.chordDiagramContent)
 
-        val toEnglishConverter = ChordsNotationConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH, preferencesState.forceSharpNotes)
+        val toEnglishConverter = ChordsNotationConverter(
+            chordsNotationService.chordsNotation,
+            ChordsNotation.ENGLISH,
+            preferencesState.forceSharpNotes,
+        )
         val engChord: String = toEnglishConverter.convertChordFragments(typedChord)
 
         val instrument = preferencesState.chordsInstrument
@@ -204,11 +218,18 @@ class ChordDiagramsService(
         return diagramView
     }
 
-    private fun inflateDrawableChordDiagramView(typedChord: String, inflater: LayoutInflater): View? {
+    private fun inflateDrawableChordDiagramView(
+        typedChord: String,
+        inflater: LayoutInflater,
+    ): View? {
         val diagramView = inflater.inflate(R.layout.component_chord_drawable_diagram, null, false)
         val diagramImage = diagramView.findViewById<ImageView>(R.id.chordDiagramImage)
 
-        val toEnglishConverter = ChordsNotationConverter(chordsNotationService.chordsNotation, ChordsNotation.ENGLISH, preferencesState.forceSharpNotes)
+        val toEnglishConverter = ChordsNotationConverter(
+            chordsNotationService.chordsNotation,
+            ChordsNotation.ENGLISH,
+            preferencesState.forceSharpNotes,
+        )
         val engChord: String = toEnglishConverter.convertChordFragments(typedChord)
 
         val diagramBuilder: DrawableChordDiagramBuilder = when (preferencesState.chordsInstrument) {

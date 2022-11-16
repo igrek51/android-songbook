@@ -14,7 +14,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 class RoomLobbyController(
-        private val bluetoothService: BluetoothService,
+    private val bluetoothService: BluetoothService,
 ) {
     var peerStatus: PeerStatus = PeerStatus.Disconnected
         private set
@@ -28,7 +28,8 @@ class RoomLobbyController(
     private val newSlaveChannel = Channel<PeerStream>(Channel.UNLIMITED)
     private val writeMutex = Mutex()
 
-    var onMasterMsgReceived: suspend (gtrMsg: GtrMsg, slaveStream: PeerStream?) -> Unit = { _, _ -> }
+    var onMasterMsgReceived: suspend (gtrMsg: GtrMsg, slaveStream: PeerStream?) -> Unit =
+        { _, _ -> }
     var onClientMsgReceived: suspend (gtrMsg: GtrMsg) -> Unit = {}
     var onJoinRoomKnocked: () -> Unit = {}
     var onClientsChange: (List<PeerClient>) -> Unit = {}
@@ -108,7 +109,7 @@ class RoomLobbyController(
             this.clients = mutableListOf(PeerClient(username, null, PeerStatus.Master))
             newSlaveListener?.close()
             val bluetoothAdapter = bluetoothService.bluetoothAdapter
-                    ?: throw RuntimeException("No Bluetooth adapter")
+                ?: throw RuntimeException("No Bluetooth adapter")
             newSlaveListener = NewSlaveListener(bluetoothAdapter, newSlaveChannel)
             peerStatus = PeerStatus.Master
             newSlaveListener!!.isInitializedAsync()
@@ -182,7 +183,8 @@ class RoomLobbyController(
             when (peerStatus) {
                 PeerStatus.Master -> {
                     val strMsg = msg.toString()
-                    val activeSlaveStreams = clients.filter { it.status == PeerStatus.Slave && it.stream != null }
+                    val activeSlaveStreams =
+                        clients.filter { it.status == PeerStatus.Slave && it.stream != null }
                             .map { it.stream!! }
                     LoggerFactory.logger.debug("sending to ${activeSlaveStreams.size} slaves: $strMsg")
                     activeSlaveStreams.forEach { stream ->
@@ -230,7 +232,8 @@ class RoomLobbyController(
     // receive as Master
     private suspend fun onMasterReceived(strMsg: String, slaveStream: PeerStream?) {
         try {
-            val clientName = if (slaveStream == null) "itself" else "slave ${slaveStream.remoteName()}"
+            val clientName =
+                if (slaveStream == null) "itself" else "slave ${slaveStream.remoteName()}"
             LoggerFactory.logger.debug("received message from $clientName: $strMsg")
             val gtrMsg: GtrMsg = GtrParser().parse(strMsg)
             onMasterMsgReceived(gtrMsg, slaveStream)

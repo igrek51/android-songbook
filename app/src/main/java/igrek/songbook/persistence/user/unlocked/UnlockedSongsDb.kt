@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UnlockedSongsDb(
-        val keys: MutableList<String>
+    val keys: MutableList<String>
 )

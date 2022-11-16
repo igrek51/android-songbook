@@ -10,7 +10,7 @@ import igrek.songbook.inject.appFactory
 
 @Suppress("DEPRECATION")
 class PackageInfoService(
-        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+    appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
 ) {
     private val activity by LazyExtractor(appCompatActivity)
 
@@ -23,7 +23,7 @@ class PackageInfoService(
     init {
         try {
             val pInfo = activity.packageManager
-                    .getPackageInfo(activity.packageName, 0)
+                .getPackageInfo(activity.packageName, 0)
             versionName = pInfo.versionName
             versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 pInfo.longVersionCode

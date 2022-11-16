@@ -25,13 +25,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
 class TopSongsLayoutController(
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
-        songOpener: LazyInject<SongOpener> = appFactory.songOpener,
-        appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
+    songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+    appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
 ) : InflatedLayout(
-        _layoutResourceId = R.layout.screen_top_songs
+    _layoutResourceId = R.layout.screen_top_songs
 ), SongClickListener {
     private val songsRepository by LazyExtractor(songsRepository)
     private val uiResourceService by LazyExtractor(uiResourceService)
@@ -62,10 +62,10 @@ class TopSongsLayoutController(
             val selected = appLanguageService.selectedSongLanguages
             val title = uiResourceService.resString(R.string.song_languages)
             languagePicker = MultiPicker(
-                    activity,
-                    entityNames = songLanguageEntries,
-                    selected = selected,
-                    title = title,
+                activity,
+                entityNames = songLanguageEntries,
+                selected = selected,
+                title = title,
             ) { selectedLanguages ->
                 if (appLanguageService.selectedSongLanguages != selectedLanguages) {
                     appLanguageService.selectedSongLanguages = selectedLanguages.toSet()
@@ -78,11 +78,12 @@ class TopSongsLayoutController(
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
         subscriptions.add(songsRepository.dbChangeSubject
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    if (isLayoutVisible())
-                        updateItemsList()
-                }, UiErrorHandler::handleError))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                if (isLayoutVisible())
+                    updateItemsList()
+            }, UiErrorHandler::handleError)
+        )
     }
 
     private fun goToSearchSong() {
@@ -93,14 +94,14 @@ class TopSongsLayoutController(
         val acceptedLanguages = appLanguageService.selectedSongLanguages
         val acceptedLangCodes = acceptedLanguages.map { lang -> lang.langCode } + "" + null
         val latestSongs = songsRepository.publicSongsRepo.songs.get()
-                .asSequence()
-                .filter { it.isPublic() }
-                .filter { song -> song.language in acceptedLangCodes }
-                .filter { song -> song.rank != null }
-                .sortedWith(compareBy({ -(it.rank ?: 0.0) }, { -it.updateTime }))
-                .take(topSongsCount)
-                .map { song -> SongSearchItem.song(song) }
-                .toList()
+            .asSequence()
+            .filter { it.isPublic() }
+            .filter { song -> song.language in acceptedLangCodes }
+            .filter { song -> song.rank != null }
+            .sortedWith(compareBy({ -(it.rank ?: 0.0) }, { -it.updateTime }))
+            .take(topSongsCount)
+            .map { song -> SongSearchItem.song(song) }
+            .toList()
         itemsListView?.setItems(latestSongs)
 
         if (storedScroll != null) {

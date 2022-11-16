@@ -5,7 +5,13 @@ import android.widget.TextView
 
 import io.reactivex.subjects.PublishSubject
 
-open class SliderController(private val seekBar: SeekBar, private val label: TextView, currentValue: Float, private val min: Float, private val max: Float) {
+open class SliderController(
+    private val seekBar: SeekBar,
+    private val label: TextView,
+    currentValue: Float,
+    private val min: Float,
+    private val max: Float
+) {
     var valueSubject = PublishSubject.create<Float>()
         internal set
 

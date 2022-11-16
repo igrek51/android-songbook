@@ -1,10 +1,10 @@
 package igrek.songbook.chords.arranger.wordwrap
 
-import igrek.songbook.chords.render.TypefaceLengthMapper
 import igrek.songbook.chords.model.LyricsFragment
 import igrek.songbook.chords.model.LyricsLine
 import igrek.songbook.chords.model.LyricsTextType
 import igrek.songbook.chords.model.lineWrapperChar
+import igrek.songbook.chords.render.TypefaceLengthMapper
 
 typealias Fragment = LyricsFragment
 typealias Line = LyricsLine

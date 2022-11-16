@@ -28,8 +28,9 @@ class PianoChordDiagramBuilder : DrawableChordDiagramBuilder {
         val markedNotes: Set<Int>
         try {
 
-            val chord: GeneralChord = ChordParser(ChordsNotation.ENGLISH).parseGeneralChord(engChord)
-                ?: throw NoChordDiagramException("not a valid english chord")
+            val chord: GeneralChord =
+                ChordParser(ChordsNotation.ENGLISH).parseGeneralChord(engChord)
+                    ?: throw NoChordDiagramException("not a valid english chord")
             markedNotes = evaluateChordNotes(chord)
 
         } catch (e: NoChordDiagramException) {
@@ -69,9 +70,10 @@ class PianoChordDiagramBuilder : DrawableChordDiagramBuilder {
 
         var suffix = chord.baseChord.suffix
         if (chord.baseChord.minor)
-           suffix = "m$suffix"
+            suffix = "m$suffix"
 
-        val sequence = chordTypeSequences[suffix] ?: throw NoChordDiagramException("chord has unsupported suffix")
+        val sequence = chordTypeSequences[suffix]
+            ?: throw NoChordDiagramException("chord has unsupported suffix")
         sequence.forEach { offset ->
             notes.add(baseNote + offset)
         }
@@ -161,7 +163,12 @@ class PianoChordDiagramBuilder : DrawableChordDiagramBuilder {
         canvas.drawRect(left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat(), paint)
     }
 
-    private fun drawBlackKey(canvas: Canvas, paint: Paint, whiteIndex: Int, background: Boolean = false) {
+    private fun drawBlackKey(
+        canvas: Canvas,
+        paint: Paint,
+        whiteIndex: Int,
+        background: Boolean = false,
+    ) {
         var left = whiteKeyWidthPx * (whiteIndex + 1) - blackKeyWidthPx / 2
         var right = whiteKeyWidthPx * (whiteIndex + 1) + blackKeyWidthPx / 2
         var top = 0

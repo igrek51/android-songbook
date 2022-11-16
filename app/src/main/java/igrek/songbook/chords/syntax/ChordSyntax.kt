@@ -2,11 +2,13 @@ package igrek.songbook.chords.syntax
 
 // these delimiters split chords irrespectively (at any time)
 val compoundChordsDelimiters = setOf(" ", "\n").toTypedArray()
+
 // these delimiters may split chords but may be a part of chords as well
 val singleChordsDelimiters = setOf(" ", "\n", ",", "/", "(", ")", "-").toTypedArray()
 
 // split compound chords, keeping delimiters as result parts
 val regexSplitcompoundChordsWithDelimiters = Regex("""(?<=[ \n])|(?=[ \n])""")
+
 // split single chords, keeping delimiters as result parts
 val regexSplitSingleChordsWithDelimiters = Regex("""(?<=[ \n,/()\-])|(?=[ \n,/()\-])""")
 

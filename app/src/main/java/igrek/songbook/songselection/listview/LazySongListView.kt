@@ -20,7 +20,8 @@ import igrek.songbook.songselection.tree.SongTreeItem
 import igrek.songbook.util.limitTo
 
 
-class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener, AbsListView.OnScrollListener {
+class LazySongListView : ListView, AdapterView.OnItemClickListener,
+    AdapterView.OnItemLongClickListener, AbsListView.OnScrollListener {
 
     private var adapter: SongListItemAdapter? = null
     private var onClickListener: SongClickListener? = null
@@ -43,11 +44,19 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
 
     constructor(context: Context) : super(context)
 
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle)
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(
+        context,
+        attrs,
+        defStyle
+    )
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
-    fun init(context: Context, onClickListener: SongClickListener, songContextMenuBuilder: SongContextMenuBuilder) {
+    fun init(
+        context: Context,
+        onClickListener: SongClickListener,
+        songContextMenuBuilder: SongContextMenuBuilder
+    ) {
         this.onClickListener = onClickListener
         onItemClickListener = this
         onItemLongClickListener = this
@@ -72,7 +81,8 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
             nextLeft = { currentFocusId: Int, currentView: View ->
                 when (currentFocusId) {
                     R.id.itemSongMoreButton, R.id.itemsList -> {
-                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        (currentView as ViewGroup).descendantFocusability =
+                            ViewGroup.FOCUS_BLOCK_DESCENDANTS
                         this.requestFocusFromTouch()
                     }
                 }
@@ -85,7 +95,8 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
             nextRight = { currentFocusId: Int, currentView: View ->
                 when {
                     currentFocusId == R.id.itemsList -> {
-                        (currentView as? ViewGroup)?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+                        (currentView as? ViewGroup)?.descendantFocusability =
+                            ViewGroup.FOCUS_BEFORE_DESCENDANTS
                         R.id.itemSongMoreButton
                     }
                     else -> 0
@@ -94,7 +105,8 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
             nextUp = { currentFocusId: Int, currentView: View ->
                 when (currentFocusId) {
                     R.id.itemSongMoreButton, R.id.itemsList -> {
-                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        (currentView as ViewGroup).descendantFocusability =
+                            ViewGroup.FOCUS_BLOCK_DESCENDANTS
                         this.requestFocusFromTouch()
                     }
                 }
@@ -109,7 +121,8 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
             nextDown = { currentFocusId: Int, currentView: View ->
                 when (currentFocusId) {
                     R.id.itemSongMoreButton, R.id.itemsList -> {
-                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        (currentView as ViewGroup).descendantFocusability =
+                            ViewGroup.FOCUS_BLOCK_DESCENDANTS
                         this.requestFocusFromTouch()
                     }
                 }
@@ -138,7 +151,12 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
         }
     }
 
-    override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
+    override fun onItemLongClick(
+        parent: AdapterView<*>,
+        view: View,
+        position: Int,
+        id: Long
+    ): Boolean {
         adapter?.getItem(position)?.let { item ->
             onClickListener?.onSongItemLongClick(item)
         }
@@ -149,7 +167,10 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
         allItems = items
         renderItemsCount = initialLazyRenderCount.limitTo(allItems.size)
 
-        val refreshed = recalculateVisibleItems(firstVisiblePosition, lastVisiblePosition - firstVisiblePosition)
+        val refreshed = recalculateVisibleItems(
+            firstVisiblePosition,
+            lastVisiblePosition - firstVisiblePosition
+        )
         if (!refreshed)
             showSubItems()
     }
@@ -200,7 +221,7 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener, AdapterView.
     }
 
     override fun onScroll(
-            view: AbsListView?, firstVisible: Int, visibleCount: Int, totalCount: Int,
+        view: AbsListView?, firstVisible: Int, visibleCount: Int, totalCount: Int,
     ) {
         if (scrollState != OnScrollListener.SCROLL_STATE_IDLE) {
             recalculateVisibleItems(firstVisible, visibleCount)

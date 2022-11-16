@@ -4,16 +4,16 @@ import igrek.songbook.room.protocol.GtrProtocol.Companion.VERSION
 import java.util.*
 import kotlin.reflect.KClass
 
-open class GtrMsg() {
+open class GtrMsg {
     override fun toString(): String = GtrFormatter().format(this)
 }
 
 internal class MsgSpec<T : GtrMsg>(
-        val code: String,
-        val clazz: KClass<T>,
-        val partsFormatter: ((msg: T) -> List<String>)? = null,
-        val partsParser: (parts: List<String>) -> T,
-        val requiredParts: Int = 0,
+    val code: String,
+    val clazz: KClass<T>,
+    val partsFormatter: ((msg: T) -> List<String>)? = null,
+    val partsParser: (parts: List<String>) -> T,
+    val requiredParts: Int = 0,
 ) {
     fun formatGTR(msg: GtrMsg): String {
         val datapart = when (partsFormatter) {

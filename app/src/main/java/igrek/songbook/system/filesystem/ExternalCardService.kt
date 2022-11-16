@@ -41,8 +41,8 @@ class ExternalCardService {
             val s = StringBuilder()
             try {
                 val process = ProcessBuilder().command("mount")
-                        .redirectErrorStream(true)
-                        .start()
+                    .redirectErrorStream(true)
+                    .start()
                 process.waitFor()
                 val inputStream = process.inputStream
                 val buffer = ByteArray(1024)
@@ -54,7 +54,8 @@ class ExternalCardService {
                 e.printStackTrace()
             }
 
-            val lines = s.toString().split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            val lines =
+                s.toString().split("\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             for (line in lines) {
                 if (!line.lowercase(Locale.US).contains("asec")) {
                     if (line.matches(reg.toRegex())) {
@@ -82,14 +83,14 @@ class ExternalCardService {
 
     private fun findExternalSDPath(): String? {
         return FirstRuleChecker<String>()
-                .addRule({ this.isSamsung }, { checkDirExists("/storage/extSdCard") })
-                .addRule { this.externalMount }
-                .addRule { checkDirExists("/storage/extSdCard") }
-                .addRule { checkDirExists("/storage/external_sd") }
-                .addRule { checkDirExists("/storage/ext_sd") }
-                .addRule { checkDirExists("/storage/external") }
-                .addRule { this.externalStorageDirectory }
-                .find()
+            .addRule({ this.isSamsung }, { checkDirExists("/storage/extSdCard") })
+            .addRule { this.externalMount }
+            .addRule { checkDirExists("/storage/extSdCard") }
+            .addRule { checkDirExists("/storage/external_sd") }
+            .addRule { checkDirExists("/storage/ext_sd") }
+            .addRule { checkDirExists("/storage/external") }
+            .addRule { this.externalStorageDirectory }
+            .find()
     }
 
     private fun checkDirExists(path: String): String? {

@@ -103,7 +103,8 @@ class SongPreviewLayoutController(
     private var autoscrollButton: ImageButton? = null
     private var setFavouriteButton: ImageButton? = null
     private var screenShareButton: ImageButton? = null
-    private val originalButtonBackgrounds: MutableMap<Int, Pair<ColorFilter, Drawable>> = mutableMapOf()
+    private val originalButtonBackgrounds: MutableMap<Int, Pair<ColorFilter, Drawable>> =
+        mutableMapOf()
 
     val isQuickMenuVisible: Boolean
         get() = quickMenuTranspose.isVisible || quickMenuAutoscroll.isVisible
@@ -243,9 +244,10 @@ class SongPreviewLayoutController(
         }
         updateScreenShareButton()
 
-        exitFullscreenButton = layout.findViewById<FloatingActionButton>(R.id.exitFullscreenButton)?.apply {
-            setOnClickListener { setFullscreen(false) }
-        }
+        exitFullscreenButton =
+            layout.findViewById<FloatingActionButton>(R.id.exitFullscreenButton)?.apply {
+                setOnClickListener { setFullscreen(false) }
+            }
         setFullscreen(false)
     }
 

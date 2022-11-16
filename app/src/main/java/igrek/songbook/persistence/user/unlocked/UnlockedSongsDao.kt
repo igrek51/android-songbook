@@ -7,14 +7,14 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
 
 class UnlockedSongsDao(
-        path: String,
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    path: String,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
 ) : AbstractJsonDao<UnlockedSongsDb>(
-        path,
-        dbName = "unlocked",
-        schemaVersion = 1,
-        clazz = UnlockedSongsDb::class.java,
-        serializer = UnlockedSongsDb.serializer()
+    path,
+    dbName = "unlocked",
+    schemaVersion = 1,
+    clazz = UnlockedSongsDb::class.java,
+    serializer = UnlockedSongsDb.serializer()
 ) {
     private val songsRepository by LazyExtractor(songsRepository)
 

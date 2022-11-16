@@ -14,8 +14,8 @@ import java.io.InputStream
 import java.io.OutputStream
 
 class PeerStream(
-        private val remoteSocket: BluetoothSocket,
-        val receivedMsgCh: Channel<String>,
+    private val remoteSocket: BluetoothSocket,
+    val receivedMsgCh: Channel<String>,
 ) {
     private var inStream: InputStream = remoteSocket.inputStream
     private var outStream: OutputStream = remoteSocket.outputStream

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.appbar.AppBarLayout
-    android:id="@+id/appBarLayout"
+<com.google.android.material.appbar.AppBarLayout android:id="@+id/appBarLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -18,8 +17,7 @@
         app:contentInsetEnd="0dp"
         app:contentInsetLeft="0dp"
         app:contentInsetRight="0dp"
-        app:contentInsetStart="0dp"
-        >
+        app:contentInsetStart="0dp">
 
         <ImageButton
             android:id="@+id/navMenuButton"
@@ -34,8 +32,7 @@
             android:focusableInTouchMode="false"
             android:padding="8dp"
             android:scaleType="centerInside"
-            android:src="@drawable/menu"
-            />
+            android:src="@drawable/menu" />
 
         <TextView
             android:id="@+id/screenTitleTextView"
@@ -43,6 +40,6 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
             android:layout_marginStart="20dp"
-            android:textSize="18sp"/>
+            android:textSize="18sp" />
     </androidx.appcompat.widget.Toolbar>
 </com.google.android.material.appbar.AppBarLayout>

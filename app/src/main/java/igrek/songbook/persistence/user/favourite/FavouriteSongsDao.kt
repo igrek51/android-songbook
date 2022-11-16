@@ -16,15 +16,15 @@ import igrek.songbook.util.lookup.SimpleCache
 import io.reactivex.android.schedulers.AndroidSchedulers
 
 class FavouriteSongsDao(
-        path: String,
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-        activity: LazyInject<Activity> = appFactory.activity,
+    path: String,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    activity: LazyInject<Activity> = appFactory.activity,
 ) : AbstractJsonDao<FavouriteSongsDb>(
-        path,
-        dbName = "favourites",
-        schemaVersion = 1,
-        clazz = FavouriteSongsDb::class.java,
-        serializer = FavouriteSongsDb.serializer()
+    path,
+    dbName = "favourites",
+    schemaVersion = 1,
+    clazz = FavouriteSongsDb::class.java,
+    serializer = FavouriteSongsDb.serializer()
 ) {
     private val songsRepository by LazyExtractor(songsRepository)
     private val activity by LazyExtractor(activity)
@@ -32,19 +32,19 @@ class FavouriteSongsDao(
     private val favouriteSongs: FavouriteSongsDb get() = db!!
 
     private var favouritesCache: SimpleCache<HashSet<Song>> =
-            SimpleCache {
-                val favouriteSongs = this.songsRepository.allSongsRepo.songs.get().filter { song ->
-                    FavouriteSong(song.id, song.isCustom()) in favouriteSongs.favourites
-                }
-                HashSet(favouriteSongs)
+        SimpleCache {
+            val favouriteSongs = this.songsRepository.allSongsRepo.songs.get().filter { song ->
+                FavouriteSong(song.id, song.isCustom()) in favouriteSongs.favourites
             }
+            HashSet(favouriteSongs)
+        }
 
     init {
         this.songsRepository.dbChangeSubject
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    favouritesCache.invalidate()
-                }, UiErrorHandler::handleError)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                favouritesCache.invalidate()
+            }, UiErrorHandler::handleError)
 
         read()
     }
@@ -62,8 +62,10 @@ class FavouriteSongsDao(
     }
 
     fun isSongFavourite(songIdentifier: SongIdentifier): Boolean {
-        val favSong = FavouriteSong(songIdentifier.songId,
-                songIdentifier.namespace == SongNamespace.Custom)
+        val favSong = FavouriteSong(
+            songIdentifier.songId,
+            songIdentifier.namespace == SongNamespace.Custom
+        )
         return favSong in favouriteSongs.favourites
     }
 

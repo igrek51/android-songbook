@@ -7,16 +7,17 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.tree.SongTreeItem
-import java.util.*
 
 class SongListItemAdapter internal constructor(
-        context: Context,
-        private var _dataSource: List<SongTreeItem> = emptyList(),
-        songContextMenuBuilder: SongContextMenuBuilder,
+    context: Context,
+    private var _dataSource: List<SongTreeItem> = emptyList(),
+    songContextMenuBuilder: SongContextMenuBuilder,
 ) : ArrayAdapter<SongTreeItem>(context, 0, ArrayList()) {
 
-    private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    private val viewFactory: SongItemViewFactory = SongItemViewFactory(inflater, songContextMenuBuilder)
+    private val inflater: LayoutInflater =
+        context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    private val viewFactory: SongItemViewFactory =
+        SongItemViewFactory(inflater, songContextMenuBuilder)
 
     fun setDataSource(dataSource: List<SongTreeItem>) {
         this._dataSource = dataSource

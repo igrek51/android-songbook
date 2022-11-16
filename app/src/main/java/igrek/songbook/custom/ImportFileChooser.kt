@@ -49,21 +49,25 @@ class ImportFileChooser(
         }
     }
 
-    private fun onFileSelect(selectedUri: Uri?, onLoad: (content: String, filename: String) -> Unit) {
+    private fun onFileSelect(
+        selectedUri: Uri?,
+        onLoad: (content: String, filename: String) -> Unit,
+    ) {
         SafeExecutor {
             if (selectedUri != null) {
-                activity.contentResolver.openInputStream(selectedUri)?.use { inputStream: InputStream ->
-                    val filename = getFileNameFromUri(selectedUri)
+                activity.contentResolver.openInputStream(selectedUri)
+                    ?.use { inputStream: InputStream ->
+                        val filename = getFileNameFromUri(selectedUri)
 
-                    val length = inputStream.available()
-                    if (length > FILE_IMPORT_LIMIT_B) {
-                        uiInfoService.showToast(R.string.selected_file_is_too_big)
-                        return@SafeExecutor
+                        val length = inputStream.available()
+                        if (length > FILE_IMPORT_LIMIT_B) {
+                            uiInfoService.showToast(R.string.selected_file_is_too_big)
+                            return@SafeExecutor
+                        }
+
+                        val content = convert(inputStream, Charset.forName("UTF-8"))
+                        onLoad(content, filename)
                     }
-
-                    val content = convert(inputStream, Charset.forName("UTF-8"))
-                    onLoad(content, filename)
-                }
             }
         }
     }

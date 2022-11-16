@@ -14,11 +14,11 @@ class ListMover<T>(private val items: MutableList<T>) {
 
         var pos = position
         while (pos < targetPosition) {
-            swapElements(pos, pos+1)
+            swapElements(pos, pos + 1)
             pos++
         }
         while (pos > targetPosition) {
-            swapElements(pos, pos-1)
+            swapElements(pos, pos - 1)
             pos--
         }
         return items

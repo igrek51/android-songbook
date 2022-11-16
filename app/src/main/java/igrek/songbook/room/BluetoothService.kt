@@ -34,8 +34,8 @@ import java.util.concurrent.ConcurrentHashMap
 @Suppress("DEPRECATION")
 @SuppressLint("MissingPermission")
 class BluetoothService(
-        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
-        activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,
+    appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+    activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,
 ) {
     private val activity by LazyExtractor(appCompatActivity)
     private val activityResultDispatcher by LazyExtractor(activityResultDispatcher)
@@ -91,8 +91,14 @@ class BluetoothService(
         }
 
         activity.registerReceiver(discoveryReceiver, IntentFilter(BluetoothDevice.ACTION_FOUND))
-        activity.registerReceiver(discoveryReceiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED))
-        activity.registerReceiver(discoveryReceiver, IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
+        activity.registerReceiver(
+            discoveryReceiver,
+            IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED)
+        )
+        activity.registerReceiver(
+            discoveryReceiver,
+            IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
+        )
     }
 
     private val discoveryReceiver: BroadcastReceiver = object : BroadcastReceiver() {
@@ -123,7 +129,7 @@ class BluetoothService(
 
     private fun onDeviceDiscovered(intent: Intent) {
         val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-                ?: return
+            ?: return
         logger.debug("BT device discovered: ${device.name} (${device.address})")
 
         if (discoveredDevices.containsKey(device.address)) {
@@ -154,8 +160,8 @@ class BluetoothService(
 
                 try {
                     val room = Room(
-                            name = device.name.orEmpty(),
-                            hostAddress = device.address,
+                        name = device.name.orEmpty(),
+                        hostAddress = device.address,
                     )
                     discoveredRoomsChannel.send(room)
                 } catch (e: ClosedSendChannelException) {
@@ -174,7 +180,7 @@ class BluetoothService(
 
     private fun detectDeviceSocket(address: String) {
         val device = bluetoothAdapter?.getRemoteDevice(address)
-                ?: throw RuntimeException("no bluetooth adapter")
+            ?: throw RuntimeException("no bluetooth adapter")
         reuseBluetoothSocket(address)
         logger.debug("Room found on ${device.name} ($address)")
     }
@@ -183,9 +189,11 @@ class BluetoothService(
         // Coarse Location permission required to discover devices
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (activity.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(activity, arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                ), 1)
+                ActivityCompat.requestPermissions(
+                    activity, arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                    ), 1
+                )
             }
         }
         enableBluetoothPermissions()
@@ -204,10 +212,12 @@ class BluetoothService(
 
     private fun enableBluetoothPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {  // Android 12
-            ActivityCompat.requestPermissions(activity, arrayOf(
-                Manifest.permission.BLUETOOTH_SCAN,
-                Manifest.permission.BLUETOOTH_CONNECT,
-            ), 2)
+            ActivityCompat.requestPermissions(
+                activity, arrayOf(
+                    Manifest.permission.BLUETOOTH_SCAN,
+                    Manifest.permission.BLUETOOTH_CONNECT,
+                ), 2
+            )
         }
     }
 
@@ -235,7 +245,7 @@ class BluetoothService(
     private fun connectBluetoothSocket(btAddress: String?): BluetoothSocket {
         val btSocket: BluetoothSocket
         val device = bluetoothAdapter?.getRemoteDevice(btAddress)
-                ?: throw RuntimeException("No Bluetooth adapter")
+            ?: throw RuntimeException("No Bluetooth adapter")
         logger.debug("Detecting BT Room socket on ${device.name} (${btAddress})")
         try {
             btSocket = createBluetoothSocket(device)
@@ -278,9 +288,10 @@ class BluetoothService(
             return
         }
         logger.debug("asking for discoverability")
-        val discoverableIntent: Intent = Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
-            putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300)
-        }
+        val discoverableIntent: Intent =
+            Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE).apply {
+                putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300)
+            }
 
         activityResultDispatcher.startActivityForResult(discoverableIntent) { resultCode: Int, _: Intent? ->
             if (resultCode == Activity.RESULT_OK) {

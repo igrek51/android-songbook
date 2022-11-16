@@ -13,7 +13,6 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
-import igrek.songbook.persistence.repository.SongsRepository
 import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType
@@ -24,16 +23,14 @@ import java.util.*
 
 @OptIn(DelicateCoroutinesApi::class)
 class AntechamberService(
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        adminService: LazyInject<AdminService> = appFactory.adminService,
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-        adminSongsLayoutContoller: LazyInject<AdminSongsLayoutContoller> = appFactory.adminSongsLayoutContoller,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    adminService: LazyInject<AdminService> = appFactory.adminService,
+    adminSongsLayoutContoller: LazyInject<AdminSongsLayoutContoller> = appFactory.adminSongsLayoutContoller,
 ) {
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val adminService by LazyExtractor(adminService)
-    private val songsRepository by LazyExtractor(songsRepository)
     private val adminSongsLayoutContoller by LazyExtractor(adminSongsLayoutContoller)
 
     companion object {
@@ -61,12 +58,13 @@ class AntechamberService(
 
     fun downloadSongs(): Deferred<Result<List<Song>>> {
         val request: Request = Request.Builder()
-                .url(allSongsUrl)
-                .addHeader(authTokenHeader, adminService.userAuthToken)
-                .build()
+            .url(allSongsUrl)
+            .addHeader(authTokenHeader, adminService.userAuthToken)
+            .build()
         return httpRequester.httpRequestAsync(request) { response: Response ->
             val json = response.body()?.string() ?: ""
-            val allDtos: AllAntechamberSongsDto = jsonSerializer.decodeFromString(AllAntechamberSongsDto.serializer(), json)
+            val allDtos: AllAntechamberSongsDto =
+                jsonSerializer.decodeFromString(AllAntechamberSongsDto.serializer(), json)
             val antechamberSongs: List<Song> = allDtos.toModel()
             antechamberSongs
         }
@@ -74,12 +72,13 @@ class AntechamberService(
 
     private fun updateAntechamberSong(song: Song): Deferred<Result<Unit>> {
         val antechamberSongDto = AntechamberSongDto.fromModel(song)
-        val json = jsonSerializer.encodeToString(AntechamberSongDto.serializer(), antechamberSongDto)
+        val json =
+            jsonSerializer.encodeToString(AntechamberSongDto.serializer(), antechamberSongDto)
         val request: Request = Request.Builder()
-                .url(specificSongUrl(song.id))
-                .put(RequestBody.create(jsonType, json))
-                .addHeader(authTokenHeader, adminService.userAuthToken)
-                .build()
+            .url(specificSongUrl(song.id))
+            .put(RequestBody.create(jsonType, json))
+            .addHeader(authTokenHeader, adminService.userAuthToken)
+            .build()
         return httpRequester.httpRequestAsync(request) { }
     }
 
@@ -87,20 +86,21 @@ class AntechamberService(
         logger.info("Sending new antechamber song")
         val antechamberSongDto = AntechamberSongDto.fromModel(song)
         antechamberSongDto.id = null
-        val json = jsonSerializer.encodeToString(AntechamberSongDto.serializer(), antechamberSongDto)
+        val json =
+            jsonSerializer.encodeToString(AntechamberSongDto.serializer(), antechamberSongDto)
         val request: Request = Request.Builder()
-                .url(allSongsUrl)
-                .post(RequestBody.create(jsonType, json))
-                .build()
+            .url(allSongsUrl)
+            .post(RequestBody.create(jsonType, json))
+            .build()
         return httpRequester.httpRequestAsync(request) { }
     }
 
     fun deleteAntechamberSong(song: Song): Deferred<Result<Unit>> {
         val request: Request = Request.Builder()
-                .url(specificSongUrl(song.id))
-                .delete()
-                .addHeader(authTokenHeader, adminService.userAuthToken)
-                .build()
+            .url(specificSongUrl(song.id))
+            .delete()
+            .addHeader(authTokenHeader, adminService.userAuthToken)
+            .build()
         return httpRequester.httpRequestAsync(request) { }
     }
 
@@ -111,10 +111,10 @@ class AntechamberService(
         val dto = ChordsSongDto.fromModel(song)
         val json = jsonSerializer.encodeToString(ChordsSongDto.serializer(), dto)
         val request: Request = Request.Builder()
-                .url(updatePublicSongIdUrl(song.id))
-                .put(RequestBody.create(jsonType, json))
-                .addHeader(authTokenHeader, adminService.userAuthToken)
-                .build()
+            .url(updatePublicSongIdUrl(song.id))
+            .put(RequestBody.create(jsonType, json))
+            .addHeader(authTokenHeader, adminService.userAuthToken)
+            .build()
         return httpRequester.httpRequestAsync(request) { response: Response ->
             logger.debug("Update response", response.body()?.string())
         }
@@ -127,10 +127,10 @@ class AntechamberService(
         dto.categories = song.customCategoryName?.let { listOf(it) } ?: emptyList()
         val json = jsonSerializer.encodeToString(ChordsSongDto.serializer(), dto)
         val request: Request = Request.Builder()
-                .url(approveSongUrl)
-                .post(RequestBody.create(jsonType, json))
-                .addHeader(authTokenHeader, adminService.userAuthToken)
-                .build()
+            .url(approveSongUrl)
+            .post(RequestBody.create(jsonType, json))
+            .addHeader(authTokenHeader, adminService.userAuthToken)
+            .build()
         return httpRequester.httpRequestAsync(request) { response: Response ->
             logger.debug("Approve response", response.body()?.string())
         }
@@ -151,7 +151,8 @@ class AntechamberService(
     }
 
     fun approveCustomSongUI(song: Song) {
-        val message1 = uiResourceService.resString(R.string.admin_antechamber_confirm_approve, song.toString())
+        val message1 =
+            uiResourceService.resString(R.string.admin_antechamber_confirm_approve, song.toString())
         ConfirmDialogBuilder().confirmAction(message1) {
             uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
 
@@ -168,7 +169,8 @@ class AntechamberService(
     }
 
     fun approveAntechamberSongUI(song: Song) {
-        val message1 = uiResourceService.resString(R.string.admin_antechamber_confirm_approve, song.toString())
+        val message1 =
+            uiResourceService.resString(R.string.admin_antechamber_confirm_approve, song.toString())
         ConfirmDialogBuilder().confirmAction(message1) {
             uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
 
@@ -186,7 +188,8 @@ class AntechamberService(
     }
 
     fun deleteAntechamberSongUI(song: Song) {
-        val message1 = uiResourceService.resString(R.string.admin_antechamber_confirm_delete, song.toString())
+        val message1 =
+            uiResourceService.resString(R.string.admin_antechamber_confirm_delete, song.toString())
         ConfirmDialogBuilder().confirmAction(message1) {
             uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
 

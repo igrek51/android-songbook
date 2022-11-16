@@ -240,7 +240,8 @@ class AutoscrollService(
                 AutoscrollState.WAITING -> {
                     val remainingWaitingTimeS = remainingWaitingTimeS()
 
-                    val elapsedTimeS = (System.currentTimeMillis() - previousStepTime).toFloat() / 1000f
+                    val elapsedTimeS =
+                        (System.currentTimeMillis() - previousStepTime).toFloat() / 1000f
                     eyeFocus += elapsedTimeS * autoscrollSpeed
                     previousStepTime = System.currentTimeMillis()
 
@@ -326,7 +327,8 @@ class AutoscrollService(
             AutoscrollState.SCROLLING -> {
                 if (dScroll > 0) {
                     // speed up scrolling
-                    val delta = (dScroll * ADJUSTMENT_SPEED_SCALE).limitTo(ADJUSTMENT_MAX_SPEED_CHANGE)
+                    val delta =
+                        (dScroll * ADJUSTMENT_SPEED_SCALE).limitTo(ADJUSTMENT_MAX_SPEED_CHANGE)
                     autoAdjustScrollSpeed(delta)
 
                 } else if (dScroll < 0) {
@@ -340,7 +342,8 @@ class AutoscrollService(
                         return
                     } else {
                         // slow down scrolling
-                        val delta = -(-dScroll * ADJUSTMENT_SPEED_SCALE).limitTo(ADJUSTMENT_MAX_SPEED_CHANGE)
+                        val delta =
+                            -(-dScroll * ADJUSTMENT_SPEED_SCALE).limitTo(ADJUSTMENT_MAX_SPEED_CHANGE)
                         autoAdjustScrollSpeed(delta)
                     }
                 }

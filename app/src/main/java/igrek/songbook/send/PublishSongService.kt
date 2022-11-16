@@ -17,10 +17,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(DelicateCoroutinesApi::class)
 class PublishSongService(
-        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
-        publishSongLayoutController: LazyInject<PublishSongLayoutController> = appFactory.publishSongLayoutController,
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+    publishSongLayoutController: LazyInject<PublishSongLayoutController> = appFactory.publishSongLayoutController,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
 ) {
     private val layoutController by LazyExtractor(layoutController)
     private val publishSongLayoutController by LazyExtractor(publishSongLayoutController)

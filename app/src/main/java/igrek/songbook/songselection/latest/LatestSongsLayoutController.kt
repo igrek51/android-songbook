@@ -23,13 +23,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
 class LatestSongsLayoutController(
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-        songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
-        songOpener: LazyInject<SongOpener> = appFactory.songOpener,
-        appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
-        songsUpdater: LazyInject<SongsUpdater> = appFactory.songsUpdater,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
+    songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+    appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
+    songsUpdater: LazyInject<SongsUpdater> = appFactory.songsUpdater,
 ) : InflatedLayout(
-        _layoutResourceId = R.layout.screen_latest_songs
+    _layoutResourceId = R.layout.screen_latest_songs
 ), SongClickListener {
     private val songsRepository by LazyExtractor(songsRepository)
     private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
@@ -59,24 +59,25 @@ class LatestSongsLayoutController(
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
         subscriptions.add(songsRepository.dbChangeSubject
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    if (isLayoutVisible())
-                        updateItemsList()
-                }, UiErrorHandler::handleError))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                if (isLayoutVisible())
+                    updateItemsList()
+            }, UiErrorHandler::handleError)
+        )
     }
 
     private fun updateItemsList() {
         val acceptedLanguages = appLanguageService.selectedSongLanguages
         val acceptedLangCodes = acceptedLanguages.map { lang -> lang.langCode } + "" + null
         val latestSongs = songsRepository.publicSongsRepo.songs.get()
-                .asSequence()
-                .filter { it.isPublic() }
-                .filter { song -> song.language in acceptedLangCodes }
-                .sortedBy { song -> -song.updateTime }
-                .take(latestSongsCount)
-                .map { song -> SongSearchItem.song(song) }
-                .toList()
+            .asSequence()
+            .filter { it.isPublic() }
+            .filter { song -> song.language in acceptedLangCodes }
+            .sortedBy { song -> -song.updateTime }
+            .take(latestSongsCount)
+            .map { song -> SongSearchItem.song(song) }
+            .toList()
         itemsListView?.setItems(latestSongs)
 
         if (storedScroll != null) {

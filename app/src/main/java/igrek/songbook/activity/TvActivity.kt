@@ -1,4 +1,3 @@
 package igrek.songbook.activity
 
-class TvActivity : MainActivity() {
-}
+class TvActivity : MainActivity()

@@ -78,16 +78,17 @@ open class SongOpener(
     }
 
     fun hasLastSong(): Boolean {
-        songsRepository.openHistoryDao.historyDb.songs.firstOrNull()?.let{ openedSong: OpenedSong ->
-            val namespace = when {
-                openedSong.custom -> SongNamespace.Custom
-                else -> SongNamespace.Public
+        songsRepository.openHistoryDao.historyDb.songs.firstOrNull()
+            ?.let { openedSong: OpenedSong ->
+                val namespace = when {
+                    openedSong.custom -> SongNamespace.Custom
+                    else -> SongNamespace.Public
+                }
+                val songIdentifier = SongIdentifier(openedSong.songId, namespace)
+                val song = songsRepository.allSongsRepo.songFinder.find(songIdentifier)
+                if (song != null)
+                    return true
             }
-            val songIdentifier = SongIdentifier(openedSong.songId, namespace)
-            val song = songsRepository.allSongsRepo.songFinder.find(songIdentifier)
-            if (song != null)
-                return true
-        }
         return false
     }
 }

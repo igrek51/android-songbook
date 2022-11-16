@@ -6,8 +6,8 @@ import igrek.songbook.util.lookup.LazyFinderByTuple
 import igrek.songbook.util.lookup.SimpleCache
 
 data class AllSongsRepository(
-        val publicSongsRepo: PublicSongsRepository,
-        val customSongsRepo: CustomSongsRepository
+    val publicSongsRepo: PublicSongsRepository,
+    val customSongsRepo: CustomSongsRepository
 ) {
 
     val songs = SimpleCache {
@@ -23,13 +23,13 @@ data class AllSongsRepository(
     }
 
     val songFinder = LazyFinderByTuple(
-            entityToId = { song -> song.songIdentifier() },
-            valuesSupplier = songs
+        entityToId = { song -> song.songIdentifier() },
+        valuesSupplier = songs
     )
 
     val categoryFinder = LazyFinderByTuple(
-            entityToId = { e -> e.id },
-            valuesSupplier = categories
+        entityToId = { e -> e.id },
+        valuesSupplier = categories
     )
 
     fun invalidate() {

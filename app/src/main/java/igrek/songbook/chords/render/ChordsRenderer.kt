@@ -4,7 +4,7 @@ import igrek.songbook.chords.model.*
 import igrek.songbook.chords.syntax.MajorKey
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
-class ChordsRenderer (
+class ChordsRenderer(
     private val toNotation: ChordsNotation,
     private val key: MajorKey? = null,
     private val forceSharps: Boolean = false,
@@ -29,10 +29,20 @@ class ChordsRenderer (
     private fun renderChordFragment(chordFragment: ChordFragment, originalModifiers: Boolean) {
         when (chordFragment.type) {
             ChordFragmentType.SINGLE_CHORD -> {
-                chordFragment.text = chordFragment.singleChord!!.format(toNotation, key, originalModifiers, forceSharps)
+                chordFragment.text = chordFragment.singleChord!!.format(
+                    toNotation,
+                    key,
+                    originalModifiers,
+                    forceSharps,
+                )
             }
             ChordFragmentType.COMPOUND_CHORD -> {
-                chordFragment.text = chordFragment.compoundChord!!.format(toNotation, key, originalModifiers, forceSharps)
+                chordFragment.text = chordFragment.compoundChord!!.format(
+                    toNotation,
+                    key,
+                    originalModifiers,
+                    forceSharps,
+                )
             }
             else -> {}
         }

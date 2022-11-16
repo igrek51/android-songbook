@@ -3,7 +3,8 @@ package igrek.songbook.playlist.list
 import android.content.Context
 import android.widget.AbsListView
 
-class TreeListScrollHandler(private val listView: PlaylistListView, context: Context) : AbsListView.OnScrollListener {
+class TreeListScrollHandler(private val listView: PlaylistListView, context: Context) :
+    AbsListView.OnScrollListener {
 
     var scrollOffset: Int? = 0
         private set
@@ -43,17 +44,20 @@ class TreeListScrollHandler(private val listView: PlaylistListView, context: Con
             val range = listView.computeVerticalScrollRange()
 
             if (listView.reorder?.isDragging == true
-                    && listView.reorder.hoverBitmapBounds != null) {
+                && listView.reorder.hoverBitmapBounds != null
+            ) {
                 val hoverViewTop = listView.reorder.hoverBitmapBounds!!.top
                 val hoverHeight = listView.reorder.hoverBitmapBounds!!.height()
 
                 if (hoverViewTop <= smoothScrollEdgePx && offset > 0) {
-                    val scrollDistance = ((hoverViewTop - smoothScrollEdgePx) * smoothScrollFactor).toInt()
+                    val scrollDistance =
+                        ((hoverViewTop - smoothScrollEdgePx) * smoothScrollFactor).toInt()
                     listView.smoothScrollBy(scrollDistance, smoothScrollDuration)
                     return true
                 }
                 if (hoverViewTop + hoverHeight >= height - smoothScrollEdgePx && offset + extent < range) {
-                    val scrollDistance = ((hoverViewTop + hoverHeight - height + smoothScrollEdgePx) * smoothScrollFactor).toInt()
+                    val scrollDistance =
+                        ((hoverViewTop + hoverHeight - height + smoothScrollEdgePx) * smoothScrollFactor).toInt()
                     listView.smoothScrollBy(scrollDistance, smoothScrollDuration)
                     return true
                 }
@@ -62,7 +66,12 @@ class TreeListScrollHandler(private val listView: PlaylistListView, context: Con
         return false
     }
 
-    override fun onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
+    override fun onScroll(
+        view: AbsListView,
+        firstVisibleItem: Int,
+        visibleItemCount: Int,
+        totalItemCount: Int
+    ) {
         scrollOffset = realScrollPosition
     }
 

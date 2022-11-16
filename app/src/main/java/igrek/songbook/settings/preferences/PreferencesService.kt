@@ -9,8 +9,8 @@ import igrek.songbook.persistence.user.UserDataDao
 import kotlin.collections.set
 
 class PreferencesService(
-        userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
-        sharedPreferencesService: LazyInject<SharedPreferencesService> = appFactory.sharedPreferencesService,
+    userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
+    sharedPreferencesService: LazyInject<SharedPreferencesService> = appFactory.sharedPreferencesService,
 ) {
     private val userDataDao by LazyExtractor(userDataDao)
     private val sharedPreferencesService by LazyExtractor(sharedPreferencesService)

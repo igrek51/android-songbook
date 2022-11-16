@@ -28,11 +28,11 @@ import kotlinx.coroutines.launch
 
 @OptIn(DelicateCoroutinesApi::class)
 class RoomLobbyLayoutController(
-        roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+    roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    songOpener: LazyInject<SongOpener> = appFactory.songOpener,
 ) : InflatedLayout(
-        _layoutResourceId = R.layout.screen_room_lobby
+    _layoutResourceId = R.layout.screen_room_lobby
 ) {
     private val roomLobby by LazyExtractor(roomLobby)
     private val uiInfoService by LazyExtractor(uiInfoService)
@@ -48,9 +48,10 @@ class RoomLobbyLayoutController(
     override fun showLayout(layout: View) {
         super.showLayout(layout)
 
-        layout.findViewById<ImageButton>(R.id.moreActionsButton)?.setOnClickListener(SafeClickListener {
-            showMoreActions()
-        })
+        layout.findViewById<ImageButton>(R.id.moreActionsButton)
+            ?.setOnClickListener(SafeClickListener {
+                showMoreActions()
+            })
 
         openSelectedSongButton = layout.findViewById<Button>(R.id.openSelectedSongButton)?.also {
             it.setOnClickListener(SafeClickListener {
@@ -68,9 +69,10 @@ class RoomLobbyLayoutController(
             it.onClickCallback = {}
         }
         chatMessageEdit = layout.findViewById(R.id.chatMessageEdit)
-        layout.findViewById<ImageButton>(R.id.chatSendButton)?.setOnClickListener(SafeClickListener {
-            sendChatMessage()
-        })
+        layout.findViewById<ImageButton>(R.id.chatSendButton)
+            ?.setOnClickListener(SafeClickListener {
+                sendChatMessage()
+            })
 
         membersTextView = layout.findViewById(R.id.membersTextView)
 
@@ -146,10 +148,12 @@ class RoomLobbyLayoutController(
             val currentSongString = uiInfoService.resString(R.string.room_current_song)
             selectedSongTextView.text = when (roomLobby.currentSong) {
                 null -> {
-                    val waitingString = uiInfoService.resString(when (roomLobby.peerStatus) {
-                        PeerStatus.Master -> R.string.room_current_song_waiting_master
-                        else -> R.string.room_current_song_waiting
-                    })
+                    val waitingString = uiInfoService.resString(
+                        when (roomLobby.peerStatus) {
+                            PeerStatus.Master -> R.string.room_current_song_waiting_master
+                            else -> R.string.room_current_song_waiting
+                        }
+                    )
                     "$currentSongString $waitingString"
                 }
                 else -> currentSongString
@@ -189,7 +193,8 @@ class RoomLobbyLayoutController(
     }
 
     private fun showMoreActions() {
-        ContextMenuBuilder().showContextMenu(mutableListOf(
+        ContextMenuBuilder().showContextMenu(
+            mutableListOf(
                 ContextMenuBuilder.Action(R.string.room_close_room) {
                     leaveLobbyConfirm()
                 },
@@ -199,7 +204,8 @@ class RoomLobbyLayoutController(
                         uiInfoService.showInfo(R.string.room_bluetooth_will_bediscoverable)
                     }
                 },
-        ))
+            )
+        )
     }
 
     private fun onOpenSong(song: Song, updated: Boolean) {

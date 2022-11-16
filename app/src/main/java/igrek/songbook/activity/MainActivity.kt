@@ -86,7 +86,11 @@ open class MainActivity(
         return super.onKeyUp(keyCode, event)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray,
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         activityData.permissionService.onRequestPermissionsResult(permissions, grantResults)
     }

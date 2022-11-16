@@ -17,11 +17,11 @@ import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.system.SoftKeyboardService
 
 class ContactLayoutController(
-        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        sendMessageService: LazyInject<SendMessageService> = appFactory.sendMessageService,
-        softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
+    layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    sendMessageService: LazyInject<SendMessageService> = appFactory.sendMessageService,
+    softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
 ) : MainLayout {
     private val layoutController by LazyExtractor(layoutController)
     private val uiInfoService by LazyExtractor(uiInfoService)
@@ -65,8 +65,10 @@ class ContactLayoutController(
             return
         }
         ConfirmDialogBuilder().confirmAction(R.string.confirm_send_contact) {
-            sendMessageService.sendContactMessage(message, origin = MessageOrigin.CONTACT_MESSAGE,
-                    author = author, subject = subject)
+            sendMessageService.sendContactMessage(
+                message, origin = MessageOrigin.CONTACT_MESSAGE,
+                author = author, subject = subject
+            )
             AnalyticsLogger().logEventContactMessageSent()
         }
     }

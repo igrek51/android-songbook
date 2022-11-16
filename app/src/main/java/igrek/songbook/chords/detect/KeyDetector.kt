@@ -1,6 +1,6 @@
 package igrek.songbook.chords.detect
 
-import igrek.songbook.chords.model.*
+import igrek.songbook.chords.model.LyricsModel
 import igrek.songbook.chords.syntax.MajorKey
 import kotlin.math.absoluteValue
 
@@ -23,7 +23,12 @@ class KeyDetector {
         }
     }
 
-    private fun assessKeyMatchScore(key: MajorKey, uniqueNotes: Set<Int>, majorChordNotes: Set<Int>, minorChordNotes: Set<Int>): Int {
+    private fun assessKeyMatchScore(
+        key: MajorKey,
+        uniqueNotes: Set<Int>,
+        majorChordNotes: Set<Int>,
+        minorChordNotes: Set<Int>,
+    ): Int {
 
         val notesIntersection = majorKeyNoteIndexes[key]!!.intersect(uniqueNotes)
         val notesIntersectionScore = (2 * notesIntersection.size - uniqueNotes.size) * 1000
@@ -34,7 +39,8 @@ class KeyDetector {
         val hasSubdominant = (key.subdominant() in majorChordNotes).toInt() // IV
         val hasMediant = (key.mediant() in minorChordNotes).toInt() // iii
         val hasSupertonic = (key.supertonic() in minorChordNotes).toInt() // ii
-        val scaleDegreeScore = hasTonic * 500 + hasSubmediant * 250 + hasDominant * 125 + hasSubdominant * 50 + hasMediant * 10 + hasSupertonic * 10
+        val scaleDegreeScore =
+            hasTonic * 500 + hasSubmediant * 250 + hasDominant * 125 + hasSubdominant * 50 + hasMediant * 10 + hasSupertonic * 10
 
         val sharpnessAbs = majorKeySharpnessAbs[key]!!
         val sharpnessScore = -sharpnessAbs // take key with less sharps/flats

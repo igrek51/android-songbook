@@ -25,7 +25,7 @@ class OpenHistoryLayoutController(
     songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
     songOpener: LazyInject<SongOpener> = appFactory.songOpener,
 ) : InflatedLayout(
-        _layoutResourceId = R.layout.screen_open_history
+    _layoutResourceId = R.layout.screen_open_history
 ), SongClickListener {
     private val songsRepository by LazyExtractor(songsRepository)
     private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
@@ -47,17 +47,19 @@ class OpenHistoryLayoutController(
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
         subscriptions.add(songsRepository.dbChangeSubject
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    if (isLayoutVisible())
-                        updateItemsList()
-                }, UiErrorHandler::handleError))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                if (isLayoutVisible())
+                    updateItemsList()
+            }, UiErrorHandler::handleError)
+        )
         subscriptions.add(songsRepository.openHistoryDao.historyDbSubject
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    if (isLayoutVisible())
-                        updateItemsList()
-                }, UiErrorHandler::handleError))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                if (isLayoutVisible())
+                    updateItemsList()
+            }, UiErrorHandler::handleError)
+        )
     }
 
     private fun updateItemsList() {

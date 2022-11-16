@@ -18,9 +18,9 @@ class LineWrapper(
         val wrappedWords = wrapWords(words)
 
         return wrappedWords.toLines()
-                .clearBlanksOnEnd()
-                .addLineWrappers(screenWRelative, lengthMapper)
-                .nonEmptyLines()
+            .clearBlanksOnEnd()
+            .addLineWrappers(screenWRelative, lengthMapper)
+            .nonEmptyLines()
     }
 
     internal fun wrapWords(words: List<Word>): List<List<Word>> {

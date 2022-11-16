@@ -4,8 +4,8 @@ import android.view.KeyEvent
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.GlobalFocusTraverser
+import igrek.songbook.layout.LayoutController
 import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.settings.buttons.MediaButtonBehaviours
 import igrek.songbook.settings.preferences.PreferencesState

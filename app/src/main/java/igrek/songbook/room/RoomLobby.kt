@@ -14,7 +14,7 @@ import java.util.*
 
 @OptIn(DelicateCoroutinesApi::class)
 class RoomLobby(
-        bluetoothService: LazyInject<BluetoothService> = appFactory.bluetoothService,
+    bluetoothService: LazyInject<BluetoothService> = appFactory.bluetoothService,
 ) {
     private val bluetoothService by LazyExtractor(bluetoothService)
 
@@ -105,9 +105,11 @@ class RoomLobby(
     fun reportSongSelected(song: Song) {
         if (peerStatus == PeerStatus.Master) {
             currentSong = song
-            controller.sendToSlaves(SelectSongMsg(
+            controller.sendToSlaves(
+                SelectSongMsg(
                     buildSongDto(song)
-            ))
+                )
+            )
         }
     }
 
@@ -116,13 +118,22 @@ class RoomLobby(
         when (msg) {
             is HelloMsg -> {
                 if (slaveStream != null)
-                    controller.sendToSlave(slaveStream, WhosThereMsg(username, roomPassword.isNotEmpty()))
+                    controller.sendToSlave(
+                        slaveStream,
+                        WhosThereMsg(username, roomPassword.isNotEmpty())
+                    )
             }
             is LoginMsg -> {
                 if (slaveStream != null)
                     verifyLoggingUser(msg.username, msg.password, slaveStream)
             }
-            is ChatMessageMsg -> controller.sendToClients(ChatMessageMsg(msg.author, Date().time, msg.message))
+            is ChatMessageMsg -> controller.sendToClients(
+                ChatMessageMsg(
+                    msg.author,
+                    Date().time,
+                    msg.message
+                )
+            )
             is DisconnectMsg -> slaveStream?.let { controller.onSlaveDisconnect(slaveStream, null) }
             is WhatsupMsg -> {
                 if (slaveStream != null)
@@ -150,13 +161,18 @@ class RoomLobby(
             }
             is RoomUsersMsg -> {
                 val clients = msg.usernames.mapIndexed { index, it ->
-                    PeerClient(it, null, status = if (index == 0) PeerStatus.Master else PeerStatus.Slave)
+                    PeerClient(
+                        it,
+                        null,
+                        status = if (index == 0) PeerStatus.Master else PeerStatus.Slave
+                    )
                 }.toMutableList()
                 controller.setClients(clients)
                 updateMembersCallback(clients.toList())
             }
             is ChatMessageMsg -> {
-                val chatMessage = ChatMessage(msg.author, msg.message, msg.timestampMs.timestampMsToDate())
+                val chatMessage =
+                    ChatMessage(msg.author, msg.message, msg.timestampMs.timestampMsToDate())
                 GlobalScope.launch(Dispatchers.Main) {
                     chatHistory.add(chatMessage)
                     newChatMessageCallback(chatMessage)
@@ -179,7 +195,11 @@ class RoomLobby(
         }
     }
 
-    private suspend fun verifyLoggingUser(username: String, givenPassword: String, slaveStream: PeerStream) {
+    private suspend fun verifyLoggingUser(
+        username: String,
+        givenPassword: String,
+        slaveStream: PeerStream
+    ) {
         if (givenPassword != roomPassword) {
             logger.warn("User $username attempted to login to room with invalid password: $givenPassword")
             controller.sendToSlave(slaveStream, WelcomeMsg(false)).join()
@@ -196,7 +216,10 @@ class RoomLobby(
         controller.sendToSlave(slaveStream, RoomStatusMsg(songDto))
         controller.sendToSlave(slaveStream, RoomUsersMsg(clients.map { it.username }))
         chatHistory.forEach { chatMessage ->
-            controller.sendToSlave(slaveStream, ChatMessageMsg(chatMessage.author, chatMessage.time.time, chatMessage.message))
+            controller.sendToSlave(
+                slaveStream,
+                ChatMessageMsg(chatMessage.author, chatMessage.time.time, chatMessage.message)
+            )
         }
     }
 
@@ -205,27 +228,27 @@ class RoomLobby(
             return null
         val now: Long = Date().time
         return Song(
-                id = songDto.songId.songId,
-                title = songDto.title,
-                categories = mutableListOf(),
-                content = songDto.content,
-                versionNumber = 1,
-                createTime = now,
-                updateTime = now,
-                status = SongStatus.PUBLISHED,
-                customCategoryName = songDto.categoryName,
-                chordsNotation = songDto.chordsNotation,
-                namespace = SongNamespace.Ephemeral,
+            id = songDto.songId.songId,
+            title = songDto.title,
+            categories = mutableListOf(),
+            content = songDto.content,
+            versionNumber = 1,
+            createTime = now,
+            updateTime = now,
+            status = SongStatus.PUBLISHED,
+            customCategoryName = songDto.categoryName,
+            chordsNotation = songDto.chordsNotation,
+            namespace = SongNamespace.Ephemeral,
         )
     }
 
     private fun buildSongDto(song: Song): SongDto {
         return SongDto(
-                songId = song.songIdentifier(),
-                categoryName = song.displayCategories(),
-                title = song.title,
-                chordsNotation = song.chordsNotation ?: ChordsNotation.default,
-                content = song.content.orEmpty(),
+            songId = song.songIdentifier(),
+            categoryName = song.displayCategories(),
+            title = song.title,
+            chordsNotation = song.chordsNotation ?: ChordsNotation.default,
+            content = song.content.orEmpty(),
         )
     }
 

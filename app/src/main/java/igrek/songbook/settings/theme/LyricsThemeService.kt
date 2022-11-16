@@ -5,11 +5,10 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.preferences.PreferencesState
-import java.util.*
 
 class LyricsThemeService(
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val preferencesState by LazyExtractor(preferencesState)

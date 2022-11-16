@@ -13,10 +13,10 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.navigation.NavigationMenuController
 
 open class InflatedLayout(
-        private val _layoutResourceId: Int,
-        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
-        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
-        navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
+    private val _layoutResourceId: Int,
+    layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+    appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+    navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
 ) : MainLayout {
     protected val layoutController by LazyExtractor(layoutController)
     protected val activity by LazyExtractor(appCompatActivity)

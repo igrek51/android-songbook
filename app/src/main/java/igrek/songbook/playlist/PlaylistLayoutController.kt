@@ -45,7 +45,7 @@ class PlaylistLayoutController(
     songOpener: LazyInject<SongOpener> = appFactory.songOpener,
     playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
 ) : InflatedLayout(
-        _layoutResourceId = R.layout.screen_playlists
+    _layoutResourceId = R.layout.screen_playlists
 ), ListItemClickListener<PlaylistListItem> {
     private val songsRepository by LazyExtractor(songsRepository)
     private val uiResourceService by LazyExtractor(uiResourceService)
@@ -94,7 +94,8 @@ class PlaylistLayoutController(
             nextLeft = { currentFocusId: Int, currentView: View ->
                 when (currentFocusId) {
                     R.id.itemMoreButton, R.id.playlistListView, R.id.itemMoveButton -> {
-                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        (currentView as ViewGroup).descendantFocusability =
+                            ViewGroup.FOCUS_BLOCK_DESCENDANTS
                         itemsListView?.requestFocusFromTouch()
                     }
                 }
@@ -112,15 +113,18 @@ class PlaylistLayoutController(
                 when {
                     currentFocusId == R.id.playlistListView -> when {
                         currentView.findViewById<View>(R.id.itemMoveButton)?.isVisible == true -> {
-                            (currentView as? ViewGroup)?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+                            (currentView as? ViewGroup)?.descendantFocusability =
+                                ViewGroup.FOCUS_BEFORE_DESCENDANTS
                             R.id.itemMoveButton
                         }
                         currentView.findViewById<View>(R.id.itemSongMoreButton)?.isVisible == true -> {
-                            (currentView as? ViewGroup)?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+                            (currentView as? ViewGroup)?.descendantFocusability =
+                                ViewGroup.FOCUS_BEFORE_DESCENDANTS
                             R.id.itemSongMoreButton
                         }
                         currentView.findViewById<View>(R.id.itemMoreButton)?.isVisible == true -> {
-                            (currentView as? ViewGroup)?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+                            (currentView as? ViewGroup)?.descendantFocusability =
+                                ViewGroup.FOCUS_BEFORE_DESCENDANTS
                             R.id.itemMoreButton
                         }
                         else -> 0
@@ -132,7 +136,8 @@ class PlaylistLayoutController(
             nextUp = { currentFocusId: Int, currentView: View ->
                 when (currentFocusId) {
                     R.id.itemSongMoreButton, R.id.itemMoreButton, R.id.playlistListView, R.id.itemMoveButton -> {
-                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        (currentView as ViewGroup).descendantFocusability =
+                            ViewGroup.FOCUS_BLOCK_DESCENDANTS
                         itemsListView?.requestFocusFromTouch()
                     }
                 }
@@ -151,7 +156,8 @@ class PlaylistLayoutController(
             nextDown = { currentFocusId: Int, currentView: View ->
                 when (currentFocusId) {
                     R.id.itemSongMoreButton, R.id.itemMoreButton, R.id.playlistListView, R.id.itemMoveButton -> {
-                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        (currentView as ViewGroup).descendantFocusability =
+                            ViewGroup.FOCUS_BLOCK_DESCENDANTS
                         itemsListView?.requestFocusFromTouch()
                     }
                 }
@@ -169,24 +175,26 @@ class PlaylistLayoutController(
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
         subscriptions.add(songsRepository.dbChangeSubject
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    if (isLayoutVisible())
-                        updateItemsList()
-                }, UiErrorHandler::handleError))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                if (isLayoutVisible())
+                    updateItemsList()
+            }, UiErrorHandler::handleError)
+        )
         subscriptions.add(songsRepository.playlistDao.playlistDbSubject
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    if (isLayoutVisible())
-                        updateItemsList()
-                }, UiErrorHandler::handleError))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                if (isLayoutVisible())
+                    updateItemsList()
+            }, UiErrorHandler::handleError)
+        )
     }
 
     private fun updateItemsList() {
         val items = if (playlist == null) {
             songsRepository.playlistDao.playlistDb.playlists
-                    .map { p -> PlaylistListItem(playlist = p) }
-                    .toMutableList()
+                .map { p -> PlaylistListItem(playlist = p) }
+                .toMutableList()
         } else {
             playlist?.songs
                 ?.mapNotNull { s ->
@@ -257,7 +265,7 @@ class PlaylistLayoutController(
     override fun onItemClick(item: PlaylistListItem) {
         storedScroll = itemsListView?.currentScrollPosition
         if (item.song != null) {
-            songOpener.openSongPreview(item.song, playlist=playlist)
+            songOpener.openSongPreview(item.song, playlist = playlist)
         } else if (item.playlist != null) {
             playlist = item.playlist
             updateItemsList()
@@ -278,15 +286,15 @@ class PlaylistLayoutController(
 
     private fun showPlaylistActions(playlist: Playlist) {
         val actions = mutableListOf(
-                ContextMenuBuilder.Action(R.string.rename_playlist) {
-                    renamePlaylist(playlist)
-                },
-                ContextMenuBuilder.Action(R.string.remove_playlist) {
-                    ConfirmDialogBuilder().confirmAction(R.string.confirm_remove_playlist) {
-                        songsRepository.playlistDao.removePlaylist(playlist)
-                        uiInfoService.showInfo(R.string.playlist_removed)
-                    }
+            ContextMenuBuilder.Action(R.string.rename_playlist) {
+                renamePlaylist(playlist)
+            },
+            ContextMenuBuilder.Action(R.string.remove_playlist) {
+                ConfirmDialogBuilder().confirmAction(R.string.confirm_remove_playlist) {
+                    songsRepository.playlistDao.removePlaylist(playlist)
+                    uiInfoService.showInfo(R.string.playlist_removed)
                 }
+            }
         )
 
         contextMenuBuilder.showContextMenu(R.string.choose_playlist, actions)

@@ -2,7 +2,6 @@ package igrek.songbook.songpreview.renderer.canvas
 
 import android.content.Context
 import android.graphics.*
-import android.graphics.LinearGradient
 import android.graphics.Shader.TileMode
 import android.os.Build
 import android.view.View
@@ -144,7 +143,14 @@ abstract class BaseCanvasView(context: Context) : View(context) {
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    fun fillRectGradientH(left: Float, top: Float, right: Float, bottom: Float, color1: Int, color2: Int) {
+    fun fillRectGradientH(
+        left: Float,
+        top: Float,
+        right: Float,
+        bottom: Float,
+        color1: Int,
+        color2: Int
+    ) {
         val shader: Shader = LinearGradient(left, top, right, top, color1, color2, TileMode.CLAMP)
         val paint = Paint()
         paint.shader = shader

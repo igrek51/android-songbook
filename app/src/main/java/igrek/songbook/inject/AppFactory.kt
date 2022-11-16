@@ -80,7 +80,8 @@ class AppFactory(
 
     val context: LazyInject<Context> = SingletonInject { _activity!!.applicationContext }
     val logger: LazyInject<Logger> = PrototypeInject { LoggerFactory.logger }
-    val sharedPreferences: LazyInject<SharedPreferences> = PrototypeInject { SharedPreferencesService.sharedPreferencesCreator(_activity!!) }
+    val sharedPreferences: LazyInject<SharedPreferences> =
+        PrototypeInject { SharedPreferencesService.sharedPreferencesCreator(_activity!!) }
 
     /* Services */
     val activityData = SingletonInject { MainActivityData() }

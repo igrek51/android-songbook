@@ -74,7 +74,14 @@ class SongSearchLayoutController(
         searchFilterEdit = layout.findViewById<EditText>(R.id.searchFilterEdit)?.apply {
             addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {}
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     searchFilterSubject.onNext(s.toString())
                 }
@@ -116,17 +123,19 @@ class SongSearchLayoutController(
         subscriptions.clear()
         // refresh only after some inactive time
         subscriptions.add(searchFilterSubject
-                .debounce(400, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    setSongFilter(searchFilterEdit?.text?.toString())
-                }, UiErrorHandler::handleError))
+            .debounce(400, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                setSongFilter(searchFilterEdit?.text?.toString())
+            }, UiErrorHandler::handleError)
+        )
         subscriptions.add(songsRepository.dbChangeSubject
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    if (layoutController.isState(this::class))
-                        updateItemsList()
-                }, UiErrorHandler::handleError))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                if (layoutController.isState(this::class))
+                    updateItemsList()
+            }, UiErrorHandler::handleError)
+        )
     }
 
     private fun updateItemsList() {
@@ -155,23 +164,24 @@ class SongSearchLayoutController(
     private fun getSongItems(songsRepo: AllSongsRepository): MutableList<SongTreeItem> {
         if (!isFilterSet()) { // no filter
             return songsRepo.songs.get()
-                    .sortedBy { it.displayName().lowercase(StringSimplifier.locale) }
-                    .map { song -> SongSearchItem.song(song) }
-                    .toMutableList()
+                .sortedBy { it.displayName().lowercase(StringSimplifier.locale) }
+                .map { song -> SongSearchItem.song(song) }
+                .toMutableList()
         } else {
-            val songFilter = SongSearchFilter(itemFilter.orEmpty(), preferencesState.songLyricsSearch)
+            val songFilter =
+                SongSearchFilter(itemFilter.orEmpty(), preferencesState.songLyricsSearch)
             // filter songs
             val songsSequence = songsRepo.songs.get()
-                    .filter { song -> songFilter.matchSong(song) }
-                    .sortSongsByFilterRelevance(songFilter)
-                    .map { song -> SongSearchItem.song(song) }
+                .filter { song -> songFilter.matchSong(song) }
+                .sortSongsByFilterRelevance(songFilter)
+                .map { song -> SongSearchItem.song(song) }
             // filter categories
             val categoriesSequence = songsRepo.categories.get()
-                    .filter { category -> songFilter.matchCategory(category) }
-                    .map { category -> SongTreeItem.category(category) }
+                .filter { category -> songFilter.matchCategory(category) }
+                .map { category -> SongTreeItem.category(category) }
             // display union
             return categoriesSequence.plus(songsSequence)
-                    .toMutableList()
+                .toMutableList()
         }
     }
 

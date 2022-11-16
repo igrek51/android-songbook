@@ -30,16 +30,22 @@ enum class MajorKey(
 
     // Tonic (I)
     fun tonic(): Int = baseMajorNote.index
+
     // supertonic (ii)
     fun supertonic(): Int = moveNote(baseMajorNote.index, 2)
+
     // mediant (iii)
     fun mediant(): Int = moveNote(baseMajorNote.index, 4)
+
     // Subdominant (IV)
     fun subdominant(): Int = moveNote(baseMajorNote.index, 5)
+
     // Dominant (V)
     fun dominant(): Int = moveNote(baseMajorNote.index, 7)
+
     // submediant - base minor note index (vi)
     fun submediant(): Int = moveNote(baseMajorNote.index, 9)
+
     // subtonic (vii0)
     fun subtonic(): Int = moveNote(baseMajorNote.index, 11)
 }

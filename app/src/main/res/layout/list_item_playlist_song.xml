@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
@@ -55,8 +54,7 @@
         android:focusableInTouchMode="false"
         android:background="?android:selectableItemBackground"
         android:src="@drawable/reorder"
-        android:scaleType="centerInside"
-        />
+        android:scaleType="centerInside" />
 
     <ImageButton
         android:id="@+id/itemSongMoreButton"
@@ -75,7 +73,6 @@
         android:focusableInTouchMode="false"
         android:padding="4dp"
         android:scaleType="centerInside"
-        android:src="@drawable/more"
-        />
+        android:src="@drawable/more" />
 
 </RelativeLayout>

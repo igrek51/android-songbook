@@ -10,7 +10,7 @@ import igrek.songbook.inject.appFactory
 
 @Suppress("DEPRECATION")
 class WindowManagerService(
-        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+    appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
 ) {
     private val activity by LazyExtractor(appCompatActivity)
 
@@ -43,7 +43,8 @@ class WindowManagerService(
     }
 
     private fun setShowWhenLocked(set: Boolean) {
-        val flag = WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+        val flag =
+            WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
         if (set) {
             activity.window.setFlags(flag, flag)
         } else {
@@ -57,6 +58,6 @@ class WindowManagerService(
 
     fun showAppWhenLocked() {
         activity.window
-                .addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
+            .addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON or WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED)
     }
 }

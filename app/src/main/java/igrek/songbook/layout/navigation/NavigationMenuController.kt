@@ -79,26 +79,46 @@ class NavigationMenuController(
     }
 
     private fun initOptionActionsMap() {
-        actionsMap[R.id.nav_songs_list] = { layoutController.showLayout(SongTreeLayoutController::class) }
-        actionsMap[R.id.nav_search] = { layoutController.showLayout(SongSearchLayoutController::class) }
-        actionsMap[R.id.nav_favourites] = { layoutController.showLayout(FavouritesLayoutController::class) }
-        actionsMap[R.id.nav_playlists] = { layoutController.showLayout(PlaylistLayoutController::class) }
-        actionsMap[R.id.nav_update_db] = { songsUpdater.updateSongsDb(forced = true) }
-        actionsMap[R.id.nav_custom_songs] = { layoutController.showLayout(CustomSongsListLayoutController::class) }
-        actionsMap[R.id.nav_random_song] = { randomSongOpener.openRandomSong() }
-        actionsMap[R.id.nav_settings] = { layoutController.showLayout(SettingsLayoutController::class) }
-        actionsMap[R.id.nav_manual] = { aboutLayoutController.showManual() }
-        actionsMap[R.id.nav_exit] = { activityController.quit() }
-        actionsMap[R.id.nav_contact] = { layoutController.showLayout(ContactLayoutController::class) }
-        actionsMap[R.id.nav_missing_song] = { sendMessageService.requestMissingSong() }
-        actionsMap[R.id.nav_history] = { layoutController.showLayout(OpenHistoryLayoutController::class) }
-        actionsMap[R.id.nav_latest] = { layoutController.showLayout(LatestSongsLayoutController::class) }
-        actionsMap[R.id.nav_top_songs] = { layoutController.showLayout(TopSongsLayoutController::class) }
-        actionsMap[R.id.nav_last_song] = { songOpener.openLastSong() }
-        actionsMap[R.id.nav_admin_antechamber] = { layoutController.showLayout(AdminSongsLayoutContoller::class) }
-        actionsMap[R.id.nav_chord_diagram] = { chordsDiagramsService.showFindChordByNameMenu() }
-        actionsMap[R.id.nav_screen_share] = { layoutController.showLayout(RoomListLayoutController::class) }
-        actionsMap[R.id.nav_purchase] = { layoutController.showLayout(BillingLayoutController::class) }
+        actionsMap[R.id.nav_songs_list] =
+            { layoutController.showLayout(SongTreeLayoutController::class) }
+        actionsMap[R.id.nav_search] =
+            { layoutController.showLayout(SongSearchLayoutController::class) }
+        actionsMap[R.id.nav_favourites] =
+            { layoutController.showLayout(FavouritesLayoutController::class) }
+        actionsMap[R.id.nav_playlists] =
+            { layoutController.showLayout(PlaylistLayoutController::class) }
+        actionsMap[R.id.nav_update_db] =
+            { songsUpdater.updateSongsDb(forced = true) }
+        actionsMap[R.id.nav_custom_songs] =
+            { layoutController.showLayout(CustomSongsListLayoutController::class) }
+        actionsMap[R.id.nav_random_song] =
+            { randomSongOpener.openRandomSong() }
+        actionsMap[R.id.nav_settings] =
+            { layoutController.showLayout(SettingsLayoutController::class) }
+        actionsMap[R.id.nav_manual] =
+            { aboutLayoutController.showManual() }
+        actionsMap[R.id.nav_exit] =
+            { activityController.quit() }
+        actionsMap[R.id.nav_contact] =
+            { layoutController.showLayout(ContactLayoutController::class) }
+        actionsMap[R.id.nav_missing_song] =
+            { sendMessageService.requestMissingSong() }
+        actionsMap[R.id.nav_history] =
+            { layoutController.showLayout(OpenHistoryLayoutController::class) }
+        actionsMap[R.id.nav_latest] =
+            { layoutController.showLayout(LatestSongsLayoutController::class) }
+        actionsMap[R.id.nav_top_songs] =
+            { layoutController.showLayout(TopSongsLayoutController::class) }
+        actionsMap[R.id.nav_last_song] =
+            { songOpener.openLastSong() }
+        actionsMap[R.id.nav_admin_antechamber] =
+            { layoutController.showLayout(AdminSongsLayoutContoller::class) }
+        actionsMap[R.id.nav_chord_diagram] =
+            { chordsDiagramsService.showFindChordByNameMenu() }
+        actionsMap[R.id.nav_screen_share] =
+            { layoutController.showLayout(RoomListLayoutController::class) }
+        actionsMap[R.id.nav_purchase] =
+            { layoutController.showLayout(BillingLayoutController::class) }
     }
 
     fun init() {
@@ -132,7 +152,8 @@ class NavigationMenuController(
 
     private fun bindCustomButtonActions() {
         var menuItem: MenuItem? = navigationView?.menu?.findItem(R.id.nav_custom_songs)
-        val navAddCustomSongButton = menuItem?.actionView?.findViewById<ImageButton>(R.id.navAddCustomSongButton)
+        val navAddCustomSongButton =
+            menuItem?.actionView?.findViewById<ImageButton>(R.id.navAddCustomSongButton)
         navAddCustomSongButton?.setOnClickListener {
             closeDrawerAndCallAction {
                 customSongService.showAddSongScreen()

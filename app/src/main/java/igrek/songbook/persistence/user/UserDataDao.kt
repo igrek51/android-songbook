@@ -23,7 +23,7 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
 class UserDataDao(
-        localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
+    localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
 ) {
     internal val localDbService by LazyExtractor(localDbService)
 
@@ -42,12 +42,12 @@ class UserDataDao(
 
     init {
         saveRequestSubject
-                .throttleLast(2, TimeUnit.SECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ toSave ->
-                    if (toSave)
-                        save()
-                }, UiErrorHandler::handleError)
+            .throttleLast(2, TimeUnit.SECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ toSave ->
+                if (toSave)
+                    save()
+            }, UiErrorHandler::handleError)
     }
 
     fun reload() {
@@ -104,7 +104,7 @@ class UserDataDao(
 }
 
 class LazyDaoLoader<T : AbstractJsonDao<out Any>>(
-        private val loader: (path: String) -> T,
+    private val loader: (path: String) -> T,
 ) : ReadWriteProperty<UserDataDao, T> {
 
     private var loaded: T? = null

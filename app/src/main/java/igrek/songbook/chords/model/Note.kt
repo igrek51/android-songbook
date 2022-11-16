@@ -1,7 +1,8 @@
 package igrek.songbook.chords.model
 
 import igrek.songbook.chords.syntax.MajorKey
-import igrek.songbook.chords.syntax.MajorKey.*
+import igrek.songbook.chords.syntax.MajorKey.B_MAJOR
+import igrek.songbook.chords.syntax.MajorKey.F_SHARP_MAJOR
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
 
@@ -91,7 +92,7 @@ fun indexToNote(noteIndex: Int, key: MajorKey? = null, forceModifier: NoteModifi
 }
 
 fun convertToSharp(note: Note, notation: ChordsNotation): Note {
-    return when(note) {
+    return when (note) {
         Note.D_FLAT -> Note.C_SHARP
         Note.E_FLAT -> Note.D_SHARP
         Note.G_FLAT -> Note.F_SHARP

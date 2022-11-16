@@ -25,12 +25,12 @@ import kotlinx.coroutines.launch
 
 @OptIn(DelicateCoroutinesApi::class)
 class PublishSongLayoutController(
-        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        sendMessageService: LazyInject<SendMessageService> = appFactory.sendMessageService,
-        softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
-        antechamberService: LazyInject<AntechamberService> = appFactory.antechamberService,
+    layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    sendMessageService: LazyInject<SendMessageService> = appFactory.sendMessageService,
+    softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
+    antechamberService: LazyInject<AntechamberService> = appFactory.antechamberService,
 ) : MainLayout {
     private val layoutController by LazyExtractor(layoutController)
     private val uiInfoService by LazyExtractor(uiInfoService)
@@ -99,9 +99,11 @@ class PublishSongLayoutController(
         val subject = "$subjectPrefix: $fullTitle"
 
         ConfirmDialogBuilder().confirmAction(R.string.confirm_send_contact) {
-            sendMessageService.sendContactMessage(message = content, origin = MessageOrigin.SONG_PUBLISH,
-                    category = category, title = title, author = author, subject = subject,
-                    originalSongId = originalSongId)
+            sendMessageService.sendContactMessage(
+                message = content, origin = MessageOrigin.SONG_PUBLISH,
+                category = category, title = title, author = author, subject = subject,
+                originalSongId = originalSongId
+            )
 
             publishSong?.let { publishSong ->
                 GlobalScope.launch(Dispatchers.Main) {

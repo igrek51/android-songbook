@@ -5,16 +5,14 @@
     android:layout_gravity="center"
     android:orientation="vertical"
     android:padding="0dp"
-    android:descendantFocusability="afterDescendants"
-    >
+    android:descendantFocusability="afterDescendants">
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/card_view" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_view"
+    <androidx.cardview.widget.CardView android:id="@+id/card_view"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

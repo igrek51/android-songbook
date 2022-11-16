@@ -16,7 +16,7 @@ class SharedSongOpenActivity : AppCompatActivity() {
         LoggerFactory.logger.info("opening encoded shared song: $encodedSong")
 
         val intent = Intent(applicationContext, MainActivity::class.java)
-        intent.putExtra("encodedSong", encodedSong);
+        intent.putExtra("encodedSong", encodedSong)
         startActivity(intent)
         finish()
     }

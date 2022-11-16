@@ -8,6 +8,7 @@ object Align {
     const val TOP = 0x010
     const val BOTTOM = 0x020
     const val VCENTER = 0x040
+
     // mixed
     const val CENTER = HCENTER or VCENTER
     const val BOTTOM_LEFT = BOTTOM or LEFT

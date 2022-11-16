@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
@@ -25,8 +24,7 @@
             app:contentInsetEnd="0dp"
             app:contentInsetLeft="0dp"
             app:contentInsetRight="0dp"
-            app:contentInsetStart="0dp"
-            >
+            app:contentInsetStart="0dp">
 
             <ImageButton
                 android:id="@+id/navMenuButton"
@@ -41,8 +39,7 @@
                 android:focusableInTouchMode="false"
                 android:padding="8dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/menu"
-                />
+                android:src="@drawable/menu" />
 
             <ImageButton
                 android:id="@+id/goBackButton"
@@ -131,7 +128,7 @@
                 android:layout_margin="8dp"
                 android:gravity="bottom"
                 android:text="@string/edit_song_title_label"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/songTitleEdit"
@@ -142,7 +139,7 @@
                 android:gravity="center_vertical"
                 android:hint="@string/edit_song_title_hint"
                 android:inputType="text"
-                android:padding="8dp"/>
+                android:padding="8dp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -150,7 +147,7 @@
                 android:layout_margin="8dp"
                 android:gravity="bottom"
                 android:text="@string/edit_song_category_name_label"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
             <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:id="@+id/customCategoryNameEdit"
@@ -161,7 +158,7 @@
                 android:gravity="center_vertical"
                 android:hint="@string/edit_song_category_name_hint"
                 android:inputType="text"
-                android:padding="8dp"/>
+                android:padding="8dp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -176,14 +173,12 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:focusable="true"
-                android:focusableInTouchMode="false"
-                />
+                android:focusableInTouchMode="false" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                >
+                android:layout_margin="8dp">
 
                 <TextView
                     android:id="@+id/editChordsLyricsInfo"
@@ -197,7 +192,7 @@
                     android:textSize="18sp"
                     android:layout_toLeftOf="@+id/tooltipEditChordsLyricsInfo"
                     android:layout_toStartOf="@+id/tooltipEditChordsLyricsInfo"
-                    android:layout_alignParentLeft="true"/>
+                    android:layout_alignParentLeft="true" />
 
                 <ImageButton
                     android:id="@+id/tooltipEditChordsLyricsInfo"
@@ -214,7 +209,7 @@
                     android:padding="4dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/help"
-                    android:layout_alignParentEnd="true"/>
+                    android:layout_alignParentEnd="true" />
 
             </RelativeLayout>
 
@@ -232,7 +227,7 @@
                 android:focusableInTouchMode="false"
                 android:padding="8dp"
                 android:inputType="none"
-                android:text=""/>
+                android:text="" />
 
         </LinearLayout>
     </ScrollView>

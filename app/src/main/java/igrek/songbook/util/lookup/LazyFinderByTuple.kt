@@ -1,8 +1,8 @@
 package igrek.songbook.util.lookup
 
 open class LazyFinderByTuple<K, V>(
-        private val entityToId: (V) -> K,
-        private val valuesSupplier: SimpleCache<List<V>>
+    private val entityToId: (V) -> K,
+    private val valuesSupplier: SimpleCache<List<V>>
 ) {
 
     private val idMapping = hashMapOf<K, V>()

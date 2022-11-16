@@ -24,7 +24,7 @@ class BillingLayoutController(
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
     billingService: LazyInject<BillingService> = appFactory.billingService,
 ) : InflatedLayout(
-        _layoutResourceId = R.layout.screen_billing
+    _layoutResourceId = R.layout.screen_billing
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val uiResourceService by LazyExtractor(uiResourceService)

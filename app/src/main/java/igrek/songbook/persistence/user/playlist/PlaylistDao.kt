@@ -9,14 +9,14 @@ import igrek.songbook.persistence.user.AbstractJsonDao
 import io.reactivex.subjects.PublishSubject
 
 class PlaylistDao(
-        path: String,
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    path: String,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
 ) : AbstractJsonDao<PlaylistDb>(
-        path,
-        dbName = "playlist",
-        schemaVersion = 1,
-        clazz = PlaylistDb::class.java,
-        serializer = PlaylistDb.serializer()
+    path,
+    dbName = "playlist",
+    schemaVersion = 1,
+    clazz = PlaylistDb::class.java,
+    serializer = PlaylistDb.serializer()
 ) {
     private val songsRepository by LazyExtractor(songsRepository)
 
@@ -45,7 +45,7 @@ class PlaylistDao(
 
     fun removePlaylist(playlist: Playlist) {
         val olds = playlistDb.playlists
-                .filter { p -> p.id != playlist.id }.toMutableList()
+            .filter { p -> p.id != playlist.id }.toMutableList()
         playlistDb.playlists = olds
         playlistDbSubject.onNext(playlistDb)
     }
@@ -61,7 +61,7 @@ class PlaylistDao(
 
     fun isSongOnAnyPlaylist(song: Song): Boolean {
         return songsRepository.playlistDao.playlistDb.playlists
-                .any { playlist -> isSongOnPlaylist(song, playlist) }
+            .any { playlist -> isSongOnPlaylist(song, playlist) }
     }
 
     fun addSongToPlaylist(song: Song, playlist: Playlist) {

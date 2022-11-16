@@ -24,13 +24,13 @@ import igrek.songbook.songselection.tree.SongTreeItem
 import igrek.songbook.songselection.tree.SongTreeSorter
 
 abstract class SongSelectionLayoutController(
-        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
-        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
-        navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-        songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
-        songOpener: LazyInject<SongOpener> = appFactory.songOpener,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+    appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+    navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
+    songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
 ) : SongClickListener {
     protected val layoutController by LazyExtractor(layoutController)
     protected val activity by LazyExtractor(appCompatActivity)

@@ -5,13 +5,13 @@ import igrek.songbook.persistence.user.AbstractJsonDao
 import io.reactivex.subjects.PublishSubject
 
 class SongTweakDao(
-        path: String,
+    path: String,
 ) : AbstractJsonDao<SongTweakDb>(
-        path,
-        dbName = "songtweak",
-        schemaVersion = 1,
-        clazz = SongTweakDb::class.java,
-        serializer = SongTweakDb.serializer()
+    path,
+    dbName = "songtweak",
+    schemaVersion = 1,
+    clazz = SongTweakDb::class.java,
+    serializer = SongTweakDb.serializer()
 ) {
     private val songtweakDb: SongTweakDb get() = db!!
     private val songtweakDbSubject = PublishSubject.create<SongTweakDb>()
@@ -28,7 +28,7 @@ class SongTweakDao(
         val songFound = songtweakDb.songs
             .find {
                 it.songId == songIdentifier.songId
-                && it.namespaceId == songIdentifier.namespace.id
+                        && it.namespaceId == songIdentifier.namespace.id
             }
         return songFound?.autoscrollSpeed
     }
@@ -37,13 +37,13 @@ class SongTweakDao(
         val existingEntry = songtweakDb.songs
             .find {
                 it.songId == songIdentifier.songId
-                && it.namespaceId == songIdentifier.namespace.id
+                        && it.namespaceId == songIdentifier.namespace.id
             }
         if (existingEntry == null) {
             val newEntry = TweakedSong(
-                songId=songIdentifier.songId,
-                namespaceId=songIdentifier.namespace.id,
-                autoscrollSpeed=autoscrollSpeed,
+                songId = songIdentifier.songId,
+                namespaceId = songIdentifier.namespace.id,
+                autoscrollSpeed = autoscrollSpeed,
             )
             songtweakDb.songs.add(newEntry)
         } else {
@@ -56,10 +56,10 @@ class SongTweakDao(
         val songId = songIdentifier.songId
         val namespaceId = songIdentifier.namespace.id
         val songFound = songtweakDb.songs
-                .find {
-                    it.songId == songId
-                    && it.namespaceId == namespaceId
-                }
+            .find {
+                it.songId == songId
+                        && it.namespaceId == namespaceId
+            }
         if (songFound != null) {
             songtweakDb.songs.remove(songFound)
             songtweakDbSubject.onNext(songtweakDb)

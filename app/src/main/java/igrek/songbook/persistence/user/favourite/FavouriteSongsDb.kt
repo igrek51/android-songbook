@@ -4,11 +4,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class FavouriteSongsDb(
-        val favourites: MutableList<FavouriteSong> = mutableListOf()
+    val favourites: MutableList<FavouriteSong> = mutableListOf()
 )
 
 @Serializable
 data class FavouriteSong(
-        val songId: Long,
-        val custom: Boolean
+    val songId: Long,
+    val custom: Boolean
 )

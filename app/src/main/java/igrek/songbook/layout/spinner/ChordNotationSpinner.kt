@@ -7,13 +7,12 @@ import android.widget.Spinner
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import java.util.*
 
 class ChordNotationSpinner(
-        @IdRes spinnerId: Int,
-        layout: View,
-        activity: AppCompatActivity,
-        chordsNotationDisplayNames: LinkedHashMap<ChordsNotation, String>
+    @IdRes spinnerId: Int,
+    layout: View,
+    activity: AppCompatActivity,
+    chordsNotationDisplayNames: LinkedHashMap<ChordsNotation, String>
 ) {
 
     var selectedNotation: ChordsNotation
@@ -35,13 +34,16 @@ class ChordNotationSpinner(
     }
 
     init {
-        val adapter: ArrayAdapter<String> = ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item, displayItems)
+        val adapter: ArrayAdapter<String> =
+            ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item, displayItems)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View,
-                                        position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>, view: View,
+                position: Int, id: Long
+            ) {
                 internalValue = availableEntities[position]
             }
 

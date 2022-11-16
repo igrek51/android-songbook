@@ -3,9 +3,9 @@ package igrek.songbook.editor
 open class LyricsEditorHistory {
 
     data class Entry(
-            val text: String,
-            val startSelection: Int,
-            val endSelection: Int,
+        val text: String,
+        val startSelection: Int,
+        val endSelection: Int,
     )
 
     private var history: MutableList<Entry> = mutableListOf()

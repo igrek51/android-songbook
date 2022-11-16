@@ -10,7 +10,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 
 open class UiResourceService(
-        activity: LazyInject<Activity> = appFactory.activity,
+    activity: LazyInject<Activity> = appFactory.activity,
 ) {
     private val activity: Activity by LazyExtractor(activity)
 

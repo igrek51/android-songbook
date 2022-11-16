@@ -12,12 +12,12 @@ import igrek.songbook.system.SystemKeyDispatcher
     Workaround for reusing finished activities by Android
  */
 class MainActivityData(
-        appInitializer: LazyInject<AppInitializer> = appFactory.appInitializer,
-        activityController: LazyInject<ActivityController> = appFactory.activityController,
-        optionSelectDispatcher: LazyInject<OptionSelectDispatcher> = appFactory.optionSelectDispatcher,
-        systemKeyDispatcher: LazyInject<SystemKeyDispatcher> = appFactory.systemKeyDispatcher,
-        permissionService: LazyInject<PermissionService> = appFactory.permissionService,
-        activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,
+    appInitializer: LazyInject<AppInitializer> = appFactory.appInitializer,
+    activityController: LazyInject<ActivityController> = appFactory.activityController,
+    optionSelectDispatcher: LazyInject<OptionSelectDispatcher> = appFactory.optionSelectDispatcher,
+    systemKeyDispatcher: LazyInject<SystemKeyDispatcher> = appFactory.systemKeyDispatcher,
+    permissionService: LazyInject<PermissionService> = appFactory.permissionService,
+    activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,
 ) : AppCompatActivity() {
     val appInitializer by LazyExtractor(appInitializer)
     val activityController by LazyExtractor(activityController)

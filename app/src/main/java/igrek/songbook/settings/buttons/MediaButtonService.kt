@@ -7,7 +7,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 
 class MediaButtonService(
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
 ) {
     private val uiResourceService by LazyExtractor(uiResourceService)
 

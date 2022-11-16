@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentEnd="true"
@@ -19,6 +18,6 @@
         android:focusableInTouchMode="false"
         android:padding="12dp"
         android:scaleType="centerInside"
-        android:src="@drawable/add"/>
+        android:src="@drawable/add" />
 
 </FrameLayout>

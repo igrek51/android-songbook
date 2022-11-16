@@ -18,7 +18,8 @@ class ActivityResultDispatcher(
     private val appCompatActivity by LazyExtractor(appCompatActivity)
 
     private val requestCodeSequence: AtomicInteger = AtomicInteger(10)
-    private val requestCodeReactions: HashMap<Int, (resultCode: Int, data: Intent?) -> Unit> = hashMapOf()
+    private val requestCodeReactions: HashMap<Int, (resultCode: Int, data: Intent?) -> Unit> =
+        hashMapOf()
 
     fun registerActivityResultLauncher(onResult: (resultCode: Int, data: Intent?) -> Unit): ActivityResultLauncher<Intent> {
         val activityResultLauncher: ActivityResultLauncher<Intent> =
@@ -30,7 +31,10 @@ class ActivityResultDispatcher(
         return activityResultLauncher
     }
 
-    fun startRegisteredActivityForResult(intent: Intent, onResult: (resultCode: Int, data: Intent?) -> Unit) {
+    fun startRegisteredActivityForResult(
+        intent: Intent,
+        onResult: (resultCode: Int, data: Intent?) -> Unit
+    ) {
         val activityResultLauncher: ActivityResultLauncher<Intent> =
             appCompatActivity.registerForActivityResult(
                 ActivityResultContracts.StartActivityForResult(),

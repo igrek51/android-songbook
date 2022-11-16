@@ -45,7 +45,7 @@ class EditSongLayoutController(
     globalFocusTraverser: LazyInject<GlobalFocusTraverser> = appFactory.globalFocusTraverser,
     webviewLayoutController: LazyInject<WebviewLayoutController> = appFactory.webviewLayoutController,
 ) : InflatedLayout(
-        _layoutResourceId = R.layout.screen_custom_song_details
+    _layoutResourceId = R.layout.screen_custom_song_details
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val customSongService by LazyExtractor(customSongService)
@@ -83,9 +83,10 @@ class EditSongLayoutController(
             saveSong()
         })
 
-        layout.findViewById<ImageButton>(R.id.moreActionsButton).setOnClickListener(SafeClickListener {
-            showMoreActions()
-        })
+        layout.findViewById<ImageButton>(R.id.moreActionsButton)
+            .setOnClickListener(SafeClickListener {
+                showMoreActions()
+            })
 
         layout.findViewById<ImageButton>(R.id.tooltipEditChordsLyricsInfo)?.let {
             it.setOnClickListener {
@@ -114,18 +115,19 @@ class EditSongLayoutController(
             globalFocusTraverser.setUpDownKeyListener(it)
         }
 
-        customCategoryNameEdit = layout.findViewById<AppCompatAutoCompleteTextView>(R.id.customCategoryNameEdit)?.apply {
-            setText(customCategoryName.orEmpty())
-            threshold = 1
-            globalFocusTraverser.setUpDownKeyListener(this)
-        }
+        customCategoryNameEdit =
+            layout.findViewById<AppCompatAutoCompleteTextView>(R.id.customCategoryNameEdit)?.apply {
+                setText(customCategoryName.orEmpty())
+                threshold = 1
+                globalFocusTraverser.setUpDownKeyListener(this)
+            }
         updateCategoryAutocompleter()
 
         chordsNotationSpinner = ChordNotationSpinner(
-                spinnerId = R.id.songChordNotationSpinner,
-                layout = layout,
-                activity = activity,
-                chordsNotationDisplayNames = chordsNotationService.chordsNotationDisplayNames
+            spinnerId = R.id.songChordNotationSpinner,
+            layout = layout,
+            activity = activity,
+            chordsNotationDisplayNames = chordsNotationService.chordsNotationDisplayNames
         ).also {
             it.selectedNotation = songChordsNotation ?: preferencesState.chordsNotation
             globalFocusTraverser.setUpDownKeyListener(it.spinner)
@@ -134,23 +136,25 @@ class EditSongLayoutController(
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
         subscriptions.add(songsRepository.dbChangeSubject
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    if (isLayoutVisible())
-                        updateCategoryAutocompleter()
-                }, UiErrorHandler::handleError))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                if (isLayoutVisible())
+                    updateCategoryAutocompleter()
+            }, UiErrorHandler::handleError)
+        )
     }
 
     private fun updateCategoryAutocompleter() {
         val categoryNames = getAllCategoryNames().toTypedArray()
-        val adapter = ArrayAdapter(activity, android.R.layout.simple_dropdown_item_1line, categoryNames)
+        val adapter =
+            ArrayAdapter(activity, android.R.layout.simple_dropdown_item_1line, categoryNames)
         customCategoryNameEdit?.setAdapter(adapter)
     }
 
     private fun getAllCategoryNames(): List<String> {
         return songsRepository.allSongsRepo.publicCategories.get()
-                .mapNotNull { it.displayName }
-                .sorted()
+            .mapNotNull { it.displayName }
+            .sorted()
     }
 
     private fun showMoreActions() {
@@ -183,7 +187,8 @@ class EditSongLayoutController(
         this.songTitle = songTitleEdit?.text?.toString().orEmpty()
         this.songContent = songContentEdit?.text?.toString().orEmpty()
         this.customCategoryName = customCategoryNameEdit?.text?.toString().orEmpty()
-        val chordsNotation = chordsNotationSpinner?.selectedNotation ?: preferencesState.chordsNotation
+        val chordsNotation =
+            chordsNotationSpinner?.selectedNotation ?: preferencesState.chordsNotation
         this.songChordsNotation = chordsNotation
 
         chordsEditorLayoutController.chordsNotation = chordsNotation
@@ -224,14 +229,25 @@ class EditSongLayoutController(
         val songContent = songContentEdit?.text.toString()
         val customCategoryName: String? = customCategoryNameEdit?.text.toString().ifEmpty { null }
         val chordsNotation: ChordsNotation = chordsNotationSpinner?.selectedNotation
-                ?: chordsNotationService.chordsNotation
+            ?: chordsNotationService.chordsNotation
 
         if (currentSong == null) {
             // add
-            currentSong = customSongService.addCustomSong(songTitle, customCategoryName, songContent, chordsNotation)
+            currentSong = customSongService.addCustomSong(
+                songTitle,
+                customCategoryName,
+                songContent,
+                chordsNotation,
+            )
         } else {
             // update
-            customSongService.updateSong(currentSong!!, songTitle, customCategoryName, songContent, chordsNotation)
+            customSongService.updateSong(
+                currentSong!!,
+                songTitle,
+                customCategoryName,
+                songContent,
+                chordsNotation,
+            )
         }
 
         uiInfoService.showInfo(R.string.edit_song_has_been_saved)
@@ -254,11 +270,14 @@ class EditSongLayoutController(
     override fun onBackClicked() {
         if (hasUnsavedChanges()) {
             uiInfoService.dialogThreeChoices(
-                    titleResId = R.string.confirm_unsaved_changes_title,
-                    messageResId = R.string.confirm_discard_custom_song_changes,
-                    positiveButton = R.string.confirm_unsaved_save, positiveAction = { saveSong() },
-                    negativeButton = R.string.confirm_discard_changes, negativeAction = { layoutController.showPreviousLayoutOrQuit() },
-                    neutralButton = R.string.action_cancel, neutralAction = {})
+                titleResId = R.string.confirm_unsaved_changes_title,
+                messageResId = R.string.confirm_discard_custom_song_changes,
+                positiveButton = R.string.confirm_unsaved_save,
+                positiveAction = { saveSong() },
+                negativeButton = R.string.confirm_discard_changes,
+                negativeAction = { layoutController.showPreviousLayoutOrQuit() },
+                neutralButton = R.string.action_cancel,
+                neutralAction = {})
         } else {
             layoutController.showPreviousLayoutOrQuit()
         }

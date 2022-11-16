@@ -15,22 +15,25 @@ class CustomSongsDbBuilder(private val userDataDao: UserDataDao) {
 
     fun buildCustom(uiResourceService: UiResourceService): CustomSongsRepository {
         val allCustomCategory = Category(
-                id = CategoryType.CUSTOM.id,
-                type = CategoryType.CUSTOM,
-                name = null,
-                custom = false,
-                songs = mutableListOf()
+            id = CategoryType.CUSTOM.id,
+            type = CategoryType.CUSTOM,
+            name = null,
+            custom = false,
+            songs = mutableListOf()
         )
         refillCategoryDisplayName(uiResourceService, allCustomCategory)
         val (customSongs, customSongsUncategorized) = assembleCustomSongs(allCustomCategory)
         return CustomSongsRepository(
-                songs = SimpleCache { customSongs },
-                uncategorizedSongs = SimpleCache { customSongsUncategorized },
-                allCustomCategory = allCustomCategory
+            songs = SimpleCache { customSongs },
+            uncategorizedSongs = SimpleCache { customSongsUncategorized },
+            allCustomCategory = allCustomCategory
         )
     }
 
-    private fun refillCategoryDisplayName(uiResourceService: UiResourceService, category: Category) {
+    private fun refillCategoryDisplayName(
+        uiResourceService: UiResourceService,
+        category: Category
+    ) {
         category.displayName = when {
             category.type.localeStringId != null ->
                 uiResourceService.resString(category.type.localeStringId)
@@ -44,15 +47,15 @@ class CustomSongsDbBuilder(private val userDataDao: UserDataDao) {
 
         // bind custom categories to songs
         userDataDao.customSongsDao.customCategories = customSongs
-                .asSequence()
-                .map { song ->
-                    song.categoryName
-                }.toSet()
-                .filterNotNull()
-                .filter { it.isNotEmpty() }
-                .map { categoryName ->
-                    CustomCategory(name = categoryName)
-                }.toList()
+            .asSequence()
+            .map { song ->
+                song.categoryName
+            }.toSet()
+            .filterNotNull()
+            .filter { it.isNotEmpty() }
+            .map { categoryName ->
+                CustomCategory(name = categoryName)
+            }.toList()
         val customCategoryFinder = FinderByTuple(userDataDao.customSongsDao.customCategories) {
             it.name
         }
@@ -67,8 +70,9 @@ class CustomSongsDbBuilder(private val userDataDao: UserDataDao) {
 
             customModelSongs.add(song)
 
-            val customCategory: CustomCategory? = customCategoryFinder.find(customSong.categoryName
-                    ?: "")
+            val customCategory: CustomCategory? = customCategoryFinder.find(
+                customSong.categoryName ?: ""
+            )
             if (customCategory == null) {
                 customSongsUncategorized.add(song)
             } else {

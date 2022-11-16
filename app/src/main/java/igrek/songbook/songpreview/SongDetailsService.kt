@@ -35,9 +35,24 @@ class SongDetailsService(
         val namespaceName = buildNamespaceName(song)
 
         val messageLines = mutableListOf<String>()
-        messageLines.add(uiResourceService.resString(R.string.song_details, path, songTitle, categories, namespaceName, songVersion, modificationDate))
+        messageLines.add(
+            uiResourceService.resString(
+                R.string.song_details,
+                path,
+                songTitle,
+                categories,
+                namespaceName,
+                songVersion,
+                modificationDate
+            )
+        )
         if (!preferredKey.isNullOrEmpty())
-            messageLines.add(uiResourceService.resString(R.string.song_details_preferred_key, preferredKey))
+            messageLines.add(
+                uiResourceService.resString(
+                    R.string.song_details_preferred_key,
+                    preferredKey
+                )
+            )
         if (!metre.isNullOrEmpty())
             messageLines.add(uiResourceService.resString(R.string.song_details_metre, metre))
         if (!comment.isNullOrEmpty())
@@ -45,10 +60,10 @@ class SongDetailsService(
 
         val message = messageLines.joinToString(separator = "\n")
         uiInfoService.dialogThreeChoices(
-                titleResId = R.string.song_details_title,
-                message = message,
-                positiveButton = R.string.action_info_ok, positiveAction = {},
-                neutralButton = R.string.song_action_more, neutralAction = { showMoreActions(song) },
+            titleResId = R.string.song_details_title,
+            message = message,
+            positiveButton = R.string.action_info_ok, positiveAction = {},
+            neutralButton = R.string.song_action_more, neutralAction = { showMoreActions(song) },
         )
     }
 
@@ -61,8 +76,8 @@ class SongDetailsService(
         }
 
         return listOf(namespaceName, displayCategories, song.title)
-                .filter { it.isNotEmpty() }
-                .joinToString(" / ")
+            .filter { it.isNotEmpty() }
+            .joinToString(" / ")
     }
 
     private fun buildNamespaceName(song: Song): String {

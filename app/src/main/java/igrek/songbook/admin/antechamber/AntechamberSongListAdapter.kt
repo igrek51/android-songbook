@@ -9,11 +9,10 @@ import android.widget.ImageButton
 import android.widget.TextView
 import igrek.songbook.R
 import igrek.songbook.persistence.general.model.Song
-import java.util.*
 
 class AntechamberSongListAdapter internal constructor(
-        context: Context,
-        _dataSource: List<Song>?
+    context: Context,
+    _dataSource: List<Song>?
 ) : ArrayAdapter<Song>(context, 0, ArrayList()) {
 
     private var dataSource: List<Song>? = null

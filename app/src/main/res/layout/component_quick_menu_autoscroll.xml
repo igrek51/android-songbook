@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
     android:orientation="vertical"
     android:paddingBottom="46dp"
-    android:descendantFocusability="afterDescendants"
-    >
+    android:descendantFocusability="afterDescendants">
 
-    <androidx.cardview.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -42,8 +39,7 @@
                     android:text="@string/start_autoscroll"
                     android:clickable="true"
                     android:focusable="true"
-                    android:focusableInTouchMode="false"
-                    />
+                    android:focusableInTouchMode="false" />
             </LinearLayout>
 
             <TextView
@@ -52,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
                 android:text="@string/settings_autoscroll_speed"
-                android:textAlignment="center"/>
+                android:textAlignment="center" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -73,7 +69,7 @@
                     android:focusable="true"
                     android:focusableInTouchMode="false"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/remove_circle"/>
+                    android:src="@drawable/remove_circle" />
 
                 <SeekBar
                     android:id="@+id/speedSeekbar"
@@ -84,8 +80,7 @@
                     android:layout_weight="1"
                     android:max="100000"
                     android:focusable="true"
-                    android:focusableInTouchMode="false"
-                    />
+                    android:focusableInTouchMode="false" />
 
                 <ImageButton
                     android:id="@+id/speedPlusButton"
@@ -99,7 +94,7 @@
                     android:focusable="true"
                     android:focusableInTouchMode="false"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/circle_add"/>
+                    android:src="@drawable/circle_add" />
             </LinearLayout>
 
         </LinearLayout>

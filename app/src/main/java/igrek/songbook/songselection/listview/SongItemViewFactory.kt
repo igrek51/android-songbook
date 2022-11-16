@@ -12,8 +12,8 @@ import igrek.songbook.songselection.search.SongSearchItem
 import igrek.songbook.songselection.tree.SongTreeItem
 
 class SongItemViewFactory(
-        private val inflater: LayoutInflater,
-        private val songContextMenuBuilder: SongContextMenuBuilder,
+    private val inflater: LayoutInflater,
+    private val songContextMenuBuilder: SongContextMenuBuilder,
 ) {
 
     fun createView(item: SongTreeItem, parent: ViewGroup): View {

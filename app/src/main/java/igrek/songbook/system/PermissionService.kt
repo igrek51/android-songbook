@@ -11,7 +11,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 
 class PermissionService(
-        activity: LazyInject<Activity> = appFactory.activity,
+    activity: LazyInject<Activity> = appFactory.activity,
 ) {
     private val activity by LazyExtractor(activity)
 
@@ -23,7 +23,11 @@ class PermissionService(
                 if (activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     true
                 } else {
-                    ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+                    ActivityCompat.requestPermissions(
+                        activity,
+                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                        1
+                    )
                     false
                 }
             } else {

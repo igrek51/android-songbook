@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<LinearLayout
-    android:id="@+id/songPreviewLinearLayout"
+<LinearLayout android:id="@+id/songPreviewLinearLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -10,8 +9,7 @@
     android:layout_gravity="center_horizontal"
     android:fillViewport="true"
     android:orientation="vertical"
-    android:descendantFocusability="afterDescendants"
-    >
+    android:descendantFocusability="afterDescendants">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -30,20 +28,22 @@
             app:contentInsetRight="0dp"
             app:contentInsetStart="0dp">
 
-            <LinearLayout android:id="@+id/toolbarVerticalLayout"
-                          android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:layout_margin="0dp"
-                          android:fillViewport="true"
-                          android:orientation="vertical"
-                          android:padding="0dp">
+            <LinearLayout
+                android:id="@+id/toolbarVerticalLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="0dp"
+                android:fillViewport="true"
+                android:orientation="vertical"
+                android:padding="0dp">
 
-                <LinearLayout android:id="@+id/toolbarHorizontalLayout"
-                              android:layout_width="match_parent"
-                              android:layout_height="34dp"
-                              android:fillViewport="true"
-                              android:orientation="horizontal"
-                              android:padding="0dp">
+                <LinearLayout
+                    android:id="@+id/toolbarHorizontalLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="34dp"
+                    android:fillViewport="true"
+                    android:orientation="horizontal"
+                    android:padding="0dp">
 
                     <ImageButton
                         android:id="@+id/navMenuButton"
@@ -57,7 +57,7 @@
                         android:focusable="true"
                         android:focusableInTouchMode="false"
                         android:scaleType="centerInside"
-                        android:src="@drawable/menu"/>
+                        android:src="@drawable/menu" />
 
                     <ImageButton
                         android:id="@+id/songInfoButton"
@@ -85,8 +85,7 @@
                         android:focusable="true"
                         android:focusableInTouchMode="false"
                         android:scaleType="centerInside"
-                        android:src="@drawable/grid"
-                        />
+                        android:src="@drawable/grid" />
 
                     <ImageButton
                         android:id="@+id/setFavouriteButton"
@@ -100,8 +99,7 @@
                         android:focusable="true"
                         android:focusableInTouchMode="false"
                         android:scaleType="centerInside"
-                        android:src="@drawable/star_border"
-                        />
+                        android:src="@drawable/star_border" />
 
                     <ImageButton
                         android:id="@+id/transposeButton"
@@ -115,8 +113,7 @@
                         android:focusable="true"
                         android:focusableInTouchMode="false"
                         android:scaleType="centerInside"
-                        android:src="@drawable/transpose"
-                        />
+                        android:src="@drawable/transpose" />
 
                     <ImageButton
                         android:id="@+id/autoscrollButton"
@@ -130,8 +127,7 @@
                         android:focusable="true"
                         android:focusableInTouchMode="false"
                         android:scaleType="centerInside"
-                        android:src="@drawable/scroll1"
-                        />
+                        android:src="@drawable/scroll1" />
 
                     <ImageButton
                         android:id="@+id/screenShareButton"
@@ -145,8 +141,7 @@
                         android:focusable="true"
                         android:focusableInTouchMode="false"
                         android:scaleType="centerInside"
-                        android:src="@drawable/bluetooth"
-                        />
+                        android:src="@drawable/bluetooth" />
 
                     <ImageButton
                         android:id="@+id/moreActionsButton"
@@ -160,8 +155,7 @@
                         android:focusable="true"
                         android:focusableInTouchMode="false"
                         android:scaleType="centerInside"
-                        android:src="@drawable/more"
-                        />
+                        android:src="@drawable/more" />
 
                 </LinearLayout>
 
@@ -172,8 +166,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
                     android:paddingTop="0dp"
-                    android:textSize="16sp"
-                    />
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -222,8 +215,7 @@
             app:backgroundTint="@color/colorFloatingButton"
             app:elevation="6dp"
             app:fabSize="mini"
-            app:rippleColor="@color/colorFloatingButtonClicked"
-            />
+            app:rippleColor="@color/colorFloatingButtonClicked" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

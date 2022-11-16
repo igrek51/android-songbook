@@ -6,9 +6,9 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.buttons.MediaButtonBehaviours
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import igrek.songbook.settings.homescreen.HomeScreenEnum
 import igrek.songbook.settings.enums.ChordsInstrument
 import igrek.songbook.settings.enums.CustomSongsOrdering
+import igrek.songbook.settings.homescreen.HomeScreenEnum
 import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.DisplayStyle
@@ -58,7 +58,7 @@ class PreferencesState(
 }
 
 class PreferenceDelegate<T : Any>(
-        private val field: PreferencesField
+    private val field: PreferencesField
 ) : ReadWriteProperty<PreferencesState, T> {
 
     override fun getValue(thisRef: PreferencesState, property: KProperty<*>): T {

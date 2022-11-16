@@ -13,9 +13,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class CrashlyticsLogger(
-        activity: LazyInject<Activity> = appFactory.activity,
-        appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    activity: LazyInject<Activity> = appFactory.activity,
+    appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
 ) {
     private val activity by LazyExtractor(activity)
     private val appLanguageService by LazyExtractor(appLanguageService)
@@ -29,7 +29,8 @@ class CrashlyticsLogger(
 
     fun sendCrashlytics() {
         try {
-            val deviceId = Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID)
+            val deviceId =
+                Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID)
             crashlytics.setUserId(deviceId)
             setCustomKeys()
         } catch (t: Throwable) {
@@ -41,7 +42,10 @@ class CrashlyticsLogger(
         crashlytics.setCustomKey("locale", appLanguageService.getCurrentLocale().language)
         val dbVersionNumber = songsRepository.publicSongsRepo.versionNumber.toString()
         crashlytics.setCustomKey("dbVersion", dbVersionNumber)
-        crashlytics.setCustomKey("buildConfig", if (BuildConfig.DEBUG) "debug" else "release") // build config
+        crashlytics.setCustomKey(
+            "buildConfig",
+            if (BuildConfig.DEBUG) "debug" else "release"
+        ) // build config
         crashlytics.setCustomKey("buildDate", BuildConfig.BUILD_DATE.formatYYYMMDD())
     }
 

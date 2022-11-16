@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
     android:orientation="vertical"
     android:weightSum="1"
-    android:descendantFocusability="afterDescendants"
-    >
+    android:descendantFocusability="afterDescendants">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -27,8 +25,7 @@
             app:contentInsetEnd="0dp"
             app:contentInsetLeft="0dp"
             app:contentInsetRight="0dp"
-            app:contentInsetStart="0dp"
-            >
+            app:contentInsetStart="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -51,7 +48,7 @@
                     android:focusableInTouchMode="false"
                     android:padding="8dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/menu"/>
+                    android:src="@drawable/menu" />
 
                 <ImageButton
                     android:id="@+id/goBackButton"
@@ -70,7 +67,7 @@
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/arrow_back"/>
+                    android:src="@drawable/arrow_back" />
 
                 <TextView
                     android:id="@+id/tabTitleLabel"
@@ -103,8 +100,7 @@
                         android:inputType="text"
                         android:paddingBottom="16dp"
                         android:paddingTop="16dp"
-                        android:scrollbars="vertical"
-                        />
+                        android:scrollbars="vertical" />
 
                     <ImageButton
                         android:id="@+id/searchFilterClearButton"
@@ -120,7 +116,7 @@
                         android:focusableInTouchMode="false"
                         android:padding="8dp"
                         android:scaleType="centerInside"
-                        android:src="@drawable/close"/>
+                        android:src="@drawable/close" />
                 </FrameLayout>
 
                 <ImageButton
@@ -187,7 +183,7 @@
         <igrek.songbook.custom.list.CustomSongListView
             android:id="@+id/itemsListView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <TextView
             android:id="@+id/emptyListLabel"
@@ -197,8 +193,7 @@
             android:layout_centerInParent="true"
             android:gravity="center"
             android:text="@string/empty_custom_songs"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
     </RelativeLayout>
 
 </RelativeLayout>

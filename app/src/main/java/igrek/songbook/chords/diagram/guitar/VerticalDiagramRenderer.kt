@@ -4,7 +4,7 @@ class VerticalDiagramRenderer : DiagramRenderer {
 
     override fun render(frets: List<DisplayStringFret>): String {
         val display2d = frets.reversed()
-                .mapIndexed { index, it -> it.display(index == frets.lastIndex) }
+            .mapIndexed { index, it -> it.display(index == frets.lastIndex) }
 
         val flatRows = MutableList(display2d.first().size) { "" }
         display2d.forEach { column ->

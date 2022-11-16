@@ -23,8 +23,8 @@ import java.util.concurrent.TimeUnit
 
 @SuppressLint("CheckResult")
 class QuickMenuAutoscroll(
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
 ) {
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val autoscrollService by LazyExtractor(autoscrollService)
@@ -53,17 +53,17 @@ class QuickMenuAutoscroll(
 
     init {
         this.autoscrollService.scrollStateSubject
-                .debounce(200, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    updateView()
-                }, UiErrorHandler::handleError)
+            .debounce(200, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                updateView()
+            }, UiErrorHandler::handleError)
         this.autoscrollService.scrollSpeedAdjustmentSubject
-                .debounce(200, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    updateView()
-                }, UiErrorHandler::handleError)
+            .debounce(200, TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                updateView()
+            }, UiErrorHandler::handleError)
     }
 
     fun setQuickMenuView(quickMenuView: View) {
@@ -81,9 +81,18 @@ class QuickMenuAutoscroll(
         val speedLabel = quickMenuView.findViewById<TextView>(R.id.speedLabel)
         val speedSeekbar = quickMenuView.findViewById<SeekBar>(R.id.speedSeekbar)
         val autoscrollSpeed = autoscrollService.autoscrollSpeed
-        autoscrollSpeedSlider = object : SliderController(speedSeekbar, speedLabel, autoscrollSpeed, AutoscrollService.MIN_SPEED, AutoscrollService.MAX_SPEED) {
+        autoscrollSpeedSlider = object : SliderController(
+            speedSeekbar,
+            speedLabel,
+            autoscrollSpeed,
+            AutoscrollService.MIN_SPEED,
+            AutoscrollService.MAX_SPEED
+        ) {
             override fun generateLabelText(value: Float): String {
-                return uiResourceService.resString(R.string.autoscroll_panel_speed, roundDecimal(value, "0.000"))
+                return uiResourceService.resString(
+                    R.string.autoscroll_panel_speed,
+                    roundDecimal(value, "0.000")
+                )
             }
         }
         val speedMinusButton = quickMenuView.findViewById<ImageButton>(R.id.speedMinusButton)
@@ -100,7 +109,8 @@ class QuickMenuAutoscroll(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     saveSettings()
-                }, UiErrorHandler::handleError))
+                }, UiErrorHandler::handleError)
+        )
     }
 
     private fun addAutoscrollSpeed(diff: Float) {
@@ -125,7 +135,8 @@ class QuickMenuAutoscroll(
             if (autoscrollService.isRunning) {
                 autoscrollToggleButton?.text = uiResourceService.resString(R.string.stop_autoscroll)
             } else {
-                autoscrollToggleButton?.text = uiResourceService.resString(R.string.start_autoscroll)
+                autoscrollToggleButton?.text =
+                    uiResourceService.resString(R.string.start_autoscroll)
             }
             // set sliders value
             val autoscrollSpeed = autoscrollService.autoscrollSpeed

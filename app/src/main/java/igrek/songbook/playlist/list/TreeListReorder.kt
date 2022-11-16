@@ -104,7 +104,9 @@ class TreeListReorder(private val listView: PlaylistListView) {
 
     fun handleItemDragging() {
 
-        val dyTotal = lastTouchY - startTouchY + ((listView.scrollHandler?.scrollOffset ?: 0) - (scrollStart ?: 0))
+        val dyTotal =
+            lastTouchY - startTouchY + ((listView.scrollHandler?.scrollOffset ?: 0) - (scrollStart
+                ?: 0))
 
         if (draggedItemViewTop == null) {
             logger.error("draggedItemViewTop = null")
@@ -201,7 +203,12 @@ class TreeListReorder(private val listView: PlaylistListView) {
             hoverBitmap = null
             draggedItemViewTop = null
 
-            val hoverViewAnimator = ObjectAnimator.ofObject(hoverBitmapAnimation, "bounds", rectBoundsEvaluator, hoverBitmapBoundsCopy)
+            val hoverViewAnimator = ObjectAnimator.ofObject(
+                hoverBitmapAnimation,
+                "bounds",
+                rectBoundsEvaluator,
+                hoverBitmapBoundsCopy
+            )
             hoverViewAnimator.addUpdateListener { listView.invalidate() }
             hoverViewAnimator.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator) {
@@ -267,7 +274,12 @@ class TreeListReorder(private val listView: PlaylistListView) {
 
         private val rectBoundsEvaluator = object : TypeEvaluator<Rect> {
             override fun evaluate(fraction: Float, startValue: Rect, endValue: Rect): Rect {
-                return Rect(interpolate(startValue.left, endValue.left, fraction), interpolate(startValue.top, endValue.top, fraction), interpolate(startValue.right, endValue.right, fraction), interpolate(startValue.bottom, endValue.bottom, fraction))
+                return Rect(
+                    interpolate(startValue.left, endValue.left, fraction),
+                    interpolate(startValue.top, endValue.top, fraction),
+                    interpolate(startValue.right, endValue.right, fraction),
+                    interpolate(startValue.bottom, endValue.bottom, fraction)
+                )
             }
 
             fun interpolate(start: Int, end: Int, fraction: Float): Int {

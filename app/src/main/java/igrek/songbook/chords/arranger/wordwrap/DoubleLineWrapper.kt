@@ -20,21 +20,30 @@ class DoubleLineWrapper(
         val (wrappedChordWords, wrappedTextWords) = wrapDoubleWords(chordWords, textWords)
 
         val chordLines: List<Line> = wrappedChordWords.toLines()
-                .clearBlanksOnEnd()
-                .addLineWrappers(screenWRelative, lengthMapper)
+            .clearBlanksOnEnd()
+            .addLineWrappers(screenWRelative, lengthMapper)
         val textLines: List<Line> = wrappedTextWords.toLines()
-                .clearBlanksOnEnd()
-                .addLineWrappers(screenWRelative, lengthMapper)
+            .clearBlanksOnEnd()
+            .addLineWrappers(screenWRelative, lengthMapper)
         val lines = chordLines zipUneven textLines
 
         return lines.nonEmptyLines()
     }
 
-    private fun wrapDoubleWords(chords: List<Word>, texts: List<Word>): Pair<List<List<Word>>, List<List<Word>>> {
+    private fun wrapDoubleWords(
+        chords: List<Word>,
+        texts: List<Word>
+    ): Pair<List<List<Word>>, List<List<Word>>> {
         when {
-            chords.end() <= screenWRelative && texts.end() <= screenWRelative -> return listOf(chords) to listOf(texts)
-            chords.end() <= screenWRelative -> return wrapSingleWords(chords) to wrapSingleWords(texts)
-            texts.end() <= screenWRelative -> return wrapSingleWords(chords) to wrapSingleWords(texts)
+            chords.end() <= screenWRelative && texts.end() <= screenWRelative -> {
+                return listOf(chords) to listOf(texts)
+            }
+            chords.end() <= screenWRelative -> {
+                return wrapSingleWords(chords) to wrapSingleWords(texts)
+            }
+            texts.end() <= screenWRelative -> {
+                return wrapSingleWords(chords) to wrapSingleWords(texts)
+            }
         }
 
         val (beforeC, middleC, afterC) = chords.splitByXLimit(screenWRelative)

@@ -6,9 +6,8 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.preferences.PreferencesState
-import java.util.LinkedHashMap
 
-class SettingsEnumService (
+class SettingsEnumService(
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {

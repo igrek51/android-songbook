@@ -11,8 +11,8 @@ import igrek.songbook.persistence.repository.SongsRepository
 import io.reactivex.subjects.PublishSubject
 
 class FavouriteSongsService(
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
 ) {
     private val songsRepository by LazyExtractor(songsRepository)
     private val uiInfoService by LazyExtractor(uiInfoService)

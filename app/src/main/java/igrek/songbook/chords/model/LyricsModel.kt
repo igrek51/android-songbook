@@ -9,7 +9,7 @@ data class LyricsModel(
     }
 
     fun displayString(): String {
-        return lines.joinToString (separator = "\n") { it.displayString() }
+        return lines.joinToString(separator = "\n") { it.displayString() }
     }
 }
 
@@ -21,7 +21,7 @@ data class LyricsLine(
     }
 
     fun displayString(): String {
-        return fragments.joinToString (separator = "") { it.displayString() }
+        return fragments.joinToString(separator = "") { it.displayString() }
     }
 
     val isBlank: Boolean get() = fragments.all { fragment -> fragment.text.isBlank() }
@@ -68,7 +68,13 @@ data class LyricsFragment(
         }
 
         fun chords(text: String, x: Float = 0f, width: Float = 0f): LyricsFragment {
-            return LyricsFragment(text, LyricsTextType.CHORDS, x = x, width = width, chordFragments = listOf())
+            return LyricsFragment(
+                text,
+                LyricsTextType.CHORDS,
+                x = x,
+                width = width,
+                chordFragments = listOf(),
+            )
         }
     }
 }

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory android:title="@string/settings_general_section">
         <ListPreference
             android:key="applicationLanguage"
             android:title="@string/settings_language"
             android:summary="%s"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false" />
         <ListPreference
             android:key="homeScreen"
             android:title="@string/settings_home_screen"
@@ -20,7 +20,7 @@
             android:key="chordsNotation"
             android:title="@string/settings_chords_notation"
             android:summary="%s"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false" />
         <SwitchPreference
             android:key="forceSharpChords"
             android:title="@string/settings_force_sharp_chords"
@@ -37,7 +37,7 @@
             android:key="chordsInstrument"
             android:title="@string/settings_chords_instrument"
             android:summary="%s"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false" />
         <ListPreference
             android:key="chordDiagramStyle"
             android:title="@string/settings_chord_digram_style"
@@ -50,7 +50,7 @@
             android:key="colorScheme"
             android:title="@string/settings_color_scheme"
             android:summary="%s"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false" />
         <SeekBarPreference
             android:key="fontSize"
             android:title="@string/settings_fontsize"
@@ -98,7 +98,7 @@
             android:key="autoscrollIndividualSpeed"
             android:title="@string/settings_autoscroll_restore_speed"
             android:summary="@string/settings_autoscroll_restore_speed_hint"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false" />
         <SwitchPreference
             android:key="autoscrollAutostart"
             android:title="@string/settings_autoscroll_autostart"
@@ -116,7 +116,7 @@
             android:key="restoreTransposition"
             android:title="@string/settings_restore_transposition"
             android:summary="@string/settings_restore_transposition_hint"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/settings_custom_songs">

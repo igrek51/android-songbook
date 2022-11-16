@@ -11,12 +11,11 @@ import igrek.songbook.R
 import igrek.songbook.layout.list.ListItemClickListener
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.user.custom.CustomCategory
-import java.util.*
 
 class CustomSongItemAdapter internal constructor(
-        context: Context,
-        _dataSource: List<CustomSongListItem>?,
-        private val onClickListener: ListItemClickListener<CustomSongListItem>
+    context: Context,
+    _dataSource: List<CustomSongListItem>?,
+    private val onClickListener: ListItemClickListener<CustomSongListItem>,
 ) : ArrayAdapter<CustomSongListItem>(context, 0, ArrayList()) {
 
     var dataSource: List<CustomSongListItem>? = null

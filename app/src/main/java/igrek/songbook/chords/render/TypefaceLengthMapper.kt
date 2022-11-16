@@ -7,7 +7,10 @@ open class TypefaceLengthMapper(
     private val boldCharLengths: HashMap<Char, Float> = hashMapOf(),
 ) {
 
-    constructor(vararg pairs: Pair<Char, Float>) : this(HashMap(pairs.toMap()), HashMap(pairs.toMap()))
+    constructor(vararg pairs: Pair<Char, Float>) : this(
+        HashMap(pairs.toMap()),
+        HashMap(pairs.toMap())
+    )
 
     fun put(type: LyricsTextType, char: Char, length: Float) {
         val charLengths: HashMap<Char, Float> = when (type) {

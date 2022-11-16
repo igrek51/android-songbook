@@ -49,23 +49,29 @@ class CustomSongService(
     fun exportSongContent(content: String, title: String, notation: ChordsNotation) {
         val filename = title.takeIf { it.lowercase().endsWith(".txt") } ?: "$title.txt"
         val cleanTitle = title.replace("\"", "").replace("{", "").replace("}", "")
-        val exportContent = "{title: \"$cleanTitle\"}\n{chords_notation: ${notation.id}}\n" + content
+        val exportContent =
+            "{title: \"$cleanTitle\"}\n{chords_notation: ${notation.id}}\n" + content
         songExportFileChooser.showFileChooser(exportContent, filename) {
             uiInfoService.showInfo(R.string.song_exported)
         }
     }
 
-    fun addCustomSong(title: String, customCategoryName: String?, content: String, chordsNotation: ChordsNotation): Song {
+    fun addCustomSong(
+        title: String,
+        customCategoryName: String?,
+        content: String,
+        chordsNotation: ChordsNotation,
+    ): Song {
         val now: Long = Date().time
         val customSong = CustomSong(
-                id = 0,
-                title = title,
-                categoryName = customCategoryName,
-                content = content,
-                versionNumber = 1,
-                createTime = now,
-                updateTime = now,
-                chordsNotation = chordsNotation
+            id = 0,
+            title = title,
+            categoryName = customCategoryName,
+            content = content,
+            versionNumber = 1,
+            createTime = now,
+            updateTime = now,
+            chordsNotation = chordsNotation,
         )
         songsRepository.customSongsDao.saveCustomSong(customSong)
 
@@ -76,7 +82,13 @@ class CustomSongService(
         return song
     }
 
-    fun updateSong(song: Song, songTitle: String, customCategoryName: String?, songContent: String?, chordsNotation: ChordsNotation) {
+    fun updateSong(
+        song: Song,
+        songTitle: String,
+        customCategoryName: String?,
+        songContent: String?,
+        chordsNotation: ChordsNotation,
+    ) {
         song.title = songTitle
         song.content = songContent
         song.customCategoryName = customCategoryName
@@ -115,8 +127,10 @@ class CustomSongService(
 
         val newModelSong = songsRepository.customSongsDao.saveCustomSong(newSong)
 
-        uiInfoService.showInfoAction(R.string.song_copied_as_custom,
-                actionResId = R.string.song_copied_edit_it) {
+        uiInfoService.showInfoAction(
+            R.string.song_copied_as_custom,
+            actionResId = R.string.song_copied_edit_it,
+        ) {
             showEditSongScreen(newModelSong)
         }
         return newSong

@@ -10,12 +10,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class RoomChatListView(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = android.R.attr.listViewStyle,
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = android.R.attr.listViewStyle,
 ) : GenericListView<ChatMessage>(
-        context, attrs, defStyleAttr,
-        itemViewRes = R.layout.list_item_generic_string,
+    context, attrs, defStyleAttr,
+    itemViewRes = R.layout.list_item_generic_string,
 ) {
 
     var onClickCallback: (item: ChatMessage) -> Unit = {}
@@ -23,11 +23,16 @@ class RoomChatListView(
 
     constructor(context: Context) : this(context, null, android.R.attr.listViewStyle)
 
-    constructor(context: Context, attrs: AttributeSet) : this(context, attrs, android.R.attr.listViewStyle)
+    constructor(context: Context, attrs: AttributeSet) : this(
+        context,
+        attrs,
+        android.R.attr.listViewStyle
+    )
 
     override fun buildView(view: View, item: ChatMessage) {
         val timeFormatted = dateFormat.format(item.time)
-        view.findViewById<TextView>(R.id.itemLabel)?.text = "[$timeFormatted] ${item.author}: ${item.message}"
+        view.findViewById<TextView>(R.id.itemLabel)?.text =
+            "[$timeFormatted] ${item.author}: ${item.message}"
     }
 
     override fun onClick(item: ChatMessage) {

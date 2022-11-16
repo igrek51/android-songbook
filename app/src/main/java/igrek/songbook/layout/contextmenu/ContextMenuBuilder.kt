@@ -19,13 +19,13 @@ class ContextMenuBuilder(
         val actionNames = actions.map { action -> actionName(action) }.toTypedArray()
 
         val builder = AlertDialog.Builder(activity)
-                .setTitle(uiResourceService.resString(titleResId))
-                .setItems(actionNames) { _, item ->
-                    SafeExecutor {
-                        actions[item].executor()
-                    }
+            .setTitle(uiResourceService.resString(titleResId))
+            .setItems(actionNames) { _, item ->
+                SafeExecutor {
+                    actions[item].executor()
                 }
-                .setCancelable(true)
+            }
+            .setCancelable(true)
         if (!activity.isFinishing) {
             builder.create().show()
         }
@@ -35,12 +35,12 @@ class ContextMenuBuilder(
         val actionNames = actions.map { action -> actionName(action) }.toTypedArray()
 
         val builder = AlertDialog.Builder(activity)
-                .setItems(actionNames) { _, item ->
-                    SafeExecutor {
-                        actions[item].executor()
-                    }
+            .setItems(actionNames) { _, item ->
+                SafeExecutor {
+                    actions[item].executor()
                 }
-                .setCancelable(true)
+            }
+            .setCancelable(true)
         if (!activity.isFinishing) {
             builder.create().show()
         }
@@ -54,9 +54,9 @@ class ContextMenuBuilder(
     }
 
     data class Action(
-            var name: String?,
-            val nameResId: Int?,
-            val executor: () -> Unit,
+        var name: String?,
+        val nameResId: Int?,
+        val executor: () -> Unit,
     ) {
 
         constructor(name: String, executor: () -> Unit) : this(name, null, executor)

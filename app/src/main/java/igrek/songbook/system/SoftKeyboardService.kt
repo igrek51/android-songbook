@@ -10,11 +10,12 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 
 class SoftKeyboardService(
-        appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
+    appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
 ) {
     private val activity by LazyExtractor(appCompatActivity)
 
-    private val imm: InputMethodManager? = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+    private val imm: InputMethodManager? =
+        activity.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
     private val logger = LoggerFactory.logger
 
     fun hideSoftKeyboard(view: View?) {

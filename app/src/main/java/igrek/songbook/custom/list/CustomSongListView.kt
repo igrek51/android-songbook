@@ -9,7 +9,8 @@ import android.widget.ListView
 import igrek.songbook.layout.list.ListItemClickListener
 import igrek.songbook.songselection.listview.ListScrollPosition
 
-class CustomSongListView : ListView, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+class CustomSongListView : ListView, AdapterView.OnItemClickListener,
+    AdapterView.OnItemLongClickListener {
 
     private var adapter: CustomSongItemAdapter? = null
     private var onClickListener: ListItemClickListener<CustomSongListItem>? = null
@@ -36,7 +37,11 @@ class CustomSongListView : ListView, AdapterView.OnItemClickListener, AdapterVie
 
     constructor(context: Context) : super(context)
 
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle)
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(
+        context,
+        attrs,
+        defStyle,
+    )
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
@@ -59,7 +64,12 @@ class CustomSongListView : ListView, AdapterView.OnItemClickListener, AdapterVie
             onClickListener!!.onItemClick(item!!)
     }
 
-    override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
+    override fun onItemLongClick(
+        parent: AdapterView<*>,
+        view: View,
+        position: Int,
+        id: Long,
+    ): Boolean {
         val item = adapter!!.getItem(position)
         if (onClickListener != null)
             onClickListener!!.onItemLongClick(item!!)

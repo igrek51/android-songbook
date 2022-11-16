@@ -94,7 +94,7 @@ class SettingsFragment(
             onLoad = { preferencesState.appLanguage.langCode },
             onSave = { id: String ->
                 preferencesState.appLanguage = AppLanguage.parseByLangCode(id)
-                        ?: AppLanguage.DEFAULT
+                    ?: AppLanguage.DEFAULT
             }
         )
 
@@ -103,7 +103,7 @@ class SettingsFragment(
             onLoad = { preferencesState.chordsInstrument.id.toString() },
             onSave = { id: String ->
                 preferencesState.chordsInstrument = ChordsInstrument.parseById(id.toLong())
-                        ?: ChordsInstrument.default
+                    ?: ChordsInstrument.default
             }
         )
 
@@ -120,7 +120,7 @@ class SettingsFragment(
             onLoad = { preferencesState.chordsNotation.id.toString() },
             onSave = { id: String ->
                 preferencesState.chordsNotation = ChordsNotation.parseById(id.toLong())
-                        ?: ChordsNotation.default
+                    ?: ChordsNotation.default
             }
         )
 
@@ -137,7 +137,7 @@ class SettingsFragment(
             onLoad = { preferencesState.fontTypeface.id },
             onSave = { id: String ->
                 preferencesState.fontTypeface = FontTypeface.parseById(id)
-                        ?: FontTypeface.default
+                    ?: FontTypeface.default
             }
         )
 
@@ -146,7 +146,7 @@ class SettingsFragment(
             onLoad = { preferencesState.chordsEditorFontTypeface.id },
             onSave = { id: String ->
                 preferencesState.chordsEditorFontTypeface = FontTypeface.parseById(id)
-                        ?: FontTypeface.MONOSPACE
+                    ?: FontTypeface.MONOSPACE
             }
         )
 
@@ -155,17 +155,22 @@ class SettingsFragment(
             onLoad = { preferencesState.colorScheme.id.toString() },
             onSave = { id: String ->
                 preferencesState.colorScheme = ColorScheme.parseById(id.toLong())
-                        ?: ColorScheme.default
+                    ?: ColorScheme.default
             }
         )
 
-        setupSeekBarPreference("autoscrollSpeed", min = AutoscrollService.MIN_SPEED, max = AutoscrollService.MAX_SPEED,
+        setupSeekBarPreference("autoscrollSpeed",
+            min = AutoscrollService.MIN_SPEED,
+            max = AutoscrollService.MAX_SPEED,
             onLoad = { preferencesState.autoscrollSpeed },
             onSave = { value: Float ->
                 preferencesState.autoscrollSpeed = value
             },
             stringConverter = { value: Float ->
-                uiResourceService.resString(R.string.settings_autoscroll_speed_value, decimal3(value))
+                uiResourceService.resString(
+                    R.string.settings_autoscroll_speed_value,
+                    decimal3(value)
+                )
             }
         )
 
@@ -233,7 +238,8 @@ class SettingsFragment(
                 if (ids.isEmpty())
                     uiResourceService.resString(R.string.none)
                 else
-                    ids.map { id -> entriesMap[id].orEmpty() }.sorted().joinToString(separator = ", ")
+                    ids.map { id -> entriesMap[id].orEmpty() }.sorted()
+                        .joinToString(separator = ", ")
             }
         )
 
@@ -329,7 +335,8 @@ class SettingsFragment(
             mediaButtonService.mediaButtonBehavioursEntries(),
             onLoad = { preferencesState.mediaButtonBehaviour.id.toString() },
             onSave = { id: String ->
-                preferencesState.mediaButtonBehaviour = MediaButtonBehaviours.mustParseById(id.toLong())
+                preferencesState.mediaButtonBehaviour =
+                    MediaButtonBehaviours.mustParseById(id.toLong())
             }
         )
 
@@ -337,7 +344,8 @@ class SettingsFragment(
             settingsEnumService.customSongsOrderingStringEntries(),
             onLoad = { preferencesState.customSongsOrdering.id.toString() },
             onSave = { id: String ->
-                preferencesState.customSongsOrdering = CustomSongsOrdering.mustParseById(id.toLong())
+                preferencesState.customSongsOrdering =
+                    CustomSongsOrdering.mustParseById(id.toLong())
             }
         )
 
@@ -357,7 +365,8 @@ class SettingsFragment(
     }
 
     private fun openPrivacyPolicy() {
-        val uri = Uri.parse("https://docs.google.com/document/d/e/2PACX-1vTRgTqRx6Cwbn_uuLXCuad9YEK3qY7XNxMkil26ZBV5XZ_qn6L-CaXu3M39k-Gc6OErnCmsrY8QPT8e/pub")
+        val uri =
+            Uri.parse("https://docs.google.com/document/d/e/2PACX-1vTRgTqRx6Cwbn_uuLXCuad9YEK3qY7XNxMkil26ZBV5XZ_qn6L-CaXu3M39k-Gc6OErnCmsrY8QPT8e/pub")
         val i = Intent(Intent.ACTION_VIEW, uri)
         activity.startActivity(i)
     }
@@ -378,33 +387,34 @@ class SettingsFragment(
             excludeLanguagesPreference.values = emptySet()
         } else {
             excludeLanguagesPreference.values = excludeLanguagesPreference.entryValues
-                    .map { s -> s.toString() }.toSet()
+                .map { s -> s.toString() }.toSet()
         }
         excludeLanguagesPreference.callChangeListener(excludeLanguagesPreference.values)
     }
 
     private fun setupListPreference(
-            key: String,
-            entriesMap: LinkedHashMap<String, String>,
-            onLoad: () -> String?,
-            onSave: (id: String) -> Unit,
+        key: String,
+        entriesMap: LinkedHashMap<String, String>,
+        onLoad: () -> String?,
+        onSave: (id: String) -> Unit,
     ) {
         val preference = findPreference(key) as ListPreference
         preference.entryValues = entriesMap.keys.toTypedArray()
         preference.entries = entriesMap.values.toTypedArray()
-        preference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-            onSave(newValue.toString())
-            true
-        }
+        preference.onPreferenceChangeListener =
+            Preference.OnPreferenceChangeListener { _, newValue ->
+                onSave(newValue.toString())
+                true
+            }
         preference.value = onLoad()
     }
 
     private fun setupMultiListPreference(
-            key: String,
-            entriesMap: LinkedHashMap<String, String>,
-            onLoad: () -> Set<String>?,
-            onSave: (ids: Set<String>) -> Unit,
-            stringConverter: (ids: Set<String>, entriesMap: LinkedHashMap<String, String>) -> String
+        key: String,
+        entriesMap: LinkedHashMap<String, String>,
+        onLoad: () -> Set<String>?,
+        onSave: (ids: Set<String>) -> Unit,
+        stringConverter: (ids: Set<String>, entriesMap: LinkedHashMap<String, String>) -> String
     ): MultiSelectListPreference {
         val preference = findPreference(key) as MultiSelectListPreference
         preference.entryValues = entriesMap.keys.toTypedArray()
@@ -414,15 +424,16 @@ class SettingsFragment(
             preference.values = onLoad()
         }
 
-        preference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { pref, newValue ->
-            if (newValue != null && newValue is Set<*>) {
-                @Suppress("unchecked_cast")
-                val newSet = newValue as Set<String>
-                onSave(newSet)
-                pref.summary = stringConverter(newSet, entriesMap)
+        preference.onPreferenceChangeListener =
+            Preference.OnPreferenceChangeListener { pref, newValue ->
+                if (newValue != null && newValue is Set<*>) {
+                    @Suppress("unchecked_cast")
+                    val newSet = newValue as Set<String>
+                    onSave(newSet)
+                    pref.summary = stringConverter(newSet, entriesMap)
+                }
+                true
             }
-            true
-        }
         preference.summary = stringConverter(preference.values, entriesMap)
         return preference
     }
@@ -439,12 +450,12 @@ class SettingsFragment(
     }
 
     private fun setupSeekBarPreference(
-            key: String,
-            min: Number,
-            max: Number,
-            onLoad: () -> Float,
-            onSave: (value: Float) -> Unit,
-            stringConverter: (value: Float) -> String,
+        key: String,
+        min: Number,
+        max: Number,
+        onLoad: () -> Float,
+        onSave: (value: Float) -> Unit,
+        stringConverter: (value: Float) -> String,
     ) {
         val preference = findPreference(key) as SeekBarPreference
         preference.isAdjustable = true
@@ -453,32 +464,34 @@ class SettingsFragment(
         val minF = min.toFloat()
         val maxF = max.toFloat()
         preference.value = calculateProgress(minF, maxF, currentValueF)
-        preference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { pref, newValue ->
-            val progress = newValue.toString().toFloat() / SEEKBAR_RESOLUTION
-            val valueF = progress * (maxF - minF) + minF
-            pref.summary = stringConverter(valueF)
-            onSave(valueF)
-            true
-        }
+        preference.onPreferenceChangeListener =
+            Preference.OnPreferenceChangeListener { pref, newValue ->
+                val progress = newValue.toString().toFloat() / SEEKBAR_RESOLUTION
+                val valueF = progress * (maxF - minF) + minF
+                pref.summary = stringConverter(valueF)
+                onSave(valueF)
+                true
+            }
         preference.summary = stringConverter(currentValueF)
     }
 
     private fun setupSwitchPreference(
-            key: String,
-            onLoad: () -> Boolean,
-            onSave: (value: Boolean) -> Unit,
+        key: String,
+        onLoad: () -> Boolean,
+        onSave: (value: Boolean) -> Unit,
     ) {
         val preference = findPreference(key) as SwitchPreference
         preference.isChecked = onLoad()
-        preference.onPreferenceChangeListener = Preference.OnPreferenceChangeListener { _, newValue ->
-            onSave(newValue as Boolean)
-            true
-        }
+        preference.onPreferenceChangeListener =
+            Preference.OnPreferenceChangeListener { _, newValue ->
+                onSave(newValue as Boolean)
+                true
+            }
     }
 
     private fun setupClickPreference(
-            key: String,
-            onClick: () -> Unit,
+        key: String,
+        onClick: () -> Unit,
     ) {
         val button = findPreference(key)
         button.onPreferenceClickListener = Preference.OnPreferenceClickListener {

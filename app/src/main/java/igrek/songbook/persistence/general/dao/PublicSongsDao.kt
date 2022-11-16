@@ -30,7 +30,11 @@ class PublicSongsDao(private val dbFile: File) : AbstractSqliteDao() {
 
     private fun openDatabase(songsDbFile: File): SQLiteDatabase {
         if (!songsDbFile.exists())
-            throw NoSuchFileException(songsDbFile, null, "Database file does not exist: ${songsDbFile.absolutePath}")
+            throw NoSuchFileException(
+                songsDbFile,
+                null,
+                "Database file does not exist: ${songsDbFile.absolutePath}"
+            )
         val db = openDatabase(songsDbFile.absolutePath, null, SQLiteDatabase.OPEN_READONLY)
         db.disableWriteAheadLogging()
         return db
@@ -54,8 +58,13 @@ class PublicSongsDao(private val dbFile: File) : AbstractSqliteDao() {
     }
 
     fun readDbVersionNumber(): Long? {
-        val mapper: (Cursor) -> Long = { cursor -> cursor.getLong(cursor.getColumnIndexOrThrow("value")) }
-        return queryOneValue(mapper, null, "SELECT value FROM songs_info WHERE name = 'version_number'")
+        val mapper: (Cursor) -> Long =
+            { cursor -> cursor.getLong(cursor.getColumnIndexOrThrow("value")) }
+        return queryOneValue(
+            mapper,
+            null,
+            "SELECT value FROM songs_info WHERE name = 'version_number'"
+        )
     }
 
     fun verifyDbVersion(dbVersion: Long) {

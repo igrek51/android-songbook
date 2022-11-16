@@ -44,14 +44,15 @@ class ChordTextDiagramBuilder(
         val fretSign = if (showEllipsis) "…" else " "
         val hiddenFrets = if (showEllipsis) minFinger - 1 else 0
 
-        val displayStringFrets: List<DisplayStringFret> = stringsNames.getValue(instrument).map { stringName ->
-            DisplayStringFret(
+        val displayStringFrets: List<DisplayStringFret> =
+            stringsNames.getValue(instrument).map { stringName ->
+                DisplayStringFret(
                     stringName = stringName,
                     fretSign = fretSign,
                     fretsShown = fretsShown,
                     digitsCount = digitsCount
-            )
-        }.toMutableList()
+                )
+            }.toMutableList()
 
         frets.reversed().forEachIndexed { index, fretValue ->
             val displayFret = displayStringFrets[index]

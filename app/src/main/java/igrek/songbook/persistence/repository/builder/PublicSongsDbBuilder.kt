@@ -10,15 +10,16 @@ import igrek.songbook.util.lookup.FinderByTuple
 import igrek.songbook.util.lookup.SimpleCache
 
 class PublicSongsDbBuilder(
-        private val versionNumber: Long,
-        private val publicSongsDao: PublicSongsDao,
-        private val userDataDao: UserDataDao,
+    private val versionNumber: Long,
+    private val publicSongsDao: PublicSongsDao,
+    private val userDataDao: UserDataDao,
 ) {
 
     fun buildPublic(uiResourceService: UiResourceService): PublicSongsRepository {
         val categories: MutableList<Category> = publicSongsDao.readAllCategories()
         val songs: MutableList<Song> = publicSongsDao.readAllSongs()
-        val songCategories: MutableList<SongCategoryRelationship> = publicSongsDao.readAllSongCategories()
+        val songCategories: MutableList<SongCategoryRelationship> =
+            publicSongsDao.readAllSongCategories()
 
         unlockSongs(songs)
         removeLockedSongs(songs)
@@ -27,10 +28,16 @@ class PublicSongsDbBuilder(
 
         refillCategoryDisplayNames(uiResourceService, categories)
 
-        return PublicSongsRepository(versionNumber, SimpleCache { categories }, SimpleCache { songs })
+        return PublicSongsRepository(
+            versionNumber,
+            SimpleCache { categories },
+            SimpleCache { songs })
     }
 
-    private fun refillCategoryDisplayNames(uiResourceService: UiResourceService, categories: List<Category>) {
+    private fun refillCategoryDisplayNames(
+        uiResourceService: UiResourceService,
+        categories: List<Category>
+    ) {
         categories.forEach { category ->
             category.displayName = when {
                 category.type.localeStringId != null ->
@@ -57,7 +64,11 @@ class PublicSongsDbBuilder(
         categories.removeAll { category -> category.songs.isEmpty() }
     }
 
-    private fun assignSongsToCategories(categories: MutableList<Category>, songs: MutableList<Song>, songCategories: MutableList<SongCategoryRelationship>) {
+    private fun assignSongsToCategories(
+        categories: MutableList<Category>,
+        songs: MutableList<Song>,
+        songCategories: MutableList<SongCategoryRelationship>
+    ) {
         val songFinder = FinderByTuple(songs) { song -> song.songIdentifier() }
         val categoryFinder = FinderById(categories) { e -> e.id }
 

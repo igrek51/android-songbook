@@ -29,10 +29,11 @@ class ChordsTransposerManager(
     var transposedBy = 0
     val isTransposed: Boolean get() = transposedBy != 0
 
-    val transposedByDisplayName: String get() = when {
-        transposedBy > 0 ->"+$transposedBy ${getSemitonesDisplayName(transposedBy)}"
-        else -> "$transposedBy ${getSemitonesDisplayName(transposedBy)}"
-    }
+    val transposedByDisplayName: String
+        get() = when {
+            transposedBy > 0 -> "+$transposedBy ${getSemitonesDisplayName(transposedBy)}"
+            else -> "$transposedBy ${getSemitonesDisplayName(transposedBy)}"
+        }
 
     fun reset(initialTransposed: Int = 0) {
         transposedBy = initialTransposed

@@ -12,10 +12,10 @@ import igrek.songbook.settings.preferences.PreferencesState
 import java.util.*
 
 class AppLanguageService(
-        activity: LazyInject<Activity> = appFactory.activity,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
-        userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
+    activity: LazyInject<Activity> = appFactory.activity,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
 ) {
     private val activity by LazyExtractor(activity)
     private val uiResourceService by LazyExtractor(uiResourceService)
@@ -70,11 +70,11 @@ class AppLanguageService(
     fun songLanguageEntries(): LinkedHashMap<SongLanguage, String> {
         val map = LinkedHashMap<SongLanguage, String>()
         SongLanguage.allKnown()
-                .forEach { lang ->
-                    val locale = Locale(lang.langCode)
-                    val langDisplayName = locale.getDisplayLanguage(locale)
-                    map[lang] = langDisplayName
-                }
+            .forEach { lang ->
+                val locale = Locale(lang.langCode)
+                val langDisplayName = locale.getDisplayLanguage(locale)
+                map[lang] = langDisplayName
+            }
         return map
     }
 
@@ -90,17 +90,17 @@ class AppLanguageService(
     fun languageFilterEntries(): LinkedHashMap<String, String> {
         val map = LinkedHashMap<String, String>()
         SongLanguage.allKnown()
-                .forEach { lang ->
-                    val locale = Locale(lang.langCode)
-                    val langDisplayName = locale.getDisplayLanguage(locale)
-                    map[lang.langCode] = langDisplayName
-                }
+            .forEach { lang ->
+                val locale = Locale(lang.langCode)
+                val langDisplayName = locale.getDisplayLanguage(locale)
+                map[lang.langCode] = langDisplayName
+            }
         return map
     }
 
     fun setSelectedSongLanguageCodes(languageCodes: Set<String>) {
         selectedSongLanguages = SongLanguage.allKnown()
-                .filter { it.langCode in languageCodes }
-                .toSet()
+            .filter { it.langCode in languageCodes }
+            .toSet()
     }
 }

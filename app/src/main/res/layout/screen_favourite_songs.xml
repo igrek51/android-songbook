@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_horizontal"
     android:orientation="vertical"
     android:weightSum="1"
-    android:descendantFocusability="afterDescendants"
-    >
+    android:descendantFocusability="afterDescendants">
 
     <igrek.songbook.layout.navigation.TitleBarView
         android:id="@+id/titleBarFragment"
@@ -28,7 +26,7 @@
         <igrek.songbook.songselection.listview.LazySongListView
             android:id="@+id/itemsList"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <TextView
             android:id="@+id/emptyListLabel"
@@ -38,8 +36,7 @@
             android:layout_centerInParent="true"
             android:gravity="center"
             android:text="@string/empty_favourite_songs"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
     </RelativeLayout>
 
 </RelativeLayout>

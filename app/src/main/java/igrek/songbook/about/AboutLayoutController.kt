@@ -48,7 +48,12 @@ class AboutLayoutController(
             else -> "release"
         }
         val appVersionLong = "$variant $appVersionCode $buildDate"
-        val message = uiResourceService.resString(R.string.ui_about_content, appVersionName, appVersionLong, dbVersionNumber)
+        val message = uiResourceService.resString(
+            R.string.ui_about_content,
+            appVersionName,
+            appVersionLong,
+            dbVersionNumber
+        )
         val spannedMessage = HtmlCompat.fromHtml(message, HtmlCompat.FROM_HTML_MODE_LEGACY)
 
         // set button almost hidden by setting color
@@ -61,9 +66,12 @@ class AboutLayoutController(
         uiInfoService.dialogThreeChoices(
             title = title,
             message = spannedMessage,
-            positiveButton = R.string.action_info_ok, positiveAction = {},
-            negativeButton = R.string.action_rate_app, negativeAction = { this.openInGoogleStore() },
-            neutralButton = R.string.action_secret, neutralAction = { secretCommandService.showUnlockAlert() },
+            positiveButton = R.string.action_info_ok,
+            positiveAction = {},
+            negativeButton = R.string.action_rate_app,
+            negativeAction = { this.openInGoogleStore() },
+            neutralButton = R.string.action_secret,
+            neutralAction = { secretCommandService.showUnlockAlert() },
             postProcessor = postProcessor,
             richMessage = true,
         )
@@ -84,9 +92,11 @@ class AboutLayoutController(
 
     fun openInGoogleStore() {
         try {
-            val urlActivity = Intent(Intent.ACTION_VIEW, Uri.parse(
-                "http://play.google.com/store/apps/details?id=" + activity.packageName
-            ))
+            val urlActivity = Intent(
+                Intent.ACTION_VIEW, Uri.parse(
+                    "http://play.google.com/store/apps/details?id=" + activity.packageName
+                )
+            )
             activity.startActivity(urlActivity)
         } catch (e: ActivityNotFoundException) {
             val uri = Uri.parse("market://details?id=" + activity.packageName)

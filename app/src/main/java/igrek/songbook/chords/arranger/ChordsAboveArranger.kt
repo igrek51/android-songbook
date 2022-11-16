@@ -1,10 +1,10 @@
 package igrek.songbook.chords.arranger
 
 import igrek.songbook.chords.arranger.wordwrap.DoubleLineWrapper
-import igrek.songbook.chords.render.TypefaceLengthMapper
 import igrek.songbook.chords.model.LyricsFragment
 import igrek.songbook.chords.model.LyricsLine
 import igrek.songbook.chords.model.LyricsTextType
+import igrek.songbook.chords.render.TypefaceLengthMapper
 
 
 class ChordsAboveArranger(
@@ -51,8 +51,8 @@ class ChordsAboveArranger(
     private fun postProcessLine(line: LyricsLine): LyricsLine {
         // cleanup blank fragments
         val fragments = line.fragments
-                .onEach { fragment -> fragment.text = fragment.text.trimEnd() }
-                .filter { fragment -> fragment.text.isNotBlank() }
+            .onEach { fragment -> fragment.text = fragment.text.trimEnd() }
+            .filter { fragment -> fragment.text.isNotBlank() }
 
         return LyricsLine(fragments)
     }
@@ -67,17 +67,20 @@ class ChordsAboveArranger(
         }
     }
 
-    private fun preventChordsOverlapping(chords: List<LyricsFragment>, texts: List<LyricsFragment>) {
+    private fun preventChordsOverlapping(
+        chords: List<LyricsFragment>,
+        texts: List<LyricsFragment>
+    ) {
         chords.forEachIndexed { index, chord ->
             chords.getOrNull(index - 1)
-                    ?.let {
-                        val spaceWidth = lengthMapper.charWidth(chord.type, ' ')
-                        val overlappedBy = it.x + it.width - chord.x
-                        if (overlappedBy > 0) {
-                            texts.filter { f -> f.x > chord.x }.forEach { f -> f.x += overlappedBy }
-                            chord.x += overlappedBy + spaceWidth
-                        }
+                ?.let {
+                    val spaceWidth = lengthMapper.charWidth(chord.type, ' ')
+                    val overlappedBy = it.x + it.width - chord.x
+                    if (overlappedBy > 0) {
+                        texts.filter { f -> f.x > chord.x }.forEach { f -> f.x += overlappedBy }
+                        chord.x += overlappedBy + spaceWidth
                     }
+                }
         }
     }
 

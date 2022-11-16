@@ -15,7 +15,7 @@ class SimpleCache<T>(private val supplier: () -> T) {
     }
 
     companion object {
-        inline fun <reified U> emptyList(): SimpleCache<List<U>>{
+        inline fun <reified U> emptyList(): SimpleCache<List<U>> {
             return SimpleCache(supplier = { kotlin.collections.emptyList<U>() })
         }
     }

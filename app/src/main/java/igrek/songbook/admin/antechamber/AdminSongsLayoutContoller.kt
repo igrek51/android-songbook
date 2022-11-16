@@ -26,13 +26,13 @@ import kotlinx.coroutines.launch
 
 @OptIn(DelicateCoroutinesApi::class)
 class AdminSongsLayoutContoller(
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        songOpener: LazyInject<SongOpener> = appFactory.songOpener,
-        customSongService: LazyInject<CustomSongService> = appFactory.customSongService,
-        antechamberService: LazyInject<AntechamberService> = appFactory.antechamberService,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    songOpener: LazyInject<SongOpener> = appFactory.songOpener,
+    customSongService: LazyInject<CustomSongService> = appFactory.customSongService,
+    antechamberService: LazyInject<AntechamberService> = appFactory.antechamberService,
 ) : InflatedLayout(
-        _layoutResourceId = R.layout.screen_admin_songs
+    _layoutResourceId = R.layout.screen_admin_songs
 ) {
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val uiInfoService by LazyExtractor(uiInfoService)
@@ -50,10 +50,12 @@ class AdminSongsLayoutContoller(
         super.showLayout(layout)
 
         itemsListView = layout.findViewById(R.id.itemsList)
-        itemsListView!!.init(activity,
-                onClick = this::onSongClick,
-                onLongClick = this::onSongLongClick,
-                onMore = this::onMoreMenu)
+        itemsListView!!.init(
+            activity,
+            onClick = this::onSongClick,
+            onLongClick = this::onSongLongClick,
+            onMore = this::onMoreMenu
+        )
         updateItemsList()
 
         layout.findViewById<Button>(R.id.updateButton).setOnClickListener {
@@ -63,17 +65,18 @@ class AdminSongsLayoutContoller(
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
         subscriptions.add(fetchRequestSubject
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    GlobalScope.launch(Dispatchers.Main) {
-                        val result = antechamberService.downloadSongs().await()
-                        result.fold(onSuccess = { downloadedSongs ->
-                            experimentalSongs = downloadedSongs.toMutableList()
-                        }, onFailure = { e ->
-                            logger.error(e)
-                        })
-                    }
-                }, UiErrorHandler::handleError))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                GlobalScope.launch(Dispatchers.Main) {
+                    val result = antechamberService.downloadSongs().await()
+                    result.fold(onSuccess = { downloadedSongs ->
+                        experimentalSongs = downloadedSongs.toMutableList()
+                    }, onFailure = { e ->
+                        logger.error(e)
+                    })
+                }
+            }, UiErrorHandler::handleError)
+        )
     }
 
     private fun updateItemsList() {
@@ -107,7 +110,8 @@ class AdminSongsLayoutContoller(
     }
 
     private fun deleteAntechamberSongUI(song: Song) {
-        val message1 = uiResourceService.resString(R.string.admin_antechamber_confirm_delete, song.toString())
+        val message1 =
+            uiResourceService.resString(R.string.admin_antechamber_confirm_delete, song.toString())
         ConfirmDialogBuilder().confirmAction(message1) {
             uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
             GlobalScope.launch(Dispatchers.Main) {
@@ -125,18 +129,18 @@ class AdminSongsLayoutContoller(
 
     private fun generateMenuOptions(song: Song): List<ContextMenuBuilder.Action> {
         return listOf(
-                ContextMenuBuilder.Action(R.string.admin_antechamber_edit_action) {
-                    customSongService.showEditSongScreen(song)
-                },
-                ContextMenuBuilder.Action(R.string.admin_antechamber_update_action) {
-                    antechamberService.updateAntechamberSongUI(song)
-                },
-                ContextMenuBuilder.Action(R.string.admin_antechamber_approve_action) {
-                    antechamberService.approveAntechamberSongUI(song)
-                },
-                ContextMenuBuilder.Action(R.string.admin_antechamber_delete_action) {
-                    deleteAntechamberSongUI(song)
-                }
+            ContextMenuBuilder.Action(R.string.admin_antechamber_edit_action) {
+                customSongService.showEditSongScreen(song)
+            },
+            ContextMenuBuilder.Action(R.string.admin_antechamber_update_action) {
+                antechamberService.updateAntechamberSongUI(song)
+            },
+            ContextMenuBuilder.Action(R.string.admin_antechamber_approve_action) {
+                antechamberService.approveAntechamberSongUI(song)
+            },
+            ContextMenuBuilder.Action(R.string.admin_antechamber_delete_action) {
+                deleteAntechamberSongUI(song)
+            }
         )
     }
 }

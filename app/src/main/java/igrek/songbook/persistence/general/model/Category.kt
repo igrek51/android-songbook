@@ -4,11 +4,11 @@ import com.google.common.base.Objects
 import igrek.songbook.util.lookup.SimpleCache
 
 data class Category(
-        val id: Long = 0,
-        val type: CategoryType,
-        val name: String? = null,
-        var custom: Boolean = false,
-        var songs: MutableList<Song> = mutableListOf()
+    val id: Long = 0,
+    val type: CategoryType,
+    val name: String? = null,
+    var custom: Boolean = false,
+    var songs: MutableList<Song> = mutableListOf()
 ) {
     var displayName: String? = null
         get() {
@@ -29,7 +29,7 @@ data class Category(
     }
 
     private var unlockedSongsCache: SimpleCache<List<Song>> =
-            SimpleCache { songs.filter { s -> !s.locked } }
+        SimpleCache { songs.filter { s -> !s.locked } }
 
     fun getUnlockedSongs(): List<Song> {
         return unlockedSongsCache.get()

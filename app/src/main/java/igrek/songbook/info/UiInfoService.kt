@@ -24,8 +24,8 @@ import kotlinx.coroutines.launch
 
 @OptIn(DelicateCoroutinesApi::class)
 open class UiInfoService(
-        activity: LazyInject<Activity> = appFactory.activity,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    activity: LazyInject<Activity> = appFactory.activity,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
 ) {
     private val activity by LazyExtractor(activity)
     private val uiResourceService by LazyExtractor(uiResourceService)
@@ -42,7 +42,8 @@ open class UiInfoService(
         indefinite: Boolean = false,
     ) {
         GlobalScope.launch(Dispatchers.Main) {
-            val snackbarLength = if (indefinite) Snackbar.LENGTH_INDEFINITE else Snackbar.LENGTH_LONG
+            val snackbarLength =
+                if (indefinite) Snackbar.LENGTH_INDEFINITE else Snackbar.LENGTH_LONG
             val infoV = info.takeIf { it.isNotEmpty() } ?: uiResourceService.resString(infoResId)
 
             // dont create new snackbars if one is already shown
@@ -72,16 +73,25 @@ open class UiInfoService(
         logger.info("UI: snackbar: $info")
     }
 
-    fun showInfo(infoResId: Int, vararg args: String?,
-                 indefinite: Boolean = false) {
+    fun showInfo(
+        infoResId: Int, vararg args: String?,
+        indefinite: Boolean = false
+    ) {
         val info = uiResourceService.resString(infoResId, *args)
         showSnackbar(info = info, actionResId = R.string.action_info_ok, indefinite = indefinite)
     }
 
-    fun showInfoAction(infoResId: Int, vararg args: String,
-                       indefinite: Boolean = false, actionResId: Int, action: () -> Unit) {
+    fun showInfoAction(
+        infoResId: Int, vararg args: String,
+        indefinite: Boolean = false, actionResId: Int, action: () -> Unit
+    ) {
         val info = uiResourceService.resString(infoResId, *args)
-        showSnackbar(info = info, actionResId = actionResId, action = action, indefinite = indefinite)
+        showSnackbar(
+            info = info,
+            actionResId = actionResId,
+            action = action,
+            indefinite = indefinite
+        )
     }
 
     fun isSnackbarShown(): Boolean {
@@ -91,7 +101,8 @@ open class UiInfoService(
     fun focusSnackBar(): Boolean {
         if (!isSnackbarShown())
             return false
-        val actionView = lastSnakbar?.view?.findViewById<View>(com.google.android.material.R.id.snackbar_action)
+        val actionView =
+            lastSnakbar?.view?.findViewById<View>(com.google.android.material.R.id.snackbar_action)
         return actionView?.requestFocusFromTouch() ?: false
     }
 
@@ -121,21 +132,21 @@ open class UiInfoService(
     }
 
     open fun resString(resourceId: Int, vararg args: Any?): String =
-            uiResourceService.resString(resourceId, *args)
+        uiResourceService.resString(resourceId, *args)
 
     fun dialog(titleResId: Int, message: String) {
         dialogThreeChoices(
-                titleResId = titleResId,
-                message = message,
-                positiveButton = R.string.action_info_ok, positiveAction = {},
+            titleResId = titleResId,
+            message = message,
+            positiveButton = R.string.action_info_ok, positiveAction = {},
         )
     }
 
     fun dialog(titleResId: Int, messageResId: Int) {
         dialogThreeChoices(
-                titleResId = titleResId,
-                messageResId = messageResId,
-                positiveButton = R.string.action_info_ok, positiveAction = {},
+            titleResId = titleResId,
+            messageResId = messageResId,
+            positiveButton = R.string.action_info_ok, positiveAction = {},
         )
     }
 
@@ -151,14 +162,18 @@ open class UiInfoService(
         GlobalScope.launch(Dispatchers.Main) {
             val alertBuilder = AlertDialog.Builder(activity)
 
-            alertBuilder.setMessage(when {
-                messageResId > 0 -> uiResourceService.resString(messageResId)
-                else -> message
-            })
-            alertBuilder.setTitle(when {
-                titleResId > 0 -> uiResourceService.resString(titleResId)
-                else -> title
-            })
+            alertBuilder.setMessage(
+                when {
+                    messageResId > 0 -> uiResourceService.resString(messageResId)
+                    else -> message
+                }
+            )
+            alertBuilder.setTitle(
+                when {
+                    titleResId > 0 -> uiResourceService.resString(titleResId)
+                    else -> title
+                }
+            )
 
             if (positiveButton > 0) {
                 alertBuilder.setPositiveButton(uiResourceService.resString(positiveButton)) { _, _ ->

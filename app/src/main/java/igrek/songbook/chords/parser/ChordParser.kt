@@ -15,10 +15,18 @@ class ChordParser(
 
         // recognize basic chord (without suffixes)
         minorChordToNoteIndex[chord]?.let { noteIndex: Int ->
-            return Chord(noteIndex=noteIndex, minor=true, originalModifier=getNoteModifier(chord))
+            return Chord(
+                noteIndex = noteIndex,
+                minor = true,
+                originalModifier = getNoteModifier(chord),
+            )
         }
         baseChordToNoteIndex[chord]?.let { noteIndex: Int ->
-            return Chord(noteIndex=noteIndex, minor=false, originalModifier=getNoteModifier(chord))
+            return Chord(
+                noteIndex = noteIndex,
+                minor = false,
+                originalModifier = getNoteModifier(chord),
+            )
         }
 
         // recognize base chord + suffix
@@ -26,14 +34,24 @@ class ChordParser(
             if (chord.startsWith(baseName)) {
                 val suffix = chord.drop(baseName.length)
                 if (suffix in chordSuffixes)
-                    return Chord(noteIndex=noteIndex, minor=true, suffix=suffix, originalModifier=getNoteModifier(baseName))
+                    return Chord(
+                        noteIndex = noteIndex,
+                        minor = true,
+                        suffix = suffix,
+                        originalModifier = getNoteModifier(baseName),
+                    )
             }
         }
         baseChordToNoteIndex.forEach { (baseName: String, noteIndex: Int) ->
             if (chord.startsWith(baseName)) {
                 val suffix = chord.drop(baseName.length)
                 if (suffix in chordSuffixes)
-                    return Chord(noteIndex=noteIndex, minor=false, suffix=suffix, originalModifier=getNoteModifier(baseName))
+                    return Chord(
+                        noteIndex = noteIndex,
+                        minor = false,
+                        suffix = suffix,
+                        originalModifier = getNoteModifier(baseName),
+                    )
             }
         }
         return null
@@ -69,7 +87,8 @@ class ChordParser(
         if (fragments.size == 3 &&
             fragments[0].type == ChordFragmentType.SINGLE_CHORD &&
             fragments[1].type == ChordFragmentType.CHORD_SPLITTER &&
-            fragments[2].type == ChordFragmentType.SINGLE_CHORD) {
+            fragments[2].type == ChordFragmentType.SINGLE_CHORD
+        ) {
             return CompoundChord(
                 chord1 = fragments[0].singleChord!!,
                 splitter = fragments[1].text,
@@ -85,7 +104,8 @@ class ChordParser(
         lyrics.lines.forEach { line ->
             line.fragments.forEach { lyricsFragment ->
                 if (lyricsFragment.type == LyricsTextType.CHORDS) {
-                    lyricsFragment.chordFragments = parseChordFragments(lyricsFragment.text, unknowns)
+                    lyricsFragment.chordFragments =
+                        parseChordFragments(lyricsFragment.text, unknowns)
                 }
             }
         }
@@ -128,7 +148,8 @@ class ChordParser(
         return fragments.fold(mutableListOf()) { acc: MutableList<ChordFragment>, segment: ChordFragment ->
             if (acc.isNotEmpty() &&
                 acc.last().type == ChordFragmentType.CHORD_SPLITTER &&
-                segment.type == ChordFragmentType.CHORD_SPLITTER) {
+                segment.type == ChordFragmentType.CHORD_SPLITTER
+            ) {
                 acc.last().text += segment.text // join with the last group
             } else {
                 acc += segment // add new group
@@ -190,7 +211,8 @@ class ChordParser(
                     )
                 }
 
-                val singleChord: Chord = recognizeSingleChord(part) ?: return null // propagate failure
+                val singleChord: Chord =
+                    recognizeSingleChord(part) ?: return null // propagate failure
                 return@map ChordFragment(
                     text = part,
                     type = ChordFragmentType.SINGLE_CHORD,
@@ -207,7 +229,8 @@ class ChordParser(
         if (fragments.size == 3 &&
             fragments[0].type == ChordFragmentType.SINGLE_CHORD &&
             fragments[1].type == ChordFragmentType.CHORD_SPLITTER &&
-            fragments[2].type == ChordFragmentType.SINGLE_CHORD) {
+            fragments[2].type == ChordFragmentType.SINGLE_CHORD
+        ) {
             return CompoundChord(
                 chord1 = fragments[0].singleChord!!,
                 splitter = fragments[1].text,

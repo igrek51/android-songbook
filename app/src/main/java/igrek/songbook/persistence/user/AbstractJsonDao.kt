@@ -8,11 +8,11 @@ import java.io.File
 import java.io.FileNotFoundException
 
 abstract class AbstractJsonDao<T>(
-        private val path: String,
-        val dbName: String,
-        val schemaVersion: Int,
-        val clazz: Class<T>,
-        val serializer: KSerializer<T>
+    private val path: String,
+    val dbName: String,
+    val schemaVersion: Int,
+    val clazz: Class<T>,
+    val serializer: KSerializer<T>
 ) {
 
     private val json = Json {

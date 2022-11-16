@@ -1,8 +1,8 @@
 package igrek.songbook.util.lookup
 
 open class FinderByTuple<K, V>(
-        entitiesList: List<V>,
-        private val entityToId: (V) -> K
+    entitiesList: List<V>,
+    private val entityToId: (V) -> K
 ) {
 
     private val idMapping = hashMapOf<K, V>()

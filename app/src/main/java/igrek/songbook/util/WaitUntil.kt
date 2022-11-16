@@ -4,9 +4,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 
 fun waitUntil(
-        retries: Int,
-        delayMs: Long,
-        predicate: () -> Boolean,
+    retries: Int,
+    delayMs: Long,
+    predicate: () -> Boolean,
 ): Boolean {
     for (attempt in 0 until retries) {
         val result = predicate()

@@ -8,7 +8,8 @@ import android.widget.ListView
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.songselection.listview.ListScrollPosition
 
-class AntechamberSongListView : ListView, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+class AntechamberSongListView : ListView, AdapterView.OnItemClickListener,
+    AdapterView.OnItemLongClickListener {
 
     private var itemAdapter: AntechamberSongListAdapter? = null
     private var onClick: ((Song) -> Unit)? = null
@@ -25,14 +26,19 @@ class AntechamberSongListView : ListView, AdapterView.OnItemClickListener, Adapt
 
     constructor(context: Context) : super(context)
 
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle)
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(
+        context,
+        attrs,
+        defStyle
+    )
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
-    fun init(context: Context,
-             onClick: (item: Song) -> Unit,
-             onLongClick: (item: Song) -> Unit,
-             onMore: (item: Song) -> Unit
+    fun init(
+        context: Context,
+        onClick: (item: Song) -> Unit,
+        onLongClick: (item: Song) -> Unit,
+        onMore: (item: Song) -> Unit
     ) {
         this.onClick = onClick
         this.onLongClick = onLongClick
@@ -49,7 +55,12 @@ class AntechamberSongListView : ListView, AdapterView.OnItemClickListener, Adapt
         onClick?.invoke(item!!)
     }
 
-    override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
+    override fun onItemLongClick(
+        parent: AdapterView<*>,
+        view: View,
+        position: Int,
+        id: Long
+    ): Boolean {
         val item = itemAdapter!!.getItem(position)
         onLongClick?.invoke(item!!)
         return true

@@ -17,11 +17,11 @@ import okhttp3.*
 import java.io.*
 
 class SongsUpdater(
-        okHttpClient: LazyInject<OkHttpClient> = appFactory.okHttpClient,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-        localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
-        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    okHttpClient: LazyInject<OkHttpClient> = appFactory.okHttpClient,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
     private val okHttpClient by LazyExtractor(okHttpClient)
     private val uiInfoService by LazyExtractor(uiInfoService)
@@ -43,8 +43,8 @@ class SongsUpdater(
         uiInfoService.showInfo(R.string.updating_db_in_progress, indefinite = true)
 
         val request: Request = Request.Builder()
-                .url(songsdbUrl)
-                .build()
+            .url(songsdbUrl)
+            .build()
 
         okHttpClient.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
@@ -65,8 +65,8 @@ class SongsUpdater(
     fun checkUpdateIsAvailable() {
         Handler(Looper.getMainLooper()).post {
             val request: Request = Request.Builder()
-                    .url(songsDbVersionUrl)
-                    .build()
+                .url(songsDbVersionUrl)
+                .build()
 
             okHttpClient.newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
@@ -85,7 +85,11 @@ class SongsUpdater(
         }
     }
 
-    private fun onSongDatabaseReceived(response: Response, songsDbFile: File, forcedUpdate: Boolean) {
+    private fun onSongDatabaseReceived(
+        response: Response,
+        songsDbFile: File,
+        forcedUpdate: Boolean
+    ) {
         try {
             val inputStream: InputStream = response.body()!!.byteStream()
             val input = BufferedInputStream(inputStream)
@@ -126,7 +130,10 @@ class SongsUpdater(
             }
         } catch (e: Throwable) {
             logger.error("Downloading new database failed: ${e.message}")
-            UiErrorHandler().handleError(RuntimeException("Downloading new database failed: ${e.message}"), R.string.error_communication_breakdown)
+            UiErrorHandler().handleError(
+                RuntimeException("Downloading new database failed: ${e.message}"),
+                R.string.error_communication_breakdown
+            )
         }
     }
 
@@ -151,12 +158,19 @@ class SongsUpdater(
 
     private fun onErrorReceived(errorMessage: String?) {
         logger.error("Connection error: $errorMessage")
-        UiErrorHandler().handleError(RuntimeException("Connection error: $errorMessage"), R.string.error_communication_breakdown)
+        UiErrorHandler().handleError(
+            RuntimeException("Connection error: $errorMessage"),
+            R.string.error_communication_breakdown
+        )
     }
 
     private fun showUpdateIsAvailable() {
         Handler(Looper.getMainLooper()).post {
-            uiInfoService.showInfoAction(R.string.update_is_available, indefinite = true, actionResId = R.string.action_update) {
+            uiInfoService.showInfoAction(
+                R.string.update_is_available,
+                indefinite = true,
+                actionResId = R.string.action_update
+            ) {
                 uiInfoService.clearSnackBars()
                 updateSongsDb(forced = false)
             }

@@ -81,10 +81,12 @@ class QuickMenuTranspose(
     @SuppressLint("SetTextI18n")
     private fun updateTranspositionText() {
         val semitonesDisplayName = lyricsLoader.transposedByDisplayName
-        val transposedByText = uiResourceService.resString(R.string.transposed_by_semitones, semitonesDisplayName)
+        val transposedByText =
+            uiResourceService.resString(R.string.transposed_by_semitones, semitonesDisplayName)
 
         val detectedKeyStr = buildSongKeyName(lyricsLoader.songKey)
-        val detectedKeyText = uiResourceService.resString(R.string.song_detected_key, detectedKeyStr)
+        val detectedKeyText =
+            uiResourceService.resString(R.string.song_detected_key, detectedKeyStr)
 
         transposedByLabel?.text = "$transposedByText\n$detectedKeyText"
     }
@@ -92,11 +94,11 @@ class QuickMenuTranspose(
     private fun buildSongKeyName(key: MajorKey): String {
         val notation = preferencesState.chordsNotation
         val forceSharps = preferencesState.forceSharpNotes
-        val baseMajorNote = when(forceSharps) {
+        val baseMajorNote = when (forceSharps) {
             true -> convertToSharp(key.baseMajorNote, notation)
             false -> key.baseMajorNote
         }
-        val baseMinorNote = when(forceSharps) {
+        val baseMinorNote = when (forceSharps) {
             true -> convertToSharp(key.baseMinorNote, notation)
             false -> key.baseMinorNote
         }

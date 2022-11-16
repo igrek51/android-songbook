@@ -5,12 +5,9 @@ import android.util.Base64
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import java.io.IOException
-import java.lang.IllegalArgumentException
-import java.lang.RuntimeException
 import java.security.*
 import java.security.spec.InvalidKeySpecException
 import java.security.spec.X509EncodedKeySpec
-import kotlin.Throws
 
 internal object Security {
 
@@ -23,7 +20,8 @@ internal object Security {
 
     fun verifyPurchase(signedData: String, signature: String?): Boolean {
         if (TextUtils.isEmpty(signedData) || TextUtils.isEmpty(BASE_64_ENCODED_PUBLIC_KEY)
-                || TextUtils.isEmpty(signature)) {
+            || TextUtils.isEmpty(signature)
+        ) {
             logger.warn("Purchase verification failed: missing data.")
             return false
         }

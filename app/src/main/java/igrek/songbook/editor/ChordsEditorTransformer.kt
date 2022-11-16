@@ -41,7 +41,10 @@ class ChordsEditorTransformer(
             .let { textEditor.setText(it) }
     }
 
-    private fun transformDoubleLines(input: String, transformer: (String, String) -> List<String>?): String {
+    private fun transformDoubleLines(
+        input: String,
+        transformer: (String, String) -> List<String>?
+    ): String {
         val inputLines = input.lines()
         val lines = mutableListOf<String>()
         var i = 0
@@ -110,7 +113,11 @@ class ChordsEditorTransformer(
                 return
             }
             // if it's the end of line AND there is no space before
-            if ((after.isEmpty() || after.startsWith("\n")) && before.isNotEmpty() && !before.endsWith(" ") && !before.endsWith("\n")) {
+            if ((after.isEmpty() || after.startsWith("\n"))
+                && before.isNotEmpty()
+                && !before.endsWith(" ")
+                && !before.endsWith("\n")
+            ) {
                 // insert missing space
                 edited = "$before []$after"
                 selStart += 2
@@ -174,7 +181,8 @@ class ChordsEditorTransformer(
     }
 
     private fun convertFromNotation(fromNotation: ChordsNotation) {
-        val converter = ChordsNotationConverter(fromNotation, chordsNotation, preferencesState.forceSharpNotes)
+        val converter =
+            ChordsNotationConverter(fromNotation, chordsNotation, preferencesState.forceSharpNotes)
         val converted = converter.convertLyrics(textEditor.getText())
         textEditor.setText(converted)
     }
@@ -222,7 +230,9 @@ class ChordsEditorTransformer(
         if (clipboard.isNullOrEmpty()) {
             uiInfoService.showToast(R.string.no_text_selected)
         } else {
-            uiInfoService.showToast(uiInfoService.resString(R.string.selected_text_copied, clipboard))
+            uiInfoService.showToast(
+                uiInfoService.resString(R.string.selected_text_copied, clipboard)
+            )
         }
     }
 
@@ -274,7 +284,12 @@ class ChordsEditorTransformer(
         if (detectedChordsNum == 0) {
             uiInfoService.showToast(R.string.no_new_chords_detected)
         } else {
-            uiInfoService.showToast(uiInfoService.resString(R.string.new_chords_detected, detectedChordsNum.toString()))
+            uiInfoService.showToast(
+                uiInfoService.resString(
+                    R.string.new_chords_detected,
+                    detectedChordsNum.toString(),
+                )
+            )
         }
     }
 
@@ -307,7 +322,8 @@ class ChordsEditorTransformer(
     fun transformMoveChordsAboveToInline(lyrics: String): String {
         return transformDoubleLines(lyrics) { first: String, second: String ->
             if (first.isNotBlank() && second.isNotBlank() &&
-                    first.hasOnlyChords() && !second.hasChords()) {
+                first.hasOnlyChords() && !second.hasChords()
+            ) {
                 val chords = ChordSegmentDetector().detectChords(first)
                 val joined = ChordSegmentApplier().applyChords(second, chords)
                 return@transformDoubleLines listOf(joined)
@@ -324,7 +340,8 @@ class ChordsEditorTransformer(
 
         val lyricsJoined = transformDoubleLines(lyricsDetected) { first: String, second: String ->
             if (first.isNotBlank() && second.isNotBlank() &&
-                    first.hasOnlyChords() && !second.hasChords()) {
+                first.hasOnlyChords() && !second.hasChords()
+            ) {
                 val chords = ChordSegmentDetector().detectChordsUnaligned(first)
                 val joined = ChordSegmentApplier().applyChords(second, chords)
                 return@transformDoubleLines listOf(joined)
@@ -340,14 +357,15 @@ class ChordsEditorTransformer(
     }
 
     private fun String.hasOnlyChords(): Boolean {
-        return "[" in this && "]" in this && this.replace(Regex("""\[(.*?)]"""), "").trim().isBlank()
+        return "[" in this && "]" in this && this.replace(Regex("""\[(.*?)]"""), "").trim()
+            .isBlank()
     }
 
     private fun String.trimChordsLine(): String {
         return this.trim()
-                .replace(Regex("""\[ +"""), "[")
-                .replace(Regex(""" +]"""), "]")
-                .replace(Regex(""" +"""), " ")
+            .replace(Regex("""\[ +"""), "[")
+            .replace(Regex(""" +]"""), "]")
+            .replace(Regex(""" +"""), " ")
     }
 
     fun reformatAndTrimEditor() {

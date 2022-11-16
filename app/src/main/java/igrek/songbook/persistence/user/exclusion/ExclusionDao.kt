@@ -3,13 +3,13 @@ package igrek.songbook.persistence.user.exclusion
 import igrek.songbook.persistence.user.AbstractJsonDao
 
 class ExclusionDao(
-        path: String,
+    path: String,
 ) : AbstractJsonDao<ExclusionDb>(
-        path,
-        dbName = "exclusion",
-        schemaVersion = 2,
-        clazz = ExclusionDb::class.java,
-        serializer = ExclusionDb.serializer()
+    path,
+    dbName = "exclusion",
+    schemaVersion = 2,
+    clazz = ExclusionDb::class.java,
+    serializer = ExclusionDb.serializer()
 ) {
     val exclusionDb: ExclusionDb get() = db!!
 

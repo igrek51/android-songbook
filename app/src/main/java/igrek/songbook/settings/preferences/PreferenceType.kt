@@ -22,8 +22,8 @@ abstract class PreferenceTypeDefinition<T : Any>(val defaultValue: T) {
     }
 }
 
-class StringPreferenceType (
-        defaultValue: String
+class StringPreferenceType(
+    defaultValue: String
 ) : PreferenceTypeDefinition<String>(defaultValue) {
 
     override fun load(sharedPreferences: SharedPreferences, propertyName: String): String {
@@ -35,8 +35,8 @@ class StringPreferenceType (
     }
 }
 
-class LongPreferenceType (
-        defaultValue: Long
+class LongPreferenceType(
+    defaultValue: Long
 ) : PreferenceTypeDefinition<Long>(defaultValue) {
 
     override fun load(sharedPreferences: SharedPreferences, propertyName: String): Long {
@@ -48,8 +48,8 @@ class LongPreferenceType (
     }
 }
 
-class FloatPreferenceType (
-        defaultValue: Float
+class FloatPreferenceType(
+    defaultValue: Float
 ) : PreferenceTypeDefinition<Float>(defaultValue) {
 
     override fun load(sharedPreferences: SharedPreferences, propertyName: String): Float {
@@ -61,8 +61,8 @@ class FloatPreferenceType (
     }
 }
 
-class BooleanPreferenceType (
-        defaultValue: Boolean
+class BooleanPreferenceType(
+    defaultValue: Boolean
 ) : PreferenceTypeDefinition<Boolean>(defaultValue) {
 
     override fun load(sharedPreferences: SharedPreferences, propertyName: String): Boolean {
@@ -74,14 +74,15 @@ class BooleanPreferenceType (
     }
 }
 
-class GenericStringIdPreferenceType<T : Any> (
-        defaultValue: T,
-        private val serializer: (T) -> String,
-        private val deserializer: (String) -> T?
+class GenericStringIdPreferenceType<T : Any>(
+    defaultValue: T,
+    private val serializer: (T) -> String,
+    private val deserializer: (String) -> T?
 ) : PreferenceTypeDefinition<T>(defaultValue) {
 
     override fun load(sharedPreferences: SharedPreferences, propertyName: String): T {
-        val stringVal: String = sharedPreferences.getString(propertyName, null) ?: return defaultValue
+        val stringVal: String =
+            sharedPreferences.getString(propertyName, null) ?: return defaultValue
         return deserializer(stringVal) ?: defaultValue
     }
 
@@ -100,10 +101,10 @@ class GenericStringIdPreferenceType<T : Any> (
     }
 }
 
-class GenericLongIdPreferenceType<T : Any> (
-        defaultValue: T,
-        private val serializer: (T) -> Long,
-        private val deserializer: (Long) -> T?
+class GenericLongIdPreferenceType<T : Any>(
+    defaultValue: T,
+    private val serializer: (T) -> Long,
+    private val deserializer: (Long) -> T?
 ) : PreferenceTypeDefinition<T>(defaultValue) {
 
     override fun load(sharedPreferences: SharedPreferences, propertyName: String): T {

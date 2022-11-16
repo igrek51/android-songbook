@@ -6,13 +6,13 @@ import igrek.songbook.persistence.user.AbstractJsonDao
 import io.reactivex.subjects.PublishSubject
 
 class TransposeDao(
-        path: String,
+    path: String,
 ) : AbstractJsonDao<TransposeDb>(
-        path,
-        dbName = "transpose",
-        schemaVersion = 1,
-        clazz = TransposeDb::class.java,
-        serializer = TransposeDb.serializer()
+    path,
+    dbName = "transpose",
+    schemaVersion = 1,
+    clazz = TransposeDb::class.java,
+    serializer = TransposeDb.serializer()
 ) {
     private val transposeDb: TransposeDb get() = db!!
     private val transposeDbSubject = PublishSubject.create<TransposeDb>()
@@ -27,23 +27,25 @@ class TransposeDao(
 
     fun getSongTransposition(songIdentifier: SongIdentifier): Int {
         val songFound = transposeDb.songs
-                .find {
-                    it.songId == songIdentifier.songId
-                            && it.custom == (songIdentifier.namespace == SongNamespace.Custom)
-                }
+            .find {
+                it.songId == songIdentifier.songId
+                        && it.custom == (songIdentifier.namespace == SongNamespace.Custom)
+            }
         return songFound?.transposition ?: 0
     }
 
     fun setSongTransposition(songIdentifier: SongIdentifier, transposition: Int) {
         val songFound = transposeDb.songs
-                .find {
-                    it.songId == songIdentifier.songId
-                            && it.custom == (songIdentifier.namespace == SongNamespace.Custom)
-                }
+            .find {
+                it.songId == songIdentifier.songId
+                        && it.custom == (songIdentifier.namespace == SongNamespace.Custom)
+            }
         if (songFound == null) {
-            val newSong = TransposedSong(songIdentifier.songId,
-                    (songIdentifier.namespace == SongNamespace.Custom),
-                    transposition)
+            val newSong = TransposedSong(
+                songIdentifier.songId,
+                (songIdentifier.namespace == SongNamespace.Custom),
+                transposition
+            )
             transposeDb.songs.add(newSong)
         } else {
             songFound.transposition = transposition
@@ -53,10 +55,10 @@ class TransposeDao(
 
     fun removeUsage(songId: Long, custom: Boolean) {
         val songFound = transposeDb.songs
-                .find {
-                    it.songId == songId
-                            && it.custom == custom
-                }
+            .find {
+                it.songId == songId
+                        && it.custom == custom
+            }
         if (songFound != null) {
             transposeDb.songs.remove(songFound)
             transposeDbSubject.onNext(transposeDb)

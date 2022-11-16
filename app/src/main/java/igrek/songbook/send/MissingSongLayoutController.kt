@@ -17,11 +17,11 @@ import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.system.SoftKeyboardService
 
 class MissingSongLayoutController(
-        layoutController: LazyInject<LayoutController> = appFactory.layoutController,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        sendMessageService: LazyInject<SendMessageService> = appFactory.sendMessageService,
-        softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
+    layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    sendMessageService: LazyInject<SendMessageService> = appFactory.sendMessageService,
+    softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
 ) : MainLayout {
     private val layoutController by LazyExtractor(layoutController)
     private val uiInfoService by LazyExtractor(uiInfoService)
@@ -67,8 +67,10 @@ class MissingSongLayoutController(
         val subject = uiResourceService.resString(R.string.contact_subject_missing_song)
 
         ConfirmDialogBuilder().confirmAction(R.string.confirm_send_contact) {
-            sendMessageService.sendContactMessage(message, origin = MessageOrigin.MISSING_SONG,
-                    subject = subject)
+            sendMessageService.sendContactMessage(
+                message, origin = MessageOrigin.MISSING_SONG,
+                subject = subject
+            )
             AnalyticsLogger().logEventMissingSongRequested(message)
         }
     }

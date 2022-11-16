@@ -5,7 +5,8 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.recyclerview.widget.RecyclerView
 
-class OverlayRecyclerAdapter(private val songPreview: SongPreview) : RecyclerView.Adapter<OverlayRecyclerAdapter.OverlayViewHolder>() {
+class OverlayRecyclerAdapter(private val songPreview: SongPreview) :
+    RecyclerView.Adapter<OverlayRecyclerAdapter.OverlayViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OverlayViewHolder {
         // Scrolling in Android is so fukced up!!
@@ -13,7 +14,8 @@ class OverlayRecyclerAdapter(private val songPreview: SongPreview) : RecyclerVie
         val height = Integer.MAX_VALUE / itemCount
 
         val overlayView = View(parent.context)
-        overlayView.layoutParams = ViewGroup.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT, height)
+        overlayView.layoutParams =
+            ViewGroup.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT, height)
         overlayView.minimumHeight = height
         overlayView.setOnClickListener { songPreview.onClick() }
         overlayView.setOnTouchListener(songPreview)

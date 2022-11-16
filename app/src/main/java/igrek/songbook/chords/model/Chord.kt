@@ -5,7 +5,7 @@ import igrek.songbook.chords.syntax.MajorKey
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
 // Single chord with one single note: Cm, F#maj7, Bbm
-data class Chord (
+data class Chord(
     /* Note index:
      0 - C
      1 - C# / Db
@@ -24,7 +24,7 @@ data class Chord (
     val minor: Boolean = false,
     val suffix: String = "",
     val originalModifier: NoteModifier = NoteModifier.NATURAL,
-): GeneralChord {
+) : GeneralChord {
 
     override fun format(
         notation: ChordsNotation,
@@ -56,7 +56,7 @@ data class CompoundChord(
     val chord1: Chord,
     val splitter: String,
     val chord2: Chord,
-): GeneralChord {
+) : GeneralChord {
 
     override fun format(
         notation: ChordsNotation,
@@ -73,8 +73,8 @@ data class CompoundChord(
 
     override fun clone(): CompoundChord {
         return this.copy(
-            chord1=this.chord1.copy(),
-            chord2=this.chord2.copy(),
+            chord1 = this.chord1.copy(),
+            chord2 = this.chord2.copy(),
         )
     }
 }

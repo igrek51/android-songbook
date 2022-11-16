@@ -27,8 +27,8 @@ class ChordSegmentDetector {
 }
 
 data class ChordSegment(
-        val chord: String,
-        val start: Int,
+    val chord: String,
+    val start: Int,
 )
 
 class ChordSegmentApplier {
@@ -54,9 +54,9 @@ class ChordSegmentApplier {
         val minus1 = before.takeLast(1)
         val plus1 = after.take(1)
         if (
-                (minus2.isEmpty() || !minus2.hasLetters()) &&
-                minus1.isNotEmpty() && minus1.hasLetters() &&
-                plus1.isNotEmpty() && plus1.hasLetters()
+            (minus2.isEmpty() || !minus2.hasLetters()) &&
+            minus1.isNotEmpty() && minus1.hasLetters() &&
+            plus1.isNotEmpty() && plus1.hasLetters()
         ) {
             return draft - 1
         }

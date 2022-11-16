@@ -38,7 +38,12 @@ class ExportFileChooser(
                     type = "text/plain"
                     putExtra(Intent.EXTRA_TITLE, filename)
                 }
-                activityResultDispatcher.startActivityForResult(Intent.createChooser(intent, title)) { resultCode: Int, data: Intent? ->
+                activityResultDispatcher.startActivityForResult(
+                    Intent.createChooser(
+                        intent,
+                        title,
+                    )
+                ) { resultCode: Int, data: Intent? ->
                     if (resultCode == Activity.RESULT_OK) {
                         onFileSelect(data?.data)
                     }
@@ -53,10 +58,11 @@ class ExportFileChooser(
     private fun onFileSelect(selectedUri: Uri?) {
         SafeExecutor {
             if (selectedUri != null) {
-                activity.contentResolver.openOutputStream(selectedUri)?.use { outputStream: OutputStream ->
-                    outputStream.write(contentToBeSaved.toByteArray())
-                    onSuccess.invoke(selectedUri)
-                }
+                activity.contentResolver.openOutputStream(selectedUri)
+                    ?.use { outputStream: OutputStream ->
+                        outputStream.write(contentToBeSaved.toByteArray())
+                        onSuccess.invoke(selectedUri)
+                    }
             }
         }
     }

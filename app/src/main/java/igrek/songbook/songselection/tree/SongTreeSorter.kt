@@ -16,12 +16,12 @@ class SongTreeSorter {
     }
 
     private val categorySongOrdering = Ordering.natural<Boolean>()
-            .onResultOf(Function<SongTreeItem, Boolean> { it?.isCategory == true })
+        .onResultOf(Function<SongTreeItem, Boolean> { it?.isCategory == true })
 
     private val categoryTypeOrdering = //
-            Ordering.explicit(CategoryType.CUSTOM, CategoryType.ARTIST, CategoryType.OTHERS)
-                    .nullsLast<CategoryType>()
-                    .onResultOf<SongTreeItem>(categoryTypeExtractor)
+        Ordering.explicit(CategoryType.CUSTOM, CategoryType.ARTIST, CategoryType.OTHERS)
+            .nullsLast<CategoryType>()
+            .onResultOf<SongTreeItem>(categoryTypeExtractor)
 
     private val itemNameOrdering = Ordering.from<SongTreeItem> { lhs, rhs ->
         val lName = lhs.simpleName!!.lowercase(locale)
@@ -30,8 +30,8 @@ class SongTreeSorter {
     }
 
     private val songTreeItemOrdering = categorySongOrdering // songs before categories
-            .compound(categoryTypeOrdering) // CUSTOM, ARTIST (...), OTHERS
-            .compound(itemNameOrdering) // sort by name
+        .compound(categoryTypeOrdering) // CUSTOM, ARTIST (...), OTHERS
+        .compound(itemNameOrdering) // sort by name
 
     fun sort(items: List<SongTreeItem>): List<SongTreeItem> {
         // make it modifiable

@@ -24,8 +24,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
 class SongTreeLayoutController(
-        scrollPosBuffer: LazyInject<ScrollPosBuffer> = appFactory.scrollPosBuffer,
-        appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
+    scrollPosBuffer: LazyInject<ScrollPosBuffer> = appFactory.scrollPosBuffer,
+    appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
 ) : SongSelectionLayoutController(), MainLayout {
     private val scrollPosBuffer by LazyExtractor(scrollPosBuffer)
     private val appLanguageService by LazyExtractor(appLanguageService)
@@ -54,21 +54,22 @@ class SongTreeLayoutController(
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
         subscriptions.add(songsRepository.dbChangeSubject
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    if (layoutController.isState(this::class))
-                        updateSongItemsList()
-                }, UiErrorHandler::handleError))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                if (layoutController.isState(this::class))
+                    updateSongItemsList()
+            }, UiErrorHandler::handleError)
+        )
 
         layout.findViewById<ImageButton>(R.id.languageFilterButton)?.apply {
             val songLanguageEntries = appLanguageService.songLanguageEntries()
             val selected = appLanguageService.selectedSongLanguages
             val title = uiResourceService.resString(R.string.song_languages)
             languagePicker = MultiPicker(
-                    activity,
-                    entityNames = songLanguageEntries,
-                    selected = selected,
-                    title = title,
+                activity,
+                entityNames = songLanguageEntries,
+                selected = selected,
+                title = title,
             ) { selectedLanguages ->
                 if (appLanguageService.selectedSongLanguages != selectedLanguages) {
                     appLanguageService.selectedSongLanguages = selectedLanguages.toSet()
@@ -90,7 +91,8 @@ class SongTreeLayoutController(
             nextLeft = { currentFocusId: Int, currentView: View ->
                 when (currentFocusId) {
                     R.id.itemSongMoreButton, R.id.itemsList -> {
-                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        (currentView as ViewGroup).descendantFocusability =
+                            ViewGroup.FOCUS_BLOCK_DESCENDANTS
                         itemsListView?.requestFocusFromTouch()
                     }
                 }
@@ -104,7 +106,8 @@ class SongTreeLayoutController(
             nextRight = { currentFocusId: Int, currentView: View ->
                 when {
                     currentFocusId == R.id.itemsList && currentView.findViewById<View>(R.id.itemSongMoreButton)?.isVisible == true -> {
-                        (currentView as? ViewGroup)?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+                        (currentView as? ViewGroup)?.descendantFocusability =
+                            ViewGroup.FOCUS_BEFORE_DESCENDANTS
                         R.id.itemSongMoreButton
                     }
                     else -> 0
@@ -113,7 +116,8 @@ class SongTreeLayoutController(
             nextUp = { currentFocusId: Int, currentView: View ->
                 when (currentFocusId) {
                     R.id.itemSongMoreButton, R.id.itemsList -> {
-                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        (currentView as ViewGroup).descendantFocusability =
+                            ViewGroup.FOCUS_BLOCK_DESCENDANTS
                         itemsListView?.requestFocusFromTouch()
                     }
                 }
@@ -131,7 +135,8 @@ class SongTreeLayoutController(
             nextDown = { currentFocusId: Int, currentView: View ->
                 when (currentFocusId) {
                     R.id.itemSongMoreButton, R.id.itemsList -> {
-                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        (currentView as ViewGroup).descendantFocusability =
+                            ViewGroup.FOCUS_BLOCK_DESCENDANTS
                         itemsListView?.requestFocusFromTouch()
                     }
                 }
@@ -163,7 +168,7 @@ class SongTreeLayoutController(
         // reload current category
         if (isCategorySelected()) {
             currentCategory = songsRepository.allSongsRepo.categories.get()
-                    .firstOrNull { category -> category.id == currentCategory?.id }
+                .firstOrNull { category -> category.id == currentCategory?.id }
         }
         super.updateSongItemsList()
         if (isCategorySelected()) {
@@ -182,19 +187,19 @@ class SongTreeLayoutController(
         return if (isCategorySelected()) {
             // selected category
             currentCategory?.getUnlockedSongs().orEmpty()
-                    .filter { song -> song.language in acceptedLangCodes }
-                    .asSequence()
-                    .map { song -> SongTreeItem.song(song) }
-                    .toMutableList()
+                .filter { song -> song.language in acceptedLangCodes }
+                .asSequence()
+                .map { song -> SongTreeItem.song(song) }
+                .toMutableList()
         } else {
             // all categories apart from custom
             songsRepo.publicCategories.get()
-                    .filter { category ->
-                        category.songs.any { song -> song.language in acceptedLangCodes }
-                    }
-                    .asSequence()
-                    .map { category -> SongTreeItem.category(category) }
-                    .toMutableList()
+                .filter { category ->
+                    category.songs.any { song -> song.language in acceptedLangCodes }
+                }
+                .asSequence()
+                .map { category -> SongTreeItem.category(category) }
+                .toMutableList()
         }
     }
 

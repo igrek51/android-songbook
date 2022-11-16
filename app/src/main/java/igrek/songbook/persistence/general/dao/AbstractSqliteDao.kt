@@ -22,7 +22,12 @@ abstract class AbstractSqliteDao {
         return getDatabase().rawQuery(sql, selectionArgs)
     }
 
-    protected fun <T> queryOneValue(mapper: (Cursor) -> T, defaultValue: T, sql: String, vararg args: Any): T {
+    protected fun <T> queryOneValue(
+        mapper: (Cursor) -> T,
+        defaultValue: T,
+        sql: String,
+        vararg args: Any
+    ): T {
         try {
             val cursor = sqlQuery(sql, *args)
             cursor.use { cursorIn ->

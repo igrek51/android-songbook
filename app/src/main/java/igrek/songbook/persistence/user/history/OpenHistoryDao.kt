@@ -6,13 +6,13 @@ import io.reactivex.subjects.PublishSubject
 import java.util.*
 
 class OpenHistoryDao(
-        path: String,
+    path: String,
 ) : AbstractJsonDao<OpenHistoryDb>(
-        path,
-        dbName = "history",
-        schemaVersion = 1,
-        clazz = OpenHistoryDb::class.java,
-        serializer = OpenHistoryDb.serializer()
+    path,
+    dbName = "history",
+    schemaVersion = 1,
+    clazz = OpenHistoryDb::class.java,
+    serializer = OpenHistoryDb.serializer()
 ) {
     val historyDb: OpenHistoryDb get() = db!!
     val historyDbSubject = PublishSubject.create<OpenHistoryDb>()
@@ -34,9 +34,9 @@ class OpenHistoryDao(
         val custom = namespace == SongNamespace.Custom
         // remove other occurrences and old history
         historyDb.songs = historyDb.songs
-                .filter { s -> !(s.songId == songId && s.custom == custom) }
-                .take(openedHistoryLimit - 1)
-                .toMutableList()
+            .filter { s -> !(s.songId == songId && s.custom == custom) }
+            .take(openedHistoryLimit - 1)
+            .toMutableList()
         historyDb.songs.add(0, OpenedSong(songId, custom, Date().time))
         historyDbSubject.onNext(historyDb)
     }

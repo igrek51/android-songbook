@@ -82,26 +82,26 @@ class LayoutController(
     private var currentLayout: MainLayout? = null
     private var layoutHistory: MutableList<MainLayout> = mutableListOf()
     private var registeredLayouts: Map<KClass<out MainLayout>, MainLayout> = mapOf(
-            SongTreeLayoutController::class to songTreeLayoutController.get(),
-            SongSearchLayoutController::class to songSearchLayoutController.get(),
-            SongPreviewLayoutController::class to songPreviewLayoutController.get(),
-            ContactLayoutController::class to contactLayoutController.get(),
-            SettingsLayoutController::class to settingsLayoutController.get(),
-            EditSongLayoutController::class to editSongLayoutController.get(),
-            ChordsEditorLayoutController::class to chordsEditorLayoutController.get(),
-            CustomSongsListLayoutController::class to customSongsListLayoutController.get(),
-            FavouritesLayoutController::class to favouritesLayoutController.get(),
-            PlaylistLayoutController::class to playlistLayoutController.get(),
-            LatestSongsLayoutController::class to latestSongsLayoutController.get(),
-            TopSongsLayoutController::class to topSongsLayoutController.get(),
-            OpenHistoryLayoutController::class to openHistoryLayoutController.get(),
-            MissingSongLayoutController::class to missingSongLayoutController.get(),
-            PublishSongLayoutController::class to publishSongLayoutController.get(),
-            AdminSongsLayoutContoller::class to adminSongsLayoutContoller.get(),
-            RoomListLayoutController::class to roomListLayoutController.get(),
-            RoomLobbyLayoutController::class to roomLobbyLayoutController.get(),
-            BillingLayoutController::class to billingLayoutController.get(),
-            WebviewLayoutController::class to webviewLayoutController.get(),
+        SongTreeLayoutController::class to songTreeLayoutController.get(),
+        SongSearchLayoutController::class to songSearchLayoutController.get(),
+        SongPreviewLayoutController::class to songPreviewLayoutController.get(),
+        ContactLayoutController::class to contactLayoutController.get(),
+        SettingsLayoutController::class to settingsLayoutController.get(),
+        EditSongLayoutController::class to editSongLayoutController.get(),
+        ChordsEditorLayoutController::class to chordsEditorLayoutController.get(),
+        CustomSongsListLayoutController::class to customSongsListLayoutController.get(),
+        FavouritesLayoutController::class to favouritesLayoutController.get(),
+        PlaylistLayoutController::class to playlistLayoutController.get(),
+        LatestSongsLayoutController::class to latestSongsLayoutController.get(),
+        TopSongsLayoutController::class to topSongsLayoutController.get(),
+        OpenHistoryLayoutController::class to openHistoryLayoutController.get(),
+        MissingSongLayoutController::class to missingSongLayoutController.get(),
+        PublishSongLayoutController::class to publishSongLayoutController.get(),
+        AdminSongsLayoutContoller::class to adminSongsLayoutContoller.get(),
+        RoomListLayoutController::class to roomListLayoutController.get(),
+        RoomLobbyLayoutController::class to roomLobbyLayoutController.get(),
+        BillingLayoutController::class to billingLayoutController.get(),
+        WebviewLayoutController::class to webviewLayoutController.get(),
     )
     private val logger = LoggerFactory.logger
     private val layoutCache = hashMapOf<Int, View>()
@@ -122,7 +122,7 @@ class LayoutController(
 
     fun showLayout(layoutClass: KClass<out MainLayout>, disableReturn: Boolean = false): Job {
         val layoutController = registeredLayouts[layoutClass]
-                ?: throw IllegalArgumentException("${layoutClass.simpleName} class not registered as layout")
+            ?: throw IllegalArgumentException("${layoutClass.simpleName} class not registered as layout")
 
         if (disableReturn) {
             // remove current layout from history
@@ -170,7 +170,10 @@ class LayoutController(
     private fun createLayout(layoutResourceId: Int): Pair<View, Boolean> {
         val inflater = activity.layoutInflater
         val properLayoutView = inflater.inflate(layoutResourceId, null)
-        properLayoutView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        properLayoutView.layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
         layoutCache[layoutResourceId] = properLayoutView
         return properLayoutView to false
     }

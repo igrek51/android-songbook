@@ -48,7 +48,7 @@ class RandomSongOpener(
             return
         }
 
-        songOpener.openSongPreview(randomSong, playlist=playlist)
+        songOpener.openSongPreview(randomSong, playlist = playlist)
     }
 
     private fun songsToShuffle(playlist: Playlist?): List<Song> {

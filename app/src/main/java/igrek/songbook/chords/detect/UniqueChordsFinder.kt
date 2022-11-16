@@ -1,6 +1,9 @@
 package igrek.songbook.chords.detect
 
-import igrek.songbook.chords.model.*
+import igrek.songbook.chords.model.Chord
+import igrek.songbook.chords.model.ChordFragmentType
+import igrek.songbook.chords.model.LyricsModel
+import igrek.songbook.chords.model.LyricsTextType
 
 class UniqueChordsFinder {
 

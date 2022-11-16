@@ -2,11 +2,11 @@ package igrek.songbook.chords.arranger
 
 import igrek.songbook.chords.arranger.wordwrap.Fragment
 import igrek.songbook.chords.arranger.wordwrap.LineWrapper
-import igrek.songbook.chords.render.TypefaceLengthMapper
 import igrek.songbook.chords.model.LyricsFragment
 import igrek.songbook.chords.model.LyricsLine
 import igrek.songbook.chords.model.LyricsModel
 import igrek.songbook.chords.model.LyricsTextType
+import igrek.songbook.chords.render.TypefaceLengthMapper
 import igrek.songbook.settings.theme.DisplayStyle
 
 class LyricsArranger(
@@ -70,8 +70,8 @@ class LyricsArranger(
 
         // cleanup blank fragments
         val fragments = line.fragments
-                .onEach { fragment -> fragment.text = fragment.text.trimEnd() }
-                .filter { fragment -> fragment.text.isNotBlank() }
+            .onEach { fragment -> fragment.text = fragment.text.trimEnd() }
+            .filter { fragment -> fragment.text.isNotBlank() }
 
         return LyricsLine(fragments)
     }
@@ -106,24 +106,32 @@ class LyricsArranger(
         }
     }
 
-    private fun padInlineChord(previous: Fragment?, current: Fragment, next: Fragment?, textSpaceWidth: Float) {
+    private fun padInlineChord(
+        previous: Fragment?,
+        current: Fragment,
+        next: Fragment?,
+        textSpaceWidth: Float
+    ) {
         // when chord inside a word, skip separating
-        if (previous.touchesWithNext(current) && current.touchesWithNext(next) &&
-                previous?.type == LyricsTextType.REGULAR_TEXT && next?.type == LyricsTextType.REGULAR_TEXT) {
+        if (previous.touchesWithNext(current) &&
+            current.touchesWithNext(next) &&
+            previous?.type == LyricsTextType.REGULAR_TEXT &&
+            next?.type == LyricsTextType.REGULAR_TEXT
+        ) {
             return
         }
 
         previous?.takeIf { previous.touchesWithNext(current) }
-                ?.let {
-                    it.text = it.text + " "
-                    it.width += textSpaceWidth
-                }
+            ?.let {
+                it.text = it.text + " "
+                it.width += textSpaceWidth
+            }
 
         next?.takeIf { current.touchesWithNext(next) }
-                ?.let {
-                    it.text = " " + it.text
-                    it.width += textSpaceWidth
-                }
+            ?.let {
+                it.text = " " + it.text
+                it.width += textSpaceWidth
+            }
     }
 
     private fun Fragment?.touchesWithNext(next: Fragment?): Boolean {

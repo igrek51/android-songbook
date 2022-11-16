@@ -2,7 +2,7 @@ package igrek.songbook.info.errorcheck
 
 
 class SafeExecutor(
-        action: () -> Unit,
+    action: () -> Unit,
 ) {
 
     init {

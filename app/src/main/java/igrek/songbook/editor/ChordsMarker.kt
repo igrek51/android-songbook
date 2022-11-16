@@ -59,11 +59,11 @@ class ChordsMarker(
     }
 
     private fun List<String>.allFragmentsAreChords(): Boolean =
-            this.all { fragment ->
-                fragment.isBlank() || fragment.trim().run {
-                    startsWith("[") && endsWith("]")
-                }
+        this.all { fragment ->
+            fragment.isBlank() || fragment.trim().run {
+                startsWith("[") && endsWith("]")
             }
+        }
 
     private fun MutableList<String>.removeLastSpace() {
         this.removeAll { it.isEmpty() }

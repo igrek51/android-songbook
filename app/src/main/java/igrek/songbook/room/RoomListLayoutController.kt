@@ -18,11 +18,11 @@ import kotlinx.coroutines.*
 
 @OptIn(DelicateCoroutinesApi::class)
 class RoomListLayoutController(
-        bluetoothService: LazyInject<BluetoothService> = appFactory.bluetoothService,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
+    bluetoothService: LazyInject<BluetoothService> = appFactory.bluetoothService,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
 ) : InflatedLayout(
-        _layoutResourceId = R.layout.screen_room_list
+    _layoutResourceId = R.layout.screen_room_list
 ) {
     private val bluetoothService by LazyExtractor(bluetoothService)
     private val uiInfoService by LazyExtractor(uiInfoService)
@@ -43,9 +43,10 @@ class RoomListLayoutController(
             return
         }
 
-        layout.findViewById<ImageButton>(R.id.moreActionsButton)?.setOnClickListener(SafeClickListener {
-            showMoreActions()
-        })
+        layout.findViewById<ImageButton>(R.id.moreActionsButton)
+            ?.setOnClickListener(SafeClickListener {
+                showMoreActions()
+            })
 
         myNameEditText = layout.findViewById<EditText>(R.id.myNameEditText)?.also {
             it.setText(bluetoothService.deviceName())
@@ -103,7 +104,10 @@ class RoomListLayoutController(
         roomLobby.onRoomWrongPassword = ::onRoomWrongPassword
         roomLobby.onRoomWelcomedSuccessfully = ::onRoomWelcomedSuccessfully
         if (withPassword) {
-            InputDialogBuilder().input(R.string.screen_share_enter_room_password, null) { password ->
+            InputDialogBuilder().input(
+                R.string.screen_share_enter_room_password,
+                null
+            ) { password ->
                 roomLobby.enterRoom(username, password)
             }
         } else {
@@ -124,11 +128,13 @@ class RoomListLayoutController(
     }
 
     private fun showMoreActions() {
-        ContextMenuBuilder().showContextMenu(mutableListOf(
+        ContextMenuBuilder().showContextMenu(
+            mutableListOf(
                 ContextMenuBuilder.Action(R.string.screen_share_scan_rooms) {
                     scanRooms()
                 },
-        ))
+            )
+        )
     }
 
     private fun scanRooms() {
@@ -143,9 +149,11 @@ class RoomListLayoutController(
                 GlobalScope.launch {
                     for (progress in progressCh) {
                         if (showScanning)
-                            uiInfoService.showInfo(R.string.room_scanning_progress,
-                                    "${progress.done.get()}/${progress.all.get()}",
-                                    indefinite = true)
+                            uiInfoService.showInfo(
+                                R.string.room_scanning_progress,
+                                "${progress.done.get()}/${progress.all.get()}",
+                                indefinite = true
+                            )
                     }
                 }
 
@@ -158,7 +166,10 @@ class RoomListLayoutController(
                 if (showScanning) {
                     val found = joinRoomListView?.items?.size ?: 0
                     if (found > 0) {
-                        uiInfoService.showInfo(R.string.room_scanning_completed_found, found.toString())
+                        uiInfoService.showInfo(
+                            R.string.room_scanning_completed_found,
+                            found.toString()
+                        )
                     } else {
                         uiInfoService.showInfo(R.string.room_scanning_completed_not_found)
                     }

@@ -63,7 +63,11 @@ class PlaylistService(
 
     private fun addSongToPlaylist(playlist: Playlist, song: Song) {
         if (songsRepository.playlistDao.isSongOnPlaylist(song, playlist)) {
-            uiInfoService.showInfo(R.string.song_already_on_playlist, song.displayName(), playlist.name)
+            uiInfoService.showInfo(
+                R.string.song_already_on_playlist,
+                song.displayName(),
+                playlist.name
+            )
             return
         }
         songsRepository.playlistDao.addSongToPlaylist(song, playlist)
@@ -72,9 +76,9 @@ class PlaylistService(
 
     fun removeFromPlaylist(song: Song) {
         val playlistsWithSong = songsRepository.playlistDao.playlistDb.playlists
-                .filter { playlist ->
-                    songsRepository.playlistDao.isSongOnPlaylist(song, playlist)
-                }
+            .filter { playlist ->
+                songsRepository.playlistDao.isSongOnPlaylist(song, playlist)
+            }
 
         when (playlistsWithSong.size) {
             0 -> {
@@ -102,7 +106,11 @@ class PlaylistService(
 
     private fun removeFromPlaylist(song: Song, playlist: Playlist) {
         songsRepository.playlistDao.removeSongFromPlaylist(song, playlist)
-        uiInfoService.showInfo(R.string.song_removed_from_playlist, song.displayName(), playlist.name)
+        uiInfoService.showInfo(
+            R.string.song_removed_from_playlist,
+            song.displayName(),
+            playlist.name
+        )
     }
 
     fun goToNextOrPrevious(next: Int): Boolean {
@@ -127,7 +135,7 @@ class PlaylistService(
         }
         val songId = SongIdentifier(nextPlaylistSong.songId, namespace)
         val nextSong = songsRepository.allSongsRepo.songFinder.find(songId) ?: return false
-        songOpener.openSongPreview(nextSong, playlist=playlist)
+        songOpener.openSongPreview(nextSong, playlist = playlist)
         return true
     }
 

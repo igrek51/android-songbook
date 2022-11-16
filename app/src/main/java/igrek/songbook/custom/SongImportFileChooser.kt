@@ -50,19 +50,20 @@ class SongImportFileChooser(
     }
 
     fun init() {
-        fileChooserLauncher = activityResultDispatcher.registerActivityResultLauncher { resultCode: Int, data: Intent? ->
-            when (resultCode) {
-                Activity.RESULT_OK -> {
-                    onFileSelect(data)
-                }
-                Activity.RESULT_CANCELED -> {
-                    uiInfoService.showToast(R.string.file_select_operation_canceled)
-                }
-                else -> {
-                    UiErrorHandler().handleError(RuntimeException("Unknown operation result"))
+        fileChooserLauncher =
+            activityResultDispatcher.registerActivityResultLauncher { resultCode: Int, data: Intent? ->
+                when (resultCode) {
+                    Activity.RESULT_OK -> {
+                        onFileSelect(data)
+                    }
+                    Activity.RESULT_CANCELED -> {
+                        uiInfoService.showToast(R.string.file_select_operation_canceled)
+                    }
+                    else -> {
+                        UiErrorHandler().handleError(RuntimeException("Unknown operation result"))
+                    }
                 }
             }
-        }
     }
 
     fun showFileChooser() {
@@ -105,9 +106,14 @@ class SongImportFileChooser(
                 val fileContent: String = extractFileContent(uri)
 
                 val parsedContent: ParsedSongContent = parseSongContentMetadata(fileContent)
-                val title = parsedContent.title ?: File(getFileNameFromUri(uri)).nameWithoutExtension.capitalize()
+                val title = parsedContent.title
+                    ?: File(getFileNameFromUri(uri)).nameWithoutExtension.capitalize()
 
-                editSongLayoutController.setupImportedSong(title, parsedContent.content, parsedContent.notation)
+                editSongLayoutController.setupImportedSong(
+                    title,
+                    parsedContent.content,
+                    parsedContent.notation
+                )
             }
         }
     }
@@ -156,7 +162,11 @@ class SongImportFileChooser(
         }
     }
 
-    private fun extractPhysicalFileContent(inputStream: InputStream, filename: String, mimetype: String?): String {
+    private fun extractPhysicalFileContent(
+        inputStream: InputStream,
+        filename: String,
+        mimetype: String?,
+    ): String {
         val size = inputStream.available()
         logger.debug("Reading file: $filename, type: $mimetype, size: $size")
 
@@ -176,7 +186,10 @@ class SongImportFileChooser(
                 extractTxtContent(inputStream)
             }
             else -> {
-                val error = uiInfoService.resString(R.string.error_song_file_type_unallowed, "$extension ($mimetype)")
+                val error = uiInfoService.resString(
+                    R.string.error_song_file_type_unallowed,
+                    "$extension ($mimetype)"
+                )
                 throw RuntimeException(error)
             }
         }
@@ -297,7 +310,7 @@ class SongImportFileChooser(
     }
 
 
-    data class ParsedSongContent (
+    data class ParsedSongContent(
         val content: String,
         val title: String?,
         val notation: ChordsNotation?,

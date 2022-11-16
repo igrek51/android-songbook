@@ -8,18 +8,19 @@ import igrek.songbook.R
 
 
 class MultiPicker<T>(
-        private val context: Context,
-        private val entityNames: LinkedHashMap<T, String>,
-        selected: Set<T>,
-        private val title: String,
-        private val onChange: (Set<T>) -> Unit,
+    private val context: Context,
+    private val entityNames: LinkedHashMap<T, String>,
+    selected: Set<T>,
+    private val title: String,
+    private val onChange: (Set<T>) -> Unit,
 ) : OnMultiChoiceClickListener {
 
     private var selected = HashSet<T>(selected)
 
     fun showChoiceDialog() {
         val namesArray = entityNames.values.toTypedArray()
-        val valuesArray: BooleanArray = orderedKeys().map { key -> key in selected }.toBooleanArray()
+        val valuesArray: BooleanArray =
+            orderedKeys().map { key -> key in selected }.toBooleanArray()
 
         val builder: AlertDialog.Builder = AlertDialog.Builder(context)
         builder.setTitle(title)

@@ -27,7 +27,7 @@
                 android:layout_margin="8dp"
                 android:gravity="bottom"
                 android:text="@string/contact_label"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/contactSubjectEdit"
@@ -38,7 +38,7 @@
                 android:gravity="top"
                 android:hint="@string/contact_subject_hint"
                 android:inputType="text|textMultiLine"
-                android:padding="8dp"/>
+                android:padding="8dp" />
 
             <EditText
                 android:id="@+id/contactMessageEdit"
@@ -50,7 +50,7 @@
                 android:hint="@string/contact_message_hint"
                 android:inputType="text|textMultiLine"
                 android:minHeight="200dp"
-                android:padding="8dp"/>
+                android:padding="8dp" />
 
             <EditText
                 android:id="@+id/contactAuthorEdit"
@@ -61,14 +61,14 @@
                 android:gravity="center_vertical"
                 android:hint="@string/contact_author_hint"
                 android:inputType="text"
-                android:padding="8dp"/>
+                android:padding="8dp" />
 
             <Button
                 android:id="@+id/contactSendButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:text="@string/contact_send"/>
+                android:text="@string/contact_send" />
 
         </LinearLayout>
     </ScrollView>

@@ -14,8 +14,8 @@ import java.io.IOException
 
 @OptIn(DelicateCoroutinesApi::class)
 class NewSlaveListener(
-        private val bluetoothAdapter: BluetoothAdapter,
-        private val newSlaveChannel: SendChannel<PeerStream>,
+    private val bluetoothAdapter: BluetoothAdapter,
+    private val newSlaveChannel: SendChannel<PeerStream>,
 ) {
 
     private val initChannel = Channel<Result<Unit>>(1)
@@ -36,7 +36,10 @@ class NewSlaveListener(
 
         try {
             try {
-                serverSocket = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord("Songbook", BT_APP_UUID)
+                serverSocket = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord(
+                    "Songbook",
+                    BT_APP_UUID
+                )
                 initChannel.trySendBlocking(Result.success(Unit))
             } catch (e: Throwable) {
                 logger.error("creating Rfcomm server socket", e)
@@ -46,7 +49,8 @@ class NewSlaveListener(
 
             logger.debug("listening for Bluetooth connections")
             while (true) {
-                val socket: BluetoothSocket = serverSocket!!.accept() // This will block until there is a connection
+                val socket: BluetoothSocket =
+                    serverSocket!!.accept() // This will block until there is a connection
 
                 try {
                     val macAddress = socket.remoteDevice.address
@@ -60,7 +64,10 @@ class NewSlaveListener(
                     openSockets.add(socket)
 
                 } catch (connectException: IOException) {
-                    logger.error("Failed to start a Bluetooth connection as a server", connectException)
+                    logger.error(
+                        "Failed to start a Bluetooth connection as a server",
+                        connectException
+                    )
                     socket.close()
                 }
             }
@@ -77,7 +84,7 @@ class NewSlaveListener(
     fun isInitializedAsync(): Deferred<Result<Unit>> {
         return GlobalScope.async {
             initChannel.receiveCatching().getOrNull()
-                    ?: Result.failure(ClosedReceiveChannelException("init channel closed"))
+                ?: Result.failure(ClosedReceiveChannelException("init channel closed"))
         }
     }
 

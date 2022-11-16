@@ -4,29 +4,29 @@ import com.google.common.base.Objects
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
 data class Song(
-        var id: Long,
-        var title: String,
-        var categories: MutableList<Category> = mutableListOf(),
-        var content: String? = null,
-        var versionNumber: Long = 1,
-        var createTime: Long = 0, // timestamp in milliseconds
-        var updateTime: Long = 0, // timestamp in milliseconds
-        var comment: String? = null,
-        var preferredKey: String? = null,
-        var locked: Boolean = false,
-        var lockPassword: String? = null,
-        var author: String? = null,
-        var status: SongStatus,
-        var customCategoryName: String? = null,
-        var language: String? = null,
-        var metre: String? = null,
-        var rank: Double? = null,
-        var scrollSpeed: Double? = null,
-        var initialDelay: Double? = null,
-        var chordsNotation: ChordsNotation? = null,
-        var tags: String? = null,
-        var originalSongId: Long? = null,
-        var namespace: SongNamespace = SongNamespace.Public
+    var id: Long,
+    var title: String,
+    var categories: MutableList<Category> = mutableListOf(),
+    var content: String? = null,
+    var versionNumber: Long = 1,
+    var createTime: Long = 0, // timestamp in milliseconds
+    var updateTime: Long = 0, // timestamp in milliseconds
+    var comment: String? = null,
+    var preferredKey: String? = null,
+    var locked: Boolean = false,
+    var lockPassword: String? = null,
+    var author: String? = null,
+    var status: SongStatus,
+    var customCategoryName: String? = null,
+    var language: String? = null,
+    var metre: String? = null,
+    var rank: Double? = null,
+    var scrollSpeed: Double? = null,
+    var initialDelay: Double? = null,
+    var chordsNotation: ChordsNotation? = null,
+    var tags: String? = null,
+    var originalSongId: Long? = null,
+    var namespace: SongNamespace = SongNamespace.Public
 ) {
     override fun equals(other: Any?): Boolean {
         if (other !is Song)
@@ -48,8 +48,8 @@ data class Song(
 
     fun displayCategories(): String {
         val publicCategories = categories
-                .filter { it.type == CategoryType.ARTIST }
-                .joinToString(", ") { c -> c.displayName ?: "" }
+            .filter { it.type == CategoryType.ARTIST }
+            .joinToString(", ") { c -> c.displayName ?: "" }
         if (publicCategories.isNotEmpty())
             return publicCategories
         return customCategoryName.orEmpty()

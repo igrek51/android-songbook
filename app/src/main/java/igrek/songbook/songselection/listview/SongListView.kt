@@ -10,7 +10,8 @@ import igrek.songbook.songselection.SongClickListener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.tree.SongTreeItem
 
-class SongListView : ListView, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+class SongListView : ListView, AdapterView.OnItemClickListener,
+    AdapterView.OnItemLongClickListener {
 
     private var adapter: SongListItemAdapter? = null
     private var onClickListener: SongClickListener? = null
@@ -26,11 +27,19 @@ class SongListView : ListView, AdapterView.OnItemClickListener, AdapterView.OnIt
 
     constructor(context: Context) : super(context)
 
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle)
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(
+        context,
+        attrs,
+        defStyle
+    )
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 
-    fun init(context: Context, onClickListener: SongClickListener, songContextMenuBuilder: SongContextMenuBuilder) {
+    fun init(
+        context: Context,
+        onClickListener: SongClickListener,
+        songContextMenuBuilder: SongContextMenuBuilder
+    ) {
         this.onClickListener = onClickListener
         onItemClickListener = this
         onItemLongClickListener = this
@@ -48,7 +57,12 @@ class SongListView : ListView, AdapterView.OnItemClickListener, AdapterView.OnIt
             onClickListener!!.onSongItemClick(item!!)
     }
 
-    override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
+    override fun onItemLongClick(
+        parent: AdapterView<*>,
+        view: View,
+        position: Int,
+        id: Long
+    ): Boolean {
         val item = adapter!!.getItem(position)
         if (onClickListener != null)
             onClickListener!!.onSongItemLongClick(item!!)

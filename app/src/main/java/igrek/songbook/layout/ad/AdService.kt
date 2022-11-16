@@ -43,11 +43,11 @@ class AdService(
 
     init {
         requestAdViewSubject
-                .throttleFirst(120, TimeUnit.SECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    requestAdRefresh()
-                }, UiErrorHandler::handleError)
+            .throttleFirst(120, TimeUnit.SECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                requestAdRefresh()
+            }, UiErrorHandler::handleError)
     }
 
     fun initialize() {
@@ -151,7 +151,8 @@ class AdService(
         }
 
         val adContainerWidthDp = (adContainerWidthPixels / density).toInt()
-        val adSize: AdSize = AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adContainerWidthDp)
+        val adSize: AdSize =
+            AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adContainerWidthDp)
 
         adView.setAdSize(adSize)
         val adUnitResId = when {

@@ -4,11 +4,11 @@ import android.graphics.Paint
 import igrek.songbook.chords.arranger.LyricsArranger
 import igrek.songbook.chords.detect.KeyDetector
 import igrek.songbook.chords.model.LyricsCloner
-import igrek.songbook.chords.render.ChordsRenderer
-import igrek.songbook.chords.render.LyricsInflater
 import igrek.songbook.chords.model.LyricsModel
 import igrek.songbook.chords.parser.ChordParser
 import igrek.songbook.chords.parser.LyricsExtractor
+import igrek.songbook.chords.render.ChordsRenderer
+import igrek.songbook.chords.render.LyricsInflater
 import igrek.songbook.chords.syntax.MajorKey
 import igrek.songbook.chords.transpose.ChordsTransposer
 import igrek.songbook.chords.transpose.ChordsTransposerManager
@@ -72,7 +72,8 @@ class LyricsLoader(
         originalLyrics = if (fileContent.isEmpty()) {
             LyricsModel()
         } else {
-            val lyrics = LyricsExtractor(trimWhitespaces = preferencesState.trimWhitespaces).parseLyrics(fileContent)
+            val lyrics =
+                LyricsExtractor(trimWhitespaces = preferencesState.trimWhitespaces).parseLyrics(fileContent)
             val unknownChords = ChordParser(srcNotation).parseAndFillChords(lyrics)
             unknownChords.takeIf { it.isNotEmpty() }?.let {
                 logger.warn("Unknown chords: ${unknownChords.joinToString(", ")}")
@@ -84,7 +85,8 @@ class LyricsLoader(
     }
 
     private fun transposeAndFormatLyrics() {
-        val lyrics = ChordsTransposer().transposeLyrics(originalLyrics, chordsTransposerManager.transposedBy)
+        val lyrics =
+            ChordsTransposer().transposeLyrics(originalLyrics, chordsTransposerManager.transposedBy)
         songKey = KeyDetector().detectKey(lyrics)
 
         val toNotation = preferencesState.chordsNotation
@@ -92,7 +94,10 @@ class LyricsLoader(
             toNotation == originalSongNotation && chordsTransposerManager.transposedBy == 0 -> true
             else -> false
         }
-        ChordsRenderer(toNotation, songKey, preferencesState.forceSharpNotes).formatLyrics(lyrics, originalModifiers)
+        ChordsRenderer(toNotation, songKey, preferencesState.forceSharpNotes).formatLyrics(
+            lyrics,
+            originalModifiers,
+        )
         transposedLyrics = lyrics
 
         arrangeLyrics()

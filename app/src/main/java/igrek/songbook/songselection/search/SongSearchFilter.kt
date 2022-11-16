@@ -67,7 +67,7 @@ class SongSearchFilter(
 fun List<Song>.sortSongsByFilterRelevance(filter: SongSearchFilter): List<Song> {
     val songsRelevance = this.map { song -> song to filter.matchSongRelevance(song) }
     return songsRelevance.sortedWith(
-            compareBy<Pair<Song, Int>> { pair -> -pair.second }
+        compareBy<Pair<Song, Int>> { pair -> -pair.second }
             .thenBy { pair -> pair.first.displayName().lowercase(StringSimplifier.locale) }
-        ).map { pair -> pair.first }
+    ).map { pair -> pair.first }
 }

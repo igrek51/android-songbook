@@ -13,7 +13,7 @@ import okhttp3.RequestBody
 import okhttp3.Response
 
 class AdminCategoryManager(
-        adminService: LazyInject<AdminService> = appFactory.adminService,
+    adminService: LazyInject<AdminService> = appFactory.adminService,
 ) {
     private val adminService by LazyExtractor(adminService)
 
@@ -41,10 +41,10 @@ class AdminCategoryManager(
         val dto = CreateCategoryDto(name = categoryName)
         val json = jsonSerializer.encodeToString(CreateCategoryDto.serializer(), dto)
         val request: Request = Request.Builder()
-                .url(createCategoryUrl)
-                .post(RequestBody.create(jsonType, json))
-                .addHeader(authTokenHeader, adminService.userAuthToken)
-                .build()
+            .url(createCategoryUrl)
+            .post(RequestBody.create(jsonType, json))
+            .addHeader(authTokenHeader, adminService.userAuthToken)
+            .build()
         return httpRequester.httpRequestAsync(request) { response: Response ->
             logger.debug("Add category response", response.body()?.string())
         }
@@ -53,5 +53,5 @@ class AdminCategoryManager(
 
 @Serializable
 data class CreateCategoryDto(
-        var name: String? = null,
+    var name: String? = null,
 )

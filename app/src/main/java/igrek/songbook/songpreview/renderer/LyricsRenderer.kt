@@ -130,10 +130,10 @@ class LyricsRenderer internal constructor(
                     canvas.setFontTypeface(italicTypeface)
                     canvas.setColor(commentColor)
                     canvas.drawText(
-                            fragment.text,
-                            fragment.x * fontsize - scrollX,
-                            y + lineheight,
-                            Align.LEFT
+                        fragment.text,
+                        fragment.x * fontsize - scrollX,
+                        y + lineheight,
+                        Align.LEFT
                     )
                 }
                 LyricsTextType.LINEWRAPPER -> {}
@@ -176,7 +176,14 @@ class LyricsRenderer internal constructor(
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val thickness = canvas.scrollThickness * 4f
-            canvas.fillRectGradientH(w - thickness, eyeFocusTop, w, eyeFocusBottom, eyeFocusZoneColorTransparent, eyeFocusZoneColor)
+            canvas.fillRectGradientH(
+                w - thickness,
+                eyeFocusTop,
+                w,
+                eyeFocusBottom,
+                eyeFocusZoneColorTransparent,
+                eyeFocusZoneColor
+            )
         } else {
             val thickness = canvas.scrollThickness * 2f
             canvas.setColor(eyeFocusZoneColor)

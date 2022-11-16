@@ -33,16 +33,16 @@ class Migration037CustomSongs(private val activity: Activity) {
 
         val customSongs = tuples.map { tuple ->
             CustomSong(
-                    id = tuple[0] as Long,
-                    title = tuple[1] as String,
-                    categoryName = tuple[15] as String?,
-                    content = tuple[3] as String? ?: "",
-                    versionNumber = tuple[4] as Long,
-                    createTime = tuple[5] as Long,
-                    updateTime = tuple[6] as Long,
-                    comment = tuple[9] as String?,
-                    preferredKey = tuple[10] as String?,
-                    author = tuple[13] as String?
+                id = tuple[0] as Long,
+                title = tuple[1] as String,
+                categoryName = tuple[15] as String?,
+                content = tuple[3] as String? ?: "",
+                versionNumber = tuple[4] as Long,
+                createTime = tuple[5] as Long,
+                updateTime = tuple[6] as Long,
+                comment = tuple[9] as String?,
+                preferredKey = tuple[10] as String?,
+                author = tuple[13] as String?
             )
         }.toMutableList()
 
@@ -95,14 +95,37 @@ class Migration037CustomSongs(private val activity: Activity) {
                 val author = cursor.getString(cursor.getColumnIndexOrThrow("author"))
                 val stateId = cursor.getLong(cursor.getColumnIndexOrThrow("state"))
                 val categoryId = cursor.getLong(cursor.getColumnIndexOrThrow("category_id"))
-                val customCategoryName = cursor.getString(cursor.getColumnIndexOrThrow("custom_category_name"))
+                val customCategoryName =
+                    cursor.getString(cursor.getColumnIndexOrThrow("custom_category_name"))
                 val language = null
                 val rank = null
                 val scrollSpeed = null
                 val initialDelay = null
                 val metre = null
 
-                val tuple = mutableListOf(id, title, categoryId, fileContent, versionNumber, createTime, updateTime, custom, filename, comment, preferredKey, locked, lockPassword, author, stateId, customCategoryName, language, rank, scrollSpeed, initialDelay, metre)
+                val tuple = mutableListOf(
+                    id,
+                    title,
+                    categoryId,
+                    fileContent,
+                    versionNumber,
+                    createTime,
+                    updateTime,
+                    custom,
+                    filename,
+                    comment,
+                    preferredKey,
+                    locked,
+                    lockPassword,
+                    author,
+                    stateId,
+                    customCategoryName,
+                    language,
+                    rank,
+                    scrollSpeed,
+                    initialDelay,
+                    metre
+                )
                 tuples.add(tuple)
             }
 
@@ -130,7 +153,11 @@ class Migration037CustomSongs(private val activity: Activity) {
         }
     }
 
-    private fun sqlQuery(db: SQLiteDatabase, sql: String, selectionArgs: Array<String> = arrayOf()): Cursor {
+    private fun sqlQuery(
+        db: SQLiteDatabase,
+        sql: String,
+        selectionArgs: Array<String> = arrayOf()
+    ): Cursor {
         return db.rawQuery(sql, selectionArgs)
     }
 }

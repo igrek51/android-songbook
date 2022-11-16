@@ -60,18 +60,20 @@ open class Logger internal constructor() {
     protected fun log(message: String?, level: LogLevel, logPrefix: String) {
         if (level.moreOrEqualImportant(LoggerFactory.CONSOLE_LEVEL)) {
 
-            val consoleMessage: String
-            consoleMessage = if (level.lessOrEqualImportant(LoggerFactory.SHOW_TRACE_DETAILS_LEVEL)) {
-                val externalTrace = getFirstExternalTrace(Thread.currentThread()
-                        .stackTrace)
+            val consoleMessage: String =
+                if (level.lessOrEqualImportant(LoggerFactory.SHOW_TRACE_DETAILS_LEVEL)) {
+                    val externalTrace = getFirstExternalTrace(
+                        Thread.currentThread()
+                            .stackTrace
+                    )
 
-                val fileName = externalTrace.fileName
-                val lineNumber = externalTrace.lineNumber
+                    val fileName = externalTrace.fileName
+                    val lineNumber = externalTrace.lineNumber
 
-                String.format("%s(%s:%d): %s", logPrefix, fileName, lineNumber, message)
-            } else {
-                logPrefix + message
-            }
+                    String.format("%s(%s:%d): %s", logPrefix, fileName, lineNumber, message)
+                } else {
+                    logPrefix + message
+                }
 
             when {
                 level.moreOrEqualImportant(LogLevel.ERROR) -> printError(consoleMessage)
@@ -81,7 +83,8 @@ open class Logger internal constructor() {
             }
 
             if (level.moreOrEqualImportant(LogLevel.INFO) ||
-                    (BuildConfig.DEBUG && level.moreOrEqualImportant(LogLevel.DEBUG))) {
+                (BuildConfig.DEBUG && level.moreOrEqualImportant(LogLevel.DEBUG))
+            ) {
                 try {
                     CrashlyticsLogger().logCrashlytics(consoleMessage)
                 } catch (e: NoSuchMethodError) {

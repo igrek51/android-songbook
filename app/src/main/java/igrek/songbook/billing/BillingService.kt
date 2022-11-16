@@ -1,26 +1,26 @@
 package igrek.songbook.billing
 
+import android.app.Activity
 import android.content.Context
 import com.android.billingclient.api.*
-import igrek.songbook.inject.LazyExtractor
-import igrek.songbook.inject.LazyInject
-import igrek.songbook.inject.appFactory
-import android.app.Activity
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.inject.LazyExtractor
+import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.ad.AdService
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.PreferencesState
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlin.RuntimeException
 
 
-const val BILLING_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhCjsZRfLF2/6f0/5De3TAKzezDcx/Kozz3d+qsvsHS8Q3TPopC4ODQ8dCZG/6RHbtSMvqXmW7H1K/YqCYJ/cQ6LGwbe6QMUUDy9BV0l8yYaTFGqfkIhaHqbA95934K5DeAzXwnk6eFIWiRm5iTmlg9kNWwQafT3Yd8Es32xWcFh69NUAjIrlgS5xojjm5Tf8rksu1aF8uBwqxwvaCONpMYl9BABf9mzZ27ibiYvHSyAuPqyuQj1Ql4z4FZ8faF9oZrFkXCOD7iD1eoRIHUwelPvEAt5OIIYNyQpW4stv57RR7T8xgrj13GUOROozoaUyLswaR9aDsV51FUBvEoinkwIDAQAB"
+const val BILLING_PUBLIC_KEY =
+    "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhCjsZRfLF2/6f0/5De3TAKzezDcx/Kozz3d+qsvsHS8Q3TPopC4ODQ8dCZG/6RHbtSMvqXmW7H1K/YqCYJ/cQ6LGwbe6QMUUDy9BV0l8yYaTFGqfkIhaHqbA95934K5DeAzXwnk6eFIWiRm5iTmlg9kNWwQafT3Yd8Es32xWcFh69NUAjIrlgS5xojjm5Tf8rksu1aF8uBwqxwvaCONpMYl9BABf9mzZ27ibiYvHSyAuPqyuQj1Ql4z4FZ8faF9oZrFkXCOD7iD1eoRIHUwelPvEAt5OIIYNyQpW4stv57RR7T8xgrj13GUOROozoaUyLswaR9aDsV51FUBvEoinkwIDAQAB"
 
 const val PRODUCT_ID_NO_ADS = "no_ads_forever"
 const val PRODUCT_ID_DONATE_1_BEER = "donate_1_beer"
@@ -90,9 +90,9 @@ class BillingService(
         try {
             logger.debug("initializing Billing Service")
             billingClient = BillingClient.newBuilder(context)
-                    .setListener(this)
-                    .enablePendingPurchases()
-                    .build()
+                .setListener(this)
+                .enablePendingPurchases()
+                .build()
             billingClient?.startConnection(this)
         } catch (t: Throwable) {
             UiErrorHandler().handleError(t, R.string.error_purchase_error)
@@ -153,17 +153,19 @@ class BillingService(
                     .build()
             }
             val queryProductDetailsParams = QueryProductDetailsParams.newBuilder()
-                    .setProductList(queryProductsList)
-                    .build()
-            billingClient?.queryProductDetailsAsync(queryProductDetailsParams) {
-                billingResult: BillingResult, productDetailsList: List<ProductDetails> ->
+                .setProductList(queryProductsList)
+                .build()
+            billingClient?.queryProductDetailsAsync(queryProductDetailsParams) { billingResult: BillingResult, productDetailsList: List<ProductDetails> ->
                 onProductDetailsResponse(billingResult, productDetailsList)
                 initDetailsChannel.trySend(Result.success(true))
             }
         }
     }
 
-    private fun onProductDetailsResponse(billingResult: BillingResult, productDetails: List<ProductDetails>) {
+    private fun onProductDetailsResponse(
+        billingResult: BillingResult,
+        productDetails: List<ProductDetails>
+    ) {
         val responseCode = billingResult.responseCode
         val debugMessage = billingResult.debugMessage
         when (responseCode) {
@@ -174,14 +176,18 @@ class BillingService(
                     for (productDetail in productDetails) {
                         val productId = productDetail.productId
                         productsDetails[productId] = productDetail
-                        val offerDetails: ProductDetails.OneTimePurchaseOfferDetails? = productDetail.oneTimePurchaseOfferDetails
+                        val offerDetails: ProductDetails.OneTimePurchaseOfferDetails? =
+                            productDetail.oneTimePurchaseOfferDetails
                         productPrices[productId] = offerDetails?.formattedPrice
                     }
                     logger.debug("Product details fetched: ${productDetails.size}")
                 }
             }
             else -> {
-                UiErrorHandler().handleError(RuntimeException("Product details: $responseCode $debugMessage"), R.string.error_purchase_error)
+                UiErrorHandler().handleError(
+                    RuntimeException("Product details: $responseCode $debugMessage"),
+                    R.string.error_purchase_error
+                )
             }
         }
     }
@@ -196,7 +202,7 @@ class BillingService(
     }
 
     private suspend fun restorePurchases() {
-        try{
+        try {
 
             for (productId: String in this.knownAllProducts) {
                 productAmounts[productId] = 0
@@ -221,9 +227,11 @@ class BillingService(
                 }
             }
 
-            logger.debug("Restored purchases: " +
-                    "$PRODUCT_ID_NO_ADS - ${productStateMap[PRODUCT_ID_NO_ADS]?.name}, " +
-                    "$PRODUCT_ID_DONATE_1_BEER - ${productStateMap[PRODUCT_ID_DONATE_1_BEER]?.name} quantity=${productAmounts[PRODUCT_ID_DONATE_1_BEER]}")
+            logger.debug(
+                "Restored purchases: " +
+                        "$PRODUCT_ID_NO_ADS - ${productStateMap[PRODUCT_ID_NO_ADS]?.name}, " +
+                        "$PRODUCT_ID_DONATE_1_BEER - ${productStateMap[PRODUCT_ID_DONATE_1_BEER]?.name} quantity=${productAmounts[PRODUCT_ID_DONATE_1_BEER]}"
+            )
 
         } catch (t: Throwable) {
             UiErrorHandler().handleError(t, R.string.error_purchase_error)
@@ -245,7 +253,8 @@ class BillingService(
     fun launchBillingFlow(productId: String) {
         uiInfoService.showInfo(R.string.billing_starting_purchase)
         try {
-            val productDetails = productsDetails[productId] ?: throw RuntimeException("Product Details not found for product ID: $productId")
+            val productDetails = productsDetails[productId]
+                ?: throw RuntimeException("Product Details not found for product ID: $productId")
             val productDetailsParamsList = listOf(
                 BillingFlowParams.ProductDetailsParams.newBuilder()
                     .setProductDetails(productDetails)
@@ -302,7 +311,10 @@ class BillingService(
         }
     }
 
-    override fun onPurchasesUpdated(billingResult: BillingResult, purchases: MutableList<Purchase>?) {
+    override fun onPurchasesUpdated(
+        billingResult: BillingResult,
+        purchases: MutableList<Purchase>?,
+    ) {
         try {
             when (billingResult.responseCode) {
                 BillingClient.BillingResponseCode.OK -> {
@@ -384,7 +396,8 @@ class BillingService(
                 for (productId in purchase.products) {
 
                     if (purchase.isAcknowledged) {
-                        productAmounts[productId] = (productAmounts[productId] ?: 0) + purchase.quantity
+                        productAmounts[productId] =
+                            (productAmounts[productId] ?: 0) + purchase.quantity
 
                     } else {
 
@@ -396,7 +409,8 @@ class BillingService(
                         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                             logger.info("Purchase acknowledged: $productId")
                             productStateMap[productId] = ProductState.PURCHASED_AND_ACKNOWLEDGED
-                            productAmounts[productId] = (productAmounts[productId] ?: 0) + purchase.quantity
+                            productAmounts[productId] =
+                                (productAmounts[productId] ?: 0) + purchase.quantity
                             savePurchaseData(productId)
                             uiInfoService.showInfo(R.string.billing_thanks_for_purchase_confirm)
 
@@ -434,7 +448,8 @@ class BillingService(
 
             when (purchase.purchaseState) {
                 Purchase.PurchaseState.PENDING -> productStateMap[productId] = ProductState.PENDING
-                Purchase.PurchaseState.UNSPECIFIED_STATE -> productStateMap[productId] = ProductState.UNPURCHASED
+                Purchase.PurchaseState.UNSPECIFIED_STATE -> productStateMap[productId] =
+                    ProductState.UNPURCHASED
                 Purchase.PurchaseState.PURCHASED -> if (purchase.isAcknowledged) {
                     productStateMap[productId] = ProductState.PURCHASED_AND_ACKNOWLEDGED
                     savePurchaseData(productId)
@@ -455,14 +470,15 @@ class BillingService(
             for (productId in purchaseHistoryRecord.products) {
                 val isConsumable = knownConsumableInAppProducts.contains(productId)
                 if (isConsumable) {
-                    productAmounts[productId] = (productAmounts[productId] ?: 0) + purchaseHistoryRecord.quantity
+                    productAmounts[productId] =
+                        (productAmounts[productId] ?: 0) + purchaseHistoryRecord.quantity
                 }
             }
         }
     }
 
     private fun savePurchaseData(productId: String) {
-        when(productId) {
+        when (productId) {
             PRODUCT_ID_NO_ADS -> {
                 if (!preferencesState.purchasedAdFree) {
                     preferencesState.purchasedAdFree = true
@@ -494,7 +510,8 @@ class BillingService(
         }
     }
 
-    private fun isConsumable(productId: String): Boolean = knownConsumableInAppProducts.contains(productId)
+    private fun isConsumable(productId: String): Boolean =
+        knownConsumableInAppProducts.contains(productId)
 
     fun waitForInitialized() {
         runBlocking {
@@ -504,7 +521,7 @@ class BillingService(
 
     fun isPurchased(productId: String): Boolean? {
         return productStateMap[productId]
-                ?.let { productState -> productState == ProductState.PURCHASED_AND_ACKNOWLEDGED }
+            ?.let { productState -> productState == ProductState.PURCHASED_AND_ACKNOWLEDGED }
     }
 
     fun getProductPrice(productId: String): String? {

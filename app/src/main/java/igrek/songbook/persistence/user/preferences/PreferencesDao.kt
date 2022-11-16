@@ -3,13 +3,13 @@ package igrek.songbook.persistence.user.preferences
 import igrek.songbook.persistence.user.AbstractJsonDao
 
 class PreferencesDao(
-        path: String,
+    path: String,
 ) : AbstractJsonDao<PreferencesDb>(
-        path,
-        dbName = "preferences",
-        schemaVersion = 1,
-        clazz = PreferencesDb::class.java,
-        serializer = PreferencesDb.serializer()
+    path,
+    dbName = "preferences",
+    schemaVersion = 1,
+    clazz = PreferencesDb::class.java,
+    serializer = PreferencesDb.serializer()
 ) {
     private val preferencesDb: PreferencesDb get() = db!!
 
@@ -23,14 +23,14 @@ class PreferencesDao(
 
     fun getPrimitiveEntries(): Map<String, Any> {
         return preferencesDb.entries
-                .map { entry -> entry.name to readEntryValue(entry) }
-                .toMap()
+            .map { entry -> entry.name to readEntryValue(entry) }
+            .toMap()
     }
 
     fun setPrimitiveEntries(entries: Map<String, Any>) {
         preferencesDb.entries = entries
-                .map { (name, value) -> buildEntryValue(name, value) }
-                .toMutableSet()
+            .map { (name, value) -> buildEntryValue(name, value) }
+            .toMutableSet()
     }
 
     fun setPrimitiveEntry(preferenceName: String, value: Any) {

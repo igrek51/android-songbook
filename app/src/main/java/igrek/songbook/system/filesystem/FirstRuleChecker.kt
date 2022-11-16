@@ -30,5 +30,8 @@ internal class FirstRuleChecker<T> {
         return null
     }
 
-    private inner class Rule internal constructor(internal var condition: () -> Boolean, internal var then: () -> (T?))
+    private inner class Rule(
+        var condition: () -> Boolean,
+        var then: () -> (T?)
+    )
 }

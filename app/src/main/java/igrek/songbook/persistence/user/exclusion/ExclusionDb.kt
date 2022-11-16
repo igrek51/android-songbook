@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ExclusionDb(
-        var languages: MutableList<String> = mutableListOf(),
+    var languages: MutableList<String> = mutableListOf(),
 )

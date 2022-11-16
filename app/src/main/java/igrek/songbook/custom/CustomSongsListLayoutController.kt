@@ -112,7 +112,13 @@ class CustomSongsListLayoutController(
         searchFilterEdit = layout.findViewById<EditText>(R.id.searchFilterEdit)?.apply {
             addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {}
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int,
+                ) {}
+
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     searchFilterSubject.onNext(s.toString())
                 }
@@ -178,11 +184,12 @@ class CustomSongsListLayoutController(
             }
         }
 
-        searchFilterClearButton = layout.findViewById<ImageButton>(R.id.searchFilterClearButton)?.also {
-            it.setOnClickListener {
-                onClearFilterClicked()
+        searchFilterClearButton =
+            layout.findViewById<ImageButton>(R.id.searchFilterClearButton)?.also {
+                it.setOnClickListener {
+                    onClearFilterClicked()
+                }
             }
-        }
 
         itemsListView = layout.findViewById(R.id.itemsListView)
         itemsListView!!.init(activity as Context, this)
@@ -201,7 +208,8 @@ class CustomSongsListLayoutController(
             nextLeft = { currentFocusId: Int, currentView: View ->
                 when (currentFocusId) {
                     R.id.itemSongMoreButton, R.id.itemsListView -> {
-                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        (currentView as ViewGroup).descendantFocusability =
+                            ViewGroup.FOCUS_BLOCK_DESCENDANTS
                         itemsListView?.requestFocusFromTouch()
                     }
                 }
@@ -215,7 +223,8 @@ class CustomSongsListLayoutController(
             nextRight = { currentFocusId: Int, currentView: View ->
                 when {
                     currentFocusId == R.id.itemsListView && currentView.findViewById<View>(R.id.itemSongMoreButton)?.isVisible == true -> {
-                        (currentView as? ViewGroup)?.descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
+                        (currentView as? ViewGroup)?.descendantFocusability =
+                            ViewGroup.FOCUS_BEFORE_DESCENDANTS
                         R.id.itemSongMoreButton
                     }
                     else -> 0
@@ -224,7 +233,8 @@ class CustomSongsListLayoutController(
             nextUp = { currentFocusId: Int, currentView: View ->
                 when (currentFocusId) {
                     R.id.itemSongMoreButton, R.id.itemsListView -> {
-                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        (currentView as ViewGroup).descendantFocusability =
+                            ViewGroup.FOCUS_BLOCK_DESCENDANTS
                         itemsListView?.requestFocusFromTouch()
                     }
                 }
@@ -242,7 +252,8 @@ class CustomSongsListLayoutController(
             nextDown = { currentFocusId: Int, currentView: View ->
                 when (currentFocusId) {
                     R.id.itemSongMoreButton, R.id.itemsListView -> {
-                        (currentView as ViewGroup).descendantFocusability = ViewGroup.FOCUS_BLOCK_DESCENDANTS
+                        (currentView as ViewGroup).descendantFocusability =
+                            ViewGroup.FOCUS_BLOCK_DESCENDANTS
                         itemsListView?.requestFocusFromTouch()
                     }
                 }
@@ -264,13 +275,15 @@ class CustomSongsListLayoutController(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 setSongFilter(searchFilterEdit?.text?.toString())
-            }, UiErrorHandler::handleError))
+            }, UiErrorHandler::handleError)
+        )
         subscriptions.add(songsRepository.dbChangeSubject
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 if (isLayoutVisible())
                     updateItemsList()
-            }, UiErrorHandler::handleError))
+            }, UiErrorHandler::handleError)
+        )
     }
 
     private fun isFilterSet(): Boolean {
@@ -299,20 +312,22 @@ class CustomSongsListLayoutController(
     }
 
     private fun showMoreActions() {
-        ContextMenuBuilder().showContextMenu(mutableListOf(
-            ContextMenuBuilder.Action(R.string.action_create_new_custom_song) {
-                addCustomSong()
-            },
-            ContextMenuBuilder.Action(R.string.import_content_from_file) {
-                importOneSong()
-            },
-            ContextMenuBuilder.Action(R.string.edit_song_import_custom_songs) {
-                importCustomSongs()
-            },
-            ContextMenuBuilder.Action(R.string.edit_song_export_all_custom_songs) {
-                exportAllCustomSongs()
-            },
-        ))
+        ContextMenuBuilder().showContextMenu(
+            mutableListOf(
+                ContextMenuBuilder.Action(R.string.action_create_new_custom_song) {
+                    addCustomSong()
+                },
+                ContextMenuBuilder.Action(R.string.import_content_from_file) {
+                    importOneSong()
+                },
+                ContextMenuBuilder.Action(R.string.edit_song_import_custom_songs) {
+                    importCustomSongs()
+                },
+                ContextMenuBuilder.Action(R.string.edit_song_export_all_custom_songs) {
+                    exportAllCustomSongs()
+                },
+            )
+        )
     }
 
     private fun exportAllCustomSongs() {
@@ -344,8 +359,10 @@ class CustomSongsListLayoutController(
                     useArrayPolymorphism = false
                 }
 
-                val importedCustomSongsDb = json.decodeFromString(CustomSongsDb.serializer(), content)
-                val added = songsRepository.customSongsDao.addNewCustomSongs(importedCustomSongsDb.songs)
+                val importedCustomSongsDb =
+                    json.decodeFromString(CustomSongsDb.serializer(), content)
+                val added =
+                    songsRepository.customSongsDao.addNewCustomSongs(importedCustomSongsDb.songs)
                 uiInfoService.showInfo(R.string.custom_songs_imported, added.toString())
             }
         }
@@ -356,7 +373,8 @@ class CustomSongsListLayoutController(
     }
 
     private fun updateHeader() {
-        val groupingEnabled = settingsEnumService.preferencesState.customSongsOrdering == CustomSongsOrdering.GROUP_CATEGORIES
+        val groupingEnabled =
+            settingsEnumService.preferencesState.customSongsOrdering == CustomSongsOrdering.GROUP_CATEGORIES
         if (!groupingEnabled)
             customCategory = null
 
@@ -394,7 +412,8 @@ class CustomSongsListLayoutController(
     }
 
     private fun updateItemsList() {
-        val groupingEnabled = settingsEnumService.preferencesState.customSongsOrdering == CustomSongsOrdering.GROUP_CATEGORIES
+        val groupingEnabled =
+            settingsEnumService.preferencesState.customSongsOrdering == CustomSongsOrdering.GROUP_CATEGORIES
         if (!groupingEnabled)
             customCategory = null
         val filtering = isFilterSet()
@@ -402,7 +421,8 @@ class CustomSongsListLayoutController(
         val songItems: List<CustomSongListItem> = when {
 
             filtering -> {
-                val songFilter = SongSearchFilter(itemNameFilter.orEmpty(), preferencesState.songLyricsSearch)
+                val songFilter =
+                    SongSearchFilter(itemNameFilter.orEmpty(), preferencesState.songLyricsSearch)
                 songsRepository.customSongsRepo.songs.get()
                     .filter { song -> songFilter.matchSong(song) }
                     .sortSongsByFilterRelevance(songFilter)
@@ -411,7 +431,8 @@ class CustomSongsListLayoutController(
 
             groupingEnabled && customCategory == null -> {
                 val locale = appLanguageService.getCurrentLocale()
-                val categoryNameComparator = InsensitiveNameComparator<CustomCategory>(locale) { category -> category.name }
+                val categoryNameComparator =
+                    InsensitiveNameComparator<CustomCategory>(locale) { category -> category.name }
                 val categories = songsRepository.customSongsDao.customCategories
                     .sortedWith(categoryNameComparator)
                     .map { CustomSongListItem(customCategory = it) }
@@ -462,16 +483,20 @@ class CustomSongsListLayoutController(
                 )
             }
             CustomSongsOrdering.SORT_BY_LATEST -> {
-                this.sortedWith(compareBy (
-                    { song -> -song.updateTime },
-                    { song -> song.displayName().lowercase(locale) },
-                ))
+                this.sortedWith(
+                    compareBy(
+                        { song -> -song.updateTime },
+                        { song -> song.displayName().lowercase(locale) },
+                    )
+                )
             }
             CustomSongsOrdering.SORT_BY_OLDEST -> {
-                this.sortedWith(compareBy (
-                    { song -> song.updateTime },
-                    { song -> song.displayName().lowercase(locale) },
-                ))
+                this.sortedWith(
+                    compareBy(
+                        { song -> song.updateTime },
+                        { song -> song.displayName().lowercase(locale) },
+                    )
+                )
             }
         }
     }

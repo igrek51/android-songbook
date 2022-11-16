@@ -15,7 +15,7 @@ import okhttp3.RequestBody
 import okhttp3.Response
 
 class SongRankService(
-        adminService: LazyInject<AdminService> = appFactory.adminService,
+    adminService: LazyInject<AdminService> = appFactory.adminService,
 ) {
     private val adminService by LazyExtractor(adminService)
 
@@ -44,10 +44,10 @@ class SongRankService(
         val dto = SongRankUpdateDto(rank = song.rank)
         val json = jsonSerializer.encodeToString(SongRankUpdateDto.serializer(), dto)
         val request: Request = Request.Builder()
-                .url(updatePublicSongIdUrl(song.id))
-                .put(RequestBody.create(jsonType, json))
-                .addHeader(authTokenHeader, adminService.userAuthToken)
-                .build()
+            .url(updatePublicSongIdUrl(song.id))
+            .put(RequestBody.create(jsonType, json))
+            .addHeader(authTokenHeader, adminService.userAuthToken)
+            .build()
         return httpRequester.httpRequestAsync(request) { response: Response ->
             logger.debug("Update rank response", response.body()?.string())
         }
@@ -57,5 +57,5 @@ class SongRankService(
 
 @Serializable
 data class SongRankUpdateDto(
-        var rank: Double? = null,
+    var rank: Double? = null,
 )

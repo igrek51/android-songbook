@@ -10,17 +10,18 @@ import android.widget.ListAdapter
 import android.widget.ListView
 
 abstract class GenericListView<T>(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = android.R.attr.listViewStyle,
-        val itemViewRes: Int,
-) : ListView(context, attrs, defStyleAttr), AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = android.R.attr.listViewStyle,
+    val itemViewRes: Int,
+) : ListView(context, attrs, defStyleAttr), AdapterView.OnItemClickListener,
+    AdapterView.OnItemLongClickListener {
 
     private var adapter: GenericListAdapter<T> = GenericListAdapter(
-            context,
-            dataSource = emptyList(),
-            layoutRes = itemViewRes,
-            viewBuilder = ::buildView,
+        context,
+        dataSource = emptyList(),
+        layoutRes = itemViewRes,
+        viewBuilder = ::buildView,
     )
 
     var items: List<T>
@@ -52,7 +53,12 @@ abstract class GenericListView<T>(
             onClick(item)
     }
 
-    override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
+    override fun onItemLongClick(
+        parent: AdapterView<*>,
+        view: View,
+        position: Int,
+        id: Long
+    ): Boolean {
         val item = adapter.getItem(position)
         if (item != null)
             onClick(item)

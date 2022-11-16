@@ -151,8 +151,10 @@ class AppInitializer(
         uiInfoService.dialogThreeChoices(
             titleResId = R.string.prompt_rate_app_title,
             messageResId = R.string.prompt_rate_app_body,
-            negativeButton = R.string.action_cancel, negativeAction = {},
-            positiveButton = R.string.action_info_yes, positiveAction = { aboutLayoutController.openInGoogleStore() }
+            negativeButton = R.string.action_cancel,
+            negativeAction = {},
+            positiveButton = R.string.action_info_yes,
+            positiveAction = { aboutLayoutController.openInGoogleStore() }
         )
     }
 

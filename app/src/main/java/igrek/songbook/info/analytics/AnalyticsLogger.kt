@@ -12,8 +12,8 @@ import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.settings.preferences.PreferencesState
 
 class AnalyticsLogger(
-        activity: LazyInject<Activity> = appFactory.activity,
-        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    activity: LazyInject<Activity> = appFactory.activity,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
     private val activity by LazyExtractor(activity)
     private val preferencesState by LazyExtractor(preferencesState)
@@ -25,33 +25,41 @@ class AnalyticsLogger(
     }
 
     fun logEventSongPublished(song: Song) {
-        logEvent("x_song_published", mapOf(
+        logEvent(
+            "x_song_published", mapOf(
                 "title" to song.title,
                 "category" to song.customCategoryName,
                 "language" to song.language,
-        ))
+            )
+        )
     }
 
     fun logEventMissingSongRequested(name: String) {
         val (category, title) = extractArtistAndTitle(name)
-        logEvent("x_missing_song_requested", mapOf(
+        logEvent(
+            "x_missing_song_requested", mapOf(
                 "category" to category,
                 "title" to title,
-        ))
+            )
+        )
     }
 
     fun logEventSongOpened(song: Song) {
-        logEvent("x_song_opened", mapOf(
+        logEvent(
+            "x_song_opened", mapOf(
                 "id" to song.id.toString(),
                 "namespace" to song.namespace.toString(),
-        ))
+            )
+        )
     }
 
     fun logEventSongFavourited(song: Song) {
-        logEvent("x_song_favourited", mapOf(
+        logEvent(
+            "x_song_favourited", mapOf(
                 "id" to song.id.toString(),
                 "namespace" to song.namespace.toString(),
-        ))
+            )
+        )
     }
 
     private fun extractArtistAndTitle(songName: String): Pair<String, String> {
@@ -66,7 +74,7 @@ class AnalyticsLogger(
 
     private fun getDeviceId(): String? {
         return Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID)
-                ?: null
+            ?: null
     }
 
     private fun logEvent(eventName: String, values: Map<String, String?>) {

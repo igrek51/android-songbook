@@ -11,7 +11,7 @@ import igrek.songbook.inject.appFactory
 
 
 class UiErrorHandler(
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
 
@@ -25,7 +25,12 @@ class UiErrorHandler(
         if (t is LocalizedError) {
             uiInfoService.showInfo(t.messageRes, indefinite = true)
         } else {
-            uiInfoService.showInfoAction(contextResId, err, indefinite = true, actionResId = R.string.error_details) {
+            uiInfoService.showInfoAction(
+                contextResId,
+                err,
+                indefinite = true,
+                actionResId = R.string.error_details
+            ) {
                 showDetails(t, contextResId)
             }
         }

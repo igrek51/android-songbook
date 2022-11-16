@@ -27,15 +27,15 @@ import kotlinx.coroutines.launch
 
 @OptIn(DelicateCoroutinesApi::class)
 class AdminService(
-        navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
-        preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        antechamberService: LazyInject<AntechamberService> = appFactory.antechamberService,
-        activity: LazyInject<Activity> = appFactory.activity,
-        softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
-        songRankService: LazyInject<SongRankService> = appFactory.songRankService,
-        adminCategoryManager: LazyInject<AdminCategoryManager> = appFactory.adminCategoryManager,
+    navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    antechamberService: LazyInject<AntechamberService> = appFactory.antechamberService,
+    activity: LazyInject<Activity> = appFactory.activity,
+    softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
+    songRankService: LazyInject<SongRankService> = appFactory.songRankService,
+    adminCategoryManager: LazyInject<AdminCategoryManager> = appFactory.adminCategoryManager,
 ) {
     private val navigationMenuController by LazyExtractor(navigationMenuController)
     private val preferencesState by LazyExtractor(preferencesState)

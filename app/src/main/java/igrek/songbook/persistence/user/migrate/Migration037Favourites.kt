@@ -28,8 +28,8 @@ class Migration037Favourites(private val activity: Activity) {
 
         val favourites = favouritesTuples.map { favouritesTuple ->
             FavouriteSong(
-                    songId = favouritesTuple[0] as Long,
-                    custom = favouritesTuple[1] as Boolean
+                songId = favouritesTuple[0] as Long,
+                custom = favouritesTuple[1] as Boolean
             )
         }.toMutableList()
 
@@ -61,7 +61,11 @@ class Migration037Favourites(private val activity: Activity) {
     private fun openDatabase(songsDbFile: File): SQLiteDatabase? {
         if (!songsDbFile.exists())
             return null
-        return SQLiteDatabase.openDatabase(songsDbFile.absolutePath, null, SQLiteDatabase.OPEN_READWRITE)
+        return SQLiteDatabase.openDatabase(
+            songsDbFile.absolutePath,
+            null,
+            SQLiteDatabase.OPEN_READWRITE
+        )
     }
 
     private fun getBooleanColumn(cursor: Cursor, name: String): Boolean {
@@ -69,7 +73,11 @@ class Migration037Favourites(private val activity: Activity) {
         return intValue != 0
     }
 
-    private fun sqlQuery(db: SQLiteDatabase, sql: String, selectionArgs: Array<String> = arrayOf()): Cursor {
+    private fun sqlQuery(
+        db: SQLiteDatabase,
+        sql: String,
+        selectionArgs: Array<String> = arrayOf()
+    ): Cursor {
         return db.rawQuery(sql, selectionArgs)
     }
 

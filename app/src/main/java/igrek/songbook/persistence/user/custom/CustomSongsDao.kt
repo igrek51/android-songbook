@@ -13,15 +13,15 @@ import igrek.songbook.persistence.user.AbstractJsonDao
 import igrek.songbook.persistence.user.migrate.Migration037CustomSongs
 
 class CustomSongsDao(
-        path: String,
-        songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-        activity: LazyInject<Activity> = appFactory.activity,
+    path: String,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    activity: LazyInject<Activity> = appFactory.activity,
 ) : AbstractJsonDao<CustomSongsDb>(
-        path,
-        dbName = "customsongs",
-        schemaVersion = 1,
-        clazz = CustomSongsDb::class.java,
-        serializer = CustomSongsDb.serializer()
+    path,
+    dbName = "customsongs",
+    schemaVersion = 1,
+    clazz = CustomSongsDb::class.java,
+    serializer = CustomSongsDb.serializer()
 ) {
     private val songsRepository by LazyExtractor(songsRepository)
     private val activity by LazyExtractor(activity)
@@ -85,7 +85,7 @@ class CustomSongsDao(
 
     fun removeCustomSong(newSong: CustomSong) {
         val olds = customSongs.songs
-                .filter { song -> song.id != newSong.id }.toMutableList()
+            .filter { song -> song.id != newSong.id }.toMutableList()
         customSongs.songs = olds
         // clean up other usages
         songsRepository.favouriteSongsDao.removeUsage(newSong.id, true)

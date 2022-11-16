@@ -5,9 +5,9 @@ import android.os.Handler
 import android.os.Looper
 import android.text.InputType
 import android.view.LayoutInflater
+import android.view.WindowManager.LayoutParams
 import android.widget.EditText
 import android.widget.TextView
-import android.view.WindowManager.LayoutParams
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.auth0.android.jwt.JWT
@@ -291,7 +291,10 @@ class SecretCommandService(
                     if (retCode == 0) {
                         uiInfoService.dialog(R.string.command_successful, "$stdout\n$stderr")
                     } else {
-                        uiInfoService.dialog(R.string.command_failed, "$stdout\n$stderr\nerror code: $retCode")
+                        uiInfoService.dialog(
+                            R.string.command_failed,
+                            "$stdout\n$stderr\nerror code: $retCode"
+                        )
                     }
                 }
                 false -> {
@@ -318,7 +321,8 @@ class SecretCommandService(
             alertBuilder.setCancelable(true)
             val dialog: AlertDialog = alertBuilder.create()
 
-            val inflater = activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val inflater =
+                activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val itemView = inflater.inflate(R.layout.component_alert_monospace, null, false)
             val contentTextView = itemView.findViewById(R.id.contentTextView) as TextView
             contentTextView.text = EA5T3R_M00
