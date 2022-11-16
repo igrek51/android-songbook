@@ -96,23 +96,23 @@ Try to get rid of them before publishing a song.
 
 Find out more about [**Chords Editor**](./chords-editor.md), which has a lot of useful tools.
 
+## Importing songs
+You can import a song from a **local file** on your device or a **cloud drive** (like **Google Drive**)
+in order to load the song to **My songs**.
+
+You can load either a **text file** (`.txt`), **PDF document** (`.pdf`) or a **Google Docs** document.
+
+!!! note
+    When importing a **PDF** file, the raw text will be extracted.
+    Keep in mind that the extracted text might look different compared to original PDF,
+    esepcially if it has non-flat structures inside, like tables or fancy paragraph layout.
+
 ## Editing with external tool
-Any external text editor can be used to create and modify song in a **text** file format.
+If you prefer, you can use any external text editor to create and modify a song in a **text** file format.
 
 The text file should be saved with `UTF-8` encoding.
 
 It can have arbitrary extension, but the common practice is to use `.txt` extension.
-
-## Importing songs
-You can import a song from a local file on your device or a cloud drive (like Google Drive)
-in order to load the song to **My songs**.
-
-You can load a **text** file (`.txt`), **PDF document** (`.pdf`) or a **Google Docs** document.
-
-!!! note
-    When importing **PDF** file, the raw text will be extracted.
-    Keep in mind that the extracted text might look different compared to original PDF,
-    esepcially if it has non-flat structures inside, like tables or columns.
 
 ## Displaying style benefits
 Thanks to indicating precisely the place where the chord is accentuated (right before the word),
