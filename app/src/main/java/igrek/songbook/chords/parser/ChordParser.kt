@@ -10,7 +10,7 @@ class ChordParser(
 ) {
 
     fun recognizeSingleChord(chord: String): Chord? {
-        if (chord in ChordNames.falseFriends[notation]!!)
+        if (chord in (ChordNames.falseFriends[notation] ?: emptySet()))
             return null
 
         // recognize basic chord (without suffixes)

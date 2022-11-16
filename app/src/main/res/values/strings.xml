@@ -176,7 +176,7 @@
     </string>
     <string name="import_content_from_file">📂 Import from text file / PDF / Drive / Google Docs</string>
     <string name="edit_song_save">💾 Save song</string>
-    <string name="edit_song_remove">❌ Remove song</string>
+    <string name="edit_song_remove">❌ Delete song</string>
     <string name="edit_song_has_been_saved">Song has been saved in \"My songs\".</string>
     <string name="edit_song_has_been_removed">Song has been removed.</string>
     <string name="settings_chords_notation">Chords notation (note naming convention)</string>
@@ -221,7 +221,7 @@
     <string name="action_song_copy">📋 Make editable copy</string>
     <string name="action_song_amend">Suggest correction</string>
     <string name="action_song_edit">✏️Edit</string>
-    <string name="action_song_remove">❌ Remove</string>
+    <string name="action_song_remove">❌ Delete</string>
     <string name="action_song_set_favourite">⭐️ Add to favourites</string>
     <string name="action_song_unset_favourite">⭐️ Remove from favourites</string>
     <string name="song_action_more">More</string>
@@ -298,7 +298,7 @@
     <string name="action_remove_from_playlist">🚫 Remove from playlist</string>
     <string name="song_is_not_on_playlist">Song is not on a playlist</string>
     <string name="song_removed_from_playlist" formatted="false">Song \"%s\" has been removed from playlist \"%s\"</string>
-    <string name="remove_playlist">❌ Remove playlist</string>
+    <string name="remove_playlist">❌ Delete playlist</string>
     <string name="confirm_remove_playlist">Do you really want to remove this playlist?</string>
     <string name="rename_playlist">✏️ Rename playlist</string>
     <string name="playlist_removed">Playlist has been removed</string>
@@ -440,11 +440,14 @@
     <string name="room_make_discoverable">Make discoverable again</string>
     <string name="room_open_current_song">Open current song</string>
     <string name="edit_song_export_all_custom_songs">💾 Export all songs</string>
-    <string name="edit_song_import_custom_songs">🗂️ Import multiple songs in a batch</string>
+    <string name="edit_song_import_custom_songs">🗂️ Import multiple songs from a batch</string>
     <string name="custom_songs_exported">All custom songs exported</string>
     <string name="select_file_to_open">Select file to open</string>
     <string name="custom_songs_imported">%s new custom songs have been imported</string>
-    <string name="custom_songs_mass_import_hint">Importing multiple custom songs is supposed to load many songs from a particular file type. Existing songs will not be overwritten. If you\'d rather like to import just one song from a text file, use option \"Import from file\" when creating new song. Do you want to continue importing multiple custom songs?</string>
+    <string name="custom_songs_mass_import_hint">Importing multiple songs is supposed to load many songs from a single JSON file of a particular type.
+        \nExisting songs will not be overwritten.
+        \nIf you\'d rather like to import just one song from a text file, use option \"Import from file\" when creating a song.
+        \nDo you want to continue to import multiple songs?</string>
     <string name="error_details">Details</string>
     <string name="error_occurred">Error occurred</string>
     <string name="command_successful">Command successful</string>

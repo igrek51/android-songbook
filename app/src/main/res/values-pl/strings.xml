@@ -413,11 +413,14 @@
     <string name="room_make_discoverable">Ponownie ustaw widoczność</string>
     <string name="room_open_current_song">Otwórz obecną piosenkę</string>
     <string name="edit_song_export_all_custom_songs">💾 Wyeksportuj wszystkie piosenki</string>
-    <string name="edit_song_import_custom_songs">🗂️ Importuj wiele piosenek w partii</string>
+    <string name="edit_song_import_custom_songs">🗂️ Importuj wiele piosenek z paczki</string>
     <string name="custom_songs_exported">Wyeksportowano własne piosenki.</string>
     <string name="select_file_to_open">Wybierz plik do otwarcia</string>
     <string name="custom_songs_imported">Zaimportowano %s nowych własnych piosenek.</string>
-    <string name="custom_songs_mass_import_hint">Importowanie wielu piosenek polega na wczytaniu wielu własnych piosenek z jednego pliku określonego typu. Istniejące piosenki nie zostaną nadpisane. Jeśli chcesz zaimportować tylko jedną piosenkę, użyj raczej opcji "Importuj z pliku" podczas tworzenia nowej piosenki. Czy chcesz kontynuować import wielu piosenek?</string>
+    <string name="custom_songs_mass_import_hint">Import wielu piosenek z paczki wczytuje własne piosenki z jednego pliku JSON o określonym formacie.
+        \nIstniejące piosenki nie zostaną nadpisane.
+        \nJeśli chcesz zaimportować tylko jedną piosenkę, użyj raczej opcji \"Importuj z pliku\" podczas tworzenia nowej piosenki.
+        \nCzy chcesz kontynuować import wielu piosenek?</string>
     <string name="error_details">Szczegóły</string>
     <string name="error_occurred">Wystąpił błąd</string>
     <string name="command_successful">Polecenie wykonane</string>

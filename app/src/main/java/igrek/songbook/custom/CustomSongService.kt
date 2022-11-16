@@ -49,7 +49,7 @@ class CustomSongService(
     fun exportSongContent(content: String, title: String, notation: ChordsNotation) {
         val filename = title.takeIf { it.lowercase().endsWith(".txt") } ?: "$title.txt"
         val cleanTitle = title.replace("\"", "").replace("{", "").replace("}", "")
-        val exportContent = """{title: "$cleanTitle"}\n{chords_notation: ${notation.id}}\n""" + content
+        val exportContent = "{title: \"$cleanTitle\"}\n{chords_notation: ${notation.id}}\n" + content
         songExportFileChooser.showFileChooser(exportContent, filename) {
             uiInfoService.showInfo(R.string.song_exported)
         }

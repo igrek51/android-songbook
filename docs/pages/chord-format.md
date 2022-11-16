@@ -103,7 +103,11 @@ The text file should be saved with `UTF-8` encoding.
 
 It can have arbitrary extension, but the common practice is to use `.txt` extension.
 
-You can import `.txt` , `.pdf` files and add them to **My songs**.
+## Importing songs
+You can import a song from a local file on your device or a cloud drive (like Google Drive)
+in order to load the song to **My songs**.
+
+You can load a **text** file (`.txt`), **PDF document** (`.pdf`) or a **Google Docs** document.
 
 !!! note
     When importing **PDF** file, the raw text will be extracted.
