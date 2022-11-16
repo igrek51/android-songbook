@@ -552,5 +552,5 @@
     <string name="manual_confirm_opening_manual">Would you like to see the quick Guide (Tutorial) and take a tour of Songbook\'s features?</string>
     <string name="prompt_rate_app_title">Do you like Songbook?</string>
     <string name="prompt_rate_app_body">Would you rate the Songbook with 5 stars ⭐️⭐️⭐️⭐️⭐️?</string>
-    <string name="error_song_file_type_unallowed">Not allowed file type (%s). Only TXT, PDF files and Google Docs are allowed.</string>
+    <string name="error_song_file_type_unallowed">Not allowed file type: %s. Only TXT, PDF files and Google Docs are allowed.</string>
 </resources>

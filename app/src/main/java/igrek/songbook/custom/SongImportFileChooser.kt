@@ -167,7 +167,7 @@ class SongImportFileChooser(
         val extension = File(filename).extension.lowercase()
 
         return when {
-            mimetype == "application/pdf" || extension == "pdf" -> {
+            mimetype == "application/pdf" || extension == "`pdf" -> {
                 logger.info("extracting content from PDF file $filename")
                 extractPdfContent(inputStream)
             }
@@ -176,7 +176,7 @@ class SongImportFileChooser(
                 extractTxtContent(inputStream)
             }
             else -> {
-                val error = uiInfoService.resString(R.string.error_song_file_type_unallowed, mimetype)
+                val error = uiInfoService.resString(R.string.error_song_file_type_unallowed, "$extension ($mimetype)")
                 throw RuntimeException(error)
             }
         }
