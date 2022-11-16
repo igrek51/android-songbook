@@ -24,5 +24,5 @@ Our chief weapons are:
 Songbook is a tool focused on guitarists, pianists and other musicians, but it also can be used just to view the songs lyrics on mobile devices.
 It has many songs with chords on board and its database can be easily extended with your own songs.
 
-Find more documentation and user guides at https://igrek51.github.io/android-songbook
+Find out more user guides and manuals at https://igrek51.github.io/android-songbook
 and give it a star on https://github.com/igrek51/android-songbook

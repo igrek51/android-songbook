@@ -44,6 +44,6 @@ Example application screenshots:
 Songbook is available on [Google Play](https://play.google.com/store/apps/details?id=igrek.songbook) for free.
 Please give it a ⭐️⭐️⭐️⭐️⭐️ star.
 
-## Documentation
+## Manual
 
-Find more guides and documentation at [https://igrek51.github.io/android-songbook](https://igrek51.github.io/android-songbook).
+Find out more user guides and manuals at [https://igrek51.github.io/android-songbook](https://igrek51.github.io/android-songbook).
