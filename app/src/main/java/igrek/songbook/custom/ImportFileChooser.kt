@@ -1,5 +1,6 @@
 package igrek.songbook.custom
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
@@ -8,7 +9,6 @@ import com.google.common.io.CharStreams
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityResultDispatcher
 import igrek.songbook.info.UiInfoService
-import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -19,14 +19,12 @@ import java.io.InputStreamReader
 import java.nio.charset.Charset
 
 class ImportFileChooser(
-        activity: LazyInject<Activity> = appFactory.activity,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,
+    activity: LazyInject<Activity> = appFactory.activity,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,
 ) {
     private val activity by LazyExtractor(activity)
     private val uiInfoService by LazyExtractor(uiInfoService)
-    private val uiResourceService by LazyExtractor(uiResourceService)
     private val activityResultDispatcher by LazyExtractor(activityResultDispatcher)
 
     companion object {
@@ -40,8 +38,7 @@ class ImportFileChooser(
             intent.addCategory(Intent.CATEGORY_OPENABLE)
 
             try {
-                val title = uiResourceService.resString(R.string.select_file_to_open)
-                activityResultDispatcher.startActivityForResult(Intent.createChooser(intent, title)) { resultCode: Int, data: Intent? ->
+                activityResultDispatcher.startActivityForResult(intent) { resultCode: Int, data: Intent? ->
                     if (resultCode == Activity.RESULT_OK) {
                         onFileSelect(data?.data, onLoad)
                     }
@@ -76,6 +73,7 @@ class ImportFileChooser(
         return CharStreams.toString(InputStreamReader(inputStream, charset))
     }
 
+    @SuppressLint("Range")
     private fun getFileNameFromUri(uri: Uri): String {
         var result: String? = null
         if (uri.scheme == "content") {

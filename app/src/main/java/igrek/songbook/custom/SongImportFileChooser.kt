@@ -10,7 +10,6 @@ import com.google.common.io.CharStreams
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityResultDispatcher
 import igrek.songbook.info.UiInfoService
-import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
@@ -24,13 +23,11 @@ import java.nio.charset.Charset
 class SongImportFileChooser(
     activity: LazyInject<Activity> = appFactory.activity,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
     editSongLayoutController: LazyInject<EditSongLayoutController> = appFactory.editSongLayoutController,
     activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,
 ) {
     private val activity by LazyExtractor(activity)
     private val uiInfoService by LazyExtractor(uiInfoService)
-    private val uiResourceService by LazyExtractor(uiResourceService)
     private val editSongLayoutController by LazyExtractor(editSongLayoutController)
     private val activityResultDispatcher by LazyExtractor(activityResultDispatcher)
 
@@ -44,7 +41,7 @@ class SongImportFileChooser(
         fileChooserLauncher = activityResultDispatcher.registerActivityResultLauncher { resultCode: Int, data: Intent? ->
             when (resultCode) {
                 Activity.RESULT_OK -> {
-                    onFileSelect(data?.data)
+                    onFileSelect(data)
                 }
                 Activity.RESULT_CANCELED -> {
                     uiInfoService.showToast(R.string.file_select_operation_canceled)
@@ -74,7 +71,7 @@ class SongImportFileChooser(
                         activityResultDispatcher.startActivityForResult(intent) { resultCode: Int, data: Intent? ->
                             when (resultCode) {
                                 Activity.RESULT_OK -> {
-                                    onFileSelect(data?.data)
+                                    onFileSelect(data)
                                 }
                                 Activity.RESULT_CANCELED -> {
                                     uiInfoService.showToast(R.string.file_select_operation_canceled)
@@ -92,11 +89,12 @@ class SongImportFileChooser(
         }
     }
 
-    private fun onFileSelect(selectedUri: Uri?) {
+    private fun onFileSelect(intent: Intent?) {
+        val uri: Uri? = intent?.data
         SafeExecutor {
-            if (selectedUri != null) {
-                activity.contentResolver.openInputStream(selectedUri)?.use { inputStream: InputStream ->
-                    val filename = getFileNameFromUri(selectedUri)
+            if (uri != null) {
+                activity.contentResolver.openInputStream(uri)?.use { inputStream: InputStream ->
+                    val filename = getFileNameFromUri(uri)
 
                     val length = inputStream.available()
                     if (length > FILE_IMPORT_LIMIT_B) {

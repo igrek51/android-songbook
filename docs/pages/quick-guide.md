@@ -40,6 +40,8 @@ In **Settings**, you can also pick your favourite [**Chords Notation**](./chords
 Default **chords notation** had already been set automatically depending on your **system language**
 (due to some chords notations are used in particular countries).
 
+Find out more about [Chords Notations](./chords-notations.md).
+
 ## Transposing
 ![](./assets/screenshots-mobile-en/02.png){ width="30%" }
 
@@ -159,4 +161,4 @@ For instance, you can keep your songs in the playlists called
 
 !!! tip
     There's a lot of optional, customizable features in *Songbook*.
-    Walk throught the **Settings** to discover them.
+    Walk through the **Settings** to discover them.
