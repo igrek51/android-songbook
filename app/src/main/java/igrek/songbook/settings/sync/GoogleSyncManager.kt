@@ -64,7 +64,7 @@ class GoogleSyncManager(
         "files/playlist.1.json",
         "files/transpose.1.json",
         "files/unlocked.1.json",
-        "files/preferences.1.json"
+        "files/preferences.1.json",
     )
 
     private val logger = LoggerFactory.logger

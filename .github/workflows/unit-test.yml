@@ -1,0 +1,26 @@
+name: test
+on:
+  push
+
+jobs:
+
+  test-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: 11
+          cache: 'gradle'
+
+      - name: Build project
+        run: /gradlew assembleDebug --stacktrace
+
+      - name: Run Unit Tests
+        run: ./gradlew test --stacktrace
+
+      - name: Android Test Report
+        uses: asadmansr/android-test-report-action@v1.2.0
+        if: ${{ always() }}
