@@ -1,6 +1,7 @@
 package igrek.songbook.info.errorcheck
 
 
+import igrek.songbook.BuildConfig
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.logger.LoggerFactory
@@ -32,7 +33,10 @@ class UiErrorHandler(
 
     private fun showDetails(t: Throwable, contextResId: Int) {
         val errorMessage = uiInfoService.resString(contextResId, t.message.orEmpty())
-        val message = "${errorMessage}\nType: ${t::class.simpleName}"
+        val message = when (BuildConfig.DEBUG) {
+            true -> "${errorMessage}\nType: ${t::class.simpleName}"
+            false -> errorMessage
+        }
         uiInfoService.dialog(titleResId = R.string.error_occurred, message = message)
     }
 
