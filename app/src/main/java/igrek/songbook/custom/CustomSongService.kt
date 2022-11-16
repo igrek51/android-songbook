@@ -12,6 +12,7 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.custom.CustomSong
 import igrek.songbook.persistence.user.custom.CustomSongMapper
 import igrek.songbook.settings.chordsnotation.ChordsNotation
+import igrek.songbook.settings.preferences.PreferencesState
 import java.util.*
 
 class CustomSongService(
@@ -19,13 +20,15 @@ class CustomSongService(
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
     editSongLayoutController: LazyInject<EditSongLayoutController> = appFactory.editSongLayoutController,
-    exportFileChooser: LazyInject<ExportFileChooser> = appFactory.songExportFileChooser,
+    exportFileChooser: LazyInject<ExportFileChooser> = appFactory.exportFileChooser,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val songsRepository by LazyExtractor(songsRepository)
     private val layoutController by LazyExtractor(layoutController)
     private val editSongLayoutController by LazyExtractor(editSongLayoutController)
     private val songExportFileChooser by LazyExtractor(exportFileChooser)
+    private val preferencesState by LazyExtractor(preferencesState)
 
     fun showAddSongScreen() {
         editSongLayoutController.setCurrentSong(null)
@@ -38,11 +41,17 @@ class CustomSongService(
     }
 
     fun exportSong(song: Song) {
-        var songTitle = song.title
-        songTitle = songTitle.takeIf { it.lowercase().endsWith(".txt") } ?: "$songTitle.txt"
         val songContent = song.content.orEmpty()
-        songExportFileChooser.showFileChooser(songContent, songTitle) {
-            uiInfoService.showInfo(R.string.song_content_exported)
+        val notation = song.chordsNotation ?: preferencesState.chordsNotation
+        exportSongContent(songContent, song.title, notation)
+    }
+
+    fun exportSongContent(content: String, title: String, notation: ChordsNotation) {
+        val filename = title.takeIf { it.lowercase().endsWith(".txt") } ?: "$title.txt"
+        val cleanTitle = title.replace("\"", "").replace("{", "").replace("}", "")
+        val exportContent = """{title: "$cleanTitle"}\n{chords_notation: ${notation.id}}\n""" + content
+        songExportFileChooser.showFileChooser(exportContent, filename) {
+            uiInfoService.showInfo(R.string.song_exported)
         }
     }
 

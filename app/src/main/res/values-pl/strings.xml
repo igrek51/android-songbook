@@ -131,7 +131,7 @@
     <string name="custom_song_editor">Edytor piosenki</string>
     <string name="edit_song_title_label">Tytuł piosenki:</string>
     <string name="edit_song_title_hint">Tytuł…</string>
-    <string name="edit_song_content_label">Tekst piosenki z akordami w nawiasach kwadratowych:</string>
+    <string name="edit_song_content_label">Tekst piosenki z [akordami]:</string>
     <string name="chords_editor_hint">Umieść tu tekst piosenki z akordami. Postaraj się trzymać następujących reguł, aby zachować spójność ze standardem piosenek:
         \n\n1. Zaznacz akordy w nawiasach kwadratowych, np. \"między [C G# A7 F#maj7] słowami\".
         \n\n2. Mieszaj akordy z tekstem w tej samej linii, umieszczając je tuż przed słowami, gdzie występują, dokładnie wskazując moment zmiany akordu i jego akcentu w tekście, np. \"[C]And no reli[Cmaj7]gion [F]too\". Nie umieszczaj ich w osobnej linii ponad tekstem (wtedy sposób wyświetlania możesz zawsze zmienić w ustawieniach, więc pozwól innym wybrać ich ulubiony sposób wyświetlania). Umieszczanie akordów w tej samej linii jest niezmiernie ważne, bo pozwala to wyświetlać akordy zawsze w poprawnym miejscu, niezależnie od róźnych krojów czcionki i zawijania wyrazów. Nie martw się o Twój ulubiony styl wyświetlania akordów - Songbook wykona całą tą magię dla Ciebie.
@@ -167,10 +167,11 @@
     </string>
     <string name="import_song_content_hint">
         Tekst piosenki z [akordami] w tej samej linii
+        \nOtwórz pomoc (?), aby uzyskać więcej szczegółów.
         \n…[C]Przykładowy [G#]tekst [C G# A7 F#maj7]…
         \n…[C]So, so you think you can [D]tell…
         \n…Smoke on the water [C G#]…
-        \nOtwórz pomoc (?), aby uzyskać więcej szczegółów.
+        \n…Never gonna [G]give you [A]up…
     </string>
     <string name="import_content_from_file">📂 Importuj z pliku / chmury</string>
     <string name="edit_song_save">💾 Zapisz piosenkę</string>
@@ -378,7 +379,7 @@
     <string name="settings_keep_screen_on_hint">Utrzymuj niegasnący wyświetlacz na podglądzie piosenki</string>
     <string name="select_file_to_export">Zapisz plik</string>
     <string name="export_content_to_file">📤 Eksportuj do pliku / chmury</string>
-    <string name="song_content_exported">Zawartość piosenki została wyeksportowana.</string>
+    <string name="song_exported">Piosenka została wyeksportowana.</string>
     <string name="multichoice_invert">Odwróć</string>
     <string name="song_languages">Języki piosenek</string>
     <string name="nav_top_songs">Top lista</string>

@@ -103,6 +103,13 @@ The text file should be saved with `UTF-8` encoding.
 
 It can have arbitrary extension, but the common practice is to use `.txt` extension.
 
+You can import `.txt` , `.pdf` files and add them to **My songs**.
+
+!!! note
+    When importing **PDF** file, the raw text will be extracted.
+    Keep in mind that the extracted text might look different compared to original PDF,
+    esepcially if it has non-flat structures inside, like tables or columns.
+
 ## Displaying style benefits
 Thanks to indicating precisely the place where the chord is accentuated (right before the word),
 Songbook can interpret that information in different ways when displaying a chord.

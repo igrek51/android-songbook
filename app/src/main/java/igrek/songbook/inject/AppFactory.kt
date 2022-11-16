@@ -114,7 +114,7 @@ class AppFactory(
     val songDetailsService = SingletonInject { SongDetailsService() }
     val sendMessageService = SingletonInject { SendMessageService() }
     val songImportFileChooser = SingletonInject { SongImportFileChooser() }
-    val songExportFileChooser = SingletonInject { ExportFileChooser() }
+    val exportFileChooser = SingletonInject { ExportFileChooser() }
     val okHttpClient = SingletonInject { OkHttpClient() }
     val customSongService = SingletonInject { CustomSongService() }
     val editSongLayoutController = SingletonInject { EditSongLayoutController() }

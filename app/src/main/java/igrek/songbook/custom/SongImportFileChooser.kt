@@ -20,6 +20,7 @@ import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.util.capitalize
 import igrek.songbook.util.limitTo
 import java.io.File
@@ -109,17 +110,18 @@ class SongImportFileChooser(
                     val filename = getFileNameFromUri(uri)
                     val size = inputStream.available()
 
-                    val content = extractFileContent(inputStream, filename, mimetype, size)
-                    val title = File(filename).nameWithoutExtension.capitalize()
+                    val fileContent = extractFileContent(inputStream, filename, mimetype, size)
+                    val parsed: ParsedSongContent = parseSongContentMetadata(fileContent)
+                    val title = parsed.title ?: File(filename).nameWithoutExtension.capitalize()
 
-                    editSongLayoutController.setupImportedSong(title, content)
+                    editSongLayoutController.setupImportedSong(title, parsed.content, parsed.notation)
                 }
             }
         }
     }
 
     private fun extractFileContent(inputStream: InputStream, filename: String, mimetype: String?, size: Int): String {
-        logger.debug("Importing file $filename, type: $mimetype")
+        logger.debug("Importing file $filename, type: $mimetype, size: $size")
 
         if (size > FILE_IMPORT_LIMIT_B) {
             throw LocalizedError(R.string.selected_file_is_too_big)
@@ -132,8 +134,12 @@ class SongImportFileChooser(
                 logger.info("extracting content from PDF file $filename")
                 extractPdfContent(inputStream)
             }
+            mimetype == "text/plain" || extension == "txt" -> {
+                extractTxtContent(inputStream)
+            }
             else -> {
-                CharStreams.toString(InputStreamReader(inputStream, Charset.forName("UTF-8")))
+                logger.warn("Unknown $mimetype mimetype - parsing as a text file")
+                extractTxtContent(inputStream)
             }
         }
     }
@@ -142,6 +148,40 @@ class SongImportFileChooser(
         PDFBoxResourceLoader.init(activity.applicationContext)
         val doc: PDDocument = PDDocument.load(inputStream)
         return PDFTextStripper().getText(doc).trimIndent().trim()
+    }
+
+    private fun extractTxtContent(inputStream: InputStream): String {
+        return CharStreams.toString(InputStreamReader(inputStream, Charset.forName("UTF-8")))
+    }
+
+    private fun parseSongContentMetadata(fileContent: String): ParsedSongContent {
+        var title: String? = null
+        var notation: ChordsNotation? = null
+
+        val titleRegex = Regex("""^\{title: ?"?([\S\s]+?)"?}$""")
+        val notationRegex = Regex("""^\{chords_notation: ?(\d+)}$""")
+
+        val allLines = fileContent.trim().lines()
+        val firstLines = allLines.take(3)
+        val lastLines = allLines.drop(3)
+
+        val parsedFirstLines = firstLines.mapNotNull { line: String ->
+            val trimmedLine = line.trim()
+            titleRegex.matchEntire(trimmedLine)?.let { match ->
+                title = match.groupValues[1].trim()
+                return@mapNotNull null
+            }
+            notationRegex.matchEntire(trimmedLine)?.let { match ->
+                val notationInt = match.groupValues[1].toLong()
+                notation = ChordsNotation.parseById(notationInt)
+                return@mapNotNull null
+            }
+            return@mapNotNull line
+        }
+
+        val parsedLines = parsedFirstLines + lastLines
+        val parsedContent = parsedLines.joinToString("\n")
+        return ParsedSongContent(parsedContent, title, notation)
     }
 
     @SuppressLint("Range")
@@ -186,4 +226,10 @@ class SongImportFileChooser(
         }
         return false
     }
+
+    data class ParsedSongContent (
+        val content: String,
+        val title: String?,
+        val notation: ChordsNotation?,
+    )
 }

@@ -36,7 +36,6 @@ class EditSongLayoutController(
     customSongService: LazyInject<CustomSongService> = appFactory.customSongService,
     softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
     songImportFileChooser: LazyInject<SongImportFileChooser> = appFactory.songImportFileChooser,
-    exportFileChooser: LazyInject<ExportFileChooser> = appFactory.songExportFileChooser,
     chordsEditorLayoutController: LazyInject<ChordsEditorLayoutController> = appFactory.chordsEditorLayoutController,
     chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
     contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
@@ -52,7 +51,6 @@ class EditSongLayoutController(
     private val customSongService by LazyExtractor(customSongService)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
     private val songImportFileChooser by LazyExtractor(songImportFileChooser)
-    private val songExportFileChooser by LazyExtractor(exportFileChooser)
     private val chordsEditorLayoutController by LazyExtractor(chordsEditorLayoutController)
     private val chordsNotationService by LazyExtractor(chordsNotationService)
     private val contextMenuBuilder by LazyExtractor(contextMenuBuilder)
@@ -198,12 +196,10 @@ class EditSongLayoutController(
     }
 
     private fun exportContentToFile() {
-        var songTitle = songTitleEdit?.text?.toString().orEmpty()
-        songTitle = songTitle.takeIf { it.lowercase().endsWith(".txt") } ?: "$songTitle.txt"
+        val songTitle = songTitleEdit?.text?.toString() ?: "Untitled"
         val songContent = songContentEdit?.text?.toString().orEmpty()
-        songExportFileChooser.showFileChooser(songContent, songTitle) {
-            uiInfoService.showInfo(R.string.song_content_exported)
-        }
+        val notation = chordsNotationSpinner?.selectedNotation ?: preferencesState.chordsNotation
+        customSongService.exportSongContent(songContent, songTitle, notation)
     }
 
     fun setCurrentSong(song: Song?) {
@@ -288,10 +284,11 @@ class EditSongLayoutController(
         softKeyboardService.hideSoftKeyboard()
     }
 
-    fun setupImportedSong(title: String, content: String) {
-        if (songTitleEdit?.text.toString().isEmpty()) {
-            songTitleEdit?.setText(title)
-        }
+    fun setupImportedSong(title: String, content: String, notation: ChordsNotation?) {
+        songTitleEdit?.setText(title)
         songContentEdit?.setText(content)
+        notation?.let { notation ->
+            chordsNotationSpinner?.selectedNotation = notation
+        }
     }
 }

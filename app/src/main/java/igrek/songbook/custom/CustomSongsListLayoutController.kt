@@ -59,7 +59,7 @@ class CustomSongsListLayoutController(
     songOpener: LazyInject<SongOpener> = appFactory.songOpener,
     customSongService: LazyInject<CustomSongService> = appFactory.customSongService,
     appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
-    exportFileChooser: LazyInject<ExportFileChooser> = appFactory.songExportFileChooser,
+    exportFileChooser: LazyInject<ExportFileChooser> = appFactory.exportFileChooser,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     importFileChooser: LazyInject<ImportFileChooser> = appFactory.allSongsImportFileChooser,
     songImportFileChooser: LazyInject<SongImportFileChooser> = appFactory.songImportFileChooser,

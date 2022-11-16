@@ -132,7 +132,7 @@
     <string name="custom_song_editor">Song editor</string>
     <string name="edit_song_title_label">Song Title:</string>
     <string name="edit_song_title_hint">Title…</string>
-    <string name="edit_song_content_label">Lyrics with chords in square brackets:</string>
+    <string name="edit_song_content_label">Lyrics and [chords]:</string>
     <string name="chords_editor_hint">Put here the lyrics with chords. Try to stick to these following rules in order to keep songs consistent with others:
         \n\n1. Mark chords by surrounding them with square brackets, e.g. \"between [C G# A7 F#maj7] words\".
         \n\n2. Mix chords with the lyrics in the same line placing them just before the words where they occur in order to precisely indicate where a chord should be accentuated, e.g. \"[C]And no reli[Cmaj7]gion [F]too\". Do not place them in a separate line above text (though you can always change your displaying style in settings - so let others choose their favourite displaying style). Placing chords in the same line is extremely important, because it allows to display chord always in correct place regardless different font styles and word wrapping. Don\'t worry about your favourite chords displaying style - Songbook will do all the magic for you.
@@ -168,10 +168,11 @@
     </string>
     <string name="import_song_content_hint">
         Song lyrics with [chords] in the same line
+        \nCheck out help (?) for more details.
         \n…[C]Example [G#]text [C G# A7 F#maj7]…
         \n…[C]So, so you think you can [D]tell…
         \n…Smoke on the water [C G#]…
-        \nCheck out help (?) for more details.
+        \n…Never gonna [G]give you [A]up…
     </string>
     <string name="import_content_from_file">📂 Import from file / cloud</string>
     <string name="edit_song_save">💾 Save song</string>
@@ -403,7 +404,7 @@
     <string name="settings_keep_screen_on_hint">Keep display always on when a song is opened</string>
     <string name="select_file_to_export">Save file</string>
     <string name="export_content_to_file">📤 Export to file / cloud</string>
-    <string name="song_content_exported">Song content has been exported</string>
+    <string name="song_exported">Song has been exported</string>
     <string name="multichoice_invert">Invert</string>
     <string name="song_languages">Song languages</string>
     <string name="nav_top_songs">Top songs</string>

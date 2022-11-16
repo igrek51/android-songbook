@@ -14,10 +14,10 @@ import igrek.songbook.inject.appFactory
 import java.io.OutputStream
 
 class ExportFileChooser(
-        activity: LazyInject<Activity> = appFactory.activity,
-        uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-        activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,
+    activity: LazyInject<Activity> = appFactory.activity,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,
 ) {
     private val activity by LazyExtractor(activity)
     private val uiInfoService by LazyExtractor(uiInfoService)
