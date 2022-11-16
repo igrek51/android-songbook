@@ -17,7 +17,7 @@ jobs:
           cache: 'gradle'
 
       - name: Build project
-        run: ./gradlew assemble --stacktrace
+        run: ./gradlew assembleDebug --stacktrace
 
       - name: Run Unit Tests
         run: ./gradlew test --stacktrace
