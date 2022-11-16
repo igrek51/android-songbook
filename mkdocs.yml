@@ -8,6 +8,8 @@ theme:
   name: material
   icon:
     repo: fontawesome/brands/github
+    logo: material/music-note
+  favicon: assets/favicon.png
   palette:
     - scheme: default
       primary: indigo
