@@ -26,11 +26,11 @@ jobs:
         uses: asadmansr/android-test-report-action@v1.2.0
         if: ${{ always() }}
 
-      - name: Run Instrumentation Tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 33
-          target: default
-          arch: x86
-          profile: Nexus 6
-          script: ./gradlew connectedCheck --stacktrace
+      # - name: Run Instrumentation Tests
+      #   uses: reactivecircus/android-emulator-runner@v2
+      #   with:
+      #     api-level: 33
+      #     target: default
+      #     arch: x86
+      #     profile: Nexus 6
+      #     script: ./gradlew connectedCheck --stacktrace
