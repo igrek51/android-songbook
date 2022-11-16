@@ -1,7 +1,7 @@
 # Chord Format Specification
 
-Songbook uses simple text file format to interpret songs.
-It contains the song lyrics and chords.
+*Songbook* uses simple text file format to interpret songs.
+It contains the song's lyrics intertwined with the chords.
 The chords are placed between square brackets `[` and `]`, eg. `[C7]`.
 
 You **must** adhere to the formatting principles in order to create a valid song in *Songbook*.
@@ -9,49 +9,60 @@ You **must** adhere to the formatting principles in order to create a valid song
 ## Formatting Rules
 Try to stick to these following rules in order to keep songs consistent with others:
 
-1. Mark **chords** by surrounding them with **square brackets**, e.g.
-```
-[C]So, so you think you can [D]tell
-```
+1.  Mark **chords** by surrounding them with **square brackets**, e.g.
+    ```
+    [C]So, so you think you can [D]tell
+    ```
 
 2.  Mix chords with the lyrics in the **same line**, placing them **just before the words** 
     where they occur in order to precisely indicate where a chord should be accentuated, e.g. 
     ```
-    [C]And no reli[Cmaj7]gion [F]too
+    Never gonna [G]give you [A]up
     ```
 
     !!! failure "Don't"
         **Do not place the chords in a separate line above the text**.
 
-    You can always change your [Displaying Style](./displaying-styles.md) in **Settings**,
-    so let others choose their favourite displaying style.
-    Placing chords in the same line is extremely important, 
-    because it allows to display chord always in correct place regardless different 
-    **font styles** and **word wrapping**. 
-    Don't worry about your favourite chords displaying style,
-    *Songbook* will do all the magic for you.
+    !!! note
+        If you want to display chords above the lyrics,
+        you can always change your [Displaying Style](./displaying-styles.md) in **Settings**.
+        So don't force it on others, let others choose their favourite displaying style.
+        Placing chords in the same line is extremely important, 
+        because only then chords are precisely defined in correct place,
+        regardless different **font styles** or **word wrapping**. 
+        Don't worry about your favourite chords displaying style,
+        *Songbook* will do all the magic for you.
 
 3.  If some part of a song is **repeated** (e.g. **chorus**), **copy** it to all its occurrences. 
     When lyrics are **continuous**, it facilitates scrolling through the song and 
     then you will not have to scroll back every time to see the refrain chords. 
 
     !!! failure "Don't"
-        Don't put any annotations or paragraphs like `Chorus`, `Verse`, `Title`, `Solo`, `Instrumental`. 
+        Don't put any superfluous annotations or paragraphs
+        like `Chorus`, `Verse`, `Title`, `Solo`, `Instrumental`. 
         Include only lyrics with chords.
 
-4. If a song has **difficult rhythm** with chords changing **frequently**,
-place the chords **between words** or even **inside the words** in order to indicate 
-the syllable with a chord accent, e.g `[G]Hotel Cali[D]fornia`. 
-In very simple cases, it is allowed to place tje chords **at the end of line**: `Smoke on the water [C G#]`
+4.  If a song has **difficult rhythm** with chords changing **frequently**,
+    place the chords **between words** or even **inside the words** in order to indicate 
+    the syllable with a chord accent, e.g
+    ```
+    [G]Hotel Cali[D]fornia
+    ``` 
+    In very simple cases, it is allowed to place tje chords **at the end of line**:
+    ```
+    Smoke on the water [C G#]
+    ```
 
 5. You can use **dash** `-` to couple quickly changing chords: 
 `D Dsus2-D-Dsus4` or use **parentheses** `()` to mark some chords **optional**: `[C G (G7)]`.
 
-6. Make sure you have chosen appropriate [**Notation**](./chords-notations.md) for your chords
-(`Am` for English or `a` for German).
+6.  Make sure you have chosen appropriate **Notation** for your chords
+    (`Am` for **English** or `a` for **German**).
+    Find out [**why specifying Chord Notation is so important**](./chord-notations.md)
 
-7. [**Reformat**](./chords-editor.md#tools) and [**Validate**](./chords-editor.md#tools) your song before saving it, 
-especially when you are going to publish it.
+7.  Use [**Reformat**](./chords-editor.md#tools) and [**Validate**](./chords-editor.md#tools)
+    tools on your song before saving it, 
+    especially when you are going to publish it.
 
 ## Valid chords
 Please use the valid chord names inside brackets, so the *Songbook* can interpret them correctly.
@@ -64,18 +75,17 @@ Having that in mind, **E minor** chord, should be named `Em` (in **English** not
 Valid chords are for instance `C G# A7 F#maj7`
 
 !!! failure "Don't"
-    Don't use `Fm#` name, the valid chord is `F#m` (F sharp minor).
+    Don't use `Fm#` name, the valid chord is `F#m` instead (F sharp minor).
 
 !!! note
-    Some chords notations (like German) may allow lowercase note names in case of a minor chord, eg. `d` (instead of English `Dm`).
-    Also, valid note names depend on a selected chords notation, eg. German notation have `A B H C ...` notes, while in English it's called `A Bb B C ...`.
+    In some chord notations (like **German**) minor chords are written with lowecase note names, eg. `d` (instead of **English** `Dm`).
+    Also, valid note names depend on a selected chord notation, eg. **German** notation have `A B H C ...` notes, while in **English** it's called `A Bb B C ...`.
 
 ## Example
 ```
 [C]Twinkle, twinkle, [F]little [C]star
 [F]How I [C]wonder [G7]what you [C]are.
 
-Song lyrics with [chords] in the same line
 [C]Example [G#]text [C G# A7 F#maj7]
 [C]So, so you think you can [D]tell
 Smoke on the water [C G#]
@@ -97,10 +107,15 @@ Try to get rid of them before publishing a song.
 Find out more about [**Chords Editor**](./chords-editor.md), which has a lot of useful tools.
 
 ## Importing songs
-You can import a song from a **local file** on your device or a **cloud drive** (like **Google Drive**)
-in order to load the song to **My songs**.
+In order to load a song to **My songs**,
+you can import it from a **local file** on your device
+or any **cloud drive** supported by your device (like **Google Drive**).
 
-You can load either a **text file** (`.txt`), **PDF document** (`.pdf`) or a **Google Docs** document.
+You can load either:
+
+- **text file** (`.txt`),
+- **PDF document** (`.pdf`) or
+- **Google Docs** document.
 
 !!! note
     When importing a **PDF** file, the raw text will be extracted.
@@ -127,7 +142,7 @@ Given the following text file
 
 you can choose how to present the chords on a song preview:
 
-- **Chords inline, among the words** (as original text, but chords are bold with a color accent)
+- **Chords inline, among the words** (In *Songbook* chords are bold with a color accent)
     ```
     C Twinkle, twinkle, F little C star
     F How I C wonder G7 what you C are.

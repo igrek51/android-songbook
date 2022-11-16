@@ -2,7 +2,7 @@
 
 Here's the list of third-party libraries and tools used by *Songbook*:
 
-- [AdMob](https://developers.google.com/admob/android/quick-start)
+- [AdMob SDK](https://developers.google.com/admob/android/quick-start)
 - [Android SDK](https://github.com/AndroidSDKSources)
 - [Apache Commons Codec](https://github.com/apache/commons-codec)
 - [Firebase Crashlytics](https://firebase.google.com/docs/crashlytics)
@@ -16,9 +16,12 @@ Here's the list of third-party libraries and tools used by *Songbook*:
 - [JWTDecode](https://github.com/auth0/JWTDecode.Android)
 - [Kotlin](https://github.com/JetBrains/kotlin)
 - [Material Design icons](https://materialdesignicons.com/)
+- [Material for MkDocs](https://github.com/squidfunk/mkdocs-material)
+- [MkDocs](https://github.com/mkdocs/mkdocs)
 - [OkHttp](https://github.com/square/okhttp)
 - [PdfBox-Android](https://github.com/TomRoush/PdfBox-Android)
 - [Protobuf](https://github.com/protocolbuffers/protobuf/)
+- [Python](https://github.com/python/cpython)
 - [RxAndroid](https://github.com/ReactiveX/RxAndroid)
 - [RxKotlin](https://github.com/ReactiveX/RxKotlin)
 - [SQLite](https://github.com/sqlite/sqlite)

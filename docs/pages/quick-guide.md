@@ -12,7 +12,7 @@ You can choose a song from the **Artists** view,
     Search by any word, uppercase / lowercase doesn't matter.
 
 ## Song Preview
-![](./assets/screenshots-mobile-en/01.png){ width="30%" }
+![](./assets/screenshots-mobile-en/01.png){ width="300" }
 
 *Songbook* displays the **lyrics** of the song with highlighted **chords**.
 On a song preview it keeps the display always on.
@@ -28,7 +28,7 @@ In **Settings**, choose one of the options how to present the chords:
 - Lyrics only, chords hidden
 - Chords only, lyrics hidden
 
-In **Settings**, you can also pick your favourite [**Chords Notation**](./chords-notations.md):
+In **Settings**, you can also pick your favourite [**Chord Notation**](./chord-notations.md):
 
 - **English**: `Am Bb B C C# Dm Eb`,
 - **German (#/b)**: `a B H C C# d Eb`,
@@ -37,13 +37,13 @@ In **Settings**, you can also pick your favourite [**Chords Notation**](./chords
 - **Japanese**: `Im Hen-ro Ro Ha Ei-ha Nim Hen-ho`,
 - **Solfege**: `Lam Sib Si Do Do# Rem Mib`
 
-Default **chords notation** had already been set automatically depending on your **system language**
-(due to some chords notations are used in particular countries).
+Default **chord notation** had already been set automatically depending on your **system language**
+(due to some chord notations are used in particular countries).
 
-Find out more about [Chords Notations](./chords-notations.md).
+Find out more about [Chord Notations](./chord-notations.md).
 
 ## Transposing
-![](./assets/screenshots-mobile-en/02.png){ width="30%" }
+![](./assets/screenshots-mobile-en/02.png){ width="300" }
 
 You can transpose the chords from any song to **any key**.
 Click transposing icon on top action bar to show the transposing panel.
@@ -56,7 +56,7 @@ and displays it in the Transposing panel.
 It shows the detected **Major key** along with its **minor key** counterpart, eg. `C / Am`.
 
 ## Autoscroll
-![](./assets/screenshots-mobile-en/03.png){ width="30%" }
+![](./assets/screenshots-mobile-en/03.png){ width="300" }
 
 Click **Autoscroll** icon on top action bar to show autoscroll panel.
 Starting autoscroll causes the lyrics to be scrolled automatically by the timer.
@@ -98,10 +98,10 @@ Pick your instrument in the **Settings**:
 Click the diagrams button in the context of a song to get the list of all unique chords occurring in a song.
 Alternatively you can choose the option **Chord Diagrams** from the main menu to search the chord by name.
 
-![](./assets/screenshots-mobile-en/07.png){ width="30%" }
+![](./assets/screenshots-mobile-en/07.png){ width="300" }
 
 ## Custom Songs
-![](./assets/screenshots-mobile-en/04.png){ width="30%" }
+![](./assets/screenshots-mobile-en/04.png){ width="300" }
 
 You can view your custom songs by clicking **My songs** in the main menu.
 To add a new one, click the :material-plus: icon in the main navigation menu.
@@ -156,7 +156,7 @@ For instance, you can keep your songs in the playlists called
     from **favourites** or from a current **playlist**.
 
 !!! tip
-    Remember to use **Save Backup** option in **Settings** from time to time to 
+    Use **Save Backup** option in **Settings** from time to time to 
     keep your application data safe and to synchronize data between many devices.
 
 !!! tip

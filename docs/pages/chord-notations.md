@@ -1,8 +1,8 @@
-# Chords Notations
+# Chord Notations
 
-**Chords Notation** is the note naming convention in music.
+**Chord Notation** is the note naming convention in music.
 
-*Songbook* supports several chords notations:
+*Songbook* supports several chord notations:
 
 -   **English** - 
     used in most countries.
@@ -59,19 +59,19 @@
     Minor chords are denoted by appending `m` to the main note name.
 
 
-You can pick your favourite chords notation in the Settings.
+You can pick your favourite chord notation in the Settings.
 
-Default chords notation had already been set automatically depending on your system language
-since some chords notations are used only in particular countries.
+Default chord notation had already been set automatically depending on your system language
+since some chord notations are used only in particular countries.
 
 !!! note
-    Name **`B`** in music can denote completely different notes depending on the chords notation.
+    Name **`B`** in music can denote completely different notes depending on the chord notation.
     According to **English** notation `B` is the note being 1 semitone lower than `C`,
     while according to **German** notation it's the sound that is 2 semitones lower than `C` (so it's English `Bb`).
-    Thus, it's extremely important to specify the appropriate **chords notation** before interpreting chords.
+    Thus, it's extremely important to specify the appropriate **chord notation** before interpreting chords.
 
 !!! note
-    **German** chords notation changes note names to lowercase in case of a minor chord,
+    **German** chord notation changes note names to lowercase in case of a minor chord,
     eg. `d` (instead of English `Dm`).
     Songbook takes that into account too.
 
