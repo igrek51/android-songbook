@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import igrek.songbook.R
+import igrek.songbook.activity.ActivityController
 import igrek.songbook.chords.diagram.ChordDiagramsService
 import igrek.songbook.chords.loader.LyricsLoader
 import igrek.songbook.info.UiInfoService
@@ -67,6 +68,7 @@ class SongPreviewLayoutController(
     chordDiagramsService: LazyInject<ChordDiagramsService> = appFactory.chordDiagramsService,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
     roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
+    activityController: LazyInject<ActivityController> = appFactory.activityController,
 ) : MainLayout {
     private val lyricsLoader by LazyExtractor(lyricsLoader)
     private val lyricsThemeService by LazyExtractor(lyricsThemeService)
@@ -86,6 +88,7 @@ class SongPreviewLayoutController(
     private val chordsDiagramsService by LazyExtractor(chordDiagramsService)
     private val preferencesState by LazyExtractor(preferencesState)
     private val roomLobby by LazyExtractor(roomLobby)
+    private val activityController by LazyExtractor(activityController)
 
     var songPreview: SongPreview? = null
         private set
@@ -95,7 +98,7 @@ class SongPreviewLayoutController(
     private var songTitleLabel: TextView? = null
     private var fullscreen = false
     private var appBarLayout: AppBarLayout? = null
-    private var disableFullscreenButton: FloatingActionButton? = null
+    private var exitFullscreenButton: FloatingActionButton? = null
     private var transposeButton: ImageButton? = null
     private var autoscrollButton: ImageButton? = null
     private var setFavouriteButton: ImageButton? = null
@@ -240,7 +243,7 @@ class SongPreviewLayoutController(
         }
         updateScreenShareButton()
 
-        disableFullscreenButton = layout.findViewById<FloatingActionButton>(R.id.disableFullscreenButton)?.apply {
+        exitFullscreenButton = layout.findViewById<FloatingActionButton>(R.id.exitFullscreenButton)?.apply {
             setOnClickListener { setFullscreen(false) }
         }
         setFullscreen(false)
@@ -353,10 +356,12 @@ class SongPreviewLayoutController(
 
         if (fullscreen) {
             appBarLayout?.visibility = View.GONE
-            disableFullscreenButton?.show()
+            if (!activityController.isAndroidTv()) {
+                exitFullscreenButton?.show()
+            }
         } else {
             appBarLayout?.visibility = View.VISIBLE
-            disableFullscreenButton?.hide()
+            exitFullscreenButton?.hide()
         }
     }
 
