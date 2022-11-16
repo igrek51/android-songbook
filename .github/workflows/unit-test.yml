@@ -20,7 +20,7 @@ jobs:
         run: ./gradlew assembleDebug --stacktrace
 
       - name: Run Unit Tests
-        run: ./gradlew test --stacktrace
+        run: ./gradlew testDebug --stacktrace
 
       - name: Android Test Report
         uses: asadmansr/android-test-report-action@v1.2.0
