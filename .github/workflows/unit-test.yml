@@ -12,6 +12,7 @@ jobs:
       - name: set up JDK
         uses: actions/setup-java@v2
         with:
+          distribution: 'temurin'
           java-version: 11
           cache: 'gradle'
 
