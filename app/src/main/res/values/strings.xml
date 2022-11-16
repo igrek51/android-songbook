@@ -401,7 +401,7 @@
     <string name="settings_keep_screen_on">Screen always on</string>
     <string name="settings_keep_screen_on_hint">Keep display always on when a song is opened</string>
     <string name="select_file_to_export">Save file</string>
-    <string name="export_content_to_file">📤 Export to file / cloud</string>
+    <string name="export_content_to_file">📤 Export to file / Drive</string>
     <string name="song_exported">Song has been exported</string>
     <string name="multichoice_invert">Invert</string>
     <string name="song_languages">Song languages</string>

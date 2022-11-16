@@ -376,7 +376,7 @@
     <string name="settings_keep_screen_on">Zawsze włączony ekran</string>
     <string name="settings_keep_screen_on_hint">Utrzymuj niegasnący wyświetlacz na podglądzie piosenki</string>
     <string name="select_file_to_export">Zapisz plik</string>
-    <string name="export_content_to_file">📤 Eksportuj do pliku / chmury</string>
+    <string name="export_content_to_file">📤 Eksportuj do pliku / Dysku</string>
     <string name="song_exported">Piosenka została wyeksportowana.</string>
     <string name="multichoice_invert">Odwróć</string>
     <string name="song_languages">Języki piosenek</string>
