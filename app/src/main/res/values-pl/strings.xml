@@ -9,9 +9,8 @@
     <string name="nav_settings">Ustawienia</string>
     <string name="nav_exit">Wyjście</string>
     <string name="nav_about">Informacje</string>
-    <string name="nav_manual">Pomoc</string>
+    <string name="nav_manual">Podręcznik</string>
     <string name="nav_contact">Kontakt</string>
-    <string name="nav_help">Pomoc</string>
     <string name="nav_screen_share">Współdzielenie piosenek</string>
     <string name="nav_purchase">Sklep</string>
     <string name="ui_help_content">
@@ -62,8 +61,7 @@
         <br>
         <br><a href=\"https://github.com/igrek51/android-songbook\">Projekt Songbook na GitHubie</a>
         <br>
-        <br><b>WYKORZYSTANE BIBLIOTEKI I NARZĘDZIA</b>:
-        <br>Android SDK, Apache Commons, Firebase Analytics, Google Play Services, Gradle, Guava, Jackson, Java, JWT, Kotlin, Material Design icons, OkHttp, Protobuf, RxAndroid, RxKotlin, SQLite
+        <br><a href=\"https://igrek51.github.io/android-songbook/develop/tech-stack\">Biblioteki zewnętrzne</a>
     ]]></string>
     <string name="action_info_ok">OK</string>
     <string name="action_info_yes">Tak</string>
@@ -524,7 +522,7 @@
     <string name="settings_songLyricsSearch">Wyszukiwanie po fragmencie tekstu</string>
     <string name="settings_songLyricsSearch_hint">Szukaj piosenek zawierających słowa tekstu (wolniejsze)</string>
     <string name="manual_first_time">Pierwszy raz?</string>
-    <string name="manual_confirm_opening_manual">Czy chcesz zobaczyć krótki Przewodnik po funkcjonalnościach Songbooka?</string>
+    <string name="manual_confirm_opening_manual">Czy otworzyć krótki Przewodnik po funkcjonalnościach Songbooka (Tutorial)?</string>
     <string name="prompt_rate_app_title">Podoba Ci się Songbook?</string>
     <string name="prompt_rate_app_body">Czy oceniłbyś Songbooka na 5 gwiazdek ⭐️⭐️⭐️⭐️⭐️?</string>
 </resources>

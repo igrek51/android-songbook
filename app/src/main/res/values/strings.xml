@@ -14,7 +14,6 @@
     <string name="nav_about">About</string>
     <string name="nav_manual">Manual</string>
     <string name="nav_contact">Contact</string>
-    <string name="nav_help">Help</string>
     <string name="nav_screen_share">Bluetooth Sharing</string>
     <string name="nav_purchase">Shop</string>
     <string name="ui_help_content">
@@ -63,8 +62,7 @@
         <br>
         <br><a href=\"https://github.com/igrek51/android-songbook\">Songbook Project on GitHub</a>
         <br>
-        <br><b>USED LIBRARIES &amp; TOOLS</b>:
-        <br>Android SDK, Apache Commons, Firebase Analytics, Google Play Services, Gradle, Guava, Jackson, Java, JWT, Kotlin, Material Design icons, OkHttp, Protobuf, RxAndroid, RxKotlin, SQLite
+        <br><a href=\"https://igrek51.github.io/android-songbook/develop/tech-stack\">Third Party Libraries</a>
     ]]></string>
     <string name="action_info_ok">OK</string>
     <string name="action_info_yes">Yes</string>
@@ -551,7 +549,7 @@
     <string name="settings_songLyricsSearch">Full-text search by words</string>
     <string name="settings_songLyricsSearch_hint">Search songs by excerpt from lyrics (slower)</string>
     <string name="manual_first_time">First time?</string>
-    <string name="manual_confirm_opening_manual">Would you like to see the quick Guide and take a tour of Songbook\'s features?</string>
+    <string name="manual_confirm_opening_manual">Would you like to see the quick Guide (Tutorial) and take a tour of Songbook\'s features?</string>
     <string name="prompt_rate_app_title">Do you like Songbook?</string>
     <string name="prompt_rate_app_body">Would you rate the Songbook with 5 stars ⭐️⭐️⭐️⭐️⭐️?</string>
 </resources>

@@ -138,7 +138,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3'
     // Guava
     implementation 'com.google.guava:guava:31.1-android'
-    // Apache commons
+    // Apache Commons Codec
     implementation 'commons-codec:commons-codec:1.15'
     // Protobuf
     implementation 'com.google.protobuf:protobuf-kotlin:3.21.2'

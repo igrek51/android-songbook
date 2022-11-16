@@ -63,3 +63,5 @@ nav:
     - Chords Editor: chords-editor.md
     - Contributing: contributing.md
     - Sharing by Link: sharing-by-link.md
+  - Development:
+    - Third Party Libraries: develop/tech-stack.md
