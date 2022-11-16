@@ -26,7 +26,9 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.util.capitalize
 import igrek.songbook.util.limitTo
-import java.io.*
+import java.io.File
+import java.io.InputStream
+import java.io.InputStreamReader
 import java.nio.charset.Charset
 
 
@@ -184,7 +186,18 @@ class SongImportFileChooser(
     private fun extractPdfContent(inputStream: InputStream): String {
         PDFBoxResourceLoader.init(activity.applicationContext)
         val doc: PDDocument = PDDocument.load(inputStream)
-        return PDFTextStripper().getText(doc).trimIndent().trim()
+//        val stripper: PDFTextStripper = object : PDFTextStripper() {
+//            override fun writeString(text: String?, textPositions: MutableList<TextPosition>?) {
+//                super.writeString(text, textPositions)
+//                logger.debug("""fragment: ${text}, textPositions: $textPositions""")
+//            }
+//        }
+//        stripper.sortByPosition = true
+//        stripper.startPage = 0
+//        val dummy: Writer = OutputStreamWriter(ByteArrayOutputStream())
+//        stripper.writeText(doc, dummy)
+        val stripper = PDFTextStripper()
+        return stripper.getText(doc).trimIndent().trim()
     }
 
     private fun extractTxtContent(inputStream: InputStream): String {
@@ -195,7 +208,7 @@ class SongImportFileChooser(
         var title: String? = null
         var notation: ChordsNotation? = null
 
-        val titleRegex = Regex("""\{title: ?"?([\S\s]+?)"?\}""")
+        val titleRegex = Regex("""\{title: ?"?([\S\s]+?)"?\}""") // escape character \} is needed
         val notationRegex = Regex("""\{chords_notation: ?(\d+)\}""")
 
         val allLines = fileContent.trim().lines()
