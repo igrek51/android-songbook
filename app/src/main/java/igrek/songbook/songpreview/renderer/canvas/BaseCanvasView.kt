@@ -19,6 +19,7 @@ abstract class BaseCanvasView(context: Context) : View(context) {
         protected set
     private var canvas: Canvas? = null
     private var initialized: Boolean = false
+    private val lock = Any()
 
     val isInitialized: Boolean
         @Synchronized get() = initialized
@@ -59,7 +60,7 @@ abstract class BaseCanvasView(context: Context) : View(context) {
             h = height
         }
         if (!initialized) {
-            synchronized(initialized) {
+            synchronized(lock) {
                 if (!initialized) {
                     init()
                     initialized = true

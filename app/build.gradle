@@ -25,11 +25,11 @@ def getVersionName = { ->
 }
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
     defaultConfig {
         applicationId "igrek.songbook"
         minSdkVersion 19
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode getVersionCode()
         versionName getVersionName()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -94,25 +94,25 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     // Android
-    implementation 'androidx.appcompat:appcompat:1.4.2'
-    implementation 'androidx.annotation:annotation:1.4.0'
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.annotation:annotation:1.5.0'
+    implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.activity:activity-ktx:1.5.0'
+    implementation 'androidx.activity:activity-ktx:1.6.1'
     implementation 'androidx.work:work-runtime:2.7.1'
     // Firebase
-    implementation 'com.google.firebase:firebase-analytics-ktx:21.1.1'
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.13'
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.2.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.3.2'
     // Google APIs
     implementation('com.google.api-client:google-api-client-android:1.35.2') {
         exclude group: 'org.apache.httpcomponents'
     }
     implementation 'com.google.android.gms:play-services-basement:18.1.0'
-    implementation('com.google.android.gms:play-services-auth:20.3.0') {
+    implementation('com.google.android.gms:play-services-auth:20.4.0') {
     // AdMob
     implementation 'com.google.android.gms:play-services-ads:21.0.0'
     }
@@ -124,9 +124,9 @@ dependencies {
         exclude group: 'org.apache.httpcomponents'
     }
     // Google Play Billing
-    implementation 'com.android.billingclient:billing-ktx:5.0.0'
+    implementation 'com.android.billingclient:billing-ktx:5.1.0'
     // Kotlin
-    implementation "androidx.core:core-ktx:1.8.0"
+    implementation "androidx.core:core-ktx:1.9.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
@@ -153,16 +153,16 @@ dependencies {
     // PDFBox
     implementation 'com.tom-roush:pdfbox-android:2.0.25.0'
     // Unit tests
-    testImplementation 'androidx.appcompat:appcompat:1.4.2'
+    testImplementation 'androidx.appcompat:appcompat:1.5.1'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:2.28.2'
     testImplementation 'org.assertj:assertj-core:3.23.1'
     // Android instumentation tests
     androidTestImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test:runner:1.4.0'
-    androidTestImplementation 'androidx.test:rules:1.4.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.4.0'
+    androidTestImplementation 'androidx.test:runner:1.5.1'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.5.0'
     androidTestImplementation 'org.mockito:mockito-core:2.28.2'
     androidTestImplementation 'org.mockito:mockito-android:2.22.0'
     androidTestImplementation 'org.assertj:assertj-core:3.23.1'

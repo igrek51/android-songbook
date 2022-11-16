@@ -306,8 +306,8 @@ class EditSongLayoutController(
     fun setupImportedSong(title: String, content: String, notation: ChordsNotation?) {
         songTitleEdit?.setText(title)
         songContentEdit?.setText(content)
-        notation?.let { notation ->
-            chordsNotationSpinner?.selectedNotation = notation
+        notation?.let { _notation ->
+            chordsNotationSpinner?.selectedNotation = _notation
         }
     }
 }

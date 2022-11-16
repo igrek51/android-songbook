@@ -82,7 +82,7 @@ class SongTreeLayoutController(
         val localFocus = LocalFocusTraverser(
             currentViewGetter = { itemsListView?.selectedView },
             currentFocusGetter = { appFactory.activity.get().currentFocus?.id },
-            preNextFocus = { currentFocusId: Int, currentView: View ->
+            preNextFocus = { _: Int, _: View ->
                 when {
                     appFactory.navigationMenuController.get().isDrawerShown() -> R.id.nav_view
                     else -> 0
