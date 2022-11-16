@@ -48,19 +48,24 @@ Find out more about [Chord Notations](./chord-notations.md).
 [![](./assets/screenshots-mobile-en/02.png){ width="250" }](./assets/screenshots-mobile-en/02.png)
 
 You can transpose the chords of any song to **any key**.
-Click transposing icon on top action bar to show the transposing panel.
+Click transposing icon 
+![](./assets/res-drawable/transpose.png){ style="background: #1564C0; height: 1.5em; vertical-align: top;" }
+on top action bar to show the transposing panel.
 
 - Click `-5`, `-1`, `+1`, `+5` buttons to transpose by particular number of **semitones**.
 - Click `0` button to restore the original key.
 
-*Songbook* **recognizes the key** of the song based on the chords it is composed of
-and displays it in the Transposing panel.
-It shows the detected **Major key** along with its **minor key** counterpart, eg. `C / Am`.
+!!! tip "Did you know?"
+    *Songbook* **automatically** recognizes **the key** of the song based on the chords it is composed of
+    and displays it in the *Transposing* panel.
+    Detected **Major key** is shown in conjunction with its **minor key** counterpart, eg. `C / Am`.
 
 ## Autoscroll
 [![](./assets/screenshots-mobile-en/03.png){ width="250" }](./assets/screenshots-mobile-en/03.png)
 
-Click **Autoscroll** icon on top action bar to show autoscroll panel.
+Click **Autoscroll** icon
+![](./assets/res-drawable/scroll1.png){ style="background: #1564C0; height: 1.5em; vertical-align: top;" }
+on top action bar to show autoscroll panel.
 Starting autoscroll causes the lyrics to be scrolled automatically by the timer.
 
 There is an moving **eye-focus zone** prompting where to look when playing.
@@ -100,7 +105,9 @@ Pick your instrument in the **Settings**:
 - **Mandolin**,
 - **Piano**.
 
-Click the diagrams button in the context of a song to get the list of all unique chords occurring in a song.
+Click the diagrams button
+![](./assets/res-drawable/grid.png){ style="background: #1564C0; height: 1.5em; vertical-align: top;" }
+in the context of a song to get the list of all unique chords occurring in a song.
 Alternatively you can choose the option **Chord Diagrams** from the main menu to search the chord by name.
 
 ## Custom Songs
@@ -114,6 +121,11 @@ Find out more about [Chord Format Specification](./chord-format.md).
 
 There are many useful tools in [**Chords Editor**](./chords-editor.md),
 which make the editing easier.
+
+!!! tip
+    You can load your own song from a **local file** on your device
+    or any **cloud drive** supported by your device (like **Google Drive**).
+    Import from either **Text file** (`.txt`), **PDF document** (`.pdf`) or **Google Docs** document.
 
 !!! tip
     If you prefer to edit your own songs on a desktop computer in a **TXT** file,

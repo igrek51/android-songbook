@@ -41,8 +41,10 @@ Example application screenshots:
 
 ## Available on Google Play
 
-Songbook is available on [Google Play](https://play.google.com/store/apps/details?id=igrek.songbook) for free.
+*Songbook* is available on [Google Play](https://play.google.com/store/apps/details?id=igrek.songbook) for free.
 Please give it a ⭐️⭐️⭐️⭐️⭐️ star.
+
+It is available on **phones**, **tablets** and **TV** devices with **Android**.
 
 ## Manual
 
