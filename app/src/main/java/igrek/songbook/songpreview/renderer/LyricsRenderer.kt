@@ -113,7 +113,7 @@ class LyricsRenderer internal constructor(
                         fragment.text,
                         fragment.x * fontsize - scrollX,
                         y + lineheight,
-                        Align.LEFT
+                        Align.LEFT,
                     )
                 }
                 LyricsTextType.CHORDS -> {
@@ -133,7 +133,7 @@ class LyricsRenderer internal constructor(
                         fragment.text,
                         fragment.x * fontsize - scrollX,
                         y + lineheight,
-                        Align.LEFT
+                        Align.LEFT,
                     )
                 }
                 LyricsTextType.LINEWRAPPER -> {}

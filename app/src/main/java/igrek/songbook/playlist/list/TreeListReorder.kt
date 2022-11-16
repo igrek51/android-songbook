@@ -122,7 +122,7 @@ class TreeListReorder(private val listView: PlaylistListView) {
 
         if (dyTotal > 0) { // move up
             while (true) {
-                if (draggedItemPos!! + step + 1 >= listView.items?.size ?: 0)
+                if (draggedItemPos!! + step + 1 >= (listView.items?.size ?: 0))
                     break
                 val downHeight = listView.getItemHeight(draggedItemPos!! + step + 1)
                 if (downHeight == 0)

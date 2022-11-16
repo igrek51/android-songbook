@@ -7,7 +7,7 @@
     android:padding="0dp"
     android:descendantFocusability="afterDescendants">
 
-    <Space
+    <android.widget.Space
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/card_view" />
@@ -118,7 +118,7 @@
 
     </androidx.cardview.widget.CardView>
 
-    <Space
+    <android.widget.Space
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/card_view" />

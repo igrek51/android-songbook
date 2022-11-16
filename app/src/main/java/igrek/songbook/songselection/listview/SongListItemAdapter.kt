@@ -24,7 +24,7 @@ class SongListItemAdapter internal constructor(
         notifyDataSetChanged()
     }
 
-    override fun getItem(position: Int): SongTreeItem? {
+    override fun getItem(position: Int): SongTreeItem {
         return _dataSource[position]
     }
 

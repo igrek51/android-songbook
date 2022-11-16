@@ -138,7 +138,7 @@ class RoomLobbyController(
                 }
 
                 onJoinRoomKnocked()
-            }.map { Unit }
+            }.map { }
         }
     }
 

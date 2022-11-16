@@ -41,7 +41,7 @@ data class Song(
     }
 
     private fun hasArtistCategory(): Boolean {
-        if (categories.isNullOrEmpty())
+        if (categories.isEmpty())
             return false
         return categories.any { c -> c.type == CategoryType.ARTIST }
     }

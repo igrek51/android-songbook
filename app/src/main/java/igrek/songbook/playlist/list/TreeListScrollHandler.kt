@@ -28,7 +28,7 @@ class TreeListScrollHandler(private val listView: PlaylistListView, context: Con
             return sumh - listView.getChildAt(0).top
         }
 
-    val currentScrollPosition: Int?
+    val currentScrollPosition: Int
         get() = realScrollPosition
 
     init {

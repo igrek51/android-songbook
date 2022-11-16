@@ -3178,7 +3178,7 @@ val allPianoChordsNames: Map<String, List<String>> by lazy {
     notes.forEach { note ->
         suffixes.forEach { suffix ->
             val chordName = note + suffix
-            diagrams[chordName] = emptyList<String>()
+            diagrams[chordName] = emptyList()
         }
     }
     diagrams

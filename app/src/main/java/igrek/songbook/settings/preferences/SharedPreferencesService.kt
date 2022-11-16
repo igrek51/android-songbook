@@ -42,14 +42,6 @@ class SharedPreferencesService(
         }
     }
 
-    private fun saveAll() {
-        val editor = sharedPreferences.edit()
-        for (prefDef in PreferencesField.values()) {
-            saveProperty(prefDef, editor)
-        }
-        editor.apply()
-    }
-
     private fun loadProperty(prefDef: PreferencesField) {
         val propertyName = prefDef.preferenceName()
         var value: Any

@@ -27,7 +27,7 @@ data class AllSongsRepository(
         valuesSupplier = songs
     )
 
-    val categoryFinder = LazyFinderByTuple(
+    private val categoryFinder = LazyFinderByTuple(
         entityToId = { e -> e.id },
         valuesSupplier = categories
     )

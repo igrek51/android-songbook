@@ -119,10 +119,6 @@ open class UiInfoService(
         showToast(message)
     }
 
-    fun showTooltip(infoRes: Int) {
-        dialog(R.string.tooltip, infoRes)
-    }
-
     fun clearSnackBars() {
         infobars.forEach { (_, snackbar) ->
             if (snackbar.isShown)

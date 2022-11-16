@@ -45,7 +45,7 @@ open class LyricsEditorHistory {
     }
 
     private fun peekLastSelection(): Pair<Int, Int>? {
-        if (history.isNullOrEmpty())
+        if (history.isEmpty())
             return null
         val last = history.last()
         return Pair(last.startSelection, last.endSelection)

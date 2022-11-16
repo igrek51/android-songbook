@@ -6,8 +6,7 @@ import android.os.Bundle
 
 class CurrentActivityListener : Application.ActivityLifecycleCallbacks {
 
-    var currentActivity: Activity? = null
-        private set
+    private var currentActivity: Activity? = null
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
         currentActivity = activity

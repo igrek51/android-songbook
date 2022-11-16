@@ -521,8 +521,4 @@ class SettingsFragment(
         return decimalFormat1.format(value.toDouble())
     }
 
-    private fun msToS(ms: Float): Long {
-        return ((ms + 500) / 1000).toLong()
-    }
-
 }

@@ -23,19 +23,13 @@ class PreferencesDao(
 
     fun getPrimitiveEntries(): Map<String, Any> {
         return preferencesDb.entries
-            .map { entry -> entry.name to readEntryValue(entry) }
-            .toMap()
+            .associate { entry -> entry.name to readEntryValue(entry) }
     }
 
     fun setPrimitiveEntries(entries: Map<String, Any>) {
         preferencesDb.entries = entries
             .map { (name, value) -> buildEntryValue(name, value) }
             .toMutableSet()
-    }
-
-    fun setPrimitiveEntry(preferenceName: String, value: Any) {
-        preferencesDb.entries.removeAll { entry -> entry.name == preferenceName }
-        preferencesDb.entries.add(buildEntryValue(preferenceName, value))
     }
 
     private fun readEntryValue(entry: PreferenceEntry): Any {

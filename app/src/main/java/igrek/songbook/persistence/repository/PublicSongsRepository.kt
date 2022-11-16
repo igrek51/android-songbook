@@ -10,7 +10,7 @@ data class PublicSongsRepository(
     val categories: SimpleCache<List<Category>>,
     val songs: SimpleCache<List<Song>>
 ) {
-    val categoryFinder = LazyFinderByTuple(
+    private val categoryFinder = LazyFinderByTuple(
         entityToId = { e -> e.id },
         valuesSupplier = categories
     )

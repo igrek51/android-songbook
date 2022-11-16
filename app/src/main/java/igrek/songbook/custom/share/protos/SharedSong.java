@@ -158,7 +158,7 @@ public final class SharedSong {
 			}
 		}
 		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+		public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
 			return igrek.songbook.custom.share.protos.SharedSong.internal_static_igrek_songbook_custom_share_protos_SharedSongDto_descriptor;
 		}
 		
@@ -492,7 +492,7 @@ public final class SharedSong {
 		public static final class Builder extends com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
 				// @@protoc_insertion_point(builder_implements:igrek.songbook.custom.share.protos.SharedSongDto)
 				igrek.songbook.custom.share.protos.SharedSong.SharedSongDtoOrBuilder {
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor() {
+			public static com.google.protobuf.Descriptors.Descriptor getDescriptor() {
 				return igrek.songbook.custom.share.protos.SharedSong.internal_static_igrek_songbook_custom_share_protos_SharedSongDto_descriptor;
 			}
 			

@@ -29,7 +29,7 @@ class PreferencesService(
 
     private fun readEntities(): Map<String, Any> {
         val primitives = userDataDao.preferencesDao.getPrimitiveEntries()
-        if (!primitives.isNullOrEmpty())
+        if (primitives.isNotEmpty())
             return primitives2entities(primitives)
 
         logger.warn("no user data preferences found, reading from shared preferences")

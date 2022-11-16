@@ -77,7 +77,7 @@ class AdminService(
     fun updatePublicSongUi(song: Song) {
         uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
 
-        val deferred = antechamberService.updatePublicSong(song)
+        val deferred = antechamberService.updatePublicSongAsync(song)
         GlobalScope.launch(Dispatchers.Main) {
             val result = deferred.await()
             result.fold(onSuccess = {
@@ -143,7 +143,7 @@ class AdminService(
     private fun updateRank(song: Song, rank: Double?) {
         uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
 
-        val deferred = songRankService.updateRank(song, rank)
+        val deferred = songRankService.updateRankAsync(song, rank)
         GlobalScope.launch(Dispatchers.Main) {
             val result = deferred.await()
             result.fold(onSuccess = {
@@ -157,7 +157,7 @@ class AdminService(
     private fun createCategory(categoryName: String) {
         uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
 
-        val deferred = adminCategoryManager.createCategory(categoryName)
+        val deferred = adminCategoryManager.createCategoryAsync(categoryName)
         GlobalScope.launch(Dispatchers.Main) {
             val result = deferred.await()
             result.fold(onSuccess = {

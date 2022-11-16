@@ -221,7 +221,7 @@ class SongImportFileChooser(
         var notation: ChordsNotation? = null
 
         val titleRegex = Regex("""\{title: ?"?([\S\s]+?)"?\}""") // escape character \} is needed
-        val notationRegex = Regex("""\{chords_notation: ?(\d+)\}""")
+        val notationRegex = Regex("""\{chords_notation: ?(\d+)\}""") // escape character \} is needed
 
         val allLines = fileContent.trim().lines()
         val firstLines = allLines.take(3)

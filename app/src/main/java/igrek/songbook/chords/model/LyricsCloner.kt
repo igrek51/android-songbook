@@ -8,19 +8,19 @@ class LyricsCloner {
         )
     }
 
-    fun cloneLine(origin: LyricsLine): LyricsLine {
+    private fun cloneLine(origin: LyricsLine): LyricsLine {
         return origin.copy(
             fragments = origin.fragments.map { cloneLyricsFragment(it) },
         )
     }
 
-    fun cloneLyricsFragment(origin: LyricsFragment): LyricsFragment {
+    private fun cloneLyricsFragment(origin: LyricsFragment): LyricsFragment {
         return origin.copy(
             chordFragments = origin.chordFragments.map { cloneChordFragment(it) },
         )
     }
 
-    fun cloneChordFragment(origin: ChordFragment): ChordFragment {
+    private fun cloneChordFragment(origin: ChordFragment): ChordFragment {
         return when (origin.type) {
             ChordFragmentType.SINGLE_CHORD -> origin.copy(singleChord = origin.singleChord?.copy())
             ChordFragmentType.COMPOUND_CHORD -> origin.copy(compoundChord = origin.compoundChord?.clone())

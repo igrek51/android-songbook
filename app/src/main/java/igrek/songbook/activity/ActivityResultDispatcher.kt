@@ -24,10 +24,10 @@ class ActivityResultDispatcher(
     fun registerActivityResultLauncher(onResult: (resultCode: Int, data: Intent?) -> Unit): ActivityResultLauncher<Intent> {
         val activityResultLauncher: ActivityResultLauncher<Intent> =
             appCompatActivity.registerForActivityResult(
-                ActivityResultContracts.StartActivityForResult(),
-                ActivityResultCallback<ActivityResult> { result ->
-                    onResult(result.resultCode, result.data)
-                })
+                ActivityResultContracts.StartActivityForResult()
+            ) { result ->
+                onResult(result.resultCode, result.data)
+            }
         return activityResultLauncher
     }
 
@@ -37,10 +37,10 @@ class ActivityResultDispatcher(
     ) {
         val activityResultLauncher: ActivityResultLauncher<Intent> =
             appCompatActivity.registerForActivityResult(
-                ActivityResultContracts.StartActivityForResult(),
-                ActivityResultCallback<ActivityResult> { result ->
-                    onResult(result.resultCode, result.data)
-                })
+                ActivityResultContracts.StartActivityForResult()
+            ) { result ->
+                onResult(result.resultCode, result.data)
+            }
         activityResultLauncher.launch(intent)
     }
 

@@ -110,8 +110,8 @@ class PlaylistLayoutController(
                 }
             },
             nextRight = { currentFocusId: Int, currentView: View ->
-                when {
-                    currentFocusId == R.id.playlistListView -> when {
+                when (currentFocusId) {
+                    R.id.playlistListView -> when {
                         currentView.findViewById<View>(R.id.itemMoveButton)?.isVisible == true -> {
                             (currentView as? ViewGroup)?.descendantFocusability =
                                 ViewGroup.FOCUS_BEFORE_DESCENDANTS
@@ -129,7 +129,7 @@ class PlaylistLayoutController(
                         }
                         else -> 0
                     }
-                    currentFocusId == R.id.itemMoveButton -> R.id.itemSongMoreButton
+                    R.id.itemMoveButton -> R.id.itemSongMoreButton
                     else -> 0
                 }
             },

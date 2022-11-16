@@ -21,7 +21,7 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener,
     var adapter: PlaylistListItemAdapter? = null
     var scrollHandler: TreeListScrollHandler? = null
         private set
-    val reorder: TreeListReorder? = TreeListReorder(this)
+    val reorder: TreeListReorder = TreeListReorder(this)
     private var onClickListener: ListItemClickListener<PlaylistListItem>? = null
 
     /** view index -> view height  */

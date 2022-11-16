@@ -56,7 +56,7 @@ class AntechamberService(
         useArrayPolymorphism = false
     }
 
-    fun downloadSongs(): Deferred<Result<List<Song>>> {
+    fun downloadSongsAsync(): Deferred<Result<List<Song>>> {
         val request: Request = Request.Builder()
             .url(allSongsUrl)
             .addHeader(authTokenHeader, adminService.userAuthToken)
@@ -70,7 +70,7 @@ class AntechamberService(
         }
     }
 
-    private fun updateAntechamberSong(song: Song): Deferred<Result<Unit>> {
+    private fun updateAntechamberSongAsync(song: Song): Deferred<Result<Unit>> {
         val antechamberSongDto = AntechamberSongDto.fromModel(song)
         val json =
             jsonSerializer.encodeToString(AntechamberSongDto.serializer(), antechamberSongDto)
@@ -82,7 +82,7 @@ class AntechamberService(
         return httpRequester.httpRequestAsync(request) { }
     }
 
-    fun createAntechamberSong(song: Song): Deferred<Result<Unit>> {
+    fun createAntechamberSongAsync(song: Song): Deferred<Result<Unit>> {
         logger.info("Sending new antechamber song")
         val antechamberSongDto = AntechamberSongDto.fromModel(song)
         antechamberSongDto.id = null
@@ -95,7 +95,7 @@ class AntechamberService(
         return httpRequester.httpRequestAsync(request) { }
     }
 
-    fun deleteAntechamberSong(song: Song): Deferred<Result<Unit>> {
+    fun deleteAntechamberSongAsync(song: Song): Deferred<Result<Unit>> {
         val request: Request = Request.Builder()
             .url(specificSongUrl(song.id))
             .delete()
@@ -104,7 +104,7 @@ class AntechamberService(
         return httpRequester.httpRequestAsync(request) { }
     }
 
-    fun updatePublicSong(song: Song): Deferred<Result<Unit>> {
+    fun updatePublicSongAsync(song: Song): Deferred<Result<Unit>> {
         logger.info("Updating public song: $song")
         song.versionNumber++
         song.updateTime = Date().time
@@ -120,7 +120,7 @@ class AntechamberService(
         }
     }
 
-    private fun approveAntechamberSong(song: Song): Deferred<Result<Unit>> {
+    private fun approveAntechamberSongAsync(song: Song): Deferred<Result<Unit>> {
         logger.info("Approving antechamber song: $song")
         val dto = ChordsSongDto.fromModel(song)
         dto.id = null
@@ -139,7 +139,7 @@ class AntechamberService(
     fun updateAntechamberSongUI(song: Song) {
         uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
 
-        val deferred = updateAntechamberSong(song)
+        val deferred = updateAntechamberSongAsync(song)
         GlobalScope.launch(Dispatchers.Main) {
             val result = deferred.await()
             result.fold(onSuccess = {
@@ -156,7 +156,7 @@ class AntechamberService(
         ConfirmDialogBuilder().confirmAction(message1) {
             uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
 
-            val deferred = approveAntechamberSong(song)
+            val deferred = approveAntechamberSongAsync(song)
             GlobalScope.launch(Dispatchers.Main) {
                 val result = deferred.await()
                 result.fold(onSuccess = {
@@ -175,8 +175,8 @@ class AntechamberService(
             uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
 
             GlobalScope.launch(Dispatchers.Main) {
-                val result = approveAntechamberSong(song).await()
-                result.map { deleteAntechamberSong(song).await() }
+                val result = approveAntechamberSongAsync(song).await()
+                result.map { deleteAntechamberSongAsync(song).await() }
                 result.fold(onSuccess = {
                     uiInfoService.showInfo(R.string.admin_success)
                     adminSongsLayoutContoller.fetchRequestSubject.onNext(true)
@@ -194,7 +194,7 @@ class AntechamberService(
             uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
 
             GlobalScope.launch(Dispatchers.Main) {
-                val result = deleteAntechamberSong(song).await()
+                val result = deleteAntechamberSongAsync(song).await()
                 result.fold(onSuccess = {
                     uiInfoService.showInfo(R.string.admin_success)
                     adminSongsLayoutContoller.fetchRequestSubject.onNext(true)

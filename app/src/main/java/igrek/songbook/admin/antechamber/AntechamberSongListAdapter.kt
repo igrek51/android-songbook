@@ -32,7 +32,7 @@ class AntechamberSongListAdapter internal constructor(
         notifyDataSetChanged()
     }
 
-    override fun getItem(position: Int): Song? {
+    override fun getItem(position: Int): Song {
         return dataSource!![position]
     }
 

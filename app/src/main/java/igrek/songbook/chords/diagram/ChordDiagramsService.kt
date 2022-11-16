@@ -57,8 +57,6 @@ class ChordDiagramsService(
     private val preferencesState by LazyExtractor(preferencesState)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
 
-    private val logger = LoggerFactory.logger
-
     fun showLyricsChordsMenu(lyrics: LyricsModel) {
         val uniqueChords = UniqueChordsFinder().findUniqueChordNamesInLyrics(lyrics)
         if (uniqueChords.isEmpty()) {

@@ -86,15 +86,15 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener,
                         this.requestFocusFromTouch()
                     }
                 }
-                when {
-                    currentFocusId == R.id.itemSongMoreButton -> -1
-                    currentFocusId == R.id.itemsList -> R.id.navMenuButton
+                when (currentFocusId) {
+                    R.id.itemSongMoreButton -> -1
+                    R.id.itemsList -> R.id.navMenuButton
                     else -> 0
                 }
             },
             nextRight = { currentFocusId: Int, currentView: View ->
-                when {
-                    currentFocusId == R.id.itemsList -> {
+                when (currentFocusId) {
+                    R.id.itemsList -> {
                         (currentView as? ViewGroup)?.descendantFocusability =
                             ViewGroup.FOCUS_BEFORE_DESCENDANTS
                         R.id.itemSongMoreButton

@@ -34,7 +34,7 @@ class PlaylistListItemAdapter internal constructor(
         inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     }
 
-    override fun getItem(position: Int): PlaylistListItem? {
+    override fun getItem(position: Int): PlaylistListItem {
         return dataSource!![position]
     }
 

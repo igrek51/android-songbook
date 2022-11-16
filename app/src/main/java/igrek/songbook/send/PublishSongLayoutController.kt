@@ -107,7 +107,7 @@ class PublishSongLayoutController(
 
             publishSong?.let { publishSong ->
                 GlobalScope.launch(Dispatchers.Main) {
-                    val result = antechamberService.createAntechamberSong(publishSong).await()
+                    val result = antechamberService.createAntechamberSongAsync(publishSong).await()
                     result.fold(onSuccess = {
                         uiInfoService.showInfo(R.string.antechamber_new_song_sent)
                     }, onFailure = { e ->

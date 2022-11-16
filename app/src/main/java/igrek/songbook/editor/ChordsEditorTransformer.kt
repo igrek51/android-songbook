@@ -32,15 +32,6 @@ class ChordsEditorTransformer(
             .let { textEditor.setText(it) }
     }
 
-    private fun transformLines(transformer: (String) -> String) {
-        textEditor.getText()
-            .lines()
-            .joinToString(separator = "\n") { line ->
-                transformer.invoke(line)
-            }
-            .let { textEditor.setText(it) }
-    }
-
     private fun transformDoubleLines(
         input: String,
         transformer: (String, String) -> List<String>?

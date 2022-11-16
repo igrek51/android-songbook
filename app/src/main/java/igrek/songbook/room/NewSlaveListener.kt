@@ -1,5 +1,6 @@
 package igrek.songbook.room
 
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothServerSocket
 import android.bluetooth.BluetoothSocket
@@ -31,47 +32,51 @@ class NewSlaveListener(
         }
     }
 
+    @SuppressLint("MissingPermission")
     suspend fun run() {
         logger.debug("hosting BT room...")
 
         try {
-            try {
-                serverSocket = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord(
-                    "Songbook",
-                    BT_APP_UUID
-                )
-                initChannel.trySendBlocking(Result.success(Unit))
-            } catch (e: Throwable) {
-                logger.error("creating Rfcomm server socket", e)
-                initChannel.trySendBlocking(Result.failure(e))
-                throw e
-            }
-
-            logger.debug("listening for Bluetooth connections")
-            while (true) {
-                val socket: BluetoothSocket =
-                    serverSocket!!.accept() // This will block until there is a connection
+            withContext(Dispatchers.IO) {
 
                 try {
-                    val macAddress = socket.remoteDevice.address
-                    logger.debug("socket accepted for $macAddress")
-
-                    val receivedClientMsgCh = Channel<String>(Channel.UNLIMITED)
-                    val clientStream = PeerStream(socket, receivedClientMsgCh)
-                    looperScope.launch {
-                        newSlaveChannel.send(clientStream)
-                    }
-                    openSockets.add(socket)
-
-                } catch (connectException: IOException) {
-                    logger.error(
-                        "Failed to start a Bluetooth connection as a server",
-                        connectException
+                    serverSocket = bluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord(
+                        "Songbook",
+                        BT_APP_UUID,
                     )
-                    socket.close()
+                    initChannel.trySendBlocking(Result.success(Unit))
+                } catch (e: Throwable) {
+                    logger.error("creating Rfcomm server socket", e)
+                    initChannel.trySendBlocking(Result.failure(e))
+                    throw e
                 }
-            }
 
+                logger.debug("listening for Bluetooth connections")
+                while (true) {
+                    // This will block until there is a connection
+                    val socket: BluetoothSocket = serverSocket!!.accept()
+
+                    try {
+                        val macAddress = socket.remoteDevice.address
+                        logger.debug("socket accepted for $macAddress")
+
+                        val receivedClientMsgCh = Channel<String>(Channel.UNLIMITED)
+                        val clientStream = PeerStream(socket, receivedClientMsgCh)
+                        looperScope.launch {
+                            newSlaveChannel.send(clientStream)
+                        }
+                        openSockets.add(socket)
+
+                    } catch (connectException: IOException) {
+                        logger.error(
+                            "Failed to start a Bluetooth connection as a server",
+                            connectException
+                        )
+                        socket.close()
+                    }
+                }
+
+            }
         } catch (e: Throwable) {
             logger.error("Server socket error", e)
         }

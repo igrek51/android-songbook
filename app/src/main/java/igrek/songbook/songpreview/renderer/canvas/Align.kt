@@ -1,20 +1,24 @@
 package igrek.songbook.songpreview.renderer.canvas
 
-object Align {
-    // position
-    const val LEFT = 0x001
-    const val RIGHT = 0x002
-    const val HCENTER = 0x004
-    const val TOP = 0x010
-    const val BOTTOM = 0x020
-    const val VCENTER = 0x040
+enum class Align(private val bits: Int) {
 
-    // mixed
-    const val CENTER = HCENTER or VCENTER
-    const val BOTTOM_LEFT = BOTTOM or LEFT
-    const val BOTTOM_RIGHT = BOTTOM or RIGHT
-    const val BOTTOM_HCENTER = BOTTOM or HCENTER
-    const val TOP_LEFT = TOP or LEFT
-    const val TOP_RIGHT = TOP or RIGHT
-    const val TOP_HCENTER = TOP or HCENTER
+    LEFT(0x001),
+    RIGHT(0x002),
+    HCENTER(0x004),
+    TOP(0x010),
+    BOTTOM(0x020),
+    VCENTER(0x040),
+
+    CENTER(0x004 or 0x040),
+    BOTTOM_LEFT(0x020 or 0x001),
+    BOTTOM_RIGHT(0x020 or 0x002),
+    BOTTOM_HCENTER(0x020 or 0x004),
+    TOP_LEFT(0x010 or 0x001),
+    TOP_RIGHT(0x010 or 0x002),
+    TOP_HCENTER(0x010 or 0x004),
+    ;
+
+    fun isFlagSet(flag: Align): Boolean {
+        return this.bits and flag.bits == flag.bits
+    }
 }

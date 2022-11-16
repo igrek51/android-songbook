@@ -17,14 +17,12 @@ import java.io.IOException
 
 class SendMessageService(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
     okHttpClient: LazyInject<OkHttpClient> = appFactory.okHttpClient,
     packageInfoService: LazyInject<PackageInfoService> = appFactory.packageInfoService,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
-    private val uiResourceService by LazyExtractor(uiResourceService)
     private val okHttpClient by LazyExtractor(okHttpClient)
     private val packageInfoService by LazyExtractor(packageInfoService)
     private val songsRepository by LazyExtractor(songsRepository)

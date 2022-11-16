@@ -38,7 +38,7 @@ class SongRankService(
         useArrayPolymorphism = false
     }
 
-    fun updateRank(song: Song, rank: Double?): Deferred<Result<Unit>> {
+    fun updateRankAsync(song: Song, rank: Double?): Deferred<Result<Unit>> {
         song.rank = rank
         logger.info("Updating song rank: $song")
         val dto = SongRankUpdateDto(rank = song.rank)

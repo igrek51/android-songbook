@@ -36,7 +36,7 @@ class AdminCategoryManager(
         useArrayPolymorphism = false
     }
 
-    fun createCategory(categoryName: String): Deferred<Result<Unit>> {
+    fun createCategoryAsync(categoryName: String): Deferred<Result<Unit>> {
         logger.info("Creating category: $categoryName")
         val dto = CreateCategoryDto(name = categoryName)
         val json = jsonSerializer.encodeToString(CreateCategoryDto.serializer(), dto)

@@ -29,7 +29,7 @@ class CustomSongItemAdapter internal constructor(
         inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     }
 
-    override fun getItem(position: Int): CustomSongListItem? {
+    override fun getItem(position: Int): CustomSongListItem {
         return dataSource!![position]
     }
 

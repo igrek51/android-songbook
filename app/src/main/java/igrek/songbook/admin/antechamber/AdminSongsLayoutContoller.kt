@@ -68,7 +68,7 @@ class AdminSongsLayoutContoller(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 GlobalScope.launch(Dispatchers.Main) {
-                    val result = antechamberService.downloadSongs().await()
+                    val result = antechamberService.downloadSongsAsync().await()
                     result.fold(onSuccess = { downloadedSongs ->
                         experimentalSongs = downloadedSongs.toMutableList()
                     }, onFailure = { e ->
@@ -86,7 +86,7 @@ class AdminSongsLayoutContoller(
     private fun downloadSongs() {
         uiInfoService.showInfo(R.string.admin_downloading_antechamber, indefinite = true)
         GlobalScope.launch(Dispatchers.Main) {
-            val result = antechamberService.downloadSongs().await()
+            val result = antechamberService.downloadSongsAsync().await()
             result.fold(onSuccess = { downloadedSongs ->
                 experimentalSongs = downloadedSongs.toMutableList()
                 uiInfoService.showInfo(R.string.admin_downloaded_antechamber)
@@ -115,7 +115,7 @@ class AdminSongsLayoutContoller(
         ConfirmDialogBuilder().confirmAction(message1) {
             uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
             GlobalScope.launch(Dispatchers.Main) {
-                val result = antechamberService.deleteAntechamberSong(song).await()
+                val result = antechamberService.deleteAntechamberSongAsync(song).await()
                 result.fold(onSuccess = {
                     experimentalSongs.remove(song)
                     uiInfoService.showInfo(R.string.admin_success)

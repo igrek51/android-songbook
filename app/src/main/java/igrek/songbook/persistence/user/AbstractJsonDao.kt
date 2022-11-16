@@ -68,8 +68,7 @@ abstract class AbstractJsonDao<T>(
             throw FileNotFoundException("file not found: ${file.absoluteFile}")
 
         val content = file.readText(Charsets.UTF_8)
-        val parsed = json.decodeFromString(serializer, content)
-        return parsed
+        return json.decodeFromString(serializer, content)
     }
 
     open fun read() {

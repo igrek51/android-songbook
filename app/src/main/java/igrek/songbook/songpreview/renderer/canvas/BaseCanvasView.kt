@@ -75,7 +75,7 @@ abstract class BaseCanvasView(context: Context) : View(context) {
         invalidate()
     }
 
-    fun drawText(text: String, cx: Float, cy: Float, align: Int) {
+    fun drawText(text: String, cx: Float, cy: Float, align: Align) {
         when (align) {
             Align.LEFT -> { // left only
                 paint?.textAlign = Paint.Align.LEFT
@@ -87,19 +87,20 @@ abstract class BaseCanvasView(context: Context) : View(context) {
                 canvas?.drawText(text, cx, cy, paint!!)
                 return
             }
+            else -> {}
         }
         when {
-            isFlagSet(align, Align.LEFT) -> paint?.textAlign = Paint.Align.LEFT
-            isFlagSet(align, Align.HCENTER) -> paint?.textAlign = Paint.Align.CENTER
+            align.isFlagSet(Align.LEFT) -> paint?.textAlign = Paint.Align.LEFT
+            align.isFlagSet(Align.HCENTER) -> paint?.textAlign = Paint.Align.CENTER
             else -> // right
                 paint?.textAlign = Paint.Align.RIGHT
         }
         val textBounds = Rect()
         paint?.getTextBounds(text, 0, text.length, textBounds)
         var yPos = cy - (paint!!.descent() + paint!!.ascent()) / 2
-        if (isFlagSet(align, Align.TOP)) {
+        if (align.isFlagSet(Align.TOP)) {
             yPos += (textBounds.height() / 2).toFloat()
-        } else if (isFlagSet(align, Align.BOTTOM)) {
+        } else if (align.isFlagSet(Align.BOTTOM)) {
             yPos -= (textBounds.height() / 2).toFloat()
         }
         canvas?.drawText(text, cx, yPos, paint!!)
@@ -119,14 +120,6 @@ abstract class BaseCanvasView(context: Context) : View(context) {
         if (color1 and -0x1000000 == 0)
             color1 = color1 or -0x1000000
         paint?.color = color1
-    }
-
-    fun setColor(color: Long) {
-        var color1: Long = color
-        // if alpha channel is not set - set it to max (opaque)
-        if (color1 and -0x1000000 == 0L)
-            color1 = color1 or -0x1000000
-        paint?.color = color1.toInt()
     }
 
     fun setColor(rgb: Int, alpha: Int) {
@@ -156,11 +149,5 @@ abstract class BaseCanvasView(context: Context) : View(context) {
         val paint = Paint()
         paint.shader = shader
         canvas?.drawRect(RectF(left, top, right, bottom), paint)
-    }
-
-    companion object {
-        fun isFlagSet(tested: Int, flag: Int): Boolean {
-            return tested and flag == flag
-        }
     }
 }
