@@ -2,6 +2,7 @@ package igrek.songbook.songpreview.autoscroll
 
 import android.annotation.SuppressLint
 import android.os.Handler
+import android.os.Looper
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
@@ -70,8 +71,7 @@ class AutoscrollService(
     val scrollStateSubject = PublishSubject.create<AutoscrollState>()
     val scrollSpeedAdjustmentSubject = PublishSubject.create<Float>()
 
-    @Suppress("DEPRECATION")
-    private val timerHandler = Handler()
+    private val timerHandler = Handler(Looper.getMainLooper())
     private val timerRunnable: () -> Unit = {
         if (state != AutoscrollState.OFF) {
             handleAutoscrollStep()

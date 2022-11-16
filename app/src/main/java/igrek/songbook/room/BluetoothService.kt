@@ -31,7 +31,6 @@ import java.util.concurrent.ConcurrentHashMap
 
 
 @OptIn(DelicateCoroutinesApi::class)
-@Suppress("DEPRECATION")
 @SuppressLint("MissingPermission")
 class BluetoothService(
     appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
@@ -44,6 +43,7 @@ class BluetoothService(
         private const val REQUEST_ENABLE_BT = 20
     }
 
+    @Suppress("DEPRECATION")
     var bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
 
     private val discoveredDevices: ConcurrentHashMap<String, BluetoothDevice> = ConcurrentHashMap()
@@ -127,6 +127,7 @@ class BluetoothService(
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun onDeviceDiscovered(intent: Intent) {
         val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
             ?: return
@@ -185,6 +186,7 @@ class BluetoothService(
         logger.debug("Room found on ${device.name} ($address)")
     }
 
+    @Suppress("DEPRECATION")
     fun ensureBluetoothEnabled() {
         // Coarse Location permission required to discover devices
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

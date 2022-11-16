@@ -34,14 +34,14 @@ open class ShareSongService(
     private val activity by LazyExtractor(activity)
 
     fun encodeSong(song: Song): String {
-        val marsh = marshal(song)
-        val bytes = gzip(marsh)
+        val marsh: ByteArray = marshal(song)
+        val bytes: ByteArray = gzip(marsh)
         return base64Encode(bytes)
     }
 
     fun decodeSong(encoded: String): Song {
-        val bytes = base64Decode(encoded)
-        val marsh = ungzip(bytes)
+        val bytes: ByteArray = base64Decode(encoded)
+        val marsh: ByteArray = ungzip(bytes)
         return unmarshal(marsh)
     }
 
