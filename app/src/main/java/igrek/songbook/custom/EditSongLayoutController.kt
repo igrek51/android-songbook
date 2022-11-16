@@ -288,9 +288,9 @@ class EditSongLayoutController(
         softKeyboardService.hideSoftKeyboard()
     }
 
-    fun setupImportedSong(filename: String, content: String) {
+    fun setupImportedSong(title: String, content: String) {
         if (songTitleEdit?.text.toString().isEmpty()) {
-            songTitleEdit?.setText(filename)
+            songTitleEdit?.setText(title)
         }
         songContentEdit?.setText(content)
     }

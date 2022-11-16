@@ -7,15 +7,22 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.activity.result.ActivityResultLauncher
 import com.google.common.io.CharStreams
+import com.tom_roush.pdfbox.android.PDFBoxResourceLoader
+import com.tom_roush.pdfbox.pdmodel.PDDocument
+import com.tom_roush.pdfbox.text.PDFTextStripper
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityResultDispatcher
 import igrek.songbook.info.UiInfoService
+import igrek.songbook.info.errorcheck.LocalizedError
 import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.info.errorcheck.UiErrorHandler
+import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import java.io.IOException
+import igrek.songbook.util.capitalize
+import igrek.songbook.util.limitTo
+import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.nio.charset.Charset
@@ -34,7 +41,7 @@ class SongImportFileChooser(
     private var fileChooserLauncher: ActivityResultLauncher<Intent>? = null
 
     companion object {
-        const val FILE_IMPORT_LIMIT_B = 50 * 1024
+        const val FILE_IMPORT_LIMIT_B = 100 * 1024 // 100 KiB
     }
 
     fun init() {
@@ -93,26 +100,48 @@ class SongImportFileChooser(
         val uri: Uri? = intent?.data
         SafeExecutor {
             if (uri != null) {
+                val mimetype = activity.contentResolver.getType(uri)
+                val binaryGuess = isBinaryFile(uri)
+                if (binaryGuess)
+                    logger.warn("File seems to be binary")
+
                 activity.contentResolver.openInputStream(uri)?.use { inputStream: InputStream ->
                     val filename = getFileNameFromUri(uri)
+                    val size = inputStream.available()
 
-                    val length = inputStream.available()
-                    if (length > FILE_IMPORT_LIMIT_B) {
-                        uiInfoService.showToast(R.string.selected_file_is_too_big)
-                        return@SafeExecutor
-                    }
+                    val content = extractFileContent(inputStream, filename, mimetype, size)
+                    val title = File(filename).nameWithoutExtension.capitalize()
 
-                    val content = convert(inputStream, Charset.forName("UTF-8"))
-
-                    editSongLayoutController.setupImportedSong(filename, content)
+                    editSongLayoutController.setupImportedSong(title, content)
                 }
             }
         }
     }
 
-    @Throws(IOException::class)
-    private fun convert(inputStream: InputStream, charset: Charset): String {
-        return CharStreams.toString(InputStreamReader(inputStream, charset))
+    private fun extractFileContent(inputStream: InputStream, filename: String, mimetype: String?, size: Int): String {
+        logger.debug("Importing file $filename, type: $mimetype")
+
+        if (size > FILE_IMPORT_LIMIT_B) {
+            throw LocalizedError(R.string.selected_file_is_too_big)
+        }
+
+        val extension = File(filename).extension.lowercase()
+
+        return when {
+            mimetype == "application/pdf" || extension == "pdf" -> {
+                logger.info("extracting content from PDF file $filename")
+                extractPdfContent(inputStream)
+            }
+            else -> {
+                CharStreams.toString(InputStreamReader(inputStream, Charset.forName("UTF-8")))
+            }
+        }
+    }
+
+    private fun extractPdfContent(inputStream: InputStream): String {
+        PDFBoxResourceLoader.init(activity.applicationContext)
+        val doc: PDDocument = PDDocument.load(inputStream)
+        return PDFTextStripper().getText(doc).trimIndent().trim()
     }
 
     @SuppressLint("Range")
@@ -133,5 +162,28 @@ class SongImportFileChooser(
             }
         }
         return result.orEmpty()
+    }
+
+    private fun isBinaryFile(uri: Uri): Boolean {
+        activity.contentResolver.openInputStream(uri)?.use { inputStream: InputStream ->
+            val size: Int = inputStream.available().limitTo(1024)
+            val data = ByteArray(size)
+            inputStream.read(data)
+            inputStream.close()
+            var ascii = 0
+            var other = 0
+            for (i in data.indices) {
+                val b = data[i]
+                when {
+                    b.toInt() == 0x09 || b.toInt() == 0x0A || b.toInt() == 0x0C || b.toInt() == 0x0D -> ascii++
+                    b in 0x20..0x7E -> ascii++
+                    else -> other++
+                }
+            }
+            if (other == 0)
+                return false
+            return 100 * other / size > 95
+        }
+        return false
     }
 }

@@ -150,6 +150,8 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.12'
     // JWT
     implementation 'com.auth0.android:jwtdecode:2.0.1'
+    // PDFBox
+    implementation 'com.tom-roush:pdfbox-android:2.0.25.0'
     // Unit tests
     testImplementation 'androidx.appcompat:appcompat:1.4.2'
     testImplementation 'junit:junit:4.13.2'
