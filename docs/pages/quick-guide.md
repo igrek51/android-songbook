@@ -12,21 +12,23 @@ You can choose a song from the **Artists** view,
     Search by any word, uppercase / lowercase doesn't matter.
 
 ## Song Preview
-![](./assets/screenshots-mobile-en/01.png){ width="300" }
+[![](./assets/screenshots-mobile-en/01.png){ width="250" }](./assets/screenshots-mobile-en/01.png)
+[![](./assets/screenshots-mobile-en/06.png){ width="250" }](./assets/screenshots-mobile-en/06.png)
 
 *Songbook* displays the **lyrics** of the song with highlighted **chords**.
 On a song preview it keeps the display always on.
 
-Pinch with two fingers to change the font size.
+!!! tip
+    Pinch with two fingers to change the font size.
 
 You can customize the [**Chords Displaying Style**](./displaying-styles.md) in a song.
 In **Settings**, choose one of the options how to present the chords:
 
-- Chords inline, among the words
-- Chords above lyrics, in a separate line
-- Chords aligned to right, at the end of line
-- Lyrics only, chords hidden
-- Chords only, lyrics hidden
+- **Chords inline**, among the words
+- **Chords above lyrics**, in a separate line
+- **Chords aligned to right**, at the end of line
+- **Lyrics only**, chords hidden
+- **Chords only**, lyrics hidden
 
 In **Settings**, you can also pick your favourite [**Chord Notation**](./chord-notations.md):
 
@@ -43,20 +45,20 @@ Default **chord notation** had already been set automatically depending on your 
 Find out more about [Chord Notations](./chord-notations.md).
 
 ## Transposing
-![](./assets/screenshots-mobile-en/02.png){ width="300" }
+[![](./assets/screenshots-mobile-en/02.png){ width="250" }](./assets/screenshots-mobile-en/02.png)
 
-You can transpose the chords from any song to **any key**.
+You can transpose the chords of any song to **any key**.
 Click transposing icon on top action bar to show the transposing panel.
 
-- Click `-5`, `-1`, `+1`, `+5` buttons to transpose by particular number of semitones.
+- Click `-5`, `-1`, `+1`, `+5` buttons to transpose by particular number of **semitones**.
 - Click `0` button to restore the original key.
 
-*Songbook* recognizes the **key** of the song based on the chords it is composed of
+*Songbook* **recognizes the key** of the song based on the chords it is composed of
 and displays it in the Transposing panel.
 It shows the detected **Major key** along with its **minor key** counterpart, eg. `C / Am`.
 
 ## Autoscroll
-![](./assets/screenshots-mobile-en/03.png){ width="300" }
+[![](./assets/screenshots-mobile-en/03.png){ width="250" }](./assets/screenshots-mobile-en/03.png)
 
 Click **Autoscroll** icon on top action bar to show autoscroll panel.
 Starting autoscroll causes the lyrics to be scrolled automatically by the timer.
@@ -85,6 +87,9 @@ so it learns your style.
     Clicking once again will turn it off.
 
 ## Chord Diagrams
+[![](./assets/screenshots-mobile-en/07.png){ width="250" }](./assets/screenshots-mobile-en/07.png)
+[![](./assets/screenshots-mobile-en/05.png){ width="250" }](./assets/screenshots-mobile-en/05.png)
+
 *Songbook* can prompt you with the chord diagram graphics,
 if you don't know how to play a particular chord on your instrument.
 
@@ -98,10 +103,8 @@ Pick your instrument in the **Settings**:
 Click the diagrams button in the context of a song to get the list of all unique chords occurring in a song.
 Alternatively you can choose the option **Chord Diagrams** from the main menu to search the chord by name.
 
-![](./assets/screenshots-mobile-en/07.png){ width="300" }
-
 ## Custom Songs
-![](./assets/screenshots-mobile-en/04.png){ width="300" }
+[![](./assets/screenshots-mobile-en/04.png){ width="250" }](./assets/screenshots-mobile-en/04.png)
 
 You can view your custom songs by clicking **My songs** in the main menu.
 To add a new one, click the :material-plus: icon in the main navigation menu.
