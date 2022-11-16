@@ -3,7 +3,10 @@ package igrek.songbook.custom
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.database.Cursor
 import android.net.Uri
+import android.os.Build
+import android.provider.DocumentsContract
 import android.provider.OpenableColumns
 import androidx.activity.result.ActivityResultLauncher
 import com.google.common.io.CharStreams
@@ -23,10 +26,9 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.util.capitalize
 import igrek.songbook.util.limitTo
-import java.io.File
-import java.io.InputStream
-import java.io.InputStreamReader
+import java.io.*
 import java.nio.charset.Charset
+
 
 class SongImportFileChooser(
     activity: LazyInject<Activity> = appFactory.activity,
@@ -65,12 +67,10 @@ class SongImportFileChooser(
         SafeExecutor {
             val intent = Intent(Intent.ACTION_GET_CONTENT)
             intent.type = "*/*"
-            intent.addCategory(Intent.CATEGORY_OPENABLE)
 
             try {
                 // val title = uiResourceService.resString(R.string.select_file_to_import)
                 // DON'T USE: val activityIntent = Intent.createChooser(intent, title)
-
                 fileChooserLauncher.let { fileChooserLauncher ->
                     if (fileChooserLauncher != null) {
                         fileChooserLauncher.launch(intent)
@@ -101,27 +101,63 @@ class SongImportFileChooser(
         val uri: Uri? = intent?.data
         SafeExecutor {
             if (uri != null) {
-                val mimetype = activity.contentResolver.getType(uri)
+                val fileContent: String = extractFileContent(uri)
+
+                val parsedContent: ParsedSongContent = parseSongContentMetadata(fileContent)
+                val title = parsedContent.title ?: File(getFileNameFromUri(uri)).nameWithoutExtension.capitalize()
+
+                editSongLayoutController.setupImportedSong(title, parsedContent.content, parsedContent.notation)
+            }
+        }
+    }
+
+    private fun extractFileContent(uri: Uri): String {
+        val mimetype = activity.contentResolver.getType(uri)
+        val filename = getFileNameFromUri(uri)
+        val virtualFile = isVirtualFile(uri)
+
+        return when {
+
+            virtualFile && mimetype == "application/vnd.google-apps.document" -> { // Google Docs
+                logger.info("Converting Google Docs file $filename -> PDF -> TXT")
+
+                val targetMimeType = "application/pdf"
+                val openableMimeTypes = activity.contentResolver.getStreamTypes(uri, targetMimeType)
+
+                if (openableMimeTypes == null || openableMimeTypes.isEmpty()) {
+                    throw RuntimeException("Stream type $targetMimeType is not available")
+                }
+
+                val inputStream = activity.contentResolver
+                    .openTypedAssetFileDescriptor(uri, openableMimeTypes[0], null)
+                    ?.createInputStream() ?: throw RuntimeException("Can't open file descriptor")
+
+                inputStream.use {
+                    extractPhysicalFileContent(it, filename, targetMimeType)
+                }
+            }
+
+            virtualFile -> {
+                throw RuntimeException("Can't read from a virtual file")
+            }
+
+            else -> {
                 val binaryGuess = isBinaryFile(uri)
                 if (binaryGuess)
                     logger.warn("File seems to be binary")
 
-                activity.contentResolver.openInputStream(uri)?.use { inputStream: InputStream ->
-                    val filename = getFileNameFromUri(uri)
-                    val size = inputStream.available()
-
-                    val fileContent = extractFileContent(inputStream, filename, mimetype, size)
-                    val parsed: ParsedSongContent = parseSongContentMetadata(fileContent)
-                    val title = parsed.title ?: File(filename).nameWithoutExtension.capitalize()
-
-                    editSongLayoutController.setupImportedSong(title, parsed.content, parsed.notation)
+                val inputStream = activity.contentResolver.openInputStream(uri)
+                    ?: throw RuntimeException("can't open input stream for a content")
+                inputStream.use {
+                    extractPhysicalFileContent(it, filename, mimetype)
                 }
             }
         }
     }
 
-    private fun extractFileContent(inputStream: InputStream, filename: String, mimetype: String?, size: Int): String {
-        logger.debug("Importing file $filename, type: $mimetype, size: $size")
+    private fun extractPhysicalFileContent(inputStream: InputStream, filename: String, mimetype: String?): String {
+        val size = inputStream.available()
+        logger.debug("Reading file: $filename, type: $mimetype, size: $size")
 
         if (size > FILE_IMPORT_LIMIT_B) {
             throw LocalizedError(R.string.selected_file_is_too_big)
@@ -135,10 +171,11 @@ class SongImportFileChooser(
                 extractPdfContent(inputStream)
             }
             mimetype == "text/plain" || extension == "txt" -> {
+                logger.info("reading content from text file $filename")
                 extractTxtContent(inputStream)
             }
             else -> {
-                logger.warn("Unknown $mimetype mimetype - parsing as a text file")
+                logger.warn("Unknown $mimetype mimetype - reading as a text file")
                 extractTxtContent(inputStream)
             }
         }
@@ -158,8 +195,8 @@ class SongImportFileChooser(
         var title: String? = null
         var notation: ChordsNotation? = null
 
-        val titleRegex = Regex("""^\{title: ?"?([\S\s]+?)"?}$""")
-        val notationRegex = Regex("""^\{chords_notation: ?(\d+)}$""")
+        val titleRegex = Regex("""\{title: ?"?([\S\s]+?)"?\}""")
+        val notationRegex = Regex("""\{chords_notation: ?(\d+)\}""")
 
         val allLines = fileContent.trim().lines()
         val firstLines = allLines.take(3)
@@ -226,6 +263,27 @@ class SongImportFileChooser(
         }
         return false
     }
+
+    private fun isVirtualFile(uri: Uri): Boolean {
+        if (!DocumentsContract.isDocumentUri(activity, uri))
+            return false
+
+        val cursor: Cursor = activity.contentResolver.query(
+            uri, arrayOf(DocumentsContract.Document.COLUMN_FLAGS),
+            null, null, null
+        ) ?: return false
+        var flags = 0
+        if (cursor.moveToFirst()) {
+            flags = cursor.getInt(0)
+        }
+        cursor.close()
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            flags and DocumentsContract.Document.FLAG_VIRTUAL_DOCUMENT != 0
+        } else {
+            flags and (1 shl 9) != 0
+        }
+    }
+
 
     data class ParsedSongContent (
         val content: String,

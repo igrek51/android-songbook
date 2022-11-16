@@ -173,7 +173,7 @@
         \n…Smoke on the water [C G#]…
         \n…Never gonna [G]give you [A]up…
     </string>
-    <string name="import_content_from_file">📂 Importuj z pliku / chmury</string>
+    <string name="import_content_from_file">📂 Importuj z pliku TXT / PDF / Dysku / Google Docs</string>
     <string name="edit_song_save">💾 Zapisz piosenkę</string>
     <string name="edit_song_remove">❌ Usuń piosenkę</string>
     <string name="edit_song_has_been_saved">Zapisano piosenkę w \"Moje piosenki\".</string>

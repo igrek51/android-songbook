@@ -174,7 +174,7 @@
         \n…Smoke on the water [C G#]…
         \n…Never gonna [G]give you [A]up…
     </string>
-    <string name="import_content_from_file">📂 Import from file / cloud</string>
+    <string name="import_content_from_file">📂 Import from text file / PDF / Drive / Google Docs</string>
     <string name="edit_song_save">💾 Save song</string>
     <string name="edit_song_remove">❌ Remove song</string>
     <string name="edit_song_has_been_saved">Song has been saved in \"My songs\".</string>
