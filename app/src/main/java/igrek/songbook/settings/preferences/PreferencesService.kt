@@ -74,6 +74,7 @@ class PreferencesService(
         userDataDao.preferencesDao.setPrimitiveEntries(primitiveValues)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun <T> getValue(prefDef: PreferencesField): T {
         val propertyName = prefDef.preferenceName()
         if (propertyName !in entityValues)

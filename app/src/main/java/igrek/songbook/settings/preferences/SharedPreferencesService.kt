@@ -77,6 +77,7 @@ class SharedPreferencesService(
         prefDef.typeDef.save(editor, propertyName, propertyValue)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun <T> getValue(prefDef: PreferencesField): T {
         val propertyName = prefDef.preferenceName()
         if (!propertyValues.containsKey(propertyName))

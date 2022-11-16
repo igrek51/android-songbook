@@ -15,6 +15,7 @@ internal class MsgSpec<T : GtrMsg>(
     val partsParser: (parts: List<String>) -> T,
     val requiredParts: Int = 0,
 ) {
+    @Suppress("UNCHECKED_CAST")
     fun formatGTR(msg: GtrMsg): String {
         val datapart = when (partsFormatter) {
             null -> ""

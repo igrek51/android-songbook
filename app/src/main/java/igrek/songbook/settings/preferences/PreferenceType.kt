@@ -9,6 +9,7 @@ abstract class PreferenceTypeDefinition<T : Any>(val defaultValue: T) {
 
     abstract fun save(editor: SharedPreferences.Editor, propertyName: String, value: Any)
 
+    @Suppress("UNCHECKED_CAST")
     open fun primitive2entity(primitive: Any): T {
         return primitive as T
     }
@@ -86,6 +87,7 @@ class GenericStringIdPreferenceType<T : Any>(
         return deserializer(stringVal) ?: defaultValue
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun save(editor: SharedPreferences.Editor, propertyName: String, value: Any) {
         val serialized: String = serializer(value as T)
         editor.putString(propertyName, serialized)
@@ -96,6 +98,7 @@ class GenericStringIdPreferenceType<T : Any>(
         return deserializer(id) ?: defaultValue
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun entity2primitive(entity: Any): String {
         return serializer((entity as? T) ?: defaultValue)
     }
@@ -113,6 +116,7 @@ class GenericLongIdPreferenceType<T : Any>(
         return deserializer(longVal) ?: defaultValue
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun save(editor: SharedPreferences.Editor, propertyName: String, value: Any) {
         val serialized: Long = serializer(value as T)
         editor.putLong(propertyName, serialized)
@@ -123,6 +127,7 @@ class GenericLongIdPreferenceType<T : Any>(
         return deserializer(id) ?: defaultValue
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun entity2primitive(entity: Any): Long {
         return serializer((entity as? T) ?: defaultValue)
     }

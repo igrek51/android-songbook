@@ -255,6 +255,7 @@ class GoogleSyncManager(
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun isIntentCallable(intent: Intent): Boolean {
         val list: List<ResolveInfo> = activity.packageManager.queryIntentActivities(
             intent,
@@ -282,6 +283,7 @@ class GoogleSyncManager(
         if (resultCode != Activity.RESULT_OK || resultData == null) {
             logger.warn("Sign in request failed: result code=$resultCode, result=$resultData, extras=${resultData?.extras}")
             resultData?.extras?.keySet()?.forEach { key ->
+                @Suppress("DEPRECATION")
                 logger.warn("key=$key, value=${resultData.extras?.get(key)}")
             }
             uiInfoService.showToast(R.string.operation_cancelled)
