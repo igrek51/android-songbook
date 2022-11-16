@@ -61,7 +61,7 @@ class CustomSongListView : ListView, AdapterView.OnItemClickListener,
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         val item = adapter!!.getItem(position)
         if (onClickListener != null)
-            onClickListener!!.onItemClick(item!!)
+            onClickListener!!.onItemClick(item)
     }
 
     override fun onItemLongClick(
@@ -72,7 +72,7 @@ class CustomSongListView : ListView, AdapterView.OnItemClickListener,
     ): Boolean {
         val item = adapter!!.getItem(position)
         if (onClickListener != null)
-            onClickListener!!.onItemLongClick(item!!)
+            onClickListener!!.onItemLongClick(item)
         return true
     }
 

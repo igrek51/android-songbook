@@ -83,7 +83,7 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener,
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         val item = adapter!!.getItem(position)
         if (onClickListener != null)
-            onClickListener!!.onItemClick(item!!)
+            onClickListener!!.onItemClick(item)
     }
 
     override fun onItemLongClick(
@@ -94,7 +94,7 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener,
     ): Boolean {
         val item = adapter!!.getItem(position)
         if (onClickListener != null)
-            onClickListener!!.onItemLongClick(item!!)
+            onClickListener!!.onItemLongClick(item)
         return true
     }
 
@@ -120,16 +120,16 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener,
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action and MotionEvent.ACTION_MASK) {
-            MotionEvent.ACTION_MOVE -> if (reorder?.isDragging == true) {
+            MotionEvent.ACTION_MOVE -> if (reorder.isDragging) {
                 reorder.setLastTouchY(event.y)
                 reorder.handleItemDragging()
                 return false
             }
             MotionEvent.ACTION_UP -> {
-                reorder?.itemDraggingStopped()
+                reorder.itemDraggingStopped()
             }
             MotionEvent.ACTION_CANCEL -> {
-                reorder?.itemDraggingStopped()
+                reorder.itemDraggingStopped()
             }
         }
         return super.onTouchEvent(event)
@@ -137,18 +137,17 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener,
 
     override fun invalidate() {
         super.invalidate()
-        if (reorder?.isDragging == true) {
+        if (reorder.isDragging) {
             reorder.setDraggedItemView()
         }
     }
 
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
-        reorder?.dispatchDraw(canvas)
+        reorder.dispatchDraw(canvas)
     }
 
     private fun calculateViewHeights() {
-        // FIXME: for a moment - there's invalidated item heights map
         val observer = this.viewTreeObserver
         observer.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {

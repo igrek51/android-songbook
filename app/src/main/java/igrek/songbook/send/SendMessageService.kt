@@ -4,7 +4,6 @@ import android.os.Handler
 import android.os.Looper
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
-import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject

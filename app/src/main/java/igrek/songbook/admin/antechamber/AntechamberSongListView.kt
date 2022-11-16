@@ -52,7 +52,7 @@ class AntechamberSongListView : ListView, AdapterView.OnItemClickListener,
 
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
         val item = itemAdapter!!.getItem(position)
-        onClick?.invoke(item!!)
+        onClick?.invoke(item)
     }
 
     override fun onItemLongClick(
@@ -62,7 +62,7 @@ class AntechamberSongListView : ListView, AdapterView.OnItemClickListener,
         id: Long
     ): Boolean {
         val item = itemAdapter!!.getItem(position)
-        onLongClick?.invoke(item!!)
+        onLongClick?.invoke(item)
         return true
     }
 
