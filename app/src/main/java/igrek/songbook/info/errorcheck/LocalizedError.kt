@@ -6,12 +6,12 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 
 class LocalizedError(
-        val messageRes: Int,
-        uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    val messageRes: Int,
+    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
 ) : RuntimeException() {
     private val uiResourceService by LazyExtractor(uiResourceService)
 
-    override val message: String?
+    override val message: String
         get() {
             return uiResourceService.resString(messageRes)
         }

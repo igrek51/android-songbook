@@ -71,7 +71,6 @@ class SongImportFileChooser(
             intent.type = "*/*"
 
             try {
-                // val title = uiResourceService.resString(R.string.select_file_to_import)
                 // DON'T USE: val activityIntent = Intent.createChooser(intent, title)
                 fileChooserLauncher.let { fileChooserLauncher ->
                     if (fileChooserLauncher != null) {
@@ -177,8 +176,8 @@ class SongImportFileChooser(
                 extractTxtContent(inputStream)
             }
             else -> {
-                logger.warn("Unknown $mimetype mimetype - reading as a text file")
-                extractTxtContent(inputStream)
+                val error = uiInfoService.resString(R.string.error_song_file_type_unallowed, mimetype)
+                throw RuntimeException(error)
             }
         }
     }
