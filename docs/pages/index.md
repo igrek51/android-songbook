@@ -20,7 +20,7 @@ Our chief weapons are:
 - Playlists / setlists with songs
 - [Chord diagrams](./chord-diagrams.md) for guitar, ukulele, mandolin and piano
 - [Sharing & Displaying songs on multiple devices at the same time via Bluetooth](./bluetooth-sharing.md)
-- [Several chords notations supported](./chords-notations.md): English (`Am Bbm Bb B C Dm`), German (`a b B H C d`), Solfege (`Do Re Mi Fa`)
+- [Several chords notations supported](./chords-notations.md): English (`Am Bbm Bb B C Dm`), German (`a b B H C d`), Solfege (`Do Re Mi Fa`), Dutch, Japanese
 - [Customizable chord displaying styles](./displaying-styles.md)
 - Automatic chords detection, detecting a song key
 - Custom songs & settings synchronization between many devices, back-ups & restoring all application data

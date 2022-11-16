@@ -12,7 +12,7 @@ Główne funkcje:
 - Playlisty z piosenkami
 - Diagramy akordów dla gitary, ukulele, mandoliny oraz na pianino
 - Udostępnianie i wyświetlanie piosenek na wielu urządzeniach jednocześnie przez Bluetooth
-- Wsparcie dla kilku notacji akordów: Niemiecka ("a b B H C d"), Angielska ("Am Bbm Bb B C Dm"), Solfeż ("Do Re Mi Fa")
+- Wsparcie dla kilku notacji akordów: Niemiecka ("a b B H C d"), Angielska ("Am Bbm Bb B C Dm"), Solfeż ("Do Re Mi Fa"), Holenderska, Japońska
 - Wybór stylu wyświetlania akordów
 - Automatyczne wykrywanie akordów, rozpoznawanie tonacji piosenki
 - Synchronizacja własnych piosenek i ustawień między wieloma urządzeniami, kopie zapasowe i odzyskiwanie wszystkich danych aplikacji
