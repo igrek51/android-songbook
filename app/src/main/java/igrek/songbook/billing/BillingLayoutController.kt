@@ -32,7 +32,7 @@ class BillingLayoutController(
 
     private var buyAdFreeButton: Button? = null
     private var adFreePriceTextView: TextView? = null
-    private var donate1PriceTextView: TextView? = null
+//    private var donate1PriceTextView: TextView? = null
 
     private val subscriptions = mutableListOf<Disposable>()
 
@@ -52,14 +52,14 @@ class BillingLayoutController(
 
         buyAdFreeButton = layout.findViewById(R.id.billingBuyAdFree)
         adFreePriceTextView = layout.findViewById(R.id.billingAdFreePrice)
-        donate1PriceTextView = layout.findViewById(R.id.billingDonate1Price)
+//        donate1PriceTextView = layout.findViewById(R.id.billingDonate1Price)
 
         buyAdFreeButton?.setOnClickListener {
             billingService.launchBillingFlow(PRODUCT_ID_NO_ADS)
         }
-        layout.findViewById<Button>(R.id.billingBuyDonate1Button)?.setOnClickListener {
-            billingService.launchBillingFlow(PRODUCT_ID_DONATE_1_BEER)
-        }
+//        layout.findViewById<Button>(R.id.billingBuyDonate1Button)?.setOnClickListener {
+//            billingService.launchBillingFlow(PRODUCT_ID_DONATE_1_BEER)
+//        }
         layout.findViewById<Button>(R.id.billingRestorePurchases)?.setOnClickListener {
             billingService.callRestorePurchases()
         }
@@ -83,8 +83,7 @@ class BillingLayoutController(
         val priceAdFree = billingService.getProductPrice(PRODUCT_ID_NO_ADS).orEmpty()
         val adfreePurchased: Boolean? = billingService.isPurchased(PRODUCT_ID_NO_ADS)
 
-        val priceDonate1 = billingService.getProductPrice(PRODUCT_ID_DONATE_1_BEER).orEmpty()
-        // val donate1Quantity = billingService.getProductPurchasedAmount(PRODUCT_ID_DONATE_1_BEER)
+//        val priceDonate1 = billingService.getProductPrice(PRODUCT_ID_DONATE_1_BEER).orEmpty()
 
         runBlocking(Dispatchers.Main) {
 
@@ -98,9 +97,10 @@ class BillingLayoutController(
             adFreePriceTextView?.let {
                 it.text = uiInfoService.resString(R.string.billing_item_price, priceAdFree)
             }
-            donate1PriceTextView?.let {
-                it.text = uiInfoService.resString(R.string.billing_item_price, priceDonate1)
-            }
+
+//            donate1PriceTextView?.let {
+//                it.text = uiInfoService.resString(R.string.billing_item_price, priceDonate1)
+//            }
 
         }
     }

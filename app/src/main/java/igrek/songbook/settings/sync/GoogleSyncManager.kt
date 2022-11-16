@@ -32,6 +32,7 @@ import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.system.filesystem.saveInputStreamToFile
 import kotlinx.coroutines.*
+import kotlinx.serialization.Serializable
 import java.io.FileNotFoundException
 import java.io.IOException
 
@@ -66,6 +67,20 @@ class GoogleSyncManager(
         "files/unlocked.1.json",
         "files/preferences.1.json",
     )
+
+    @Serializable
+    data class CompositeBackup(
+        val customsongs: String,
+        val exclusion: String,
+        val favourites: String,
+        val history: String,
+        val playlist: String,
+        val transpose: String,
+        val unlocked: String,
+        val preferences: String,
+    )
+
+    private val compositeBackupFile: String = "songbook-backup.bak"
 
     private val logger = LoggerFactory.logger
 

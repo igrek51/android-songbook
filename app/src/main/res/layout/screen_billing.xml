@@ -95,45 +95,47 @@
                 android:text="@string/billing_buy_ad_free" />
 
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="@android:color/darker_gray" />
+<!--            &lt;!&ndash;Splitter&ndash;&gt;-->
+<!--            <View-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="1dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:background="@android:color/darker_gray" />-->
 
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:gravity="bottom"
-                android:text="@string/billing_donate_1_info"
-                android:textSize="18sp" />
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="8dp"-->
+<!--                android:gravity="bottom"-->
+<!--                android:text="@string/billing_donate_1_info"-->
+<!--                android:textSize="18sp" />-->
 
-            <TextView
-                android:id="@+id/billingDonate1Price"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:gravity="center"
-                android:text="@string/billing_price_loading"
-                android:textSize="18sp" />
+<!--            <TextView-->
+<!--                android:id="@+id/billingDonate1Price"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="4dp"-->
+<!--                android:layout_marginBottom="4dp"-->
+<!--                android:layout_marginLeft="8dp"-->
+<!--                android:layout_marginRight="8dp"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/billing_price_loading"-->
+<!--                android:textSize="18sp" />-->
 
-            <Button
-                android:id="@+id/billingBuyDonate1Button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:text="@string/billing_buy_donate_1" />
+<!--            <Button-->
+<!--                android:id="@+id/billingBuyDonate1Button"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="4dp"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:layout_marginLeft="8dp"-->
+<!--                android:layout_marginRight="8dp"-->
+<!--                android:text="@string/billing_buy_donate_1" />-->
 
 
+            <!--Splitter-->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
