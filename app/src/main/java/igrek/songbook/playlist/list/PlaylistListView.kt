@@ -137,14 +137,17 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener,
 
     override fun invalidate() {
         super.invalidate()
-        if (reorder.isDragging) {
+        // HAVE TO CHECK IF NOT NULL IN CASE THE CHILD CLASS IS NOT YET INITIALIZED!!!
+        if (reorder != null && reorder.isDragging) {
             reorder.setDraggedItemView()
         }
     }
 
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
-        reorder.dispatchDraw(canvas)
+        if (reorder != null) {
+            reorder.dispatchDraw(canvas)
+        }
     }
 
     private fun calculateViewHeights() {
