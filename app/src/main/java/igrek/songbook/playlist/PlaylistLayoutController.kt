@@ -61,7 +61,6 @@ class PlaylistLayoutController(
     private var playlistTitleLabel: TextView? = null
     private var goBackButton: ImageButton? = null
 
-    private var playlist: Playlist? = null
     private var storedScroll: ListScrollPosition? = null
     private var subscriptions = mutableListOf<Disposable>()
 
@@ -103,9 +102,9 @@ class PlaylistLayoutController(
                     currentFocusId == R.id.itemSongMoreButton -> R.id.itemMoveButton
                     currentFocusId == R.id.itemMoreButton -> -1
                     currentFocusId == R.id.itemMoveButton -> -1
-                    currentFocusId == R.id.playlistListView && playlist != null -> R.id.goBackButton
-                    currentFocusId == R.id.main_content && playlist != null -> R.id.goBackButton
-                    currentFocusId == R.id.playlistListView && playlist == null -> R.id.navMenuButton
+                    currentFocusId == R.id.playlistListView && playlistService.currentPlaylist != null -> R.id.goBackButton
+                    currentFocusId == R.id.main_content && playlistService.currentPlaylist != null -> R.id.goBackButton
+                    currentFocusId == R.id.playlistListView && playlistService.currentPlaylist == null -> R.id.navMenuButton
                     else -> 0
                 }
             },
@@ -146,7 +145,7 @@ class PlaylistLayoutController(
                     currentFocusId == R.id.itemMoreButton -> -1
                     (itemsListView?.selectedItemPosition ?: 0) <= 0 -> {
                         when {
-                            playlist != null -> R.id.goBackButton
+                            playlistService.currentPlaylist != null -> R.id.goBackButton
                             else -> R.id.navMenuButton
                         }
                     }
@@ -191,12 +190,12 @@ class PlaylistLayoutController(
     }
 
     private fun updateItemsList() {
-        val items = if (playlist == null) {
+        val items = if (playlistService.currentPlaylist == null) {
             songsRepository.playlistDao.playlistDb.playlists
                 .map { p -> PlaylistListItem(playlist = p) }
                 .toMutableList()
         } else {
-            playlist?.songs
+            playlistService.currentPlaylist?.songs
                 ?.mapNotNull { s ->
                     val namespace = when {
                         s.custom -> SongNamespace.Custom
@@ -221,12 +220,12 @@ class PlaylistLayoutController(
         }
 
         val playlistsTitle = uiResourceService.resString(R.string.nav_playlists)
-        playlistTitleLabel?.text = when (playlist) {
+        playlistTitleLabel?.text = when (playlistService.currentPlaylist) {
             null -> playlistsTitle
-            else -> "$playlistsTitle: ${playlist?.name}"
+            else -> "$playlistsTitle: ${playlistService.currentPlaylist?.name}"
         }
 
-        emptyListLabel?.text = when (playlist) {
+        emptyListLabel?.text = when (playlistService.currentPlaylist) {
             null -> uiResourceService.resString(R.string.empty_playlists)
             else -> uiResourceService.resString(R.string.empty_playlist_songs)
         }
@@ -235,12 +234,12 @@ class PlaylistLayoutController(
             else -> View.GONE
         }
 
-        addPlaylistButton?.visibility = when (playlist) {
+        addPlaylistButton?.visibility = when (playlistService.currentPlaylist) {
             null -> View.VISIBLE
             else -> View.GONE
         }
 
-        goBackButton?.visibility = when (playlist) {
+        goBackButton?.visibility = when (playlistService.currentPlaylist) {
             null -> View.GONE
             else -> View.VISIBLE
         }
@@ -252,10 +251,10 @@ class PlaylistLayoutController(
 
     private fun goUp() {
         try {
-            if (playlist == null)
+            if (playlistService.currentPlaylist == null)
                 throw NoParentItemException()
 
-            playlist = null
+            playlistService.currentPlaylist = null
             updateItemsList()
         } catch (e: NoParentItemException) {
             layoutController.showPreviousLayoutOrQuit()
@@ -265,9 +264,9 @@ class PlaylistLayoutController(
     override fun onItemClick(item: PlaylistListItem) {
         storedScroll = itemsListView?.currentScrollPosition
         if (item.song != null) {
-            songOpener.openSongPreview(item.song, playlist = playlist)
+            songOpener.openSongPreview(item.song, playlist = playlistService.currentPlaylist)
         } else if (item.playlist != null) {
-            playlist = item.playlist
+            playlistService.currentPlaylist = item.playlist
             updateItemsList()
         }
     }
@@ -309,7 +308,7 @@ class PlaylistLayoutController(
 
     @Synchronized
     fun itemMoved(position: Int, step: Int): List<PlaylistListItem> {
-        val existingSongs = playlist!!.songs
+        val existingSongs = playlistService.currentPlaylist!!.songs
             .filter { s ->
                 val namespace = when {
                     s.custom -> SongNamespace.Custom
@@ -320,7 +319,7 @@ class PlaylistLayoutController(
                 song != null
             }.toMutableList()
         ListMover(existingSongs).move(position, step)
-        playlist?.songs = existingSongs
+        playlistService.currentPlaylist?.songs = existingSongs
         val items = existingSongs
             .mapNotNull { s ->
                 val namespace = when {

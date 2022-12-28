@@ -34,8 +34,8 @@ class RandomSongOpener(
 
     fun openRandomSong() {
         val playlist: Playlist? = when {
-            preferencesState.randomPlaylistSongs && songOpener.isPlaylistOpen() -> {
-                songOpener.playlist!!
+            preferencesState.randomPlaylistSongs && playlistService.isPlaylistOpen() -> {
+                playlistService.currentPlaylist!!
             }
             else -> null
         }

@@ -12,6 +12,7 @@ import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.playlist.Playlist
+import igrek.songbook.persistence.user.playlist.PlaylistSong
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController
 
@@ -27,6 +28,8 @@ class PlaylistService(
     private val contextMenuBuilder by LazyExtractor(contextMenuBuilder)
     private val songOpener by LazyExtractor(songOpener)
     private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
+
+    var currentPlaylist: Playlist? = null
 
     fun addNewPlaylist(onSuccess: (Playlist) -> Unit = {}) {
         InputDialogBuilder().input(R.string.new_playlist_name, null) { name ->
@@ -74,6 +77,14 @@ class PlaylistService(
         uiInfoService.showInfo(R.string.song_added_to_playlist, song.displayName(), playlist.name)
     }
 
+    fun removeFromThisPlaylist(song: Song) {
+        currentPlaylist?.let { currentPlaylist ->
+            removeFromPlaylist(song, currentPlaylist)
+        } ?: kotlin.run {
+            uiInfoService.showInfo(R.string.song_is_not_on_playlist)
+        }
+    }
+
     fun removeFromPlaylist(song: Song) {
         val playlistsWithSong = songsRepository.playlistDao.playlistDb.playlists
             .filter { playlist ->
@@ -115,7 +126,7 @@ class PlaylistService(
 
     fun goToNextOrPrevious(next: Int): Boolean {
         val currentSong = songPreviewLayoutController.currentSong ?: return false
-        val playlist = songOpener.playlist ?: return false
+        val playlist = currentPlaylist ?: return false
         val songIndex = findSongInPlaylist(currentSong, playlist)
         if (songIndex == -1)
             return false
@@ -141,7 +152,7 @@ class PlaylistService(
 
     fun hasNextSong(): Boolean {
         val currentSong = songPreviewLayoutController.currentSong ?: return false
-        val playlist = songOpener.playlist ?: return false
+        val playlist = currentPlaylist ?: return false
         val songIndex = findSongInPlaylist(currentSong, playlist)
         if (songIndex == -1)
             return false
@@ -164,6 +175,21 @@ class PlaylistService(
                 song
             }
             .toMutableList()
+    }
+
+    fun isPlaylistOpen(): Boolean {
+        return currentPlaylist != null
+    }
+
+    fun isSongOnCurrentPlaylist(song: Song): Boolean {
+        return currentPlaylist?.let { currentPlaylist ->
+            isSongOnPlaylist(song, currentPlaylist)
+        } ?: false
+    }
+
+    private fun isSongOnPlaylist(song: Song, playlist: Playlist): Boolean {
+        val playlistSong = PlaylistSong(song.id, song.isCustom())
+        return playlistSong in playlist.songs
     }
 
 }

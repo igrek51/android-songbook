@@ -14,6 +14,7 @@ import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.history.OpenedSong
 import igrek.songbook.persistence.user.playlist.Playlist
+import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.room.RoomLobby
 
 open class SongOpener(
@@ -22,19 +23,18 @@ open class SongOpener(
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
+    playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
 ) {
     private val layoutController by LazyExtractor(layoutController)
     private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
     private val songsRepository by LazyExtractor(songsRepository)
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val roomLobby by LazyExtractor(roomLobby)
-
-    var playlist: Playlist? = null
-        private set
+    private val playlistService by LazyExtractor(playlistService)
 
     fun openSongPreview(song: Song, playlist: Playlist? = null) {
         logger.info("Opening song: $song")
-        this.playlist = playlist
+        playlistService.currentPlaylist = playlist
         songPreviewLayoutController.currentSong = song
         layoutController.showLayout(SongPreviewLayoutController::class)
         songsRepository.openHistoryDao.registerOpenedSong(song.id, song.namespace)
@@ -51,7 +51,7 @@ open class SongOpener(
     }
 
     fun openLastSong() {
-        this.playlist = null
+        playlistService.currentPlaylist = null
         val currentSong = songPreviewLayoutController.currentSong
         if (currentSong != null) {
             layoutController.showLayout(SongPreviewLayoutController::class)
@@ -71,10 +71,6 @@ open class SongOpener(
         }
 
         uiInfoService.showInfo(R.string.no_last_song)
-    }
-
-    fun isPlaylistOpen(): Boolean {
-        return playlist != null
     }
 
     fun hasLastSong(): Boolean {

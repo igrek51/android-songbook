@@ -1,6 +1,5 @@
 package igrek.songbook.songselection.contextmenu
 
-
 import android.app.Activity
 import androidx.appcompat.app.AlertDialog
 import igrek.songbook.R
@@ -16,7 +15,6 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
-import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.send.PublishSongService
 import igrek.songbook.songpreview.SongDetailsService
@@ -29,7 +27,6 @@ class SongContextMenuBuilder(
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
     favouriteSongsService: LazyInject<FavouriteSongsService> = appFactory.favouriteSongsService,
     customSongService: LazyInject<CustomSongService> = appFactory.customSongService,
-    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
     playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
     songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
@@ -43,7 +40,6 @@ class SongContextMenuBuilder(
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val favouriteSongsService by LazyExtractor(favouriteSongsService)
     private val customSongService by LazyExtractor(customSongService)
-    private val songsRepository by LazyExtractor(songsRepository)
     private val playlistService by LazyExtractor(playlistService)
     private val layoutController by LazyExtractor(layoutController)
     private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
@@ -80,12 +76,12 @@ class SongContextMenuBuilder(
                 executor = { song ->
                     playlistService.showAddSongToPlaylistDialog(song)
                 }),
-            SongContextAction(R.string.action_remove_from_playlist,
+            SongContextAction(R.string.action_remove_from_this_playlist,
                 availableCondition = { song ->
-                    songsRepository.playlistDao.isSongOnAnyPlaylist(song)
+                    playlistService.isSongOnCurrentPlaylist(song)
                 },
                 executor = { song ->
-                    playlistService.removeFromPlaylist(song)
+                    playlistService.removeFromThisPlaylist(song)
                 }),
             SongContextAction(R.string.action_song_copy,
                 availableCondition = { song -> !song.isCustom() },
