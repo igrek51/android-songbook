@@ -85,9 +85,9 @@ class BackupSyncManager(
 
     private val logger = LoggerFactory.logger
 
-    fun makeDriveBackupUI(showSuccess: Boolean) {
+    fun makeDriveBackupUI(logout: Boolean = true) {
         logger.debug("making application data Backup in Google Drive")
-        requestSingIn { driveService: Drive ->
+        requestSingIn(logout) { driveService: Drive ->
             showSyncProgress(0, 2)
             GlobalScope.launch(Dispatchers.IO) {
                 userDataDao.saveNow()
@@ -98,9 +98,7 @@ class BackupSyncManager(
                 }.onFailure { error ->
                     UiErrorHandler().handleError(error, R.string.settings_sync_save_error)
                 }.onSuccess {
-                    if (showSuccess) {
-                        uiInfoService.showInfo(R.string.settings_sync_save_success)
-                    }
+                    uiInfoService.showInfo(R.string.settings_sync_save_success)
                 }
             }
         }
@@ -108,7 +106,7 @@ class BackupSyncManager(
 
     fun restoreDriveBackupUI() {
         logger.debug("restoring application data from Google Drive")
-        requestSingIn { driveService: Drive ->
+        requestSingIn(logout = true) { driveService: Drive ->
             GlobalScope.launch(Dispatchers.IO) {
                 when {
                     findDriveFile(driveService, compositeBackupFile) != null -> {
@@ -278,7 +276,7 @@ class BackupSyncManager(
         return googleFile.id
     }
 
-    private fun requestSingIn(onSignIn: (driveService: Drive) -> Unit) {
+    private fun requestSingIn(logout: Boolean, onSignIn: (driveService: Drive) -> Unit) {
         logger.debug("requesting Google Sign In")
         val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestEmail()
@@ -286,18 +284,34 @@ class BackupSyncManager(
             .build()
         val client: GoogleSignInClient = GoogleSignIn.getClient(activity, signInOptions)
 
-        client.signOut().addOnCompleteListener {
-            val signInIntent = client.signInIntent
-            if (signInIntent.action == null) {
-                logger.warn("Google SignIn intent action is null")
-                signInIntent.action = "com.google.android.gms.auth.GOOGLE_SIGN_IN"
+        when (logout) {
+            true -> client.signOut().addOnCompleteListener {
+                val signInIntent = client.signInIntent
+                if (signInIntent.action == null) {
+                    logger.warn("Google SignIn intent action is null")
+                    signInIntent.action = "com.google.android.gms.auth.GOOGLE_SIGN_IN"
+                }
+                if (!isIntentCallable(signInIntent)) {
+                    logger.warn("Intent is not callable: $signInIntent")
+                }
+                // The result of the sign-in Intent is handled in onActivityResult.
+                activityResultDispatcher.startActivityForResult(signInIntent) { resultCode: Int, data: Intent? ->
+                    handleSignInResult(data, resultCode, onSignIn)
+                }
             }
-            if (!isIntentCallable(signInIntent)) {
-                logger.warn("Intent is not callable: $signInIntent")
-            }
-            // The result of the sign-in Intent is handled in onActivityResult.
-            activityResultDispatcher.startActivityForResult(signInIntent) { resultCode: Int, data: Intent? ->
-                handleSignInResult(data, resultCode, onSignIn)
+            false -> {
+                val signInIntent = client.signInIntent
+                if (signInIntent.action == null) {
+                    logger.warn("Google SignIn intent action is null")
+                    signInIntent.action = "com.google.android.gms.auth.GOOGLE_SIGN_IN"
+                }
+                if (!isIntentCallable(signInIntent)) {
+                    logger.warn("Intent is not callable: $signInIntent")
+                }
+                // The result of the sign-in Intent is handled in onActivityResult.
+                activityResultDispatcher.startActivityForResult(signInIntent) { resultCode: Int, data: Intent? ->
+                    handleSignInResult(data, resultCode, onSignIn)
+                }
             }
         }
     }
@@ -407,6 +421,10 @@ class BackupSyncManager(
         val lastDate = formatTimestampDate(preferencesState.lastDriveBackupTimestamp)
         val todayDate = formatTodayDate()
         return lastDate != todayDate
+    }
+
+    fun makeAutomaticBackup() {
+        makeDriveBackupUI(logout = false)
     }
 
     fun formatLastBackupTime(): String {

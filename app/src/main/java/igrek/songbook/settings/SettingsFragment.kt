@@ -252,7 +252,7 @@ class SettingsFragment(
 
         setupClickPreference("settingsSyncSave") {
             SafeExecutor {
-                backupSyncManager.makeDriveBackupUI(showSuccess = true)
+                backupSyncManager.makeDriveBackupUI()
             }
         }
         setupClickPreference("settingsSyncSaveFile") {
@@ -346,6 +346,9 @@ class SettingsFragment(
             onLoad = { preferencesState.syncBackupAutomatically },
             onSave = { value: Boolean ->
                 preferencesState.syncBackupAutomatically = value
+                if (value && backupSyncManager.needsAutomaticBackup()) {
+                    backupSyncManager.makeAutomaticBackup()
+                }
             },
             summaryProvider = {
                 uiResourceService.resString(
@@ -510,6 +513,9 @@ class SettingsFragment(
         preference.onPreferenceChangeListener =
             Preference.OnPreferenceChangeListener { _, newValue ->
                 onSave(newValue as Boolean)
+                summaryProvider?.let { provider ->
+                    preference.summary = provider()
+                }
                 true
             }
         summaryProvider?.let { provider ->

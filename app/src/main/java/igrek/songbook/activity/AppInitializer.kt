@@ -120,7 +120,7 @@ class AppInitializer(
     private fun postInit() {
         postInitIntent(activity.intent)
         if (backupSyncManager.needsAutomaticBackup()) {
-            backupSyncManager.makeDriveBackupUI(showSuccess = false)
+            backupSyncManager.makeAutomaticBackup()
         }
     }
 

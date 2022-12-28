@@ -368,7 +368,7 @@
     <string name="settings_sync_save_hint">Save all application data (settings, custom songs, playlists, favourites) on your Google Drive Account in hidden application data folder. This will overwrite your previous backup!</string>
     <string name="settings_sync_restore">Restore Backup from a Cloud</string>
     <string name="settings_sync_restore_hint">Restore all application data from your Google Drive Account.\nWarning: This will overwrite all your current application data. Requires restart.</string>
-    <string name="settings_sync_save_success">Application data backed up successfully.</string>
+    <string name="settings_sync_save_success">Data synchronized.</string>
     <string name="settings_sync_save_error">Error when saving backup: %s</string>
     <string name="settings_sync_restore_confirm">Do you really want to restore all application data from your Google Drive Account?\nThis will overwrite all your current application data. Application restart is needed after restoring.</string>
     <string name="settings_sync_restore_confirm_file">Do you really want to restore all application data from a file?\nThis will overwrite all your current application data. Application restart is needed after restoring.</string>
@@ -560,5 +560,5 @@
     <string name="error_song_file_type_unallowed">Not allowed file type: %s. Only TXT, PDF files and Google Docs are allowed.</string>
     <string name="backup_file_exported">Backup file has been exported.</string>
     <string name="settings_sync_backup_automatically">Automatic Backups</string>
-    <string name="settings_sync_backup_automatically_hint">Make periodic backups automatically to your Google Drive Account.\nLast backup: %s</string>
+    <string name="settings_sync_backup_automatically_hint">Make periodic (daily) backups automatically to your Google Drive Account.\nLast backup: %s</string>
 </resources>

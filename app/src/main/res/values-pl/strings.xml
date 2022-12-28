@@ -344,7 +344,7 @@
     <string name="settings_sync_save_hint">Zapisz wszystkie dane aplikacji (ustawienia, własne piosenki, playlisty, ulubione) na Twoim koncie Google Drive w ukrytym folderze danych aplikacji. Nadpisze to Twoją poprzednią kopię zapasową!</string>
     <string name="settings_sync_restore">Przywróć kopię zapasową z Chmury</string>
     <string name="settings_sync_restore_hint">Przywróć zapisane dane aplikacji z twojego konta Google Drive.\nUwaga: Przywracanie nadpisze twoje obecne niezapisane dane aplikacji. Wymagany restart.</string>
-    <string name="settings_sync_save_success">Dane aplikacji zostały zapisane.</string>
+    <string name="settings_sync_save_success">Dane zsynchronizowane.</string>
     <string name="settings_sync_save_error">Błąd tworzenia kopii zapasowej: %s</string>
     <string name="settings_sync_restore_confirm">Czy na pewno chcesz przywrócić zapisane dane aplikacji z twojego konta Google Drive?\nPrzywracanie nadpisze twoje obecne niezapisane dane aplikacji. Po zakończeniu wymagany jest restart aplikacji.</string>
     <string name="settings_sync_restore_confirm_file">Czy na pewno chcesz przywrócić zapisane dane aplikacji z wybranego pliku?\nPrzywracanie nadpisze twoje obecne niezapisane dane aplikacji. Po zakończeniu wymagany jest restart aplikacji.</string>
@@ -533,5 +533,5 @@
     <string name="error_song_file_type_unallowed">Niedozwolony typ pliku: %s. Tylko pliki TXT, PDF i Dokumenty Google Docs są dozwolone.</string>
     <string name="backup_file_exported">Kopia zapasowa została zapisana.</string>
     <string name="settings_sync_backup_automatically">Automatyczna kopia zapasowa</string>
-    <string name="settings_sync_backup_automatically_hint">Zapisuj cyklicznie kopie zapasowe na twoim koncie Google Drive.\nOstatnia kopia zapasowa: %s</string>
+    <string name="settings_sync_backup_automatically_hint">Zapisuj cyklicznie (codziennie) kopie zapasowe na twoim koncie Google Drive.\nOstatnia kopia zapasowa: %s</string>
 </resources>
