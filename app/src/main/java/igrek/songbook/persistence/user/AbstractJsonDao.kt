@@ -104,7 +104,7 @@ abstract class AbstractJsonDao<T>(
 
         if (file.exists()) {
             if (backupFile.exists()) {
-                logger.error("removing previous backup file: " + backupFile.absolutePath)
+                logger.warn("removing previous backup file: " + backupFile.absolutePath)
                 backupFile.delete()
             }
 

@@ -73,13 +73,13 @@ class LocalDbService(
                 true -> {
                     val bakFile = File(songsDbFile.absolutePath + ".bak")
                     if (bakFile.exists()) {
-                        logger.error("removing previous backup file: " + bakFile.absolutePath)
+                        logger.warn("removing previous backup file: " + bakFile.absolutePath)
                         bakFile.delete()
                     }
                     songsDbFile.renameTo(bakFile)
                     when (songsDbFile.exists()) {
                         true -> logger.error("failed to rename file: " + songsDbFile.absolutePath)
-                        false -> logger.info("file ${songsDbFile.absolutePath} deleted, backup at ${bakFile.absolutePath}")
+                        false -> logger.info("file ${songsDbFile.absolutePath} moved to backup at ${bakFile.absolutePath}")
                     }
                 }
                 false -> {

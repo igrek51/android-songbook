@@ -75,12 +75,10 @@ class SecretCommandService(
             }) { showCowSuperPowers() },
             SimplifiedKeyRule("dupa", "okon") { showCowSuperPowers() },
 
-            SimplifiedKeyRule("engineer", "inzynier") { unlockSongs("engineer") },
-
             ExactKeyRule("reset") {
                 this.songsRepository.factoryReset()
                 this.preferencesService.clear()
-                logger.debug("Factory reset done")
+                toast("Factory reset done")
             },
             ExactKeyRule("reset config") { this.preferencesService.clear() },
             ExactKeyRule("reset db") { this.songsRepository.factoryReset() },
@@ -122,6 +120,7 @@ class SecretCommandService(
             SubCommandRule("shellout") { shellCommand(it, showStdout = true) },
 
             SubCommandRule("unlock", ::unlockSongs),
+            SimplifiedKeyRule("engineer", "inzynier") { unlockSongs("engineer") },
 
             SubCommandRule("backup export local", ::backupDataFiles),
             SubCommandRule("backup import local", ::restoreDataFiles),
