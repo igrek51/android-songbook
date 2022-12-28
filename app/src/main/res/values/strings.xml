@@ -364,9 +364,9 @@
     <string name="no_last_song">You haven\'t open any song yet.</string>
     <string name="song_copied_edit_it">Edit</string>
     <string name="settings_sync">Backup &amp; Restore / Synchronize devices</string>
-    <string name="settings_sync_save">Save Backup to a Cloud</string>
+    <string name="settings_sync_save">Save Backup to the Cloud</string>
     <string name="settings_sync_save_hint">Save all application data (settings, custom songs, playlists, favourites) on your Google Drive Account in hidden application data folder. This will overwrite your previous backup!</string>
-    <string name="settings_sync_restore">Restore Backup from a Cloud</string>
+    <string name="settings_sync_restore">Restore Backup from the Cloud</string>
     <string name="settings_sync_restore_hint">Restore all application data from your Google Drive Account.\nWarning: This will overwrite all your current application data. Requires restart.</string>
     <string name="settings_sync_save_success">Data synchronized.</string>
     <string name="settings_sync_save_error">Error when saving backup: %s</string>

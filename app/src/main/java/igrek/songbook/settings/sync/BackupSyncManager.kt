@@ -373,10 +373,8 @@ class BackupSyncManager(
     fun makeFileBackupUI() {
         val today = formatTodayDate()
         val filename = "songbook-backup-$today.bak"
-        showSyncProgress(0, 2)
         GlobalScope.launch(Dispatchers.IO) {
             runCatching {
-                showSyncProgress(1, 2)
                 val encodedData: String = BackupEncoder().makeCompositeBackup()
                 withContext(Dispatchers.Main) {
                     exportFileChooser.showFileChooser(encodedData, filename) {
@@ -392,10 +390,8 @@ class BackupSyncManager(
     fun restoreFileBackupUI() {
         importFileChooser.importFile(sizeLimit = 100 * 1024 * 1024) { content: String, filename: String ->
             logger.info("Restoring backup data from a file $filename")
-            showSyncProgress(0, 2)
             GlobalScope.launch(Dispatchers.IO) {
                 runCatching {
-                    showSyncProgress(1, 2)
                     BackupEncoder().restoreCompositeBackup(content)
                 }.onFailure { error ->
                     UiErrorHandler().handleError(error, R.string.settings_sync_restore_error)
