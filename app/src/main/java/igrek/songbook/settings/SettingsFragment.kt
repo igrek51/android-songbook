@@ -252,14 +252,25 @@ class SettingsFragment(
 
         setupClickPreference("settingsSyncSave") {
             SafeExecutor {
-                backupSyncManager.syncSave()
+                backupSyncManager.makeDriveBackupUI()
             }
         }
-
+        setupClickPreference("settingsSyncSaveFile") {
+            SafeExecutor {
+                backupSyncManager.makeFileBackupUI()
+            }
+        }
         setupClickPreference("settingsSyncRestore") {
             ConfirmDialogBuilder().confirmAction(R.string.settings_sync_restore_confirm) {
                 SafeExecutor {
-                    backupSyncManager.syncRestore()
+                    backupSyncManager.restoreDriveBackupUI()
+                }
+            }
+        }
+        setupClickPreference("settingsSyncRestoreFile") {
+            ConfirmDialogBuilder().confirmAction(R.string.settings_sync_restore_confirm_file) {
+                SafeExecutor {
+                    backupSyncManager.restoreFileBackupUI()
                 }
             }
         }

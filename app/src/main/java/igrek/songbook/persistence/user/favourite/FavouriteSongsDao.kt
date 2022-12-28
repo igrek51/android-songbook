@@ -1,5 +1,6 @@
 package igrek.songbook.persistence.user.favourite
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.WrapContextError
@@ -15,6 +16,7 @@ import igrek.songbook.persistence.user.migrate.Migration037Favourites
 import igrek.songbook.util.lookup.SimpleCache
 import io.reactivex.android.schedulers.AndroidSchedulers
 
+@SuppressLint("CheckResult")
 class FavouriteSongsDao(
     path: String,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,

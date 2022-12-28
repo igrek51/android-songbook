@@ -27,7 +27,7 @@ class CustomSongService(
     private val songsRepository by LazyExtractor(songsRepository)
     private val layoutController by LazyExtractor(layoutController)
     private val editSongLayoutController by LazyExtractor(editSongLayoutController)
-    private val songExportFileChooser by LazyExtractor(exportFileChooser)
+    private val exportFileChooser by LazyExtractor(exportFileChooser)
     private val preferencesState by LazyExtractor(preferencesState)
 
     fun showAddSongScreen() {
@@ -51,7 +51,7 @@ class CustomSongService(
         val cleanTitle = title.replace("\"", "").replace("{", "").replace("}", "")
         val exportContent =
             "{title: \"$cleanTitle\"}\n{chords_notation: ${notation.id}}\n" + content
-        songExportFileChooser.showFileChooser(exportContent, filename) {
+        exportFileChooser.showFileChooser(exportContent, filename) {
             uiInfoService.showInfo(R.string.song_exported)
         }
     }

@@ -21,6 +21,7 @@ import com.google.api.services.drive.model.FileList
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.activity.ActivityResultDispatcher
+import igrek.songbook.custom.ExportFileChooser
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.LoggerFactory
@@ -32,6 +33,7 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.system.filesystem.saveInputStreamToFile
+import igrek.songbook.util.todayDateText
 import kotlinx.coroutines.*
 import java.io.File
 import java.io.FileNotFoundException
@@ -48,6 +50,7 @@ class BackupSyncManager(
     activityController: LazyInject<ActivityController> = appFactory.activityController,
     userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
     activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,
+    exportFileChooser: LazyInject<ExportFileChooser> = appFactory.exportFileChooser,
 ) {
     private val activity by LazyExtractor(appCompatActivity)
     private val uiInfoService by LazyExtractor(uiInfoService)
@@ -57,6 +60,7 @@ class BackupSyncManager(
     private val activityController by LazyExtractor(activityController)
     private val userDataDao by LazyExtractor(userDataDao)
     private val activityResultDispatcher by LazyExtractor(activityResultDispatcher)
+    private val exportFileChooser by LazyExtractor(exportFileChooser)
 
     private val oldSyncFiles = listOf(
         "files/customsongs.1.json",
@@ -72,43 +76,35 @@ class BackupSyncManager(
 
     private val logger = LoggerFactory.logger
 
-    fun syncSave() {
+    fun makeDriveBackupUI() {
         logger.debug("making application data Backup in Google Drive")
         requestSingIn { driveService: Drive ->
-            makeBackupUI(driveService)
-        }
-    }
-
-    fun syncRestore() {
-        logger.debug("restoring application data from Google Drive")
-        requestSingIn { driveService: Drive ->
-            restoreDriveBackupUI(driveService)
-        }
-    }
-
-    private fun makeBackupUI(driveService: Drive) {
-        showSyncProgress(0, 2)
-        GlobalScope.launch(Dispatchers.IO) {
-            userDataDao.saveNow()
-            preferencesService.saveAll()
-            runCatching {
-                showSyncProgress(1, 2)
-                makeCompositeDriveBackup(driveService)
-            }.onFailure { error ->
-                UiErrorHandler().handleError(error, R.string.settings_sync_save_error)
-            }.onSuccess {
-                uiInfoService.showInfo(R.string.settings_sync_save_success)
+            showSyncProgress(0, 2)
+            GlobalScope.launch(Dispatchers.IO) {
+                userDataDao.saveNow()
+                preferencesService.saveAll()
+                runCatching {
+                    showSyncProgress(1, 2)
+                    makeCompositeDriveBackup(driveService)
+                }.onFailure { error ->
+                    UiErrorHandler().handleError(error, R.string.settings_sync_save_error)
+                }.onSuccess {
+                    uiInfoService.showInfo(R.string.settings_sync_save_success)
+                }
             }
         }
     }
 
-    private fun restoreDriveBackupUI(driveService: Drive) {
-        GlobalScope.launch(Dispatchers.IO) {
-            when {
-                findDriveFile(driveService, compositeBackupFile) != null -> {
-                    restoreCompositeDriveBackupUI(driveService)
+    fun restoreDriveBackupUI() {
+        logger.debug("restoring application data from Google Drive")
+        requestSingIn { driveService: Drive ->
+            GlobalScope.launch(Dispatchers.IO) {
+                when {
+                    findDriveFile(driveService, compositeBackupFile) != null -> {
+                        restoreCompositeDriveBackupUI(driveService)
+                    }
+                    else -> restoreOldDriveBackupUI(driveService)
                 }
-                else -> restoreOldDriveBackupUI(driveService)
             }
         }
     }
@@ -216,7 +212,6 @@ class BackupSyncManager(
         val fileId: String = findOrCreateDriveFile(driveService, compositeBackupFile)
         driveService.files().update(fileId, metadata, fileContent).execute()
         cacheFile.delete()
-        logger.debug("application data backed up:\n$encodedData")
         logger.info("application data backed up in a composite backup $compositeBackupFile ($fileId) on Google Drive")
     }
 
@@ -346,5 +341,26 @@ class BackupSyncManager(
         client.signOut().addOnCompleteListener {
             uiInfoService.showInfo(R.string.sync_singed_out)
         }
+    }
+
+    fun makeFileBackupUI() {
+        val today = todayDateText()
+        val filename = "songbook-backup-$today.bak"
+        GlobalScope.launch(Dispatchers.IO) {
+            runCatching {
+                val encodedData: String = BackupEncoder().encodeCompositeBackup()
+                withContext(Dispatchers.Main) {
+                    exportFileChooser.showFileChooser(encodedData, filename) {
+                        uiInfoService.showInfo(R.string.backup_file_exported)
+                    }
+                }
+            }.onFailure { error ->
+                UiErrorHandler().handleError(error, R.string.settings_sync_save_error)
+            }
+        }
+    }
+
+    fun restoreFileBackupUI() {
+
     }
 }

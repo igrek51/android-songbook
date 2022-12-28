@@ -1,6 +1,7 @@
 package igrek.songbook.settings.sync
 
 import igrek.songbook.info.logger.LoggerFactory.logger
+import igrek.songbook.info.logger.WrapContextError
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -47,7 +48,11 @@ class BackupEncoder(
             unlocked = encodeFileBackup("unlocked.1.json"),
             preferences = encodeFileBackup("preferences.1.json"),
         )
-        return jsonSerializer.encodeToString(CompositeBackup.serializer(), compositeBackup)
+        try {
+            return jsonSerializer.encodeToString(CompositeBackup.serializer(), compositeBackup)
+        } catch (t: Throwable) {
+            throw WrapContextError("Serializing to JSON", t)
+        }
     }
 
     fun restoreCompositeBackup(data: String) {
@@ -74,13 +79,21 @@ class BackupEncoder(
         if (data == null)
             return
         val fileContent: ByteArray = decodeFileBackup(data)
-        writeAppDataFileContent(filename, fileContent)
+        try {
+            writeAppDataFileContent(filename, fileContent)
+        } catch (t: Throwable) {
+            throw WrapContextError("Restoring app data file $filename", t)
+        }
     }
 
     fun decodeFileBackup(data: String): ByteArray {
-        val encrypted: ByteArray = base64Decode(data)
-        val zipped: ByteArray = aesDecrypt(encrypted)
-        return ungzip(zipped)
+        try{
+            val encrypted: ByteArray = base64Decode(data)
+            val zipped: ByteArray = aesDecrypt(encrypted)
+            return ungzip(zipped)
+        } catch (t: Throwable) {
+            throw WrapContextError("Failed to decode backup data", t)
+        }
     }
 
     private fun readAppDataFileContent(filename: String): ByteArray {
@@ -109,7 +122,7 @@ class BackupEncoder(
             }
 
             localFile.writeBytes(content)
-            logger.info("file ${localFile.absolutePath} restored, old backup at ${bakFile.absolutePath}")
+            logger.info("file ${localFile.absolutePath} restored, old file backed up at ${bakFile.absolutePath}")
 
         } else {
             localFile.writeBytes(content)

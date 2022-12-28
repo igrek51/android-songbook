@@ -48,7 +48,7 @@ Try to stick to these following rules in order to keep songs consistent with oth
     ```
     [G]Hotel Cali[D]fornia
     ``` 
-    In very simple cases, it is allowed to place tje chords **at the end of line**:
+    In very simple cases, it is allowed to place the chords **at the end of line**:
     ```
     Smoke on the water [C G#]
     ```

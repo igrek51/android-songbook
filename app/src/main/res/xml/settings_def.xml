@@ -187,6 +187,16 @@
             android:key="settingsSyncRestore"
             android:summary="@string/settings_sync_restore_hint"
             app:iconSpaceReserved="false" />
+        <Preference
+            android:title="@string/settings_sync_save_file"
+            android:key="settingsSyncSaveFile"
+            android:summary="@string/settings_sync_save_file_hint"
+            app:iconSpaceReserved="false" />
+        <Preference
+            android:title="@string/settings_sync_restore_file"
+            android:key="settingsSyncRestoreFile"
+            android:summary="@string/settings_sync_restore_file_hint"
+            app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
 
