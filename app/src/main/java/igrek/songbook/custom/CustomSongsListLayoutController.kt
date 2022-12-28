@@ -61,7 +61,7 @@ class CustomSongsListLayoutController(
     appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
     exportFileChooser: LazyInject<ExportFileChooser> = appFactory.exportFileChooser,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-    importFileChooser: LazyInject<ImportFileChooser> = appFactory.allSongsImportFileChooser,
+    importFileChooser: LazyInject<ImportFileChooser> = appFactory.importFileChooser,
     songImportFileChooser: LazyInject<SongImportFileChooser> = appFactory.songImportFileChooser,
     settingsEnumService: LazyInject<SettingsEnumService> = appFactory.settingsEnumService,
     softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
@@ -351,7 +351,7 @@ class CustomSongsListLayoutController(
 
     private fun importCustomSongs() {
         ConfirmDialogBuilder().confirmAction(uiInfoService.resString(R.string.custom_songs_mass_import_hint)) {
-            importFileChooser.importFile { content: String, _ ->
+            importFileChooser.importFile(sizeLimit = 10 * 1024 * 1024) { content: String, _ ->
                 val json = Json {
                     ignoreUnknownKeys = true
                     allowStructuredMapKeys = true

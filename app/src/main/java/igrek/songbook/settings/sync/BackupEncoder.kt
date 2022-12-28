@@ -36,7 +36,7 @@ class BackupEncoder(
         useArrayPolymorphism = false
     }
 
-    fun encodeCompositeBackup(): String {
+    fun makeCompositeBackup(): String {
         val compositeBackup = CompositeBackup(
             backupVersion = 2,
             customsongs = encodeFileBackup("customsongs.1.json"),
@@ -56,16 +56,20 @@ class BackupEncoder(
     }
 
     fun restoreCompositeBackup(data: String) {
-        val compositeBackup: CompositeBackup = jsonSerializer.decodeFromString(CompositeBackup.serializer(), data)
+        try{
+            val compositeBackup: CompositeBackup = jsonSerializer.decodeFromString(CompositeBackup.serializer(), data)
 
-        restoreFileBackup("customsongs.1.json", compositeBackup.customsongs)
-        restoreFileBackup("exclusion.2.json", compositeBackup.exclusion)
-        restoreFileBackup("favourites.1.json", compositeBackup.favourites)
-        restoreFileBackup("history.1.json", compositeBackup.history)
-        restoreFileBackup("playlist.1.json", compositeBackup.playlist)
-        restoreFileBackup("transpose.1.json", compositeBackup.transpose)
-        restoreFileBackup("unlocked.1.json", compositeBackup.unlocked)
-        restoreFileBackup("preferences.1.json", compositeBackup.preferences)
+            restoreFileBackup("customsongs.1.json", compositeBackup.customsongs)
+            restoreFileBackup("exclusion.2.json", compositeBackup.exclusion)
+            restoreFileBackup("favourites.1.json", compositeBackup.favourites)
+            restoreFileBackup("history.1.json", compositeBackup.history)
+            restoreFileBackup("playlist.1.json", compositeBackup.playlist)
+            restoreFileBackup("transpose.1.json", compositeBackup.transpose)
+            restoreFileBackup("unlocked.1.json", compositeBackup.unlocked)
+            restoreFileBackup("preferences.1.json", compositeBackup.preferences)
+        } catch (t: Throwable) {
+            throw WrapContextError("Invalid backup file data", t)
+        }
     }
 
     private fun encodeFileBackup(filename: String): String {

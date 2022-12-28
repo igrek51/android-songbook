@@ -27,11 +27,7 @@ class ImportFileChooser(
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val activityResultDispatcher by LazyExtractor(activityResultDispatcher)
 
-    companion object {
-        const val FILE_IMPORT_LIMIT_B = 10 * 1024 * 1024
-    }
-
-    fun importFile(onLoad: (content: String, filename: String) -> Unit) {
+    fun importFile(sizeLimit: Int? = null, onLoad: (content: String, filename: String) -> Unit) {
         SafeExecutor {
             val intent = Intent(Intent.ACTION_GET_CONTENT)
             intent.type = "*/*"
@@ -40,7 +36,7 @@ class ImportFileChooser(
             try {
                 activityResultDispatcher.startActivityForResult(intent) { resultCode: Int, data: Intent? ->
                     if (resultCode == Activity.RESULT_OK) {
-                        onFileSelect(data?.data, onLoad)
+                        onFileSelect(data?.data, onLoad, sizeLimit)
                     }
                 }
             } catch (ex: android.content.ActivityNotFoundException) {
@@ -52,6 +48,7 @@ class ImportFileChooser(
     private fun onFileSelect(
         selectedUri: Uri?,
         onLoad: (content: String, filename: String) -> Unit,
+        sizeLimit: Int?,
     ) {
         SafeExecutor {
             if (selectedUri != null) {
@@ -60,9 +57,11 @@ class ImportFileChooser(
                         val filename = getFileNameFromUri(selectedUri)
 
                         val length = inputStream.available()
-                        if (length > FILE_IMPORT_LIMIT_B) {
-                            uiInfoService.showToast(R.string.selected_file_is_too_big)
-                            return@SafeExecutor
+                        sizeLimit?.let { sizeLimit ->
+                            if (length > sizeLimit) {
+                                uiInfoService.showToast(R.string.selected_file_is_too_big)
+                                return@SafeExecutor
+                            }
                         }
 
                         val content = convert(inputStream, Charset.forName("UTF-8"))

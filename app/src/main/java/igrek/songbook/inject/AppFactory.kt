@@ -155,7 +155,7 @@ class AppFactory(
     val roomLobbyLayoutController = SingletonInject { RoomLobbyLayoutController() }
     val bluetoothService = SingletonInject { BluetoothService() }
     val roomLobby = SingletonInject { RoomLobby() }
-    val allSongsImportFileChooser = SingletonInject { ImportFileChooser() }
+    val importFileChooser = SingletonInject { ImportFileChooser() }
     val activityResultDispatcher = SingletonInject { ActivityResultDispatcher() }
     val shareSongService = SingletonInject { ShareSongService() }
     val mediaButtonService = SingletonInject { MediaButtonService() }

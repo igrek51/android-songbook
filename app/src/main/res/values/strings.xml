@@ -364,9 +364,9 @@
     <string name="no_last_song">You haven\'t open any song yet.</string>
     <string name="song_copied_edit_it">Edit</string>
     <string name="settings_sync">Backup &amp; Restore / Synchronize devices</string>
-    <string name="settings_sync_save">Save Backup to Cloud</string>
+    <string name="settings_sync_save">Save Backup to a Cloud</string>
     <string name="settings_sync_save_hint">Save all application data (settings, custom songs, playlists, favourites) on your Google Drive Account in hidden application data folder. This will overwrite your previous backup!</string>
-    <string name="settings_sync_restore">Restore Backup from Cloud</string>
+    <string name="settings_sync_restore">Restore Backup from a Cloud</string>
     <string name="settings_sync_restore_hint">Restore all application data from your Google Drive Account.\nWarning: This will overwrite all your current application data. Requires restart.</string>
     <string name="settings_sync_save_success">Application data backed up successfully.</string>
     <string name="settings_sync_save_error">Error when saving backup: %s</string>
@@ -375,7 +375,7 @@
     <string name="settings_sync_restore_success">Application data restored successfully. Please restart app.</string>
     <string name="settings_sync_restore_error">Error when restoring data: %s</string>
     <string name="settings_sync_save_file">Export Backup to a file</string>
-    <string name="settings_sync_save_file_hint">Save all application data (settings, custom songs, playlists, favourites) to an external file.</string>
+    <string name="settings_sync_save_file_hint">Save all application data (settings, custom songs, playlists, favourites) to an external file. You can also export it to a Google Drive file.</string>
     <string name="settings_sync_restore_file">Restore Backup from a file</string>
     <string name="settings_sync_restore_file_hint">Restore all application data from a selected file.\nWarning: This will overwrite all your current application data. Requires restart.</string>
     <string name="operation_cancelled">Operation cancelled</string>

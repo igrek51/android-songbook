@@ -351,7 +351,7 @@
     <string name="settings_sync_restore_success">Dane aplikacji zostały przywrócone. Zrestartuj aplikację</string>
     <string name="settings_sync_restore_error">Błąd przywracania danych: %s</string>
     <string name="settings_sync_save_file">Eksport kopii zapasowej do pliku</string>
-    <string name="settings_sync_save_file_hint">Zapisz wszystkie dane aplikacji (ustawienia, własne piosenki, playlisty, ulubione) w zewnętrznym pliku.</string>
+    <string name="settings_sync_save_file_hint">Zapisz wszystkie dane aplikacji (ustawienia, własne piosenki, playlisty, ulubione) w zewnętrznym pliku. Możesz również zapisać dane jako plik na Google Drive.</string>
     <string name="settings_sync_restore_file">Przywróć kopię zapasową z pliku</string>
     <string name="settings_sync_restore_file_hint">Przywróć zapisane dane aplikacji z wybranego pliku.\nUwaga: Przywracanie nadpisze twoje obecne niezapisane dane aplikacji. Wymagany restart.</string>
     <string name="operation_cancelled">Operacja anulowana</string>

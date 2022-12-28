@@ -22,6 +22,7 @@ import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.activity.ActivityResultDispatcher
 import igrek.songbook.custom.ExportFileChooser
+import igrek.songbook.custom.ImportFileChooser
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.LoggerFactory
@@ -51,6 +52,7 @@ class BackupSyncManager(
     userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
     activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,
     exportFileChooser: LazyInject<ExportFileChooser> = appFactory.exportFileChooser,
+    importFileChooser: LazyInject<ImportFileChooser> = appFactory.importFileChooser,
 ) {
     private val activity by LazyExtractor(appCompatActivity)
     private val uiInfoService by LazyExtractor(uiInfoService)
@@ -61,6 +63,7 @@ class BackupSyncManager(
     private val userDataDao by LazyExtractor(userDataDao)
     private val activityResultDispatcher by LazyExtractor(activityResultDispatcher)
     private val exportFileChooser by LazyExtractor(exportFileChooser)
+    private val importFileChooser by LazyExtractor(importFileChooser)
 
     private val oldSyncFiles = listOf(
         "files/customsongs.1.json",
@@ -203,7 +206,7 @@ class BackupSyncManager(
     }
 
     private fun makeCompositeDriveBackup(driveService: Drive) {
-        val encodedData = BackupEncoder().encodeCompositeBackup()
+        val encodedData = BackupEncoder().makeCompositeBackup()
         val cacheFile = File.createTempFile("songbook-backup-", ".bak", activity.cacheDir)
         cacheFile.writeBytes(encodedData.toByteArray())
 
@@ -346,9 +349,11 @@ class BackupSyncManager(
     fun makeFileBackupUI() {
         val today = todayDateText()
         val filename = "songbook-backup-$today.bak"
+        showSyncProgress(0, 2)
         GlobalScope.launch(Dispatchers.IO) {
             runCatching {
-                val encodedData: String = BackupEncoder().encodeCompositeBackup()
+                showSyncProgress(1, 2)
+                val encodedData: String = BackupEncoder().makeCompositeBackup()
                 withContext(Dispatchers.Main) {
                     exportFileChooser.showFileChooser(encodedData, filename) {
                         uiInfoService.showInfo(R.string.backup_file_exported)
@@ -361,6 +366,25 @@ class BackupSyncManager(
     }
 
     fun restoreFileBackupUI() {
-
+        importFileChooser.importFile(sizeLimit = 100 * 1024 * 1024) { content: String, filename: String ->
+            logger.info("Restoring backup data from a file $filename")
+            showSyncProgress(0, 2)
+            GlobalScope.launch(Dispatchers.IO) {
+                runCatching {
+                    showSyncProgress(1, 2)
+                    BackupEncoder().restoreCompositeBackup(content)
+                }.onFailure { error ->
+                    UiErrorHandler().handleError(error, R.string.settings_sync_restore_error)
+                }.onSuccess {
+                    songsRepository.reloadSongsDb()
+                    preferencesService.reload()
+                    uiInfoService.showToast(R.string.settings_sync_restore_success)
+                    uiInfoService.showInfo(R.string.settings_sync_restore_success)
+                    withContext(Dispatchers.Main) {
+                        activityController.quit()
+                    }
+                }
+            }
+        }
     }
 }
