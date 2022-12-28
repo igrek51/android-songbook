@@ -149,6 +149,10 @@ enum class PreferencesField constructor(
 
     SongLyricsSearch(true),
 
+    SyncBackupAutomatically(false),
+
+    LastDriveBackupTimestamp(0), // in seconds
+
     ;
 
     constructor(defaultValue: String) : this(StringPreferenceType(defaultValue))

@@ -559,4 +559,6 @@
     <string name="prompt_rate_app_body">Would you rate the Songbook with 5 stars ⭐️⭐️⭐️⭐️⭐️?</string>
     <string name="error_song_file_type_unallowed">Not allowed file type: %s. Only TXT, PDF files and Google Docs are allowed.</string>
     <string name="backup_file_exported">Backup file has been exported.</string>
+    <string name="settings_sync_backup_automatically">Automatic Backups</string>
+    <string name="settings_sync_backup_automatically_hint">Make periodic backups automatically to your Google Drive Account.\nLast backup: %s</string>
 </resources>

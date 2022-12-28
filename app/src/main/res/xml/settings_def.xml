@@ -187,6 +187,11 @@
             android:key="settingsSyncRestore"
             android:summary="@string/settings_sync_restore_hint"
             app:iconSpaceReserved="false" />
+        <SwitchPreference
+            android:key="syncBackupAutomatically"
+            android:title="@string/settings_sync_backup_automatically"
+            android:summary="@string/settings_sync_backup_automatically_hint"
+            app:iconSpaceReserved="false" />
         <Preference
             android:title="@string/settings_sync_save_file"
             android:key="settingsSyncSaveFile"

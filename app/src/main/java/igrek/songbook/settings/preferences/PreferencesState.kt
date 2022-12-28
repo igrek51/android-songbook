@@ -54,6 +54,8 @@ class PreferencesState(
     var forceSharpNotes: Boolean by PreferenceDelegate(PreferencesField.ForceSharpNotes)
     var customSongsOrdering: CustomSongsOrdering by PreferenceDelegate(PreferencesField.CustomSongsOrdering)
     var songLyricsSearch: Boolean by PreferenceDelegate(PreferencesField.SongLyricsSearch)
+    var syncBackupAutomatically: Boolean by PreferenceDelegate(PreferencesField.SyncBackupAutomatically)
+    var lastDriveBackupTimestamp: Long by PreferenceDelegate(PreferencesField.LastDriveBackupTimestamp)
 
 }
 

@@ -252,7 +252,7 @@ class SettingsFragment(
 
         setupClickPreference("settingsSyncSave") {
             SafeExecutor {
-                backupSyncManager.makeDriveBackupUI()
+                backupSyncManager.makeDriveBackupUI(showSuccess = true)
             }
         }
         setupClickPreference("settingsSyncSaveFile") {
@@ -340,6 +340,19 @@ class SettingsFragment(
             onSave = { value: Boolean ->
                 preferencesState.songLyricsSearch = value
             }
+        )
+
+        setupSwitchPreference("syncBackupAutomatically",
+            onLoad = { preferencesState.syncBackupAutomatically },
+            onSave = { value: Boolean ->
+                preferencesState.syncBackupAutomatically = value
+            },
+            summaryProvider = {
+                uiResourceService.resString(
+                    R.string.settings_sync_backup_automatically_hint,
+                    backupSyncManager.formatLastBackupTime(),
+                )
+          },
         )
 
         setupListPreference("mediaButtonBehaviour",
@@ -490,6 +503,7 @@ class SettingsFragment(
         key: String,
         onLoad: () -> Boolean,
         onSave: (value: Boolean) -> Unit,
+        summaryProvider: (() -> String)? = null,
     ) {
         val preference = findPreference(key) as SwitchPreference
         preference.isChecked = onLoad()
@@ -498,6 +512,9 @@ class SettingsFragment(
                 onSave(newValue as Boolean)
                 true
             }
+        summaryProvider?.let { provider ->
+            preference.summary = provider()
+        }
     }
 
     private fun setupClickPreference(

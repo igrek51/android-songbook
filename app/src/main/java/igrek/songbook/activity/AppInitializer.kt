@@ -23,6 +23,7 @@ import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.homescreen.HomeScreenEnum
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.sync.BackupSyncManager
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.system.WindowManagerService
 import kotlinx.coroutines.*
@@ -46,6 +47,7 @@ class AppInitializer(
     songOpener: LazyInject<SongOpener> = appFactory.songOpener,
     aboutLayoutController: LazyInject<AboutLayoutController> = appFactory.aboutLayoutController,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    backupSyncManager: LazyInject<BackupSyncManager> = appFactory.backupSyncManager,
 ) {
     private val windowManagerService by LazyExtractor(windowManagerService)
     private val layoutController by LazyExtractor(layoutController)
@@ -63,6 +65,7 @@ class AppInitializer(
     private val songOpener by LazyExtractor(songOpener)
     private val aboutLayoutController by LazyExtractor(aboutLayoutController)
     private val uiInfoService by LazyExtractor(uiInfoService)
+    private val backupSyncManager by LazyExtractor(backupSyncManager)
 
     private val logger = LoggerFactory.logger
     private val debugInitEnabled = false
@@ -116,6 +119,9 @@ class AppInitializer(
 
     private fun postInit() {
         postInitIntent(activity.intent)
+        if (backupSyncManager.needsAutomaticBackup()) {
+            backupSyncManager.makeDriveBackupUI(showSuccess = false)
+        }
     }
 
     fun postInitIntent(intent: Intent?) {

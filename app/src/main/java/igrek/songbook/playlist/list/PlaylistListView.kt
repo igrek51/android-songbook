@@ -135,6 +135,7 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener,
         return super.onTouchEvent(event)
     }
 
+    @Suppress("SENSELESS_COMPARISON")
     override fun invalidate() {
         super.invalidate()
         // HAVE TO CHECK IF NOT NULL IN CASE THE CHILD CLASS IS NOT YET INITIALIZED!!!
@@ -143,6 +144,7 @@ class PlaylistListView : ListView, AdapterView.OnItemClickListener,
         }
     }
 
+    @Suppress("SENSELESS_COMPARISON", "IfThenToSafeAccess")
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
         if (reorder != null) {

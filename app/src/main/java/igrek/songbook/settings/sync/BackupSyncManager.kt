@@ -33,12 +33,16 @@ import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.preferences.PreferencesService
+import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.system.filesystem.saveInputStreamToFile
-import igrek.songbook.util.todayDateText
+import igrek.songbook.util.formatTimestampDate
+import igrek.songbook.util.formatTimestampTime
+import igrek.songbook.util.formatTodayDate
 import kotlinx.coroutines.*
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
+import java.util.*
 
 
 @OptIn(DelicateCoroutinesApi::class)
@@ -53,6 +57,7 @@ class BackupSyncManager(
     activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,
     exportFileChooser: LazyInject<ExportFileChooser> = appFactory.exportFileChooser,
     importFileChooser: LazyInject<ImportFileChooser> = appFactory.importFileChooser,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
     private val activity by LazyExtractor(appCompatActivity)
     private val uiInfoService by LazyExtractor(uiInfoService)
@@ -64,6 +69,7 @@ class BackupSyncManager(
     private val activityResultDispatcher by LazyExtractor(activityResultDispatcher)
     private val exportFileChooser by LazyExtractor(exportFileChooser)
     private val importFileChooser by LazyExtractor(importFileChooser)
+    private val preferencesState by LazyExtractor(preferencesState)
 
     private val oldSyncFiles = listOf(
         "files/customsongs.1.json",
@@ -79,7 +85,7 @@ class BackupSyncManager(
 
     private val logger = LoggerFactory.logger
 
-    fun makeDriveBackupUI() {
+    fun makeDriveBackupUI(showSuccess: Boolean) {
         logger.debug("making application data Backup in Google Drive")
         requestSingIn { driveService: Drive ->
             showSyncProgress(0, 2)
@@ -92,7 +98,9 @@ class BackupSyncManager(
                 }.onFailure { error ->
                     UiErrorHandler().handleError(error, R.string.settings_sync_save_error)
                 }.onSuccess {
-                    uiInfoService.showInfo(R.string.settings_sync_save_success)
+                    if (showSuccess) {
+                        uiInfoService.showInfo(R.string.settings_sync_save_success)
+                    }
                 }
             }
         }
@@ -215,6 +223,8 @@ class BackupSyncManager(
         val fileId: String = findOrCreateDriveFile(driveService, compositeBackupFile)
         driveService.files().update(fileId, metadata, fileContent).execute()
         cacheFile.delete()
+
+        preferencesState.lastDriveBackupTimestamp = Date().time / 1000
         logger.info("application data backed up in a composite backup $compositeBackupFile ($fileId) on Google Drive")
     }
 
@@ -347,7 +357,7 @@ class BackupSyncManager(
     }
 
     fun makeFileBackupUI() {
-        val today = todayDateText()
+        val today = formatTodayDate()
         val filename = "songbook-backup-$today.bak"
         showSyncProgress(0, 2)
         GlobalScope.launch(Dispatchers.IO) {
@@ -386,5 +396,22 @@ class BackupSyncManager(
                 }
             }
         }
+    }
+
+    fun needsAutomaticBackup(): Boolean {
+        if (!preferencesState.syncBackupAutomatically)
+            return false
+        if (preferencesState.lastDriveBackupTimestamp == 0L)
+            return true
+
+        val lastDate = formatTimestampDate(preferencesState.lastDriveBackupTimestamp)
+        val todayDate = formatTodayDate()
+        return lastDate != todayDate
+    }
+
+    fun formatLastBackupTime(): String {
+        if (preferencesState.lastDriveBackupTimestamp == 0L)
+            return uiInfoService.resString(R.string.none)
+        return formatTimestampTime(preferencesState.lastDriveBackupTimestamp)
     }
 }
