@@ -100,8 +100,22 @@ abstract class AbstractJsonDao<T>(
     fun factoryReset() {
         val filename = buildFilename(dbName, schemaVersion)
         val file = File(path, filename)
-        if (!file.delete() || file.exists())
-            logger.error("failed to delete json db file: " + file.absolutePath)
+        val backupFile = File(path, "$filename.bak")
+
+        if (file.exists()) {
+            if (backupFile.exists()) {
+                logger.error("removing previous backup file: " + backupFile.absolutePath)
+                backupFile.delete()
+            }
+
+            file.renameTo(backupFile)
+
+            when (file.exists()) {
+                true -> logger.error("failed to rename json db file: " + file.absolutePath)
+                false -> logger.info("json db file ${file.absolutePath} moved to backup ${backupFile.absolutePath}")
+            }
+        }
+
         db = empty()
         save()
     }

@@ -62,15 +62,34 @@ class LocalDbService(
     }
 
     fun factoryReset() {
-        removeFile(songsDbFile)
+        removeFile(songsDbFile, keepBackup = true)
         removeFile(File(songsDbFile.absolutePath + "-shm"))
         removeFile(File(songsDbFile.absolutePath + "-wal"))
     }
 
-    private fun removeFile(songsDbFile: File) {
+    private fun removeFile(songsDbFile: File, keepBackup: Boolean = false) {
         if (songsDbFile.exists()) {
-            if (!songsDbFile.delete() || songsDbFile.exists())
-                logger.error("failed to delete file: " + songsDbFile.absolutePath)
+            when (keepBackup) {
+                true -> {
+                    val bakFile = File(songsDbFile.absolutePath + ".bak")
+                    if (bakFile.exists()) {
+                        logger.error("removing previous backup file: " + bakFile.absolutePath)
+                        bakFile.delete()
+                    }
+                    songsDbFile.renameTo(bakFile)
+                    when (songsDbFile.exists()) {
+                        true -> logger.error("failed to rename file: " + songsDbFile.absolutePath)
+                        false -> logger.info("file ${songsDbFile.absolutePath} deleted, backup at ${bakFile.absolutePath}")
+                    }
+                }
+                false -> {
+                    if (!songsDbFile.delete() || songsDbFile.exists()) {
+                        logger.error("failed to delete file: " + songsDbFile.absolutePath)
+                    } else {
+                        logger.info("file ${songsDbFile.absolutePath} deleted")
+                    }
+                }
+            }
         }
     }
 
