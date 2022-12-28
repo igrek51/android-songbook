@@ -49,7 +49,7 @@ import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.preferences.SharedPreferencesService
-import igrek.songbook.settings.sync.GoogleSyncManager
+import igrek.songbook.settings.sync.BackupSyncManager
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.SongDetailsService
 import igrek.songbook.songpreview.SongOpener
@@ -145,7 +145,7 @@ class AppFactory(
     val adminService = SingletonInject { AdminService() }
     val adminSongsLayoutContoller = SingletonInject { AdminSongsLayoutContoller() }
     val antechamberService = SingletonInject { AntechamberService() }
-    val googleSyncManager = SingletonInject { GoogleSyncManager() }
+    val backupSyncManager = SingletonInject { BackupSyncManager() }
     val sharedPreferencesService = SingletonInject { SharedPreferencesService() }
     val adService = SingletonInject { AdService() }
     val songRankService = SingletonInject { SongRankService() }

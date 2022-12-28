@@ -31,7 +31,7 @@ import igrek.songbook.settings.homescreen.HomeScreenEnumService
 import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesState
-import igrek.songbook.settings.sync.GoogleSyncManager
+import igrek.songbook.settings.sync.BackupSyncManager
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.DisplayStyle
 import igrek.songbook.settings.theme.FontTypeface
@@ -49,7 +49,7 @@ class SettingsFragment(
     appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
     chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
-    googleSyncManager: LazyInject<GoogleSyncManager> = appFactory.googleSyncManager,
+    backupSyncManager: LazyInject<BackupSyncManager> = appFactory.backupSyncManager,
     mediaButtonService: LazyInject<MediaButtonService> = appFactory.mediaButtonService,
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
     homeScreenEnumService: LazyInject<HomeScreenEnumService> = appFactory.homeScreenEnumService,
@@ -61,7 +61,7 @@ class SettingsFragment(
     private val appLanguageService by LazyExtractor(appLanguageService)
     private val chordsNotationService by LazyExtractor(chordsNotationService)
     private val preferencesState by LazyExtractor(preferencesState)
-    private val googleSyncManager by LazyExtractor(googleSyncManager)
+    private val backupSyncManager by LazyExtractor(backupSyncManager)
     private val mediaButtonService by LazyExtractor(mediaButtonService)
     private val layoutController by LazyExtractor(layoutController)
     private val homeScreenEnumService by LazyExtractor(homeScreenEnumService)
@@ -252,14 +252,14 @@ class SettingsFragment(
 
         setupClickPreference("settingsSyncSave") {
             SafeExecutor {
-                googleSyncManager.syncSave()
+                backupSyncManager.syncSave()
             }
         }
 
         setupClickPreference("settingsSyncRestore") {
             ConfirmDialogBuilder().confirmAction(R.string.settings_sync_restore_confirm) {
                 SafeExecutor {
-                    googleSyncManager.syncRestore()
+                    backupSyncManager.syncRestore()
                 }
             }
         }

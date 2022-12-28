@@ -38,7 +38,7 @@ import java.io.IOException
 
 
 @OptIn(DelicateCoroutinesApi::class)
-class GoogleSyncManager(
+class BackupSyncManager(
     appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     localDbService: LazyInject<LocalDbService> = appFactory.localDbService,

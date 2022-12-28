@@ -52,7 +52,7 @@
         \nYou can also suggest improving some chords or lyrics, if you have noticed some bugs.
     </string>
     <string name="ui_about_content" formatted="false"><![CDATA[
-        Application version: <b>%s</b> (%s)
+        Application version: <b>%s</b><br>(%s)
         <br>Songs database version: %s
         <br>
         <br><b>AUTHOR</b>:
