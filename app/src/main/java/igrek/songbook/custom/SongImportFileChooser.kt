@@ -215,7 +215,7 @@ class SongImportFileChooser(
                         val lastGap = lineMinY - lastLineY
 
                         if (lastGap < 0) { // New page
-                            super.writeString("\n")
+                            //super.writeString("\n")
                         } else if (lastGap > 0) {
 
                             val linesGap = (lastGap / lineheight).roundToInt()
