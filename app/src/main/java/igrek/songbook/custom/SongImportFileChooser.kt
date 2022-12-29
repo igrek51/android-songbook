@@ -13,6 +13,7 @@ import com.google.common.io.CharStreams
 import com.tom_roush.pdfbox.android.PDFBoxResourceLoader
 import com.tom_roush.pdfbox.pdmodel.PDDocument
 import com.tom_roush.pdfbox.text.PDFTextStripper
+import com.tom_roush.pdfbox.text.TextPosition
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityResultDispatcher
 import igrek.songbook.info.UiInfoService
@@ -26,10 +27,10 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.util.capitalize
 import igrek.songbook.util.limitTo
-import java.io.File
-import java.io.InputStream
-import java.io.InputStreamReader
+import java.io.*
 import java.nio.charset.Charset
+import kotlin.math.min
+import kotlin.math.roundToInt
 
 
 class SongImportFileChooser(
@@ -46,7 +47,7 @@ class SongImportFileChooser(
     private var fileChooserLauncher: ActivityResultLauncher<Intent>? = null
 
     companion object {
-        const val FILE_IMPORT_LIMIT_B = 100 * 1024 // 100 KiB
+        const val FILE_IMPORT_LIMIT_B = 200 * 1024 // 100 KiB
     }
 
     fun init() {
@@ -198,18 +199,81 @@ class SongImportFileChooser(
     private fun extractPdfContent(inputStream: InputStream): String {
         PDFBoxResourceLoader.init(activity.applicationContext)
         val doc: PDDocument = PDDocument.load(inputStream)
-//        val stripper: PDFTextStripper = object : PDFTextStripper() {
-//            override fun writeString(text: String?, textPositions: MutableList<TextPosition>?) {
-//                super.writeString(text, textPositions)
-//                logger.debug("""fragment: ${text}, textPositions: $textPositions""")
-//            }
-//        }
-//        stripper.sortByPosition = true
-//        stripper.startPage = 0
-//        val dummy: Writer = OutputStreamWriter(ByteArrayOutputStream())
-//        stripper.writeText(doc, dummy)
-        val stripper = PDFTextStripper()
-        return stripper.getText(doc).trimIndent().trim()
+
+        var lastLineY: Float? = null
+        val (pageMinX: Float, lineheight: Float) = measurePdfDocumentDimensions(doc)
+
+        val stripper: PDFTextStripper = object : PDFTextStripper() {
+            override fun writeString(text: String?, textPositions: MutableList<TextPosition>?) {
+                textPositions?.let { textPositions ->
+
+                    val textMinX = textPositions.minOf { it.x }
+                    val lineMinY = textPositions.minOf { it.y }
+                    val spaceWidth = textPositions.maxOf { it.widthOfSpace }
+
+                    lastLineY?.let { lastLineY ->
+                        val lastGap = lineMinY - lastLineY
+
+                        if (lastGap < 0) { // New page
+                            super.writeString("\n")
+                        } else if (lastGap > 0) {
+
+                            val linesGap = (lastGap / lineheight).roundToInt()
+                            if (linesGap > 1) { // Empty lines
+                                val newLines = linesGap - 1
+                                super.writeString("\n".repeat(newLines))
+                            }
+                        }
+                    }
+
+                    val spacesIndent = ((textMinX - pageMinX) / spaceWidth).roundToInt()
+                    if (spacesIndent > 0) {
+                        super.writeString(" ".repeat(spacesIndent))
+                    }
+
+                    lastLineY = lineMinY
+                }
+                super.writeString(text, textPositions)
+            }
+        }
+
+        val outputStream = StringWriter()
+        stripper.sortByPosition = true
+        stripper.startPage = 0
+        stripper.writeText(doc, outputStream)
+
+        return outputStream.toString().trim()
+//        return PDFTextStripper().getText(doc).trimIndent().trim()
+    }
+
+    private fun measurePdfDocumentDimensions(doc: PDDocument): Pair<Float, Float> {
+        var pageMinX: Float? = null
+        var minLineheight: Float? = null
+        var lastLineY: Float? = null
+
+        val stripper: PDFTextStripper = object : PDFTextStripper() {
+            override fun writeString(text: String?, textPositions: MutableList<TextPosition>?) {
+                textPositions?.let { textPositions ->
+                    val textMinX = textPositions.minOf { it.x }
+                    val lineMinY = textPositions.minOf { it.y }
+                    pageMinX = min(pageMinX ?: textMinX, textMinX)
+                    lastLineY?.let { lastLineY ->
+                        val lastGap = lineMinY - lastLineY
+                        if (lastGap > 0) {
+                            minLineheight = min(minLineheight ?: lastGap, lastGap)
+                        }
+                    }
+                    lastLineY = lineMinY
+                }
+                super.writeString(text, textPositions)
+            }
+        }
+
+        stripper.sortByPosition = true
+        stripper.startPage = 0
+        stripper.writeText(doc, StringWriter())
+
+        return (pageMinX ?: 0f) to (minLineheight ?: 0f)
     }
 
     private fun extractTxtContent(inputStream: InputStream): String {
