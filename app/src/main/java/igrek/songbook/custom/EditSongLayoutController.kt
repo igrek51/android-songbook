@@ -26,6 +26,7 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.system.SoftKeyboardService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -44,6 +45,7 @@ class EditSongLayoutController(
     adminService: LazyInject<AdminService> = appFactory.adminService,
     globalFocusTraverser: LazyInject<GlobalFocusTraverser> = appFactory.globalFocusTraverser,
     webviewLayoutController: LazyInject<WebviewLayoutController> = appFactory.webviewLayoutController,
+    songOpener: LazyInject<SongOpener> = appFactory.songOpener,
 ) : InflatedLayout(
     _layoutResourceId = R.layout.screen_custom_song_details
 ) {
@@ -59,6 +61,7 @@ class EditSongLayoutController(
     private val adminService by LazyExtractor(adminService)
     private val globalFocusTraverser by LazyExtractor(globalFocusTraverser)
     private val webviewLayoutController by LazyExtractor(webviewLayoutController)
+    private val songOpener by LazyExtractor(songOpener)
 
     private var songTitleEdit: EditText? = null
     private var songContentEdit: EditText? = null
@@ -250,7 +253,9 @@ class EditSongLayoutController(
             )
         }
 
-        uiInfoService.showInfo(R.string.edit_song_has_been_saved)
+        uiInfoService.showInfoAction(R.string.edit_song_has_been_saved, actionResId = R.string.open_saved_song) {
+            songOpener.openSongPreview(currentSong!!)
+        }
         layoutController.showPreviousLayoutOrQuit()
     }
 
