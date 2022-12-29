@@ -55,7 +55,7 @@ class LazySongListView : ListView, AdapterView.OnItemClickListener,
     fun init(
         context: Context,
         onClickListener: SongClickListener,
-        songContextMenuBuilder: SongContextMenuBuilder
+        songContextMenuBuilder: SongContextMenuBuilder,
     ) {
         this.onClickListener = onClickListener
         onItemClickListener = this

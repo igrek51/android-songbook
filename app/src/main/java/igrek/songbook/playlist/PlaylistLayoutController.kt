@@ -11,7 +11,6 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
-import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -38,7 +37,6 @@ import io.reactivex.disposables.Disposable
 
 class PlaylistLayoutController(
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
     songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
     contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
@@ -48,7 +46,6 @@ class PlaylistLayoutController(
     _layoutResourceId = R.layout.screen_playlists
 ), ListItemClickListener<PlaylistListItem> {
     private val songsRepository by LazyExtractor(songsRepository)
-    private val uiResourceService by LazyExtractor(uiResourceService)
     private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
     private val contextMenuBuilder by LazyExtractor(contextMenuBuilder)
     private val uiInfoService by LazyExtractor(uiInfoService)
@@ -56,7 +53,7 @@ class PlaylistLayoutController(
     private val playlistService by LazyExtractor(playlistService)
 
     private var itemsListView: PlaylistListView? = null
-    private var addPlaylistButton: ImageButton? = null
+    private var addButton: ImageButton? = null
     private var emptyListLabel: TextView? = null
     private var playlistTitleLabel: TextView? = null
     private var goBackButton: ImageButton? = null
@@ -69,8 +66,8 @@ class PlaylistLayoutController(
 
         itemsListView = layout.findViewById(R.id.playlistListView)
 
-        addPlaylistButton = layout.findViewById(R.id.addPlaylistButton)
-        addPlaylistButton?.setOnClickListener { playlistService.addNewPlaylist() }
+        addButton = layout.findViewById(R.id.addPlaylistButton)
+        addButton?.setOnClickListener { handleAddButton() }
 
         playlistTitleLabel = layout.findViewById(R.id.playlistTitleLabel)
         emptyListLabel = layout.findViewById(R.id.emptyListLabel)
@@ -189,6 +186,13 @@ class PlaylistLayoutController(
         )
     }
 
+    private fun handleAddButton() {
+        when (playlistService.currentPlaylist) {
+            null -> playlistService.addNewPlaylist()
+            else -> layoutController.showLayout(PlaylistFillLayoutController::class)
+        }
+    }
+
     private fun updateItemsList() {
         val items = if (playlistService.currentPlaylist == null) {
             songsRepository.playlistDao.playlistDb.playlists
@@ -219,25 +223,21 @@ class PlaylistLayoutController(
             }
         }
 
-        val playlistsTitle = uiResourceService.resString(R.string.nav_playlists)
         playlistTitleLabel?.text = when (playlistService.currentPlaylist) {
-            null -> playlistsTitle
-            else -> "$playlistsTitle: ${playlistService.currentPlaylist?.name}"
+            null -> uiInfoService.resString(R.string.nav_playlists)
+            else -> playlistService.currentPlaylist?.name
         }
 
         emptyListLabel?.text = when (playlistService.currentPlaylist) {
-            null -> uiResourceService.resString(R.string.empty_playlists)
-            else -> uiResourceService.resString(R.string.empty_playlist_songs)
+            null -> uiInfoService.resString(R.string.empty_playlists)
+            else -> uiInfoService.resString(R.string.empty_playlist_songs)
         }
         emptyListLabel?.visibility = when (itemsListView!!.count) {
             0 -> View.VISIBLE
             else -> View.GONE
         }
 
-        addPlaylistButton?.visibility = when (playlistService.currentPlaylist) {
-            null -> View.VISIBLE
-            else -> View.GONE
-        }
+        addButton?.visibility = View.VISIBLE
 
         goBackButton?.visibility = when (playlistService.currentPlaylist) {
             null -> View.GONE

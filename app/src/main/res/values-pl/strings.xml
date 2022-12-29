@@ -281,7 +281,7 @@
     <string name="action_add_to_playlist">▶️ Dodaj do playlisty</string>
     <string name="no_playlists_to_add">Nie znaleziono żadnej playlisty. Utwórz playlistę.</string>
     <string name="choose_playlist">Wybierz playlistę</string>
-    <string name="song_added_to_playlist" formatted="false">Dodano piosenkę \"%s\" do playlisty \"%s\"</string>
+    <string name="song_added_to_playlist" formatted="false">\"%s\" dodana do playlisty \"%s\"</string>
     <string name="song_already_on_playlist" formatted="false">Piosenka \"%s\" jest już na playliście \"%s\"</string>
     <string name="action_remove_from_this_playlist">🚫 Usuń z tej playlisty</string>
     <string name="song_is_not_on_playlist">Piosenka nie należy do playlisty</string>
@@ -535,4 +535,6 @@
     <string name="settings_sync_backup_automatically">Automatyczna kopia zapasowa</string>
     <string name="settings_sync_backup_automatically_hint">Zapisuj cyklicznie (codziennie) kopie zapasowe na twoim koncie Google Drive.\nOstatnia kopia zapasowa: %s</string>
     <string name="restart_needed">Zrestartuj aplikację, aby wprowadzić zmiany.</string>
+    <string name="playlist_fill_search_song_to_add">Wybierz piosenki, które chcesz dodać do tej playlisty</string>
+    <string name="playlist_not_selected">Nie wybrano playlisty</string>
 </resources>

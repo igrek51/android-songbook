@@ -15,6 +15,7 @@ import igrek.songbook.persistence.user.playlist.Playlist
 import igrek.songbook.persistence.user.playlist.PlaylistSong
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController
+import io.reactivex.subjects.PublishSubject
 
 class PlaylistService(
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
@@ -30,6 +31,7 @@ class PlaylistService(
     private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
 
     var currentPlaylist: Playlist? = null
+    var addPlaylistSongSubject: PublishSubject<Song> = PublishSubject.create()
 
     fun addNewPlaylist(onSuccess: (Playlist) -> Unit = {}) {
         InputDialogBuilder().input(R.string.new_playlist_name, null) { name ->
@@ -75,6 +77,15 @@ class PlaylistService(
         }
         songsRepository.playlistDao.addSongToPlaylist(song, playlist)
         uiInfoService.showInfo(R.string.song_added_to_playlist, song.displayName(), playlist.name)
+    }
+
+    fun addSongToCurrentPlaylist(song: Song) {
+        currentPlaylist?.let { currentPlaylist ->
+            addSongToPlaylist(currentPlaylist, song)
+            addPlaylistSongSubject.onNext(song)
+        } ?: kotlin.run {
+            uiInfoService.showInfo(R.string.playlist_not_selected)
+        }
     }
 
     fun removeFromThisPlaylist(song: Song) {

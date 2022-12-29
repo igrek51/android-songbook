@@ -25,6 +25,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.ad.AdService
 import igrek.songbook.layout.navigation.NavigationMenuController
+import igrek.songbook.playlist.PlaylistFillLayoutController
 import igrek.songbook.playlist.PlaylistLayoutController
 import igrek.songbook.room.RoomListLayoutController
 import igrek.songbook.room.RoomLobbyLayoutController
@@ -71,6 +72,7 @@ class LayoutController(
     roomLobbyLayoutController: LazyInject<RoomLobbyLayoutController> = appFactory.roomLobbyLayoutController,
     billingLayoutController: LazyInject<BillingLayoutController> = appFactory.billingLayoutController,
     webviewLayoutController: LazyInject<WebviewLayoutController> = appFactory.webviewLayoutController,
+    playlistFillLayoutController: LazyInject<PlaylistFillLayoutController> = appFactory.playlistFillLayoutController,
 ) {
     private val activity by LazyExtractor(activity)
     private val navigationMenuController by LazyExtractor(navigationMenuController)
@@ -102,6 +104,7 @@ class LayoutController(
         RoomLobbyLayoutController::class to roomLobbyLayoutController.get(),
         BillingLayoutController::class to billingLayoutController.get(),
         WebviewLayoutController::class to webviewLayoutController.get(),
+        PlaylistFillLayoutController::class to playlistFillLayoutController.get(),
     )
     private val logger = LoggerFactory.logger
     private val layoutCache = hashMapOf<Int, View>()

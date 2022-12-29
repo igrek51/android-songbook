@@ -32,6 +32,7 @@ import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.general.SongsUpdater
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.UserDataDao
+import igrek.songbook.playlist.PlaylistFillLayoutController
 import igrek.songbook.playlist.PlaylistLayoutController
 import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.room.BluetoothService
@@ -133,6 +134,7 @@ class AppFactory(
     val contextMenuBuilder = SingletonInject { ContextMenuBuilder() }
     val userDataDao = SingletonInject { UserDataDao() }
     val playlistLayoutController = SingletonInject { PlaylistLayoutController() }
+    val playlistFillLayoutController = SingletonInject { PlaylistFillLayoutController() }
     val playlistService = SingletonInject { PlaylistService() }
     val latestSongsLayoutController = SingletonInject { LatestSongsLayoutController() }
     val topSongsLayoutController = SingletonInject { TopSongsLayoutController() }

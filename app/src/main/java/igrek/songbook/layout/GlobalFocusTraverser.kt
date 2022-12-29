@@ -15,6 +15,7 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.navigation.NavigationMenuController
+import igrek.songbook.playlist.PlaylistFillLayoutController
 import igrek.songbook.playlist.PlaylistLayoutController
 import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.room.RoomListLayoutController
@@ -204,6 +205,10 @@ class GlobalFocusTraverser(
                     isViewVisible(R.id.addPlaylistButton) -> R.id.addPlaylistButton
                     else -> 0
                 }
+                R.id.goBackButton -> when {
+                    isViewVisible(R.id.addPlaylistButton) -> R.id.addPlaylistButton
+                    else -> 0
+                }
                 else -> 0
             }
             currentViewId == R.id.navMenuButton -> when {
@@ -300,7 +305,10 @@ class GlobalFocusTraverser(
             }
             layoutController.isState(PlaylistLayoutController::class) -> when (currentViewId) {
                 R.id.goBackButton -> R.id.navMenuButton
-                R.id.addPlaylistButton -> R.id.navMenuButton
+                R.id.addPlaylistButton -> when {
+                    isViewVisible(R.id.goBackButton) -> R.id.goBackButton
+                    else -> R.id.navMenuButton
+                }
                 else -> R.id.navMenuButton
             }
             currentViewId == R.id.languageFilterButton -> when {
@@ -369,6 +377,10 @@ class GlobalFocusTraverser(
                 else -> 0
             }
             layoutController.isState(SongSearchLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton, R.id.searchFilterEdit, R.id.searchFilterClearButton -> R.id.itemsList
+                else -> 0
+            }
+            layoutController.isState(PlaylistFillLayoutController::class) -> when (currentViewId) {
                 R.id.navMenuButton, R.id.searchFilterEdit, R.id.searchFilterClearButton -> R.id.itemsList
                 else -> 0
             }
