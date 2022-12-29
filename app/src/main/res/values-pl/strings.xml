@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_categories_list">Wykonawcy</string>
-    <string name="nav_search_song">Szukaj</string>
+    <string name="nav_search_song">Szukaj / Wszystkie piosenki</string>
     <string name="nav_favourites_song">Ulubione</string>
     <string name="nav_update_songs">Aktualizuj piosenki</string>
     <string name="nav_custom_song">Moje piosenki</string>
@@ -197,7 +197,7 @@
     <string name="edit_song_category_name_label">Artysta / kategoria:</string>
     <string name="edit_song_category_name_hint">Artysta lub nazwa kategorii</string>
     <string name="contact_subject_hint">Temat</string>
-    <string name="settings_language">Język aplikacji (wymagany restart)</string>
+    <string name="settings_language">Język aplikacji</string>
     <string name="language_default">Domyślny systemowy</string>
     <string name="language_unknown">Nieznany</string>
     <string name="contact_subject_song_amend">Poprawka do piosenki</string>
@@ -394,7 +394,7 @@
     <string name="chords_editor_align_misplaced_chords">Wyrównaj przesunięte akordy</string>
     <string name="chord_diagram_style_horizontal">Poziome</string>
     <string name="chord_diagram_style_vertical">Pionowe</string>
-    <string name="settings_chord_digram_style">Układ diagramów (wizualizacji) akordów</string>
+    <string name="settings_chord_digram_style">Układ wizualizacji diagramów akordów</string>
     <string name="action_find_chord">Znajdź</string>
     <string name="chord_diagram_find_chord">Podaj nazwę akordu</string>
     <string name="chord_diagram_not_found">Brak diagramu dla podanego akordu i instrumentu</string>
@@ -534,4 +534,5 @@
     <string name="backup_file_exported">Kopia zapasowa została zapisana.</string>
     <string name="settings_sync_backup_automatically">Automatyczna kopia zapasowa</string>
     <string name="settings_sync_backup_automatically_hint">Zapisuj cyklicznie (codziennie) kopie zapasowe na twoim koncie Google Drive.\nOstatnia kopia zapasowa: %s</string>
+    <string name="restart_needed">Zrestartuj aplikację, aby wprowadzić zmiany.</string>
 </resources>

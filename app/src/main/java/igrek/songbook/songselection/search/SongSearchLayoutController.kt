@@ -19,6 +19,7 @@ import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.persistence.repository.AllSongsRepository
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.send.SendMessageService
+import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.SongClickListener
@@ -43,6 +44,7 @@ class SongSearchLayoutController(
     songTreeLayoutController: LazyInject<SongTreeLayoutController> = appFactory.songTreeLayoutController,
     sendMessageService: LazyInject<SendMessageService> = appFactory.sendMessageService,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
 ) : InflatedLayout(
     _layoutResourceId = R.layout.screen_song_search
 ), SongClickListener {
@@ -53,6 +55,7 @@ class SongSearchLayoutController(
     private val songTreeLayoutController by LazyExtractor(songTreeLayoutController)
     private val sendMessageService by LazyExtractor(sendMessageService)
     private val preferencesState by LazyExtractor(preferencesState)
+    private val appLanguageService by LazyExtractor(appLanguageService)
 
     private var itemsListView: LazySongListView? = null
     private var searchFilterEdit: EditText? = null
@@ -162,8 +165,12 @@ class SongSearchLayoutController(
     }
 
     private fun getSongItems(songsRepo: AllSongsRepository): MutableList<SongTreeItem> {
+        val acceptedLanguages = appLanguageService.selectedSongLanguages
+        val acceptedLangCodes = acceptedLanguages.map { lang -> lang.langCode } + "" + null
+
         if (!isFilterSet()) { // no filter
             return songsRepo.songs.get()
+                .filter { song -> song.language in acceptedLangCodes }
                 .sortedBy { it.displayName().lowercase(StringSimplifier.locale) }
                 .map { song -> SongSearchItem.song(song) }
                 .toMutableList()
@@ -172,6 +179,7 @@ class SongSearchLayoutController(
                 SongSearchFilter(itemFilter.orEmpty(), preferencesState.songLyricsSearch)
             // filter songs
             val songsSequence = songsRepo.songs.get()
+                .filter { song -> song.language in acceptedLangCodes }
                 .filter { song -> songFilter.matchSong(song) }
                 .sortSongsByFilterRelevance(songFilter)
                 .map { song -> SongSearchItem.song(song) }

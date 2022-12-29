@@ -12,7 +12,7 @@ import androidx.preference.*
 import igrek.songbook.R
 import igrek.songbook.billing.BillingLayoutController
 import igrek.songbook.chords.diagram.guitar.ChordDiagramStyle
-import igrek.songbook.info.UiResourceService
+import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -43,7 +43,7 @@ import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
 class SettingsFragment(
-    uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
     lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
     appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
@@ -55,7 +55,7 @@ class SettingsFragment(
     homeScreenEnumService: LazyInject<HomeScreenEnumService> = appFactory.homeScreenEnumService,
     settingsEnumService: LazyInject<SettingsEnumService> = appFactory.settingsEnumService,
 ) : PreferenceFragmentCompat() {
-    private val uiResourceService by LazyExtractor(uiResourceService)
+    private val uiInfoService by LazyExtractor(uiInfoService)
     private val activity by LazyExtractor(appCompatActivity)
     private val lyricsThemeService by LazyExtractor(lyricsThemeService)
     private val appLanguageService by LazyExtractor(appLanguageService)
@@ -95,6 +95,7 @@ class SettingsFragment(
             onSave = { id: String ->
                 preferencesState.appLanguage = AppLanguage.parseByLangCode(id)
                     ?: AppLanguage.DEFAULT
+                uiInfoService.showToast(R.string.restart_needed)
             }
         )
 
@@ -167,7 +168,7 @@ class SettingsFragment(
                 preferencesState.autoscrollSpeed = value
             },
             stringConverter = { value: Float ->
-                uiResourceService.resString(
+                uiInfoService.resString(
                     R.string.settings_autoscroll_speed_value,
                     decimal3(value)
                 )
@@ -180,7 +181,7 @@ class SettingsFragment(
                 preferencesState.fontsize = value
             },
             stringConverter = { value: Float ->
-                uiResourceService.resString(R.string.settings_font_size_value, decimal1(value))
+                uiInfoService.resString(R.string.settings_font_size_value, decimal1(value))
             }
         )
 
@@ -236,7 +237,7 @@ class SettingsFragment(
             },
             stringConverter = { ids: Set<String>, entriesMap: LinkedHashMap<String, String> ->
                 if (ids.isEmpty())
-                    uiResourceService.resString(R.string.none)
+                    uiInfoService.resString(R.string.none)
                 else
                     ids.map { id -> entriesMap[id].orEmpty() }.sorted()
                         .joinToString(separator = ", ")
@@ -351,7 +352,7 @@ class SettingsFragment(
                 }
             },
             summaryProvider = {
-                uiResourceService.resString(
+                uiInfoService.resString(
                     R.string.settings_sync_backup_automatically_hint,
                     backupSyncManager.formatLastBackupTime(),
                 )

@@ -9,13 +9,13 @@
             android:icon="@drawable/top"
             android:title="@string/nav_top_songs" />
         <item
-            android:id="@+id/nav_songs_list"
-            android:icon="@drawable/list"
-            android:title="@string/nav_categories_list" />
-        <item
             android:id="@+id/nav_search"
             android:icon="@drawable/search"
             android:title="@string/nav_search_song" />
+        <item
+            android:id="@+id/nav_songs_list"
+            android:icon="@drawable/list"
+            android:title="@string/nav_categories_list" />
         <item
             android:id="@+id/nav_latest"
             android:icon="@drawable/newest"

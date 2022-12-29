@@ -4,7 +4,7 @@
     <string name="adaptive_banner_ad_unit_id_test" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
     <string name="adaptive_banner_ad_unit_id_prod" translatable="false">ca-app-pub-8517210898119735/5760576809</string>
     <string name="nav_categories_list">Artists</string>
-    <string name="nav_search_song">Search</string>
+    <string name="nav_search_song">Search / All songs</string>
     <string name="nav_favourites_song">Favourites</string>
     <string name="nav_update_songs">Update songs</string>
     <string name="nav_custom_song">My songs</string>
@@ -198,7 +198,7 @@
     <string name="edit_song_category_name_label">Artist / category:</string>
     <string name="edit_song_category_name_hint">Artist or category name</string>
     <string name="contact_subject_hint">Subject</string>
-    <string name="settings_language">Application language (restart needed)</string>
+    <string name="settings_language">Application language</string>
     <string name="language_english" translatable="false">English</string>
     <string name="language_polish" translatable="false">Polski</string>
     <string name="language_default">System default</string>
@@ -421,7 +421,7 @@
     <string name="chords_editor_align_misplaced_chords">Align misplaced chords</string>
     <string name="chord_diagram_style_horizontal">Horizontal</string>
     <string name="chord_diagram_style_vertical">Vertical</string>
-    <string name="settings_chord_digram_style">Chord diagrams (visualisation) layout</string>
+    <string name="settings_chord_digram_style">Visualisation layout of the chord diagrams</string>
     <string name="action_find_chord">Find</string>
     <string name="chord_diagram_find_chord">Enter chord name</string>
     <string name="chord_diagram_not_found">No diagram found for a given chord and instrument</string>
@@ -537,7 +537,7 @@
     <string name="home_screen_enum_my_songs">My songs</string>
     <string name="home_screen_enum_favourites">Favourites</string>
     <string name="home_screen_enum_history">History</string>
-    <string name="settings_home_screen">Home Screen (starting view)</string>
+    <string name="settings_home_screen">Home Screen - starting view</string>
     <string name="home_screen_enum_last_song">Last song</string>
     <string name="settings_force_sharp_chords">Force sharp notes</string>
     <string name="settings_force_sharp_chords_hint">Always show sharp notes (C#, D#), avoiding flat notes (Db, Eb).</string>
@@ -561,4 +561,5 @@
     <string name="backup_file_exported">Backup file has been exported.</string>
     <string name="settings_sync_backup_automatically">Automatic Backups</string>
     <string name="settings_sync_backup_automatically_hint">Make periodic (daily) backups automatically to your Google Drive Account.\nLast backup: %s</string>
+    <string name="restart_needed">Restart is needed for the changes to take effect.</string>
 </resources>
