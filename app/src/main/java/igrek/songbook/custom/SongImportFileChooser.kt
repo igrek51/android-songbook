@@ -112,6 +112,7 @@ class SongImportFileChooser(
 
                 editSongLayoutController.setupImportedSong(
                     title,
+                    parsedContent.artist,
                     parsedContent.content,
                     parsedContent.notation
                 )
@@ -282,9 +283,11 @@ class SongImportFileChooser(
 
     private fun parseSongContentMetadata(fileContent: String): ParsedSongContent {
         var title: String? = null
+        var artist: String? = null
         var notation: ChordsNotation? = null
 
         val titleRegex = Regex("""\{title: ?"?([\S\s]+?)"?\}""") // escape character \} is needed
+        val artistRegex = Regex("""\{artist: ?"?([\S\s]+?)"?\}""") // escape character \} is needed
         val notationRegex = Regex("""\{chords_notation: ?(\d+)\}""") // escape character \} is needed
 
         val allLines = fileContent.trim().lines()
@@ -297,6 +300,10 @@ class SongImportFileChooser(
                 title = match.groupValues[1].trim()
                 return@mapNotNull null
             }
+            artistRegex.matchEntire(trimmedLine)?.let { match ->
+                artist = match.groupValues[1].trim()
+                return@mapNotNull null
+            }
             notationRegex.matchEntire(trimmedLine)?.let { match ->
                 val notationInt = match.groupValues[1].toLong()
                 notation = ChordsNotation.parseById(notationInt)
@@ -307,7 +314,7 @@ class SongImportFileChooser(
 
         val parsedLines = parsedFirstLines + lastLines
         val parsedContent = parsedLines.joinToString("\n")
-        return ParsedSongContent(parsedContent, title, notation)
+        return ParsedSongContent(parsedContent, title, artist, notation)
     }
 
     @SuppressLint("Range")
@@ -377,6 +384,7 @@ class SongImportFileChooser(
     data class ParsedSongContent(
         val content: String,
         val title: String?,
+        val artist: String?,
         val notation: ChordsNotation?,
     )
 }

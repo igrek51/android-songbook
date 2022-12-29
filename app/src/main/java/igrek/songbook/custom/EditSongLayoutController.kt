@@ -205,9 +205,10 @@ class EditSongLayoutController(
 
     private fun exportContentToFile() {
         val songTitle = songTitleEdit?.text?.toString() ?: "Untitled"
+        val artist = customCategoryNameEdit?.text?.toString().orEmpty()
         val songContent = songContentEdit?.text?.toString().orEmpty()
         val notation = chordsNotationSpinner?.selectedNotation ?: preferencesState.chordsNotation
-        customSongService.exportSongContent(songContent, songTitle, notation)
+        customSongService.exportSongContent(songContent, songTitle, artist, notation)
     }
 
     fun setCurrentSong(song: Song?) {
@@ -308,8 +309,11 @@ class EditSongLayoutController(
         softKeyboardService.hideSoftKeyboard()
     }
 
-    fun setupImportedSong(title: String, content: String, notation: ChordsNotation?) {
+    fun setupImportedSong(title: String, artist: String?, content: String, notation: ChordsNotation?) {
         songTitleEdit?.setText(title)
+        artist?.run {
+            customCategoryNameEdit?.setText(artist)
+        }
         songContentEdit?.setText(content)
         notation?.let { _notation ->
             chordsNotationSpinner?.selectedNotation = _notation
