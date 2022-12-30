@@ -566,4 +566,6 @@
     <string name="playlist_not_selected">Playlist not selected</string>
     <string name="open_saved_song">Open</string>
     <string name="song_import_loading_file">Loading song from a file…</string>
+    <string name="action_report_error">Send Report</string>
+    <string name="report_error_sent">Error Report has been sent. Thank you.</string>
 </resources>

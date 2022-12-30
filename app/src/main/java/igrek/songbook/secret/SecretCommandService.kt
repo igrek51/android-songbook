@@ -105,10 +105,13 @@ class SecretCommandService(
                 logger.error(IllegalArgumentException("real reason"))
                 throw RuntimeException("deliberate disaster")
             },
-            ExactKeyRule("firebase error") {
+            ExactKeyRule("firebase logs") {
                 logger.error(IllegalArgumentException("real reason"))
                 logger.error("error log")
                 CrashlyticsLogger().sendCrashlytics()
+            },
+            ExactKeyRule("firebase error") {
+                CrashlyticsLogger().reportNonFatalError(IllegalArgumentException("something bad"))
             },
 
             ExactKeyRule("ad show") { this.adService.enableAds() },
@@ -199,14 +202,14 @@ class SecretCommandService(
                 "cmd" in jwt.claims -> {
                     jwt.claims["cmd"]?.asString()?.let { cmd ->
                         logger.debug("JWT decoded cmd: $cmd")
-                        checkActivationRules(cmd)
+                        runActivationRules(cmd)
                     }
                 }
                 "cmds" in jwt.claims -> {
                     jwt.claims["cmds"]?.asList(String::class.java)?.let { cmds ->
                         logger.debug("JWT decoded cmds: $cmds")
                         cmds.forEach { cmd ->
-                            checkActivationRules(cmd)
+                            runActivationRules(cmd)
                         }
                     }
                 }
@@ -243,15 +246,18 @@ class SecretCommandService(
         logger.info("secret command entered: $key")
 
         GlobalScope.launch(Dispatchers.Main) {
-            if (!checkActivationRules(key)) {
-                toast(R.string.unlock_key_invalid)
+            SafeExecutor {
+                val trimmedKey = key.trim()
+                if (!runActivationRules(trimmedKey)) {
+                    toast(R.string.unlock_key_invalid)
+                }
             }
         }
 
         softKeyboardService.hideSoftKeyboard()
     }
 
-    private suspend fun checkActivationRules(key: String): Boolean {
+    private suspend fun runActivationRules(key: String): Boolean {
         for (rule in cmdRules) {
             if (rule.condition(key)) {
                 logger.debug("rule activated: $key")

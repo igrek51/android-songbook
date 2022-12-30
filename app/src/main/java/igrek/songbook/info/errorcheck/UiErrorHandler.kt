@@ -4,6 +4,7 @@ package igrek.songbook.info.errorcheck
 import igrek.songbook.BuildConfig
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
+import igrek.songbook.info.analytics.CrashlyticsLogger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -42,7 +43,15 @@ class UiErrorHandler(
             true -> "${errorMessage}\nType: ${t::class.simpleName}"
             false -> errorMessage
         }
-        uiInfoService.dialog(titleResId = R.string.error_occurred, message = message)
+        uiInfoService.dialogThreeChoices(
+            titleResId = R.string.error_occurred,
+            message = message,
+            positiveButton = R.string.action_info_ok, positiveAction = {},
+            neutralButton = R.string.action_report_error, neutralAction = {
+                CrashlyticsLogger().reportNonFatalError(t)
+                uiInfoService.showToast(R.string.report_error_sent)
+            },
+        )
     }
 
     companion object {

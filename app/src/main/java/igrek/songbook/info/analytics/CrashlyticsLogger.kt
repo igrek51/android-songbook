@@ -1,5 +1,6 @@
 package igrek.songbook.info.analytics
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.provider.Settings
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -9,9 +10,14 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.language.AppLanguageService
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
+@OptIn(DelicateCoroutinesApi::class)
 class CrashlyticsLogger(
     activity: LazyInject<Activity> = appFactory.activity,
     appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
@@ -27,9 +33,10 @@ class CrashlyticsLogger(
         message?.let { crashlytics.log(it) }
     }
 
+    @SuppressLint("HardwareIds")
     fun sendCrashlytics() {
         try {
-            val deviceId =
+            val deviceId: String =
                 Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID)
             crashlytics.setUserId(deviceId)
             setCustomKeys()
@@ -38,14 +45,20 @@ class CrashlyticsLogger(
         crashlytics.sendUnsentReports()
     }
 
+    fun reportNonFatalError(throwable: Throwable) {
+        GlobalScope.launch(Dispatchers.IO) {
+            crashlytics.recordException(throwable)
+            sendCrashlytics()
+        }
+    }
+
     private fun setCustomKeys() {
         crashlytics.setCustomKey("locale", appLanguageService.getCurrentLocale().language)
         val dbVersionNumber = songsRepository.publicSongsRepo.versionNumber.toString()
         crashlytics.setCustomKey("dbVersion", dbVersionNumber)
         crashlytics.setCustomKey(
-            "buildConfig",
-            if (BuildConfig.DEBUG) "debug" else "release"
-        ) // build config
+            "buildConfig", if (BuildConfig.DEBUG) "debug" else "release"
+        )
         crashlytics.setCustomKey("buildDate", BuildConfig.BUILD_DATE.formatYYYMMDD())
     }
 
