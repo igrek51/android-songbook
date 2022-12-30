@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_categories_list">Wykonawcy</string>
-    <string name="nav_search_song">Szukaj / Wszystkie piosenki</string>
+    <string name="nav_search_song">Szukaj / Wszystkie Piosenki</string>
     <string name="nav_favourites_song">Ulubione</string>
-    <string name="nav_update_songs">Aktualizuj piosenki</string>
-    <string name="nav_custom_song">Moje piosenki</string>
-    <string name="nav_random_song">Losowa piosenka</string>
+    <string name="nav_update_songs">Aktualizuj Piosenki</string>
+    <string name="nav_custom_song">Moje Piosenki</string>
+    <string name="nav_random_song">Losowa Piosenka</string>
     <string name="nav_settings">Ustawienia</string>
     <string name="nav_exit">Wyjście</string>
     <string name="nav_about">Informacje</string>
     <string name="nav_manual">Podręcznik</string>
     <string name="nav_contact">Kontakt</string>
-    <string name="nav_screen_share">Współdzielenie piosenek</string>
+    <string name="nav_screen_share">Wspólna Sesja</string>
     <string name="nav_purchase">Sklep</string>
     <string name="ui_help_content">
         WYBÓR PIOSENKI:
@@ -291,7 +291,7 @@
     <string name="rename_playlist">✏️ Zmień nazwę</string>
     <string name="playlist_removed">Usunięto playlistę</string>
     <string name="empty_playlist_songs">Brak piosenek na playliście</string>
-    <string name="nav_latest">Najnowsze piosenki</string>
+    <string name="nav_latest">Najnowsze Piosenki</string>
     <string name="nav_history">Historia</string>
     <string name="settings_songs_db">Baza piosenek</string>
     <string name="settings_exclude_artists">Ukryj wybrane kategorie</string>
@@ -318,7 +318,7 @@
     <string name="instrument_mandolin">Mandolina</string>
     <string name="settings_chords_instrument">Instrument dla diagramów akordów</string>
     <string name="contact_subject_missing_song">Brakująca piosenka</string>
-    <string name="nav_missing_song">Brakująca piosenka</string>
+    <string name="nav_missing_song">Brakująca Piosenka</string>
     <string name="search_empty_suggest_it">Brakuje piosenki? Zaproponuj ją</string>
     <string name="publish_song_title">Opublikuj piosenkę</string>
     <string name="publish_song_description">Możesz tu opublikować własne opracowanie piosenki, aby udostępnić ją pozostałym użytkownikom aplikacji. Najpierw musi jednak zostać zatwierdzona. Będę bardzo wdzięczny za Twój wkład w rozwój aplikacji.</string>
@@ -336,7 +336,7 @@
     <string name="confirm_unsaved_changes_title">Niezapisane zmiany</string>
     <string name="song_details_namespace_custom">Moje piosenki</string>
     <string name="song_details_namespace_public">Publiczne piosenki</string>
-    <string name="nav_last_song">Ostatnia piosenka</string>
+    <string name="nav_last_song">Ostatnia Piosenka</string>
     <string name="no_last_song">Nie otworzyłeś jeszcze żadnej piosenki.</string>
     <string name="song_copied_edit_it">Edytuj</string>
     <string name="settings_sync">Kopia zapasowa i Przywracanie / Synchronizacja urządzeń</string>
@@ -385,7 +385,7 @@
     <string name="song_exported">Piosenka została wyeksportowana.</string>
     <string name="multichoice_invert">Odwróć</string>
     <string name="song_languages">Języki piosenek</string>
-    <string name="nav_top_songs">Top lista</string>
+    <string name="nav_top_songs">Top Lista</string>
     <string name="settings_send_anonymous_usage_data">Przesyłaj anonimowe dane o użyciu</string>
     <string name="settings_send_anonymous_usage_data_hint">Przesyłaj anonimowe dane statystyczne o użyciu w celu poprawy rankingu najpopularniejszych piosenek</string>
     <string name="editor_reformat_error">Tekst piosenki niesformatowany. Użyj opcji \"Uporządkuj\"</string>
@@ -398,7 +398,7 @@
     <string name="action_find_chord">Znajdź</string>
     <string name="chord_diagram_find_chord">Podaj nazwę akordu</string>
     <string name="chord_diagram_not_found">Brak diagramu dla podanego akordu i instrumentu</string>
-    <string name="nav_chord_diagram">Diagramy akordów</string>
+    <string name="nav_chord_diagram">Diagramy Akordów</string>
     <string name="settings_update_db_on_startup">Aktualizuj piosenki przy starcie</string>
     <string name="settings_update_db_on_startup_hint">Automatycznie pobieraj najnowsze piosenki</string>
     <string name="ui_db_has_been_updated">Baza piosenek została zaktualizowana.</string>
