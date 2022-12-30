@@ -22,12 +22,6 @@ class AppLanguageService(
     private val preferencesState by LazyExtractor(preferencesState)
     private val userDataDao by LazyExtractor(userDataDao)
 
-    private var appLanguage: AppLanguage
-        get() = preferencesState.appLanguage
-        set(value) {
-            preferencesState.appLanguage = value
-        }
-
     var selectedSongLanguages: Set<SongLanguage>
         get() {
             val excludedLanguages = userDataDao.exclusionDao.exclusionDb.languages
@@ -42,20 +36,29 @@ class AppLanguageService(
      * forces locale settings
      * @param langCode language code (pl)
      */
-    @Suppress("DEPRECATION")
-    private fun setLocale(langCode: String) {
+    private fun setLocale(langCode: String?) {
         val res = activity.resources
         // Change locale settings in the app.
         val dm = res.displayMetrics
         val conf = res.configuration
-        conf.setLocale(Locale(langCode.lowercase()))
+        if (langCode == null) {
+            conf.setLocale(null)
+        } else {
+            conf.setLocale(Locale(langCode.lowercase()))
+        }
+        @Suppress("DEPRECATION")
         res.updateConfiguration(conf, dm)
     }
 
     fun setLocale() {
-        if (appLanguage != AppLanguage.DEFAULT) {
-            setLocale(appLanguage.langCode)
+        if (preferencesState.appLanguage != AppLanguage.DEFAULT) {
+            setLocale(preferencesState.appLanguage.langCode)
         }
+    }
+
+    fun updateLocale() {
+        val langCode = preferencesState.appLanguage.langCode.takeIf { it.isNotBlank() }
+        setLocale(langCode)
     }
 
     @Suppress("DEPRECATION")

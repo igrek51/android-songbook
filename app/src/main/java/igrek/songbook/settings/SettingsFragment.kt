@@ -95,6 +95,7 @@ class SettingsFragment(
             onSave = { id: String ->
                 preferencesState.appLanguage = AppLanguage.parseByLangCode(id)
                     ?: AppLanguage.DEFAULT
+                appLanguageService.updateLocale()
                 uiInfoService.showToast(R.string.restart_needed)
             }
         )

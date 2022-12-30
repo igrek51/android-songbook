@@ -57,7 +57,7 @@ class MobileEnScreenshotMaker {
         preferencesState.fontsize = 20f
         preferencesState.chordsNotation = ChordsNotation.ENGLISH
         preferencesState.fontTypeface = FontTypeface.default
-        preferencesState.chordsDisplayStyle = DisplayStyle.ChordsInline
+        preferencesState.chordsDisplayStyle = DisplayStyle.ChordsAbove
         preferencesState.restoreTransposition = false
 
         // open nav drawer
