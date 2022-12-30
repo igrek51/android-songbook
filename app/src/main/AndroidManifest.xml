@@ -103,6 +103,7 @@
             android:name=".activity.MainActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|navigation"
             android:resizeableActivity="true"
+            android:exported="true"
             android:theme="@style/AppTheme"
             android:launchMode="singleInstance" />
 
@@ -110,6 +111,7 @@
             android:name=".activity.TvActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|navigation"
             android:resizeableActivity="true"
+            android:exported="true"
             android:theme="@style/AppTheme"
             android:launchMode="singleInstance" />
 
@@ -129,6 +131,10 @@
         <intent>
             <action android:name="android.intent.action.GET_CONTENT" />
             <data android:mimeType="*/*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
         </intent>
     </queries>
 
