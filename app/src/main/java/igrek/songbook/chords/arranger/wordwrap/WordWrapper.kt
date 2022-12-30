@@ -48,7 +48,7 @@ internal fun List<Fragment>.toWords(lengthMapper: TypefaceLengthMapper): List<Wo
 internal fun Fragment.toWords(lengthMapper: TypefaceLengthMapper): List<Word> {
     var baseX = this.x
     // lookahead regex keeping delimiter
-    val parts = this.text.split(Regex("""(?<=[ .,\-:;/?!)])"""))
+    val parts = this.text.split(Regex("""(?<=[ .,\-:;?!)])"""))
     return parts.map {
         val width = lengthMapper.stringWidth(this.type, it)
         val segment = Word(it, type = this.type, x = baseX, width = width)

@@ -2,7 +2,6 @@ package igrek.songbook.screenshot
 
 import android.view.KeyEvent
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.NavigationViewActions
@@ -54,7 +53,7 @@ class MobileEnScreenshotMaker {
 
         preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
         preferencesState.colorScheme = ColorScheme.BRIGHT
-        preferencesState.fontsize = 20f
+        preferencesState.fontsize = 18f
         preferencesState.chordsNotation = ChordsNotation.ENGLISH
         preferencesState.fontTypeface = FontTypeface.default
         preferencesState.chordsDisplayStyle = DisplayStyle.ChordsAbove
@@ -71,7 +70,7 @@ class MobileEnScreenshotMaker {
         // choose song
         onView(withText("Zombie - The Cranberries")).perform(click())
 
-        onView(withId(R.id.songPreviewContainer)).perform(swipeUpABit(0.5f))
+        onView(withId(R.id.songPreviewContainer)).perform(swipeUpABit(0.7f))
 
         onView(isRoot()).perform(waitFor(100))
 

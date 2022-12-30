@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_categories_list">Wykonawcy</string>
-    <string name="nav_search_song">Szukaj / Wszystkie Piosenki</string>
+    <string name="nav_search_song">Szukaj / Wszystkie</string>
     <string name="nav_favourites_song">Ulubione</string>
-    <string name="nav_update_songs">Aktualizuj Piosenki</string>
+    <string name="nav_update_songs">Aktualizuj</string>
     <string name="nav_custom_song">Moje Piosenki</string>
     <string name="nav_random_song">Losowa Piosenka</string>
     <string name="nav_settings">Ustawienia</string>
@@ -291,7 +291,7 @@
     <string name="rename_playlist">✏️ Zmień nazwę</string>
     <string name="playlist_removed">Usunięto playlistę</string>
     <string name="empty_playlist_songs">Brak piosenek na playliście</string>
-    <string name="nav_latest">Najnowsze Piosenki</string>
+    <string name="nav_latest">Najnowsze</string>
     <string name="nav_history">Historia</string>
     <string name="settings_songs_db">Baza piosenek</string>
     <string name="settings_exclude_artists">Ukryj wybrane kategorie</string>
