@@ -13,6 +13,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
+import igrek.songbook.send.SongLanguageDetector
 import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType
@@ -169,10 +170,13 @@ class AntechamberService(
     }
 
     fun approveAntechamberSongUI(song: Song) {
-        val message1 =
-            uiResourceService.resString(R.string.admin_antechamber_confirm_approve, song.toString())
-        ConfirmDialogBuilder().confirmAction(message1) {
+        val msg = uiResourceService.resString(R.string.admin_antechamber_confirm_approve, song.toString())
+        ConfirmDialogBuilder().confirmAction(msg) {
             uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
+
+            if (song.language == null) {
+                song.language = SongLanguageDetector().detectLanguageCode(song.content.orEmpty())
+            }
 
             GlobalScope.launch(Dispatchers.Main) {
                 val result = approveAntechamberSongAsync(song).await()
