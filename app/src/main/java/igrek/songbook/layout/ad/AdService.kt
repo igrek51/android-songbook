@@ -58,10 +58,12 @@ class AdService(
     }
 
     fun initialize() {
-        try {
-            MobileAds.initialize(activity) {}
-        } catch (t: Throwable) {
-            logger.error("AdMob initialization failed", t)
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                MobileAds.initialize(activity) {}
+            } catch (t: Throwable) {
+                logger.error("AdMob initialization failed", t)
+            }
         }
     }
 

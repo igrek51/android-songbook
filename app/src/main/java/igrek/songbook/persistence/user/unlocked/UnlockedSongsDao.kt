@@ -5,6 +5,8 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 
 class UnlockedSongsDao(
     path: String,
@@ -36,7 +38,10 @@ class UnlockedSongsDao(
         val keys = unlockedSongs.keys
         if (key !in keys)
             keys.add(key)
-        songsRepository.saveDataReloadAllSongs()
+
+        runBlocking(Dispatchers.IO) {
+            songsRepository.saveAndReloadAllSongs()
+        }
     }
 
 }

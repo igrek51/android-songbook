@@ -1,10 +1,10 @@
 package igrek.songbook.layout
 
-import android.app.Activity
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.transition.Fade
 import androidx.transition.Scene
@@ -47,7 +47,7 @@ import kotlin.reflect.KClass
 
 @OptIn(DelicateCoroutinesApi::class)
 class LayoutController(
-    activity: LazyInject<Activity> = appFactory.activity,
+    appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
     navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
     activityController: LazyInject<ActivityController> = appFactory.activityController,
     adService: LazyInject<AdService> = appFactory.adService,
@@ -74,7 +74,7 @@ class LayoutController(
     webviewLayoutController: LazyInject<WebviewLayoutController> = appFactory.webviewLayoutController,
     playlistFillLayoutController: LazyInject<PlaylistFillLayoutController> = appFactory.playlistFillLayoutController,
 ) {
-    private val activity by LazyExtractor(activity)
+    private val activity by LazyExtractor(appCompatActivity)
     private val navigationMenuController by LazyExtractor(navigationMenuController)
     private val activityController by LazyExtractor(activityController)
     private val adService by LazyExtractor(adService)
@@ -109,18 +109,22 @@ class LayoutController(
     private val logger = LoggerFactory.logger
     private val layoutCache = hashMapOf<Int, View>()
 
-    fun init() {
-        activity.setContentView(R.layout.main_layout)
-        mainContentLayout = activity.findViewById(R.id.main_content)
-        mainContentLayout.isFocusable = true
-        mainContentLayout.isFocusableInTouchMode = true
-        mainContentLayout.setOnKeyListener { _, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN) {
-                return@setOnKeyListener systemKeyDispatcher.onKeyDown(keyCode)
+    suspend fun init() {
+        withContext(Dispatchers.Main) {
+            activity.setContentView(R.layout.main_layout)
+            mainContentLayout = activity.findViewById(R.id.main_content)
+            mainContentLayout.isFocusable = true
+            mainContentLayout.isFocusableInTouchMode = true
+            mainContentLayout.setOnKeyListener { _, keyCode, event ->
+                if (event.action == KeyEvent.ACTION_DOWN) {
+                    return@setOnKeyListener systemKeyDispatcher.onKeyDown(keyCode)
+                }
+                return@setOnKeyListener false
             }
-            return@setOnKeyListener false
+            navigationMenuController.init()
+
+            activity.supportActionBar?.hide()
         }
-        navigationMenuController.init()
     }
 
     fun showLayout(layoutClass: KClass<out MainLayout>, disableReturn: Boolean = false): Job {

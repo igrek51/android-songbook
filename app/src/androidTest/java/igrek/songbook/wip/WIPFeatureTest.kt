@@ -49,7 +49,7 @@ class WIPFeatureTest {
     @Ignore("Development purposes")
     fun factoryReset() {
         preferencesService.clear()
-        songsRepository.factoryReset()
+        songsRepository.fullFactoryReset()
     }
 
 

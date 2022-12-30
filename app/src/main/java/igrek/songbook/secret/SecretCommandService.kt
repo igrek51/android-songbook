@@ -27,6 +27,7 @@ import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.ad.AdService
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.system.PermissionService
 import igrek.songbook.system.SoftKeyboardService
@@ -52,6 +53,7 @@ class SecretCommandService(
     localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
     activityController: LazyInject<ActivityController> = appFactory.activityController,
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
+    userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
 ) {
     private val activity by LazyExtractor(appCompatActivity)
     private val uiResourceService by LazyExtractor(uiResourceService)
@@ -65,6 +67,7 @@ class SecretCommandService(
     private val localDbService by LazyExtractor(localDbService)
     private val activityController by LazyExtractor(activityController)
     private val layoutController by LazyExtractor(layoutController)
+    private val userDataDao by LazyExtractor(userDataDao)
 
     private val logger = LoggerFactory.logger
 
@@ -76,21 +79,25 @@ class SecretCommandService(
             SimplifiedKeyRule("dupa", "okon") { showCowSuperPowers() },
 
             ExactKeyRule("reset") {
-                this.songsRepository.factoryReset()
+                this.songsRepository.fullFactoryReset()
                 this.preferencesService.clear()
                 toast("Factory reset done")
             },
-            ExactKeyRule("reset config") { this.preferencesService.clear() },
-            ExactKeyRule("reset db") { this.songsRepository.factoryReset() },
-            ExactKeyRule("reset db general") {
-                this.songsRepository.resetGeneralData()
-                this.songsRepository.reloadSongsDb()
+            ExactKeyRule("reset config") {
+                this.preferencesService.clear()
+                toast("Factory reset: Settings")
             },
-            ExactKeyRule("reset db user") {
-                this.songsRepository.resetUserData()
+            ExactKeyRule("reset songs") {
+                this.songsRepository.resetGeneralSongsData()
                 this.songsRepository.reloadSongsDb()
+                toast("Factory reset: Public songs")
             },
-            ExactKeyRule("reload db user") {
+            ExactKeyRule("reset user") {
+                this.userDataDao.factoryReset()
+                this.songsRepository.reloadSongsDb()
+                toast("Factory reset: User data")
+            },
+            ExactKeyRule("reload songs") {
                 this.songsRepository.reloadSongsDb()
             },
 
@@ -174,7 +181,7 @@ class SecretCommandService(
         }
     }
 
-    private fun decodeSecretKeys(key: String) {
+    private suspend fun decodeSecretKeys(key: String) {
         val match = encodedSecretRegex.matchEntire(key.trim())
         match?.let {
             val encodedCommands = it.groupValues[1].trim().lines()
@@ -184,7 +191,7 @@ class SecretCommandService(
         }
     }
 
-    private fun decodeSecretKey(skey: String) {
+    private suspend fun decodeSecretKey(skey: String) {
         logger.debug("decoding secret key: $skey")
         SafeExecutor {
             val jwt = JWT(skey)
@@ -244,7 +251,7 @@ class SecretCommandService(
         softKeyboardService.hideSoftKeyboard()
     }
 
-    private fun checkActivationRules(key: String): Boolean {
+    private suspend fun checkActivationRules(key: String): Boolean {
         for (rule in cmdRules) {
             if (rule.condition(key)) {
                 logger.debug("rule activated: $key")

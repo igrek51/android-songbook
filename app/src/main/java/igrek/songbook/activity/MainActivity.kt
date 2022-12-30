@@ -14,7 +14,7 @@ import igrek.songbook.inject.AppContextFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import igrek.songbook.util.RetryDelayed
+import igrek.songbook.info.errorcheck.RetryDelayed
 
 
 open class MainActivity(

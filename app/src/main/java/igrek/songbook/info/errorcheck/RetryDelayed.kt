@@ -1,4 +1,4 @@
-package igrek.songbook.util
+package igrek.songbook.info.errorcheck
 
 import android.os.Handler
 import android.os.Looper

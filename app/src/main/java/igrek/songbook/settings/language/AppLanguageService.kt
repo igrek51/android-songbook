@@ -9,6 +9,8 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.preferences.PreferencesState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.util.*
 
 class AppLanguageService(
@@ -50,9 +52,11 @@ class AppLanguageService(
         res.updateConfiguration(conf, dm)
     }
 
-    fun setLocale() {
+    suspend fun setLocale() {
         if (preferencesState.appLanguage != AppLanguage.DEFAULT) {
-            setLocale(preferencesState.appLanguage.langCode)
+            withContext(Dispatchers.Main) {
+                setLocale(preferencesState.appLanguage.langCode)
+            }
         }
     }
 

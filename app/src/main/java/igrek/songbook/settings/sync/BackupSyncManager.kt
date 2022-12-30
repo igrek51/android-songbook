@@ -126,6 +126,7 @@ class BackupSyncManager(
         }.onFailure { error ->
             UiErrorHandler().handleError(error, R.string.settings_sync_restore_error)
         }.onSuccess {
+            userDataDao.reload()
             songsRepository.reloadSongsDb()
             preferencesService.reload()
             uiInfoService.showToast(R.string.settings_sync_restore_success)
@@ -152,6 +153,7 @@ class BackupSyncManager(
         }.onFailure { error ->
             UiErrorHandler().handleError(error, R.string.settings_sync_restore_error)
         }.onSuccess {
+            userDataDao.reload()
             songsRepository.reloadSongsDb()
             preferencesService.reload()
             if (errors.size == oldSyncFiles.size) {
@@ -370,7 +372,7 @@ class BackupSyncManager(
         }
     }
 
-    fun makeFileBackupUI() {
+    fun makeCompositeFileBackupUI() {
         val today = formatTodayDate()
         val filename = "songbook-backup-$today.bak"
         GlobalScope.launch(Dispatchers.IO) {
@@ -387,7 +389,7 @@ class BackupSyncManager(
         }
     }
 
-    fun restoreFileBackupUI() {
+    fun restoreCompositeFileBackupUI() {
         importFileChooser.importFile(sizeLimit = 100 * 1024 * 1024) { content: String, filename: String ->
             logger.info("Restoring backup data from a file $filename")
             GlobalScope.launch(Dispatchers.IO) {
@@ -396,6 +398,7 @@ class BackupSyncManager(
                 }.onFailure { error ->
                     UiErrorHandler().handleError(error, R.string.settings_sync_restore_error)
                 }.onSuccess {
+                    userDataDao.reload()
                     songsRepository.reloadSongsDb()
                     preferencesService.reload()
                     uiInfoService.showToast(R.string.settings_sync_restore_success)
@@ -420,7 +423,9 @@ class BackupSyncManager(
     }
 
     fun makeAutomaticBackup() {
-        makeDriveBackupUI(logout = false)
+        GlobalScope.launch(Dispatchers.Main) {
+            makeDriveBackupUI(logout = false)
+        }
     }
 
     fun formatLastBackupTime(): String {

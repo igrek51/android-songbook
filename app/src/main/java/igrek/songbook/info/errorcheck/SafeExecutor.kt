@@ -1,17 +1,21 @@
 package igrek.songbook.info.errorcheck
 
+import kotlinx.coroutines.runBlocking
+
 
 class SafeExecutor(
-    action: () -> Unit,
+    action: suspend () -> Unit,
 ) {
 
     init {
         execute(action)
     }
 
-    private fun execute(action: () -> Unit) {
+    private fun execute(action: suspend () -> Unit) {
         try {
-            action.invoke()
+            runBlocking {
+                action.invoke()
+            }
         } catch (t: Throwable) {
             UiErrorHandler().handleError(t)
         }

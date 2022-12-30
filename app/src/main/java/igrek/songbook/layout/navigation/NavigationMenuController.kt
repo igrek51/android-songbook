@@ -194,10 +194,12 @@ class NavigationMenuController(
     }
 
     fun setAdminMenu() {
-        navigationView?.let {
-            it.menu.clear()
-            it.inflateMenu(R.menu.menu_nav_admin)
-            init()
+        GlobalScope.launch(Dispatchers.Main) {
+            navigationView?.let {
+                it.menu.clear()
+                it.inflateMenu(R.menu.menu_nav_admin)
+                init()
+            }
         }
     }
 

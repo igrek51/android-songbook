@@ -1,8 +1,6 @@
 package igrek.songbook.persistence.general
 
 
-import android.os.Handler
-import android.os.Looper
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
@@ -13,9 +11,11 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.preferences.PreferencesState
+import kotlinx.coroutines.*
 import okhttp3.*
 import java.io.*
 
+@OptIn(DelicateCoroutinesApi::class)
 class SongsUpdater(
     okHttpClient: LazyInject<OkHttpClient> = appFactory.okHttpClient,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
@@ -56,14 +56,16 @@ class SongsUpdater(
                 if (!response.isSuccessful) {
                     onErrorReceived("Unexpected code: $response")
                 } else {
-                    onSongDatabaseReceived(response, songsDbFile, forced)
+                    GlobalScope.launch(Dispatchers.IO) {
+                        onSongDatabaseReceived(response, songsDbFile, forced)
+                    }
                 }
             }
         })
     }
 
     fun checkUpdateIsAvailable() {
-        Handler(Looper.getMainLooper()).post {
+        GlobalScope.launch(Dispatchers.IO) {
             val request: Request = Request.Builder()
                 .url(songsDbVersionUrl)
                 .build()
@@ -85,7 +87,7 @@ class SongsUpdater(
         }
     }
 
-    private fun onSongDatabaseReceived(
+    private suspend fun onSongDatabaseReceived(
         response: Response,
         songsDbFile: File,
         forcedUpdate: Boolean
@@ -110,12 +112,13 @@ class SongsUpdater(
                 output.close()
                 input.close()
             } catch (e: Throwable) {
-                songsRepository.saveDataReloadAllSongs()
+                songsRepository.saveAndReloadAllSongs()
                 throw e
             }
-            Handler(Looper.getMainLooper()).post {
+
+            GlobalScope.launch (Dispatchers.IO) {
                 try {
-                    songsRepository.saveDataReloadAllSongs()
+                    songsRepository.saveAndReloadAllSongs()
                     if (forcedUpdate) {
                         uiInfoService.showInfo(R.string.ui_db_is_uptodate)
                     } else {
@@ -124,8 +127,8 @@ class SongsUpdater(
                 } catch (t: Throwable) {
                     logger.error("Reloading songs db failed: ${t.message}")
                     uiInfoService.showInfo(R.string.db_update_failed_incompatible)
-                    songsRepository.resetGeneralData()
-                    songsRepository.saveDataReloadAllSongs()
+                    songsRepository.resetGeneralSongsData()
+                    songsRepository.saveAndReloadAllSongs()
                 }
             }
         } catch (e: Throwable) {
@@ -165,15 +168,13 @@ class SongsUpdater(
     }
 
     private fun showUpdateIsAvailable() {
-        Handler(Looper.getMainLooper()).post {
-            uiInfoService.showInfoAction(
-                R.string.update_is_available,
-                indefinite = true,
-                actionResId = R.string.action_update
-            ) {
-                uiInfoService.clearSnackBars()
-                updateSongsDb(forced = false)
-            }
+        uiInfoService.showInfoAction(
+            R.string.update_is_available,
+            indefinite = true,
+            actionResId = R.string.action_update
+        ) {
+            uiInfoService.clearSnackBars()
+            updateSongsDb(forced = false)
         }
     }
 

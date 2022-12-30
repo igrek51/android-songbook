@@ -37,7 +37,7 @@ import igrek.songbook.settings.theme.DisplayStyle
 import igrek.songbook.settings.theme.FontTypeface
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
-import igrek.songbook.util.RetryDelayed
+import igrek.songbook.info.errorcheck.RetryDelayed
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
@@ -259,7 +259,7 @@ class SettingsFragment(
         }
         setupClickPreference("settingsSyncSaveFile") {
             SafeExecutor {
-                backupSyncManager.makeFileBackupUI()
+                backupSyncManager.makeCompositeFileBackupUI()
             }
         }
         setupClickPreference("settingsSyncRestore") {
@@ -272,7 +272,7 @@ class SettingsFragment(
         setupClickPreference("settingsSyncRestoreFile") {
             ConfirmDialogBuilder().confirmAction(R.string.settings_sync_restore_confirm_file) {
                 SafeExecutor {
-                    backupSyncManager.restoreFileBackupUI()
+                    backupSyncManager.restoreCompositeFileBackupUI()
                 }
             }
         }

@@ -11,6 +11,8 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.system.WindowManagerService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 
 class ActivityController(
     windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
@@ -69,7 +71,9 @@ class ActivityController(
     fun onDestroy() {
         if (initialized) {
             preferencesService.saveAll()
-            userDataDao.saveNow()
+            runBlocking(Dispatchers.IO) {
+                userDataDao.saveNow()
+            }
             logger.info("activity has been destroyed")
         }
     }

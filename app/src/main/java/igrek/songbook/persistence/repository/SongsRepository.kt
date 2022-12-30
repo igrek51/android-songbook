@@ -21,6 +21,10 @@ import igrek.songbook.persistence.user.transpose.TransposeDao
 import igrek.songbook.persistence.user.unlocked.UnlockedSongsDao
 import igrek.songbook.util.lookup.SimpleCache
 import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 class SongsRepository(
     localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
@@ -50,6 +54,7 @@ class SongsRepository(
     )
     var allSongsRepo: AllSongsRepository = AllSongsRepository(publicSongsRepo, customSongsRepo)
     private var publicSongsDao: PublicSongsDao? = null
+    private val dataTransferMutex = Mutex()
 
     val unlockedSongsDao: UnlockedSongsDao get() = userDataDao.unlockedSongsDao
     val favouriteSongsDao: FavouriteSongsDao get() = userDataDao.favouriteSongsDao
@@ -59,78 +64,48 @@ class SongsRepository(
     val transposeDao: TransposeDao get() = userDataDao.transposeDao
     val songTweakDao: SongTweakDao get() = userDataDao.songTweakDao
 
-    fun init() {
-        reloadSongsDb()
-    }
-
-    @Synchronized
-    fun close() {
-        publicSongsDao?.close()
-        userDataDao.save()
-    }
-
-    @Synchronized
-    fun reloadSongsDb() {
-        val versionNumber = try {
-            loadPublicData()
-        } catch (t: Throwable) {
-            logger.error("failed to load version from general data", t)
-            resetGeneralData()
-            loadPublicData()
-        }
-
-        try {
-            userDataDao.reload()
-        } catch (t: Throwable) {
-            logger.error("failed to load user data", t)
-            try {
-                userDataDao.reload()
+    suspend fun reloadSongsDb() {
+        dataTransferMutex.withLock {
+            val versionNumber = try {
+                loadPublicSongsData()
             } catch (t: Throwable) {
-                logger.error("failed to load user data", t)
-                throw RuntimeException("Can't load corrupted user data", t)
+                logger.error("failed to load version from general songs data, resetting", t)
+                resetGeneralSongsData()
+                loadPublicSongsData()
             }
-        }
 
-        publicSongsRepo = try {
-            val publicDbBuilder = PublicSongsDbBuilder(versionNumber, publicSongsDao!!, userDataDao)
-            publicDbBuilder.buildPublic(uiResourceService)
-        } catch (t: Throwable) {
-            logger.error("failed to load general data", t)
-            resetGeneralData()
-            loadPublicData()
-            val publicDbBuilder = PublicSongsDbBuilder(versionNumber, publicSongsDao!!, userDataDao)
-            publicDbBuilder.buildPublic(uiResourceService)
-        }
-
-        val customDbBuilder = CustomSongsDbBuilder(userDataDao)
-        customSongsRepo = customDbBuilder.buildCustom(uiResourceService)
-
-        allSongsRepo = AllSongsRepository(publicSongsRepo, customSongsRepo)
-        dbChangeSubject.onNext(true)
-    }
-
-    @Synchronized
-    fun reloadCustomSongsDb() {
-        try {
-            userDataDao.reload()
-        } catch (t: Throwable) {
-            logger.error("failed to load user data", t)
-            try {
-                userDataDao.reload()
+            publicSongsRepo = try {
+                val publicDbBuilder =
+                    PublicSongsDbBuilder(versionNumber, publicSongsDao!!, userDataDao)
+                publicDbBuilder.buildPublic(uiResourceService)
             } catch (t: Throwable) {
-                logger.error("failed to load user data", t)
-                throw RuntimeException("Can't load corrupted user data", t)
+                logger.error("failed to load public songs data", t)
+                resetGeneralSongsData()
+                loadPublicSongsData()
+                val publicDbBuilder =
+                    PublicSongsDbBuilder(versionNumber, publicSongsDao!!, userDataDao)
+                publicDbBuilder.buildPublic(uiResourceService)
             }
+
+            val customDbBuilder = CustomSongsDbBuilder(userDataDao)
+            customSongsRepo = customDbBuilder.buildCustom(uiResourceService)
+
+            allSongsRepo = AllSongsRepository(publicSongsRepo, customSongsRepo)
+            dbChangeSubject.onNext(true)
         }
-
-        val customDbBuilder = CustomSongsDbBuilder(userDataDao)
-        customSongsRepo = customDbBuilder.buildCustom(uiResourceService)
-
-        allSongsRepo.invalidate()
-        dbChangeSubject.onNext(true)
     }
 
-    private fun loadPublicData(): Long {
+    private suspend fun reloadCustomSongsDb() {
+        dataTransferMutex.withLock {
+            val customDbBuilder = CustomSongsDbBuilder(userDataDao)
+            customSongsRepo = customDbBuilder.buildCustom(uiResourceService)
+
+            allSongsRepo.invalidate()
+            dbChangeSubject.onNext(true)
+        }
+    }
+
+    private fun loadPublicSongsData(): Long {
         localDbService.ensureLocalDbExists()
         val dbFile = localDbService.songsDbFile
         publicSongsDao = PublicSongsDao(dbFile)
@@ -140,36 +115,41 @@ class SongsRepository(
         return versionNumber
     }
 
-    @Synchronized
-    fun factoryReset() {
-        logger.warn("Songs database factory reset...")
-        resetGeneralData()
-        resetUserData()
-        reloadSongsDb()
+    fun fullFactoryReset() {
+        runBlocking(Dispatchers.IO) {
+            dataTransferMutex.withLock {
+                resetGeneralSongsData()
+                userDataDao.factoryReset()
+                reloadSongsDb()
+            }
+        }
     }
 
-    fun resetGeneralData() {
-        logger.warn("resetting general data...")
+    fun resetGeneralSongsData() {
+        logger.warn("Resetting general songs data...")
         publicSongsDao?.close()
         localDbService.factoryReset()
     }
 
-    fun resetUserData() {
-        logger.warn("resetting user data...")
-        userDataDao.factoryReset()
-    }
-
-    @Synchronized
     fun songsDbVersion(): Long? {
         return publicSongsDao?.readDbVersionNumber()
     }
 
-    fun saveAndReloadUserData() {
-        userDataDao.save()
-        reloadCustomSongsDb()
+    suspend fun close() {
+        dataTransferMutex.withLock {
+            publicSongsDao?.close()
+            userDataDao.save()
+        }
     }
 
-    fun saveDataReloadAllSongs() {
+    fun saveAndReloadUserSongs() {
+        runBlocking(Dispatchers.IO) {
+            userDataDao.save()
+            reloadCustomSongsDb()
+        }
+    }
+
+    suspend fun saveAndReloadAllSongs() {
         userDataDao.save()
         reloadSongsDb()
     }

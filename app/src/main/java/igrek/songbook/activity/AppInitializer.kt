@@ -19,6 +19,7 @@ import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.ad.AdService
 import igrek.songbook.persistence.general.SongsUpdater
 import igrek.songbook.persistence.repository.SongsRepository
+import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.homescreen.HomeScreenEnum
 import igrek.songbook.settings.language.AppLanguageService
@@ -48,6 +49,7 @@ class AppInitializer(
     aboutLayoutController: LazyInject<AboutLayoutController> = appFactory.aboutLayoutController,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     backupSyncManager: LazyInject<BackupSyncManager> = appFactory.backupSyncManager,
+    userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
 ) {
     private val windowManagerService by LazyExtractor(windowManagerService)
     private val layoutController by LazyExtractor(layoutController)
@@ -66,6 +68,7 @@ class AppInitializer(
     private val aboutLayoutController by LazyExtractor(aboutLayoutController)
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val backupSyncManager by LazyExtractor(backupSyncManager)
+    private val userDataDao by LazyExtractor(userDataDao)
 
     private val logger = LoggerFactory.logger
     private val debugInitEnabled = false
@@ -80,33 +83,33 @@ class AppInitializer(
         syncInit()
 
         GlobalScope.launch {
-            withContext(Dispatchers.Main) {
-                appLanguageService.setLocale()
-                songsRepository.init()
-                layoutController.init()
-                windowManagerService.hideTaskbar()
+            userDataDao.load()
+            songsRepository.reloadSongsDb()
 
-                if (preferencesState.homeScreen == HomeScreenEnum.LAST_SONG && songOpener.hasLastSong()) {
-                    songOpener.openLastSong()
-                } else {
-                    layoutController.showLayout(getStartingScreen()).join()
-                }
+            appLanguageService.setLocale()
+            layoutController.init()
 
-                songsUpdater.checkUpdateIsAvailable()
-
-                adService.initialize()
-                appLanguageService.setLocale() // fix locale after admob init
-
-                adminService.init()
-                if (isRunningFirstTime())
-                    firstRunInit()
-                if (preferencesState.appExecutionCount == 50L)
-                    promptRateApp()
-                reportExecution()
-
-                activityController.initialized = true
-                postInit()
+            if (preferencesState.homeScreen == HomeScreenEnum.LAST_SONG && songOpener.hasLastSong()) {
+                songOpener.openLastSong()
+            } else {
+                layoutController.showLayout(getStartingScreen()).join()
             }
+
+            songsUpdater.checkUpdateIsAvailable()
+
+            adService.initialize()
+            appLanguageService.setLocale() // fix locale after admob init
+
+            adminService.init()
+
+            if (isRunningFirstTime())
+                firstRunInit()
+            if (preferencesState.appExecutionCount == 50L)
+                promptRateApp()
+            reportExecution()
+
+            activityController.initialized = true
+            postInit()
 
             val activityName = activity::class.simpleName
             logger.info("Application has been initialized ($activityName, execution #${preferencesState.appExecutionCount})")

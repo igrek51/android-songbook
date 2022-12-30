@@ -71,7 +71,7 @@ abstract class AbstractJsonDao<T>(
         return json.decodeFromString(serializer, content)
     }
 
-    open fun read() {
+    fun read() {
         db = readDb()
     }
 
