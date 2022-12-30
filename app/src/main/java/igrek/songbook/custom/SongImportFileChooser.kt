@@ -27,16 +27,14 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.util.capitalize
 import igrek.songbook.util.limitTo
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import java.io.*
 import java.nio.charset.Charset
 import kotlin.math.min
 import kotlin.math.roundToInt
 
 
+@OptIn(DelicateCoroutinesApi::class)
 class SongImportFileChooser(
     activity: LazyInject<Activity> = appFactory.activity,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
@@ -106,9 +104,9 @@ class SongImportFileChooser(
 
     private fun onFileSelect(intent: Intent?) {
         val uri: Uri? = intent?.data
-        SafeExecutor {
-            GlobalScope.launch(Dispatchers.IO) {
-                uiInfoService.showToast(R.string.song_import_loading_file)
+        GlobalScope.launch(Dispatchers.IO) {
+            try {
+                uiInfoService.showInfo(R.string.song_import_loading_file)
                 if (uri != null) {
                     val fileContent: String = extractFileContent(uri)
 
@@ -125,6 +123,8 @@ class SongImportFileChooser(
                         )
                     }
                 }
+            } catch (t: Throwable) {
+                UiErrorHandler().handleError(t)
             }
         }
     }
