@@ -138,7 +138,6 @@ class SongsRepository(
     suspend fun close() {
         dataTransferMutex.withLock {
             publicSongsDao?.close()
-            userDataDao.save()
         }
     }
 

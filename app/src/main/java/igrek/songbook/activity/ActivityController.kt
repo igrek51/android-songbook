@@ -74,7 +74,7 @@ class ActivityController(
             runBlocking(Dispatchers.IO) {
                 userDataDao.saveNow()
             }
-            logger.info("activity has been destroyed")
+            logger.info("activity destroyed")
         }
     }
 

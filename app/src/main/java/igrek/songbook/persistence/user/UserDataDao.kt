@@ -54,7 +54,7 @@ class UserDataDao(
 
     init {
         saveRequestSubject
-            .throttleLast(2, TimeUnit.SECONDS)
+            .throttleLast(1, TimeUnit.SECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ toSave ->
                 if (toSave) {
