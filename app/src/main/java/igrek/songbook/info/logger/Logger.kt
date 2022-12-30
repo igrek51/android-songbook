@@ -82,7 +82,7 @@ open class Logger internal constructor() {
                 else -> printDebug(consoleMessage)
             }
 
-            if (level.moreOrEqualImportant(LogLevel.INFO) ||
+            if (level.moreOrEqualImportant(LogLevel.DEBUG) ||
                 (BuildConfig.DEBUG && level.moreOrEqualImportant(LogLevel.DEBUG))
             ) {
                 try {
