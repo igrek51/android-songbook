@@ -1,7 +1,7 @@
-Śpiewnik z tekstami piosenek i narzędziami do akordów dla muzyków, gitarzystów i pianistów
+Śpiewnik z tekstami piosenek i akordami do grania na gitarze i pianinie
 
 
-Songbook to śpiewnik z tekstami piosenek i narzędziami do akordów dla muzyków, gitarzystów i pianistów.
+Songbook to śpiewnik z tekstami piosenek i akordami do grania i śpiewania na gitarze i pianinie.
 
 Główne funkcje:
 

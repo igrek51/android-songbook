@@ -1,7 +1,7 @@
-Song lyrics viewer with chords toolkit for guitarists, musicians and singers
+Song lyrics viewer with chords to play on guitar, piano and sing
 
 
-Songbook is a song lyrics viewer with chords toolkit for guitarists, musicians and singers.
+Songbook is a song lyrics viewer with chords to play on guitar, piano and sing.
 
 Our chief weapons are:
 

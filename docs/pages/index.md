@@ -6,7 +6,7 @@
 [![Github Pages](https://img.shields.io/badge/docs-github.io-blue)](https://igrek51.github.io/android-songbook)
 [![Google Play](https://img.shields.io/badge/Google%20Play-igrek.songbook-blue)](https://play.google.com/store/apps/details?id=igrek.songbook)
 
-Song lyrics viewer with chords toolkit for guitarists, musicians and singers
+Song lyrics viewer with chords to play on guitar, piano and sing
 
 See [Quick User Guide](./quick-guide.md) to get familiar with *Songbook*.
 
