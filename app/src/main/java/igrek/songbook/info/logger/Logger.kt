@@ -2,7 +2,7 @@ package igrek.songbook.info.logger
 
 import android.util.Log
 import igrek.songbook.BuildConfig
-import igrek.songbook.info.analytics.CrashlyticsLogger
+import igrek.songbook.inject.appFactory
 
 open class Logger internal constructor() {
 
@@ -27,7 +27,7 @@ open class Logger internal constructor() {
         }
         printExceptionStackTrace(ex)
         log(exTitle, LogLevel.FATAL, "[FATAL] ")
-        CrashlyticsLogger().sendCrashlytics()
+        appFactory.crashlyticsLogger.get().sendCrashlyticsAsync()
     }
 
     fun warn(message: String?) {
@@ -86,7 +86,7 @@ open class Logger internal constructor() {
                 (BuildConfig.DEBUG && level.moreOrEqualImportant(LogLevel.DEBUG))
             ) {
                 try {
-                    CrashlyticsLogger().logCrashlytics(consoleMessage)
+                    appFactory.crashlyticsLogger.get().logCrashlytics(consoleMessage)
                 } catch (e: NoSuchMethodError) {
                 } catch (e: NoClassDefFoundError) {
                 }

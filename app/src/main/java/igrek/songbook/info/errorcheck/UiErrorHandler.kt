@@ -48,7 +48,7 @@ class UiErrorHandler(
             message = message,
             positiveButton = R.string.action_info_ok, positiveAction = {},
             neutralButton = R.string.action_report_error, neutralAction = {
-                CrashlyticsLogger().reportNonFatalError(t)
+                appFactory.crashlyticsLogger.get().reportNonFatalError(t)
                 uiInfoService.showToast(R.string.report_error_sent)
             },
         )

@@ -3,7 +3,6 @@ package igrek.songbook.activity
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
-import igrek.songbook.info.analytics.CrashlyticsLogger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -47,7 +46,7 @@ class ActivityController(
 
     fun quit() {
         windowManagerService.keepScreenOn(false)
-        CrashlyticsLogger().sendCrashlytics()
+        appFactory.crashlyticsLogger.get().sendCrashlytics()
         activity.finish()
     }
 

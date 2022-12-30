@@ -21,6 +21,7 @@ import igrek.songbook.custom.share.ShareSongService
 import igrek.songbook.editor.ChordsEditorLayoutController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.info.analytics.CrashlyticsLogger
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.layout.GlobalFocusTraverser
@@ -167,4 +168,5 @@ class AppFactory(
     val settingsEnumService = SingletonInject { SettingsEnumService() }
     val globalFocusTraverser = SingletonInject { GlobalFocusTraverser() }
     val webviewLayoutController = SingletonInject { WebviewLayoutController() }
+    val crashlyticsLogger = SingletonInject { CrashlyticsLogger() }
 }

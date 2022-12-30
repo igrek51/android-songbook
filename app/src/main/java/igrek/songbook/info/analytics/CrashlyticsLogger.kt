@@ -33,6 +33,12 @@ class CrashlyticsLogger(
         message?.let { crashlytics.log(it) }
     }
 
+    fun sendCrashlyticsAsync() {
+        GlobalScope.launch(Dispatchers.IO) {
+            sendCrashlytics()
+        }
+    }
+
     @SuppressLint("HardwareIds")
     fun sendCrashlytics() {
         try {
@@ -42,6 +48,9 @@ class CrashlyticsLogger(
             setCustomKeys()
         } catch (t: Throwable) {
         }
+        crashlytics.setCrashlyticsCollectionEnabled(false)
+        crashlytics.sendUnsentReports()
+        crashlytics.setCrashlyticsCollectionEnabled(true)
         crashlytics.sendUnsentReports()
     }
 

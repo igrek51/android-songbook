@@ -17,7 +17,6 @@ import igrek.songbook.admin.AdminService
 import igrek.songbook.billing.BillingLayoutController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
-import igrek.songbook.info.analytics.CrashlyticsLogger
 import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
@@ -108,10 +107,13 @@ class SecretCommandService(
             ExactKeyRule("firebase logs") {
                 logger.error(IllegalArgumentException("real reason"))
                 logger.error("error log")
-                CrashlyticsLogger().sendCrashlytics()
+                appFactory.crashlyticsLogger.get().sendCrashlyticsAsync()
             },
             ExactKeyRule("firebase error") {
-                CrashlyticsLogger().reportNonFatalError(IllegalArgumentException("something bad"))
+                appFactory.crashlyticsLogger.get().reportNonFatalError(IllegalArgumentException("something bad"))
+            },
+            ExactKeyRule("firebase send") {
+                appFactory.crashlyticsLogger.get().sendCrashlyticsAsync()
             },
 
             ExactKeyRule("ad show") { this.adService.enableAds() },
