@@ -27,6 +27,10 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.util.capitalize
 import igrek.songbook.util.limitTo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.*
 import java.nio.charset.Charset
 import kotlin.math.min
@@ -103,19 +107,24 @@ class SongImportFileChooser(
     private fun onFileSelect(intent: Intent?) {
         val uri: Uri? = intent?.data
         SafeExecutor {
-            if (uri != null) {
-                val fileContent: String = extractFileContent(uri)
+            GlobalScope.launch(Dispatchers.IO) {
+                uiInfoService.showToast(R.string.song_import_loading_file)
+                if (uri != null) {
+                    val fileContent: String = extractFileContent(uri)
 
-                val parsedContent: ParsedSongContent = parseSongContentMetadata(fileContent)
-                val title = parsedContent.title
-                    ?: File(getFileNameFromUri(uri)).nameWithoutExtension.capitalize()
+                    val parsedContent: ParsedSongContent = parseSongContentMetadata(fileContent)
+                    val title = parsedContent.title
+                        ?: File(getFileNameFromUri(uri)).nameWithoutExtension.capitalize()
 
-                editSongLayoutController.setupImportedSong(
-                    title,
-                    parsedContent.artist,
-                    parsedContent.content,
-                    parsedContent.notation
-                )
+                    withContext(Dispatchers.Main) {
+                        editSongLayoutController.setupImportedSong(
+                            title,
+                            parsedContent.artist,
+                            parsedContent.content,
+                            parsedContent.notation
+                        )
+                    }
+                }
             }
         }
     }

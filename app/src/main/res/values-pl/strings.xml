@@ -538,4 +538,5 @@
     <string name="playlist_fill_search_song_to_add">Wybierz piosenki, które chcesz dodać do tej playlisty</string>
     <string name="playlist_not_selected">Nie wybrano playlisty</string>
     <string name="open_saved_song">Otwórz</string>
+<string name="song_import_loading_file">Wczytywanie piosenki z pliku…</string>
 </resources>
