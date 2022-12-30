@@ -6,23 +6,24 @@
 [![Github Pages](https://img.shields.io/badge/docs-github.io-blue)](https://igrek51.github.io/android-songbook)
 [![Google Play](https://img.shields.io/badge/Google%20Play-igrek.songbook-blue)](https://play.google.com/store/apps/details?id=igrek.songbook)
 
-Songs lyrics viewer with chords toolkit for musicians, guitarists and pianists
+Song lyrics viewer with chords toolkit for guitarists, musicians and singers
 
 See [Quick User Guide](./quick-guide.md) to get familiar with *Songbook*.
 
 ## Features
 Our chief weapons are:
 
-- Displaying song lyrics with highlighted chords
+- Highlighted chords
 - [Chords transposition](./transpose.md) (any song to any key)
 - [Auto scrolling while playing](./autoscroll.md)
-- [Adding custom songs with advanced chords editor](./chords-editor.md)
-- Playlists / setlists with songs
+- [Custom songs and chords editor](./chords-editor.md)
+- Playlists
 - [Chord diagrams](./chord-diagrams.md) for guitar, ukulele, mandolin and piano
 - [Sharing & Displaying songs on multiple devices at the same time via Bluetooth](./bluetooth-sharing.md)
-- [Several chord notations supported](./chord-notations.md): English (`Am Bbm Bb B C Dm`), German (`a b B H C d`), Solfege (`Do Re Mi Fa`), Dutch, Japanese
-- [Customizable chord displaying styles](./displaying-styles.md)
-- Automatic chords detection, detecting a song key
+- [Several chord notations](./chord-notations.md): English (`Am Bbm Bb B C Dm`), German (`a b B H C d`), Solfege, Dutch, Japanese
+- Recognizing the key of the song
+- Automatic chords detection
+- [Different chord displaying styles](./displaying-styles.md)
 - Custom songs & settings synchronization between many devices, back-ups & restoring all application data
 - Sharing songs by link
 - Always-on display while playing
