@@ -29,10 +29,3 @@
 -keepclassmembers class * { @com.google.api.client.util.Key <fields>; }
 
 -dontobfuscate
-
-# Firebase
--keepattributes *Annotation*
--keepattributes SourceFile,LineNumberTable
--keep public class * extends java.lang.Exception
--keep class com.crashlytics.** { *; }
--dontwarn com.crashlytics.**
