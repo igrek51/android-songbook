@@ -15,7 +15,7 @@ Here's the list of third-party libraries and tools used by *Songbook*:
 - [Java](https://github.com/openjdk/jdk)
 - [JWTDecode](https://github.com/auth0/JWTDecode.Android)
 - [Kotlin](https://github.com/JetBrains/kotlin)
-- [Material Design icons](https://materialdesignicons.com/)
+- [Material Design icons](https://github.com/google/material-design-icons)
 - [Material for MkDocs](https://github.com/squidfunk/mkdocs-material)
 - [MkDocs](https://github.com/mkdocs/mkdocs)
 - [OkHttp](https://github.com/square/okhttp)

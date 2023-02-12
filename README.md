@@ -50,3 +50,8 @@ It is available on **phones**, **tablets** and **TV** devices with **Android**.
 ## Manual
 
 Find out more user guides and manuals at [https://igrek51.github.io/android-songbook](https://igrek51.github.io/android-songbook).
+
+## About
+
+This software is published under the [GNU General Public License v3.0](./LICENSE).
+See [Copyright Notices](./docs/pages/license/copyright-notices.md).
