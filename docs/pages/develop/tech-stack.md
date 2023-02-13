@@ -25,3 +25,5 @@ Here's the list of third-party libraries and tools used by *Songbook*:
 - [RxAndroid](https://github.com/ReactiveX/RxAndroid)
 - [RxKotlin](https://github.com/ReactiveX/RxKotlin)
 - [SQLite](https://github.com/sqlite/sqlite)
+
+See [Copyright Notices](./copyright-notices.md).

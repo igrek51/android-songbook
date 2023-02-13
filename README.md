@@ -54,4 +54,4 @@ Find out more user guides and manuals at [https://igrek51.github.io/android-song
 ## About
 
 This software is published under the [GNU General Public License v3.0](./LICENSE).
-See [Copyright Notices](./docs/pages/license/copyright-notices.md).
+See [Copyright Notices](./docs/pages/develop/copyright-notices.md).
