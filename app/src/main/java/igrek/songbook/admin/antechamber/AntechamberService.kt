@@ -60,6 +60,7 @@ class AntechamberService(
     fun downloadSongsAsync(): Deferred<Result<List<Song>>> {
         val request: Request = Request.Builder()
             .url(allSongsUrl)
+            .get()
             .addHeader(authTokenHeader, adminService.userAuthToken)
             .build()
         return httpRequester.httpRequestAsync(request) { response: Response ->

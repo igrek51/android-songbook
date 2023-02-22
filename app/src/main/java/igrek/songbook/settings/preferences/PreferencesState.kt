@@ -56,6 +56,7 @@ class PreferencesState(
     var songLyricsSearch: Boolean by PreferenceDelegate(PreferencesField.SongLyricsSearch)
     var syncBackupAutomatically: Boolean by PreferenceDelegate(PreferencesField.SyncBackupAutomatically)
     var lastDriveBackupTimestamp: Long by PreferenceDelegate(PreferencesField.LastDriveBackupTimestamp)
+    var deviceId: String by PreferenceDelegate(PreferencesField.DeviceId)
 
 }
 

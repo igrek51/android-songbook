@@ -28,6 +28,12 @@ enum class ChordsNotation(val id: Long, val displayNameResId: Int, val shortName
             return values().firstOrNull { v -> v.id == id }
         }
 
+        fun mustParseById(id: Long?): ChordsNotation {
+            if (id == null)
+                return default
+            return parseById(id) ?: default
+        }
+
         fun deserialize(id: Long): ChordsNotation? {
             return values().firstOrNull { v -> v.id == id }
         }

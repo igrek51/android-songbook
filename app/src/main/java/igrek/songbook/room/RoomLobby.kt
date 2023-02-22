@@ -247,7 +247,7 @@ class RoomLobby(
             songId = song.songIdentifier(),
             categoryName = song.displayCategories(),
             title = song.title,
-            chordsNotation = song.chordsNotation ?: ChordsNotation.default,
+            chordsNotation = song.chordsNotation,
             content = song.content.orEmpty(),
         )
     }

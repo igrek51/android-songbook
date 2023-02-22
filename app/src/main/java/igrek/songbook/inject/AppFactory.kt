@@ -29,6 +29,7 @@ import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.ad.AdService
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
+import igrek.songbook.persistence.DeviceIdProvider
 import igrek.songbook.persistence.LocalDbService
 import igrek.songbook.persistence.general.SongsUpdater
 import igrek.songbook.persistence.repository.SongsRepository
@@ -169,4 +170,6 @@ class AppFactory(
     val globalFocusTraverser = SingletonInject { GlobalFocusTraverser() }
     val webviewLayoutController = SingletonInject { WebviewLayoutController() }
     val crashlyticsLogger = SingletonInject { CrashlyticsLogger() }
+    val deviceIdProvider = SingletonInject { DeviceIdProvider() }
+    val editorSessionService = SingletonInject { EditorSessionService() }
 }

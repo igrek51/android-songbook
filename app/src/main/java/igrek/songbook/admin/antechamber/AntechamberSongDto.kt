@@ -45,7 +45,7 @@ data class AntechamberSongDto(
         metre = metre,
         scrollSpeed = scroll_speed,
         initialDelay = initial_delay,
-        chordsNotation = ChordsNotation.parseById(chords_notation),
+        chordsNotation = ChordsNotation.mustParseById(chords_notation),
         originalSongId = original_song_id,
         namespace = SongNamespace.Antechamber,
     )
@@ -61,7 +61,7 @@ data class AntechamberSongDto(
             update_time = song.updateTime,
             author = song.author,
             language = song.language,
-            chords_notation = (song.chordsNotation ?: ChordsNotation.default).id,
+            chords_notation = song.chordsNotation.id,
             original_song_id = song.originalSongId,
             status = song.status.id,
             categories = song.categories.filter { it.type == CategoryType.ARTIST }.map { it.id },

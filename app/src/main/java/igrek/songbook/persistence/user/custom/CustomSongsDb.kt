@@ -25,6 +25,6 @@ data class CustomSong(
     var language: String? = null,
     var scrollSpeed: Double? = null,
     var initialDelay: Double? = null,
-    var chordsNotation: ChordsNotation? = null,
+    var chordsNotation: ChordsNotation,
     var originalSongId: Long? = null
 )

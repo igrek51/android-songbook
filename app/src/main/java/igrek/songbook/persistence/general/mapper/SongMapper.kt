@@ -30,7 +30,7 @@ class SongMapper : AbstractMapper<Song>() {
         val tags = getOptionalString(cursor, "tags")
 
         val songStatus = SongStatus.parseById(stateId) ?: SongStatus.PUBLISHED
-        val chordsNotation = ChordsNotation.parseById(chordsNotationId)
+        val chordsNotation = ChordsNotation.mustParseById(chordsNotationId)
 
         return Song(
             id = id,

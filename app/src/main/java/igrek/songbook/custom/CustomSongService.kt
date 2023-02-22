@@ -42,7 +42,7 @@ class CustomSongService(
 
     fun exportSong(song: Song) {
         val songContent = song.content.orEmpty()
-        val notation = song.chordsNotation ?: preferencesState.chordsNotation
+        val notation = song.chordsNotation
         val artist = song.displayCategories()
         exportSongContent(songContent, song.title, artist, notation)
     }

@@ -5,6 +5,9 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -16,22 +19,32 @@ class HttpRequester {
     private val okHttpClient: OkHttpClient = OkHttpClient()
     private val logger = LoggerFactory.logger
 
-    fun <T> httpRequestAsync(request: Request, successor: (Response) -> T): Deferred<Result<T>> {
+    val jsonType = MediaType.parse("application/json; charset=utf-8")
+    val jsonSerializer = Json {
+        encodeDefaults = true
+        ignoreUnknownKeys = false
+        isLenient = false
+        allowStructuredMapKeys = true
+        prettyPrint = false
+        useArrayPolymorphism = false
+    }
+
+    fun <T> httpRequestAsync(request: Request, responseExtractor: (Response) -> T): Deferred<Result<T>> {
         return GlobalScope.async {
-            httpRequestSync(request, successor)
+            httpRequestSync(request, responseExtractor)
         }
     }
 
-    private fun <T> httpRequestSync(request: Request, successor: (Response) -> T): Result<T> {
+    private fun <T> httpRequestSync(request: Request, responseExtractor: (Response) -> T): Result<T> {
         try {
 
             val response: Response = okHttpClient.newCall(request).execute()
             return if (!response.isSuccessful) {
-                logger.error("Unexpected response code: $response")
-                Result.failure(RuntimeException(response.toString()))
+                val errorMessage = extractErrorMessage(response)
+                Result.failure(RuntimeException("Unexpected response: $errorMessage, code: $response, url: ${request.url()}"))
             } else {
                 try {
-                    val responseData = successor(response)
+                    val responseData = responseExtractor(response)
                     Result.success(responseData)
                 } catch (e: Throwable) {
                     logger.error("onResponse error: ${e.message}", e)
@@ -45,4 +58,24 @@ class HttpRequester {
         }
     }
 
+    private fun extractErrorMessage(response: Response): String {
+        val contentType = response.body()?.contentType()?.toString().orEmpty()
+        if ("application/json" in contentType) {
+            val jsonData = response.body()?.string() ?: ""
+            try {
+                val errorDto: ErrorDto = jsonSerializer.decodeFromString(ErrorDto.serializer(), jsonData)
+                return errorDto.error
+            } catch (e: kotlinx.serialization.SerializationException) {
+            } catch (e: IllegalArgumentException) {
+            }
+        }
+        return response.message()
+    }
+
 }
+
+@Serializable
+data class ErrorDto(
+    var error: String,
+    var type: String?,
+)

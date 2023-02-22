@@ -59,7 +59,7 @@ open class ShareSongService(
         if (customCategory != null) {
             dtoBuilder.customCategory = customCategory
         }
-        song.chordsNotation?.id?.let { chordsNotationId ->
+        song.chordsNotation.id.let { chordsNotationId ->
             dtoBuilder.chordsNotation = chordsNotationId
         }
 

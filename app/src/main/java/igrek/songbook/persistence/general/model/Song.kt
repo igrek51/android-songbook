@@ -23,10 +23,10 @@ data class Song(
     var rank: Double? = null,
     var scrollSpeed: Double? = null,
     var initialDelay: Double? = null,
-    var chordsNotation: ChordsNotation? = null,
+    var chordsNotation: ChordsNotation = ChordsNotation.default,
     var tags: String? = null,
     var originalSongId: Long? = null,
-    var namespace: SongNamespace = SongNamespace.Public
+    var namespace: SongNamespace = SongNamespace.Public,
 ) {
     override fun equals(other: Any?): Boolean {
         if (other !is Song)

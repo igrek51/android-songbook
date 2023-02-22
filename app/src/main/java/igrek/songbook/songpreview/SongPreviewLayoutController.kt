@@ -265,7 +265,7 @@ class SongPreviewLayoutController(
         currentSong?.let {
             // load file and parse it
             val fileContent = it.content.orEmpty()
-            val srcNotation = it.chordsNotation ?: ChordsNotation.default
+            val srcNotation = it.chordsNotation
             val transposed = songsRepository.transposeDao.getSongTransposition(it.songIdentifier())
             // initialize - first file loading
             lyricsLoader.load(fileContent, w, paint, transposed, srcNotation)

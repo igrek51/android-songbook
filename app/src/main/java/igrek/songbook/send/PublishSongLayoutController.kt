@@ -9,6 +9,7 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.analytics.AnalyticsLogger
 import igrek.songbook.info.errorcheck.SafeClickListener
+import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -111,7 +112,7 @@ class PublishSongLayoutController(
                     result.fold(onSuccess = {
                         uiInfoService.showInfo(R.string.antechamber_new_song_sent)
                     }, onFailure = { e ->
-                        logger.error(e)
+                        UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
                     })
                 }
 

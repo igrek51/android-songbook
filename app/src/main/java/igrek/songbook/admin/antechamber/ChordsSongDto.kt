@@ -40,7 +40,7 @@ data class ChordsSongDto(
             create_time = song.createTime,
             update_time = song.updateTime,
             language = song.language,
-            chords_notation = (song.chordsNotation ?: ChordsNotation.default).id,
+            chords_notation = song.chordsNotation.id,
             author = song.author,
             preferred_key = song.preferredKey,
             metre = song.metre,

@@ -153,6 +153,8 @@ enum class PreferencesField constructor(
 
     LastDriveBackupTimestamp(0), // in seconds
 
+    DeviceId(""),
+
     ;
 
     constructor(defaultValue: String) : this(StringPreferenceType(defaultValue))

@@ -72,7 +72,7 @@ class AdminSongsLayoutContoller(
                     result.fold(onSuccess = { downloadedSongs ->
                         experimentalSongs = downloadedSongs.toMutableList()
                     }, onFailure = { e ->
-                        logger.error(e)
+                        UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
                     })
                 }
             }, UiErrorHandler::handleError)

@@ -66,6 +66,7 @@ class CustomSongsListLayoutController(
     settingsEnumService: LazyInject<SettingsEnumService> = appFactory.settingsEnumService,
     softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    editorSessionService: LazyInject<EditorSessionService> = appFactory.editorSessionService,
 ) : InflatedLayout(
     _layoutResourceId = R.layout.screen_custom_songs
 ), ListItemClickListener<CustomSongListItem> {
@@ -82,6 +83,7 @@ class CustomSongsListLayoutController(
     private val settingsEnumService by LazyExtractor(settingsEnumService)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
     private val preferencesState by LazyExtractor(preferencesState)
+    private val editorSessionService by LazyExtractor(editorSessionService)
 
     private var itemsListView: CustomSongListView? = null
     private var goBackButton: ImageButton? = null
@@ -316,6 +318,9 @@ class CustomSongsListLayoutController(
             mutableListOf(
                 ContextMenuBuilder.Action(R.string.action_create_new_custom_song) {
                     addCustomSong()
+                },
+                ContextMenuBuilder.Action(R.string.custom_songs_synchornize) {
+                    editorSessionService.syncrhonizeWithWeb()
                 },
                 ContextMenuBuilder.Action(R.string.import_content_from_file) {
                     importOneSong()
