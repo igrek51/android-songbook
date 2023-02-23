@@ -9,7 +9,7 @@ import com.google.common.io.CharStreams
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityResultDispatcher
 import igrek.songbook.info.UiInfoService
-import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -28,7 +28,7 @@ class ImportFileChooser(
     private val activityResultDispatcher by LazyExtractor(activityResultDispatcher)
 
     fun importFile(sizeLimit: Int? = null, onLoad: (content: String, filename: String) -> Unit) {
-        SafeExecutor {
+        safeExecute {
             val intent = Intent(Intent.ACTION_GET_CONTENT)
             intent.type = "*/*"
             intent.addCategory(Intent.CATEGORY_OPENABLE)
@@ -50,7 +50,7 @@ class ImportFileChooser(
         onLoad: (content: String, filename: String) -> Unit,
         sizeLimit: Int?,
     ) {
-        SafeExecutor {
+        safeExecute {
             if (selectedUri != null) {
                 activity.contentResolver.openInputStream(selectedUri)
                     ?.use { inputStream: InputStream ->
@@ -60,7 +60,7 @@ class ImportFileChooser(
                         sizeLimit?.let { sizeLimit ->
                             if (length > sizeLimit) {
                                 uiInfoService.showToast(R.string.selected_file_is_too_big)
-                                return@SafeExecutor
+                                return@safeExecute
                             }
                         }
 

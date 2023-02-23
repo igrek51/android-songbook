@@ -12,7 +12,6 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.custom.CustomSong
 import igrek.songbook.persistence.user.custom.CustomSongMapper
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import igrek.songbook.settings.preferences.PreferencesState
 import java.util.*
 
 class CustomSongService(
@@ -21,14 +20,12 @@ class CustomSongService(
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
     editSongLayoutController: LazyInject<EditSongLayoutController> = appFactory.editSongLayoutController,
     exportFileChooser: LazyInject<ExportFileChooser> = appFactory.exportFileChooser,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val songsRepository by LazyExtractor(songsRepository)
     private val layoutController by LazyExtractor(layoutController)
     private val editSongLayoutController by LazyExtractor(editSongLayoutController)
     private val exportFileChooser by LazyExtractor(exportFileChooser)
-    private val preferencesState by LazyExtractor(preferencesState)
 
     fun showAddSongScreen() {
         editSongLayoutController.setCurrentSong(null)

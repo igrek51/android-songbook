@@ -18,8 +18,8 @@ import igrek.songbook.R
 import igrek.songbook.activity.ActivityResultDispatcher
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.LocalizedError
-import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.info.errorcheck.UiErrorHandler
+import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -28,7 +28,10 @@ import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.util.capitalize
 import igrek.songbook.util.limitTo
 import kotlinx.coroutines.*
-import java.io.*
+import java.io.File
+import java.io.InputStream
+import java.io.InputStreamReader
+import java.io.StringWriter
 import java.nio.charset.Charset
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -70,7 +73,7 @@ class SongImportFileChooser(
     }
 
     fun showFileChooser() {
-        SafeExecutor {
+        safeExecute {
             val intent = Intent(Intent.ACTION_GET_CONTENT)
             intent.type = "*/*"
 

@@ -22,3 +22,11 @@ class SafeExecutor(
     }
 
 }
+
+inline fun safeExecute(block: () -> Unit) {
+    try {
+        block()
+    } catch (t: Throwable) {
+        UiErrorHandler().handleError(t)
+    }
+}

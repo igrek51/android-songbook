@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.persistence.user.custom.CustomSong
 import igrek.songbook.persistence.user.custom.CustomSongsDb
+import igrek.songbook.settings.chordsnotation.ChordsNotation
 import java.io.File
 import java.io.FileNotFoundException
 import java.text.ParseException
@@ -42,7 +43,8 @@ class Migration037CustomSongs(private val activity: Activity) {
                 updateTime = tuple[6] as Long,
                 comment = tuple[9] as String?,
                 preferredKey = tuple[10] as String?,
-                author = tuple[13] as String?
+                author = tuple[13] as String?,
+                chordsNotation = ChordsNotation.default,
             )
         }.toMutableList()
 

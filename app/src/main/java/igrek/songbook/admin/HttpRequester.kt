@@ -41,7 +41,7 @@ class HttpRequester {
             val response: Response = okHttpClient.newCall(request).execute()
             return if (!response.isSuccessful) {
                 val errorMessage = extractErrorMessage(response)
-                Result.failure(RuntimeException("Unexpected response: $errorMessage, code: $response, url: ${request.url()}"))
+                Result.failure(RuntimeException("Unexpected response: $errorMessage, code: ${response.code()}, url: ${request.url()}"))
             } else {
                 try {
                     val responseData = responseExtractor(response)

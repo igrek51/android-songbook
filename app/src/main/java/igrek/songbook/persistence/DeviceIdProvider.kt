@@ -14,10 +14,14 @@ class DeviceIdProvider (
 
     fun getDeviceId(): String {
         if (preferencesState.deviceId.isBlank()) {
-            val uuid = UUID.randomUUID().toString().replace("-", "")
+            val uuid = newUUID()
             preferencesState.deviceId = uuid
             LoggerFactory.logger.debug("Device UUID assigned: $uuid")
         }
         return preferencesState.deviceId
+    }
+
+    fun newUUID(): String {
+        return UUID.randomUUID().toString().replace("-", "")
     }
 }

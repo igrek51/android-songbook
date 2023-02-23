@@ -4,7 +4,6 @@ package igrek.songbook.info.errorcheck
 import igrek.songbook.BuildConfig
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
-import igrek.songbook.info.analytics.CrashlyticsLogger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject

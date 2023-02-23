@@ -13,7 +13,8 @@ import igrek.songbook.R
 import igrek.songbook.billing.BillingLayoutController
 import igrek.songbook.chords.diagram.guitar.ChordDiagramStyle
 import igrek.songbook.info.UiInfoService
-import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.info.errorcheck.RetryDelayed
+import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -37,7 +38,6 @@ import igrek.songbook.settings.theme.DisplayStyle
 import igrek.songbook.settings.theme.FontTypeface
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
-import igrek.songbook.info.errorcheck.RetryDelayed
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
@@ -253,25 +253,25 @@ class SettingsFragment(
         )
 
         setupClickPreference("settingsSyncSave") {
-            SafeExecutor {
+            safeExecute {
                 backupSyncManager.makeDriveBackupUI()
             }
         }
         setupClickPreference("settingsSyncSaveFile") {
-            SafeExecutor {
+            safeExecute {
                 backupSyncManager.makeCompositeFileBackupUI()
             }
         }
         setupClickPreference("settingsSyncRestore") {
             ConfirmDialogBuilder().confirmAction(R.string.settings_sync_restore_confirm) {
-                SafeExecutor {
+                safeExecute {
                     backupSyncManager.restoreDriveBackupUI()
                 }
             }
         }
         setupClickPreference("settingsSyncRestoreFile") {
             ConfirmDialogBuilder().confirmAction(R.string.settings_sync_restore_confirm_file) {
-                SafeExecutor {
+                safeExecute {
                     backupSyncManager.restoreCompositeFileBackupUI()
                 }
             }

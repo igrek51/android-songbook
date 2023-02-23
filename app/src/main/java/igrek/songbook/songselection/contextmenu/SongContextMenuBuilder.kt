@@ -8,7 +8,7 @@ import igrek.songbook.admin.antechamber.AntechamberService
 import igrek.songbook.custom.CustomSongService
 import igrek.songbook.custom.share.ShareSongService
 import igrek.songbook.info.UiResourceService
-import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -174,7 +174,7 @@ class SongContextMenuBuilder(
 
         val builder = AlertDialog.Builder(activity)
         builder.setItems(actionNames) { _, item ->
-            SafeExecutor {
+            safeExecute {
                 songActions[item].executor(song)
             }
         }

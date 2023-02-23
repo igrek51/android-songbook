@@ -9,7 +9,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import igrek.songbook.R
 import igrek.songbook.info.UiResourceService
-import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -46,7 +46,7 @@ class InputDialogBuilder(
                 Handler(Looper.getMainLooper()).post {
                     softKeyboardService.hideSoftKeyboard()
                 }
-                SafeExecutor {
+                safeExecute {
                     action.invoke(input.text.toString())
                 }
             }

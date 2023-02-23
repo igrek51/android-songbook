@@ -1,7 +1,7 @@
 package igrek.songbook.activity
 
 import android.util.SparseArray
-import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.info.errorcheck.safeExecute
 
 class OptionSelectDispatcher {
 
@@ -10,7 +10,7 @@ class OptionSelectDispatcher {
     fun optionsSelect(id: Int): Boolean {
         if (optionActions.get(id) != null) {
             val action = optionActions.get(id)
-            SafeExecutor(action = action)
+            safeExecute(action)
             return true
         }
         return false

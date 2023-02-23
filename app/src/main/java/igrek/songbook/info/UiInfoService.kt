@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import igrek.songbook.R
 import igrek.songbook.info.errorcheck.SafeClickListener
-import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
@@ -75,15 +75,18 @@ open class UiInfoService(
 
     fun showInfo(
         infoResId: Int, vararg args: String?,
-        indefinite: Boolean = false
+        indefinite: Boolean = false,
     ) {
         val info = uiResourceService.resString(infoResId, *args)
         showSnackbar(info = info, actionResId = R.string.action_info_ok, indefinite = indefinite)
     }
 
     fun showInfoAction(
-        infoResId: Int, vararg args: String,
-        indefinite: Boolean = false, actionResId: Int, action: () -> Unit
+        infoResId: Int,
+        vararg args: String,
+        indefinite: Boolean = false,
+        actionResId: Int,
+        action: () -> Unit,
     ) {
         val info = uiResourceService.resString(infoResId, *args)
         showSnackbar(
@@ -173,21 +176,21 @@ open class UiInfoService(
 
             if (positiveButton > 0) {
                 alertBuilder.setPositiveButton(uiResourceService.resString(positiveButton)) { _, _ ->
-                    SafeExecutor {
+                    safeExecute {
                         positiveAction.invoke()
                     }
                 }
             }
             if (negativeButton > 0) {
                 alertBuilder.setNegativeButton(uiResourceService.resString(negativeButton)) { _, _ ->
-                    SafeExecutor {
+                    safeExecute {
                         negativeAction.invoke()
                     }
                 }
             }
             if (neutralButton > 0) {
                 alertBuilder.setNeutralButton(uiResourceService.resString(neutralButton)) { _, _ ->
-                    SafeExecutor {
+                    safeExecute {
                         neutralAction.invoke()
                     }
                 }

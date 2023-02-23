@@ -18,6 +18,7 @@ import androidx.core.view.isVisible
 import igrek.songbook.R
 import igrek.songbook.custom.list.CustomSongListItem
 import igrek.songbook.custom.list.CustomSongListView
+import igrek.songbook.custom.sync.EditorSessionService
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.UiErrorHandler
@@ -320,7 +321,7 @@ class CustomSongsListLayoutController(
                     addCustomSong()
                 },
                 ContextMenuBuilder.Action(R.string.custom_songs_synchornize) {
-                    editorSessionService.syncrhonizeWithWeb()
+                    editorSessionService.synchronizeWithWeb()
                 },
                 ContextMenuBuilder.Action(R.string.import_content_from_file) {
                     importOneSong()

@@ -17,7 +17,7 @@ import igrek.songbook.billing.BillingLayoutController
 import igrek.songbook.chords.diagram.ChordDiagramsService
 import igrek.songbook.custom.CustomSongService
 import igrek.songbook.custom.CustomSongsListLayoutController
-import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -137,7 +137,7 @@ class NavigationMenuController(
                     val action = actionsMap[id]
                     // postpone action - smoother navigation hide
                     Handler(Looper.getMainLooper()).post {
-                        SafeExecutor {
+                        safeExecute {
                             action?.invoke()
                         }
                     }
@@ -177,7 +177,7 @@ class NavigationMenuController(
         drawerLayout?.closeDrawers()
         // postpone action - smoother navigation hide
         Handler(Looper.getMainLooper()).post {
-            SafeExecutor {
+            safeExecute {
                 action.invoke()
             }
         }

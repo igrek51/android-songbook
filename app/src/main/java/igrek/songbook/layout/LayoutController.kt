@@ -19,6 +19,7 @@ import igrek.songbook.custom.CustomSongsListLayoutController
 import igrek.songbook.custom.EditSongLayoutController
 import igrek.songbook.editor.ChordsEditorLayoutController
 import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -228,7 +229,7 @@ class LayoutController(
             navigationMenuController.navDrawerHide()
             return
         }
-        SafeExecutor {
+        safeExecute {
             currentLayout?.onBackClicked()
         }
     }

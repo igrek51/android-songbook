@@ -17,7 +17,7 @@ import igrek.songbook.admin.AdminService
 import igrek.songbook.billing.BillingLayoutController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
-import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -163,7 +163,7 @@ class SecretCommandService(
     private val encodedSecretRegex = Regex("""---SONGBOOK-KEY---([\S\s]+?)---SONGBOOK-KEY---""")
 
     private fun backupDataFiles(cmd: String) {
-        SafeExecutor {
+        safeExecute {
             val parts = cmd.split(" ", limit = 2)
             check(parts.size == 2) { "insufficient sections" }
             val dataDirPath = localDbService.appFilesDir.absolutePath
@@ -175,7 +175,7 @@ class SecretCommandService(
     }
 
     private fun restoreDataFiles(cmd: String) {
-        SafeExecutor {
+        safeExecute {
             val parts = cmd.split(" ", limit = 2)
             check(parts.size == 2) { "insufficient sections" }
             val dataDirPath = localDbService.appFilesDir.absolutePath
@@ -198,7 +198,7 @@ class SecretCommandService(
 
     private suspend fun decodeSecretKey(skey: String) {
         logger.debug("decoding secret key: $skey")
-        SafeExecutor {
+        safeExecute {
             val jwt = JWT(skey)
             when {
                 "cmd" in jwt.claims -> {
@@ -248,7 +248,7 @@ class SecretCommandService(
         logger.info("secret command entered: $key")
 
         GlobalScope.launch(Dispatchers.Main) {
-            SafeExecutor {
+            safeExecute {
                 val trimmedKey = key.trim()
                 if (!runActivationRules(trimmedKey)) {
                     toast(R.string.unlock_key_invalid)
@@ -284,7 +284,7 @@ class SecretCommandService(
 
     private fun shellCommand(cmd: String, showStdout: Boolean = false) {
         logger.debug("Running shell command: $cmd")
-        SafeExecutor {
+        safeExecute {
             val execute: Process = Runtime.getRuntime().exec(cmd)
             execute.waitFor()
             val retCode = execute.exitValue()

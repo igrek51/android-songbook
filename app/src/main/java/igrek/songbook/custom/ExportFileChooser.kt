@@ -7,7 +7,7 @@ import igrek.songbook.R
 import igrek.songbook.activity.ActivityResultDispatcher
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
-import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -30,7 +30,7 @@ class ExportFileChooser(
     fun showFileChooser(contentToBeSaved: String, filename: String, onSuccess: (Uri) -> Unit) {
         this.contentToBeSaved = contentToBeSaved
         this.onSuccess = onSuccess
-        SafeExecutor {
+        safeExecute {
             try {
                 val title = uiResourceService.resString(R.string.select_file_to_export)
                 val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
@@ -56,7 +56,7 @@ class ExportFileChooser(
     }
 
     private fun onFileSelect(selectedUri: Uri?) {
-        SafeExecutor {
+        safeExecute {
             if (selectedUri != null) {
                 activity.contentResolver.openOutputStream(selectedUri)
                     ?.use { outputStream: OutputStream ->

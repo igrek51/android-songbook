@@ -24,6 +24,7 @@ import igrek.songbook.chords.parser.ChordParser
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -76,7 +77,7 @@ class ChordDiagramsService(
 
     private fun showChordDiagramsAlert(typedChord: String, uniqueChords: Set<String>) {
         GlobalScope.launch(Dispatchers.Main) {
-            SafeExecutor {
+            safeExecute {
 
                 val instrument = preferencesState.chordsInstrument
                 val instrumentName = uiResourceService.resString(instrument.displayNameResId)
@@ -110,7 +111,7 @@ class ChordDiagramsService(
 
                 if (diagramView == null) {
                     uiInfoService.showInfo(R.string.chord_diagram_not_found)
-                    return@SafeExecutor
+                    return@safeExecute
                 }
 
                 alertBuilder.setView(diagramView)

@@ -4,6 +4,7 @@ import android.app.Activity
 import androidx.appcompat.app.AlertDialog
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -21,7 +22,7 @@ class ContextMenuBuilder(
         val builder = AlertDialog.Builder(activity)
             .setTitle(uiResourceService.resString(titleResId))
             .setItems(actionNames) { _, item ->
-                SafeExecutor {
+                safeExecute {
                     actions[item].executor()
                 }
             }
@@ -36,7 +37,7 @@ class ContextMenuBuilder(
 
         val builder = AlertDialog.Builder(activity)
             .setItems(actionNames) { _, item ->
-                SafeExecutor {
+                safeExecute {
                     actions[item].executor()
                 }
             }

@@ -2,7 +2,6 @@ package igrek.songbook.admin.antechamber
 
 import igrek.songbook.persistence.general.model.CategoryType
 import igrek.songbook.persistence.general.model.Song
-import igrek.songbook.settings.chordsnotation.ChordsNotation
 import kotlinx.serialization.Serializable
 
 @Serializable
