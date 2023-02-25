@@ -159,9 +159,9 @@ class EditorSessionService(
 
     private fun mergeRemoteChanges(session: EditorSessionDto, localSongs: List<CustomSong>, remoteSongs: List<EditorSongDto>) {
         // in fact, it's force reset
-        val localIdToRemoteMap = songsRepository.customSongsDao.customSongs.syncSessionData.localIdToRemoteMap
         val split = splitSets(localSongs, remoteSongs)
         var updated = 0
+        val localIdToRemoteMap = songsRepository.customSongsDao.customSongs.syncSessionData.localIdToRemoteMap
         split.common.forEach { (localOne, remoteOne) ->
             localIdToRemoteMap[localOne.id.toString()] = remoteOne.id
             if (syncedSongsDiffers(localOne, remoteOne)) {
@@ -187,16 +187,26 @@ class EditorSessionService(
         val remoteUpdateTime = formatTimestampTime(session.update_timestamp)
         val localSongsCount = localSongs.size
         val remoteSongsCount = remoteSongs.size
-        val message = """
-        There is a conflict found between local songs and the remote ones on the server.
-        During the synchronization session, there was changes applied on both sides.
-        
-        Please choose what version is the right one.
-        WARNING: The other one will get overwritten!
-        
-        Local (on this device): $localSongsCount songs
-        Remote (Web Editor on the server): $remoteSongsCount songs, updated at $remoteUpdateTime
-        """.trimIndent()
+
+        val split = splitSets(localSongs, remoteSongs)
+        var differentCount = 0
+        split.common.forEach { (localOne, remoteOne) ->
+            if (syncedSongsDiffers(localOne, remoteOne)) {
+                updateSongFromRemote(localOne, remoteOne)
+                differentCount++
+            }
+        }
+        val unchangedCount = split.common.size - differentCount
+
+        val message = uiInfoService.resString(R.string.sync_session_conflict_summary,
+            localSongsCount.toString(),
+            remoteSongsCount.toString(),
+            remoteUpdateTime,
+            unchangedCount.toString(),
+            differentCount.toString(),
+            split.localOnly.size.toString(),
+            split.remoteOnly.size.toString(),
+        ).trimIndent().trim()
 
         uiInfoService.dialogThreeChoices(
             titleResId = R.string.sync_session_conflict_detected,

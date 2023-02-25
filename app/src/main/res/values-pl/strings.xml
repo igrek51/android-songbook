@@ -542,11 +542,27 @@
     <string name="action_report_error">Wyślij Raport</string>
     <string name="report_error_sent">Wysłano raport o błędzie. Dziękuję.</string>
     <string name="custom_songs_synchornize">🔃 Synchronizuj do edycji</string>
-    <string name="sync_session_songs_synchronized">Sesja synchronizacji będzie aktywna przez kolejne 24 godziny</string>
+    <string name="sync_session_songs_synchronized">Sesja synchronizacji będzie aktywna przez 24 godziny</string>
     <string name="sync_copy_link">Kopiuj Link</string>
     <string name="sync_session_conflict_detected">Konflikt synchronizacji</string>
     <string name="sync_session_conflict_take_local">Weź lokalne</string>
     <string name="sync_session_conflict_take_remote">Weź zdalne</string>
     <string name="sync_copy_link_copied">Link skopiowany.</string>
     <string name="sync_session_synchronizing">Synchronizing songs…</string>
+    <string name="sync_session_conflict_summary">
+        \nWystąpił konflikt pomiędzy lokalnymi piosenkami a zdalną wersją na serwerze.
+        \nPodczas sesji synchronizacji, zostały wprowadzone zmiany po obu stronach.
+        \n
+        \nProszę wybrać właściwą wersję do pozostawienia.
+        \nUWAGA: Odrzucona wersja zostanie nadpisana!
+        \n
+        \nLokalna wersja (na tym urządzeniu) ma %s piosenek.
+        \n
+        \nZdalna wersja (Edytor On-line na serwerze) ma %s piosenek, ostatnio aktualizaowana o %s.
+        \n
+        \nWspólne piosenki (bez zmian): %s
+        \nRóżniące się piosenki (lokalna różni się od zdalnej): %s
+        \nTylko na lokalnym urządzeniu: %s
+        \nTylko na serwerze: %s
+    </string>
 </resources>

@@ -576,4 +576,20 @@
     <string name="sync_session_conflict_take_remote">Take remote</string>
     <string name="sync_copy_link_copied">Link copied</string>
     <string name="sync_session_synchronizing">Synchronizing songs…</string>
+    <string name="sync_session_conflict_summary">
+        \nThere is a conflict found between local songs and the remote ones on the server.
+        \nDuring the synchronization session, there was changes applied on both sides.
+        \n
+        \nPlease choose what version is the right one.
+        \nWARNING: The other one will be overwritten!
+        \n
+        \nLocal version (on this device) has %s songs
+        \n
+        \nRemote version (Web Editor on the server) has %s songs, was updated at %s.
+        \n
+        \nCommon songs (unchanged): %s
+        \nDifferent songs (local differs from remote): %s
+        \nOnly on local device: %s
+        \nOnly on remote server: %s
+    </string>
 </resources>
