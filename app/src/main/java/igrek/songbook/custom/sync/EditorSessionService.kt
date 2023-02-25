@@ -181,7 +181,7 @@ class EditorSessionService(
         WARNING: The other one will get overwritten!
         
         Local (on this device): $localSongsCount songs
-        Remote (Web Editor): $remoteSongsCount songs, updated at $remoteUpdateTime
+        Remote (Web Editor on the server): $remoteSongsCount songs, updated at $remoteUpdateTime
         """.trimIndent()
 
         uiInfoService.dialogThreeChoices(
