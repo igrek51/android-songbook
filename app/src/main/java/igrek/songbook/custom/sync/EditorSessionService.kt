@@ -101,7 +101,7 @@ class EditorSessionService(
             }
             remoteChanged -> {
                 logger.info("Sync: fetching remote changes")
-                mergeRemoteChanges(localSongs, remoteSongs)
+                mergeRemoteChanges(session, localSongs, remoteSongs)
                 synchronizeStep5SessionLink(session)
             }
             else -> {
@@ -116,10 +116,7 @@ class EditorSessionService(
         val localSongs = songsRepository.customSongsDao.customSongs.songs
         val localIdToRemoteMap = songsRepository.customSongsDao.customSongs.syncSessionData.localIdToRemoteMap
 
-        val currentLocalHash = SongHasher().hashLocalSongs(localSongs)
-        val currentRemoteHash = session.current_hash
-        songsRepository.customSongsDao.customSongs.syncSessionData.lastLocalHash = currentLocalHash
-        songsRepository.customSongsDao.customSongs.syncSessionData.lastRemoteHash = currentRemoteHash
+        rememberNewHashes(session)
 
         val pushSongs: MutableList<EditorSongDto> = mutableListOf()
         localSongs.forEach { localSong: CustomSong ->
@@ -139,6 +136,15 @@ class EditorSessionService(
         })
     }
 
+    private fun rememberNewHashes(session: EditorSessionDto) {
+        val localSongs = songsRepository.customSongsDao.customSongs.songs
+        val currentLocalHash = SongHasher().hashLocalSongs(localSongs)
+        val currentRemoteHash = session.current_hash
+        songsRepository.customSongsDao.customSongs.syncSessionData.lastLocalHash = currentLocalHash
+        songsRepository.customSongsDao.customSongs.syncSessionData.lastRemoteHash =
+            currentRemoteHash
+    }
+
     private fun synchronizeStep5SessionLink(session: EditorSessionDto) {
         val editorLink = editorSessionUrl(session.id)
         uiInfoService.showInfoAction(R.string.sync_session_songs_synchronized, indefinite=true,
@@ -151,7 +157,7 @@ class EditorSessionService(
         }
     }
 
-    private fun mergeRemoteChanges(localSongs: List<CustomSong>, remoteSongs: List<EditorSongDto>) {
+    private fun mergeRemoteChanges(session: EditorSessionDto, localSongs: List<CustomSong>, remoteSongs: List<EditorSongDto>) {
         // in fact, it's force reset
         val localIdToRemoteMap = songsRepository.customSongsDao.customSongs.syncSessionData.localIdToRemoteMap
         val split = splitSets(localSongs, remoteSongs)
@@ -171,6 +177,8 @@ class EditorSessionService(
         split.remoteOnly.forEach { remoteOne ->
             createSongFromRemote(remoteOne)
         }
+
+        rememberNewHashes(session)
 
         logger.info("Sync: remote changes merged: updated: $updated, added: ${split.remoteOnly.size}, deleted: ${split.localOnly.size}")
     }
@@ -207,7 +215,7 @@ class EditorSessionService(
                 GlobalScope.launch {
                     safeExecute {
                         logger.info("Sync: Conflict: taking remote")
-                        mergeRemoteChanges(localSongs, remoteSongs)
+                        mergeRemoteChanges(session, localSongs, remoteSongs)
                         synchronizeStep5SessionLink(session)
                     }
                 }
