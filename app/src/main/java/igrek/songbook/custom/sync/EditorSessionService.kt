@@ -87,30 +87,32 @@ class EditorSessionService(
         val remoteChanged = currentRemoteHash != lastRemoteHash
 
         when {
-            remoteSongs.isEmpty() -> { // do nothing. Local version is already latest.
+            remoteSongs.isEmpty() -> { // don't update local, push to remote. Local version is already latest.
                 logger.info("Sync: empty remote")
+                synchronizeStep4Push(session)
             }
             localChanged && remoteChanged -> {
                 logger.info("Sync: merge conflict")
                 resolveConflicts(session, localSongs, remoteSongs)
-                return
             }
-            localChanged -> { // do nothing. Local version is already latest.
+            localChanged -> { // don't update local, push to remote. Local version is already latest.
                 logger.info("Sync: found local changes to push")
+                synchronizeStep4Push(session)
             }
             remoteChanged -> {
-                logger.info("Sync: merging remote changes")
+                logger.info("Sync: fetching remote changes")
                 mergeRemoteChanges(localSongs, remoteSongs)
+                synchronizeStep5SessionLink(session)
             }
             else -> {
                 logger.info("Sync: local is up-to-date with the remote")
+                synchronizeStep5SessionLink(session)
             }
         }
-
-        synchronizeStep4Push(session)
     }
 
     private suspend fun synchronizeStep4Push(session: EditorSessionDto) {
+        logger.info("Sync: pushing local snapshot")
         val localSongs = songsRepository.customSongsDao.customSongs.songs
         val localIdToRemoteMap = songsRepository.customSongsDao.customSongs.syncSessionData.localIdToRemoteMap
 
@@ -129,20 +131,24 @@ class EditorSessionService(
             pushSongs.add(pushSong)
         }
 
-        val editorLink = editorSessionUrl(session.id)
         val result = pushSongsAsync(session.id, pushSongs).await()
         result.fold(onSuccess = {
-            uiInfoService.showInfoAction(R.string.sync_session_songs_synchronized, indefinite=true,
-                actionResId=R.string.sync_copy_link) {
-                clipboardManager.copyToSystemClipboard(editorLink)
-                GlobalScope.launch {
-                    uiInfoService.clearSnackBars()
-                    uiInfoService.showInfo(R.string.sync_copy_link_copied)
-                }
-            }
+            synchronizeStep5SessionLink(session)
         }, onFailure = { e ->
             UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
         })
+    }
+
+    private fun synchronizeStep5SessionLink(session: EditorSessionDto) {
+        val editorLink = editorSessionUrl(session.id)
+        uiInfoService.showInfoAction(R.string.sync_session_songs_synchronized, indefinite=true,
+            actionResId=R.string.sync_copy_link) {
+            clipboardManager.copyToSystemClipboard(editorLink)
+            GlobalScope.launch {
+                uiInfoService.clearSnackBars()
+                uiInfoService.showInfo(R.string.sync_copy_link_copied)
+            }
+        }
     }
 
     private fun mergeRemoteChanges(localSongs: List<CustomSong>, remoteSongs: List<EditorSongDto>) {
@@ -202,7 +208,7 @@ class EditorSessionService(
                     safeExecute {
                         logger.info("Sync: Conflict: taking remote")
                         mergeRemoteChanges(localSongs, remoteSongs)
-                        synchronizeStep4Push(session)
+                        synchronizeStep5SessionLink(session)
                     }
                 }
             },
