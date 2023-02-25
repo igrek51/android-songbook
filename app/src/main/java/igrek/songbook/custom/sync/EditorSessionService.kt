@@ -174,7 +174,7 @@ class EditorSessionService(
         val localSongsCount = localSongs.size
         val remoteSongsCount = remoteSongs.size
         val message = """
-        There is a conflict found between local songs and the remote ones.
+        There is a conflict found between local songs and the remote ones on the server.
         During the synchronization session, there was changes applied on both sides.
         
         Please choose what version is the right one.
