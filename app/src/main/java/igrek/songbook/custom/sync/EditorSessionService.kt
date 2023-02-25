@@ -314,33 +314,40 @@ class EditorSessionService(
 
     private fun splitSets(
         localSongs: List<CustomSong>,
-        remoteSongs: List<EditorSongDto>
+        remoteSongs: List<EditorSongDto>,
     ): SetSplit {
         val split = SetSplit()
 
         val localKeySelector = { it: CustomSong -> "${it.title} - ${it.categoryName}" }
         val remoteKeySelector = { it: EditorSongDto -> "${it.title} - ${it.artist}" }
+        val localIdSelector = { it: CustomSong -> it.id.toString() }
+        val remoteIdSelector = { it: EditorSongDto -> it.id }
 
-        val localSongsById: Map<String, CustomSong> =
-            localSongs.associateBy { localKeySelector(it) }
-        val remoteSongsById: Map<String, EditorSongDto> =
-            remoteSongs.associateBy { remoteKeySelector(it) }
+        val localIdToRemoteMap = songsRepository.customSongsDao.customSongs.syncSessionData.localIdToRemoteMap
+
+        val remoteSongsByKey: Map<String, EditorSongDto> = remoteSongs.associateBy { remoteKeySelector(it) }
+        val remoteSongsById: MutableMap<String, EditorSongDto> = remoteSongs.associateBy { remoteIdSelector(it) }.toMutableMap()
 
         localSongs.forEach { localE ->
-            val id = localKeySelector(localE)
-            if (id in remoteSongsById) {
-                val commonPair = localE to remoteSongsById[id]!!
+            val localKey = localKeySelector(localE)
+            val remoteId = localIdToRemoteMap[localIdSelector(localE)]
+            if (remoteId in remoteSongsById) {
+                val remoteE = remoteSongsById[remoteId]!!
+                val commonPair = localE to remoteE
+                remoteSongsById.remove(remoteIdSelector(remoteE))
+                split.common.add(commonPair)
+            } else if (localKey in remoteSongsByKey) {
+                val remoteE = remoteSongsByKey[localKey]!!
+                val commonPair = localE to remoteE
+                remoteSongsById.remove(remoteIdSelector(remoteE))
                 split.common.add(commonPair)
             } else {
                 split.localOnly.add(localE)
             }
         }
 
-        remoteSongs.forEach { remoteE ->
-            val id = remoteKeySelector(remoteE)
-            if (id !in localSongsById) {
-                split.remoteOnly.add(remoteE)
-            }
+        remoteSongsById.values.forEach { remoteE ->
+            split.remoteOnly.add(remoteE)
         }
 
         return split
