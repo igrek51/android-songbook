@@ -101,8 +101,7 @@ class EditorSessionService(
             }
             remoteChanged -> {
                 logger.info("Sync: fetching remote changes")
-                mergeRemoteChanges(session, localSongs, remoteSongs)
-                synchronizeStep5SessionLink(session)
+                applyRemoteChanges(session, localSongs, remoteSongs)
             }
             else -> {
                 logger.info("Sync: local is up-to-date with the remote")
@@ -157,16 +156,14 @@ class EditorSessionService(
         }
     }
 
-    private fun mergeRemoteChanges(session: EditorSessionDto, localSongs: List<CustomSong>, remoteSongs: List<EditorSongDto>) {
+    private fun applyRemoteChanges(session: EditorSessionDto, localSongs: List<CustomSong>, remoteSongs: List<EditorSongDto>) {
         // in fact, it's force reset
         val split = splitSets(localSongs, remoteSongs)
-        var updated = 0
         val localIdToRemoteMap = songsRepository.customSongsDao.customSongs.syncSessionData.localIdToRemoteMap
         split.common.forEach { (localOne, remoteOne) ->
             localIdToRemoteMap[localOne.id.toString()] = remoteOne.id
             if (syncedSongsDiffers(localOne, remoteOne)) {
                 updateSongFromRemote(localOne, remoteOne)
-                updated++
             }
         }
 
@@ -179,8 +176,28 @@ class EditorSessionService(
         }
 
         rememberNewHashes(session)
+        logger.info("Sync: remote changes applied: updated: ${split.differentCount}, added: ${split.remoteOnly.size}, deleted: ${split.localOnly.size}")
 
-        logger.info("Sync: remote changes merged: updated: $updated, added: ${split.remoteOnly.size}, deleted: ${split.localOnly.size}")
+        synchronizeStep5SessionLink(session)
+    }
+
+    private suspend fun softMergeRemoteChanges(session: EditorSessionDto, split: SetSplit) {
+        val localIdToRemoteMap = songsRepository.customSongsDao.customSongs.syncSessionData.localIdToRemoteMap
+        split.common.forEach { (localOne, remoteOne) ->
+            localIdToRemoteMap[localOne.id.toString()] = remoteOne.id
+            if (syncedSongsDiffers(localOne, remoteOne)) {
+                updateSongFromRemote(localOne, remoteOne)
+            }
+        }
+
+        split.remoteOnly.forEach { remoteOne ->
+            createSongFromRemote(remoteOne)
+        }
+
+        rememberNewHashes(session)
+        logger.info("Sync: remote changes merged: updated: ${split.differentCount}, added: ${split.remoteOnly.size}, kept back locally: ${split.localOnly.size}")
+
+        synchronizeStep4Push(session)
     }
 
     private suspend fun resolveConflicts(session: EditorSessionDto, localSongs: List<CustomSong>, remoteSongs: List<EditorSongDto>) {
@@ -189,21 +206,19 @@ class EditorSessionService(
         val remoteSongsCount = remoteSongs.size
 
         val split = splitSets(localSongs, remoteSongs)
-        var differentCount = 0
-        split.common.forEach { (localOne, remoteOne) ->
-            if (syncedSongsDiffers(localOne, remoteOne)) {
-                updateSongFromRemote(localOne, remoteOne)
-                differentCount++
-            }
+
+        if (split.differentCount == 0) {
+            logger.info("Sync: conflict can be softly resolved")
+            softMergeRemoteChanges(session, split)
+            return
         }
-        val unchangedCount = split.common.size - differentCount
 
         val message = uiInfoService.resString(R.string.sync_session_conflict_summary,
             localSongsCount.toString(),
             remoteSongsCount.toString(),
             remoteUpdateTime,
-            unchangedCount.toString(),
-            differentCount.toString(),
+            split.unchangedCount.toString(),
+            split.differentCount.toString(),
             split.localOnly.size.toString(),
             split.remoteOnly.size.toString(),
         ).trimIndent().trim()
@@ -225,8 +240,7 @@ class EditorSessionService(
                 GlobalScope.launch {
                     safeExecute {
                         logger.info("Sync: Conflict: taking remote")
-                        mergeRemoteChanges(session, localSongs, remoteSongs)
-                        synchronizeStep5SessionLink(session)
+                        applyRemoteChanges(session, localSongs, remoteSongs)
                     }
                 }
             },
@@ -350,6 +364,12 @@ class EditorSessionService(
             split.remoteOnly.add(remoteE)
         }
 
+        split.common.forEach { (localOne, remoteOne) ->
+            if (syncedSongsDiffers(localOne, remoteOne)) {
+                split.differentCount++
+            }
+        }
+
         return split
     }
 
@@ -417,4 +437,7 @@ data class SetSplit(
     val common: MutableList<Pair<CustomSong, EditorSongDto>> = mutableListOf(),
     val localOnly: MutableList<CustomSong> = mutableListOf(),
     val remoteOnly: MutableList<EditorSongDto> = mutableListOf(),
-)
+    var differentCount: Int = 0,
+) {
+    val unchangedCount: Int get() = this.common.size - differentCount
+}
