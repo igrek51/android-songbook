@@ -226,8 +226,8 @@ class EditorSessionService(
         uiInfoService.dialogThreeChoices(
             titleResId = R.string.sync_session_conflict_detected,
             message = message,
-            positiveButton = R.string.sync_session_conflict_take_local,
-            positiveAction = {
+            neutralButton = R.string.sync_session_conflict_take_local,
+            neutralAction = {
                 GlobalScope.launch {
                     safeExecute {
                         logger.info("Sync: Conflict: taking local")
@@ -235,8 +235,10 @@ class EditorSessionService(
                     }
                 }
             },
-            negativeButton = R.string.sync_session_conflict_take_remote,
-            negativeAction = {
+            negativeButton = R.string.action_cancel,
+            negativeAction = {},
+            positiveButton = R.string.sync_session_conflict_take_remote,
+            positiveAction = {
                 GlobalScope.launch {
                     safeExecute {
                         logger.info("Sync: Conflict: taking remote")
@@ -244,8 +246,6 @@ class EditorSessionService(
                     }
                 }
             },
-            neutralButton = R.string.action_cancel,
-            neutralAction = {},
         )
     }
 
