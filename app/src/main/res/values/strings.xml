@@ -569,7 +569,7 @@
     <string name="action_report_error">Send Report</string>
     <string name="report_error_sent">Error Report has been sent. Thank you.</string>
     <string name="custom_songs_synchornize">🔃 Synchronize with Web Editor</string>
-    <string name="sync_session_songs_synchronized">Synchronization session will be active for 24 hours</string>
+    <string name="sync_session_songs_synchronized">Synchronized. Session will be active for 24 hours</string>
     <string name="sync_copy_link">Copy Link</string>
     <string name="sync_session_conflict_detected">Synchronization conflict</string>
     <string name="sync_session_conflict_take_local">Take local</string>
