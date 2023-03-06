@@ -11,8 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Click 3-dots icon on *My Songs* and pick *Synchronize with Web Editor*.
   This will start a temporary session for 24 hours, which you can access by opening link on any device.
   If changes were made in both places (locally and remotely), there would be a conflict to be resolved.
+- *Songbook Web UI* is available at [songbook.igrek.dev](https://songbook.igrek.dev/ui).
+  Right now it only handles *Synchronize Sessions*.
 - Changelog can be opened from the *About* window
-  and is available at https://igrek51.github.io/android-songbook/CHANGELOG/.
+  and is available at [Manual pages](https://igrek51.github.io/android-songbook/CHANGELOG/).
 - Application logs can be browsed in the app by typing the secret command `logs`.
 - Copyright notices of the third-party libraries are linked in the *About* window.
 
