@@ -565,4 +565,5 @@
         \nTylko na lokalnym urządzeniu: %s
         \nTylko na serwerze: %s
     </string>
+    <string name="listview_empty">Brak</string>
 </resources>

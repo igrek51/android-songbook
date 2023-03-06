@@ -18,7 +18,7 @@ import igrek.songbook.billing.BillingLayoutController
 import igrek.songbook.custom.CustomSongsListLayoutController
 import igrek.songbook.custom.EditSongLayoutController
 import igrek.songbook.editor.ChordsEditorLayoutController
-import igrek.songbook.info.errorcheck.SafeExecutor
+import igrek.songbook.info.logview.LogsLayoutController
 import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
@@ -74,6 +74,7 @@ class LayoutController(
     billingLayoutController: LazyInject<BillingLayoutController> = appFactory.billingLayoutController,
     webviewLayoutController: LazyInject<WebviewLayoutController> = appFactory.webviewLayoutController,
     playlistFillLayoutController: LazyInject<PlaylistFillLayoutController> = appFactory.playlistFillLayoutController,
+    logsLayoutController: LazyInject<LogsLayoutController> = appFactory.logsLayoutController,
 ) {
     private val activity by LazyExtractor(appCompatActivity)
     private val navigationMenuController by LazyExtractor(navigationMenuController)
@@ -106,6 +107,7 @@ class LayoutController(
         BillingLayoutController::class to billingLayoutController.get(),
         WebviewLayoutController::class to webviewLayoutController.get(),
         PlaylistFillLayoutController::class to playlistFillLayoutController.get(),
+        LogsLayoutController::class to logsLayoutController.get(),
     )
     private val logger = LoggerFactory.logger
     private val layoutCache = hashMapOf<Int, View>()

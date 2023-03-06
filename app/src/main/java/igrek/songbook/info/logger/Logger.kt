@@ -82,6 +82,14 @@ open class Logger internal constructor() {
                 else -> printDebug(consoleMessage)
             }
 
+            LoggerFactory.sessionLogs.add(
+                LogEntry(
+                    message = consoleMessage,
+                    timestampS = System.currentTimeMillis() / 1000,
+                    level = level,
+                )
+            )
+
             if (level.moreOrEqualImportant(LogLevel.DEBUG) ||
                 (BuildConfig.DEBUG && level.moreOrEqualImportant(LogLevel.DEBUG))
             ) {

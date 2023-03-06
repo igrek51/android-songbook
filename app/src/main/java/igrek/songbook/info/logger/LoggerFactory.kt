@@ -11,4 +11,6 @@ object LoggerFactory {
     val logger: Logger
         get() = Logger()
 
+    val sessionLogs: MutableList<LogEntry> = mutableListOf()
+
 }

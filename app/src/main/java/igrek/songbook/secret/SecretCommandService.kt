@@ -15,6 +15,7 @@ import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.admin.AdminService
 import igrek.songbook.billing.BillingLayoutController
+import igrek.songbook.info.logview.LogsLayoutController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.safeExecute
@@ -143,6 +144,10 @@ class SecretCommandService(
 
             ExactKeyRule("goto shop") {
                 this.layoutController.showLayout(BillingLayoutController::class)
+            },
+
+            ExactKeyRule("logs") {
+                this.layoutController.showLayout(LogsLayoutController::class)
             },
 
             ExactKeyRule("exit now") {

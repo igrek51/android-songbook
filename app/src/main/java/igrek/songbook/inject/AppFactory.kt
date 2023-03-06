@@ -20,6 +20,7 @@ import igrek.songbook.custom.*
 import igrek.songbook.custom.share.ShareSongService
 import igrek.songbook.custom.sync.EditorSessionService
 import igrek.songbook.editor.ChordsEditorLayoutController
+import igrek.songbook.info.logview.LogsLayoutController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.analytics.CrashlyticsLogger
@@ -173,4 +174,5 @@ class AppFactory(
     val crashlyticsLogger = SingletonInject { CrashlyticsLogger() }
     val deviceIdProvider = SingletonInject { DeviceIdProvider() }
     val editorSessionService = SingletonInject { EditorSessionService() }
+    val logsLayoutController = SingletonInject { LogsLayoutController() }
 }
