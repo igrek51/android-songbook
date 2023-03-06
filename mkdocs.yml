@@ -66,3 +66,4 @@ nav:
   - Development:
     - Third Party Libraries: develop/tech-stack.md
     - Copyright Notices: develop/copyright-notices.md
+  - Changelog: CHANGELOG.md

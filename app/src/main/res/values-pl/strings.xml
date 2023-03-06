@@ -61,6 +61,8 @@
         <br>
         <br><a href=\"https://github.com/igrek51/android-songbook\">Projekt Songbook na GitHubie</a>
         <br>
+        <br><a href=\"https://igrek51.github.io/android-songbook/CHANGELOG/\">Changelog - lista zmian</a>
+        <br>
         <br><a href=\"https://igrek51.github.io/android-songbook/develop/tech-stack\">Biblioteki zewnętrzne</a>
     ]]></string>
     <string name="action_info_ok">OK</string>

@@ -127,8 +127,15 @@ which make the editing easier.
     or any **cloud drive** supported by your device (like **Google Drive**).
     Import from either **Text file** (`.txt`), **PDF document** (`.pdf`) or **Google Docs** document.
 
-!!! tip
-    If you prefer to edit your own songs on a desktop computer in a **TXT** file,
+!!! tip "Desktop Editor: Web Editor method"
+    You can **synchronize** your songs with a **Web Editor** to modify them in any browser, for instance on your desktop computer.
+    Then synchronize them back to see the changes on your local device.
+    Click *3-dots* icon on *My Songs* and pick *Synchronize with Web Editor*.
+    This will start a temporary session for **24 hours**, which you can access by opening the link on any device.
+    If changes were made in both places (locally and remotely), there might be a conflict to be resolved.
+
+!!! tip "Desktop Editor: Drive method"
+    Or if you prefer to edit your songs on a desktop computer in a **TXT** file,
     you can upload it to **Google Drive** and then you can import it from the *Songbook* on your mobile device.
 
 ## Contributing
