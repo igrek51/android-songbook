@@ -566,4 +566,5 @@
         \nTylko na serwerze: %s
     </string>
     <string name="listview_empty">Brak</string>
+    <string name="copied_to_clipboard">Skopiowano do schowka</string>
 </resources>
