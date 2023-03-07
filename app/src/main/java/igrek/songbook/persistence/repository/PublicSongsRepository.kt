@@ -21,6 +21,9 @@ data class PublicSongsRepository(
     )
 
     fun invalidate() {
+        categories.invalidate()
+        songs.invalidate()
+
         categoryFinder.invalidate()
         songFinder.invalidate()
     }

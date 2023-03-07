@@ -26,6 +26,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
+// Singleton
 class SongsRepository(
     localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
     userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
@@ -100,7 +101,7 @@ class SongsRepository(
             val customDbBuilder = CustomSongsDbBuilder(userDataDao)
             customSongsRepo = customDbBuilder.buildCustom(uiResourceService)
 
-            allSongsRepo.invalidate()
+            allSongsRepo = AllSongsRepository(publicSongsRepo, customSongsRepo)
             dbChangeSubject.onNext(true)
         }
     }

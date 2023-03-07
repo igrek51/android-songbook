@@ -8,7 +8,7 @@ import igrek.songbook.util.lookup.SimpleCache
 data class CustomSongsRepository(
     val songs: SimpleCache<List<Song>>,
     val uncategorizedSongs: SimpleCache<List<Song>>,
-    val allCustomCategory: Category
+    val allCustomCategory: Category,
 ) {
 
     val songFinder = LazyFinderByTuple(
@@ -17,6 +17,9 @@ data class CustomSongsRepository(
     )
 
     fun invalidate() {
+        songs.invalidate()
+        uncategorizedSongs.invalidate()
+
         songFinder.invalidate()
     }
 }

@@ -7,7 +7,7 @@ import igrek.songbook.util.lookup.SimpleCache
 
 data class AllSongsRepository(
     val publicSongsRepo: PublicSongsRepository,
-    val customSongsRepo: CustomSongsRepository
+    val customSongsRepo: CustomSongsRepository,
 ) {
 
     val songs = SimpleCache {
@@ -33,6 +33,9 @@ data class AllSongsRepository(
     )
 
     fun invalidate() {
+        publicSongsRepo.invalidate()
+        customSongsRepo.invalidate()
+
         songs.invalidate()
         categories.invalidate()
         publicCategories.invalidate()
