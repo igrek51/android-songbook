@@ -82,9 +82,8 @@ class LyricsInflater(
         return bounds.width().toFloat()
     }
 
-    private fun inflateFragment(fragment: LyricsFragment): Float {
+    private fun inflateFragment(fragment: LyricsFragment) {
         fragment.width = calculateTextWidth(fragment.text, fragment.type)
-        return fragment.width
     }
 
 }

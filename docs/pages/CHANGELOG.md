@@ -15,8 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Right now it only handles *Synchronize Sessions*.
 - Changelog can be opened from the *About* window
   and is available at [Manual pages](https://igrek51.github.io/android-songbook/CHANGELOG/).
-- Application logs can be browsed in the app by typing the secret command `logs`.
+- Runtime logs from the application can be browsed in the app by typing the secret command `logs`.
 - Copyright notices of the third-party libraries are linked in the *About* window.
+
+### Fixed
+- Overlapping chords in the "Chords Above" style are now displayed correctly.
 
 ## [1.33.2] - 2023-01-19
 ### Added

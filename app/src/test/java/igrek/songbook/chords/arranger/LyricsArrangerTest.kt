@@ -202,7 +202,7 @@ class LyricsArrangerTest {
     fun test_text_not_wrapped_when_chords_above() {
         val wrapper = LyricsArranger(
             displayStyle = DisplayStyle.ChordsAbove,
-            screenWRelative = 16f,
+            screenWRelative = 17f,
             lengthMapper = lengthMapper
         )
         val wrapped = wrapper.arrangeModel(
@@ -215,16 +215,20 @@ class LyricsArrangerTest {
                 )),
             ))
         )
-        Assertions.assertThat(wrapped.lines).containsExactly(
+        /*
+        G e a7 D G e a7 D
+        wo wo wo wo wo wo
+         */
+        Assertions.assertThat(wrapped.lines).isEqualTo(listOf(
             LyricsLine(listOf(
                 LyricsFragment.chords("G e a7 D", x = 0f, width = 8f),
-                LyricsFragment.chords("G e a7 D", x = 8f, width = 8f),
+                LyricsFragment.chords("G e a7 D", x = 9f, width = 8f),
             )),
             LyricsLine(listOf(
                 LyricsFragment.text("wo wo wo", x = 0f, width = 8f),
-                LyricsFragment.text("wo wo wo", x = 8f, width = 8f),
+                LyricsFragment.text("wo wo wo", x = 9f, width = 8f),
             )),
-        )
+        ))
     }
 
     @Test
@@ -321,6 +325,13 @@ class LyricsArrangerTest {
                 )),
             )),
         )
+        /*
+        Should be:
+        G e
+        wo lo lo
+                G e
+        wo lo lo
+         */
         Assertions.assertThat(wrapped.lines).containsExactly(
             LyricsLine(listOf(
                 LyricsFragment.chords("G e", x = 0f, width = 3f),
@@ -336,6 +347,56 @@ class LyricsArrangerTest {
                 LyricsFragment.text("wo lo lo", x = 0f, width = 8f),
             )),
         )
+    }
+
+    @Test
+    fun test_align_move_overlapped_chords() {
+        val wrapper = LyricsArranger(
+            displayStyle = DisplayStyle.ChordsAbove,
+            screenWRelative = 100f,
+            lengthMapper = lengthMapper
+        )
+        val wrapped = wrapper.arrangeModel(
+            LyricsModel(listOf(
+                LyricsLine(listOf(
+                    chord("C"),
+                    text("c"),
+                    chord("F"),
+                    text("f"),
+                )),
+                LyricsLine(listOf(
+                    text("wolo"),
+                    chord("G"),
+                    chord("e"),
+                    text("end"),
+                )),
+            )),
+        )
+        /*
+        Should be:
+        C F
+        c f
+            G e
+        wolo  end
+         */
+        Assertions.assertThat(wrapped.lines).isEqualTo(listOf(
+            LyricsLine(listOf(
+                LyricsFragment.chords("C", x = 0f, width = 1f),
+                LyricsFragment.chords("F", x = 2f, width = 1f),
+            )),
+            LyricsLine(listOf(
+                LyricsFragment.text("c", x = 0f, width = 1f),
+                LyricsFragment.text("f", x = 2f, width = 1f),
+            )),
+            LyricsLine(listOf(
+                LyricsFragment.chords("G", x = 4f, width = 1f),
+                LyricsFragment.chords("e", x = 6f, width = 1f),
+            )),
+            LyricsLine(listOf(
+                LyricsFragment.text("wolo", x = 0f, width = 4f),
+                LyricsFragment.text("end", x = 6f, width = 3f),
+            )),
+        ))
     }
 
     @Test

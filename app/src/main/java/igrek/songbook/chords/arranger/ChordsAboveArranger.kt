@@ -71,14 +71,22 @@ class ChordsAboveArranger(
         chords: List<LyricsFragment>,
         texts: List<LyricsFragment>
     ) {
-        chords.forEachIndexed { index, chord ->
+        chords.forEachIndexed { index, _ ->
+            val chord = chords[index]
             chords.getOrNull(index - 1)
-                ?.let {
+                ?.let { previousChord ->
                     val spaceWidth = lengthMapper.charWidth(chord.type, ' ')
-                    val overlappedBy = it.x + it.width - chord.x
+                    val overlappedBy = previousChord.x + previousChord.width - chord.x + spaceWidth
                     if (overlappedBy > 0) {
-                        texts.filter { f -> f.x > chord.x }.forEach { f -> f.x += overlappedBy }
-                        chord.x += overlappedBy + spaceWidth
+                        val splitPoint = chord.x
+                        // move all chords and texts to the right
+                        texts.filter { fragment -> fragment.x >= splitPoint }.forEach {
+                            fragment -> fragment.x += overlappedBy
+                        }
+                        chords.filter { fragment -> fragment.x > splitPoint }.forEach {
+                            fragment -> fragment.x += overlappedBy
+                        }
+                        chord.x += overlappedBy
                     }
                 }
         }
