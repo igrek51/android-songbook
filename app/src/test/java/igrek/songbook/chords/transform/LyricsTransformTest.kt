@@ -5,6 +5,7 @@ import igrek.songbook.chords.arranger.singleChord
 import igrek.songbook.chords.arranger.text
 import igrek.songbook.chords.detect.KeyDetector
 import igrek.songbook.chords.model.LyricsCloner
+import igrek.songbook.chords.model.LyricsModel
 import igrek.songbook.chords.parser.ChordParser
 import igrek.songbook.chords.parser.LyricsExtractor
 import igrek.songbook.chords.render.ChordsRenderer
@@ -20,43 +21,13 @@ class LyricsTransformTest {
     @Test
     fun test_transform_one_line() {
         val rawContent = "Food alone won't [Gm7]ease the hun-[Am7]ger [Bbsus2]in [C]their [Dm]eyes"
-        val lyricsInflater = MonospaceLyricsInflater(1f)
+        val arrangedLyrics = transformLyrics(rawContent)
 
-        // extract lyrics: split
-        val lyrics = LyricsExtractor().parseLyrics(rawContent)
-        // parse chords
-        val chordParser = ChordParser(ChordsNotation.ENGLISH)
-        chordParser.parseAndFillChords(lyrics)
-
-        // transpose
-        val transposedLyrics = ChordsTransposer().transposeLyrics(lyrics, transposition = 0)
-        val songKey = KeyDetector().detectKey(transposedLyrics)
-        // format chords (render)
-        ChordsRenderer(ChordsNotation.ENGLISH, songKey).formatLyrics(
-            transposedLyrics,
-            originalModifiers = true,
-        )
-
-        // inflate text
-        val tmpLyrics = LyricsCloner().cloneLyrics(transposedLyrics)
-        val realFontsize = 1f
-        val inflatedLyrics = lyricsInflater.inflateLyrics(tmpLyrics)
-
-        // arrange lyrics and chords
-        val screenW = 100f
-        val screenWRelative = screenW / realFontsize
-        val lyricsWrapper = LyricsArranger(
-            DisplayStyle.ChordsAbove,
-            screenWRelative,
-            lyricsInflater.lengthMapper,
-        )
-        val arrangedLyrics = lyricsWrapper.arrangeModel(inflatedLyrics)
-
-        /*
-        Should be transformed into:
+        /* Should be transformed into:
                          Gm7          Am7 Bbsus2 C     Dm
         Food alone won't ease the hun-ger in     their eyes
          */
+        val chordParser = ChordParser(ChordsNotation.ENGLISH)
         assertThat(arrangedLyrics.lines).hasSize(2)
         assertThat(arrangedLyrics.lines[0].fragments).containsExactly(
             singleChord("Gm7", chordParser, x = 17f),
@@ -73,7 +44,47 @@ class LyricsTransformTest {
             text("their", x = 41f, w = 6f),
             text("eyes", x = 47f),
         )
-
     }
 
+}
+
+fun transformLyrics(
+    rawContent: String,
+    fontsize: Float = 1f,
+    notation: ChordsNotation = ChordsNotation.ENGLISH,
+    trimWhitespaces: Boolean = true,
+    transposedBy: Int = 0,
+    forceSharps: Boolean = false,
+    originalModifiers: Boolean = true,
+    screenW: Float = 100f,
+): LyricsModel {
+
+    // extract lyrics: split
+    val lyrics = LyricsExtractor(trimWhitespaces=trimWhitespaces).parseLyrics(rawContent)
+    // parse chords
+    val chordParser = ChordParser(notation)
+    chordParser.parseAndFillChords(lyrics)
+
+    // transpose
+    val transposedLyrics = ChordsTransposer().transposeLyrics(lyrics, transposedBy)
+    val songKey = KeyDetector().detectKey(transposedLyrics)
+    // format chords (render)
+    ChordsRenderer(notation, songKey, forceSharps=forceSharps).formatLyrics(
+        transposedLyrics,
+        originalModifiers = originalModifiers,
+    )
+
+    // inflate text
+    val lyricsInflater = MonospaceLyricsInflater(fontsize) // DUMMY inflater
+    val tmpLyrics = LyricsCloner().cloneLyrics(transposedLyrics)
+    val inflatedLyrics = lyricsInflater.inflateLyrics(tmpLyrics)
+
+    // arrange lyrics and chords
+    val screenWRelative = screenW / fontsize
+    val lyricsWrapper = LyricsArranger(
+        DisplayStyle.ChordsAbove,
+        screenWRelative,
+        lyricsInflater.lengthMapper,
+    )
+    return lyricsWrapper.arrangeModel(inflatedLyrics)
 }
