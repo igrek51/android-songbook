@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Whenever Songbook app is updated, it prompts you to view the Changelog to see the latest changes.
+
+## [1.34.0] - 1892 - 2023-03-09
+### Added
 - You can Synchronize your songs with a Web Editor to modify them in any browser, for instance on your desktop computer.
   Then synchronize them back to see the changes on your local device.
   Click 3-dots icon on *My Songs* and pick *Synchronize with Web Editor*.
@@ -22,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Overlapping chords in the "Chords Above" style are now displayed correctly.
 - Lists of songs are now properly updated when a change to a custom song is applied.
 
-## [1.33.2] - 2023-01-19
+## [1.33.2] - 1891 - 2023-01-19
 ### Added
 - Non-fatal errors can be reported by clicking *Send Report* on an error pop-up.
 
@@ -33,6 +37,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inverted chords (eg. `C/G`) are no longer splitted when wrapping the lines.
 - Fixed security error on some devices when opening the external links, like Privacy Policy.
 
-## [1.33.1] - 2023-12-30
+## [1.33.1] - 1890 - 2023-12-30
 ### Added
 - Debug logs are included in reports in case of a crash.

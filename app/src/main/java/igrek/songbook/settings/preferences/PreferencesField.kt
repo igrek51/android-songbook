@@ -155,6 +155,8 @@ enum class PreferencesField constructor(
 
     DeviceId(""),
 
+    LastAppVersionCode(0),
+
     ;
 
     constructor(defaultValue: String) : this(StringPreferenceType(defaultValue))

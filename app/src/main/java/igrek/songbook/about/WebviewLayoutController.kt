@@ -24,6 +24,10 @@ class WebviewLayoutController : InflatedLayout(
         openUrl("https://igrek51.github.io/android-songbook/chord-format/")
     }
 
+    fun openChangelog() {
+        openUrl("https://igrek51.github.io/android-songbook/CHANGELOG/")
+    }
+
     private fun openUrl(url: String) {
         currentUrl = url
         when (builtInWebview) {

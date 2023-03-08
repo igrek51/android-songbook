@@ -597,4 +597,6 @@
     </string>
     <string name="listview_empty">Empty</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="action_open_changelog">Open</string>
+    <string name="changelog_checkout_latest_changes">Check out the latest changes in this version.</string>
 </resources>

@@ -6,6 +6,7 @@ import android.content.Intent
 import igrek.songbook.BuildConfig
 import igrek.songbook.R
 import igrek.songbook.about.AboutLayoutController
+import igrek.songbook.about.WebviewLayoutController
 import igrek.songbook.admin.AdminService
 import igrek.songbook.custom.SongImportFileChooser
 import igrek.songbook.custom.share.ShareSongService
@@ -50,6 +51,7 @@ class AppInitializer(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     backupSyncManager: LazyInject<BackupSyncManager> = appFactory.backupSyncManager,
     userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
+    webviewLayoutController: LazyInject<WebviewLayoutController> = appFactory.webviewLayoutController,
 ) {
     private val windowManagerService by LazyExtractor(windowManagerService)
     private val layoutController by LazyExtractor(layoutController)
@@ -69,6 +71,7 @@ class AppInitializer(
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val backupSyncManager by LazyExtractor(backupSyncManager)
     private val userDataDao by LazyExtractor(userDataDao)
+    private val webviewLayoutController by LazyExtractor(webviewLayoutController)
 
     private val logger = LoggerFactory.logger
     private val debugInitEnabled = false
@@ -102,10 +105,11 @@ class AppInitializer(
 
             adminService.init()
 
-            if (isRunningFirstTime())
-                firstRunInit()
-            if (preferencesState.appExecutionCount == 50L)
-                promptRateApp()
+            when {
+                isRunningFirstTime() -> firstRunInit()
+                preferencesState.appExecutionCount == 50L -> promptRateApp()
+                BuildConfig.VERSION_CODE > preferencesState.lastAppVersionCode -> promptChangelog()
+            }
             reportExecution()
 
             activityController.initialized = true
@@ -150,6 +154,7 @@ class AppInitializer(
 
     private fun reportExecution() {
         preferencesState.appExecutionCount += 1
+        preferencesState.lastAppVersionCode = BuildConfig.VERSION_CODE.toLong()
     }
 
     private fun getStartingScreen(): KClass<out MainLayout> {
@@ -167,4 +172,12 @@ class AppInitializer(
         )
     }
 
+    private fun promptChangelog() {
+        uiInfoService.showInfoAction(
+            R.string.changelog_checkout_latest_changes,
+            actionResId=R.string.action_open_changelog,
+        ) {
+            webviewLayoutController.openChangelog()
+        }
+    }
 }

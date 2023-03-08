@@ -569,4 +569,6 @@
     </string>
     <string name="listview_empty">Brak</string>
     <string name="copied_to_clipboard">Skopiowano do schowka</string>
+    <string name="action_open_changelog">Otwórz</string>
+    <string name="changelog_checkout_latest_changes">Sprawdź najnowsze zmiany z tej wersji.</string>
 </resources>
