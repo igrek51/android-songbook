@@ -119,8 +119,10 @@ To add a new one, click the :material-plus: icon in the main navigation menu.
 Add your lyrics as a simple text with chords in **square brackets**.
 Find out more about [Chord Format Specification](./chord-format.md).
 
-There are many useful tools in [**Chords Editor**](./chords-editor.md),
+There are many useful tools in [**Local Chords Editor**](./chords-editor.md),
 which make the editing easier.
+
+You can also edit your songs on any other device by starting **Synchronize Session** in a [Web Editor](./web-editor.md).
 
 !!! tip
     You can load your own song from a **local file** on your device
@@ -135,7 +137,7 @@ which make the editing easier.
     If changes were made in both places (locally and remotely), there might be a conflict to be resolved.
 
 !!! tip "Desktop Editor: Drive method"
-    Or if you prefer to edit your songs on a desktop computer in a **TXT** file,
+    If you prefer to edit your songs on a desktop computer in a **TXT** file,
     you can upload it to **Google Drive** and then you can import it from the *Songbook* on your mobile device.
 
 ## Contributing

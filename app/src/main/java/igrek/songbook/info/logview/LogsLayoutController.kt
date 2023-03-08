@@ -35,10 +35,9 @@ class LogsLayoutController(
             it.emptyView = layout.findViewById(R.id.emptyListTextView)
         }
 
-        itemsListView?.let { it
+        itemsListView?.let {
             populateItems(it)
         }
-
     }
 
     private fun populateItems(listView: LogListView) {

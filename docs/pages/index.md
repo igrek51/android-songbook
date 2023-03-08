@@ -13,7 +13,7 @@ See [Quick User Guide](./quick-guide.md) to get familiar with *Songbook*.
 ## Features
 Our chief weapons are:
 
-- Highlighted chords
+- Highlighting chords
 - [Chords transposition](./transpose.md) (any song to any key)
 - [Auto scrolling while playing](./autoscroll.md)
 - [Custom songs and chords editor](./chords-editor.md)
@@ -25,6 +25,7 @@ Our chief weapons are:
 - Automatic chords detection
 - [Different chord displaying styles](./displaying-styles.md)
 - Custom songs & settings synchronization between many devices, back-ups & restoring all application data
+- Editing synchronized songs in the [Web Editor](./web-editor.md)
 - Sharing songs by link
 - Always-on display while playing
 - Importing & Exporting songs from / to files or Google Drive

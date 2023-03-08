@@ -60,7 +60,8 @@ nav:
     - Bluetooth Sharing: bluetooth-sharing.md
   - Custom Songs:
     - Chord Format Specification: chord-format.md
-    - Chords Editor: chords-editor.md
+    - Local Chords Editor: chords-editor.md
+    - Web Editor: web-editor.md
     - Contributing: contributing.md
     - Sharing by Link: sharing-by-link.md
   - Development:

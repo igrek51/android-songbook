@@ -1,9 +1,9 @@
-# Chords Editor
+# Local Chords Editor
 
 ![](./assets/screenshots-mobile-en/04.png){ width="50%" }
 
 ## Tools
-There are many useful tools in chords editor, which make the editing easier:
+There are many useful tools in chords editor (in a local app), which make the editing easier:
 
 - `Undo`: revert last changes
 - `Line`: select whole line or next lines

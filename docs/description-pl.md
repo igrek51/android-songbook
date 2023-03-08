@@ -5,7 +5,7 @@ Songbook to śpiewnik z tekstami piosenek i akordami do grania i śpiewania na g
 
 Główne funkcje:
 
-- Przeglądanie tekstów piosenek z podświetlonymi akordami
+- Podświetlanie akordów w tekście piosenki
 - Transpozycja akordów (zmiana dowolnej piosenki na dowolną tonację)
 - Automatyczne przewijanie tekstu podczas grania
 - Dodawanie własnych piosenek z zaawansowanym edytorem akordów
@@ -17,6 +17,7 @@ Główne funkcje:
 - Automatyczne wykrywanie akordów
 - Wybór stylu wyświetlania akordów
 - Synchronizacja własnych piosenek i ustawień między wieloma urządzeniami, kopie zapasowe i odzyskiwanie wszystkich danych aplikacji
+- Edycja zsynchronizowanych piosenek w edytorze on-line
 - Udostępnianie piosenek przez link
 - Niegasnący wyświetlacz podczas grania
 - Import i Eksport piosenek z / do plików lub dysku Google

@@ -5,7 +5,7 @@ Songbook is a song lyrics viewer with chords to play on guitar, piano and sing.
 
 Our chief weapons are:
 
-- Highlighted chords
+- Highlighting chords
 - Chords transposition (any song to any key)
 - Auto scrolling while playing
 - Custom songs and chords editor
@@ -17,6 +17,7 @@ Our chief weapons are:
 - Automatic chords detection
 - Different chord displaying styles
 - Custom songs & settings synchronization between many devices, back-ups & restoring all application data
+- Editing synchronized songs in the Web Editor
 - Sharing songs by link
 - Always-on display while playing
 - Importing & Exporting songs from / to files or Google Drive

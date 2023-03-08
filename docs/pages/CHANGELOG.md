@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Then synchronize them back to see the changes on your local device.
   Click 3-dots icon on *My Songs* and pick *Synchronize with Web Editor*.
   This will start a temporary session for 24 hours, which you can access by opening link on any device.
-  If changes were made in both places (locally and remotely), there would be a conflict to be resolved.
+  If changes were made in both places (locally and remotely), there might be a conflict to be resolved.
 - *Songbook Web UI* is available at [songbook.igrek.dev](https://songbook.igrek.dev/ui).
   Right now it only handles *Synchronize Sessions*.
 - Changelog can be opened from the *About* window
