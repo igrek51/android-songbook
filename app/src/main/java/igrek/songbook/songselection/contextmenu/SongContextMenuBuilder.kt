@@ -59,23 +59,6 @@ class SongContextMenuBuilder(
                 executor = { song ->
                     customSongService.showEditSongScreen(song)
                 }),
-            SongContextAction(R.string.action_song_remove,
-                availableCondition = { song -> song.isCustom() },
-                executor = { song ->
-                    ConfirmDialogBuilder().confirmAction(R.string.confirm_remove_song) {
-                        customSongService.removeSong(song)
-                    }
-                }),
-            SongContextAction(R.string.action_song_publish,
-                availableCondition = { song -> song.isCustom() },
-                executor = { song ->
-                    publishSongService.publishSong(song)
-                }),
-            SongContextAction(R.string.action_add_to_playlist,
-                availableCondition = { true },
-                executor = { song ->
-                    playlistService.showAddSongToPlaylistDialog(song)
-                }),
             SongContextAction(R.string.action_remove_from_this_playlist,
                 availableCondition = { song ->
                     playlistService.isSongOnCurrentPlaylist(song)
@@ -83,25 +66,10 @@ class SongContextMenuBuilder(
                 executor = { song ->
                     playlistService.removeFromThisPlaylist(song)
                 }),
-            SongContextAction(R.string.action_song_copy,
-                availableCondition = { song -> !song.isCustom() },
-                executor = { song ->
-                    customSongService.copySongAsCustom(song)
-                }),
-            SongContextAction(R.string.action_share_song,
+            SongContextAction(R.string.action_add_to_playlist,
                 availableCondition = { true },
                 executor = { song ->
-                    shareSongService.shareSong(song)
-                }),
-            SongContextAction(R.string.export_content_to_file,
-                availableCondition = { song -> song.isCustom() },
-                executor = { song ->
-                    customSongService.exportSong(song)
-                }),
-            SongContextAction(R.string.song_details_title,
-                availableCondition = { !layoutController.isState(SongPreviewLayoutController::class) },
-                executor = { song ->
-                    songDetailsService.showSongDetails(song)
+                    playlistService.showAddSongToPlaylistDialog(song)
                 }),
             SongContextAction(R.string.action_song_set_favourite,
                 availableCondition = { song ->
@@ -118,6 +86,38 @@ class SongContextMenuBuilder(
                 },
                 executor = { song ->
                     favouriteSongsService.unsetSongFavourite(song)
+                }),
+            SongContextAction(R.string.action_song_remove,
+                availableCondition = { song -> song.isCustom() },
+                executor = { song ->
+                    ConfirmDialogBuilder().confirmAction(R.string.confirm_remove_song) {
+                        customSongService.removeSong(song)
+                    }
+                }),
+            SongContextAction(R.string.action_song_copy,
+                availableCondition = { song -> !song.isCustom() },
+                executor = { song ->
+                    customSongService.copySongAsCustom(song)
+                }),
+            SongContextAction(R.string.action_share_song,
+                availableCondition = { true },
+                executor = { song ->
+                    shareSongService.shareSong(song)
+                }),
+            SongContextAction(R.string.action_song_publish,
+                availableCondition = { song -> song.isCustom() },
+                executor = { song ->
+                    publishSongService.publishSong(song)
+                }),
+            SongContextAction(R.string.export_content_to_file,
+                availableCondition = { song -> song.isCustom() },
+                executor = { song ->
+                    customSongService.exportSong(song)
+                }),
+            SongContextAction(R.string.song_details_title,
+                availableCondition = { !layoutController.isState(SongPreviewLayoutController::class) },
+                executor = { song ->
+                    songDetailsService.showSongDetails(song)
                 }),
             SongContextAction(R.string.song_show_fullscreen,
                 availableCondition = { layoutController.isState(SongPreviewLayoutController::class) },

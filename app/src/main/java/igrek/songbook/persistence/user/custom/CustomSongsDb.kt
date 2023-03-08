@@ -28,7 +28,14 @@ data class CustomSong(
     var initialDelay: Double? = null,
     var chordsNotation: ChordsNotation,
     var originalSongId: Long? = null
-)
+) {
+    fun displayName(): String {
+        return when {
+            !categoryName.isNullOrEmpty() -> "$title - $categoryName"
+            else -> title
+        }
+    }
+}
 
 @Serializable
 data class SyncSessionData(

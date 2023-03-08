@@ -92,7 +92,7 @@ class EditorSessionService(
                 synchronizeStep4Push(session)
             }
             localChanged && remoteChanged -> {
-                logger.info("Sync: merge conflict")
+                logger.info("Sync: merge conflict, local: $lastLocalHash -> $currentLocalHash, remote: $lastRemoteHash -> $currentRemoteHash")
                 resolveConflicts(session, localSongs, remoteSongs)
             }
             localChanged -> { // don't update local, push to remote. Local version is already latest.
@@ -128,8 +128,9 @@ class EditorSessionService(
         }
 
         val result = pushSongsAsync(session.id, pushSongs).await()
-        result.fold(onSuccess = {
-            synchronizeStep5SessionLink(session)
+        result.fold(onSuccess = { updatedSession: EditorSessionDto ->
+            rememberNewHashes(updatedSession) // update new remote hash after pushing
+            synchronizeStep5SessionLink(updatedSession)
         }, onFailure = { e ->
             UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
         })
@@ -140,8 +141,8 @@ class EditorSessionService(
         val currentLocalHash = SongHasher().hashLocalSongs(localSongs)
         val currentRemoteHash = session.current_hash
         songsRepository.customSongsDao.customSongs.syncSessionData.lastLocalHash = currentLocalHash
-        songsRepository.customSongsDao.customSongs.syncSessionData.lastRemoteHash =
-            currentRemoteHash
+        songsRepository.customSongsDao.customSongs.syncSessionData.lastRemoteHash = currentRemoteHash
+        logger.debug("Storing sync hashes: local: $currentLocalHash, remote: $currentRemoteHash")
     }
 
     private fun synchronizeStep5SessionLink(session: EditorSessionDto) {
@@ -213,15 +214,17 @@ class EditorSessionService(
             return
         }
 
+        val differentTitles = split.differentSongNames.joinToString("") { "\n  - $it" }
         val message = uiInfoService.resString(R.string.sync_session_conflict_summary,
             localSongsCount.toString(),
             remoteSongsCount.toString(),
             remoteUpdateTime,
             split.unchangedCount.toString(),
-            split.differentCount.toString(),
+            split.differentCount.toString() + differentTitles,
             split.localOnly.size.toString(),
             split.remoteOnly.size.toString(),
         ).trimIndent().trim()
+        logger.info("Sync: Conflict: $message")
 
         uiInfoService.dialogThreeChoices(
             titleResId = R.string.sync_session_conflict_detected,
@@ -315,7 +318,7 @@ class EditorSessionService(
     private fun pushSongsAsync(
         sessionId: String,
         songs: List<EditorSongDto>,
-    ): Deferred<Result<Unit>> {
+    ): Deferred<Result<EditorSessionDto>> {
         val dto = EditorSessionPushDto(songs = songs)
         val json =
             httpRequester.jsonSerializer.encodeToString(EditorSessionPushDto.serializer(), dto)
@@ -323,7 +326,14 @@ class EditorSessionService(
             .url(pushSongsUrl(sessionId))
             .post(RequestBody.create(httpRequester.jsonType, json))
             .build()
-        return httpRequester.httpRequestAsync(request) { }
+        return httpRequester.httpRequestAsync(request) { response ->
+            val jsonData = response.body()?.string() ?: ""
+            val responseData: EditorSessionDto = httpRequester.jsonSerializer.decodeFromString(
+                EditorSessionDto.serializer(),
+                jsonData
+            )
+            responseData
+        }
     }
 
     private fun splitSets(
@@ -367,6 +377,7 @@ class EditorSessionService(
         split.common.forEach { (localOne, remoteOne) ->
             if (syncedSongsDiffers(localOne, remoteOne)) {
                 split.differentCount++
+                split.differentSongNames.add(localOne.displayName())
             }
         }
 
@@ -438,6 +449,7 @@ data class SetSplit(
     val localOnly: MutableList<CustomSong> = mutableListOf(),
     val remoteOnly: MutableList<EditorSongDto> = mutableListOf(),
     var differentCount: Int = 0,
+    val differentSongNames: MutableList<String> = mutableListOf(),
 ) {
     val unchangedCount: Int get() = this.common.size - differentCount
 }

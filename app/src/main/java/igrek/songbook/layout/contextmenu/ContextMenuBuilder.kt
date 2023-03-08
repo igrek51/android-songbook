@@ -3,7 +3,6 @@ package igrek.songbook.layout.contextmenu
 import android.app.Activity
 import androidx.appcompat.app.AlertDialog
 import igrek.songbook.info.UiResourceService
-import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject

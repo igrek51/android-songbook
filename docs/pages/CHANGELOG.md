@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Overlapping chords in the "Chords Above" style are now displayed correctly.
+- Lists of songs are now properly updated when a change to a custom song is applied.
 
 ## [1.33.2] - 2023-01-19
 ### Added
