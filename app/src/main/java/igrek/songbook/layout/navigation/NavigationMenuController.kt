@@ -88,7 +88,7 @@ class NavigationMenuController(
         actionsMap[R.id.nav_playlists] =
             { layoutController.showLayout(PlaylistLayoutController::class) }
         actionsMap[R.id.nav_update_db] =
-            { songsUpdater.updateSongsDb(forced = true) }
+            { songsUpdater.updateSongsDbAsync(forced = true) }
         actionsMap[R.id.nav_custom_songs] =
             { layoutController.showLayout(CustomSongsListLayoutController::class) }
         actionsMap[R.id.nav_random_song] =

@@ -4,6 +4,7 @@ package igrek.songbook.persistence.general
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
+import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -37,7 +38,15 @@ class SongsUpdater(
         private const val songsDbVersionUrl = "$apiUrl/songs_version"
     }
 
-    fun updateSongsDb(forced: Boolean) {
+    fun updateSongsDbAsync(forced: Boolean) {
+        GlobalScope.launch(Dispatchers.IO) {
+            safeExecute {
+                updateSongsDb(forced)
+            }
+        }
+    }
+
+    private fun updateSongsDb(forced: Boolean) {
         val songsDbFile: File = localDbService.songsDbFile
 
         uiInfoService.showInfo(R.string.updating_db_in_progress, indefinite = true)
@@ -149,7 +158,7 @@ class SongsUpdater(
 
             if (localVersion != null && remoteVersion != null && localVersion < remoteVersion) {
                 if (preferencesState.updateDbOnStartup) {
-                    updateSongsDb(forced = false)
+                    updateSongsDbAsync(forced = false)
                 } else {
                     showUpdateIsAvailable()
                 }
@@ -174,7 +183,7 @@ class SongsUpdater(
             actionResId = R.string.action_update
         ) {
             uiInfoService.clearSnackBars()
-            updateSongsDb(forced = false)
+            updateSongsDbAsync(forced = false)
         }
     }
 
