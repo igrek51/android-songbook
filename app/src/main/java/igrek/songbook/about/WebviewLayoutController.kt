@@ -1,13 +1,12 @@
 package igrek.songbook.about
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import igrek.songbook.R
 import igrek.songbook.layout.InflatedLayout
+import igrek.songbook.system.LinkOpener
 
 
 class WebviewLayoutController : InflatedLayout(
@@ -35,8 +34,7 @@ class WebviewLayoutController : InflatedLayout(
                 layoutController.showLayout(WebviewLayoutController::class)
             }
             false -> {
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                activity.startActivity(browserIntent)
+                LinkOpener().openPage(url)
             }
         }
     }
@@ -44,7 +42,6 @@ class WebviewLayoutController : InflatedLayout(
     @SuppressLint("SetJavaScriptEnabled")
     override fun showLayout(layout: View) {
         super.showLayout(layout)
-
         val webView = layout.findViewById<WebView>(R.id.webView1)
         webView.settings.javaScriptEnabled = true
         webView.webViewClient = WebViewClient()

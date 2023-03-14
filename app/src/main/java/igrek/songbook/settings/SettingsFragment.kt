@@ -1,12 +1,9 @@
 package igrek.songbook.settings
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
 import androidx.preference.*
 import igrek.songbook.R
@@ -38,13 +35,13 @@ import igrek.songbook.settings.theme.DisplayStyle
 import igrek.songbook.settings.theme.FontTypeface
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
+import igrek.songbook.system.LinkOpener
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
 class SettingsFragment(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-    appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
     lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
     appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
     chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
@@ -56,7 +53,6 @@ class SettingsFragment(
     settingsEnumService: LazyInject<SettingsEnumService> = appFactory.settingsEnumService,
 ) : PreferenceFragmentCompat() {
     private val uiInfoService by LazyExtractor(uiInfoService)
-    private val activity by LazyExtractor(appCompatActivity)
     private val lyricsThemeService by LazyExtractor(lyricsThemeService)
     private val appLanguageService by LazyExtractor(appLanguageService)
     private val chordsNotationService by LazyExtractor(chordsNotationService)
@@ -278,7 +274,7 @@ class SettingsFragment(
         }
 
         setupClickPreference("settingsPrivacyPolicy") {
-            openPrivacyPolicy()
+            LinkOpener().openPrivacyPolicy()
         }
 
         setupSwitchPreference("anonymousUsageData",
@@ -391,13 +387,6 @@ class SettingsFragment(
         }
 
         refreshFragment()
-    }
-
-    private fun openPrivacyPolicy() {
-        val uri =
-            Uri.parse("https://docs.google.com/document/d/e/2PACX-1vTRgTqRx6Cwbn_uuLXCuad9YEK3qY7XNxMkil26ZBV5XZ_qn6L-CaXu3M39k-Gc6OErnCmsrY8QPT8e/pub")
-        val i = Intent(Intent.ACTION_VIEW, uri)
-        activity.startActivity(i)
     }
 
     @Suppress("DEPRECATION")
