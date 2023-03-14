@@ -266,9 +266,9 @@ class SongImportFileChooser(
 
         val stripper: PDFTextStripper = object : PDFTextStripper() {
             override fun writeString(text: String?, textPositions: MutableList<TextPosition>?) {
-                textPositions?.let { textPositions ->
-                    val textMinX = textPositions.minOf { it.x }
-                    val lineMinY = textPositions.minOf { it.y }
+                textPositions?.let { textPositionsN ->
+                    val textMinX = textPositionsN.minOf { it.x }
+                    val lineMinY = textPositionsN.minOf { it.y }
                     pageMinX = min(pageMinX ?: textMinX, textMinX)
                     lastLineY?.let { lastLineY ->
                         val lastGap = lineMinY - lastLineY

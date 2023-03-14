@@ -27,6 +27,7 @@ import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.sync.BackupSyncManager
 import igrek.songbook.songpreview.SongOpener
+import igrek.songbook.system.LinkOpener
 import igrek.songbook.system.WindowManagerService
 import kotlinx.coroutines.*
 import kotlin.reflect.KClass
@@ -168,7 +169,7 @@ class AppInitializer(
             negativeButton = R.string.action_cancel,
             negativeAction = {},
             positiveButton = R.string.action_info_yes,
-            positiveAction = { aboutLayoutController.openInGoogleStore() }
+            positiveAction = { LinkOpener().openInGoogleStore() }
         )
     }
 
