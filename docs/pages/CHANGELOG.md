@@ -39,6 +39,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Inverted chords (eg. `C/G`) are no longer splitted when wrapping the lines.
 - Fixed security error on some devices when opening the external links, like Privacy Policy.
 
-## [1.33.1] - 1890 - 2023-12-30
+## [1.33.1] - 1890 - 2022-12-30
 ### Added
 - Debug logs are included in reports in case of a crash.

@@ -176,6 +176,7 @@ class AppInitializer(
         uiInfoService.showInfoAction(
             R.string.changelog_checkout_latest_changes,
             actionResId=R.string.action_open_changelog,
+            indefinite = true,
         ) {
             webviewLayoutController.openChangelog()
         }
