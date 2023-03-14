@@ -6,6 +6,7 @@ import io.reactivex.subjects.PublishSubject
 
 class SongTweakDao(
     path: String,
+    resetOnError: Boolean = false,
 ) : AbstractJsonDao<SongTweakDb>(
     path,
     dbName = "songtweak",
@@ -17,7 +18,7 @@ class SongTweakDao(
     private val songtweakDbSubject = PublishSubject.create<SongTweakDb>()
 
     init {
-        read()
+        read(resetOnError)
     }
 
     override fun empty(): SongTweakDb {

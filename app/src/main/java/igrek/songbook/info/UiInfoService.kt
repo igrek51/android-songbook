@@ -157,6 +157,7 @@ open class UiInfoService(
         neutralButton: Int = 0, neutralAction: () -> Unit = {},
         postProcessor: (AlertDialog) -> Unit = {},
         richMessage: Boolean = false,
+        cancelable: Boolean = true,
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             val alertBuilder = AlertDialog.Builder(activity)
@@ -195,7 +196,7 @@ open class UiInfoService(
                     }
                 }
             }
-            alertBuilder.setCancelable(true)
+            alertBuilder.setCancelable(cancelable)
             val alertDialog = alertBuilder.create()
             postProcessor.invoke(alertDialog)
             if (!activity.isFinishing) {

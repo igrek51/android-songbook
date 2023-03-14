@@ -599,4 +599,12 @@
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="action_open_changelog">Open</string>
     <string name="changelog_checkout_latest_changes">Check out the latest changes in this version.</string>
+    <string name="error_corrupted_user_data">Corrupted User Data</string>
+    <string name="error_corrupted_user_data_message">Your local data seems to be corrupted and can not be loaded correctly.
+        \nYou can either close the app and try to load it again or reset your corrupted data.
+        \nWarning: User data contains your preferences, songs, playlists, etc. After resetting user data it won\'t be possible to restore it back!
+        \n
+        \nError details: %s</string>
+    <string name="action_exit">Exit</string>
+    <string name="action_reset_corrupted_data">Reset data</string>
 </resources>

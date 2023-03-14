@@ -4,6 +4,7 @@ import igrek.songbook.persistence.user.AbstractJsonDao
 
 class ExclusionDao(
     path: String,
+    resetOnError: Boolean = false,
 ) : AbstractJsonDao<ExclusionDb>(
     path,
     dbName = "exclusion",
@@ -14,7 +15,7 @@ class ExclusionDao(
     val exclusionDb: ExclusionDb get() = db!!
 
     init {
-        read()
+        read(resetOnError)
     }
 
     override fun empty(): ExclusionDb {

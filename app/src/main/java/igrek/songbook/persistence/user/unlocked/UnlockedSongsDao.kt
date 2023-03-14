@@ -11,19 +11,20 @@ import kotlinx.coroutines.runBlocking
 class UnlockedSongsDao(
     path: String,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    resetOnError: Boolean = false,
 ) : AbstractJsonDao<UnlockedSongsDb>(
     path,
     dbName = "unlocked",
     schemaVersion = 1,
     clazz = UnlockedSongsDb::class.java,
-    serializer = UnlockedSongsDb.serializer()
+    serializer = UnlockedSongsDb.serializer(),
 ) {
     private val songsRepository by LazyExtractor(songsRepository)
 
     val unlockedSongs: UnlockedSongsDb get() = db!!
 
     init {
-        read()
+        read(resetOnError)
     }
 
     override fun empty(): UnlockedSongsDb {

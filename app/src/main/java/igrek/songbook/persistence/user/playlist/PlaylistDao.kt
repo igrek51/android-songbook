@@ -11,6 +11,7 @@ import io.reactivex.subjects.PublishSubject
 class PlaylistDao(
     path: String,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
+    resetOnError: Boolean = false,
 ) : AbstractJsonDao<PlaylistDb>(
     path,
     dbName = "playlist",
@@ -24,7 +25,7 @@ class PlaylistDao(
     val playlistDbSubject = PublishSubject.create<PlaylistDb>()
 
     init {
-        read()
+        read(resetOnError)
     }
 
     override fun empty(): PlaylistDb {

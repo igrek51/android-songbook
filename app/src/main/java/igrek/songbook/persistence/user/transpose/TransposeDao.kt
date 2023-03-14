@@ -7,6 +7,7 @@ import io.reactivex.subjects.PublishSubject
 
 class TransposeDao(
     path: String,
+    resetOnError: Boolean = false,
 ) : AbstractJsonDao<TransposeDb>(
     path,
     dbName = "transpose",
@@ -18,7 +19,7 @@ class TransposeDao(
     private val transposeDbSubject = PublishSubject.create<TransposeDb>()
 
     init {
-        read()
+        read(resetOnError)
     }
 
     override fun empty(): TransposeDb {

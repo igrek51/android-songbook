@@ -30,7 +30,7 @@ class RetryDelayed(
                     makeAttempt()
                 }, delayMs)
             } else {
-                throw RuntimeException("", t)
+                throw t
             }
         }
     }

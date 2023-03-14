@@ -3,7 +3,7 @@ package igrek.songbook.persistence.user.favourite
 import android.annotation.SuppressLint
 import android.app.Activity
 import igrek.songbook.info.errorcheck.UiErrorHandler
-import igrek.songbook.info.logger.WrapContextError
+import igrek.songbook.info.errorcheck.ContextError
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -21,6 +21,7 @@ class FavouriteSongsDao(
     path: String,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
     activity: LazyInject<Activity> = appFactory.activity,
+    resetOnError: Boolean = false,
 ) : AbstractJsonDao<FavouriteSongsDb>(
     path,
     dbName = "favourites",
@@ -48,7 +49,7 @@ class FavouriteSongsDao(
                 favouritesCache.invalidate()
             }, UiErrorHandler::handleError)
 
-        read()
+        read(resetOnError)
     }
 
     override fun empty(): FavouriteSongsDb {
@@ -59,7 +60,7 @@ class FavouriteSongsDao(
         try {
             return Migration037Favourites(activity).load()
         } catch (t: Throwable) {
-            throw WrapContextError("Migration037Favourites error", t)
+            throw ContextError("Migration037Favourites error", t)
         }
     }
 

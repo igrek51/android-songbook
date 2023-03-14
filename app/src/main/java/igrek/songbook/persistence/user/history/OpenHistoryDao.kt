@@ -7,6 +7,7 @@ import java.util.*
 
 class OpenHistoryDao(
     path: String,
+    resetOnError: Boolean = false,
 ) : AbstractJsonDao<OpenHistoryDb>(
     path,
     dbName = "history",
@@ -20,7 +21,7 @@ class OpenHistoryDao(
     private val openedHistoryLimit = 50
 
     init {
-        read()
+        read(resetOnError)
     }
 
     override fun empty(): OpenHistoryDb {

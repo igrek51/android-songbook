@@ -87,7 +87,8 @@ class AppInitializer(
         syncInit()
 
         GlobalScope.launch {
-            userDataDao.load()
+            if (!userDataDao.loadOrExit())
+                return@launch
             songsRepository.reloadSongsDb()
 
             appLanguageService.setLocale()

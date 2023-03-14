@@ -5,7 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.info.errorcheck.UiErrorHandler
-import igrek.songbook.info.logger.WrapContextError
+import igrek.songbook.info.errorcheck.ContextError
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -20,11 +20,11 @@ class LinkOpener(
             val urlActivity = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             activity.startActivity(urlActivity)
         } catch (t: SecurityException) {
-            UiErrorHandler().handleError(WrapContextError("Failed to open a link: SecurityException", t))
+            UiErrorHandler().handleError(ContextError("Failed to open a link: SecurityException", t))
         } catch (t: ActivityNotFoundException) {
-            UiErrorHandler().handleError(WrapContextError("No application found to open a link", t))
+            UiErrorHandler().handleError(ContextError("No application found to open a link", t))
         } catch (t: Throwable) {
-            UiErrorHandler().handleError(WrapContextError("Failed to open a link", t))
+            UiErrorHandler().handleError(ContextError("Failed to open a link", t))
         }
     }
 
@@ -42,7 +42,7 @@ class LinkOpener(
             goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
             activity.startActivity(goToMarket)
         } catch (t: Throwable) {
-            UiErrorHandler().handleError(WrapContextError("Failed to open Google Play Store", t))
+            UiErrorHandler().handleError(ContextError("Failed to open Google Play Store", t))
         }
     }
 

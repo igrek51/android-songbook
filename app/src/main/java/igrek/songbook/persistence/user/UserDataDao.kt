@@ -1,9 +1,12 @@
 package igrek.songbook.persistence.user
 
 import android.annotation.SuppressLint
+import igrek.songbook.R
+import igrek.songbook.activity.ActivityController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.RetryAttempt
 import igrek.songbook.info.errorcheck.UiErrorHandler
+import igrek.songbook.info.errorcheck.ContextError
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
@@ -34,9 +37,11 @@ import kotlin.reflect.KProperty
 class UserDataDao(
     localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    activityController: LazyInject<ActivityController> = appFactory.activityController,
 ) {
     internal val localDbService by LazyExtractor(localDbService)
     private val uiInfoService by LazyExtractor(uiInfoService)
+    private val activityController by LazyExtractor(activityController)
 
     var unlockedSongsDao: UnlockedSongsDao by LazyDaoLoader { path -> UnlockedSongsDao(path) }
     var favouriteSongsDao: FavouriteSongsDao by LazyDaoLoader { path -> FavouriteSongsDao(path) }
@@ -67,30 +72,56 @@ class UserDataDao(
 
     suspend fun load() {
         try {
-            RetryAttempt(3, "load user data").run {
-                reload()
+            RetryAttempt(3, "loading user data").run {
+                reload(resetOnError=false)
             }
         } catch (t: Throwable) {
             logger.error("failed to load user data", t)
-            uiInfoService.showToast("Can't load corrupted user data")
-            throw RuntimeException("Can't load corrupted user data", t)
+            throw ContextError("Corrupted user data", t)
         }
     }
 
-    suspend fun reload() {
+    suspend fun loadOrExit(): Boolean {
+        try {
+            load()
+            return true
+        } catch (t: Throwable) {
+            appFactory.crashlyticsLogger.get().reportNonFatalError(t)
+            val dialogMessage = uiInfoService.resString(R.string.error_corrupted_user_data_message, t.message.orEmpty())
+
+            uiInfoService.dialogThreeChoices(
+                titleResId = R.string.error_corrupted_user_data,
+                message = dialogMessage,
+                positiveButton = R.string.action_exit,
+                positiveAction = {
+                    activityController.quit()
+                },
+                negativeButton = R.string.action_reset_corrupted_data,
+                negativeAction = {
+                    GlobalScope.launch(Dispatchers.IO) {
+                        resetCorruptedUserData()
+                    }
+                },
+                cancelable = false,
+            )
+            return false
+        }
+    }
+
+    private suspend fun reload(resetOnError: Boolean) {
         val path = localDbService.appFilesDir.absolutePath
 
         dataTransferMutex.withLock {
             launchAndJoin(
-                { unlockedSongsDao = UnlockedSongsDao(path) },
-                { favouriteSongsDao = FavouriteSongsDao(path) },
-                { customSongsDao = CustomSongsDao(path) },
-                { playlistDao = PlaylistDao(path) },
-                { openHistoryDao = OpenHistoryDao(path) },
-                { exclusionDao = ExclusionDao(path) },
-                { transposeDao = TransposeDao(path) },
-                { preferencesDao = PreferencesDao(path) },
-                { songTweakDao = SongTweakDao(path) },
+                { unlockedSongsDao = UnlockedSongsDao(path, resetOnError=resetOnError) },
+                { favouriteSongsDao = FavouriteSongsDao(path, resetOnError=resetOnError) },
+                { customSongsDao = CustomSongsDao(path, resetOnError=resetOnError) },
+                { playlistDao = PlaylistDao(path, resetOnError=resetOnError) },
+                { openHistoryDao = OpenHistoryDao(path, resetOnError=resetOnError) },
+                { exclusionDao = ExclusionDao(path, resetOnError=resetOnError) },
+                { transposeDao = TransposeDao(path, resetOnError=resetOnError) },
+                { preferencesDao = PreferencesDao(path, resetOnError=resetOnError) },
+                { songTweakDao = SongTweakDao(path, resetOnError=resetOnError) },
             )
         }
 
@@ -112,6 +143,16 @@ class UserDataDao(
             )
         }
         logger.info("User data saved")
+    }
+
+    private suspend fun resetCorruptedUserData() {
+        logger.warn("Resetting corrupted user data")
+        reload(resetOnError=true)
+        saveNow()
+        uiInfoService.showToast(R.string.restart_needed)
+        withContext(Dispatchers.Main) {
+            activityController.quit()
+        }
     }
 
     suspend fun factoryReset() {

@@ -126,7 +126,8 @@ class BackupSyncManager(
         }.onFailure { error ->
             UiErrorHandler().handleError(error, R.string.settings_sync_restore_error)
         }.onSuccess {
-            userDataDao.reload()
+            if (!userDataDao.loadOrExit())
+                return
             songsRepository.reloadSongsDb()
             preferencesService.reload()
             uiInfoService.showToast(R.string.settings_sync_restore_success)
@@ -153,7 +154,8 @@ class BackupSyncManager(
         }.onFailure { error ->
             UiErrorHandler().handleError(error, R.string.settings_sync_restore_error)
         }.onSuccess {
-            userDataDao.reload()
+            if (!userDataDao.loadOrExit())
+                return
             songsRepository.reloadSongsDb()
             preferencesService.reload()
             if (errors.size == oldSyncFiles.size) {
@@ -398,7 +400,8 @@ class BackupSyncManager(
                 }.onFailure { error ->
                     UiErrorHandler().handleError(error, R.string.settings_sync_restore_error)
                 }.onSuccess {
-                    userDataDao.reload()
+                    if (!userDataDao.loadOrExit())
+                        return@launch
                     songsRepository.reloadSongsDb()
                     preferencesService.reload()
                     uiInfoService.showToast(R.string.settings_sync_restore_success)

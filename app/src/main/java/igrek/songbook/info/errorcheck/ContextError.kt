@@ -1,6 +1,6 @@
-package igrek.songbook.info.logger
+package igrek.songbook.info.errorcheck
 
-class WrapContextError(private val _message: String, cause: Throwable) :
+class ContextError(private val _message: String, cause: Throwable) :
     RuntimeException(_message, cause) {
 
     override val message: String

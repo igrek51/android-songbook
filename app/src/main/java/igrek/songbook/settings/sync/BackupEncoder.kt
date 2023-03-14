@@ -1,7 +1,7 @@
 package igrek.songbook.settings.sync
 
 import igrek.songbook.info.logger.LoggerFactory.logger
-import igrek.songbook.info.logger.WrapContextError
+import igrek.songbook.info.errorcheck.ContextError
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -51,7 +51,7 @@ class BackupEncoder(
         try {
             return jsonSerializer.encodeToString(CompositeBackup.serializer(), compositeBackup)
         } catch (t: Throwable) {
-            throw WrapContextError("Serializing to JSON", t)
+            throw ContextError("Serializing to JSON", t)
         }
     }
 
@@ -68,7 +68,7 @@ class BackupEncoder(
             restoreFileBackup("unlocked.1.json", compositeBackup.unlocked)
             restoreFileBackup("preferences.1.json", compositeBackup.preferences)
         } catch (t: Throwable) {
-            throw WrapContextError("Invalid backup file data", t)
+            throw ContextError("Invalid backup file data", t)
         }
     }
 
@@ -86,7 +86,7 @@ class BackupEncoder(
         try {
             writeAppDataFileContent(filename, fileContent)
         } catch (t: Throwable) {
-            throw WrapContextError("Restoring app data file $filename", t)
+            throw ContextError("Restoring app data file $filename", t)
         }
     }
 
@@ -96,7 +96,7 @@ class BackupEncoder(
             val zipped: ByteArray = aesDecrypt(encrypted)
             return ungzip(zipped)
         } catch (t: Throwable) {
-            throw WrapContextError("Failed to decode backup data", t)
+            throw ContextError("Failed to decode backup data", t)
         }
     }
 

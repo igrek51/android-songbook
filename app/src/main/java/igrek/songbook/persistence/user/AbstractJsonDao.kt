@@ -1,5 +1,6 @@
 package igrek.songbook.persistence.user
 
+import igrek.songbook.info.errorcheck.ContextError
 import igrek.songbook.info.logger.LoggerFactory
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
@@ -31,33 +32,39 @@ abstract class AbstractJsonDao<T>(
         return null
     }
 
-    private fun readDb(): T {
+    private fun readDb(resetOnError: Boolean): T {
         for (attemptSchema in schemaVersion downTo 1) {
             if (attemptSchema < schemaVersion)
-                logger.debug("'$dbName' db: trying to read older version $attemptSchema...")
+                logger.debug("'$dbName' database: trying to read older version $attemptSchema...")
 
             try {
                 return readFromFile(dbName, attemptSchema)
             } catch (e: FileNotFoundException) {
                 // logger.debug("'$dbName' db: database v$attemptSchema not found")
             } catch (e: SerializationException) {
-                logger.error("'$dbName' db: JSON deserialization error", e)
+                when (resetOnError) {
+                    false -> throw ContextError("'$dbName' database: JSON deserialization error", e)
+                    true -> logger.error("'$dbName' database: JSON deserialization error", e)
+                }
             } catch (e: Throwable) {
-                logger.error("'$dbName' db: error reading '$dbName db'", e)
+                when (resetOnError) {
+                    false -> throw ContextError("'$dbName' database: error reading local database", e)
+                    true -> logger.error("'$dbName' database: error reading local database", e)
+                }
             }
         }
 
         try {
             val oldDb = migrateOlder()
             if (oldDb != null) {
-                logger.info("'$dbName' db: migration from old db has been successfully finished")
+                logger.info("'$dbName' database: migration from old db has been successfully finished")
                 return oldDb
             }
         } catch (e: Throwable) {
-            logger.error("'$dbName' db: failed to migrate older db", e)
+            throw ContextError("'$dbName' database: failed to migrate data from older version", e)
         }
 
-        logger.debug("'$dbName' db: loading empty db...")
+        logger.debug("'$dbName' database: loading empty db...")
         return empty()
     }
 
@@ -71,8 +78,8 @@ abstract class AbstractJsonDao<T>(
         return json.decodeFromString(serializer, content)
     }
 
-    fun read() {
-        db = readDb()
+    fun read(resetOnError: Boolean) {
+        db = readDb(resetOnError)
     }
 
     open fun save() {

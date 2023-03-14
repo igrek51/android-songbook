@@ -4,6 +4,7 @@ import igrek.songbook.persistence.user.AbstractJsonDao
 
 class PreferencesDao(
     path: String,
+    resetOnError: Boolean = false,
 ) : AbstractJsonDao<PreferencesDb>(
     path,
     dbName = "preferences",
@@ -14,7 +15,7 @@ class PreferencesDao(
     private val preferencesDb: PreferencesDb get() = db!!
 
     init {
-        read()
+        read(resetOnError)
     }
 
     override fun empty(): PreferencesDb {

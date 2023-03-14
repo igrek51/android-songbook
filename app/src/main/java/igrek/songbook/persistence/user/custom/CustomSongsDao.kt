@@ -1,7 +1,7 @@
 package igrek.songbook.persistence.user.custom
 
 import android.app.Activity
-import igrek.songbook.info.logger.WrapContextError
+import igrek.songbook.info.errorcheck.ContextError
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -16,6 +16,7 @@ class CustomSongsDao(
     path: String,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
     activity: LazyInject<Activity> = appFactory.activity,
+    resetOnError: Boolean = false,
 ) : AbstractJsonDao<CustomSongsDb>(
     path,
     dbName = "customsongs",
@@ -30,7 +31,7 @@ class CustomSongsDao(
     var customCategories = listOf<CustomCategory>()
 
     init {
-        read()
+        read(resetOnError)
     }
 
     override fun empty(): CustomSongsDb {
@@ -41,7 +42,7 @@ class CustomSongsDao(
         try {
             return Migration037CustomSongs(activity).load()
         } catch (t: Throwable) {
-            throw WrapContextError("Migration037CustomSongs error", t)
+            throw ContextError("Migration037CustomSongs error", t)
         }
     }
 

@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityResultDispatcher
+import igrek.songbook.info.errorcheck.ContextError
 import igrek.songbook.info.errorcheck.LocalizedError
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
@@ -252,7 +253,7 @@ class BluetoothService(
         try {
             btSocket = createBluetoothSocket(device)
         } catch (e: IOException) {
-            throw RuntimeException("Socket creation failed to ${device.name}", e)
+            throw ContextError("Socket creation failed to ${device.name}", e)
         }
 
         try {
@@ -260,7 +261,7 @@ class BluetoothService(
             logger.debug("socket connected to ${device.name}")
         } catch (e: IOException) {
             btSocket.close()
-            throw RuntimeException("socket connection failed to ${device.name}", e)
+            throw ContextError("socket connection failed to ${device.name}", e)
         }
         return btSocket
     }
