@@ -13,43 +13,6 @@
     <string name="nav_contact">Kontakt</string>
     <string name="nav_screen_share">Wspólna Sesja</string>
     <string name="nav_purchase">Sklep</string>
-    <string name="ui_help_content">
-        WYBÓR PIOSENKI:
-        \nMożesz wybrać piosenkę z drzewa kategorii lub wyszukać ją po tytule lub nazwie artysty (po dowolnym słowie z nazwy, wielkość liter i polskie znaki nie mają znaczenia).
-        \n
-        \nPODGLĄD PIOSENKI:
-        \nNa ekranie podglądu piosenki wyświetlacz jest stale włączony.
-        \nSkalowanie dwoma palcami zmienia rozmiar czcionki na podglądzie.
-        \nW ustawieniach możesz wybrać swoją ulubioną notację akordów.
-        \nDomyślna notacja akordów została wybrana automatycznie na podstawie systemowych ustawień językowych.
-        \n
-        \nTRANSPOZYCJA:
-        \nMożesz przetransponować piosenki z akordami do dowolnej tonacji.
-        Wybranie ikony tranpozycji na górnym pasku wyświetla panel transpozycji.
-        \nPrzyciski \"-5, -1, +1, +5\" - zmiana tonacji o liczbę półtonów.
-        \nPrzycisk \"0\" - przywrócenie oryginalnej tonacji.
-        \n
-        \nAUTOPRZEWIJANIE:
-        \nIkona autoprzewijania na górnym pasku wyświetla panel autoprzewijania.
-        Rozpoczęcie autoprzewijania powoduje, że tekst przwijany jest automatycznie w odstępach czasowych.
-        \nJeśli jest to początek piosenki, autoprzewijanie włączy się po pewnym czasie (odliczanie przed przewijaniem).
-        Ręczne przewinięcie tekstu w dół przerywa odliczanie i powoduje, że autoprzewijanie włącza się natychmiast.
-        Natomiast ręczne przewinięcie w górę podczas odliczania wydłuży początkową pauzę.
-        \nMożesz dostosować prędkość przewijania oraz długość początkowej pauzy w ustawieniach lub w panelu autoprzewijania.
-        Ręczne przewijanie podczas autoprzewijania spowoduje, że prędkosć autoprzewijania zostanie skorygowana (przyspieszona lub zwolniona).
-        \nPodwójne kliknięcie na ekran włącza autoprzewijanie. Ponowne kliknięcie je wyłącza.
-        \n
-        \nWŁASNE PIOSENKI:
-        \nMożesz wyświetlić własne piosenki, wybierając opcję \"Moje piosenki\" z menu głównego. Aby dodać nową, kliknij ikonę "plusa".
-        \nWpisz słowa piosenki w postaci zwykłego tesktu razem z akordami w nawiasach kwadratowych.
-        \nEdytor piosenek posiada wiele przydatnych narzędzi ułatwiających edycję.
-        \nUżyj przycisku \"[akord]\", aby szybko dodać akord w nawiasach kwadratowych.
-        \nPo zapisaniu piosenki, znajdziesz ją w kategorii \"Moje piosenki\".
-        \n
-        \nWKŁAD SPOŁECZNOŚCI:
-        \nSongbook pozwala na publikowanie dodanych przez Ciebie piosenek i współdzielenie ich z pozostałymi użytkownikami.
-        \nMożesz także zaproponować poprawkę w akordach lub tekście piosenek, jeśli odnajdziesz jakieś błędy.
-    </string>
     <string name="ui_about_content" formatted="false"><![CDATA[
         Wersja aplikacji: <b>%s</b><br>(%s)
         <br>Wersja bazy piosenek: %s
@@ -205,9 +168,9 @@
     <string name="contact_subject_song_amend">Poprawka do piosenki</string>
     <string name="contact_subject_song_comment">Komentarz do piosenki</string>
     <string name="contact_subject_publishing_song">Nowa piosenka</string>
-    <string name="favourite_song_has_been_set">Piosenka została dodana do ulubionych.</string>
-    <string name="favourite_song_has_been_unset">Piosenka została usunięta z ulubionych.</string>
-    <string name="empty_favourite_songs">Brak ulubionych piosenek.\nKliknij na ikonę gwiazdki na podglądzie piosenki, aby dodać ją do ulubionych.</string>
+    <string name="favourite_song_has_been_set">Dodano do polubionych piosenek.</string>
+    <string name="favourite_song_has_been_unset">Usunięto z polubionych piosenek.</string>
+    <string name="empty_favourite_songs">Brak polubionych piosenek.\nKliknij na ikonę gwiazdki na podglądzie piosenki, aby dodać ją do polubionych.</string>
     <string name="empty_custom_songs">Brak własnych piosenek</string>
     <string name="color_scheme_dark">Dark Side of the Moon (Ciemny)</string>
     <string name="color_scheme_bright">Whiter Shade of Pale (Jasny)</string>
@@ -219,8 +182,8 @@
     <string name="action_song_amend">Zaproponuj poprawkę</string>
     <string name="action_song_edit">✏️Edytuj</string>
     <string name="action_song_remove">❌ Usuń</string>
-    <string name="action_song_set_favourite">⭐️ Dodaj do ulubionych</string>
-    <string name="action_song_unset_favourite">⭐️ Usuń z ulubionych</string>
+    <string name="action_song_set_favourite">⭐️ Polub</string>
+    <string name="action_song_unset_favourite">⭐️ Usuń z polubionych</string>
     <string name="song_action_more">Więcej</string>
     <string name="song_copied_as_custom">Piosenka została skopiowana do \"Moich piosenek\".</string>
     <string name="song_action_choose">Wybierz akcję</string>
@@ -235,8 +198,8 @@
     <string name="settings_autoscroll_volume_keys_hint">Przyciski zwiększania / zmniejszania głośności przyspieszą lub spowolnią autoprzewijanie</string>
     <string name="settings_random_song_section">Losowa piosenka</string>
     <string name="settings_autoscroll_section">Autoprzewijanie</string>
-    <string name="settings_random_favourite">Losuj ulubione</string>
-    <string name="settings_random_favourite_hint">Losuj piosenki tylko z listy ulubionych</string>
+    <string name="settings_random_favourite">Losuj polubione</string>
+    <string name="settings_random_favourite_hint">Losuj piosenki tylko z listy polubionych</string>
     <string name="settings_songs_list_section">Lista piosenek</string>
     <string name="settings_filter_languages">Filtruj tylko piosenki w wybranych językach</string>
     <string name="settings_autoscroll_initial_delay">Opóźnienie autoprzewijania</string>
