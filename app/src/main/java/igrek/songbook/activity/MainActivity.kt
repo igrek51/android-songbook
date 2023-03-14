@@ -41,7 +41,7 @@ open class MainActivity(
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         logger.debug("MainActivity::onNewIntent")
-        activityData.appInitializer.postInitIntent(intent)
+        activityData.appInitializer.newIntentFromActivity(intent)
     }
 
     private fun recreateFields() {

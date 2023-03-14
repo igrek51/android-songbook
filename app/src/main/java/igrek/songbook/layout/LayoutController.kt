@@ -164,6 +164,8 @@ class LayoutController(
 
         val (properLayoutView, _) = createLayout(mainLayout.getLayoutResourceId())
 
+        // lateinit doesn't guarantee to be not null
+        if (mainContentLayout == null) return
         val firstTimeView = mainContentLayout.childCount == 0
 
         mainContentLayout.removeAllViews()

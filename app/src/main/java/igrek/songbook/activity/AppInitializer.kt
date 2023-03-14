@@ -76,6 +76,7 @@ class AppInitializer(
 
     private val logger = LoggerFactory.logger
     private val debugInitEnabled = false
+    private var initJob: Job? = null
 
     fun init() {
         if (debugInitEnabled && BuildConfig.DEBUG) {
@@ -86,7 +87,7 @@ class AppInitializer(
 
         syncInit()
 
-        GlobalScope.launch {
+        initJob = GlobalScope.launch {
             if (!userDataDao.loadOrExit())
                 return@launch
             songsRepository.reloadSongsDb()
@@ -133,10 +134,15 @@ class AppInitializer(
         }
     }
 
-    fun postInitIntent(intent: Intent?) {
+    private fun postInitIntent(intent: Intent?) {
         intent?.getStringExtra("encodedSong")?.let { encodedSong ->
             shareSongService.openSharedEncodedSong(encodedSong)
         }
+    }
+
+    fun newIntentFromActivity(intent: Intent?) {
+        if (initJob?.isActive != false) return // true or null
+        postInitIntent(intent)
     }
 
     private fun firstRunInit() {
