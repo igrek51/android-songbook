@@ -1,7 +1,6 @@
 package igrek.songbook.persistence.user.custom
 
 import android.app.Activity
-import igrek.songbook.info.errorcheck.ContextError
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -10,7 +9,6 @@ import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
-import igrek.songbook.persistence.user.migrate.Migration037CustomSongs
 
 class CustomSongsDao(
     path: String,
@@ -36,14 +34,6 @@ class CustomSongsDao(
 
     override fun empty(): CustomSongsDb {
         return CustomSongsDb(mutableListOf())
-    }
-
-    override fun migrateOlder(): CustomSongsDb? {
-        try {
-            return Migration037CustomSongs(activity).load()
-        } catch (t: Throwable) {
-            throw ContextError("Migration037CustomSongs error", t)
-        }
     }
 
     fun saveCustomSong(newSong: CustomSong): Song {
@@ -81,7 +71,7 @@ class CustomSongsDao(
     }
 
     private fun nextId(songs: MutableList<CustomSong>): Long {
-        return (songs.map { song -> song.id }.maxOrNull() ?: 0) + 1
+        return (songs.maxOfOrNull { song -> song.id } ?: 0) + 1
     }
 
     fun removeCustomSong(newSong: CustomSong) {
