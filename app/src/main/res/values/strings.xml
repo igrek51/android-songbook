@@ -28,7 +28,7 @@
         <br>
         <br><a href=\"https://github.com/igrek51/android-songbook\">Songbook Project on GitHub</a>
         <br>
-        <br><a href=\"https://igrek51.github.io/android-songbook/CHANGELOG/\">Changelog</a>
+        <br><a href=\"https://igrek51.github.io/android-songbook/CHANGELOG/\">Changelog - What's new in Songbook</a>
         <br>
         <br><a href=\"https://igrek51.github.io/android-songbook/develop/tech-stack\">Third Party Libraries</a>
     ]]></string>
@@ -563,7 +563,7 @@
     <string name="listview_empty">Empty</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="action_open_changelog">Open</string>
-    <string name="changelog_checkout_latest_changes">Check out the latest changes in this version.</string>
+    <string name="changelog_checkout_latest_changes">Check out what\'s new in Songbook.</string>
     <string name="error_corrupted_user_data">Corrupted User Data</string>
     <string name="error_corrupted_user_data_message">Your local data seems to be corrupted and can not be loaded correctly.
         \nYou can either close the app and try to load it again or reset your corrupted data.

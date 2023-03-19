@@ -24,7 +24,7 @@
         <br>
         <br><a href=\"https://github.com/igrek51/android-songbook\">Projekt Songbook na GitHubie</a>
         <br>
-        <br><a href=\"https://igrek51.github.io/android-songbook/CHANGELOG/\">Changelog - lista zmian</a>
+        <br><a href=\"https://igrek51.github.io/android-songbook/CHANGELOG/\">Lista zmian - Co nowego w Songbooku</a>
         <br>
         <br><a href=\"https://igrek51.github.io/android-songbook/develop/tech-stack\">Biblioteki zewnętrzne</a>
     ]]></string>
@@ -533,7 +533,7 @@
     <string name="listview_empty">Brak</string>
     <string name="copied_to_clipboard">Skopiowano do schowka</string>
     <string name="action_open_changelog">Otwórz</string>
-    <string name="changelog_checkout_latest_changes">Sprawdź najnowsze zmiany z tej wersji.</string>
+    <string name="changelog_checkout_latest_changes">Sprawdź, co nowego w Songbooku</string>
     <string name="error_corrupted_user_data">Uszkodzone dane użytkownika</string>
     <string name="error_corrupted_user_data_message">Twoje lokalne dane są uszkodzone i nie mogły zostać poprawnie odczytane.
         \nMożesz zamknąć aplikację i spróbować załadować je ponownie lub wyczyścić błędne dane, przywracając stan fabryczny.
