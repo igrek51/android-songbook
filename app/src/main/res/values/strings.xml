@@ -28,7 +28,7 @@
         <br>
         <br><a href=\"https://github.com/igrek51/android-songbook\">Songbook Project on GitHub</a>
         <br>
-        <br><a href=\"https://igrek51.github.io/android-songbook/CHANGELOG/\">Changelog - What's new in Songbook</a>
+        <br><a href=\"https://igrek51.github.io/android-songbook/CHANGELOG/\">Changelog - What\'s new in Songbook</a>
         <br>
         <br><a href=\"https://igrek51.github.io/android-songbook/develop/tech-stack\">Third Party Libraries</a>
     ]]></string>
@@ -237,7 +237,7 @@
     <string name="editor_chords_invalid">Validation error: %s</string>
     <string name="chords_invalid_missing_closing_bracket">Missing closing bracket \"]\"</string>
     <string name="chords_invalid_missing_opening_bracket">Missing opening bracket \"[\"</string>
-    <string name="chords_unknown_chord">Unknown chord in terms of chosen notation: \"%s\"</string>
+    <string name="chords_unknown_chord" formatted="false">Unknown chord in terms of chosen notation: \"%s\"</string>
     <string name="action_confirmation_title">Are you sure?</string>
     <string name="confirm_remove_song">Do you really want to remove this song?</string>
     <string name="confirm_discard_custom_song_changes">Do you want to save unsaved changes?</string>
@@ -250,7 +250,7 @@
     <string name="transpose_plus_1" translatable="false">+1</string>
     <string name="transpose_plus_5" translatable="false">+5</string>
     <string name="editor_other_chords_detected">I\'ve found chords but related to another notation: \"%s\"</string>
-    <string name="editor_onexit_validation_failed">There are validation errors:
+    <string name="editor_onexit_validation_failed" formatted="false">There are validation errors:
         \n%s
         \n
         \nDo you want to ignore these errors?</string>
@@ -337,18 +337,18 @@
     <string name="settings_sync_restore">Restore Backup from the Cloud</string>
     <string name="settings_sync_restore_hint">Restore all application data from your Google Drive Account.\nWarning: This will overwrite all your current application data. Requires restart.</string>
     <string name="settings_sync_save_success">Data synchronized.</string>
-    <string name="settings_sync_save_error">Error when saving backup: %s</string>
+    <string name="settings_sync_save_error" formatted="false">Error when saving backup: %s</string>
     <string name="settings_sync_restore_confirm">Do you really want to restore all application data from your Google Drive Account?\nThis will overwrite all your current application data. Application restart is needed after restoring.</string>
     <string name="settings_sync_restore_confirm_file">Do you really want to restore all application data from a file?\nThis will overwrite all your current application data. Application restart is needed after restoring.</string>
     <string name="settings_sync_restore_success">Application data restored successfully. Please restart app.</string>
-    <string name="settings_sync_restore_error">Error when restoring data: %s</string>
+    <string name="settings_sync_restore_error" formatted="false">Error when restoring data: %s</string>
     <string name="settings_sync_save_file">Export Backup to a file</string>
     <string name="settings_sync_save_file_hint">Save all application data (settings, custom songs, playlists, favourites) to an external file. You can also export it to a Google Drive file.</string>
     <string name="settings_sync_restore_file">Restore Backup from a file</string>
     <string name="settings_sync_restore_file_hint">Restore all application data from a selected file.\nWarning: This will overwrite all your current application data. Requires restart.</string>
     <string name="operation_cancelled">Operation cancelled</string>
     <string name="error_unable_to_sing_in_google">Unable to sign in to Google account</string>
-    <string name="settings_sync_in_progress">Sync in progress… %s%%</string>
+    <string name="settings_sync_in_progress" formatted="false">Sync in progress… %s%%</string>
     <string name="settings_sync_restore_partial_success">Some backup files couldn\'t be found. Backup restored partially. Restart app.</string>
     <string name="sync_singed_out">You are signed out.</string>
     <string name="settings_sync_restore_failed">Restoring failed: no backup files found</string>
@@ -402,7 +402,7 @@
     <string name="screen_share_join_room">Join available rooms:</string>
     <string name="screen_share_scan_rooms">Scan Rooms</string>
     <string name="screen_share_scanning_devices">Scanning all devices in proximity…</string>
-    <string name="error_communication_breakdown">Communication breakdown: %s</string>
+    <string name="error_communication_breakdown" formatted="false">Communication breakdown: %s</string>
     <string name="error_bluetooth_not_enabled">Bluetooth is not accessible. Try again.</string>
     <string name="screen_share_set_room_password">Room password (empty - no password)</string>
     <string name="room_lobby">Room Lobby</string>
@@ -414,7 +414,7 @@
     <string name="edit_song_import_custom_songs">🗂️ Import multiple songs from a batch</string>
     <string name="custom_songs_exported">All custom songs exported</string>
     <string name="select_file_to_open">Select file to open</string>
-    <string name="custom_songs_imported">%s new custom songs have been imported</string>
+    <string name="custom_songs_imported" formatted="false">%s new custom songs have been imported</string>
     <string name="custom_songs_mass_import_hint">Importing multiple songs is supposed to load many songs from a single JSON file of a particular type.
         \nExisting songs will not be overwritten.
         \nIf you\'d rather like to import just one song from a text file, use option \"Import from file\" when creating a song.
@@ -423,35 +423,35 @@
     <string name="error_occurred">Error occurred</string>
     <string name="command_successful">Command successful</string>
     <string name="command_failed">Command failed</string>
-    <string name="room_joining_room">Joining room on %s…</string>
+    <string name="room_joining_room" formatted="false">Joining room on %s…</string>
     <string name="room_joined_to_room">Joined to room</string>
     <string name="room_room_created">Room created</string>
     <string name="room_scanning_completed_not_found">Scanning completed. No room found.</string>
     <string name="room_dropped_from_host">Dropped from host</string>
-    <string name="room_dropped_from_host_s">Dropped from host: %s</string>
+    <string name="room_dropped_from_host_s" formatted="false">Dropped from host: %s</string>
     <string name="song_show_fullscreen">📺 Fullscreen</string>
-    <string name="room_members">Members:\n%s</string>
+    <string name="room_members" formatted="false">Members:\n%s</string>
     <string name="screen_share_enter_room_password">Enter room password:</string>
     <string name="room_wrong_password">Wrong password</string>
     <string name="room_host">Owner</string>
     <string name="room_confirm_leave_lobby">You are about to leave lobby. Do you really want to disconnect?</string>
-    <string name="room_scanning_progress">Scanning all devices in proximity… %s</string>
+    <string name="room_scanning_progress" formatted="false">Scanning all devices in proximity… %s</string>
     <string name="screen_share_feature_hint">Screen Sharing allows you to display the same songs on many devices using Bluetooth (that also requires location access to scan nearby devices). Create a room so that your friends could join it. Then every song the owner chooses will be broadcasted and displayed on all devices connected to a room.</string>
     <string name="room_current_song">Current song: </string>
     <string name="room_current_song_waiting">Not selected - waiting…</string>
     <string name="room_chat">Chat:</string>
     <string name="room_downloading_song">Fetching song…</string>
     <string name="song_details_namespace_temporary">Temporary songs</string>
-    <string name="room_scanning_completed_found">Scanning completed. Found rooms: %s</string>
+    <string name="room_scanning_completed_found" formatted="false">Scanning completed. Found rooms: %s</string>
     <string name="room_empty_message_given">Enter a message</string>
     <string name="room_current_song_waiting_master">Not selected\nOpen a song in any window to share it with others.</string>
     <string name="room_lobby_hint">Room lobby is open. Only owner of a room can choose songs.</string>
     <string name="room_empty_room_list">No rooms</string>
     <string name="room_no_chat_messages">No messages yet</string>
     <string name="room_enter_message_hint">Message</string>
-    <string name="room_new_chat_message">New message: %s</string>
+    <string name="room_new_chat_message" formatted="false">New message: %s</string>
     <string name="room_bluetooth_will_bediscoverable">Your device will be discoverable for next 5 minutes.</string>
-    <string name="room_new_client_joined">New client joined: %s</string>
+    <string name="room_new_client_joined" formatted="false">New client joined: %s</string>
     <string name="settings_trim_whitespaces">Trim whitespaces</string>
     <string name="settings_trim_whitespaces_hint">Remove whitespaces at the beginning and at the end of lines</string>
     <string name="settings_autoscroll_autostart">Start autoscroll automatically</string>
@@ -474,7 +474,7 @@
     <string name="billing_buy_ad_free">Buy Ad-Free</string>
     <string name="billing_restore_pruchases">Restore your purchases</string>
     <string name="billing_already_purchased">Already purchased</string>
-    <string name="error_purchase_error">Purchase error: %s</string>
+    <string name="error_purchase_error" formatted="false">Purchase error: %s</string>
     <string name="billing_loading_purchases">Loading purchases…</string>
     <string name="billing_restoring_purchases">Restoring previous purchases…</string>
     <string name="billing_purchases_restored">Purchases restored</string>
@@ -488,8 +488,8 @@
     <string name="billing_donate_1_info">If you like this app, you can express your appreciation by making a donation to the developer in a symbolic \"beer\" currency. You can donate multiple times.</string>
     <string name="billing_buy_donate_1">🍺 Send a beer to the developer</string>
     <string name="billing_price_loading">Price loading…</string>
-    <string name="billing_donate_1_amount">Donated beers: %s</string>
-    <string name="billing_item_price">Price: %s</string>
+    <string name="billing_donate_1_amount" formatted="false">Donated beers: %s</string>
+    <string name="billing_item_price" formatted="false">Price: %s</string>
     <string name="file_select_operation_canceled">File import canceled</string>
     <string name="settings_autoscroll_show_eye_focus_zone">Eye-focus progress</string>
     <string name="settings_autoscroll_show_eye_focus_zone_hint">Display the progress of autoscroll by indicating the eye-focus zone</string>
@@ -525,7 +525,7 @@
     <string name="manual_confirm_opening_manual">Would you like to see the quick Tutorial Guide and take a tour of Songbook\'s features?</string>
     <string name="prompt_rate_app_title">Do you like Songbook?</string>
     <string name="prompt_rate_app_body">Would you rate the Songbook with 5 stars ⭐️⭐️⭐️⭐️⭐️?</string>
-    <string name="error_song_file_type_unallowed">Not allowed file type: %s. Only TXT, PDF files and Google Docs are allowed.</string>
+    <string name="error_song_file_type_unallowed" formatted="false">Not allowed file type: %s. Only TXT, PDF files and Google Docs are allowed.</string>
     <string name="backup_file_exported">Backup file has been exported.</string>
     <string name="settings_sync_backup_automatically">Automatic Backups</string>
     <string name="settings_sync_backup_automatically_hint">Make periodic (daily) backups automatically to your Google Drive Account.\nLast backup: %s</string>
@@ -544,7 +544,7 @@
     <string name="sync_session_conflict_take_remote">Take remote</string>
     <string name="sync_copy_link_copied">Link copied</string>
     <string name="sync_session_synchronizing">Synchronizing songs…</string>
-    <string name="sync_session_conflict_summary">
+    <string name="sync_session_conflict_summary" formatted="false">
         \nThere is a conflict found between local songs and the remote ones on the server.
         \nDuring the synchronization session, there were changes applied on both sides.
         \n
@@ -565,7 +565,7 @@
     <string name="action_open_changelog">Open</string>
     <string name="changelog_checkout_latest_changes">Check out what\'s new in Songbook.</string>
     <string name="error_corrupted_user_data">Corrupted User Data</string>
-    <string name="error_corrupted_user_data_message">Your local data seems to be corrupted and can not be loaded correctly.
+    <string name="error_corrupted_user_data_message" formatted="false">Your local data seems to be corrupted and can not be loaded correctly.
         \nYou can either close the app and try to load it again or reset your corrupted data.
         \nWarning: User data contains your preferences, songs, playlists, etc. After resetting user data it won\'t be possible to restore it back!
         \n

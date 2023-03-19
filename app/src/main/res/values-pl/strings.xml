@@ -444,7 +444,7 @@
     <string name="billing_buy_ad_free">Wykup Brak reklam</string>
     <string name="billing_restore_pruchases">Wczytaj poprzednie zakupy</string>
     <string name="billing_already_purchased">Już kupione</string>
-    <string name="error_purchase_error">Błąd płatności: %s</string>
+    <string name="error_purchase_error" formatted="false">Błąd płatności: %s</string>
     <string name="billing_loading_purchases">Wczytywanie płatności…</string>
     <string name="billing_restoring_purchases">Przywracanie poprzednich zakupów…</string>
     <string name="billing_purchases_restored">Płatności przywrócone</string>
@@ -458,8 +458,8 @@
     <string name="billing_donate_1_info">Jeśli podoba Ci się aplikacja, możesz wyrazić swoje uznanie, przekazując deweloperowi podarunek w symbolicznej \"piwnej\" walucie. Możesz przekazywać napiwek wiele razy.</string>
     <string name="billing_buy_donate_1">🍺 Postaw piwo deweloperowi</string>
     <string name="billing_price_loading">Wczytywanie ceny…</string>
-    <string name="billing_donate_1_amount">Podarowane piwa: %s</string>
-    <string name="billing_item_price">Cena: %s</string>
+    <string name="billing_donate_1_amount" formatted="false">Podarowane piwa: %s</string>
+    <string name="billing_item_price" formatted="false">Cena: %s</string>
     <string name="file_select_operation_canceled">Import pliku anulowany</string>
     <string name="settings_autoscroll_show_eye_focus_zone">Postęp strefy skupienia wzroku</string>
     <string name="settings_autoscroll_show_eye_focus_zone_hint">Wyświetlaj postęp autoprzewijania, pokazując strefę skupienia wzroku</string>
@@ -495,7 +495,7 @@
     <string name="manual_confirm_opening_manual">Czy chcesz zobaczyć krótki Przewodnik po funkcjonalnościach Songbooka?</string>
     <string name="prompt_rate_app_title">Podoba Ci się Songbook?</string>
     <string name="prompt_rate_app_body">Czy oceniłbyś Songbooka na 5 gwiazdek ⭐️⭐️⭐️⭐️⭐️?</string>
-    <string name="error_song_file_type_unallowed">Niedozwolony typ pliku: %s. Tylko pliki TXT, PDF i Dokumenty Google Docs są dozwolone.</string>
+    <string name="error_song_file_type_unallowed" formatted="false">Niedozwolony typ pliku: %s. Tylko pliki TXT, PDF i Dokumenty Google Docs są dozwolone.</string>
     <string name="backup_file_exported">Kopia zapasowa została zapisana.</string>
     <string name="settings_sync_backup_automatically">Automatyczna kopia zapasowa</string>
     <string name="settings_sync_backup_automatically_hint">Zapisuj cyklicznie (codziennie) kopie zapasowe na twoim koncie Google Drive.\nOstatnia kopia zapasowa: %s</string>
@@ -514,7 +514,7 @@
     <string name="sync_session_conflict_take_remote">Weź zdalne</string>
     <string name="sync_copy_link_copied">Link skopiowany.</string>
     <string name="sync_session_synchronizing">Synchronizing songs…</string>
-    <string name="sync_session_conflict_summary">
+    <string name="sync_session_conflict_summary" formatted="false">
         \nWystąpił konflikt pomiędzy lokalnymi piosenkami a zdalną wersją na serwerze.
         \nPodczas sesji synchronizacji, zostały wprowadzone zmiany po obu stronach.
         \n
@@ -535,7 +535,7 @@
     <string name="action_open_changelog">Otwórz</string>
     <string name="changelog_checkout_latest_changes">Sprawdź, co nowego w Songbooku</string>
     <string name="error_corrupted_user_data">Uszkodzone dane użytkownika</string>
-    <string name="error_corrupted_user_data_message">Twoje lokalne dane są uszkodzone i nie mogły zostać poprawnie odczytane.
+    <string name="error_corrupted_user_data_message" formatted="false">Twoje lokalne dane są uszkodzone i nie mogły zostać poprawnie odczytane.
         \nMożesz zamknąć aplikację i spróbować załadować je ponownie lub wyczyścić błędne dane, przywracając stan fabryczny.
         \nUwaga: Dane użytkownika zawierają ustawienia, własne piosenki, playlisty, itp. Po zresetowaniu danych nie będzie można ich przywrócić!
         \n
