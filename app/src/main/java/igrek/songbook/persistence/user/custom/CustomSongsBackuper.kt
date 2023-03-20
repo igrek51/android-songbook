@@ -1,11 +1,17 @@
 package igrek.songbook.persistence.user.custom
 
+import igrek.songbook.R
+import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import igrek.songbook.layout.contextmenu.ContextMenuBuilder
+import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.LocalFilesystem
+import igrek.songbook.persistence.user.UserDataDao
+import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.system.filesystem.copyFile
 import igrek.songbook.util.formatTodayDate
 import igrek.songbook.util.parseDate
@@ -17,8 +23,15 @@ const val BACKUP_KEEP_LAST_DAYS: Int = 14
 
 class CustomSongsBackuper(
     localFilesystem: LazyInject<LocalFilesystem> = appFactory.localFilesystem,
+    userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
+    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
     private val localFilesystem by LazyExtractor(localFilesystem)
+    private val userDataDao by LazyExtractor(userDataDao)
+    private val uiInfoService by LazyExtractor(uiInfoService)
+    private val preferencesState by LazyExtractor(preferencesState)
+
     private val logger = LoggerFactory.logger
 
     private val songsBackupDir: File
@@ -29,21 +42,30 @@ class CustomSongsBackuper(
             return songBackupDir
         }
 
-    fun saveBackup(dbFile: File) {
+    fun saveBackup() {
         safeExecute {
+            if (!preferencesState.saveCustomSongsBackups)
+                return
+
+            val dbFile = getDbFilePath()
             val backupDir: File = songsBackupDir
 
             val todayStr = formatTodayDate()
             val backupFile: File = backupDir.resolve("${todayStr}$BACKUP_FILE_SUFFIX")
 
+            val existed = backupFile.isFile
             copyFile(dbFile, backupFile)
-            logger.debug("Custom songs backup created: $backupFile")
-            removeOldBackups(backupDir)
+            if (!existed) {
+                logger.debug("Custom songs backup created: $backupFile")
+            } else {
+                logger.debug("Custom songs backup updated: $backupFile")
+            }
+            removeOldBackups()
         }
     }
 
-    private fun removeOldBackups(backupDir: File) {
-        val backups = listBackups(backupDir)
+    private fun removeOldBackups() {
+        val backups = listBackups()
         if (backups.size <= BACKUP_KEEP_LAST_DAYS)
             return
 
@@ -55,12 +77,8 @@ class CustomSongsBackuper(
         }
     }
 
-    fun listAllBackups(): List<BackupFile> {
+    private fun listBackups(): List<BackupFile> {
         val backupDir: File = songsBackupDir
-        return listBackups(backupDir)
-    }
-
-    private fun listBackups(backupDir: File): List<BackupFile> {
         val children: List<File> = backupDir.listFiles()?.toList() ?: emptyList()
         val backups: MutableList<BackupFile> = mutableListOf()
         for (child in children) {
@@ -75,20 +93,48 @@ class CustomSongsBackuper(
                 continue
             }
 
-            backups.add(BackupFile(child, date))
+            backups.add(BackupFile(child, date, dateStr))
         }
         backups.sortByDescending { it.date }
         return backups
     }
 
-    fun restoreBackup(backupFile: File, dbFile: File) {
-        copyFile(backupFile, dbFile)
-        logger.info("Backup $backupFile restored to $dbFile")
+    private fun getDbFilePath(): File {
+        val dbName = userDataDao.customSongsDao.dbName
+        val schemaVersion = userDataDao.customSongsDao.schemaVersion
+        val filename = "$dbName.$schemaVersion.json"
+        val path = localFilesystem.appFilesDir.absolutePath
+        return File(path, filename)
     }
 
+    private fun restoreBackup(backupFile: File) {
+        val dbFile = getDbFilePath()
+        copyFile(backupFile, dbFile)
+        userDataDao.reloadCustomSongs()
+        logger.info("Backup $backupFile restored to $dbFile")
+        uiInfoService.showInfo(R.string.custom_songs_backup_restored)
+    }
+
+    fun showRestoreBackupDialog() {
+        val backups = listBackups()
+        if (backups.isEmpty()){
+            uiInfoService.showInfo(R.string.no_backups_to_restore)
+            return
+        }
+
+        val actions = backups.map { backup ->
+            ContextMenuBuilder.Action(backup.formattedDate) {
+                ConfirmDialogBuilder().confirmAction(R.string.confirm_restore_custom_songs_backup) {
+                    restoreBackup(backup.file)
+                }
+            }
+        }.toList()
+        ContextMenuBuilder().showContextMenu(R.string.custom_songs_restore_backup_choose, actions)
+    }
 }
 
 class BackupFile(
     val file: File,
     val date: Date,
+    val formattedDate: String,
 )

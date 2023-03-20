@@ -96,7 +96,7 @@ class SongsRepository(
         }
     }
 
-    private suspend fun reloadCustomSongsDb() {
+    suspend fun reloadCustomSongsDb() {
         dataTransferMutex.withLock {
             val customDbBuilder = CustomSongsDbBuilder(userDataDao)
             customSongsRepo = customDbBuilder.buildCustom(uiResourceService)

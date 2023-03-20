@@ -572,4 +572,11 @@
         \nError details: %s</string>
     <string name="action_exit">Exit</string>
     <string name="action_reset_corrupted_data">Reset data</string>
+    <string name="no_backups_to_restore">No backups have been saved yet</string>
+    <string name="custom_songs_restore_backup_choose">Choose a backup version to restore</string>
+    <string name="confirm_restore_custom_songs_backup">Do you really want to restore a backup of your custom songs? Your current custom songs will be lost.</string>
+    <string name="custom_songs_backup_restored">Backup restored</string>
+    <string name="settings_saveCustomSongsBackups">Keep daily backups of My Songs</string>
+    <string name="settings_saveCustomSongsBackups_hint">Keep versions of \"My Songs\" from last 14 days</string>
+    <string name="settings_restore_custom_songs_backup">Restore \"My Songs\" backup</string>
 </resources>

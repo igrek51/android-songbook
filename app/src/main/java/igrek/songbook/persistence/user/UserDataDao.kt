@@ -13,6 +13,7 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.LocalFilesystem
+import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.custom.CustomSongsDao
 import igrek.songbook.persistence.user.exclusion.ExclusionDao
 import igrek.songbook.persistence.user.favourite.FavouriteSongsDao
@@ -38,10 +39,12 @@ class UserDataDao(
     localFilesystem: LazyInject<LocalFilesystem> = appFactory.localFilesystem,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     activityController: LazyInject<ActivityController> = appFactory.activityController,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
 ) {
     internal val localDbService by LazyExtractor(localFilesystem)
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val activityController by LazyExtractor(activityController)
+    private val songsRepository by LazyExtractor(songsRepository)
 
     var unlockedSongsDao: UnlockedSongsDao by LazyDaoLoader { path -> UnlockedSongsDao(path) }
     var favouriteSongsDao: FavouriteSongsDao by LazyDaoLoader { path -> FavouriteSongsDao(path) }
@@ -126,6 +129,17 @@ class UserDataDao(
         }
 
         logger.debug("User data loaded")
+    }
+
+    fun reloadCustomSongs() {
+        val path = localDbService.appFilesDir.absolutePath
+        runBlocking(Dispatchers.IO) {
+            dataTransferMutex.withLock {
+                customSongsDao = CustomSongsDao(path, resetOnError=false)
+            }
+            songsRepository.reloadCustomSongsDb()
+        }
+        logger.debug("Custom songs data loaded")
     }
 
     suspend fun save() {

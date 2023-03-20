@@ -157,6 +157,8 @@ enum class PreferencesField constructor(
 
     LastAppVersionCode(0),
 
+    SaveCustomSongsBackups(true),
+
     ;
 
     constructor(defaultValue: String) : this(StringPreferenceType(defaultValue))

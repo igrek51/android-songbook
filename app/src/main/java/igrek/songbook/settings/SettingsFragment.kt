@@ -17,6 +17,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
+import igrek.songbook.persistence.user.custom.CustomSongsBackuper
 import igrek.songbook.settings.buttons.MediaButtonBehaviours
 import igrek.songbook.settings.buttons.MediaButtonService
 import igrek.songbook.settings.chordsnotation.ChordsNotation
@@ -51,6 +52,7 @@ class SettingsFragment(
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
     homeScreenEnumService: LazyInject<HomeScreenEnumService> = appFactory.homeScreenEnumService,
     settingsEnumService: LazyInject<SettingsEnumService> = appFactory.settingsEnumService,
+    customSongsBackuper: LazyInject<CustomSongsBackuper> = appFactory.customSongsBackuper,
 ) : PreferenceFragmentCompat() {
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val lyricsThemeService by LazyExtractor(lyricsThemeService)
@@ -62,6 +64,7 @@ class SettingsFragment(
     private val layoutController by LazyExtractor(layoutController)
     private val homeScreenEnumService by LazyExtractor(homeScreenEnumService)
     private val settingsEnumService by LazyExtractor(settingsEnumService)
+    private val customSongsBackuper by LazyExtractor(customSongsBackuper)
 
     private var decimalFormat1: DecimalFormat = DecimalFormat("#.#")
     private var decimalFormat3: DecimalFormat = DecimalFormat("#.###")
@@ -340,6 +343,13 @@ class SettingsFragment(
             }
         )
 
+        setupSwitchPreference("saveCustomSongsBackups",
+            onLoad = { preferencesState.saveCustomSongsBackups },
+            onSave = { value: Boolean ->
+                preferencesState.saveCustomSongsBackups = value
+            }
+        )
+
         setupSwitchPreference("syncBackupAutomatically",
             onLoad = { preferencesState.syncBackupAutomatically },
             onSave = { value: Boolean ->
@@ -384,6 +394,10 @@ class SettingsFragment(
 
         setupClickPreference("billingRemoveAds") {
             layoutController.showLayout(BillingLayoutController::class)
+        }
+
+        setupClickPreference("restoreCustomSongsBackup") {
+            customSongsBackuper.showRestoreBackupDialog()
         }
 
         refreshFragment()

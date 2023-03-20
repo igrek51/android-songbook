@@ -36,12 +36,9 @@ class CustomSongsDao(
         return CustomSongsDb(mutableListOf())
     }
 
-    override fun save(): File? {
-        val dbFile = super.save()
-        dbFile?.let {
-            customSongsBackuper.saveBackup(dbFile)
-        }
-        return dbFile
+    override fun save() {
+        super.save()
+        customSongsBackuper.saveBackup()
     }
 
     fun saveCustomSong(newSong: CustomSong): Song {

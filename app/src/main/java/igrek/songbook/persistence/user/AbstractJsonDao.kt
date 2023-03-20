@@ -82,8 +82,8 @@ abstract class AbstractJsonDao<T>(
         db = readDb(resetOnError)
     }
 
-    open fun save(): File? {
-        return db?.let {
+    open fun save() {
+        db?.let {
             saveDb(it)
         }
     }

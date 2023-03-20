@@ -58,6 +58,7 @@ class PreferencesState(
     var lastDriveBackupTimestamp: Long by PreferenceDelegate(PreferencesField.LastDriveBackupTimestamp)
     var deviceId: String by PreferenceDelegate(PreferencesField.DeviceId)
     var lastAppVersionCode: Long by PreferenceDelegate(PreferencesField.LastAppVersionCode)
+    var saveCustomSongsBackups: Boolean by PreferenceDelegate(PreferencesField.SaveCustomSongsBackups)
 
 }
 
