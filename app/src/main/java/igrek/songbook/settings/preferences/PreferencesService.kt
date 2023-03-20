@@ -10,10 +10,8 @@ import kotlin.collections.set
 
 class PreferencesService(
     userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
-    sharedPreferencesService: LazyInject<SharedPreferencesService> = appFactory.sharedPreferencesService,
 ) {
     private val userDataDao by LazyExtractor(userDataDao)
-    private val sharedPreferencesService by LazyExtractor(sharedPreferencesService)
 
     private val logger = LoggerFactory.logger
     private var entityValues = HashMap<String, Any>()
@@ -32,8 +30,8 @@ class PreferencesService(
         if (primitives.isNotEmpty())
             return primitives2entities(primitives)
 
-        logger.warn("no user data preferences found, reading from shared preferences")
-        return sharedPreferencesService.getEntities()
+        logger.info("no user data preferences found, loading defaults")
+        return emptyMap()
     }
 
     private fun primitives2entities(primitives: Map<String, Any>): Map<String, Any> {

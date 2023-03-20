@@ -304,7 +304,7 @@
     <string name="nav_last_song">Ostatnia Piosenka</string>
     <string name="no_last_song">Nie otworzyłeś jeszcze żadnej piosenki.</string>
     <string name="song_copied_edit_it">Edytuj</string>
-    <string name="settings_sync">Kopia zapasowa i Przywracanie / Synchronizacja urządzeń</string>
+    <string name="settings_sync">Kopia zapasowa i Przywracanie</string>
     <string name="settings_sync_save">Zapisz kopię zapasową w Chmurze</string>
     <string name="settings_sync_save_hint">Zapisz wszystkie dane aplikacji (ustawienia, własne piosenki, playlisty, ulubione) na Twoim koncie Google Drive w ukrytym folderze danych aplikacji. Nadpisze to Twoją poprzednią kopię zapasową!</string>
     <string name="settings_sync_restore">Przywróć kopię zapasową z Chmury</string>
@@ -543,10 +543,10 @@
     <string name="action_exit">Wyjdź</string>
     <string name="action_reset_corrupted_data">Zresetuj dane</string>
     <string name="no_backups_to_restore">Nie zapisano jeszcze żadnych kopii zapasowych.</string>
-    <string name="custom_songs_restore_backup_choose">Choose a backup version to restore</string>
-    <string name="confirm_restore_custom_songs_backup">Do you really want to restore a backup of your custom songs? Your current custom songs will be lost.</string>
-    <string name="custom_songs_backup_restored">Backup restored</string>
-    <string name="settings_saveCustomSongsBackups">Keep backups of My Songs</string>
-    <string name="settings_saveCustomSongsBackups_hint">Keep last versions of \"My Songs\" for last 14 days</string>
-    <string name="settings_restore_custom_songs_backup">Restore \"My Songs\" backup</string>
+    <string name="custom_songs_restore_backup_choose">Wybierz wersję do przywrócenia</string>
+    <string name="confirm_restore_custom_songs_backup">Czy na pewno chcesz przywrócić \"Moje Piosenki\" z kopii zapasowej? Twoje obecne piosenki zostaną utracone.</string>
+    <string name="custom_songs_backup_restored">Kopia zapasowa \"Moich Piosenek\" została przywrócona.</string>
+    <string name="settings_saveCustomSongsBackups">Zachowuj dzienne kopie Moich Piosenek</string>
+    <string name="settings_saveCustomSongsBackups_hint">Przetrzymuj lokalne wersje \"Moich Piosenek\" z ostatnich 14 dni</string>
+    <string name="settings_restore_custom_songs_backup">Przywróć \"Moje Piosenki\" z lokalnej kopii</string>
 </resources>
