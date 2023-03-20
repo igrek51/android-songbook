@@ -82,22 +82,23 @@ abstract class AbstractJsonDao<T>(
         db = readDb(resetOnError)
     }
 
-    open fun save() {
-        db?.let {
+    open fun save(): File? {
+        return db?.let {
             saveDb(it)
         }
     }
 
-    private fun saveDb(db: T) {
-        saveToFile(dbName, schemaVersion, db)
+    private fun saveDb(db: T): File {
+        return saveToFile(dbName, schemaVersion, db)
     }
 
-    private fun saveToFile(dbName: String, schemaVersion: Int, obj: T) {
+    private fun saveToFile(dbName: String, schemaVersion: Int, obj: T): File {
         json.encodeToJsonElement(serializer, obj)
         val content = json.encodeToString(serializer, obj)
         val filename = buildFilename(dbName, schemaVersion)
         val file = File(path, filename)
         file.writeText(content, Charsets.UTF_8)
+        return file
     }
 
     private fun buildFilename(name: String, schemaVersion: Int): String {

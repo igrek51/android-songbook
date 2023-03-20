@@ -32,10 +32,11 @@ import igrek.songbook.layout.ad.AdService
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.DeviceIdProvider
-import igrek.songbook.persistence.LocalDbService
+import igrek.songbook.persistence.LocalFilesystem
 import igrek.songbook.persistence.general.SongsUpdater
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.UserDataDao
+import igrek.songbook.persistence.user.custom.CustomSongsBackuper
 import igrek.songbook.playlist.PlaylistFillLayoutController
 import igrek.songbook.playlist.PlaylistLayoutController
 import igrek.songbook.playlist.PlaylistService
@@ -111,7 +112,7 @@ class AppFactory(
     val songSearchLayoutController = SingletonInject { SongSearchLayoutController() }
     val aboutLayoutController = SingletonInject { AboutLayoutController() }
     val contactLayoutController = SingletonInject { ContactLayoutController() }
-    val localDbService = SingletonInject { LocalDbService() }
+    val localFilesystem = SingletonInject { LocalFilesystem() }
     val songsRepository = SingletonInject { SongsRepository() }
     val permissionService = SingletonInject { PermissionService() }
     val secretCommandService = SingletonInject { SecretCommandService() }
@@ -175,4 +176,5 @@ class AppFactory(
     val deviceIdProvider = SingletonInject { DeviceIdProvider() }
     val editorSessionService = SingletonInject { EditorSessionService() }
     val logsLayoutController = SingletonInject { LogsLayoutController() }
+    val customSongsBackuper = SingletonInject { CustomSongsBackuper() }
 }

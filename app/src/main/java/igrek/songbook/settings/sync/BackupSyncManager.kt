@@ -29,7 +29,7 @@ import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import igrek.songbook.persistence.LocalDbService
+import igrek.songbook.persistence.LocalFilesystem
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.preferences.PreferencesService
@@ -49,7 +49,7 @@ import java.util.*
 class BackupSyncManager(
     appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-    localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
+    localFilesystem: LazyInject<LocalFilesystem> = appFactory.localFilesystem,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
     preferencesService: LazyInject<PreferencesService> = appFactory.preferencesService,
     activityController: LazyInject<ActivityController> = appFactory.activityController,
@@ -61,7 +61,7 @@ class BackupSyncManager(
 ) {
     private val activity by LazyExtractor(appCompatActivity)
     private val uiInfoService by LazyExtractor(uiInfoService)
-    private val localDbService by LazyExtractor(localDbService)
+    private val localDbService by LazyExtractor(localFilesystem)
     private val songsRepository by LazyExtractor(songsRepository)
     private val preferencesService by LazyExtractor(preferencesService)
     private val activityController by LazyExtractor(activityController)

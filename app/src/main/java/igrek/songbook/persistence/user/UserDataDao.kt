@@ -12,7 +12,7 @@ import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import igrek.songbook.persistence.LocalDbService
+import igrek.songbook.persistence.LocalFilesystem
 import igrek.songbook.persistence.user.custom.CustomSongsDao
 import igrek.songbook.persistence.user.exclusion.ExclusionDao
 import igrek.songbook.persistence.user.favourite.FavouriteSongsDao
@@ -35,11 +35,11 @@ import kotlin.reflect.KProperty
 @OptIn(DelicateCoroutinesApi::class)
 @SuppressLint("CheckResult")
 class UserDataDao(
-    localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
+    localFilesystem: LazyInject<LocalFilesystem> = appFactory.localFilesystem,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     activityController: LazyInject<ActivityController> = appFactory.activityController,
 ) {
-    internal val localDbService by LazyExtractor(localDbService)
+    internal val localDbService by LazyExtractor(localFilesystem)
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val activityController by LazyExtractor(activityController)
 

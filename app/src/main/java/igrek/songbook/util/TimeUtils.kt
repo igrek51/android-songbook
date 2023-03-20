@@ -1,5 +1,6 @@
 package igrek.songbook.util
 
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -19,4 +20,12 @@ fun formatTimestampDate(timestampSeconds: Long): String {
 fun formatTimestampTime(timestampSeconds: Long): String {
     val date = Date(timestampSeconds * 1000)
     return iso8601Format.format(date)
+}
+
+fun parseDate(dateStr: String): Date? {
+    return try {
+        dateFormat.parse(dateStr)
+    } catch (e: ParseException) {
+        null
+    }
 }

@@ -25,7 +25,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.ad.AdService
-import igrek.songbook.persistence.LocalDbService
+import igrek.songbook.persistence.LocalFilesystem
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.preferences.PreferencesService
@@ -50,7 +50,7 @@ class SecretCommandService(
     adminService: LazyInject<AdminService> = appFactory.adminService,
     adService: LazyInject<AdService> = appFactory.adService,
     permissionService: LazyInject<PermissionService> = appFactory.permissionService,
-    localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
+    localFilesystem: LazyInject<LocalFilesystem> = appFactory.localFilesystem,
     activityController: LazyInject<ActivityController> = appFactory.activityController,
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
     userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
@@ -64,7 +64,7 @@ class SecretCommandService(
     private val adminService by LazyExtractor(adminService)
     private val adService by LazyExtractor(adService)
     private val permissionService by LazyExtractor(permissionService)
-    private val localDbService by LazyExtractor(localDbService)
+    private val localDbService by LazyExtractor(localFilesystem)
     private val activityController by LazyExtractor(activityController)
     private val layoutController by LazyExtractor(layoutController)
     private val userDataDao by LazyExtractor(userDataDao)

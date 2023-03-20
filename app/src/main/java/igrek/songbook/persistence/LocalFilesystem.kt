@@ -7,17 +7,14 @@ import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import igrek.songbook.system.PermissionService
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class LocalDbService(
+class LocalFilesystem(
     activity: LazyInject<Activity> = appFactory.activity,
-    permissionService: LazyInject<PermissionService> = appFactory.permissionService,
 ) {
     private val activity by LazyExtractor(activity)
-    private val permissionService by LazyExtractor(permissionService)
 
     private val logger = LoggerFactory.logger
 
@@ -36,11 +33,9 @@ class LocalDbService(
             if (dir != null && dir.isDirectory)
                 return dir
 
-            if (permissionService.isStoragePermissionGranted) {
-                dir = activity.getExternalFilesDir("data")
-                if (dir != null && dir.isDirectory)
-                    return dir
-            }
+            dir = activity.getExternalFilesDir("data")
+            if (dir != null && dir.isDirectory)
+                return dir
 
             return File("/data/data/" + activity.packageName + "/files")
         }
@@ -53,6 +48,36 @@ class LocalDbService(
 
     val songsDbFile: File
         get() = File(appFilesDir, currentSongsDbFilename)
+
+    val backupDir: File
+        @SuppressLint("SdCardPath")
+        get() {
+            // INTERNAL_STORAGE/Android/data/PACKAGE/files/backup
+            val externalFilesDir: File? = activity.getExternalFilesDir(null)
+            if (externalFilesDir != null) {
+                if (!externalFilesDir.isDirectory)
+                    externalFilesDir.mkdirs()
+                val backupDir = externalFilesDir.resolve("backup")
+                if (!backupDir.isDirectory)
+                    backupDir.mkdirs()
+                return backupDir
+            }
+
+            // /data/data/PACKAGE/files/backup or /data/user/0/PACKAGE/files/backup
+            val filesDir: File? = activity.filesDir
+            if (filesDir != null && filesDir.isDirectory) {
+                val backupDir = filesDir.resolve("backup")
+                if (!backupDir.isDirectory)
+                    backupDir.mkdirs()
+                return backupDir
+            }
+
+            // /data/data/PACKAGE/files/backup
+            val backupDir = File("/data/data/" + activity.packageName + "/files/backup")
+            if (!backupDir.isDirectory)
+                backupDir.mkdirs()
+            return backupDir
+        }
 
     fun ensureLocalDbExists() {
         val dbFile = songsDbFile

@@ -5,7 +5,7 @@ import igrek.songbook.info.errorcheck.ContextError
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import igrek.songbook.persistence.LocalDbService
+import igrek.songbook.persistence.LocalFilesystem
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.apache.commons.codec.binary.Base64
@@ -19,9 +19,9 @@ import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 
 class BackupEncoder(
-    localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
+    localFilesystem: LazyInject<LocalFilesystem> = appFactory.localFilesystem,
 ) {
-    private val localDbService by LazyExtractor(localDbService)
+    private val localDbService by LazyExtractor(localFilesystem)
 
     private val encryptionAlgorithm = "AES/CBC/PKCS5Padding"
     private val encryptionKey: SecretKeySpec = SecretKeySpec("n75V9&bB4ufzR^fQ".toByteArray(), "AES") // Public shared key

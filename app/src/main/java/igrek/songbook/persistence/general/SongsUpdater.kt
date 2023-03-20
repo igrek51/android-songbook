@@ -9,7 +9,7 @@ import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import igrek.songbook.persistence.LocalDbService
+import igrek.songbook.persistence.LocalFilesystem
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.preferences.PreferencesState
 import kotlinx.coroutines.*
@@ -21,13 +21,13 @@ class SongsUpdater(
     okHttpClient: LazyInject<OkHttpClient> = appFactory.okHttpClient,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-    localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
+    localFilesystem: LazyInject<LocalFilesystem> = appFactory.localFilesystem,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
     private val okHttpClient by LazyExtractor(okHttpClient)
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val songsRepository by LazyExtractor(songsRepository)
-    private val localDbService by LazyExtractor(localDbService)
+    private val localDbService by LazyExtractor(localFilesystem)
     private val preferencesState by LazyExtractor(preferencesState)
 
     private val logger = LoggerFactory.logger

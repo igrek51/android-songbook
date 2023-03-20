@@ -28,8 +28,8 @@ android {
     compileSdkVersion 33
     defaultConfig {
         applicationId "igrek.songbook"
-        minSdkVersion 19
-        targetSdkVersion 33
+        minSdkVersion 19 // Android 4.4 KitKat
+        targetSdkVersion 33 // Android 13
         versionCode getVersionCode()
         versionName getVersionName()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

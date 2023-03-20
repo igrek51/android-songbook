@@ -5,7 +5,7 @@ import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import igrek.songbook.persistence.LocalDbService
+import igrek.songbook.persistence.LocalFilesystem
 import igrek.songbook.persistence.general.dao.PublicSongsDao
 import igrek.songbook.persistence.general.model.Category
 import igrek.songbook.persistence.general.model.CategoryType
@@ -28,11 +28,11 @@ import kotlinx.coroutines.sync.withLock
 
 // Singleton
 class SongsRepository(
-    localDbService: LazyInject<LocalDbService> = appFactory.localDbService,
+    localFilesystem: LazyInject<LocalFilesystem> = appFactory.localFilesystem,
     userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
 ) {
-    private val localDbService by LazyExtractor(localDbService)
+    private val localDbService by LazyExtractor(localFilesystem)
     private val userDataDao by LazyExtractor(userDataDao)
     private val uiResourceService by LazyExtractor(uiResourceService)
 

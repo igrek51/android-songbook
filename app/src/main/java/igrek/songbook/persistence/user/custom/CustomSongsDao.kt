@@ -1,6 +1,5 @@
 package igrek.songbook.persistence.user.custom
 
-import android.app.Activity
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -9,21 +8,22 @@ import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
+import java.io.File
 
 class CustomSongsDao(
     path: String,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-    activity: LazyInject<Activity> = appFactory.activity,
+    customSongsBackuper: LazyInject<CustomSongsBackuper> = appFactory.customSongsBackuper,
     resetOnError: Boolean = false,
 ) : AbstractJsonDao<CustomSongsDb>(
     path,
     dbName = "customsongs",
     schemaVersion = 1,
     clazz = CustomSongsDb::class.java,
-    serializer = CustomSongsDb.serializer()
+    serializer = CustomSongsDb.serializer(),
 ) {
     private val songsRepository by LazyExtractor(songsRepository)
-    private val activity by LazyExtractor(activity)
+    private val customSongsBackuper by LazyExtractor(customSongsBackuper)
 
     val customSongs: CustomSongsDb get() = db!!
     var customCategories = listOf<CustomCategory>()
@@ -34,6 +34,14 @@ class CustomSongsDao(
 
     override fun empty(): CustomSongsDb {
         return CustomSongsDb(mutableListOf())
+    }
+
+    override fun save(): File? {
+        val dbFile = super.save()
+        dbFile?.let {
+            customSongsBackuper.saveBackup(dbFile)
+        }
+        return dbFile
     }
 
     fun saveCustomSong(newSong: CustomSong): Song {
