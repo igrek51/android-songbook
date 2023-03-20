@@ -5,8 +5,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.34.2] - 1894 - 2023-03-21
+### Added
+- Songbook keeps daily backups of *My Songs*. 
+  It saves versions of *My Songs* from last 14 days in a local directory `Internal Storage/Android/data/igrek.songbook/files/backup`.
+  There's a new option in *Settings*: "Keep daily backups of My Songs", which is enabled by default.
+- You can restore Your Songs by choosing "Restore My Songs from a local backup" in *Settings*.
+  It gives you a chance to recover Your Songs from a local backup from last 14 days.
+  This is particularly useful in case of corrupted data or when your songs are gone for other reasons.
+
 ### Changed
-- In case of detecting corrupted user data, user can choose whether to exit or to reset local data. 
+- In case of detecting corrupted user data, user can choose whether to exit or to reset local data.
+- "Favourite songs" are now called "Liked Songs".
+
+### Fixed
+- Fixed corrupting user data in case of a concurrent loading. 
 
 ## [1.34.1] - 1893 - 2023-03-09
 ### Added
