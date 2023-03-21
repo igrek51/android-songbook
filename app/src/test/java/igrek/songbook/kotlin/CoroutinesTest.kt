@@ -1,7 +1,6 @@
 package igrek.songbook.kotlin
 
 import kotlinx.coroutines.*
-import org.junit.Ignore
 import org.junit.Test
 import java.util.concurrent.atomic.AtomicLong
 import kotlin.coroutines.CoroutineContext

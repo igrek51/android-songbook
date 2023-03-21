@@ -90,9 +90,9 @@ class BackupSyncManager(
         requestSingIn(logout) { driveService: Drive ->
             showSyncProgress(0, 2)
             GlobalScope.launch(Dispatchers.IO) {
-                userDataDao.saveNow()
-                preferencesService.saveAll()
                 runCatching {
+                    userDataDao.saveNow()
+                    preferencesService.saveAll()
                     showSyncProgress(1, 2)
                     makeCompositeDriveBackup(driveService)
                 }.onFailure { error ->
@@ -108,11 +108,15 @@ class BackupSyncManager(
         logger.debug("restoring application data from Google Drive")
         requestSingIn(logout = true) { driveService: Drive ->
             GlobalScope.launch(Dispatchers.IO) {
-                when {
-                    findDriveFile(driveService, compositeBackupFile) != null -> {
-                        restoreCompositeDriveBackupUI(driveService)
+                runCatching {
+                    when {
+                        findDriveFile(driveService, compositeBackupFile) != null -> {
+                            restoreCompositeDriveBackupUI(driveService)
+                        }
+                        else -> restoreOldDriveBackupUI(driveService)
                     }
-                    else -> restoreOldDriveBackupUI(driveService)
+                }.onFailure { error ->
+                    UiErrorHandler().handleError(error, R.string.settings_sync_restore_error)
                 }
             }
         }
@@ -427,7 +431,11 @@ class BackupSyncManager(
 
     fun makeAutomaticBackup() {
         GlobalScope.launch(Dispatchers.Main) {
-            makeDriveBackupUI(logout = false)
+            runCatching {
+                makeDriveBackupUI(logout = false)
+            }.onFailure { error ->
+                UiErrorHandler().handleError(error, R.string.settings_sync_save_error)
+            }
         }
     }
 
