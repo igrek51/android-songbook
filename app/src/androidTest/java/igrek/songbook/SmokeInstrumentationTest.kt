@@ -2,7 +2,6 @@ package igrek.songbook
 
 import androidx.test.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -18,6 +17,6 @@ class SmokeInstrumentationTest {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
 
-        assertThat(appContext.packageName).isEqualTo("igrek.songbook")
+        assert(appContext.packageName == "igrek.songbook")
     }
 }

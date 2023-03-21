@@ -43,22 +43,20 @@ class PreferencesPersistenceTest {
 
         preferencesService.clear()
 
-        var pause: Long
-
-        pause = preferencesService.getValue(PreferencesField.AutoscrollSpeed)
-        assertEquals(pause, 0.200f)
+        var current: Float = preferencesService.getValue(PreferencesField.AutoscrollSpeed)
+        assertEquals(current, 0.200f)
         assertEquals(preferencesState.autoscrollSpeed, 0.200f)
         // check modified
         preferencesState.autoscrollSpeed = 23f
-        pause = preferencesService.getValue(PreferencesField.AutoscrollSpeed)
-        assertEquals(pause, 23f)
+        current = preferencesService.getValue(PreferencesField.AutoscrollSpeed)
+        assertEquals(current, 23f)
         assertEquals(preferencesState.autoscrollSpeed, 23f)
 
         preferencesService.saveAll()
         preferencesService.loadAll()
         // check if persisted after save & reload
-        pause = preferencesService.getValue(PreferencesField.AutoscrollSpeed)
-        assertEquals(pause, 23f)
+        current = preferencesService.getValue(PreferencesField.AutoscrollSpeed)
+        assertEquals(current, 23f)
         assertEquals(preferencesState.autoscrollSpeed, 23f)
 
         preferencesState.autoscrollSpeed = 51f
@@ -66,8 +64,8 @@ class PreferencesPersistenceTest {
         // lose changes by reloading without saving
         preferencesService.loadAll()
         assertEquals(preferencesState.autoscrollSpeed, 23f)
-        pause = preferencesService.getValue(PreferencesField.AutoscrollSpeed)
-        assertEquals(pause, 23f)
+        current = preferencesService.getValue(PreferencesField.AutoscrollSpeed)
+        assertEquals(current, 23f)
     }
 
     @Test
