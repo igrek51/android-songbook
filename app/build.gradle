@@ -116,7 +116,7 @@ dependencies {
     // AdMob
     implementation 'com.google.android.gms:play-services-ads:21.0.0'
     }
-    implementation('com.google.http-client:google-http-client-gson:1.42.2') {
+    implementation('com.google.http-client:google-http-client-gson:1.43.1') {
         exclude module: 'httpclient'
         exclude module: 'commons-logging'
     }
@@ -141,7 +141,7 @@ dependencies {
     // Apache Commons Codec
     implementation 'commons-codec:commons-codec:1.15'
     // Protobuf
-    implementation 'com.google.protobuf:protobuf-kotlin:3.21.2'
+    implementation 'com.google.protobuf:protobuf-kotlin:3.22.2'
     // RX
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
@@ -149,14 +149,14 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.12.12' // last version supporting API 19
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.12'
     // JWT
-    implementation 'com.auth0.android:jwtdecode:2.0.1'
+    implementation 'com.auth0.android:jwtdecode:2.0.2'
     // PDFBox
-    implementation 'com.tom-roush:pdfbox-android:2.0.25.0'
+    implementation 'com.tom-roush:pdfbox-android:2.0.27.0'
     // Unit tests
     testImplementation 'androidx.appcompat:appcompat:1.6.1'
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-core:2.28.2'
-    testImplementation 'org.assertj:assertj-core:3.23.1'
+    testImplementation 'org.assertj:assertj-core:3.24.2'
     // Android instumentation tests
     androidTestImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test:runner:1.5.2'
@@ -165,5 +165,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.5.1'
     androidTestImplementation 'org.mockito:mockito-core:2.28.2'
     androidTestImplementation 'org.mockito:mockito-android:2.22.0'
-    androidTestImplementation 'org.assertj:assertj-core:3.23.1'
+    androidTestImplementation 'org.assertj:assertj-core:3.24.2'
 }

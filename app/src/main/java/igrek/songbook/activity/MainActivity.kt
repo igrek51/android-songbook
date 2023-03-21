@@ -95,6 +95,7 @@ open class MainActivity(
         activityData.permissionService.onRequestPermissionsResult(permissions, grantResults)
     }
 
+    @Deprecated("Deprecated in Java")
     @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         activityData.activityResultDispatcher.onActivityResult(requestCode, resultCode, data)
