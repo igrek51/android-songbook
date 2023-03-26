@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.34.3] - 1895 - 2023-03-27
+### Changed
+- When resetting user data, an additional backup file is being made.
+
+### Fixed
+- Fixed error involving corrupted data in case of finding an empty chord notation in the custom songs.
+- Better error reports in case of insufficient permissions when reading a file.
+
 ## [1.34.2] - 1894 - 2023-03-21
 ### Added
 - Songbook keeps daily backups of *My Songs*. 
