@@ -1,10 +1,12 @@
 package igrek.songbook.info.errorcheck
 
 import igrek.songbook.info.logger.LoggerFactory
+import kotlinx.coroutines.delay
 
 class RetryAttempt(
     private val retries: Int,
     private val contextMessage: String,
+    private val backoffDelayMs: Long = 0,
 ) {
     private var attempt = 0
 
@@ -21,6 +23,9 @@ class RetryAttempt(
 
                 if (attempt >= retries) {
                     throw t
+                }
+                if (backoffDelayMs > 0) {
+                    delay(backoffDelayMs)
                 }
 
             }

@@ -75,7 +75,7 @@ class UserDataDao(
 
     suspend fun load() {
         try {
-            RetryAttempt(3, "loading user data").run {
+            RetryAttempt(3, "loading user data", backoffDelayMs = 200).run {
                 reload(resetOnError=false)
             }
         } catch (t: Throwable) {

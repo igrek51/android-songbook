@@ -75,6 +75,9 @@ abstract class AbstractJsonDao<T>(
 
         try {
             val content = file.readText(Charsets.UTF_8)
+            if (content.isEmpty()) {
+                throw RuntimeException("File seems to be empty (due to insufficient permissions or corrupted file): ${file.absoluteFile}")
+            }
             return json.decodeFromString(serializer, content)
         } catch (e: FileNotFoundException) {
             if (e.message.orEmpty().contains("(Permission denied)", ignoreCase = true)) {
