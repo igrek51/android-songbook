@@ -65,7 +65,7 @@ abstract class AbstractJsonDao<T>(
             throw ContextError("'$dbName' database: failed to migrate data from older version", e)
         }
 
-        logger.debug("'$dbName' database: loading empty db...")
+        logger.debug("No '$dbName' database: loading empty db...")
         return empty()
     }
 
@@ -74,9 +74,18 @@ abstract class AbstractJsonDao<T>(
         val file = File(path, filename)
         if (!file.exists())
             throw FileNotFoundException("file not found: ${file.absoluteFile}")
+        if (!file.canRead())
+            throw RuntimeException("No permission to read a file: ${file.absoluteFile}")
 
-        val content = file.readText(Charsets.UTF_8)
-        return json.decodeFromString(serializer, content)
+        try {
+            val content = file.readText(Charsets.UTF_8)
+            return json.decodeFromString(serializer, content)
+        } catch (e: FileNotFoundException) {
+            if (e.message.orEmpty().contains("(Permission denied)", ignoreCase = true)) {
+                throw RuntimeException("Permission denied to read a file: ${file.absoluteFile}", e)
+            }
+            throw e
+        }
     }
 
     fun read(resetOnError: Boolean) {
