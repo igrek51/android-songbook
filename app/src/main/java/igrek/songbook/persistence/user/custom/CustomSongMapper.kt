@@ -25,7 +25,7 @@ internal class CustomSongMapper {
             metre = customSong.metre,
             scrollSpeed = customSong.scrollSpeed,
             initialDelay = customSong.initialDelay,
-            chordsNotation = customSong.chordsNotation,
+            chordsNotation = customSong.chordsNotationN,
             originalSongId = customSong.originalSongId,
             namespace = SongNamespace.Custom
         )

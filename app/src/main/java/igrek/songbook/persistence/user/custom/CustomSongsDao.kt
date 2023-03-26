@@ -8,7 +8,6 @@ import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
-import java.io.File
 
 class CustomSongsDao(
     path: String,

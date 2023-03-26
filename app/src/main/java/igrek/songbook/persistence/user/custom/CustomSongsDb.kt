@@ -26,8 +26,8 @@ data class CustomSong(
     var language: String? = null,
     var scrollSpeed: Double? = null,
     var initialDelay: Double? = null,
-    var chordsNotation: ChordsNotation,
-    var originalSongId: Long? = null
+    var chordsNotation: ChordsNotation? = null,
+    var originalSongId: Long? = null,
 ) {
     fun displayName(): String {
         return when {
@@ -35,6 +35,8 @@ data class CustomSong(
             else -> title
         }
     }
+
+    val chordsNotationN: ChordsNotation get() = this.chordsNotation ?: ChordsNotation.default
 }
 
 @Serializable

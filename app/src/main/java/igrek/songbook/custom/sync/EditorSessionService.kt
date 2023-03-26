@@ -391,7 +391,7 @@ class EditorSessionService(
             return true
         if (local.content != remote.content)
             return true
-        if (local.chordsNotation.id != remote.chords_notation_id)
+        if (local.chordsNotationN.id != remote.chords_notation_id)
             return true
         return false
     }
@@ -425,7 +425,7 @@ data class EditorSongDto(
             title = local.title,
             artist = local.categoryName,
             content = local.content,
-            chords_notation_id = local.chordsNotation.id,
+            chords_notation_id = local.chordsNotationN.id,
         )
     }
 }

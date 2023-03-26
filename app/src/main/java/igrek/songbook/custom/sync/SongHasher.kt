@@ -44,7 +44,7 @@ data class HashableCustomSongDto(
             title = song.title,
             artist = song.categoryName.orEmpty(),
             content = song.content,
-            chordsNotationId = song.chordsNotation.id,
+            chordsNotationId = song.chordsNotationN.id,
         )
     }
 }

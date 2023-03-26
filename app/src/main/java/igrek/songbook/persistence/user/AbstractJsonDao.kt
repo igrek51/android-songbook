@@ -21,6 +21,7 @@ abstract class AbstractJsonDao<T>(
         allowStructuredMapKeys = true
         prettyPrint = false
         useArrayPolymorphism = false
+        isLenient = false
     }
     protected val logger = LoggerFactory.logger
 
