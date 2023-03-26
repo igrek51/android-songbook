@@ -567,8 +567,7 @@
     <string name="error_corrupted_user_data">Corrupted User Data</string>
     <string name="error_corrupted_user_data_message" formatted="false">Your local data seems to be corrupted and can not be loaded correctly.
         \nYou can either close the app and try to load it again or reset your corrupted data.
-        \nWarning: User data contains your preferences, songs, playlists, etc. After resetting user data it won\'t be possible to restore it back!
-        \nNot all data will be wiped, but only the damaged parts.
+        \nWarning: User data contains your preferences, songs, playlists, etc. After resetting user data it won\'t be possible to restore it back! Not all data will be wiped, but only the damaged parts.
         \n
         \nError details: %s</string>
     <string name="action_exit">Exit</string>

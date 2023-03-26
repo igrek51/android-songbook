@@ -537,8 +537,7 @@
     <string name="error_corrupted_user_data">Uszkodzone dane użytkownika</string>
     <string name="error_corrupted_user_data_message" formatted="false">Twoje lokalne dane są uszkodzone i nie mogły zostać poprawnie odczytane.
         \nMożesz zamknąć aplikację i spróbować załadować je ponownie lub wyczyścić błędne dane, przywracając stan fabryczny.
-        \nUwaga: Dane użytkownika zawierają ustawienia, własne piosenki, playlisty, itp. Po zresetowaniu danych nie będzie można ich przywrócić!
-        \nNie wszystkie dane zostaną wyczyszczone, a jedynie uszkodzone fragmenty.
+        \nUwaga: Dane użytkownika zawierają ustawienia, własne piosenki, playlisty, itp. Po zresetowaniu danych nie będzie można ich przywrócić! Nie wszystkie dane zostaną wyczyszczone, a jedynie uszkodzone fragmenty.
         \n
         \nSzczegóły błędu: %s</string>
     <string name="action_exit">Wyjdź</string>
