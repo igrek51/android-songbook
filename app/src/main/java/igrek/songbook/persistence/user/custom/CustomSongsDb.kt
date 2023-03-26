@@ -26,7 +26,7 @@ data class CustomSong(
     var language: String? = null,
     var scrollSpeed: Double? = null,
     var initialDelay: Double? = null,
-    var chordsNotation: ChordsNotation? = null,
+    var chordsNotation: ChordsNotation? = null, // mapped to ENGLISH, GERMAN, null, ...
     var originalSongId: Long? = null,
 ) {
     fun displayName(): String {

@@ -34,39 +34,35 @@ abstract class AbstractJsonDao<T>(
     }
 
     private fun readDb(resetOnError: Boolean): T {
-        for (attemptSchema in schemaVersion downTo 1) {
-            if (attemptSchema < schemaVersion)
-                logger.debug("'$dbName' database: trying to read older version $attemptSchema...")
-
-            try {
-                return readFromFile(dbName, attemptSchema)
-            } catch (e: FileNotFoundException) {
-                // logger.debug("'$dbName' db: database v$attemptSchema not found")
-            } catch (e: SerializationException) {
-                when (resetOnError) {
-                    false -> throw ContextError("'$dbName' database: JSON deserialization error", e)
-                    true -> logger.error("'$dbName' database: JSON deserialization error", e)
-                }
-            } catch (e: Throwable) {
-                when (resetOnError) {
-                    false -> throw ContextError("'$dbName' database: error reading local database", e)
-                    true -> logger.error("'$dbName' database: error reading local database", e)
-                }
-            }
-        }
-
         try {
-            val oldDb = migrateOlder()
-            if (oldDb != null) {
-                logger.info("'$dbName' database: migration from old db has been successfully finished")
-                return oldDb
-            }
-        } catch (e: Throwable) {
-            throw ContextError("'$dbName' database: failed to migrate data from older version", e)
-        }
+            return readFromFile(dbName, schemaVersion)
 
-        logger.debug("No '$dbName' database: loading empty db...")
-        return empty()
+        } catch (e: FileNotFoundException) {
+            logger.debug("No '$dbName' database: loading empty db...")
+            return empty()
+
+        } catch (e: SerializationException) {
+            when (resetOnError) {
+                false -> throw ContextError("'$dbName' database: JSON deserialization error", e)
+                true -> {
+                    logger.error("'$dbName' database: JSON deserialization error", e)
+                    makeBackup()
+                    logger.debug("'$dbName' database: loading empty db...")
+                    return empty()
+                }
+            }
+
+        } catch (e: Throwable) {
+            when (resetOnError) {
+                false -> throw ContextError("'$dbName' database: error reading local database", e)
+                true -> {
+                    logger.error("'$dbName' database: error reading local database", e)
+                    makeBackup()
+                    logger.debug("'$dbName' database: loading empty db...")
+                    return empty()
+                }
+            }
+        }
     }
 
     private fun readFromFile(dbName: String, schemaVersion: Int): T {
@@ -115,22 +111,42 @@ abstract class AbstractJsonDao<T>(
         return "$name.$schemaVersion.json"
     }
 
-    fun factoryReset() {
+    private fun makeBackup() {
         val filename = buildFilename(dbName, schemaVersion)
-        val file = File(path, filename)
+        val dbFile = File(path, filename)
         val backupFile = File(path, "$filename.bak")
 
-        if (file.exists()) {
+        if (dbFile.exists()) {
             if (backupFile.exists()) {
                 logger.warn("removing previous backup file: " + backupFile.absolutePath)
                 backupFile.delete()
             }
 
-            file.renameTo(backupFile)
+            dbFile.copyTo(backupFile)
 
-            when (file.exists()) {
-                true -> logger.error("failed to rename json db file: " + file.absolutePath)
-                false -> logger.info("json db file ${file.absolutePath} moved to backup ${backupFile.absolutePath}")
+            when (backupFile.exists()) {
+                true -> logger.info("json db file ${dbFile.absolutePath} copied to backup ${backupFile.absolutePath}")
+                false -> logger.error("failed to copy json db file: " + dbFile.absolutePath)
+            }
+        }
+    }
+
+    fun factoryReset() {
+        val filename = buildFilename(dbName, schemaVersion)
+        val dbFile = File(path, filename)
+        val backupFile = File(path, "$filename.bak")
+
+        if (dbFile.exists()) {
+            if (backupFile.exists()) {
+                logger.warn("removing previous backup file: " + backupFile.absolutePath)
+                backupFile.delete()
+            }
+
+            dbFile.renameTo(backupFile)
+
+            when (dbFile.exists()) {
+                true -> logger.error("failed to rename json db file: " + dbFile.absolutePath)
+                false -> logger.info("json db file ${dbFile.absolutePath} moved to backup ${backupFile.absolutePath}")
             }
         }
 

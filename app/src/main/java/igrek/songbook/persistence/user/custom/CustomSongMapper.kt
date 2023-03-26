@@ -27,7 +27,7 @@ internal class CustomSongMapper {
             initialDelay = customSong.initialDelay,
             chordsNotation = customSong.chordsNotationN,
             originalSongId = customSong.originalSongId,
-            namespace = SongNamespace.Custom
+            namespace = SongNamespace.Custom,
         )
     }
 

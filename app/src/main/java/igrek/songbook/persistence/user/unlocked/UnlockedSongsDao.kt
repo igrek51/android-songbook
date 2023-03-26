@@ -31,10 +31,6 @@ class UnlockedSongsDao(
         return UnlockedSongsDb(mutableListOf())
     }
 
-    override fun migrateOlder(): UnlockedSongsDb? {
-        return null
-    }
-
     fun unlockKey(key: String) {
         val keys = unlockedSongs.keys
         if (key !in keys)
