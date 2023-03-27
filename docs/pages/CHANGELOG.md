@@ -1,4 +1,5 @@
 # Changelog - What's new in Songbook
+
 All **user-facing**, notable changes will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
@@ -6,12 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.34.4] - 1896 - 2023-03-27
+### Fixed
+- App tries to recover from fatal errors and better handles corrupted data.
+
 ## [1.34.3] - 1895 - 2023-03-27
 ### Changed
 - When resetting user data, an additional backup file is being made.
 
 ### Fixed
-- Fixed error involving corrupted data in case of finding an empty chord notation in the custom songs.
+- Fixed error involving corrupted data in case of finding an empty chord notation in the custom
+  songs.
 - Better error reports in case of insufficient permissions when reading a file.
 
 ## [1.34.2] - 1894 - 2023-03-21
