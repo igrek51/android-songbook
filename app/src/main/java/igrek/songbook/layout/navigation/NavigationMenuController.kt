@@ -101,8 +101,8 @@ class NavigationMenuController(
             { activityController.quit() }
         actionsMap[R.id.nav_contact] =
             { layoutController.showLayout(ContactLayoutController::class) }
-        actionsMap[R.id.nav_missing_song] =
-            { sendMessageService.requestMissingSong() }
+//        actionsMap[R.id.nav_missing_song] =
+//            { sendMessageService.requestMissingSong() }
         actionsMap[R.id.nav_history] =
             { layoutController.showLayout(OpenHistoryLayoutController::class) }
         actionsMap[R.id.nav_latest] =
