@@ -114,7 +114,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-basement:18.2.0'
     implementation('com.google.android.gms:play-services-auth:20.4.1') {
     // AdMob
-    implementation 'com.google.android.gms:play-services-ads:21.0.0'
+    implementation 'com.google.android.gms:play-services-ads:21.5.0'
     }
     implementation('com.google.http-client:google-http-client-gson:1.43.1') {
         exclude module: 'httpclient'
