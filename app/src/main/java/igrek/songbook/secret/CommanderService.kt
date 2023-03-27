@@ -12,20 +12,19 @@ import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.admin.AdminService
 import igrek.songbook.billing.BillingLayoutController
-import igrek.songbook.info.logview.LogsLayoutController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
+import igrek.songbook.info.errorcheck.LocalizedError
 import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.info.logview.LogsLayoutController
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
-import igrek.songbook.layout.ad.AdService
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.preferences.PreferencesService
-import igrek.songbook.system.PermissionService
 import igrek.songbook.system.SoftKeyboardService
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -42,7 +41,6 @@ class CommanderService(
     softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
     preferencesService: LazyInject<PreferencesService> = appFactory.preferencesService,
     adminService: LazyInject<AdminService> = appFactory.adminService,
-    permissionService: LazyInject<PermissionService> = appFactory.permissionService,
     activityController: LazyInject<ActivityController> = appFactory.activityController,
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
     userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
@@ -50,12 +48,10 @@ class CommanderService(
 ) {
     private val activity by LazyExtractor(appCompatActivity)
     private val uiResourceService by LazyExtractor(uiResourceService)
-    private val uiInfoService by LazyExtractor(uiInfoService)
     private val songsRepository by LazyExtractor(songsRepository)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
     private val preferencesService by LazyExtractor(preferencesService)
     private val adminService by LazyExtractor(adminService)
-    private val permissionService by LazyExtractor(permissionService)
     private val activityController by LazyExtractor(activityController)
     private val layoutController by LazyExtractor(layoutController)
     private val userDataDao by LazyExtractor(userDataDao)
@@ -70,24 +66,60 @@ class CommanderService(
             }) { this.commanderUtils.showCowSuperPowers() },
             SimpleKeyRule("dupa", "okon") { this.commanderUtils.showCowSuperPowers() },
 
+            CommandRule({ it.trim().matches(encodedSecretRegex) }) {
+                decodeJwtKeys(it)
+            },
+
+            SubCommandRule("hush", ::runHashedCommand),
+
+            SimpleKeyRule("logs") {
+                this.layoutController.showLayout(LogsLayoutController::class)
+            },
+
+            SimpleKeyRule("exit now") {
+                GlobalScope.launch(Dispatchers.Main) {
+                    uiInfoService.get().showToast("exiting...")
+                    this@CommanderService.activityController.quit()
+                }
+            },
+
+            SubCommandRule("shell") { this.commanderUtils.shellCommand(it, showStdout = false) },
+            SubCommandRule("shellout") { this.commanderUtils.shellCommand(it, showStdout = true) },
+
+            SubCommandRule("unlock", this.commanderUtils::unlockSongs),
+            SimpleKeyRule("engineer", "inzynier") { this.commanderUtils.unlockSongs("engineer") },
+
+            SimpleKeyRule("grant permission storage") {
+                this.commanderUtils.grantStoragePermission()
+            },
+
+            // appdata backup local customsongs.1.json /sdcard/customsongs.json - copy from /data/data/PACKAGE/files/
+            SubCommandRule("appdata backup local", this.commanderUtils::backupAppDataLocalFile),
+            // appdata restore local /sdcard/customsongs.json customsongs.1.json
+            SubCommandRule("appdata restore local", this.commanderUtils::restoreAppDataLocalFile),
+            // appdata backup dialog customsongs.1.json
+            SubCommandRule("appdata backup dialog", this.commanderUtils::backupAppDataDialog),
+            // appdata restore dialog customsongs.1.json
+            SubCommandRule("appdata restore dialog", this.commanderUtils::restoreAppDataDialog),
+
             SimpleKeyRule("reset") {
                 this.songsRepository.fullFactoryReset()
                 this.preferencesService.clear()
-                toast("Factory reset done")
+                success("Factory reset done")
             },
             SimpleKeyRule("reset config") {
                 this.preferencesService.clear()
-                toast("Factory reset: Settings")
+                success("Factory reset: Settings")
             },
             SimpleKeyRule("reset songs") {
                 this.songsRepository.resetGeneralSongsData()
                 this.songsRepository.reloadSongsDb()
-                toast("Factory reset: Public songs")
+                success("Factory reset: Public songs")
             },
             SimpleKeyRule("reset user") {
                 this.userDataDao.factoryReset()
                 this.songsRepository.reloadSongsDb()
-                toast("Factory reset: User data")
+                success("Factory reset: User data")
             },
             SimpleKeyRule("reload songs") {
                 this.songsRepository.reloadSongsDb()
@@ -110,44 +142,14 @@ class CommanderService(
                 appFactory.crashlyticsLogger.get().sendCrashlyticsAsync()
             },
 
-            SimpleKeyRule("ad show") { this.commanderUtils.enableAds() },
-
-            SimpleKeyRule("grant permission files") {
-                this.permissionService.isStoragePermissionGranted
-            },
-
-            CommandRule({ it.trim().matches(encodedSecretRegex) }) {
-                decodeJwtKeys(it)
-            },
-
-            SubCommandRule("hush", ::runHashedCommand),
-
-            SubCommandRule("shell") { this.commanderUtils.shellCommand(it, showStdout = false) },
-            SubCommandRule("shellout") { this.commanderUtils.shellCommand(it, showStdout = true) },
-
-            SubCommandRule("unlock", this.commanderUtils::unlockSongs),
-            SimpleKeyRule("engineer", "inzynier") { this.commanderUtils.unlockSongs("engineer") },
-
-            SubCommandRule("backup export local", this.commanderUtils::backupDataFiles),
-            SubCommandRule("backup import local", this.commanderUtils::restoreDataFiles),
-
             SubCommandRule("login") { key: String ->
                 this.adminService.loginAdmin(key)
             },
 
+            SimpleKeyRule("ad show") { this.commanderUtils.enableAds() },
+
             SimpleKeyRule("goto shop") {
                 this.layoutController.showLayout(BillingLayoutController::class)
-            },
-
-            SimpleKeyRule("logs") {
-                this.layoutController.showLayout(LogsLayoutController::class)
-            },
-
-            SimpleKeyRule("exit now") {
-                GlobalScope.launch(Dispatchers.Main) {
-                    toast("exiting...")
-                    this@CommanderService.activityController.quit()
-                }
             },
         )
     }
@@ -211,11 +213,7 @@ class CommanderService(
         }
 
         val activation = findActivator(cmdRules, command)
-
-        if (activation == null) {
-            toast(R.string.secret_key_invalid)
-            return
-        }
+            ?: throw LocalizedError(R.string.secret_key_invalid)
 
         logger.debug("Command activated: $command")
         activation.run()
@@ -225,10 +223,9 @@ class CommanderService(
         val hash = ShaHasher().hash(cmd)
         if (hash !in hashedCommands) {
             logger.warn("invalid hashed command: $cmd (#$hash)")
-            toast("invalid \"hush\" command (#$hash)")
-            return
+            throw RuntimeException("invalid \"hush\" command (#$hash)")
         }
-        toast("hashed command activated: $cmd (#$hash)")
+        success("hashed command activated: $cmd (#$hash)")
         val command = hashedCommands[hash]
         command?.invoke()
     }
@@ -266,11 +263,8 @@ class CommanderService(
         }
     }
 
-    private fun toast(message: String) {
-        uiInfoService.showToast(message)
+    private fun success(message: String) {
+        commanderUtils.success(message)
     }
 
-    private fun toast(resId: Int) {
-        uiInfoService.showToast(resId)
-    }
 }

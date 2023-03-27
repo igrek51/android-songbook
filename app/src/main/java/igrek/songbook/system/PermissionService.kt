@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.ActivityCompat
+import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -22,25 +23,24 @@ class PermissionService(
 
     private val logger = LoggerFactory.logger
 
-    val isStoragePermissionGranted: Boolean
-        get() {
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    true
-                } else {
-                    GlobalScope.launch(Dispatchers.Main) {
-                        ActivityCompat.requestPermissions(
-                            activity,
-                            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                            1
-                        )
-                    }
-                    false
-                }
+    fun ensureStorageWriteAccess(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                true
             } else {
-                true //permission is automatically granted on sdk<23 upon installation
+                GlobalScope.launch(Dispatchers.Main) {
+                    ActivityCompat.requestPermissions(
+                        activity,
+                        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                        1
+                    )
+                }
+                false
             }
+        } else {
+            true //permission is automatically granted on sdk<23 upon installation
         }
+    }
 
     fun ensureStorageReadAccess() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -66,7 +66,7 @@ class PermissionService(
     }
 
     private fun onPermissionDenied(permission: String) {
-        logger.warn("permission $permission has been denied")
+        UiErrorHandler.handleError(RuntimeException("permission $permission has been denied"))
     }
 
     fun onRequestPermissionsResult(permissions: Array<String>, grantResults: IntArray) {

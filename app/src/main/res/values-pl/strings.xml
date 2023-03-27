@@ -549,4 +549,5 @@
     <string name="settings_saveCustomSongsBackups">Zachowuj dzienne kopie Moich Piosenek</string>
     <string name="settings_saveCustomSongsBackups_hint">Przetrzymuj lokalne wersje \"Moich Piosenek\" z ostatnich 14 dni</string>
     <string name="settings_restore_custom_songs_backup">Przywróć \"Moje Piosenki\" z lokalnej kopii</string>
+    <string name="action_copy_dialog">Kopiuj</string>
 </resources>
