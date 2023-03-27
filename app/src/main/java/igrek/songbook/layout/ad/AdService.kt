@@ -184,7 +184,9 @@ class AdService(
         globalFocusTraverser.setUpDownKeyListener(adView)
 
         val adRequest = Builder().build()
-        adView.loadAd(adRequest)
+        GlobalScope.launch(Dispatchers.Main) {
+            adView.loadAd(adRequest)
+        }
     }
 
     fun enableAds() {
