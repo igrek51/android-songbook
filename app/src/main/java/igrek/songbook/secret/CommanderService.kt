@@ -79,7 +79,7 @@ class CommanderService(
             SimpleKeyRule("exit now") {
                 GlobalScope.launch(Dispatchers.Main) {
                     uiInfoService.get().showToast("exiting...")
-                    this@CommanderService.activityController.quit()
+                    this@CommanderService.activityController.quitImmediately()
                 }
             },
 

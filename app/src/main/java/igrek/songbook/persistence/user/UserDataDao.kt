@@ -99,7 +99,7 @@ class UserDataDao(
                 message = dialogMessage,
                 positiveButton = R.string.action_exit,
                 positiveAction = {
-                    activityController.quit()
+                    activityController.quitImmediately()
                 },
                 negativeButton = R.string.action_reset_corrupted_data,
                 negativeAction = {

@@ -50,6 +50,11 @@ class ActivityController(
         activity.finish()
     }
 
+    fun quitImmediately() {
+        initialized = false
+        activity.finish()
+    }
+
     fun onStart() {
         if (initialized) {
             val activityName = activity::class.simpleName
