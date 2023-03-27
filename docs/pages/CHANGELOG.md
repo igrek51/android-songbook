@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Add commands to backup and restore app data by means of a dialog box
+
+### Changed
+- *About* navigation item has been swapped with a *Manual* button.
+  *Missing son* item is hidden in a navigation menu.
+
+### Fixed
+- Optimize initialization and ad loading
 
 ## [1.34.4] - 1896 - 2023-03-27
 ### Fixed

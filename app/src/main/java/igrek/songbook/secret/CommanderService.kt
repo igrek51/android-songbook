@@ -93,7 +93,8 @@ class CommanderService(
                 this.commanderUtils.grantStoragePermission()
             },
 
-            // appdata backup local customsongs.1.json /sdcard/customsongs.json - copy from /data/data/PACKAGE/files/
+            // backup from /data/data/PACKAGE/files/:
+            // appdata backup local customsongs.1.json /sdcard/Android/data/igrek.songbook/files/customsongs.json
             SubCommandRule("appdata backup local", this.commanderUtils::backupAppDataLocalFile),
             // appdata restore local /sdcard/customsongs.json customsongs.1.json
             SubCommandRule("appdata restore local", this.commanderUtils::restoreAppDataLocalFile),
