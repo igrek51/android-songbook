@@ -20,12 +20,12 @@ import igrek.songbook.custom.*
 import igrek.songbook.custom.share.ShareSongService
 import igrek.songbook.custom.sync.EditorSessionService
 import igrek.songbook.editor.ChordsEditorLayoutController
-import igrek.songbook.info.logview.LogsLayoutController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.analytics.CrashlyticsLogger
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.info.logview.LogsLayoutController
 import igrek.songbook.layout.GlobalFocusTraverser
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.ad.AdService
@@ -44,7 +44,8 @@ import igrek.songbook.room.BluetoothService
 import igrek.songbook.room.RoomListLayoutController
 import igrek.songbook.room.RoomLobby
 import igrek.songbook.room.RoomLobbyLayoutController
-import igrek.songbook.secret.SecretCommandService
+import igrek.songbook.secret.CommanderService
+import igrek.songbook.secret.CommanderUtils
 import igrek.songbook.send.*
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.settings.buttons.MediaButtonService
@@ -115,7 +116,8 @@ class AppFactory(
     val localFilesystem = SingletonInject { LocalFilesystem() }
     val songsRepository = SingletonInject { SongsRepository() }
     val permissionService = SingletonInject { PermissionService() }
-    val secretCommandService = SingletonInject { SecretCommandService() }
+    val commanderService = SingletonInject { CommanderService() }
+    val commanderUtils = SingletonInject { CommanderUtils() }
     val packageInfoService = SingletonInject { PackageInfoService() }
     val settingsLayoutController = SingletonInject { SettingsLayoutController() }
     val songDetailsService = SingletonInject { SongDetailsService() }
@@ -153,7 +155,6 @@ class AppFactory(
     val adminSongsLayoutContoller = SingletonInject { AdminSongsLayoutContoller() }
     val antechamberService = SingletonInject { AntechamberService() }
     val backupSyncManager = SingletonInject { BackupSyncManager() }
-    val sharedPreferencesService = SingletonInject { SharedPreferencesService() }
     val adService = SingletonInject { AdService() }
     val songRankService = SingletonInject { SongRankService() }
     val clipboardManager = SingletonInject { ClipboardManager() }

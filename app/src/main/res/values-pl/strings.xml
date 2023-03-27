@@ -56,7 +56,7 @@
     <string name="song_category_others">Inne</string>
     <string name="song_category_custom">Moje piosenki</string>
     <string name="song_search_edit_hint">Tytuł, artysta lub fragment piosenki</string>
-    <string name="unlock_key_invalid">Hasło niepoprawne, próbuj dalej.</string>
+    <string name="secret_key_invalid">Hasło niepoprawne, próbuj dalej.</string>
     <string name="unlock_new_songs_unlocked">Odblokowano piosenki: %d</string>
     <string name="settings_scroll_initial_pause">Opóźnienie autoprzewijania: %s s</string>
     <string name="autoscroll_panel_speed">Szybkość autoprzewijania: %s linii / s</string>

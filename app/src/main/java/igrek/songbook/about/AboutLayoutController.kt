@@ -10,7 +10,7 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.repository.SongsRepository
-import igrek.songbook.secret.SecretCommandService
+import igrek.songbook.secret.CommanderService
 import igrek.songbook.system.LinkOpener
 import igrek.songbook.system.PackageInfoService
 import java.text.SimpleDateFormat
@@ -18,14 +18,14 @@ import java.util.*
 
 class AboutLayoutController(
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-    secretCommandService: LazyInject<SecretCommandService> = appFactory.secretCommandService,
+    commanderService: LazyInject<CommanderService> = appFactory.commanderService,
     packageInfoService: LazyInject<PackageInfoService> = appFactory.packageInfoService,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     webviewLayoutController: LazyInject<WebviewLayoutController> = appFactory.webviewLayoutController,
 ) {
     private val uiResourceService by LazyExtractor(uiResourceService)
-    private val secretCommandService by LazyExtractor(secretCommandService)
+    private val secretCommandService by LazyExtractor(commanderService)
     private val packageInfoService by LazyExtractor(packageInfoService)
     private val songsRepository by LazyExtractor(songsRepository)
     private val uiInfoService by LazyExtractor(uiInfoService)
