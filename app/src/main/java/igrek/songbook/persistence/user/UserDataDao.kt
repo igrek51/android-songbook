@@ -74,11 +74,13 @@ class UserDataDao(
     }
 
     suspend fun load() {
-        try {
+        runCatching {
             RetryAttempt(3, "loading user data", backoffDelayMs = 200).run {
-                reload(resetOnError=false)
+                reload(resetOnError = false)
             }
-        } catch (t: Throwable) {
+        }.recoverCatching {
+            reloadSync(resetOnError = false)
+        }.recover { t ->
             logger.error("failed to load user data", t)
             throw ContextError("Corrupted user data", t)
         }
@@ -129,6 +131,22 @@ class UserDataDao(
         }
 
         logger.debug("User data loaded")
+    }
+
+    private suspend fun reloadSync(resetOnError: Boolean) {
+        val path = localDbService.appFilesDir.absolutePath
+        dataTransferMutex.withLock {
+            unlockedSongsDao = UnlockedSongsDao(path, resetOnError=resetOnError)
+            favouriteSongsDao = FavouriteSongsDao(path, resetOnError=resetOnError)
+            customSongsDao = CustomSongsDao(path, resetOnError=resetOnError)
+            playlistDao = PlaylistDao(path, resetOnError=resetOnError)
+            openHistoryDao = OpenHistoryDao(path, resetOnError=resetOnError)
+            exclusionDao = ExclusionDao(path, resetOnError=resetOnError)
+            transposeDao = TransposeDao(path, resetOnError=resetOnError)
+            preferencesDao = PreferencesDao(path, resetOnError=resetOnError)
+            songTweakDao = SongTweakDao(path, resetOnError=resetOnError)
+        }
+        logger.debug("User data loaded synchronously")
     }
 
     fun reloadCustomSongs() {

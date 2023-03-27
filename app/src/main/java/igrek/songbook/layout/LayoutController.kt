@@ -155,6 +155,7 @@ class LayoutController(
         }
     }
 
+    @Suppress("SENSELESS_COMPARISON")
     private fun showMainLayout(mainLayout: MainLayout) {
         currentLayout?.onLayoutExit()
         currentLayout = mainLayout
