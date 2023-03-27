@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.InputType
 import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import igrek.songbook.R
@@ -29,13 +30,20 @@ class InputDialogBuilder(
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
 
-    fun input(title: String, initialValue: String?, action: (String) -> Unit) {
+    fun input(title: String, initialValue: String?, multiline: Boolean = false, action: (String) -> Unit) {
         GlobalScope.launch(Dispatchers.Main) {
             val alertBuilder = AlertDialog.Builder(activity)
             alertBuilder.setTitle(title)
 
             val input = EditText(activity)
-            input.inputType = InputType.TYPE_CLASS_TEXT
+            when (multiline) {
+                true -> {
+                    input.isSingleLine = false
+                    input.imeOptions = EditorInfo.IME_FLAG_NO_ENTER_ACTION
+                    input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+                }
+                false -> input.inputType = InputType.TYPE_CLASS_TEXT
+            }
             if (initialValue != null)
                 input.setText(initialValue)
             alertBuilder.setView(input)
@@ -66,7 +74,7 @@ class InputDialogBuilder(
 
     fun input(titleResId: Int, initialValue: String?, action: (String) -> Unit) {
         val title = uiResourceService.resString(titleResId)
-        input(title, initialValue, action)
+        input(title, initialValue, action=action)
     }
 
 }

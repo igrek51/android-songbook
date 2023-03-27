@@ -88,7 +88,7 @@ class CommanderUtils(
         check(parts.size == 1) { "wrong number of arguments" }
         val dataDirPath = localDbService.appFilesDir.absolutePath
         val localDstFile = File(dataDirPath, parts[0])
-        InputDialogBuilder().input("Enter file content", "") { content ->
+        InputDialogBuilder().input("Enter file content", "", multiline = true) { content ->
             localDstFile.writeText(content, Charsets.UTF_8)
             success("File saved: $localDstFile")
         }
