@@ -94,6 +94,18 @@ class CommanderUtils(
         }
     }
 
+    fun editAppDataDialog(cmd: String) {
+        val parts = extractParameters(cmd)
+        check(parts.size == 1) { "wrong number of arguments" }
+        val dataDirPath = localDbService.appFilesDir.absolutePath
+        val localFile = File(dataDirPath, parts[0])
+        val originalContent = localFile.readText(Charsets.UTF_8)
+        InputDialogBuilder().input("File content", originalContent, multiline = true) { content ->
+            localFile.writeText(content, Charsets.UTF_8)
+            success("File saved: $localFile")
+        }
+    }
+
     fun shellCommand(cmd: String, showStdout: Boolean = false) {
         logger.debug("Running shell command: $cmd")
         safeExecute {

@@ -101,6 +101,8 @@ class CommanderService(
             SubCommandRule("appdata backup dialog", this.commanderUtils::backupAppDataDialog),
             // appdata restore dialog customsongs.1.json
             SubCommandRule("appdata restore dialog", this.commanderUtils::restoreAppDataDialog),
+            // appdata edit customsongs.1.json
+            SubCommandRule("appdata edit", this.commanderUtils::editAppDataDialog),
 
             SimpleKeyRule("reset") {
                 this.songsRepository.fullFactoryReset()
