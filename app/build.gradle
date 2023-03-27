@@ -141,7 +141,7 @@ dependencies {
     // Apache Commons Codec
     implementation 'commons-codec:commons-codec:1.15'
     // Protobuf
-    implementation 'com.google.protobuf:protobuf-kotlin:3.21.2'
+    implementation 'com.google.protobuf:protobuf-kotlin:3.22.2'
     // RX
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.4.0'
@@ -149,7 +149,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:3.12.12' // last version supporting API 19
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.12'
     // JWT
-    implementation 'com.auth0.android:jwtdecode:2.0.1'
+    implementation 'com.auth0.android:jwtdecode:2.0.2'
     // PDFBox
     implementation 'com.tom-roush:pdfbox-android:2.0.25.0'
     // Unit tests
