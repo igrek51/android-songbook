@@ -86,9 +86,9 @@
             android:icon="@drawable/add"
             android:title="@string/nav_missing_song" />
         <item
-            android:id="@+id/nav_manual"
-            android:icon="@drawable/help"
-            android:title="@string/nav_manual"
+            android:id="@+id/nav_about"
+            android:icon="@drawable/info"
+            android:title="@string/nav_about"
             app:actionLayout="@layout/component_nav_help" />
         <item
             android:id="@+id/nav_exit"

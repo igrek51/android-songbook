@@ -305,8 +305,8 @@ class MobileEnScreenshotMaker {
         // open about
         onView(withId(R.id.nav_view)).perform(swipeUp())
         onView(isRoot()).perform(waitFor(300))
-        onView(withId(R.id.navAboutButton)).check(matches(isDisplayed()))
-        onView(withId(R.id.navAboutButton)).perform(click())
+        onView(withId(R.id.nav_about)).check(matches(isDisplayed()))
+        onView(withId(R.id.nav_about)).perform(click())
         onView(withText(R.string.nav_about)).check(matches(isDisplayed()))
         // click ???
         onView(withId(android.R.id.button3)).check(matches(withText(R.string.action_secret)))
