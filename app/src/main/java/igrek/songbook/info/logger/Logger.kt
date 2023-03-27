@@ -2,6 +2,7 @@ package igrek.songbook.info.logger
 
 import android.util.Log
 import igrek.songbook.BuildConfig
+import igrek.songbook.info.errorcheck.formatErrorMessage
 import igrek.songbook.inject.appFactory
 
 open class Logger internal constructor() {
@@ -16,16 +17,20 @@ open class Logger internal constructor() {
     }
 
     fun error(message: String?, t: Throwable) {
-        log("$message: ${t.message}", LogLevel.ERROR, "[ERROR] ")
+        val throwableMessage = formatErrorMessage(t)
+        log("$message: $throwableMessage", LogLevel.ERROR, "[ERROR] ")
         printExceptionStackTrace(t)
     }
 
-    open fun fatal(ex: Throwable) {
-        var exTitle = ex.javaClass.name
-        if (!ex.message.isNullOrEmpty()) {
-            exTitle = "$exTitle - ${ex.message}"
+    open fun fatal(t: Throwable) {
+        val exTitle = when {
+            t.message.isNullOrEmpty() -> t.javaClass.name
+            else -> {
+                val throwableMessage = formatErrorMessage(t)
+                "${t.javaClass.name} - $throwableMessage"
+            }
         }
-        printExceptionStackTrace(ex)
+        printExceptionStackTrace(t)
         log(exTitle, LogLevel.FATAL, "[FATAL] ")
         appFactory.crashlyticsLogger.get().sendCrashlyticsAsync()
     }
@@ -95,8 +100,8 @@ open class Logger internal constructor() {
             ) {
                 try {
                     appFactory.crashlyticsLogger.get().logCrashlytics(consoleMessage)
-                } catch (e: NoSuchMethodError) {
-                } catch (e: NoClassDefFoundError) {
+                } catch (_: NoSuchMethodError) {
+                } catch (_: NoClassDefFoundError) {
                 }
             }
         }

@@ -5,8 +5,8 @@ import igrek.songbook.info.logger.Logger
 
 class LoggerMock : Logger() {
 
-    override fun fatal(ex: Throwable) {
-        log(ex.message, LogLevel.FATAL, "[FATAL ERROR] ")
+    override fun fatal(t: Throwable) {
+        log(t.message, LogLevel.FATAL, "[FATAL ERROR] ")
     }
 
     override fun printInfo(msg: String) {

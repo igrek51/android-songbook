@@ -52,7 +52,11 @@ class AdService(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 GlobalScope.launch(Dispatchers.Main) {
-                    requestAdRefresh()
+                    runCatching {
+                        requestAdRefresh()
+                    }.onFailure { t ->
+                        logger.error("Failed to load ad", t)
+                    }
                 }
             }, UiErrorHandler::handleError)
     }
