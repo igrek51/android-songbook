@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+
 @OptIn(DelicateCoroutinesApi::class)
 class PermissionService(
     activity: LazyInject<Activity> = appFactory.activity,

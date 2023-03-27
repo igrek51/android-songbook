@@ -215,7 +215,11 @@ class CommanderService(
         }
 
         val activation = findActivator(cmdRules, command)
-            ?: throw LocalizedError(R.string.secret_key_invalid)
+
+        if (activation == null) {
+            val errorMessage = uiResourceService.resString(R.string.secret_key_invalid, command)
+            throw RuntimeException(errorMessage)
+        }
 
         logger.debug("Command activated: $command")
         activation.run()

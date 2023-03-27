@@ -1,6 +1,10 @@
 package igrek.songbook.secret
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -47,14 +51,18 @@ class CommanderUtils(
     private val logger = LoggerFactory.logger
 
     fun grantStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+            intent.data = Uri.parse("package:" + activity.packageName)
+            activity.startActivityForResult(intent, 0)
+        }
+
         val granted = permissionService.ensureStorageWriteAccess()
         if (granted)
             success("Storage permission is granted")
     }
 
     fun backupAppDataLocalFile(cmd: String) {
-        val granted = permissionService.ensureStorageWriteAccess()
-        check(granted) { "Storage permission is not granted" }
         val parts = extractParameters(cmd)
         check(parts.size == 2) { "wrong number of arguments" }
         val dataDirPath = localDbService.appFilesDir.absolutePath

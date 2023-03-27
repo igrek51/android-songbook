@@ -60,7 +60,7 @@
     <string name="song_category_others">Others</string>
     <string name="song_category_custom">My songs</string>
     <string name="song_search_edit_hint">Title, artist or lyrics</string>
-    <string name="secret_key_invalid">Key is not valid, try again.</string>
+    <string name="secret_key_invalid" formatted="false">Key is not valid: %s</string>
     <string name="unlock_new_songs_unlocked">Songs unlocked: %d</string>
     <string name="settings_scroll_initial_pause">Autoscroll initial delay: %s s</string>
     <string name="autoscroll_panel_speed">Autoscroll speed: %s line / s</string>
