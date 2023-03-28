@@ -5,6 +5,7 @@ import android.app.Activity
 import android.provider.Settings
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import igrek.songbook.BuildConfig
+import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -47,6 +48,7 @@ class CrashlyticsLogger(
             crashlytics.setUserId(deviceId)
             setCustomKeys()
         } catch (t: Throwable) {
+            logger.error("setting crashlytics keys", t)
         }
         crashlytics.setCrashlyticsCollectionEnabled(false)
         crashlytics.sendUnsentReports()
@@ -69,6 +71,9 @@ class CrashlyticsLogger(
             "buildConfig", if (BuildConfig.DEBUG) "debug" else "release"
         )
         crashlytics.setCustomKey("buildDate", BuildConfig.BUILD_DATE.formatYYYMMDD())
+        activity::class.simpleName?.let { activityName ->
+            crashlytics.setCustomKey("activity.name", activityName)
+        }
     }
 
     private fun Date.formatYYYMMDD(): String {
