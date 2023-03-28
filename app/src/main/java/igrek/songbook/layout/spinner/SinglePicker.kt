@@ -4,8 +4,13 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.DialogInterface.OnClickListener
 import androidx.appcompat.app.AlertDialog
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
+@OptIn(DelicateCoroutinesApi::class)
 class SinglePicker<T>(
     private val context: Context,
     private val entityNames: LinkedHashMap<T, String>,
@@ -17,18 +22,21 @@ class SinglePicker<T>(
     private var selectedKey: T = selected
 
     fun showChoiceDialog() {
-        val namesArray = entityNames.values.toTypedArray()
-        val selectedIndex = entityNames.keys.indexOf(selectedKey)
+        val that = this
+        GlobalScope.launch(Dispatchers.Main) {
+            val namesArray = entityNames.values.toTypedArray()
+            val selectedIndex = entityNames.keys.indexOf(selectedKey)
 
-        val builder: AlertDialog.Builder = AlertDialog.Builder(context)
-        builder.setTitle(title)
-        builder.setSingleChoiceItems(namesArray, selectedIndex, this)
+            val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+            builder.setTitle(title)
+            builder.setSingleChoiceItems(namesArray, selectedIndex, that)
 
-        builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
-            dialog.dismiss()
-            onChange.invoke(selectedKey)
+            builder.setPositiveButton(android.R.string.ok) { dialog, _ ->
+                dialog.dismiss()
+                onChange.invoke(selectedKey)
+            }
+            builder.show()
         }
-        builder.show()
     }
 
     fun getSelected(): T {

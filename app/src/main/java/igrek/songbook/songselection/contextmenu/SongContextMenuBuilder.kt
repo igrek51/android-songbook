@@ -21,7 +21,12 @@ import igrek.songbook.songpreview.SongDetailsService
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.favourite.FavouriteSongsService
 import igrek.songbook.util.lookup.SimpleCache
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
+@OptIn(DelicateCoroutinesApi::class)
 class SongContextMenuBuilder(
     activity: LazyInject<Activity> = appFactory.activity,
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
@@ -168,20 +173,22 @@ class SongContextMenuBuilder(
     }
 
     fun showSongActions(song: Song) {
-        val songActions = allActions.get()
-            .filter { action -> action.availableCondition(song) }
-        val actionNames = songActions.map { action -> action.displayName }.toTypedArray()
+        GlobalScope.launch(Dispatchers.Main) {
+            val songActions = allActions.get()
+                .filter { action -> action.availableCondition(song) }
+            val actionNames = songActions.map { action -> action.displayName }.toTypedArray()
 
-        val builder = AlertDialog.Builder(activity)
-        builder.setItems(actionNames) { _, item ->
-            safeExecute {
-                songActions[item].executor(song)
+            val builder = AlertDialog.Builder(activity)
+            builder.setItems(actionNames) { _, item ->
+                safeExecute {
+                    songActions[item].executor(song)
+                }
             }
-        }
 
-        val alert = builder.create()
-        if (!activity.isFinishing) {
-            alert.show()
+            val alert = builder.create()
+            if (!activity.isFinishing) {
+                alert.show()
+            }
         }
     }
 

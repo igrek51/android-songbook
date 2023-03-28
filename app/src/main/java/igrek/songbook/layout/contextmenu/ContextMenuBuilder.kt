@@ -7,7 +7,12 @@ import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
+@OptIn(DelicateCoroutinesApi::class)
 class ContextMenuBuilder(
     activity: LazyInject<Activity> = appFactory.activity,
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
@@ -16,33 +21,37 @@ class ContextMenuBuilder(
     private val uiResourceService by LazyExtractor(uiResourceService)
 
     fun showContextMenu(titleResId: Int, actions: List<Action>) {
-        val actionNames = actions.map { action -> actionName(action) }.toTypedArray()
+        GlobalScope.launch(Dispatchers.Main) {
+            val actionNames = actions.map { action -> actionName(action) }.toTypedArray()
 
-        val builder = AlertDialog.Builder(activity)
-            .setTitle(uiResourceService.resString(titleResId))
-            .setItems(actionNames) { _, item ->
-                safeExecute {
-                    actions[item].executor()
+            val builder = AlertDialog.Builder(activity)
+                .setTitle(uiResourceService.resString(titleResId))
+                .setItems(actionNames) { _, item ->
+                    safeExecute {
+                        actions[item].executor()
+                    }
                 }
+                .setCancelable(true)
+            if (!activity.isFinishing) {
+                builder.create().show()
             }
-            .setCancelable(true)
-        if (!activity.isFinishing) {
-            builder.create().show()
         }
     }
 
     fun showContextMenu(actions: List<Action>) {
-        val actionNames = actions.map { action -> actionName(action) }.toTypedArray()
+        GlobalScope.launch(Dispatchers.Main) {
+            val actionNames = actions.map { action -> actionName(action) }.toTypedArray()
 
-        val builder = AlertDialog.Builder(activity)
-            .setItems(actionNames) { _, item ->
-                safeExecute {
-                    actions[item].executor()
+            val builder = AlertDialog.Builder(activity)
+                .setItems(actionNames) { _, item ->
+                    safeExecute {
+                        actions[item].executor()
+                    }
                 }
+                .setCancelable(true)
+            if (!activity.isFinishing) {
+                builder.create().show()
             }
-            .setCancelable(true)
-        if (!activity.isFinishing) {
-            builder.create().show()
         }
     }
 
