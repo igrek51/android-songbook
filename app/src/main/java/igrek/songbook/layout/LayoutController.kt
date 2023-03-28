@@ -82,7 +82,7 @@ class LayoutController(
     private val adService by LazyExtractor(adService)
     private val systemKeyDispatcher by LazyExtractor(systemKeyDispatcher)
 
-    private lateinit var mainContentLayout: CoordinatorLayout
+    private var mainContentLayout: CoordinatorLayout? = null
     private var currentLayout: MainLayout? = null
     private var layoutHistory: MutableList<MainLayout> = mutableListOf()
     private var registeredLayouts: Map<KClass<out MainLayout>, MainLayout> = mapOf(
@@ -115,14 +115,15 @@ class LayoutController(
     suspend fun init() {
         withContext(Dispatchers.Main) {
             activity.setContentView(R.layout.main_layout)
-            mainContentLayout = activity.findViewById(R.id.main_content)
-            mainContentLayout.isFocusable = true
-            mainContentLayout.isFocusableInTouchMode = true
-            mainContentLayout.setOnKeyListener { _, keyCode, event ->
-                if (event.action == KeyEvent.ACTION_DOWN) {
-                    return@setOnKeyListener systemKeyDispatcher.onKeyDown(keyCode)
+            mainContentLayout = activity.findViewById<CoordinatorLayout>(R.id.main_content).also {
+                it.isFocusable = true
+                it.isFocusableInTouchMode = true
+                it.setOnKeyListener { _, keyCode, event ->
+                    if (event.action == KeyEvent.ACTION_DOWN) {
+                        return@setOnKeyListener systemKeyDispatcher.onKeyDown(keyCode)
+                    }
+                    return@setOnKeyListener false
                 }
-                return@setOnKeyListener false
             }
             navigationMenuController.init()
 
@@ -155,7 +156,6 @@ class LayoutController(
         }
     }
 
-    @Suppress("SENSELESS_COMPARISON")
     private fun showMainLayout(mainLayout: MainLayout) {
         currentLayout?.onLayoutExit()
         currentLayout = mainLayout
@@ -165,15 +165,14 @@ class LayoutController(
 
         val (properLayoutView, _) = createLayout(mainLayout.getLayoutResourceId())
 
-        // lateinit doesn't guarantee to be not null
-        if (mainContentLayout == null) return
-        val firstTimeView = mainContentLayout.childCount == 0
+        val mainContentLayoutN = mainContentLayout ?: return
+        val firstTimeView = mainContentLayoutN.childCount == 0
 
-        mainContentLayout.removeAllViews()
-        mainContentLayout.addView(properLayoutView)
+        mainContentLayoutN.removeAllViews()
+        mainContentLayoutN.addView(properLayoutView)
 
         if (!firstTimeView) {
-            TransitionManager.go(Scene(mainContentLayout, properLayoutView), transition)
+            TransitionManager.go(Scene(mainContentLayoutN, properLayoutView), transition)
         }
 
         mainLayout.showLayout(properLayoutView)
@@ -211,6 +210,7 @@ class LayoutController(
                 layoutHistory = layoutHistory.dropLast(1).toMutableList()
             }
         } catch (e: NoSuchElementException) {
+            logger.error(e)
         }
 
         if (layoutHistory.isEmpty()) {
