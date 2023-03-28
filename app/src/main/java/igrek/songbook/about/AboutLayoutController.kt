@@ -76,12 +76,12 @@ class AboutLayoutController(
         webviewLayoutController.openUrlUserGuide()
     }
 
-    fun showFirstTimeManualDialog() {
-        uiInfoService.dialogThreeChoices(
-            titleResId = R.string.manual_first_time,
-            messageResId = R.string.manual_confirm_opening_manual,
-            negativeButton = R.string.action_cancel, negativeAction = {},
-            positiveButton = R.string.action_info_yes, positiveAction = { showManual() }
+    fun showFirstTimeManualPrompt() {
+        uiInfoService.showInfoAction(
+            infoResId = R.string.prompt_first_time_manual,
+            indefinite = true,
+            actionResId = R.string.prompt_first_time_manual_action,
+            action = { showManual() }
         )
     }
 

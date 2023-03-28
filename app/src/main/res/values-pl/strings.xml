@@ -491,8 +491,8 @@
     <string name="action_create_new_custom_song">➕ Nowa piosenka</string>
     <string name="settings_songLyricsSearch">Wyszukiwanie po fragmencie tekstu</string>
     <string name="settings_songLyricsSearch_hint">Szukaj piosenek zawierających słowa tekstu (wolniejsze)</string>
-    <string name="manual_first_time">Pierwszy raz?</string>
-    <string name="manual_confirm_opening_manual">Czy chcesz zobaczyć krótki Przewodnik po funkcjonalnościach Songbooka?</string>
+    <string name="prompt_first_time_manual">Pierwszy raz? Zobacz Przewodnik po funkcjonalnościach.</string>
+    <string name="prompt_first_time_manual_action">Przewodnik</string>
     <string name="prompt_rate_app_title">Podoba Ci się Songbook?</string>
     <string name="prompt_rate_app_body">Czy oceniłbyś Songbooka na 5 gwiazdek ⭐️⭐️⭐️⭐️⭐️?</string>
     <string name="error_song_file_type_unallowed" formatted="false">Niedozwolony typ pliku: %s. Tylko pliki TXT, PDF i Dokumenty Google Docs są dozwolone.</string>

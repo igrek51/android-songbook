@@ -521,8 +521,8 @@
     <string name="action_create_new_custom_song">➕ New song</string>
     <string name="settings_songLyricsSearch">Full-text search by words</string>
     <string name="settings_songLyricsSearch_hint">Search songs by excerpt from lyrics (slower)</string>
-    <string name="manual_first_time">First time?</string>
-    <string name="manual_confirm_opening_manual">Would you like to see the quick Tutorial Guide and take a tour of Songbook\'s features?</string>
+    <string name="prompt_first_time_manual">First time? Take a tour of Songbook\'s features</string>
+    <string name="prompt_first_time_manual_action">Tutorial</string>
     <string name="prompt_rate_app_title">Do you like Songbook?</string>
     <string name="prompt_rate_app_body">Would you rate the Songbook with 5 stars ⭐️⭐️⭐️⭐️⭐️?</string>
     <string name="error_song_file_type_unallowed" formatted="false">Not allowed file type: %s. Only TXT, PDF files and Google Docs are allowed.</string>

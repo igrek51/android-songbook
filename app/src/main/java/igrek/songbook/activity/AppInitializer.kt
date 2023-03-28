@@ -148,7 +148,7 @@ class AppInitializer(
     private fun firstRunInit() {
         logger.debug("First run init")
         chordsNotationService.setDefaultChordsNotation()
-        aboutLayoutController.showFirstTimeManualDialog()
+        aboutLayoutController.showFirstTimeManualPrompt()
     }
 
     private fun debugInit() {
