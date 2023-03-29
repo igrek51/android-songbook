@@ -72,8 +72,10 @@ class CrashlyticsLogger(
         )
         crashlytics.setCustomKey("buildDate", BuildConfig.BUILD_DATE.formatYYYMMDD())
         activity::class.simpleName?.let { activityName ->
-            crashlytics.setCustomKey("activity.name", activityName)
+            crashlytics.setCustomKey("activityName", activityName)
         }
+        crashlytics.setCustomKey("versionName", BuildConfig.VERSION_NAME)
+        crashlytics.setCustomKey("versionCode", BuildConfig.VERSION_CODE.toString())
     }
 
     private fun Date.formatYYYMMDD(): String {
