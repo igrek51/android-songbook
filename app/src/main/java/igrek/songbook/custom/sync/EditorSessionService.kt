@@ -89,7 +89,7 @@ class EditorSessionService(
         when {
             remoteSongs.isEmpty() -> { // don't update local, push to remote. Local version is already latest.
                 logger.info("Sync: empty remote")
-                synchronizeStep4Push(session)
+                synchronizeStep4Push(session, localSongs, remoteSongs)
             }
             localChanged && remoteChanged -> {
                 logger.info("Sync: merge conflict, local: $lastLocalHash -> $currentLocalHash, remote: $lastRemoteHash -> $currentRemoteHash")
@@ -97,7 +97,7 @@ class EditorSessionService(
             }
             localChanged -> { // don't update local, push to remote. Local version is already latest.
                 logger.info("Sync: found local changes to push")
-                synchronizeStep4Push(session)
+                synchronizeStep4Push(session, localSongs, remoteSongs)
             }
             remoteChanged -> {
                 logger.info("Sync: fetching remote changes")
@@ -110,9 +110,8 @@ class EditorSessionService(
         }
     }
 
-    private suspend fun synchronizeStep4Push(session: EditorSessionDto) {
+    private suspend fun synchronizeStep4Push(session: EditorSessionDto, localSongs: List<CustomSong>, remoteSongs: List<EditorSongDto>) {
         logger.info("Sync: pushing local snapshot")
-        val localSongs = songsRepository.customSongsDao.customSongs.songs
         val localIdToRemoteMap = songsRepository.customSongsDao.customSongs.syncSessionData.localIdToRemoteMap
 
         rememberNewHashes(session)
@@ -120,15 +119,22 @@ class EditorSessionService(
         val pushSongs: MutableList<EditorSongDto> = mutableListOf()
         localSongs.forEach { localSong: CustomSong ->
             val localId = localSong.id.toString()
-            val remoteSongId = localIdToRemoteMap[localId] ?: deviceIdProvider.newUUID()
-            localIdToRemoteMap[localId] = remoteSongId
+            val remoteSongId = localIdToRemoteMap[localId] ?: run {
+                val newId = deviceIdProvider.newUUID()
+                localIdToRemoteMap[localId] = newId
+                logger.debug("assigned new remote ID to local-remote song mapping: $localId -> $newId")
+                newId
+            }
 
             val pushSong = EditorSongDto.fromLocalSong(localSong, remoteSongId)
             pushSongs.add(pushSong)
         }
 
+        val split = splitSets(localSongs, remoteSongs)
+
         val result = pushSongsAsync(session.id, pushSongs).await()
         result.fold(onSuccess = { updatedSession: EditorSessionDto ->
+            logger.debug("Sync: local snapshot pushed: updated: ${split.differentCount}, added: ${split.remoteOnly.size}, deleted: ${split.localOnly.size}")
             rememberNewHashes(updatedSession) // update new remote hash after pushing
             synchronizeStep5SessionLink(updatedSession)
         }, onFailure = { e ->
@@ -182,7 +188,7 @@ class EditorSessionService(
         synchronizeStep5SessionLink(session)
     }
 
-    private suspend fun softMergeRemoteChanges(session: EditorSessionDto, split: SetSplit) {
+    private suspend fun softMergeRemoteChanges(session: EditorSessionDto, split: SetSplit, localSongs: List<CustomSong>, remoteSongs: List<EditorSongDto>) {
         val localIdToRemoteMap = songsRepository.customSongsDao.customSongs.syncSessionData.localIdToRemoteMap
         split.common.forEach { (localOne, remoteOne) ->
             localIdToRemoteMap[localOne.id.toString()] = remoteOne.id
@@ -198,7 +204,7 @@ class EditorSessionService(
         rememberNewHashes(session)
         logger.info("Sync: remote changes merged: updated: ${split.differentCount}, added: ${split.remoteOnly.size}, kept back locally: ${split.localOnly.size}")
 
-        synchronizeStep4Push(session)
+        synchronizeStep4Push(session, localSongs, remoteSongs)
     }
 
     private suspend fun resolveConflicts(session: EditorSessionDto, localSongs: List<CustomSong>, remoteSongs: List<EditorSongDto>) {
@@ -210,7 +216,7 @@ class EditorSessionService(
 
         if (split.differentCount == 0) {
             logger.info("Sync: conflict can be softly resolved")
-            softMergeRemoteChanges(session, split)
+            softMergeRemoteChanges(session, split, localSongs, remoteSongs)
             return
         }
 
@@ -234,7 +240,7 @@ class EditorSessionService(
                 GlobalScope.launch {
                     safeExecute {
                         logger.info("Sync: Conflict: taking local")
-                        synchronizeStep4Push(session)
+                        synchronizeStep4Push(session, localSongs, remoteSongs)
                     }
                 }
             },
