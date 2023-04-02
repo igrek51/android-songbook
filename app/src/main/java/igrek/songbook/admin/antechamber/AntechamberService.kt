@@ -158,6 +158,10 @@ class AntechamberService(
         ConfirmDialogBuilder().confirmAction(message1) {
             uiInfoService.showInfo(R.string.admin_sending, indefinite = true)
 
+            if (song.language == null) {
+                song.language = SongLanguageDetector().detectLanguageCode(song.content.orEmpty())
+            }
+
             val deferred = approveAntechamberSongAsync(song)
             GlobalScope.launch(Dispatchers.Main) {
                 val result = deferred.await()

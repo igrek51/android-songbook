@@ -519,7 +519,7 @@ val guitarChordsDiagrams: Map<String, List<String>> = mapOf(
         "x,x,9,11,10,10",
         "x,12,12,11,12,10"
     ),
-    "Dadd9" to listOf("10,9,7,9,7,x", "x,5,4,2,5,2"),
+    "Dadd9" to listOf("x,5,4,2,5,2", "x,x,0,2,5,2", "10,9,7,9,7,x"),
     "D6add9" to listOf("10,9,9,9,10,10", "x,5,4,4,5,5", "10,x,9,9,7,x"),
     "Dmaj7b5" to listOf(
         "10,x,11,11,9,x",
