@@ -78,16 +78,18 @@ class CustomSongsDao(
         return (songs.maxOfOrNull { song -> song.id } ?: 0) + 1
     }
 
-    fun removeCustomSong(newSong: CustomSong) {
+    fun removeCustomSong(song: CustomSong) {
         val olds = customSongs.songs
-            .filter { song -> song.id != newSong.id }.toMutableList()
+            .filter { it.id != song.id }.toMutableList()
         customSongs.songs = olds
+
         // clean up other usages
-        songsRepository.favouriteSongsDao.removeUsage(newSong.id, true)
-        songsRepository.playlistDao.removeUsage(newSong.id, true)
-        songsRepository.openHistoryDao.removeUsage(newSong.id, true)
-        songsRepository.transposeDao.removeUsage(newSong.id, true)
-        songsRepository.songTweakDao.removeUsage(SongIdentifier(newSong.id, SongNamespace.Custom))
+        songsRepository.favouriteSongsDao.removeUsage(song.id, true)
+        songsRepository.playlistDao.removeUsage(song.id, true)
+        songsRepository.openHistoryDao.removeUsage(song.id, true)
+        songsRepository.transposeDao.removeUsage(song.id, true)
+        songsRepository.songTweakDao.removeUsage(SongIdentifier(song.id, SongNamespace.Custom))
+        customSongs.syncSessionData.localIdToRemoteMap.remove(song.id.toString())
 
         songsRepository.saveAndReloadUserSongs()
     }

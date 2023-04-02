@@ -179,7 +179,8 @@ class EditorSessionService(
         }
 
         split.remoteOnly.forEach { remoteOne ->
-            createSongFromRemote(remoteOne)
+            val localOne = createSongFromRemote(remoteOne)
+            localIdToRemoteMap[localOne.id.toString()] = remoteOne.id
         }
 
         rememberNewHashes(session)
@@ -198,7 +199,8 @@ class EditorSessionService(
         }
 
         split.remoteOnly.forEach { remoteOne ->
-            createSongFromRemote(remoteOne)
+            val localOne = createSongFromRemote(remoteOne)
+            localIdToRemoteMap[localOne.id.toString()] = remoteOne.id
         }
 
         rememberNewHashes(session)
@@ -268,7 +270,7 @@ class EditorSessionService(
         songsRepository.customSongsDao.saveCustomSong(localOne)
     }
 
-    private fun createSongFromRemote(remoteOne: EditorSongDto) {
+    private fun createSongFromRemote(remoteOne: EditorSongDto): CustomSong {
         val localSong = CustomSong(
             id = 0,
             title = remoteOne.title,
@@ -280,6 +282,7 @@ class EditorSessionService(
             chordsNotation = ChordsNotation.mustParseById(remoteOne.chords_notation_id),
         )
         songsRepository.customSongsDao.saveCustomSong(localSong)
+        return localSong
     }
 
     private fun deleteSongFromRemote(localOne: CustomSong) {
