@@ -100,7 +100,7 @@ class SongContextMenuBuilder(
                     }
                 }),
             SongContextAction(R.string.action_song_copy,
-                availableCondition = { song -> !song.isCustom() },
+                availableCondition = { true },
                 executor = { song ->
                     customSongService.copySongAsCustom(song)
                 }),
