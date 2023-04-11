@@ -16,6 +16,7 @@ import com.tom_roush.pdfbox.text.PDFTextStripper
 import com.tom_roush.pdfbox.text.TextPosition
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityResultDispatcher
+import igrek.songbook.activity.AppInitializer
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.LocalizedError
 import igrek.songbook.info.errorcheck.UiErrorHandler
@@ -43,11 +44,13 @@ class SongImportFileChooser(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     editSongLayoutController: LazyInject<EditSongLayoutController> = appFactory.editSongLayoutController,
     activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,
+    appInitializer: LazyInject<AppInitializer> = appFactory.appInitializer,
 ) {
     private val activity by LazyExtractor(activity)
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val editSongLayoutController by LazyExtractor(editSongLayoutController)
     private val activityResultDispatcher by LazyExtractor(activityResultDispatcher)
+    private val appInitializer by LazyExtractor(appInitializer)
 
     private var fileChooserLauncher: ActivityResultLauncher<Intent>? = null
 
@@ -109,6 +112,7 @@ class SongImportFileChooser(
         val uri: Uri? = intent?.data
         GlobalScope.launch(Dispatchers.IO) {
             try {
+                appInitializer.waitUntilInitialized()
                 uiInfoService.showInfo(R.string.song_import_loading_file)
                 if (uri != null) {
                     val fileContent: String = extractFileContent(uri)

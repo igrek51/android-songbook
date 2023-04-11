@@ -30,6 +30,8 @@ import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.system.LinkOpener
 import igrek.songbook.system.WindowManagerService
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlin.reflect.KClass
 
 @OptIn(DelicateCoroutinesApi::class)
@@ -77,8 +79,10 @@ class AppInitializer(
     private val logger = LoggerFactory.logger
     private val debugInitEnabled = false
     private var initJob: Job? = null
+    private val initChannel: Channel<Boolean> = Channel()
 
     fun init() {
+        initJob = null
         if (debugInitEnabled && BuildConfig.DEBUG) {
             debugInit()
         }
@@ -119,6 +123,7 @@ class AppInitializer(
             postInit()
 
             val activityName = activity::class.simpleName
+            initChannel.close()
             logger.info("Application has been initialized ($activityName, execution #${preferencesState.appExecutionCount})")
         }
     }
@@ -187,6 +192,17 @@ class AppInitializer(
             indefinite = true,
         ) {
             webviewLayoutController.openChangelog()
+        }
+    }
+
+    suspend fun waitUntilInitialized(): Boolean {
+        return try {
+            initChannel.receive()
+            true
+        } catch (e: ClosedReceiveChannelException) {
+            true
+        } catch (e: CancellationException) {
+            false
         }
     }
 }

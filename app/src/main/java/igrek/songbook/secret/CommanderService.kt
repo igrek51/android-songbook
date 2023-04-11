@@ -149,6 +149,12 @@ class CommanderService(
                 this.adminService.loginAdmin(key)
             },
 
+            SimpleKeyRule("test") {
+                logger.debug("waiting until initialized")
+                appFactory.appInitializer.get().waitUntilInitialized()
+                success("initialized")
+            },
+
             SimpleKeyRule("ad show") { this.commanderUtils.enableAds() },
 
             SimpleKeyRule("goto shop") {
