@@ -120,7 +120,7 @@ open class ShareSongService(
 
     private fun generateURL(song: Song): String {
         val base64 = encodeSong(song)
-        logger.debug("encoded to $base64")
+        logger.debug("Song \"${song.title}\" encoded to $base64")
         return "https://songbookapp.page.link/?${SHARED_SONG_QUERY_PREFIX}${base64}"
     }
 }
