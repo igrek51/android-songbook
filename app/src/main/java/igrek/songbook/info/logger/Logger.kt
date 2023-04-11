@@ -139,24 +139,34 @@ open class Logger internal constructor() {
             val fileName = stackTrace.fileName
             val lineNumber = stackTrace.lineNumber
             val index = i - 1
-            Log.d(tagWithKey(), "[trace] $index - ($fileName:$lineNumber)")
+            synchronized(logMutex) {
+                Log.d(tagWithKey(), "[trace] $index - ($fileName:$lineNumber)")
+            }
         }
     }
 
     protected open fun printDebug(msg: String) {
-        Log.d(tagWithKey(), msg)
+        synchronized(logMutex) {
+            Log.d(tagWithKey(), msg)
+        }
     }
 
     protected open fun printInfo(msg: String) {
-        Log.i(tagWithKey(), msg)
+        synchronized(logMutex) {
+            Log.i(tagWithKey(), msg)
+        }
     }
 
     protected open fun printWarn(msg: String) {
-        Log.w(tagWithKey(), msg)
+        synchronized(logMutex) {
+            Log.w(tagWithKey(), msg)
+        }
     }
 
     protected open fun printError(msg: String) {
-        Log.e(tagWithKey(), msg)
+        synchronized(logMutex) {
+            Log.e(tagWithKey(), msg)
+        }
     }
 
     /**
@@ -170,20 +180,17 @@ open class Logger internal constructor() {
     }
 
     companion object {
-        private var lastTagKey = 0
+        private var lastTagKey: Int = 0
+
+        val logMutex = Any()
 
         /**
          * method synchronized due to multithreading
          * @return next (incremented) tag key number
          */
-        @Synchronized
         private fun incrementTagKey(): Int {
-            lastTagKey = (lastTagKey + 1) % 4
+            lastTagKey = (lastTagKey + 1) % 2
             return lastTagKey
-        }
-
-        fun debug(vararg objs: Any) {
-            Logger().debug(*objs)
         }
     }
 }

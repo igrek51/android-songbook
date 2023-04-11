@@ -9,6 +9,10 @@ import igrek.songbook.inject.AppContextFactory
 import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.preferences.PreferencesService
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Rule
@@ -20,8 +24,9 @@ import org.junit.runner.RunWith
  * @see [Testing documentation](http://d.android.com/tools/testing)
  * A test for a Work-in-progress-features
  */
+@OptIn(DelicateCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
-class WIPFeatureTest {
+class FeatureInProgressTest {
 
     private val logger = LoggerFactory.logger
 
@@ -29,20 +34,20 @@ class WIPFeatureTest {
     @JvmField
     var rule = ActivityTestRule(MainActivity::class.java)
 
-    lateinit var activity: Activity
-    lateinit var preferencesService: PreferencesService
-    lateinit var songsRepository: SongsRepository
+    private lateinit var activity: Activity
+    private lateinit var preferencesService: PreferencesService
+    private lateinit var songsRepository: SongsRepository
 
     @Before
     fun setUpDependencies() {
-        val ruleActivity = rule.activity
-        AppContextFactory.createAppContext(ruleActivity)
+//        val ruleActivity = rule.activity
+//        AppContextFactory.createAppContext(ruleActivity)
+//
+//        activity = appFactory.activity.get()
+//        preferencesService = appFactory.preferencesService.get()
+//        songsRepository = appFactory.songsRepository.get()
 
-        activity = appFactory.activity.get()
-        preferencesService = appFactory.preferencesService.get()
-        songsRepository = appFactory.songsRepository.get()
-
-        logger.warn("====== Running Android Instrumentation Test: WIPFeatureTest ======")
+        logger.warn("====== Running Android Instrumentation Test: FeatureInProgressTest ======")
     }
 
     @Test
@@ -56,7 +61,15 @@ class WIPFeatureTest {
     @Test
     //	@Ignore
     fun testWipFeature() {
+        GlobalScope.launch {
+            delay(1000)
 
+            val userDataDao = appFactory.userDataDao.get()
+            repeat(1000) {
+                logger.warn("Test run: $it")
+                userDataDao.load()
+            }
+        }
     }
 
 }

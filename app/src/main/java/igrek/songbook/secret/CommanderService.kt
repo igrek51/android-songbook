@@ -14,7 +14,6 @@ import igrek.songbook.admin.AdminService
 import igrek.songbook.billing.BillingLayoutController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
-import igrek.songbook.info.errorcheck.LocalizedError
 import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.info.logview.LogsLayoutController

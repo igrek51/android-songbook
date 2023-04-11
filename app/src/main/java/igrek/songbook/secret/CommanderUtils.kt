@@ -50,6 +50,7 @@ class CommanderUtils(
 
     private val logger = LoggerFactory.logger
 
+    @Suppress("DEPRECATION")
     fun grantStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
