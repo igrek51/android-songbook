@@ -67,22 +67,29 @@ abstract class AbstractJsonDao<T>(
 
     private fun readFromFile(dbName: String, schemaVersion: Int): T {
         val filename = buildFilename(dbName, schemaVersion)
-        val file = File(path, filename)
+        val file = File(path, filename).absoluteFile
         if (!file.exists())
-            throw FileNotFoundException("file not found: ${file.absoluteFile}")
+            throw FileNotFoundException("file not found: file")
         if (!file.canRead())
-            throw RuntimeException("No permission to read a file: ${file.absoluteFile}")
+            throw RuntimeException("No permission to read a file: $file")
+        if (!file.isFile)
+            throw RuntimeException("Path is not a regular file: $file")
 
         try {
+            val size = file.length()
+            if (size == 0L) {
+                throw RuntimeException("File seems to be empty (due to insufficient permissions or corrupted file): $file")
+            }
             val bytes: ByteArray = file.readBytes()
             if (bytes.isEmpty()) {
-                throw RuntimeException("File seems to be empty (due to insufficient permissions or corrupted file): ${file.absoluteFile}")
+                throw RuntimeException("File seems to have zero bytes (due to insufficient permissions or corrupted file, $size length): $file")
             }
             val content: String = bytes.toString(Charsets.UTF_8)
             return json.decodeFromString(serializer, content)
+
         } catch (e: FileNotFoundException) {
             if (e.message.orEmpty().contains("(Permission denied)", ignoreCase = true)) {
-                throw RuntimeException("Permission denied to read a file: ${file.absoluteFile}", e)
+                throw RuntimeException("Permission denied to read a file: $file", e)
             }
             throw e
         }
