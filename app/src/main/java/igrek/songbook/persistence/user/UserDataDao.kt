@@ -136,16 +136,18 @@ class UserDataDao(
 
     private suspend fun reloadSync(resetOnError: Boolean) {
         val path = localDbService.appFilesDir.absolutePath
-        dataTransferMutex.withLock {
-            unlockedSongsDao = UnlockedSongsDao(path, resetOnError=resetOnError)
-            favouriteSongsDao = FavouriteSongsDao(path, resetOnError=resetOnError)
-            customSongsDao = CustomSongsDao(path, resetOnError=resetOnError)
-            playlistDao = PlaylistDao(path, resetOnError=resetOnError)
-            openHistoryDao = OpenHistoryDao(path, resetOnError=resetOnError)
-            exclusionDao = ExclusionDao(path, resetOnError=resetOnError)
-            transposeDao = TransposeDao(path, resetOnError=resetOnError)
-            preferencesDao = PreferencesDao(path, resetOnError=resetOnError)
-            songTweakDao = SongTweakDao(path, resetOnError=resetOnError)
+        withContext(Dispatchers.Main) {
+            dataTransferMutex.withLock {
+                unlockedSongsDao = UnlockedSongsDao(path, resetOnError = resetOnError)
+                favouriteSongsDao = FavouriteSongsDao(path, resetOnError = resetOnError)
+                customSongsDao = CustomSongsDao(path, resetOnError = resetOnError)
+                playlistDao = PlaylistDao(path, resetOnError = resetOnError)
+                openHistoryDao = OpenHistoryDao(path, resetOnError = resetOnError)
+                exclusionDao = ExclusionDao(path, resetOnError = resetOnError)
+                transposeDao = TransposeDao(path, resetOnError = resetOnError)
+                preferencesDao = PreferencesDao(path, resetOnError = resetOnError)
+                songTweakDao = SongTweakDao(path, resetOnError = resetOnError)
+            }
         }
         logger.debug("User data loaded synchronously")
     }
