@@ -7,14 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Add commands to backup and restore app data by means of a dialog box
+- New commands for backing up and restoring app data by means of a dialog box.
 
 ### Changed
 - *About* navigation item has been swapped with a *Manual* button.
-  *Missing son* item is hidden in a navigation menu.
+- *Missing song* item is hidden in a navigation menu.
+- App no longer asks for write permissions to access external storage.
 
 ### Fixed
-- Optimize initialization and ad loading
+- Optimize initialization and ad loading.
+- Fixed initialization errors.
+- Fix associating local songs with remote ones from a Sync Session.
 
 ## [1.34.4] - 1896 - 2023-03-27
 ### Fixed
