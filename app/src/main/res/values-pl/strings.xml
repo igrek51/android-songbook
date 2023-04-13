@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_categories_list">Wykonawcy</string>
-    <string name="nav_search_song">Szukaj / Wszystkie Piosenki</string>
+    <string name="nav_search_song">Szukaj / Wszystkie</string>
     <string name="nav_favourites_song">Ulubione</string>
     <string name="nav_update_songs">Aktualizuj</string>
     <string name="nav_custom_song">Moje Piosenki</string>
@@ -330,11 +330,11 @@
     <string name="settings_show_privacy_policy">Polityka prywatności</string>
     <string name="ads_disabled">Reklamy wyłączone</string>
     <string name="error_no_chords_marked_in_song">W tej piosence nie zaznaczono żadnych akordów.\nDodaj akordy do piosenki.</string>
-    <string name="display_style_chords_inline">Akordy w tej samej linii (między słowami)</string>
-    <string name="display_style_chords_above">Akordy nad tekstem (w osobnej linii)</string>
-    <string name="display_style_chords_aligned_right">Akordy po prawej stronie (na końcu linii)</string>
-    <string name="display_style_chords_only">Tylko akordy (tekst ukryty)</string>
-    <string name="display_style_lyrics_only">Tylko tekst (akordy ukryte)</string>
+    <string name="display_style_chords_inline">Akordy w tej samej linii\n(między słowami)</string>
+    <string name="display_style_chords_above">Akordy nad tekstem\n(w osobnej linii)</string>
+    <string name="display_style_chords_aligned_right">Akordy po prawej stronie\n(na końcu linii)</string>
+    <string name="display_style_chords_only">Tylko akordy\n(tekst ukryty)</string>
+    <string name="display_style_lyrics_only">Tylko tekst\n(akordy ukryte)</string>
     <string name="settings_chords_display_style">Styl wyświetlania akordów i tekstu</string>
     <string name="chords_editor_move_chords_above_to_inline">Przesuń akordy z górnych linii do pasujących słów</string>
     <string name="chords_editor_remove_double_empty_lines">Usuń podwójne puste linie</string>

@@ -10,9 +10,9 @@ enum class DisplayStyle(val id: Long, val nameResId: Int) {
 
     ChordsAlignedRight(3, R.string.display_style_chords_aligned_right),
 
-    ChordsOnly(4, R.string.display_style_chords_only),
-
     LyricsOnly(5, R.string.display_style_lyrics_only),
+
+    ChordsOnly(4, R.string.display_style_chords_only),
 
     ;
 

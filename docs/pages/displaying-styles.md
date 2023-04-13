@@ -13,13 +13,13 @@ Given the following text file
 
 you can choose how to present the chords on a song preview:
 
-- **Chords inline, among the words** (as original text, but chords are bold with a color accent)
+- **Chords inline (among the words)** (as original text, but chords are bold with a color accent)
     ```
     C Twinkle, twinkle, F little C star
     F How I C wonder G7 what you C are.
     ```
 
-- **Chords above lyrics, in a separate line**
+- **Chords above the lyrics (on a separate line)**
     ```
     C                F      C
     Twinkle, twinkle little star.
@@ -27,19 +27,19 @@ you can choose how to present the chords on a song preview:
     How I wonder what you are.
     ```
 
-- **Chords aligned to right, at the end of line**
+- **Chords aligned to right (at the end of line)**
     ```
     Twinkle, twinkle, little star         C F C
     How I wonder what you are.         F C G7 C
     ```
 
-- **Lyrics only, chords hidden**
+- **Lyrics alone (chords hidden)**
     ```
     Twinkle, twinkle, little star
     How I wonder what you are.
     ```
 
-- **Chords only, lyrics hidden**
+- **Chords alone (lyrics hidden)**
     ```
     C F C
     F C G7 C

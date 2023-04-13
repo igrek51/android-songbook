@@ -101,7 +101,7 @@
     <string name="edit_song_content_label">Lyrics and [chords]:</string>
     <string name="chords_editor_hint">Put here the lyrics with chords. Try to stick to these following rules in order to keep songs consistent with others:
         \n\n1. Mark chords by surrounding them with square brackets, e.g. \"between [C G# A7 F#maj7] words\".
-        \n\n2. Mix chords with the lyrics in the same line placing them just before the words where they occur in order to precisely indicate where a chord should be accentuated, e.g. \"[C]And no reli[Cmaj7]gion [F]too\". Do not place them in a separate line above text (though you can always change your displaying style in settings - so let others choose their favourite displaying style). Placing chords in the same line is extremely important, because it allows to display chord always in correct place regardless different font styles and word wrapping. Don\'t worry about your favourite chords displaying style - Songbook will do all the magic for you.
+        \n\n2. Mix chords with the lyrics in the same line placing them just before the words where they occur in order to precisely indicate where a chord should be accentuated, e.g. \"[C]And no reli[Cmaj7]gion [F]too\". Do not place them on a separate line above text (though you can always change your displaying style in settings - so let others choose their favourite displaying style). Placing chords in the same line is extremely important, because it allows to display chord always in correct place regardless different font styles and word wrapping. Don\'t worry about your favourite chords displaying style - Songbook will do all the magic for you.
         \n\n3. If some part of song is repeated (e.g. chorus), copy it to all its occurrences. When lyrics are continuous, it facilitates scrolling through the song and then you will not have to scroll back every time to see the refrain chords. Don\'t put any annotations or paragraphs like \"Chorus\", \"Verse\", \"Title\", \"Solo\", \"Instrumental\". Include only lyrics with chords.
         \n\n4. Make sure you have chosen appropriate notation for your chords (\"Am\" or \"a\").
         \n\n5. If a song has difficult rhythm with chords changing frequently, place the chords between words or even inside the words in order to indicate the syllable with a chord accent, e.g \"[G]Hotel Cali[D]fornia\". In very simple cases, you can place chords at the end of line: \"Smoke on the water [C G#]\"
@@ -358,11 +358,11 @@
     <string name="admin_song_content_update_action" translatable="false">📤 [admin] Push content update</string>
     <string name="ads_disabled">Ads disabled</string>
     <string name="error_no_chords_marked_in_song">This song doesn\'t have any chords marked properly.\nPut chords in your song.</string>
-    <string name="display_style_chords_inline">Chords inline (among the words)</string>
-    <string name="display_style_chords_above">Chords above lyrics (in a separate line)</string>
-    <string name="display_style_chords_aligned_right">Chords aligned to right (at the end of line)</string>
-    <string name="display_style_chords_only">Chords only (lyrics hidden)</string>
-    <string name="display_style_lyrics_only">Lyrics only (chords hidden)</string>
+    <string name="display_style_chords_inline">Chords inline\n(among the words)</string>
+    <string name="display_style_chords_above">Chords above the lyrics\n(on a separate line)</string>
+    <string name="display_style_chords_aligned_right">Chords aligned to right\n(at the end of line)</string>
+    <string name="display_style_chords_only">Chords alone\n(lyrics hidden)</string>
+    <string name="display_style_lyrics_only">Lyrics alone\n(chords hidden)</string>
     <string name="settings_chords_display_style"><![CDATA[Chords & Lyrics displaying style]]></string>
     <string name="chords_editor_move_chords_above_to_inline">Move chords from upper line to matching words</string>
     <string name="chords_editor_remove_double_empty_lines">Remove doubled blank lines</string>
