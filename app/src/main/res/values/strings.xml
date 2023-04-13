@@ -4,7 +4,7 @@
     <string name="adaptive_banner_ad_unit_id_test" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
     <string name="adaptive_banner_ad_unit_id_prod" translatable="false">ca-app-pub-8517210898119735/5760576809</string>
     <string name="nav_categories_list">Artists</string>
-    <string name="nav_search_song">Search / All</string>
+    <string name="nav_search_song">Search / All Songs</string>
     <string name="nav_favourites_song">Liked Songs</string>
     <string name="nav_update_songs">Update</string>
     <string name="nav_custom_song">My Songs</string>
@@ -358,11 +358,11 @@
     <string name="admin_song_content_update_action" translatable="false">📤 [admin] Push content update</string>
     <string name="ads_disabled">Ads disabled</string>
     <string name="error_no_chords_marked_in_song">This song doesn\'t have any chords marked properly.\nPut chords in your song.</string>
-    <string name="display_style_chords_inline">Chords inline, among the words</string>
-    <string name="display_style_chords_above">Chords above lyrics, in a separate line</string>
-    <string name="display_style_chords_aligned_right">Chords aligned to right, at the end of line</string>
-    <string name="display_style_chords_only">Chords only, lyrics hidden</string>
-    <string name="display_style_lyrics_only">Lyrics only, chords hidden</string>
+    <string name="display_style_chords_inline">Chords inline (among the words)</string>
+    <string name="display_style_chords_above">Chords above lyrics (in a separate line)</string>
+    <string name="display_style_chords_aligned_right">Chords aligned to right (at the end of line)</string>
+    <string name="display_style_chords_only">Chords only (lyrics hidden)</string>
+    <string name="display_style_lyrics_only">Lyrics only (chords hidden)</string>
     <string name="settings_chords_display_style"><![CDATA[Chords & Lyrics displaying style]]></string>
     <string name="chords_editor_move_chords_above_to_inline">Move chords from upper line to matching words</string>
     <string name="chords_editor_remove_double_empty_lines">Remove doubled blank lines</string>

@@ -17,7 +17,7 @@ enum class DisplayStyle(val id: Long, val nameResId: Int) {
     ;
 
     companion object {
-        val default = ChordsInline
+        val default = ChordsAbove
 
         fun parseById(id: Long): DisplayStyle? {
             return values().firstOrNull { v -> v.id == id }
