@@ -60,13 +60,13 @@ fun transformLyrics(
 ): LyricsModel {
 
     // extract lyrics: split
-    val lyrics = LyricsExtractor(trimWhitespaces=trimWhitespaces).parseLyrics(rawContent)
+    val lyrics: LyricsModel = LyricsExtractor(trimWhitespaces=trimWhitespaces).parseLyrics(rawContent)
     // parse chords
     val chordParser = ChordParser(notation)
     chordParser.parseAndFillChords(lyrics)
 
     // transpose
-    val transposedLyrics = ChordsTransposer().transposeLyrics(lyrics, transposedBy)
+    val transposedLyrics: LyricsModel = ChordsTransposer().transposeLyrics(lyrics, transposedBy)
     val songKey = KeyDetector().detectKey(transposedLyrics)
     // format chords (render)
     ChordsRenderer(notation, songKey, forceSharps=forceSharps).formatLyrics(
@@ -76,8 +76,8 @@ fun transformLyrics(
 
     // inflate text
     val lyricsInflater = MonospaceLyricsInflater(fontsize) // DUMMY inflater
-    val tmpLyrics = LyricsCloner().cloneLyrics(transposedLyrics)
-    val inflatedLyrics = lyricsInflater.inflateLyrics(tmpLyrics)
+    val tmpLyrics: LyricsModel = LyricsCloner().cloneLyrics(transposedLyrics)
+    val inflatedLyrics: LyricsModel = lyricsInflater.inflateLyrics(tmpLyrics)
 
     // arrange lyrics and chords
     val screenWRelative = screenW / fontsize

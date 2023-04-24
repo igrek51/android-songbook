@@ -15,6 +15,7 @@ data class LyricsModel(
 
 data class LyricsLine(
     val fragments: List<LyricsFragment> = listOf(),
+    val primalIndex: Int = 0,
 ) {
     override fun toString(): String {
         return fragments.joinToString("")

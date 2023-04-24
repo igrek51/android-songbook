@@ -40,7 +40,10 @@ class LyricsArranger(
 
         calculateXPositions(fragments)
 
-        val lines: List<LyricsLine> = lineWrapper.wrapLine(LyricsLine(fragments))
+        val lines: List<LyricsLine> = lineWrapper.wrapLine(LyricsLine(
+            fragments = fragments,
+            primalIndex = line.primalIndex,
+        ))
 
         return lines.map(this::postProcessLine)
     }
@@ -73,7 +76,7 @@ class LyricsArranger(
             .onEach { fragment -> fragment.text = fragment.text.trimEnd() }
             .filter { fragment -> fragment.text.isNotBlank() }
 
-        return LyricsLine(fragments)
+        return LyricsLine(fragments = fragments, primalIndex = line.primalIndex)
     }
 
     private fun calculateXPositions(fragments: List<LyricsFragment>) {

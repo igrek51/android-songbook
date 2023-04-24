@@ -21,13 +21,17 @@ class ChordsAboveArranger(
     fun arrangeLine(line: LyricsLine): List<LyricsLine> {
         calculateXPositions(line.fragments)
 
-        val chords = LyricsLine(filterFragments(line.fragments, LyricsTextType.CHORDS))
+        val chords = LyricsLine(
+            fragments = filterFragments(line.fragments, LyricsTextType.CHORDS),
+            primalIndex = line.primalIndex,
+        )
         val texts = LyricsLine(
-            filterFragments(
+            fragments = filterFragments(
                 line.fragments,
                 LyricsTextType.REGULAR_TEXT,
                 LyricsTextType.COMMENT
-            )
+            ),
+            primalIndex = line.primalIndex,
         )
         preventChordsOverlapping(chords.fragments, texts.fragments)
         alignSingleChordsLeft(chords.fragments, texts.fragments)
@@ -54,7 +58,7 @@ class ChordsAboveArranger(
             .onEach { fragment -> fragment.text = fragment.text.trimEnd() }
             .filter { fragment -> fragment.text.isNotBlank() }
 
-        return LyricsLine(fragments)
+        return LyricsLine(fragments = fragments, primalIndex = line.primalIndex)
     }
 
     private fun calculateXPositions(fragments: List<LyricsFragment>) {

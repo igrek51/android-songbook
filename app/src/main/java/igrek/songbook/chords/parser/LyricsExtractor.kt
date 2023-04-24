@@ -26,9 +26,9 @@ class LyricsExtractor(
     private fun parseLines(rawLines: List<String>): LyricsModel {
         val bracket = AtomicBoolean(false)
         val brace = AtomicBoolean(false)
-        val lines = rawLines.map { rawLine ->
+        val lines = rawLines.mapIndexed { index, rawLine ->
             val line = if (trimWhitespaces) rawLine.trim() else rawLine
-            parseLine(line, bracket, brace)
+            parseLine(line, bracket, brace, index)
         }.dropLastWhile { line -> line.isBlank }
         return LyricsModel(lines = lines)
     }
@@ -37,6 +37,7 @@ class LyricsExtractor(
         rawLine: String,
         bracket: AtomicBoolean,
         brace: AtomicBoolean,
+        lineIndex: Int,
     ): LyricsLine {
         val fragments = mutableListOf<LyricsFragment>()
         var frameStart = 0
@@ -66,7 +67,7 @@ class LyricsExtractor(
         }
         cutOffFragment(rawLine, fragments, bracket, brace, frameStart, rawLine.length)
 
-        return LyricsLine(fragments = fragments)
+        return LyricsLine(fragments = fragments, primalIndex = lineIndex)
     }
 
     private fun cutOffFragment(
