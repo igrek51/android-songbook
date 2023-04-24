@@ -22,6 +22,7 @@ import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.system.WindowManagerService
 
+// Singleton
 class LyricsLoader(
     autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
     lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
@@ -38,7 +39,8 @@ class LyricsLoader(
     private var screenW = 0
     private var paint: Paint? = null
     private var originalSongNotation: ChordsNotation = ChordsNotation.default
-    private var originalLyrics: LyricsModel = LyricsModel()
+    var originalLyrics: LyricsModel = LyricsModel()
+        private set
     var transposedLyrics: LyricsModel = LyricsModel()
         private set
     var arrangedLyrics: LyricsModel = LyricsModel()
@@ -72,8 +74,8 @@ class LyricsLoader(
         originalLyrics = if (fileContent.isEmpty()) {
             LyricsModel()
         } else {
-            val lyrics =
-                LyricsExtractor(trimWhitespaces = preferencesState.trimWhitespaces).parseLyrics(fileContent)
+            val lyricsExtractor = LyricsExtractor(trimWhitespaces = preferencesState.trimWhitespaces)
+            val lyrics = lyricsExtractor.parseLyrics(fileContent)
             val unknownChords = ChordParser(srcNotation).parseAndFillChords(lyrics)
             unknownChords.takeIf { it.isNotEmpty() }?.let {
                 logger.warn("Unknown chords: ${unknownChords.joinToString(", ")}")

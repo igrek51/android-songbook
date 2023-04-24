@@ -27,6 +27,11 @@ data class LyricsLine(
 
     val isBlank: Boolean get() = fragments.all { fragment -> fragment.text.isBlank() }
     val maxRightX: Float get() = fragments.maxOfOrNull { it.rightX } ?: 0f
+
+    override fun equals(other: Any?): Boolean = (other is LyricsLine) && fragments == other.fragments
+
+    override fun hashCode(): Int = fragments.hashCode()
+
 }
 
 data class LyricsFragment(

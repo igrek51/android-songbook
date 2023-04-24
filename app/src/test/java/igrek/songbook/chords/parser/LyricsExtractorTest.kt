@@ -78,12 +78,12 @@ class LyricsExtractorTest {
                     listOf(
                         LyricsFragment(text = "   a  ", type = LyricsTextType.REGULAR_TEXT),
                         LyricsFragment(text = "a", type = LyricsTextType.CHORDS)
-                    )
+                    ),
                 ),
                 LyricsLine(
                     listOf(
                         LyricsFragment(text = "bcde", type = LyricsTextType.REGULAR_TEXT),
-                    )
+                    ),
                 )
             )
         )
