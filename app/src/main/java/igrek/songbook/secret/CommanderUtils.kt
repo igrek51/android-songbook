@@ -181,6 +181,11 @@ class CommanderUtils(
         success(message)
     }
 
+    fun showDeviceId() {
+        val deviceId = appFactory.deviceIdProvider.get().getDeviceId()
+        success(deviceId)
+    }
+
     fun success(message: String) {
         uiInfoService.showSnackbar(
             info = message,

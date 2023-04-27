@@ -156,6 +156,8 @@ class CommanderService(
 
             SimpleKeyRule("ad show") { this.commanderUtils.enableAds() },
 
+            SimpleKeyRule("device id") { this.commanderUtils.showDeviceId() },
+
             SimpleKeyRule("goto shop") {
                 this.layoutController.showLayout(BillingLayoutController::class)
             },

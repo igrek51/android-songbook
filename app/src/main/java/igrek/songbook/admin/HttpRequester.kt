@@ -41,7 +41,7 @@ class HttpRequester {
             val response: Response = okHttpClient.newCall(request).execute()
             return if (!response.isSuccessful) {
                 val errorMessage = extractErrorMessage(response)
-                Result.failure(RuntimeException(errorMessage))
+                Result.failure(ApiResponseError(errorMessage, response))
             } else {
                 try {
                     val responseData = responseExtractor(response)
@@ -67,13 +67,20 @@ class HttpRequester {
                 val errorDetails = errorDto.error
                 return "Server response: $errorDetails, code: ${response.code()}, url: ${response.request().method()} ${response.request().url()}"
             } catch (e: kotlinx.serialization.SerializationException) {
+                logger.warn("Error deserializing error response: $jsonData", e)
             } catch (e: IllegalArgumentException) {
+                logger.warn("Error deserializing error response: $jsonData", e)
             }
         }
         return "Unexpected Server response: ${response.message()}, code: ${response.code()}, url: ${response.request().method()} ${response.request().url()}"
     }
 
 }
+
+class ApiResponseError(
+    message: String,
+    val response: Response,
+) : RuntimeException(message)
 
 @Serializable
 data class ErrorDto(

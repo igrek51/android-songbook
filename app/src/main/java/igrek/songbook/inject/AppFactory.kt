@@ -14,7 +14,7 @@ import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.admin.antechamber.AntechamberService
 import igrek.songbook.billing.BillingLayoutController
 import igrek.songbook.billing.BillingService
-import igrek.songbook.cast.SongCastController
+import igrek.songbook.cast.SongCastService
 import igrek.songbook.cast.SongCastLayout
 import igrek.songbook.cast.SongCastLobbyLayout
 import igrek.songbook.chords.diagram.ChordDiagramsService
@@ -183,5 +183,5 @@ class AppFactory(
     val customSongsBackuper = SingletonInject { CustomSongsBackuper() }
     val songCastLayout = SingletonInject { SongCastLayout() }
     val songCastLobbyLayout = SingletonInject { SongCastLobbyLayout() }
-    val songCastController = SingletonInject { SongCastController() }
+    val songCastService = SingletonInject { SongCastService() }
 }

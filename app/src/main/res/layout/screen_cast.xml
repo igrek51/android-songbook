@@ -39,7 +39,8 @@
                 android:focusableInTouchMode="false"
                 android:padding="8dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/menu" />
+                android:src="@drawable/menu"
+                android:importantForAccessibility="no" />
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -65,26 +66,22 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:gravity="bottom"
-                android:text="@string/screen_share_feature_hint"
+                android:text="@string/songcast_feature_hint"
                 android:textSize="18sp" />
 
-            <TextView
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/nameInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:gravity="bottom"
-                android:text="@string/screen_share_your_name"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/myNameEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="#07ffffff"
-                android:gravity="center_vertical"
-                android:inputType="text"
-                android:padding="8dp" />
+                app:endIconMode="clear_text"
+                android:hint="@string/songcast_hint_my_name"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -98,14 +95,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:text="@string/songcast_create_new_room" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="@android:color/darker_gray" />
+                android:text="@string/songcast_create_new_room"
+                />
 
             <TextView
                 android:layout_width="match_parent"
@@ -116,18 +107,25 @@
                 android:textSize="18sp" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textField"
+                android:id="@+id/roomCodeInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="8dp"
                 app:endIconMode="clear_text"
-                android:hint="Room code"
+                android:hint="@string/songcast_room_code_hint"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 >
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/joinRoomButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/songcast_join_room" />
 
         </LinearLayout>
     </ScrollView>

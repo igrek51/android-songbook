@@ -130,7 +130,7 @@
                         android:src="@drawable/scroll1" />
 
                     <ImageButton
-                        android:id="@+id/screenShareButton"
+                        android:id="@+id/songCastButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -141,7 +141,7 @@
                         android:focusable="true"
                         android:focusableInTouchMode="false"
                         android:scaleType="centerInside"
-                        android:src="@drawable/bluetooth" />
+                        android:src="@drawable/cast" />
 
                     <ImageButton
                         android:id="@+id/moreActionsButton"

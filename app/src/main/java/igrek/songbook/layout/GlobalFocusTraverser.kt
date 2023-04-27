@@ -150,10 +150,10 @@ class GlobalFocusTraverser(
                     R.id.setFavouriteButton -> R.id.transposeButton
                     R.id.transposeButton -> R.id.autoscrollButton
                     R.id.autoscrollButton -> when {
-                        isViewVisible(R.id.screenShareButton) -> R.id.screenShareButton
+                        isViewVisible(R.id.songCastButton) -> R.id.songCastButton
                         else -> R.id.moreActionsButton
                     }
-                    R.id.screenShareButton -> R.id.moreActionsButton
+                    R.id.songCastButton -> R.id.moreActionsButton
                     R.id.autoscrollToggleButton -> R.id.speedPlusButton
                     R.id.speedMinusButton -> R.id.speedSeekbar
                     R.id.speedSeekbar -> R.id.speedPlusButton
@@ -248,10 +248,10 @@ class GlobalFocusTraverser(
                         -1
                     }
                     R.id.moreActionsButton -> when {
-                        isViewVisible(R.id.screenShareButton) -> R.id.screenShareButton
+                        isViewVisible(R.id.songCastButton) -> R.id.songCastButton
                         else -> R.id.autoscrollButton
                     }
-                    R.id.screenShareButton -> R.id.autoscrollButton
+                    R.id.songCastButton -> R.id.autoscrollButton
                     R.id.autoscrollButton -> R.id.transposeButton
                     R.id.transposeButton -> R.id.setFavouriteButton
                     R.id.setFavouriteButton -> R.id.chordsHelpButton
@@ -355,7 +355,7 @@ class GlobalFocusTraverser(
                     R.id.main_content
                 }
                 R.id.songInfoButton, R.id.chordsHelpButton, R.id.setFavouriteButton,
-                R.id.transposeButton, R.id.autoscrollButton, R.id.screenShareButton, R.id.moreActionsButton -> when {
+                R.id.transposeButton, R.id.autoscrollButton, R.id.songCastButton, R.id.moreActionsButton -> when {
                     songPreviewLayoutController.isTransposePanelVisible() -> R.id.transpose0Button
                     songPreviewLayoutController.isAutoscrollPanelVisible() -> R.id.autoscrollToggleButton
                     songPreviewLayoutController.canScrollDown() -> R.id.main_content
@@ -474,7 +474,7 @@ class GlobalFocusTraverser(
                     R.id.navMenuButton
                 }
                 R.id.songInfoButton, R.id.chordsHelpButton, R.id.setFavouriteButton,
-                R.id.transposeButton, R.id.autoscrollButton, R.id.screenShareButton, R.id.moreActionsButton -> R.id.navMenuButton
+                R.id.transposeButton, R.id.autoscrollButton, R.id.songCastButton, R.id.moreActionsButton -> R.id.navMenuButton
                 R.id.transposeM5Button, R.id.transposeM1Button, R.id.transpose0Button,
                 R.id.transposeP1Button, R.id.transposeP5Button -> R.id.transposeButton
                 R.id.autoscrollToggleButton -> R.id.autoscrollButton

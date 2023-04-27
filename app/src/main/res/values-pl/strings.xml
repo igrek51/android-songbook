@@ -551,6 +551,4 @@
     <string name="settings_restore_custom_songs_backup">Przywróć \"Moje Piosenki\" z lokalnej kopii</string>
     <string name="action_copy_dialog">Kopiuj</string>
     <string name="nav_song_cast">Song Cast</string>
-    <string name="songcast_create_new_room">Create new room</string>
-    <string name="songcast_enter_room_number_to_join">Enter room number to join</string>
 </resources>

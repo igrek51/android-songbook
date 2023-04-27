@@ -19,6 +19,8 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
+import igrek.songbook.cast.SongCastLobbyLayout
+import igrek.songbook.cast.SongCastService
 import igrek.songbook.chords.diagram.ChordDiagramsService
 import igrek.songbook.chords.loader.LyricsLoader
 import igrek.songbook.info.UiInfoService
@@ -31,9 +33,6 @@ import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
-import igrek.songbook.room.RoomListLayoutController
-import igrek.songbook.room.RoomLobby
-import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
@@ -67,7 +66,7 @@ class SongPreviewLayoutController(
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
     chordDiagramsService: LazyInject<ChordDiagramsService> = appFactory.chordDiagramsService,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
-    roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
+    songCastService: LazyInject<SongCastService> = appFactory.songCastService,
     activityController: LazyInject<ActivityController> = appFactory.activityController,
 ) : MainLayout {
     private val lyricsLoader by LazyExtractor(lyricsLoader)
@@ -87,7 +86,7 @@ class SongPreviewLayoutController(
     private val songsRepository by LazyExtractor(songsRepository)
     private val chordsDiagramsService by LazyExtractor(chordDiagramsService)
     private val preferencesState by LazyExtractor(preferencesState)
-    private val roomLobby by LazyExtractor(roomLobby)
+    private val songCastService by LazyExtractor(songCastService)
     private val activityController by LazyExtractor(activityController)
 
     var songPreview: SongPreview? = null
@@ -102,7 +101,7 @@ class SongPreviewLayoutController(
     private var transposeButton: ImageButton? = null
     private var autoscrollButton: ImageButton? = null
     private var setFavouriteButton: ImageButton? = null
-    private var screenShareButton: ImageButton? = null
+    private var songCastButton: ImageButton? = null
     private val originalButtonBackgrounds: MutableMap<Int, Pair<ColorFilter, Drawable>> =
         mutableMapOf()
 
@@ -237,12 +236,12 @@ class SongPreviewLayoutController(
             setOnClickListener { showMoreActions() }
         }
 
-        screenShareButton = layout.findViewById<ImageButton>(R.id.screenShareButton)?.apply {
+        songCastButton = layout.findViewById<ImageButton>(R.id.songCastButton)?.apply {
             setOnClickListener {
-                layoutController.showLayout(RoomListLayoutController::class)
+                layoutController.showLayout(SongCastLobbyLayout::class)
             }
         }
-        updateScreenShareButton()
+        updateSongCastButton()
 
         exitFullscreenButton =
             layout.findViewById<FloatingActionButton>(R.id.exitFullscreenButton)?.apply {
@@ -427,13 +426,13 @@ class SongPreviewLayoutController(
         }
     }
 
-    private fun updateScreenShareButton() {
-        screenShareButton?.let { screenShareButton ->
-            if (roomLobby.isActive()) {
-                screenShareButton.visibility = View.VISIBLE
-                highlightButton(screenShareButton)
+    private fun updateSongCastButton() {
+        songCastButton?.let { songCastButton ->
+            if (songCastService.isInRoom()) {
+                songCastButton.visibility = View.VISIBLE
+                highlightButton(songCastButton)
             } else {
-                screenShareButton.visibility = View.GONE
+                songCastButton.visibility = View.GONE
             }
         }
     }
