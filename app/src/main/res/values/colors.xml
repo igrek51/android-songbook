@@ -5,6 +5,7 @@
     <color name="colorPrimary">#1564C0</color>
     <color name="colorPrimaryDark">#134DA3</color>
     <color name="colorAccent">#6E9AE9</color>
+    <color name="colorBackground">#ff303030</color>
 
     <color name="colorQuickMenuText">#ffffff</color>
     <color name="unlockAction">#505050</color>

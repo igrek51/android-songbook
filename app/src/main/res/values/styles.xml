@@ -1,15 +1,19 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Bridge">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
+        <item name="android:colorBackground">@color/colorBackground</item>
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+
+
+
+
+
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">

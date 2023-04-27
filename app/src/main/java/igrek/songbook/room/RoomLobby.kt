@@ -8,7 +8,6 @@ import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.room.protocol.*
-import igrek.songbook.settings.chordsnotation.ChordsNotation
 import kotlinx.coroutines.*
 import java.util.*
 

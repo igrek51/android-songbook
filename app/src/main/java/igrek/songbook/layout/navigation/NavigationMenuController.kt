@@ -14,6 +14,7 @@ import igrek.songbook.about.AboutLayoutController
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.billing.BillingLayoutController
+import igrek.songbook.cast.SongCastLayout
 import igrek.songbook.chords.diagram.ChordDiagramsService
 import igrek.songbook.custom.CustomSongService
 import igrek.songbook.custom.CustomSongsListLayoutController
@@ -25,9 +26,7 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.general.SongsUpdater
 import igrek.songbook.playlist.PlaylistLayoutController
-import igrek.songbook.room.RoomListLayoutController
 import igrek.songbook.send.ContactLayoutController
-import igrek.songbook.send.SendMessageService
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.favourite.FavouritesLayoutController
@@ -52,7 +51,6 @@ class NavigationMenuController(
     songsUpdater: LazyInject<SongsUpdater> = appFactory.songsUpdater,
     softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
     randomSongOpener: LazyInject<RandomSongOpener> = appFactory.randomSongOpener,
-    sendMessageService: LazyInject<SendMessageService> = appFactory.sendMessageService,
     songOpener: LazyInject<SongOpener> = appFactory.songOpener,
     chordDiagramsService: LazyInject<ChordDiagramsService> = appFactory.chordDiagramsService,
     customSongService: LazyInject<CustomSongService> = appFactory.customSongService,
@@ -64,7 +62,6 @@ class NavigationMenuController(
     private val songsUpdater by LazyExtractor(songsUpdater)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
     private val randomSongOpener by LazyExtractor(randomSongOpener)
-    private val sendMessageService by LazyExtractor(sendMessageService)
     private val songOpener by LazyExtractor(songOpener)
     private val chordsDiagramsService by LazyExtractor(chordDiagramsService)
     private val customSongService by LazyExtractor(customSongService)
@@ -115,8 +112,8 @@ class NavigationMenuController(
             { layoutController.showLayout(AdminSongsLayoutContoller::class) }
         actionsMap[R.id.nav_chord_diagram] =
             { chordsDiagramsService.showFindChordByNameMenu() }
-        actionsMap[R.id.nav_screen_share] =
-            { layoutController.showLayout(RoomListLayoutController::class) }
+        actionsMap[R.id.nav_song_cast] =
+            { layoutController.showLayout(SongCastLayout::class) }
         actionsMap[R.id.nav_purchase] =
             { layoutController.showLayout(BillingLayoutController::class) }
     }

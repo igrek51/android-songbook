@@ -580,4 +580,7 @@
     <string name="settings_saveCustomSongsBackups_hint">Keep local versions of \"My Songs\" from last 14 days</string>
     <string name="settings_restore_custom_songs_backup">Restore \"My Songs\" from a local backup</string>
     <string name="action_copy_dialog">Copy</string>
+    <string name="nav_song_cast">Song Cast</string>
+    <string name="songcast_create_new_room">Create new room</string>
+    <string name="songcast_enter_room_number_to_join">Enter room number to join:</string>
 </resources>

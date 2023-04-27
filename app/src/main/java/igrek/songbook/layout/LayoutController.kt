@@ -15,6 +15,8 @@ import igrek.songbook.about.WebviewLayoutController
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.billing.BillingLayoutController
+import igrek.songbook.cast.SongCastLayout
+import igrek.songbook.cast.SongCastLobbyLayout
 import igrek.songbook.custom.CustomSongsListLayoutController
 import igrek.songbook.custom.EditSongLayoutController
 import igrek.songbook.editor.ChordsEditorLayoutController
@@ -23,6 +25,7 @@ import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
+import igrek.songbook.inject.SingletonInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.ad.AdService
 import igrek.songbook.layout.navigation.NavigationMenuController
@@ -53,28 +56,6 @@ class LayoutController(
     activityController: LazyInject<ActivityController> = appFactory.activityController,
     adService: LazyInject<AdService> = appFactory.adService,
     systemKeyDispatcher: LazyInject<SystemKeyDispatcher> = appFactory.systemKeyDispatcher,
-    songTreeLayoutController: LazyInject<SongTreeLayoutController> = appFactory.songTreeLayoutController,
-    songSearchLayoutController: LazyInject<SongSearchLayoutController> = appFactory.songSearchLayoutController,
-    songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
-    contactLayoutController: LazyInject<ContactLayoutController> = appFactory.contactLayoutController,
-    settingsLayoutController: LazyInject<SettingsLayoutController> = appFactory.settingsLayoutController,
-    editSongLayoutController: LazyInject<EditSongLayoutController> = appFactory.editSongLayoutController,
-    chordsEditorLayoutController: LazyInject<ChordsEditorLayoutController> = appFactory.chordsEditorLayoutController,
-    customSongsListLayoutController: LazyInject<CustomSongsListLayoutController> = appFactory.customSongsListLayoutController,
-    favouritesLayoutController: LazyInject<FavouritesLayoutController> = appFactory.favouritesLayoutController,
-    playlistLayoutController: LazyInject<PlaylistLayoutController> = appFactory.playlistLayoutController,
-    latestSongsLayoutController: LazyInject<LatestSongsLayoutController> = appFactory.latestSongsLayoutController,
-    topSongsLayoutController: LazyInject<TopSongsLayoutController> = appFactory.topSongsLayoutController,
-    openHistoryLayoutController: LazyInject<OpenHistoryLayoutController> = appFactory.openHistoryLayoutController,
-    missingSongLayoutController: LazyInject<MissingSongLayoutController> = appFactory.missingSongLayoutController,
-    publishSongLayoutController: LazyInject<PublishSongLayoutController> = appFactory.publishSongLayoutController,
-    adminSongsLayoutContoller: LazyInject<AdminSongsLayoutContoller> = appFactory.adminSongsLayoutContoller,
-    roomListLayoutController: LazyInject<RoomListLayoutController> = appFactory.shareViewLayoutController,
-    roomLobbyLayoutController: LazyInject<RoomLobbyLayoutController> = appFactory.roomLobbyLayoutController,
-    billingLayoutController: LazyInject<BillingLayoutController> = appFactory.billingLayoutController,
-    webviewLayoutController: LazyInject<WebviewLayoutController> = appFactory.webviewLayoutController,
-    playlistFillLayoutController: LazyInject<PlaylistFillLayoutController> = appFactory.playlistFillLayoutController,
-    logsLayoutController: LazyInject<LogsLayoutController> = appFactory.logsLayoutController,
 ) {
     private val activity by LazyExtractor(appCompatActivity)
     private val navigationMenuController by LazyExtractor(navigationMenuController)
@@ -85,29 +66,31 @@ class LayoutController(
     private var mainContentLayout: CoordinatorLayout? = null
     private var currentLayout: MainLayout? = null
     private var layoutHistory: MutableList<MainLayout> = mutableListOf()
-    private var registeredLayouts: Map<KClass<out MainLayout>, MainLayout> = mapOf(
-        SongTreeLayoutController::class to songTreeLayoutController.get(),
-        SongSearchLayoutController::class to songSearchLayoutController.get(),
-        SongPreviewLayoutController::class to songPreviewLayoutController.get(),
-        ContactLayoutController::class to contactLayoutController.get(),
-        SettingsLayoutController::class to settingsLayoutController.get(),
-        EditSongLayoutController::class to editSongLayoutController.get(),
-        ChordsEditorLayoutController::class to chordsEditorLayoutController.get(),
-        CustomSongsListLayoutController::class to customSongsListLayoutController.get(),
-        FavouritesLayoutController::class to favouritesLayoutController.get(),
-        PlaylistLayoutController::class to playlistLayoutController.get(),
-        LatestSongsLayoutController::class to latestSongsLayoutController.get(),
-        TopSongsLayoutController::class to topSongsLayoutController.get(),
-        OpenHistoryLayoutController::class to openHistoryLayoutController.get(),
-        MissingSongLayoutController::class to missingSongLayoutController.get(),
-        PublishSongLayoutController::class to publishSongLayoutController.get(),
-        AdminSongsLayoutContoller::class to adminSongsLayoutContoller.get(),
-        RoomListLayoutController::class to roomListLayoutController.get(),
-        RoomLobbyLayoutController::class to roomLobbyLayoutController.get(),
-        BillingLayoutController::class to billingLayoutController.get(),
-        WebviewLayoutController::class to webviewLayoutController.get(),
-        PlaylistFillLayoutController::class to playlistFillLayoutController.get(),
-        LogsLayoutController::class to logsLayoutController.get(),
+    private var registeredLayoutInjectors: Map<KClass<out MainLayout>, SingletonInject<out MainLayout>> = mapOf(
+        SongTreeLayoutController::class to appFactory.songTreeLayoutController,
+        SongSearchLayoutController::class to appFactory.songSearchLayoutController,
+        SongPreviewLayoutController::class to appFactory.songPreviewLayoutController,
+        ContactLayoutController::class to appFactory.contactLayoutController,
+        SettingsLayoutController::class to appFactory.settingsLayoutController,
+        EditSongLayoutController::class to appFactory.editSongLayoutController,
+        ChordsEditorLayoutController::class to appFactory.chordsEditorLayoutController,
+        CustomSongsListLayoutController::class to appFactory.customSongsListLayoutController,
+        FavouritesLayoutController::class to appFactory.favouritesLayoutController,
+        PlaylistLayoutController::class to appFactory.playlistLayoutController,
+        LatestSongsLayoutController::class to appFactory.latestSongsLayoutController,
+        TopSongsLayoutController::class to appFactory.topSongsLayoutController,
+        OpenHistoryLayoutController::class to appFactory.openHistoryLayoutController,
+        MissingSongLayoutController::class to appFactory.missingSongLayoutController,
+        PublishSongLayoutController::class to appFactory.publishSongLayoutController,
+        AdminSongsLayoutContoller::class to appFactory.adminSongsLayoutContoller,
+        RoomListLayoutController::class to appFactory.roomListLayoutController,
+        RoomLobbyLayoutController::class to appFactory.roomLobbyLayoutController,
+        BillingLayoutController::class to appFactory.billingLayoutController,
+        WebviewLayoutController::class to appFactory.webviewLayoutController,
+        PlaylistFillLayoutController::class to appFactory.playlistFillLayoutController,
+        LogsLayoutController::class to appFactory.logsLayoutController,
+        SongCastLobbyLayout::class to appFactory.songCastLobbyLayout,
+        SongCastLayout::class to appFactory.songCastLayout,
     )
     private val logger = LoggerFactory.logger
     private val layoutCache = hashMapOf<Int, View>()
@@ -132,8 +115,9 @@ class LayoutController(
     }
 
     fun showLayout(layoutClass: KClass<out MainLayout>, disableReturn: Boolean = false): Job {
-        val layoutController = registeredLayouts[layoutClass]
+        val layoutInjector = registeredLayoutInjectors[layoutClass]
             ?: throw IllegalArgumentException("${layoutClass.simpleName} class not registered as layout")
+        val layoutController: MainLayout = layoutInjector.get()
 
         if (disableReturn) {
             // remove current layout from history
