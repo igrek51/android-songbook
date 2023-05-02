@@ -114,7 +114,11 @@ class LayoutController(
         }
     }
 
-    fun showLayout(layoutClass: KClass<out MainLayout>, disableReturn: Boolean = false): Job {
+    fun showLayout(
+        layoutClass: KClass<out MainLayout>,
+        disableReturn: Boolean = false,
+        onShown: (() -> Unit) = {},
+    ): Job {
         val layoutInjector = registeredLayoutInjectors[layoutClass]
             ?: throw IllegalArgumentException("${layoutClass.simpleName} class not registered as layout")
         val layoutController: MainLayout = layoutInjector.get()
@@ -137,6 +141,7 @@ class LayoutController(
 
         return GlobalScope.launch(Dispatchers.Main) {
             showMainLayout(layoutController)
+            onShown()
         }
     }
 

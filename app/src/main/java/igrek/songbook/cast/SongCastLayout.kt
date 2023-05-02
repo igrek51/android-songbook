@@ -67,8 +67,11 @@ class SongCastLayout(
         uiInfoService.showInfo(R.string.songcast_creating_room, indefinite = true)
         val result = songCastService.createSessionAsync(getMemberName()).await()
         result.fold(onSuccess = { _: CastSessionJoined ->
-            layoutController.showLayout(SongCastLobbyLayout::class)
-            uiInfoService.showInfo(R.string.songcast_room_created)
+            layoutController.showLayout(SongCastLobbyLayout::class) {
+                GlobalScope.launch(Dispatchers.Main) {
+                    uiInfoService.showInfo(R.string.songcast_room_created)
+                }
+            }
         }, onFailure = { e ->
             UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
         })
@@ -86,8 +89,11 @@ class SongCastLayout(
         uiInfoService.showInfo(R.string.songcast_joining_room, indefinite = true)
         val result = songCastService.joinSessionAsync(roomCode, getMemberName()).await()
         result.fold(onSuccess = { _: CastSessionJoined ->
-            layoutController.showLayout(SongCastLobbyLayout::class)
-            uiInfoService.showInfo(R.string.songcast_room_joined)
+            layoutController.showLayout(SongCastLobbyLayout::class) {
+                GlobalScope.launch(Dispatchers.Main) {
+                    uiInfoService.showInfo(R.string.songcast_room_joined)
+                }
+            }
         }, onFailure = { e ->
             if (e is ApiResponseError) {
                 if (e.response.code() == 404) {
