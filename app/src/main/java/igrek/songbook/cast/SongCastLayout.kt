@@ -32,10 +32,13 @@ class SongCastLayout(
     override fun showLayout(layout: View) {
         super.showLayout(layout)
 
-        nameInput = layout.findViewById(R.id.nameInput)
-        if (nameInput?.editText?.text?.isEmpty() == true) {
+        nameInput = layout.findViewById<TextInputLayout?>(R.id.nameInput)?.also {
             val newName = AnimalNameFeeder().generateName()
-            nameInput?.editText?.setText(newName)
+            it.editText?.setText(newName)
+
+            it.setEndIconOnClickListener {
+                randomizeName()
+            }
         }
         roomCodeInput = layout.findViewById(R.id.roomCodeInput)
 
@@ -58,6 +61,10 @@ class SongCastLayout(
             })
     }
 
+    private fun randomizeName() {
+        nameInput?.editText?.setText(AnimalNameFeeder().generateName())
+    }
+
     private fun getMemberName(): String {
         return nameInput?.editText?.text.toString().takeIf { it.isNotBlank() }
             ?: AnimalNameFeeder().generateName()
@@ -66,10 +73,11 @@ class SongCastLayout(
     private suspend fun createRoom() {
         uiInfoService.showInfo(R.string.songcast_creating_room, indefinite = true)
         val result = songCastService.createSessionAsync(getMemberName()).await()
-        result.fold(onSuccess = { _: CastSessionJoined ->
+        result.fold(onSuccess = { response: CastSessionJoined ->
             layoutController.showLayout(SongCastLobbyLayout::class) {
                 GlobalScope.launch(Dispatchers.Main) {
-                    uiInfoService.showInfo(R.string.songcast_room_created)
+                    delay(100)
+                    uiInfoService.showInfo(R.string.songcast_room_created, response.member_name)
                 }
             }
         }, onFailure = { e ->
@@ -88,10 +96,11 @@ class SongCastLayout(
 
         uiInfoService.showInfo(R.string.songcast_joining_room, indefinite = true)
         val result = songCastService.joinSessionAsync(roomCode, getMemberName()).await()
-        result.fold(onSuccess = { _: CastSessionJoined ->
+        result.fold(onSuccess = { response: CastSessionJoined ->
             layoutController.showLayout(SongCastLobbyLayout::class) {
                 GlobalScope.launch(Dispatchers.Main) {
-                    uiInfoService.showInfo(R.string.songcast_room_joined)
+                    delay(100)
+                    uiInfoService.showInfo(R.string.songcast_room_joined, response.member_name)
                 }
             }
         }, onFailure = { e ->

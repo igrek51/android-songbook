@@ -74,7 +74,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                app:endIconMode="clear_text"
+                app:endIconMode="custom"
+                app:endIconDrawable="@android:drawable/ic_popup_sync"
+                app:endIconContentDescription="@string/songcast_randomize_name"
                 android:hint="@string/songcast_hint_my_name"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 >

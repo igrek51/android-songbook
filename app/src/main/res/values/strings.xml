@@ -588,17 +588,18 @@
     <string name="songcast_join_room">Join the room</string>
     <string name="songcast_feature_hint">Song Cast allows you to display songs on many devices. Create a room so that your friends could join it. Then every song the owner chooses will be broadcasted and displayed on all devices connected to a room.</string>
     <string name="songcast_lobby">Song Cast Lobby</string>
-    <string name="songcast_room_created">Room created. \"Welcome to the Machine.\"</string>
+    <string name="songcast_room_created">Room created. Welcome to the Machine, %s.</string>
     <string name="songcast_creating_room">Creating a room…</string>
     <string name="songcast_lobby_text_hint">Share the code with others so they can join this room.</string>
     <string name="songcast_code_copied">Room code copied to clipboard</string>
     <string name="songcast_room_code_empty">Room code is empty</string>
     <string name="songcast_room_code_invalid">Room code is invalid, expected 6-digit number</string>
     <string name="songcast_joining_room">Joining the room…</string>
-    <string name="songcast_room_joined">\"Welcome to the Machine.\"</string>
+    <string name="songcast_room_joined">Welcome to the Machine, %s.</string>
     <string name="songcast_room_not_found">Room with the given code was not found</string>
     <string name="songcast_you_left_the_room">You\'ve left the room</string>
     <string name="songcast_exit_room">Exit room</string>
     <string name="songcast_confirm_leave_room">You are about to leave the Song Cast room. Do you really want to close it?</string>
     <string name="songcast_members">Members:</string>
+    <string name="songcast_randomize_name">Randomize name</string>
 </resources>
