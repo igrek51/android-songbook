@@ -3,6 +3,7 @@ package igrek.songbook.layout.navigation
 import android.app.Activity
 import android.os.Handler
 import android.os.Looper
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
@@ -190,13 +191,14 @@ class NavigationMenuController(
         }, 500)
     }
 
-    fun setAdminMenu() {
+    fun hideAdminMenu() {
         GlobalScope.launch(Dispatchers.Main) {
-            navigationView?.let {
-                it.menu.clear()
-                it.inflateMenu(R.menu.menu_nav_admin)
-                init()
-            }
+            val menu: Menu = navigationView?.menu
+                ?: run {
+                    logger.error("Navigation menu not found")
+                    return@launch
+                }
+            menu.removeItem(R.id.nav_admin_antechamber)
         }
     }
 

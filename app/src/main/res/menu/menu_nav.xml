@@ -37,6 +37,10 @@
             android:id="@+id/nav_favourites"
             android:icon="@drawable/star_filled"
             android:title="@string/nav_favourites_song" />
+        <item
+            android:id="@+id/nav_admin_antechamber"
+            android:icon="@drawable/edit"
+            android:title="@string/nav_admin_antechamber" />
     </group>
     <group
         android:id="@+id/nav_group3"

@@ -65,8 +65,9 @@ class AdminService(
 
     private fun checkMenuVisibility() {
         if (isAdminEnabled()) {
-            LoggerFactory.logger.debug("Enabling admin tools")
-            navigationMenuController.setAdminMenu()
+            LoggerFactory.logger.debug("Admin menus enabled")
+        } else {
+            navigationMenuController.hideAdminMenu()
         }
     }
 
