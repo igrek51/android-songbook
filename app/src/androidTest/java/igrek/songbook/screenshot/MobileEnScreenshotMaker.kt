@@ -20,6 +20,7 @@ import igrek.songbook.settings.theme.FontTypeface
 import igrek.songbook.test.ScreenshotCapture
 import igrek.songbook.test.swipeUpABit
 import igrek.songbook.test.waitFor
+import igrek.songbook.test.waitForVisibleView
 import igrek.songbook.test.withIndex
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
@@ -27,6 +28,7 @@ import org.hamcrest.Matchers.endsWith
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+
 
 /*
 Run this to fetch screenshots from a device
@@ -60,6 +62,7 @@ class MobileEnScreenshotMaker {
         preferencesState.restoreTransposition = false
 
         // open nav drawer
+        onView(isRoot()).perform(waitForVisibleView(R.id.navMenuButton, 5000))
         onView(withId(R.id.navMenuButton)).perform(click())
         onView(withId(R.id.nav_view)).check(matches(isDisplayed()))
         // open Search
@@ -91,6 +94,7 @@ class MobileEnScreenshotMaker {
         preferencesState.restoreTransposition = false
 
         // open nav drawer
+        onView(isRoot()).perform(waitForVisibleView(R.id.navMenuButton, 5000))
         onView(withId(R.id.navMenuButton)).perform(click())
         onView(withId(R.id.nav_view)).check(matches(isDisplayed()))
         // open Search
@@ -125,6 +129,7 @@ class MobileEnScreenshotMaker {
         preferencesState.restoreTransposition = false
 
         // open nav drawer
+        onView(isRoot()).perform(waitForVisibleView(R.id.navMenuButton, 5000))
         onView(withId(R.id.navMenuButton)).perform(click())
         onView(withId(R.id.nav_view)).check(matches(isDisplayed()))
         // open Search
@@ -158,6 +163,7 @@ class MobileEnScreenshotMaker {
         preferencesState.restoreTransposition = false
 
         // open nav drawer
+        onView(isRoot()).perform(waitForVisibleView(R.id.navMenuButton, 5000))
         onView(withId(R.id.navMenuButton)).perform(click())
         onView(withId(R.id.nav_view)).check(matches(isDisplayed()))
         // open Search
@@ -202,6 +208,7 @@ class MobileEnScreenshotMaker {
         preferencesState.restoreTransposition = false
 
         // open nav drawer
+        onView(isRoot()).perform(waitForVisibleView(R.id.navMenuButton, 5000))
         onView(withId(R.id.navMenuButton)).perform(click())
         onView(withId(R.id.nav_view)).check(matches(isDisplayed()))
         // open Search
@@ -234,6 +241,7 @@ class MobileEnScreenshotMaker {
         preferencesState.restoreTransposition = false
 
         // open nav drawer
+        onView(isRoot()).perform(waitForVisibleView(R.id.navMenuButton, 5000))
         onView(withId(R.id.navMenuButton)).perform(click())
         onView(withId(R.id.nav_view)).check(matches(isDisplayed()))
         // open Search
@@ -264,6 +272,7 @@ class MobileEnScreenshotMaker {
         preferencesState.restoreTransposition = false
 
         // open nav drawer
+        onView(isRoot()).perform(waitForVisibleView(R.id.navMenuButton, 5000))
         onView(withId(R.id.navMenuButton)).perform(click())
         onView(withId(R.id.nav_view)).check(matches(isDisplayed()))
         // open Search
@@ -300,13 +309,15 @@ class MobileEnScreenshotMaker {
         preferencesState.restoreTransposition = false
 
         // open nav drawer
+        onView(isRoot()).perform(waitForVisibleView(R.id.navMenuButton, 5000))
         onView(withId(R.id.navMenuButton)).perform(click())
         onView(withId(R.id.nav_view)).check(matches(isDisplayed()))
         // open about
         onView(withId(R.id.nav_view)).perform(swipeUp())
         onView(isRoot()).perform(waitFor(300))
-        onView(withId(R.id.nav_about)).check(matches(isDisplayed()))
-        onView(withId(R.id.nav_about)).perform(click())
+        onView(isRoot()).perform(waitForVisibleView(R.id.nav_about, 5000))
+        onView(withIndex(withId(R.id.nav_about), 0)).check(matches(isDisplayed()))
+        onView(withIndex(withId(R.id.nav_about), 0)).perform(click())
         onView(withText(R.string.nav_about)).check(matches(isDisplayed()))
         // click ???
         onView(withId(android.R.id.button3)).check(matches(withText(R.string.action_secret)))
@@ -321,6 +332,7 @@ class MobileEnScreenshotMaker {
         onView(withText(Matchers.containsString("Secret Cow Level"))).check(matches(isDisplayed()))
 
         ScreenshotCapture.takeScreenshot("08")
+        onView(isRoot()).perform(waitFor(500))
     }
 
     @Test
@@ -337,6 +349,7 @@ class MobileEnScreenshotMaker {
         preferencesState.restoreTransposition = false
 
         // open nav drawer
+        onView(isRoot()).perform(waitForVisibleView(R.id.navMenuButton, 5000))
         onView(withId(R.id.navMenuButton)).perform(click())
         onView(withId(R.id.nav_view)).check(matches(isDisplayed()))
         // open Search

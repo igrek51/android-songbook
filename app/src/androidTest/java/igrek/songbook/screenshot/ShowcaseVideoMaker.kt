@@ -20,6 +20,7 @@ import igrek.songbook.settings.theme.DisplayStyle
 import igrek.songbook.settings.theme.FontTypeface
 import igrek.songbook.test.swipeUpABit
 import igrek.songbook.test.waitFor
+import igrek.songbook.test.waitForVisibleView
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.endsWith
 import org.junit.Rule
@@ -58,6 +59,7 @@ class ShowcaseVideoMaker {
         preferencesState.chordsInstrument = ChordsInstrument.GUITAR
 
         // open nav drawer
+        onView(isRoot()).perform(waitForVisibleView(R.id.navMenuButton, 5000))
         onView(isRoot()).perform(waitFor(1500))
         onView(withId(R.id.navMenuButton)).perform(click())
         onView(withId(R.id.nav_view)).check(matches(isDisplayed()))

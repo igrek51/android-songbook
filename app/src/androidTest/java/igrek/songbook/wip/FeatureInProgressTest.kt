@@ -53,7 +53,7 @@ class FeatureInProgressTest {
 
 
     @Test
-    @Ignore
+    @Ignore("Development purposes")
     fun testWipFeature() {
         runBlocking {
             delay(1000)
