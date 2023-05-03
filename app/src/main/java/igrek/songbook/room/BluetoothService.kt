@@ -23,7 +23,7 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.room.protocol.GtrProtocol.Companion.BT_APP_UUID
-import igrek.songbook.util.waitUntil
+import igrek.songbook.util.waitUntilCondition
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedSendChannelException
@@ -206,7 +206,7 @@ class BluetoothService(
 
         val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
         activity.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
-        val turnOnResult = waitUntil(retries = 20, delayMs = 500) {
+        val turnOnResult = waitUntilCondition(retries = 20, delayMs = 500) {
             bluetoothAdapter?.isEnabled == true
         }
         if (!turnOnResult)

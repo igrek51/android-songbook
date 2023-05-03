@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="igrek.songbook">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -86,6 +87,15 @@
             android:exported="true"
             android:theme="@style/AppTheme"
             android:launchMode="singleInstance" />
+
+        <activity
+            android:name=".activity.KickstartActivity"
+            android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|navigation"
+            android:resizeableActivity="true"
+            android:exported="true"
+            android:theme="@style/AppTheme"
+            android:launchMode="singleInstance"
+            tools:targetApi="n" />
 
         <activity
             android:name=".activity.CopyToClipboardActivity"
