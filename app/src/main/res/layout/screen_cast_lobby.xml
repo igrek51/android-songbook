@@ -130,8 +130,8 @@
             <igrek.songbook.layout.list.StringListView
                 android:id="@+id/membersListView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fillViewport="true"/>
+                android:layout_height="wrap_content"
+                />
             <TextView
                 android:id="@+id/emptyListTextView"
                 android:layout_width="match_parent"
@@ -141,6 +141,14 @@
                 android:gravity="center"
                 android:text="@string/listview_empty"
                 android:padding="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:gravity="bottom"
+                android:text="BOTTOM"
+                android:textSize="18sp" />
 
         </LinearLayout>
     </ScrollView>

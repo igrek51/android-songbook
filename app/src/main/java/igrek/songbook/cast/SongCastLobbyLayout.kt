@@ -76,9 +76,10 @@ class SongCastLobbyLayout(
     private fun updateSessionDetails() {
         roomCodeInput?.editText?.setText(songCastService.sessionShortId ?: "")
 
-        membersListView?.items = songCastService.members.map { member ->
+        val items = songCastService.members.map { member ->
             member.name
         }
+        membersListView?.items = items
     }
 
     private fun copySessionCode() {

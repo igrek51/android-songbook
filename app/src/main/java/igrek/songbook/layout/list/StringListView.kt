@@ -21,7 +21,7 @@ class StringListView(
     constructor(context: Context, attrs: AttributeSet) : this(
         context,
         attrs,
-        android.R.attr.listViewStyle
+        android.R.attr.listViewStyle,
     )
 
     override fun buildView(view: View, item: String) {
@@ -30,5 +30,13 @@ class StringListView(
 
     override fun onClick(item: String) {
         onClickCallback(item)
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        val expandSpec = MeasureSpec.makeMeasureSpec(
+            Int.MAX_VALUE shr 2,
+            MeasureSpec.AT_MOST
+        )
+        super.onMeasure(widthMeasureSpec, expandSpec)
     }
 }

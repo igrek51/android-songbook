@@ -19,20 +19,18 @@ abstract class GenericListView<T>(
 
     private var adapter: GenericListAdapter<T> = GenericListAdapter(
         context,
-        dataSource = emptyList(),
+        dataSource = mutableListOf(),
         layoutRes = itemViewRes,
         viewBuilder = ::buildView,
     )
 
     var items: List<T>
-        get() = adapter.dataSource
+        get() = adapter.dataSource.toList()
         set(items) {
-            adapter.run {
-                dataSource = items
-                invalidate()
-                notifyDataSetChanged()
-            }
-            invalidate()
+            adapter.clear()
+            adapter.addAll(items)
+            adapter.notifyDataSetChanged()
+            alignListViewHeight()
         }
 
     abstract fun buildView(view: View, item: T)
