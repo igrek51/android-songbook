@@ -2,6 +2,8 @@ package igrek.songbook.cast
 
 import android.view.View
 import android.widget.ImageButton
+import android.widget.TextView
+import androidx.core.text.HtmlCompat
 import com.google.android.material.textfield.TextInputLayout
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
@@ -31,6 +33,7 @@ class SongCastLobbyLayout(
 
     private var roomCodeInput: TextInputLayout? = null
     private var membersListView: StringListView? = null
+    private var songcastLobbyHint: TextView? = null
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
@@ -51,6 +54,8 @@ class SongCastLobbyLayout(
                 copySessionCode()
             }
         }
+
+        songcastLobbyHint = layout.findViewById(R.id.songcastLobbyHint)
 
         layout.findViewById<ImageButton>(R.id.moreActionsButton)
             ?.setOnClickListener(SafeClickListener {
@@ -89,6 +94,14 @@ class SongCastLobbyLayout(
             member.name
         }
         membersListView?.items = items
+
+        val textRestId = if (songCastService.isPresenter()) {
+            R.string.songcast_lobby_text_presenter_hint
+        } else {
+            R.string.songcast_lobby_text_guest_hint
+        }
+        val span = HtmlCompat.fromHtml(uiInfoService.resString(textRestId), HtmlCompat.FROM_HTML_MODE_LEGACY)
+        songcastLobbyHint?.text = span
     }
 
     private fun copySessionCode() {

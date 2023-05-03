@@ -41,6 +41,9 @@ class SongCastService(
     var chatMessages: List<CastChatMessage> = listOf()
         private set
 
+    private val presenters: List<CastMember> get() = members.filter { it.type == CastMemberType.OWNER.value }
+    private val spectators: List<CastMember> get() = members.filter { it.type == CastMemberType.GUEST.value }
+
     companion object {
         private const val songbookApiBase = "https://songbook.igrek.dev"
         private const val createSessionUrl = "$songbookApiBase/api/cast"
@@ -55,6 +58,14 @@ class SongCastService(
 
     fun isInRoom(): Boolean {
         return sessionShortId != null
+    }
+
+    fun isPresenter(): Boolean {
+        return isInRoom() && presenters.any { it.public_member_id == myMemberPublicId }
+    }
+
+    fun isSpectator(): Boolean {
+        return isInRoom() && spectators.any { it.public_member_id == myMemberPublicId }
     }
 
     private fun clearRoom() {
@@ -169,6 +180,7 @@ data class CastSessionJoined(
     var short_id: String,
     var public_member_id: String,
     var member_name: String,
+    var rejoined: Boolean,
 )
 
 @Serializable
@@ -213,3 +225,9 @@ data class CastChatMessage(
     var author: String,
     var text: String,
 )
+
+enum class CastMemberType(val value: String) {
+    OWNER("owner"), // can pick current song, presenter
+    GUEST("guest"), // read-only spectator
+    ;
+}

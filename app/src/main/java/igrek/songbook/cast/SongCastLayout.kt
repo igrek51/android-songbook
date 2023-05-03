@@ -84,7 +84,10 @@ class SongCastLayout(
             layoutController.showLayout(SongCastLobbyLayout::class) {
                 GlobalScope.launch(Dispatchers.Main) {
                     delay(100)
-                    uiInfoService.showInfo(R.string.songcast_room_created, response.member_name)
+                    when (response.rejoined) {
+                        true -> uiInfoService.showInfo(R.string.songcast_room_created_rejoined, response.member_name)
+                        false -> uiInfoService.showInfo(R.string.songcast_room_created, response.member_name)
+                    }
                 }
             }
         }, onFailure = { e ->
@@ -107,7 +110,10 @@ class SongCastLayout(
             layoutController.showLayout(SongCastLobbyLayout::class) {
                 GlobalScope.launch(Dispatchers.Main) {
                     delay(100)
-                    uiInfoService.showInfo(R.string.songcast_room_joined, response.member_name)
+                    when (response.rejoined) {
+                        true -> uiInfoService.showInfo(R.string.songcast_room_joined_rejoined, response.member_name)
+                        false -> uiInfoService.showInfo(R.string.songcast_room_joined, response.member_name)
+                    }
                 }
             }
         }, onFailure = { e ->
