@@ -56,8 +56,10 @@ class SongCastLobbyLayout(
             it.emptyView = layout.findViewById(R.id.emptyListTextView)
         }
 
-        updateSessionDetails()
-        refreshSessionDetails()
+        layout.post {
+            updateSessionDetails()
+            refreshSessionDetails()
+        }
     }
 
     private fun refreshSessionDetails() {
