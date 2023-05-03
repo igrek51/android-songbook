@@ -35,6 +35,13 @@ class SongCastLobbyLayout(
     override fun showLayout(layout: View) {
         super.showLayout(layout)
 
+        if (!songCastService.isInRoom()) {
+            GlobalScope.launch(Dispatchers.Main) {
+                layoutController.showLayout(SongCastLayout::class, disableReturn = true)
+            }
+            return
+        }
+
         roomCodeInput = layout.findViewById<TextInputLayout?>(R.id.roomCodeInput)?.also {
             it.editText?.setText(songCastService.sessionShortId.orEmpty())
             it.editText?.setOnClickListener {
@@ -109,12 +116,12 @@ class SongCastLobbyLayout(
 
     private suspend fun exitRoom() {
         uiInfoService.showInfo(R.string.songcast_you_left_the_room)
-        layoutController.showLayout(SongCastLayout::class)
         val result = songCastService.dropSessionAsync().await()
         result.fold(onSuccess = {
         }, onFailure = { e ->
             UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
         })
+        layoutController.showLayout(SongCastLayout::class, disableReturn = true)
     }
 
     override fun onBackClicked() {

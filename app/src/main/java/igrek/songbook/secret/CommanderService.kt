@@ -23,6 +23,7 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.UserDataDao
+import igrek.songbook.room.RoomListLayoutController
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.system.SoftKeyboardService
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -160,6 +161,9 @@ class CommanderService(
 
             SimpleKeyRule("goto shop") {
                 this.layoutController.showLayout(BillingLayoutController::class)
+            },
+            SimpleKeyRule("goto bt-share") {
+                this.layoutController.showLayout(RoomListLayoutController::class)
             },
         )
     }

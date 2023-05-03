@@ -116,20 +116,22 @@ class SongCastService(
     }
 
     fun dropSessionAsync(): Deferred<Result<Unit>> {
-        if (sessionShortId == null) {
+        val mSessionShortId = sessionShortId
+        clearRoom()
+
+        if (mSessionShortId == null) {
             logger.warn("SongCast session not dropped - not joined")
             return GlobalScope.async { Result.success(Unit) }
         }
-        logger.info("Dropping SongCast session: $sessionShortId")
+        logger.info("Dropping SongCast session: $mSessionShortId")
         val deviceId = deviceIdProvider.getDeviceId()
         val request: Request = Request.Builder()
-            .url(dropSessionUrl(sessionShortId ?: ""))
+            .url(dropSessionUrl(mSessionShortId ?: ""))
             .header(authDeviceHeader, deviceId)
             .post(RequestBody.create(null, ""))
             .build()
         return httpRequester.httpRequestAsync(request) {
-            logger.info("SongCast session $sessionShortId dropped")
-            clearRoom()
+            logger.info("SongCast session $mSessionShortId dropped")
         }
     }
 

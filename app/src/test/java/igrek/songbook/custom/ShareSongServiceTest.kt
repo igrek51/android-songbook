@@ -30,9 +30,9 @@ Nie mam czasu na przejażdżki wiedźmo wściekła! [a C G G]
 """
         )
 
-        val encoded = shareSongEncoder.encodeSong(song)
+        var encoded = shareSongEncoder.encodeSong(song)
         Assertions.assertThat(encoded)
-            .isEqualTo("H4sIAAAAAAAA_3WLIQ4CMRBFBa4SifoYLgJkBQkWQVZM2oEMZWizZbOhcq_BTcjauRcrMbj3kvfcZp_lSRfpFeFOONmYQhUV7upsr5J8FL6mpbhdQhaONtIa__hM4NYdhaGk8JVKjwchd5VvZFOwKQoG4WAfTRjs7X_OLRo0rVu5A_mq1JW5XXwB.YnGPKEAAAA-")
+            .startsWith("H4sIAAAAAAAA")
 
         // encoded song is escaped url
         val encodedUrl: String = URLEncoder.encode(encoded, "utf-8")
@@ -41,13 +41,23 @@ Nie mam czasu na przejażdżki wiedźmo wściekła! [a C G G]
         val decodedBack = shareSongEncoder.decodeSong(encoded)
         Assertions.assertThat(decodedBack.title).isEqualTo("Epitafium dla Włodzimierza Wysockiego")
         Assertions.assertThat(decodedBack.customCategoryName).isEqualTo("Kaczmarski")
-        Assertions.assertThat(decodedBack.content).isEqualTo(
-            """
+        Assertions.assertThat(decodedBack.content).isEqualTo("""
 Do piekła! Do piekła! Do piekła! [a e]
 Nie mam czasu na przejażdżki wiedźmo wściekła! [a C G G]
-"""
-        )
+""")
         Assertions.assertThat(decodedBack.chordsNotation).isEqualTo(ChordsNotation.ENGLISH)
+
+        // ensure backwards compatiblity
+        encoded = "H4sIAAAAAAAA_3WLIQ4CMRBFBa4SifoYLgJkBQkWQVZM2oEMZWizZbOhcq_BTcjauRcrMbj3kvfcZp_lSRfpFeFOONmYQhUV7upsr5J8FL6mpbhdQhaONtIa__hM4NYdhaGk8JVKjwchd5VvZFOwKQoG4WAfTRjs7X_OLRo0rVu5A_mq1JW5XXwB.YnGPKEAAAA-"
+
+        val decodedBack2 = shareSongEncoder.decodeSong(encoded)
+        Assertions.assertThat(decodedBack2.title).isEqualTo("Epitafium dla Włodzimierza Wysockiego")
+        Assertions.assertThat(decodedBack2.customCategoryName).isEqualTo("Kaczmarski")
+        Assertions.assertThat(decodedBack2.content).isEqualTo("""
+Do piekła! Do piekła! Do piekła! [a e]
+Nie mam czasu na przejażdżki wiedźmo wściekła! [a C G G]
+""")
+        Assertions.assertThat(decodedBack2.chordsNotation).isEqualTo(ChordsNotation.ENGLISH)
     }
 
     @Test

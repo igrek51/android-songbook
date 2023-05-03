@@ -32,6 +32,13 @@ class SongCastLayout(
     override fun showLayout(layout: View) {
         super.showLayout(layout)
 
+        if (songCastService.isInRoom()) {
+            GlobalScope.launch(Dispatchers.Main) {
+                layoutController.showLayout(SongCastLobbyLayout::class, disableReturn = true)
+            }
+            return
+        }
+
         nameInput = layout.findViewById<TextInputLayout?>(R.id.nameInput)?.also {
             val newName = AnimalNameFeeder().generateName()
             it.editText?.setText(newName)
