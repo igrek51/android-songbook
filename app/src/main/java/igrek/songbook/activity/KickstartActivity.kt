@@ -2,6 +2,7 @@ package igrek.songbook.activity
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageButton
 import androidx.core.view.isVisible
 import com.google.android.material.navigation.NavigationView
@@ -36,6 +37,7 @@ class KickstartActivity : MainActivity() {
 
     private suspend fun bootstrapUI() {
         openNavItem(R.id.nav_song_cast)
+        clickButtonById(R.id.createNewRoomButton)
     }
 
     private suspend fun openNavItem(navItemResId: Int) {
@@ -47,6 +49,13 @@ class KickstartActivity : MainActivity() {
         val menuItem: MenuItem? = navigationView?.menu?.findItem(navItemResId)
         requireNotNull(menuItem)
         navigationView.menu.performIdentifierAction(menuItem.itemId, 0)
+    }
+
+    private suspend fun clickButtonById(viewResId: Int) {
+        waitUntil {
+            findViewById<View>(viewResId)?.isVisible == true
+        }
+        findViewById<View>(viewResId)?.performClick()
     }
 
 }
