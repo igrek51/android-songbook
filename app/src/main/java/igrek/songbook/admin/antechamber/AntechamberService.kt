@@ -39,9 +39,9 @@ class AntechamberService(
         private const val chordsApiBase = "https://chords.igrek.dev/api/v5"
 
         private const val allSongsUrl = "$antechamberApiBase/songs"
-        private val specificSongUrl = { id: Long -> "$antechamberApiBase/songs/$id" }
+        private val specificSongUrl = { id: String -> "$antechamberApiBase/songs/$id" }
         private const val approveSongUrl = "$chordsApiBase/songs"
-        private val updatePublicSongIdUrl = { id: Long -> "$chordsApiBase/songs/$id" }
+        private val updatePublicSongIdUrl = { id: String -> "$chordsApiBase/songs/$id" }
 
         private const val authTokenHeader = "X-Auth-Token"
     }

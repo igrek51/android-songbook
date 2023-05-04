@@ -4,7 +4,7 @@ import com.google.common.base.Objects
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
 data class Song(
-    var id: Long,
+    var id: String,
     var title: String,
     var categories: MutableList<Category> = mutableListOf(),
     var content: String? = null,
@@ -25,7 +25,7 @@ data class Song(
     var initialDelay: Double? = null,
     var chordsNotation: ChordsNotation = ChordsNotation.default,
     var tags: String? = null,
-    var originalSongId: Long? = null,
+    var originalSongId: String? = null,
     var namespace: SongNamespace = SongNamespace.Public,
 ) {
 

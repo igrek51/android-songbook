@@ -54,7 +54,7 @@ class TransposeDao(
         transposeDbSubject.onNext(transposeDb)
     }
 
-    fun removeUsage(songId: Long, custom: Boolean) {
+    fun removeUsage(songId: String, custom: Boolean) {
         val songFound = transposeDb.songs
             .find {
                 it.songId == songId

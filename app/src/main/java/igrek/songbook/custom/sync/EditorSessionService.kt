@@ -118,7 +118,7 @@ class EditorSessionService(
 
         val pushSongs: MutableList<EditorSongDto> = mutableListOf()
         localSongs.forEach { localSong: CustomSong ->
-            val localId = localSong.id.toString()
+            val localId = localSong.id
             val remoteSongId = localIdToRemoteMap[localId] ?: run {
                 val newId = deviceIdProvider.newUUID()
                 localIdToRemoteMap[localId] = newId
@@ -168,7 +168,7 @@ class EditorSessionService(
         val split = splitSets(localSongs, remoteSongs)
         val localIdToRemoteMap = songsRepository.customSongsDao.customSongs.syncSessionData.localIdToRemoteMap
         split.common.forEach { (localOne, remoteOne) ->
-            localIdToRemoteMap[localOne.id.toString()] = remoteOne.id
+            localIdToRemoteMap[localOne.id] = remoteOne.id
             if (syncedSongsDiffers(localOne, remoteOne)) {
                 updateSongFromRemote(localOne, remoteOne)
             }
@@ -180,7 +180,7 @@ class EditorSessionService(
 
         split.remoteOnly.forEach { remoteOne ->
             val localOne = createSongFromRemote(remoteOne)
-            localIdToRemoteMap[localOne.id.toString()] = remoteOne.id
+            localIdToRemoteMap[localOne.id] = remoteOne.id
         }
 
         rememberNewHashes(session)
@@ -192,7 +192,7 @@ class EditorSessionService(
     private suspend fun softMergeRemoteChanges(session: EditorSessionDto, split: SetSplit, localSongs: List<CustomSong>, remoteSongs: List<EditorSongDto>) {
         val localIdToRemoteMap = songsRepository.customSongsDao.customSongs.syncSessionData.localIdToRemoteMap
         split.common.forEach { (localOne, remoteOne) ->
-            localIdToRemoteMap[localOne.id.toString()] = remoteOne.id
+            localIdToRemoteMap[localOne.id] = remoteOne.id
             if (syncedSongsDiffers(localOne, remoteOne)) {
                 updateSongFromRemote(localOne, remoteOne)
             }
@@ -200,7 +200,7 @@ class EditorSessionService(
 
         split.remoteOnly.forEach { remoteOne ->
             val localOne = createSongFromRemote(remoteOne)
-            localIdToRemoteMap[localOne.id.toString()] = remoteOne.id
+            localIdToRemoteMap[localOne.id] = remoteOne.id
         }
 
         rememberNewHashes(session)
@@ -272,7 +272,7 @@ class EditorSessionService(
 
     private fun createSongFromRemote(remoteOne: EditorSongDto): CustomSong {
         val localSong = CustomSong(
-            id = 0,
+            id = "0",
             title = remoteOne.title,
             categoryName = remoteOne.artist,
             content = remoteOne.content,
@@ -353,7 +353,7 @@ class EditorSessionService(
 
         val localKeySelector = { it: CustomSong -> "${it.title} - ${it.categoryName}" }
         val remoteKeySelector = { it: EditorSongDto -> "${it.title} - ${it.artist}" }
-        val localIdSelector = { it: CustomSong -> it.id.toString() }
+        val localIdSelector = { it: CustomSong -> it.id }
         val remoteIdSelector = { it: EditorSongDto -> it.id }
 
         val localIdToRemoteMap = songsRepository.customSongsDao.customSongs.syncSessionData.localIdToRemoteMap

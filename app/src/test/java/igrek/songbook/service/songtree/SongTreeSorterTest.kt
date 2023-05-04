@@ -45,7 +45,7 @@ class SongTreeSorterTest {
     private fun songItem(title: String, categoryType: CategoryType = CategoryType.OTHERS, categoryName: String = "others", custom: Boolean = false): SongTreeItem {
         val category = Category(categoryType.id, categoryType, categoryName, false)
         val song = Song(
-                id = 1,
+                id = "1",
                 title = title,
                 categories = mutableListOf(category),
                 content = null,

@@ -206,7 +206,7 @@ class SongCastService(
                 return@launch
 
             val payload = CastSongSelected(
-                id = song.id.toString(),
+                id = song.id,
                 title = song.title,
                 artist = song.artist,
                 content = song.content.orEmpty(),
@@ -226,7 +226,7 @@ class SongCastService(
             return null
         val now: Long = Date().time
         return Song(
-            id = songDto.id.hashCode().toLong(),
+            id = songDto.id,
             title = songDto.title,
             categories = mutableListOf(),
             content = songDto.content,

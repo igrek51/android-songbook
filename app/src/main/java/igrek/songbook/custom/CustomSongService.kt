@@ -6,6 +6,7 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LayoutController
+import igrek.songbook.persistence.DeviceIdProvider
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
@@ -66,7 +67,7 @@ class CustomSongService(
     ): Song {
         val now: Long = Date().time
         val customSong = CustomSong(
-            id = 0,
+            id = DeviceIdProvider().newUUID(),
             title = title,
             categoryName = customCategoryName,
             content = content,
@@ -120,7 +121,7 @@ class CustomSongService(
         val customCategoryName = sourceSong.customCategoryName ?: sourceSong.displayCategories()
 
         val newSong = customSongMapper.songToCustomSong(sourceSong)
-        newSong.id = 0
+        newSong.id = DeviceIdProvider().newUUID()
         newSong.categoryName = customCategoryName
         newSong.versionNumber = versionNumber
         newSong.createTime = now

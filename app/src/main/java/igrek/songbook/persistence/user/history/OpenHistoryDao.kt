@@ -28,7 +28,7 @@ class OpenHistoryDao(
         return OpenHistoryDb()
     }
 
-    fun registerOpenedSong(songId: Long, namespace: SongNamespace) {
+    fun registerOpenedSong(songId: String, namespace: SongNamespace) {
         if (namespace == SongNamespace.Ephemeral)
             return
 
@@ -42,7 +42,7 @@ class OpenHistoryDao(
         historyDbSubject.onNext(historyDb)
     }
 
-    fun removeUsage(songId: Long, custom: Boolean) {
+    fun removeUsage(songId: String, custom: Boolean) {
         historyDb.songs = historyDb.songs.filter { song ->
             !(song.songId == songId && song.custom == custom)
         }.toMutableList()

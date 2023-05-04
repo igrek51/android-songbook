@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AntechamberSongDto(
-    var id: Long? = null,
+    var id: String? = null,
     var title: String? = null,
     var category_name: String? = null,
     var content: String? = null,
@@ -24,7 +24,7 @@ data class AntechamberSongDto(
     var scroll_speed: Double? = null,
     var initial_delay: Double? = null,
     var chords_notation: Long? = null,
-    var original_song_id: Long? = null,
+    var original_song_id: String? = null,
     var status: Long? = null,
     var categories: List<Long>? = null,
 ) {

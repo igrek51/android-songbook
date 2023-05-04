@@ -9,7 +9,7 @@ data class OpenHistoryDb(
 
 @Serializable
 data class OpenedSong(
-    val songId: Long,
+    val songId: String,
     val custom: Boolean,
-    val timestamp: Long
+    val timestamp: Long,
 )

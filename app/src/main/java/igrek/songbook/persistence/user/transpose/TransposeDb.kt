@@ -9,7 +9,7 @@ data class TransposeDb(
 
 @Serializable
 data class TransposedSong(
-    val songId: Long,
+    val songId: String,
     val custom: Boolean,
     var transposition: Int
 )

@@ -12,7 +12,7 @@ data class CustomSongsDb(
 
 @Serializable
 data class CustomSong(
-    var id: Long,
+    var id: String,
     var title: String,
     var categoryName: String? = null,
     var content: String = "",
@@ -27,7 +27,7 @@ data class CustomSong(
     var scrollSpeed: Double? = null,
     var initialDelay: Double? = null,
     var chordsNotation: ChordsNotation? = null, // mapped to ENGLISH, GERMAN, null, ...
-    var originalSongId: Long? = null,
+    var originalSongId: String? = null,
 ) {
     fun displayName(): String {
         return when {

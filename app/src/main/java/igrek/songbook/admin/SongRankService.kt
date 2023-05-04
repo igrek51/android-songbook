@@ -22,7 +22,7 @@ class SongRankService(
     companion object {
         private const val chordsApiBase = "https://chords.igrek.dev/api/v5"
 
-        private val updatePublicSongIdUrl = { id: Long -> "$chordsApiBase/songs/$id" }
+        private val updatePublicSongIdUrl = { id: String -> "$chordsApiBase/songs/$id" }
 
         private const val authTokenHeader = "X-Auth-Token"
     }

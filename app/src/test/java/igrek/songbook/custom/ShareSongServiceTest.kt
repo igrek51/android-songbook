@@ -16,7 +16,7 @@ class ShareSongServiceTest {
     fun test_encodeDecodeSong() {
         val shareSongEncoder = ShareSongServiceMock()
         val song = Song(
-            id = 1,
+            id = "1",
             title = "Epitafium dla Włodzimierza Wysockiego",
             categories = mutableListOf(
                 Category(1, type = CategoryType.ARTIST, name = "Jacek Kaczmarski")
@@ -64,7 +64,7 @@ Nie mam czasu na przejażdżki wiedźmo wściekła! [a C G G]
     fun test_marshalUnmarshal() {
         val shareSongEncoder = ShareSongServiceMock()
         val song = Song(
-            id = 1,
+            id = "1",
             title = "Epitafium dla Włodzimierza Wysockiego",
             categories = mutableListOf(
                 Category(1, type = CategoryType.ARTIST, name = "Jacek Kaczmarski")

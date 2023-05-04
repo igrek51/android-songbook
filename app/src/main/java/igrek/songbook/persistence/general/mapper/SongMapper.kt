@@ -33,7 +33,7 @@ class SongMapper : AbstractMapper<Song>() {
         val chordsNotation = ChordsNotation.mustParseById(chordsNotationId)
 
         return Song(
-            id = id,
+            id = id.toString(),
             title = title,
             categories = mutableListOf(),
             content = content,

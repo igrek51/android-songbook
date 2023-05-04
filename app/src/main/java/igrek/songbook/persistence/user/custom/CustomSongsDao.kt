@@ -3,6 +3,7 @@ package igrek.songbook.persistence.user.custom
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import igrek.songbook.persistence.DeviceIdProvider
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
@@ -41,8 +42,8 @@ class CustomSongsDao(
     }
 
     fun saveCustomSong(newSong: CustomSong): Song {
-        if (newSong.id == 0L)
-            newSong.id = nextId(customSongs.songs)
+        if (newSong.id.isEmpty())
+            newSong.id = DeviceIdProvider().newUUID()
         val index = customSongs.songs.indexOfFirst { it.id == newSong.id }
         if (index >= 0) {
             customSongs.songs[index] = newSong
@@ -64,7 +65,7 @@ class CustomSongsDao(
         var added = 0
         newSongs.forEach { newSong ->
             if (!customSongs.songs.any { it.title == newSong.title && it.categoryName == newSong.categoryName }) {
-                newSong.id = nextId(customSongs.songs)
+                newSong.id = DeviceIdProvider().newUUID()
                 customSongs.songs.add(newSong)
                 added++
             }
@@ -72,10 +73,6 @@ class CustomSongsDao(
 
         songsRepository.saveAndReloadUserSongs()
         return added
-    }
-
-    private fun nextId(songs: MutableList<CustomSong>): Long {
-        return (songs.maxOfOrNull { song -> song.id } ?: 0) + 1
     }
 
     fun removeCustomSong(song: CustomSong) {
@@ -89,7 +86,7 @@ class CustomSongsDao(
         songsRepository.openHistoryDao.removeUsage(song.id, true)
         songsRepository.transposeDao.removeUsage(song.id, true)
         songsRepository.songTweakDao.removeUsage(SongIdentifier(song.id, SongNamespace.Custom))
-        customSongs.syncSessionData.localIdToRemoteMap.remove(song.id.toString())
+        customSongs.syncSessionData.localIdToRemoteMap.remove(song.id)
 
         songsRepository.saveAndReloadUserSongs()
     }

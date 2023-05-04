@@ -67,15 +67,15 @@ internal val msgSpecs = listOf(
             if (it.song == null)
                 return@MsgSpec listOf("0", "0", "", "", "0", "")
             listOf(
-                it.song.songId.namespace.id.toString(), it.song.songId.songId.toString(),
+                it.song.songId.namespace.id.toString(), it.song.songId.songId,
                 it.song.categoryName, it.song.title,
                 it.song.chordsNotation.id.toString(), it.song.content
             )
         },
         requiredParts = 6,
         partsParser = { parts ->
-            val song = when (val songId = parts[1].toLong()) {
-                0L -> null
+            val song = when (val songId = parts[1]) {
+                "0" -> null
                 else -> {
                     val namespace = SongNamespace.parseById(parts[0].toLong())
                     val songIdentifier = SongIdentifier(songId = songId, namespace = namespace)
@@ -99,14 +99,14 @@ internal val msgSpecs = listOf(
     MsgSpec("SELECT_SONG", SelectSongMsg::class,
         partsFormatter = {
             listOf(
-                it.song.songId.namespace.id.toString(), it.song.songId.songId.toString(),
+                it.song.songId.namespace.id.toString(), it.song.songId.songId,
                 it.song.categoryName, it.song.title,
                 it.song.chordsNotation.id.toString(), it.song.content
             )
         },
         requiredParts = 6,
         partsParser = { parts ->
-            val songId = parts[1].toLong()
+            val songId = parts[1]
             val namespace = SongNamespace.parseById(parts[0].toLong())
             val songIdentifier = SongIdentifier(songId = songId, namespace = namespace)
             val chordsNotation = ChordsNotation.parseById(parts[4].toLong())

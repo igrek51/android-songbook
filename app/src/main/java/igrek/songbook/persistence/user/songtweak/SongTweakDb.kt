@@ -9,7 +9,7 @@ data class SongTweakDb(
 
 @Serializable
 data class TweakedSong(
-    val songId: Long,
+    val songId: String,
     val namespaceId: Long,
     var autoscrollSpeed: Float?,
 )

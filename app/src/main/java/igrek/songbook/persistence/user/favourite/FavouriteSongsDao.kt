@@ -1,9 +1,7 @@
 package igrek.songbook.persistence.user.favourite
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import igrek.songbook.info.errorcheck.UiErrorHandler
-import igrek.songbook.info.errorcheck.ContextError
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -12,7 +10,6 @@ import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
-import igrek.songbook.persistence.user.migrate.Migration037Favourites
 import igrek.songbook.util.lookup.SimpleCache
 import io.reactivex.android.schedulers.AndroidSchedulers
 
@@ -20,7 +17,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 class FavouriteSongsDao(
     path: String,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-    activity: LazyInject<Activity> = appFactory.activity,
     resetOnError: Boolean = false,
 ) : AbstractJsonDao<FavouriteSongsDb>(
     path,
@@ -30,7 +26,6 @@ class FavouriteSongsDao(
     serializer = FavouriteSongsDb.serializer()
 ) {
     private val songsRepository by LazyExtractor(songsRepository)
-    private val activity by LazyExtractor(activity)
 
     private val favouriteSongs: FavouriteSongsDb get() = db!!
 
@@ -54,14 +49,6 @@ class FavouriteSongsDao(
 
     override fun empty(): FavouriteSongsDb {
         return FavouriteSongsDb(mutableListOf())
-    }
-
-    override fun migrateOlder(): FavouriteSongsDb? {
-        try {
-            return Migration037Favourites(activity).load()
-        } catch (t: Throwable) {
-            throw ContextError("Migration037Favourites error", t)
-        }
     }
 
     fun isSongFavourite(songIdentifier: SongIdentifier): Boolean {
@@ -90,7 +77,7 @@ class FavouriteSongsDao(
         favouritesCache.get().remove(song)
     }
 
-    fun removeUsage(songId: Long, custom: Boolean) {
+    fun removeUsage(songId: String, custom: Boolean) {
         val favSong = FavouriteSong(songId, custom)
         if (favSong in favouriteSongs.favourites)
             favouriteSongs.favourites.remove(favSong)

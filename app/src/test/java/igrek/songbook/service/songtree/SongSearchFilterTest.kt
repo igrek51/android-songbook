@@ -14,7 +14,7 @@ class SongSearchFilterTest {
     @Test
     fun test_matchesNameFilter() {
         val songItem = SongTreeItem.song(Song(
-                id = 1,
+                id = "1",
                 title = "Jolka jolka ążśźęćół ĄĄŻŚŹĘĆ Żółć Łódź",
                 categories = mutableListOf(
                         Category(1, type = CategoryType.ARTIST, name = "Budka suflera")
@@ -43,7 +43,7 @@ class SongSearchFilterTest {
     @Test
     fun test_filteringWithQuotes() {
         val songItem = SongTreeItem.song(Song(
-                id = 1,
+                id = "1",
                 title = "he's dupa",
                 categories = mutableListOf(
                         Category(1, type = CategoryType.ARTIST, name = "Budka suflera")

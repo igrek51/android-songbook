@@ -9,6 +9,6 @@ data class FavouriteSongsDb(
 
 @Serializable
 data class FavouriteSong(
-    val songId: Long,
-    val custom: Boolean
+    val songId: String,
+    val custom: Boolean,
 )

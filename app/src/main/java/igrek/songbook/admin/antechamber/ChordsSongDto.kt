@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ChordsSongDto(
-    var id: Long? = null,
+    var id: String? = null,
     var title: String? = null,
     var categories: List<String>? = null,
     var content: String? = null,

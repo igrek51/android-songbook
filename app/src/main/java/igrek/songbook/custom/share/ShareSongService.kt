@@ -10,6 +10,7 @@ import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import igrek.songbook.persistence.DeviceIdProvider
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.general.model.SongStatus
@@ -72,7 +73,7 @@ open class ShareSongService(
         val now: Long = Date().time
         val chordsNotation = ChordsNotation.parseById(dto.chordsNotation) ?: ChordsNotation.default
         return Song(
-            id = 0,
+            id = DeviceIdProvider().newUUID(),
             title = dto.title,
             categories = mutableListOf(),
             content = dto.content,

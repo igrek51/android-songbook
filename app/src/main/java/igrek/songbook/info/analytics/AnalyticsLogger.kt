@@ -47,7 +47,7 @@ class AnalyticsLogger(
     fun logEventSongOpened(song: Song) {
         logEvent(
             "x_song_opened", mapOf(
-                "id" to song.id.toString(),
+                "id" to song.id,
                 "namespace" to song.namespace.toString(),
             )
         )
@@ -56,7 +56,7 @@ class AnalyticsLogger(
     fun logEventSongFavourited(song: Song) {
         logEvent(
             "x_song_favourited", mapOf(
-                "id" to song.id.toString(),
+                "id" to song.id,
                 "namespace" to song.namespace.toString(),
             )
         )

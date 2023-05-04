@@ -40,7 +40,7 @@ class SendMessageService(
         subject: String? = null,
         category: String? = null,
         title: String? = null,
-        originalSongId: Long? = null
+        originalSongId: String? = null,
     ) {
         uiInfoService.showInfo(R.string.contact_sending, indefinite = true)
 
@@ -55,7 +55,7 @@ class SendMessageService(
             .addFormDataPart("title", title ?: "")
             .addFormDataPart("category", category ?: "")
             .addFormDataPart("origin_id", origin.id.toString())
-            .addFormDataPart("original_song_id", originalSongId?.toString() ?: "")
+            .addFormDataPart("original_song_id", originalSongId ?: "")
             .addFormDataPart("application_id", APPLICATION_ID.toString())
             .addFormDataPart("app_version", "$appVersionName ($appVersionCode)")
             .addFormDataPart("db_version", dbVersionNumber)

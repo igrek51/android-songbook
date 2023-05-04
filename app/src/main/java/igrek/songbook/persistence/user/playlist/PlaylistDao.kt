@@ -77,7 +77,7 @@ class PlaylistDao(
         playlistDbSubject.onNext(playlistDb)
     }
 
-    fun removeUsage(songId: Long, custom: Boolean) {
+    fun removeUsage(songId: String, custom: Boolean) {
         val playlistSong = PlaylistSong(songId, custom)
         var removed = 0
         playlistDb.playlists.forEach { playlist ->

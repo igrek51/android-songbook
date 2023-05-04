@@ -16,6 +16,6 @@ data class Playlist(
 
 @Serializable
 data class PlaylistSong(
-    val songId: Long,
+    val songId: String,
     val custom: Boolean,
 )

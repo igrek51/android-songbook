@@ -10,7 +10,6 @@ import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.analytics.AnalyticsLogger
 import igrek.songbook.info.errorcheck.SafeClickListener
 import igrek.songbook.info.errorcheck.UiErrorHandler
-import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -44,7 +43,7 @@ class PublishSongLayoutController(
     private var publishSongArtistEdit: EditText? = null
     private var publishSongContentEdit: EditText? = null
     private var contactAuthorEdit: EditText? = null
-    private var originalSongId: Long? = null
+    private var originalSongId: String? = null
     private var publishSong: Song? = null
 
     override fun showLayout(layout: View) {

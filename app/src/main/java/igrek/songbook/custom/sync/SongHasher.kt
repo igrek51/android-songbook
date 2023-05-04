@@ -40,7 +40,7 @@ data class HashableCustomSongDto(
 ) {
     companion object {
         fun fromCustomSong(song: CustomSong): HashableCustomSongDto = HashableCustomSongDto(
-            id = song.id.toString(),
+            id = song.id,
             title = song.title,
             artist = song.categoryName.orEmpty(),
             content = song.content,

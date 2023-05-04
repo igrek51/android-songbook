@@ -58,8 +58,7 @@ class SongTweakDao(
         val namespaceId = songIdentifier.namespace.id
         val songFound = songtweakDb.songs
             .find {
-                it.songId == songId
-                        && it.namespaceId == namespaceId
+                it.songId == songId && it.namespaceId == namespaceId
             }
         if (songFound != null) {
             songtweakDb.songs.remove(songFound)
