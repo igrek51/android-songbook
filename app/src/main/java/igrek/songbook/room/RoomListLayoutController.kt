@@ -57,6 +57,7 @@ class RoomListLayoutController(
         }
 
         joinRoomListView = layout.findViewById<JoinRoomListView>(R.id.itemsListView)?.also {
+            it.init()
             it.onClickCallback = { room ->
                 joinRoomKnock(room)
             }

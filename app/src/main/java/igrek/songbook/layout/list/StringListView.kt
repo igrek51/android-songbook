@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.TextView
 import igrek.songbook.R
 
+
 class StringListView(
     context: Context,
     attrs: AttributeSet? = null,
@@ -30,13 +31,5 @@ class StringListView(
 
     override fun onClick(item: String) {
         onClickCallback(item)
-    }
-
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val expandSpec = MeasureSpec.makeMeasureSpec(
-            Int.MAX_VALUE shr 2,
-            MeasureSpec.AT_MOST
-        )
-        super.onMeasure(widthMeasureSpec, expandSpec)
     }
 }

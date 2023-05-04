@@ -1,5 +1,6 @@
 package igrek.songbook.layout.list
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -37,11 +38,10 @@ abstract class GenericListView<T>(
 
     abstract fun onClick(item: T)
 
-    init {
+    fun init() {
         onItemClickListener = this
         onItemLongClickListener = this
         choiceMode = CHOICE_MODE_SINGLE
-
         setAdapter(adapter)
     }
 
@@ -67,6 +67,7 @@ abstract class GenericListView<T>(
         items = items + element
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     fun enableNestedScrolling() {
         // enable scrolling inside scrollview
         this.setOnTouchListener { v, event ->

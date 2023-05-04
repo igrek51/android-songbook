@@ -38,7 +38,9 @@
                 android:focusableInTouchMode="false"
                 android:padding="8dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/menu" />
+                android:src="@drawable/menu"
+                android:contentDescription="@string/button_menu_description"
+                />
 
             <TextView
                 android:layout_width="match_parent"
@@ -123,21 +125,11 @@
                 android:gravity="bottom"
                 android:text="@string/songcast_members_presenters"
                 android:textSize="18sp" />
-
             <igrek.songbook.layout.list.StringListView
                 android:id="@+id/membersListView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 />
-            <TextView
-                android:id="@+id/emptyListTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="gone"
-                android:gravity="center"
-                android:text="@string/listview_empty"
-                android:padding="8dp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -146,6 +138,11 @@
                 android:gravity="bottom"
                 android:text="@string/songcast_members_spectators"
                 android:textSize="18sp" />
+            <igrek.songbook.layout.list.StringListView
+                android:id="@+id/membersListView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
 
         </LinearLayout>
     </ScrollView>

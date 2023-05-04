@@ -28,6 +28,7 @@ class LogsLayoutController(
         super.showLayout(layout)
 
         itemsListView = layout.findViewById<LogListView>(R.id.itemsListView)?.also {
+            it.init()
             it.onClickCallback = { item: LogEntry ->
                 copyItemToClipboard(item)
             }

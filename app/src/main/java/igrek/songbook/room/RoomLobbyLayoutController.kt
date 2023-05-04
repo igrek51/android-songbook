@@ -66,6 +66,7 @@ class RoomLobbyLayoutController(
 
         emptyChatListTextView = layout.findViewById(R.id.emptyChatListTextView)
         chatListView = layout.findViewById<RoomChatListView>(R.id.itemsListView)?.also {
+            it.init()
             it.onClickCallback = {}
         }
         chatMessageEdit = layout.findViewById(R.id.chatMessageEdit)

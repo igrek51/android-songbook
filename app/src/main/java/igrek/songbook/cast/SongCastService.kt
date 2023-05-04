@@ -41,8 +41,8 @@ class SongCastService(
     var chatMessages: List<CastChatMessage> = listOf()
         private set
 
-    private val presenters: List<CastMember> get() = members.filter { it.type == CastMemberType.OWNER.value }
-    private val spectators: List<CastMember> get() = members.filter { it.type == CastMemberType.GUEST.value }
+    val presenters: List<CastMember> get() = members.filter { it.type == CastMemberType.OWNER.value }
+    val spectators: List<CastMember> get() = members.filter { it.type == CastMemberType.GUEST.value }
 
     companion object {
         private const val songbookApiBase = "https://songbook.igrek.dev"

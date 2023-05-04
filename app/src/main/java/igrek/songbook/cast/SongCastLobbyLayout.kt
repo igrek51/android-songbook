@@ -33,6 +33,7 @@ class SongCastLobbyLayout(
 
     private var roomCodeInput: TextInputLayout? = null
     private var membersListView: StringListView? = null
+    private var membersListView2: StringListView? = null
     private var songcastLobbyHint: TextView? = null
 
     override fun showLayout(layout: View) {
@@ -63,9 +64,12 @@ class SongCastLobbyLayout(
             })
 
         membersListView = layout.findViewById<StringListView>(R.id.membersListView)?.also {
+            it.init()
             it.onClickCallback = { }
-            it.items = listOf()
-            it.emptyView = layout.findViewById(R.id.emptyListTextView)
+        }
+        membersListView2 = layout.findViewById<StringListView>(R.id.membersListView2)?.also {
+            it.init()
+            it.onClickCallback = { }
         }
 
         layout.post {
@@ -88,12 +92,17 @@ class SongCastLobbyLayout(
     }
 
     private fun updateSessionDetails() {
-        roomCodeInput?.editText?.setText(songCastService.sessionShortId ?: "")
+        val sessionShortId = songCastService.sessionShortId ?: ""
+        val splittedCode = sessionShortId.take(3) + " " + sessionShortId.drop(3)
+        roomCodeInput?.editText?.setText(splittedCode)
 
-        val items = songCastService.members.map { member ->
-            member.name
+        membersListView?.items = songCastService.presenters.map { member ->
+            "- ${member.name}"
         }
-        membersListView?.items = items
+
+        membersListView2?.items = songCastService.spectators.map { member ->
+            "- ${member.name}"
+        }
 
         val textRestId = if (songCastService.isPresenter()) {
             R.string.songcast_lobby_text_presenter_hint

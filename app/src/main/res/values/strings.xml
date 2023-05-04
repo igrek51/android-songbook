@@ -592,7 +592,7 @@
     <string name="songcast_room_created_rejoined">We\'ve found your room. Welcome again, %s.</string>
     <string name="songcast_creating_room">Creating a room…</string>
     <string name="songcast_lobby_text_presenter_hint"><![CDATA[
-    You\'re a <b>Presenter</b>. Once you open any song, the other members will also see it.
+    You\'re a <b>Presenter</b>. Once you open any song, the other members will see it too.
     <br>
     Share the code with others so they can join this room as <b>spectators</b>.
 ]]></string>
@@ -613,4 +613,5 @@
     <string name="songcast_members_spectators">Spectators:</string>
     <string name="songcast_randomize_name">Randomize name</string>
     <string name="button_more_description">More</string>
+    <string name="button_menu_description">Menu</string>
 </resources>

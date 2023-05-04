@@ -83,7 +83,7 @@ class SongCastLayout(
         result.fold(onSuccess = { response: CastSessionJoined ->
             layoutController.showLayout(SongCastLobbyLayout::class) {
                 GlobalScope.launch(Dispatchers.Main) {
-                    delay(100)
+                    delay(100) // WTF: Android hackaround
                     when (response.rejoined) {
                         true -> uiInfoService.showInfo(R.string.songcast_room_created_rejoined, response.member_name)
                         false -> uiInfoService.showInfo(R.string.songcast_room_created, response.member_name)
@@ -96,7 +96,7 @@ class SongCastLayout(
     }
 
     private suspend fun joinRoom() {
-        val roomCode = roomCodeInput?.editText?.text.toString().trim()
+        val roomCode = roomCodeInput?.editText?.text.toString().replace(" ", "").trim()
         if (roomCode.isBlank()) {
             throw LocalizedError(R.string.songcast_room_code_empty)
         }
@@ -109,7 +109,7 @@ class SongCastLayout(
         result.fold(onSuccess = { response: CastSessionJoined ->
             layoutController.showLayout(SongCastLobbyLayout::class) {
                 GlobalScope.launch(Dispatchers.Main) {
-                    delay(100)
+                    delay(100) // WTF: Android hackaround
                     when (response.rejoined) {
                         true -> uiInfoService.showInfo(R.string.songcast_room_joined_rejoined, response.member_name)
                         false -> uiInfoService.showInfo(R.string.songcast_room_joined, response.member_name)
