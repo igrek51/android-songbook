@@ -4,7 +4,12 @@ import android.annotation.SuppressLint
 import android.graphics.ColorFilter
 import android.graphics.Paint
 import android.graphics.PorterDuff
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.StyleSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -46,6 +51,7 @@ import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.WindowManagerService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
+
 
 @SuppressLint("CheckResult")
 class SongPreviewLayoutController(
@@ -202,7 +208,7 @@ class SongPreviewLayoutController(
         resetOverlayScroll()
 
         songTitleLabel = layout.findViewById<TextView>(R.id.songTitleLabel)?.apply {
-            text = currentSong?.displayName().orEmpty()
+            text = formatSongTitle()
         }
 
         transposeButton = layout.findViewById<ImageButton>(R.id.transposeButton)?.also {
@@ -460,6 +466,25 @@ class SongPreviewLayoutController(
 
     fun canScrollDown(): Boolean {
         return songPreview?.canScrollDown() ?: false
+    }
+
+    private fun formatSongTitle(): Spanned {
+        val song = currentSong ?: return SpannableString("")
+        val categories = song.displayCategories()
+        return when {
+            categories.isNotBlank() -> {
+                val span: Spannable = SpannableString("${song.title} - $categories")
+                span.setSpan(
+                    StyleSpan(Typeface.BOLD),
+                    0, song.title.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+                )
+                span
+            }
+            else -> {
+                SpannableString(song.title)
+            }
+        }
     }
 
 }
