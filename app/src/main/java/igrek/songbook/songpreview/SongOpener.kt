@@ -1,6 +1,7 @@
 package igrek.songbook.songpreview
 
 import igrek.songbook.R
+import igrek.songbook.cast.SongCastService
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.analytics.AnalyticsLogger
 import igrek.songbook.info.logger.LoggerFactory.logger
@@ -15,21 +16,20 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.history.OpenedSong
 import igrek.songbook.persistence.user.playlist.Playlist
 import igrek.songbook.playlist.PlaylistService
-import igrek.songbook.room.RoomLobby
 
 open class SongOpener(
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
     songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-    roomLobby: LazyInject<RoomLobby> = appFactory.roomLobby,
+    songCastService: LazyInject<SongCastService> = appFactory.songCastService,
     playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
 ) {
     private val layoutController by LazyExtractor(layoutController)
     private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
     private val songsRepository by LazyExtractor(songsRepository)
     private val uiInfoService by LazyExtractor(uiInfoService)
-    private val roomLobby by LazyExtractor(roomLobby)
+    private val songCastService by LazyExtractor(songCastService)
     private val playlistService by LazyExtractor(playlistService)
 
     fun openSongPreview(song: Song, playlist: Playlist? = null) {
@@ -38,7 +38,7 @@ open class SongOpener(
         songPreviewLayoutController.currentSong = song
         layoutController.showLayout(SongPreviewLayoutController::class)
         songsRepository.openHistoryDao.registerOpenedSong(song.id, song.namespace)
-        roomLobby.reportSongSelected(song)
+        songCastService.reportSongSelected(song)
         AnalyticsLogger().logEventSongOpened(song)
     }
 
@@ -55,7 +55,7 @@ open class SongOpener(
         val currentSong = songPreviewLayoutController.currentSong
         if (currentSong != null) {
             layoutController.showLayout(SongPreviewLayoutController::class)
-            roomLobby.reportSongSelected(currentSong)
+            songCastService.reportSongSelected(currentSong)
             return
         }
 

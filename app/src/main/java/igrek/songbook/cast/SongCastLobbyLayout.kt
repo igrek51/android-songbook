@@ -91,26 +91,28 @@ class SongCastLobbyLayout(
         }
     }
 
+    private fun formatMember(member: CastMember): String {
+        if (member.public_member_id == songCastService.myMemberPublicId) {
+            return "- ${member.name} (You)"
+        }
+        return "- ${member.name}"
+    }
+
     private fun updateSessionDetails() {
         val sessionShortId = songCastService.sessionShortId ?: ""
         val splittedCode = sessionShortId.take(3) + " " + sessionShortId.drop(3)
         roomCodeInput?.editText?.setText(splittedCode)
 
-        membersListView?.items = songCastService.presenters.map { member ->
-            "- ${member.name}"
-        }
+        membersListView?.items = songCastService.presenters.map { formatMember(it) }
 
-        membersListView2?.items = songCastService.spectators.map { member ->
-            "- ${member.name}"
-        }
+        membersListView2?.items = songCastService.spectators.map { formatMember(it) }
 
         val textRestId = if (songCastService.isPresenter()) {
             R.string.songcast_lobby_text_presenter_hint
         } else {
             R.string.songcast_lobby_text_guest_hint
         }
-        val span = HtmlCompat.fromHtml(uiInfoService.resString(textRestId), HtmlCompat.FROM_HTML_MODE_LEGACY)
-        songcastLobbyHint?.text = span
+        songcastLobbyHint?.text = uiInfoService.resRichString(textRestId)
     }
 
     private fun copySessionCode() {

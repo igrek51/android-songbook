@@ -586,7 +586,7 @@
     <string name="songcast_room_code_hint">Room code</string>
     <string name="songcast_hint_my_name">Your name</string>
     <string name="songcast_join_room">Join the room</string>
-    <string name="songcast_feature_hint">Song Cast is a Songbook\'s protocol to display songs on many devices. Create a room so that your friends could join it. Once the presenter chooses a song, it will be broadcasted and displayed on all devices connected to a room.</string>
+    <string name="songcast_feature_hint"><b>Song Cast</b> is a Songbook\'s protocol to display songs on many devices. Create a room so that your friends could join it. Once the presenter chooses a song, it will be broadcasted and displayed on all devices connected to a room.</string>
     <string name="songcast_lobby">Song Cast Lobby</string>
     <string name="songcast_room_created">Room created. Welcome to the Machine, %s.</string>
     <string name="songcast_room_created_rejoined">We\'ve found your room. Welcome again, %s.</string>

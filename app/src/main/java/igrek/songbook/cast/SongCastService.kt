@@ -1,17 +1,21 @@
 package igrek.songbook.cast
 
+import igrek.songbook.R
 import igrek.songbook.admin.HttpRequester
 import igrek.songbook.info.UiInfoService
+import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.DeviceIdProvider
+import igrek.songbook.persistence.general.model.Song
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -29,7 +33,8 @@ class SongCastService(
     private val logger: Logger = LoggerFactory.logger
 
     private var myName: String = ""
-    private var myMemberPublicId: String = ""
+    var myMemberPublicId: String = ""
+        private set
     var sessionShortId: String? = null
         private set
     var members: List<CastMember> = listOf()
@@ -43,6 +48,7 @@ class SongCastService(
 
     val presenters: List<CastMember> get() = members.filter { it.type == CastMemberType.OWNER.value }
     val spectators: List<CastMember> get() = members.filter { it.type == CastMemberType.GUEST.value }
+    val myMember: CastMember? get() = members.find { it.public_member_id == myMemberPublicId }
 
     companion object {
         private const val songbookApiBase = "https://songbook.igrek.dev"
@@ -96,7 +102,10 @@ class SongCastService(
             this.sessionShortId = responseData.short_id
             this.myName = responseData.member_name
             this.myMemberPublicId = responseData.public_member_id
-            logger.info("SongCast session created (or rejoined): ${responseData.short_id}")
+            when (responseData.rejoined) {
+                true -> logger.info("SongCast session rejoined: ${responseData.short_id}")
+                false -> logger.info("SongCast session created: ${responseData.short_id}")
+            }
             responseData
         }
     }
@@ -121,7 +130,10 @@ class SongCastService(
             this.sessionShortId = responseData.short_id
             this.myName = responseData.member_name
             this.myMemberPublicId = responseData.public_member_id
-            logger.info("SongCast session joined: ${responseData.short_id}")
+            when (responseData.rejoined) {
+                true -> logger.info("SongCast session rejoined: ${responseData.short_id}")
+                false -> logger.info("SongCast session joined: ${responseData.short_id}")
+            }
             responseData
         }
     }
@@ -165,6 +177,40 @@ class SongCastService(
             this.currentScroll = responseData.scroll
             this.chatMessages = responseData.chat_messages
             responseData
+        }
+    }
+
+    private fun postSongPresentAsync(payload: CastSongSelected): Deferred<Result<Unit>> {
+        val deviceId = deviceIdProvider.getDeviceId()
+        val json = httpRequester.jsonSerializer.encodeToString(CastSongSelected.serializer(), payload)
+        val request: Request = Request.Builder()
+            .url(sessionSongUrl(sessionShortId ?: ""))
+            .header(authDeviceHeader, deviceId)
+            .post(RequestBody.create(httpRequester.jsonType, json))
+            .build()
+        return httpRequester.httpRequestAsync(request) {
+            logger.info("SongCast: Song selection sent: ${payload.title} - ${payload.artist}")
+        }
+    }
+
+    fun reportSongSelected(song: Song) {
+        GlobalScope.launch {
+            if (!isPresenter())
+                return@launch
+
+            val payload = CastSongSelected(
+                id = song.id.toString(),
+                title = song.title,
+                artist = song.artist,
+                content = song.content.orEmpty(),
+                chords_notation_id = song.chordsNotation.id,
+            )
+
+            val result = postSongPresentAsync(payload).await()
+            result.fold(onSuccess = {
+            }, onFailure = { e ->
+                UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
+            })
         }
     }
 
@@ -225,6 +271,21 @@ data class CastChatMessage(
     var author: String,
     var text: String,
 )
+
+@Serializable
+data class CastSongSelected(
+    var id: String,
+    var title: String,
+    var artist: String?,
+    var content: String,
+    var chords_notation_id: Long,
+)
+
+@Serializable
+data class CastChatMessageSent(
+    var text: String,
+)
+
 
 enum class CastMemberType(val value: String) {
     OWNER("owner"), // can pick current song, presenter

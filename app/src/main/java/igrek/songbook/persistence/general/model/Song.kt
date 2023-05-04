@@ -28,6 +28,9 @@ data class Song(
     var originalSongId: Long? = null,
     var namespace: SongNamespace = SongNamespace.Public,
 ) {
+
+    val artist: String? get() = displayCategories().takeIf { it.isNotEmpty() }
+
     override fun equals(other: Any?): Boolean {
         if (other !is Song)
             return false

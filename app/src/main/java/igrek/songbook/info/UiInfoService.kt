@@ -1,12 +1,14 @@
 package igrek.songbook.info
 
 import android.app.Activity
+import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.text.HtmlCompat
 import com.google.android.material.snackbar.Snackbar
 import igrek.songbook.R
 import igrek.songbook.info.errorcheck.SafeClickListener
@@ -137,6 +139,11 @@ open class UiInfoService(
 
     open fun resString(resourceId: Int, vararg args: Any?): String =
         uiResourceService.resString(resourceId, *args)
+
+    fun resRichString(resourceId: Int, vararg args: Any?): Spanned {
+        val text = uiResourceService.resString(resourceId, *args)
+        return HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_LEGACY)
+    }
 
     fun dialog(titleResId: Int, message: String) {
         dialogThreeChoices(
