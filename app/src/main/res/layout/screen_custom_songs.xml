@@ -149,7 +149,7 @@
                     android:focusableInTouchMode="false"
                     android:padding="8dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/tune" />
+                    android:src="@drawable/sort" />
 
                 <ImageButton
                     android:id="@+id/moreActionsButton"

@@ -307,7 +307,7 @@
     <string name="missing_song_titles">Artist - Title</string>
     <string name="missing_song_title_invalid_format">Invalid format. Try: \"Artist - Title\"</string>
     <string name="dialog_warning">Warning</string>
-    <string name="publish_song_no_change">You shouldn\'t publish this song because you did not any change compared to original song. Make some changes first, if you want to send an improved version.</string>
+    <string name="publish_song_no_change">This song is already published. You didn\'t do any change compared to the original song. Make some changes first, if you want to send an improved version.</string>
     <string name="nav_admin_antechamber" translatable="false">Antechamber</string>
     <string name="admin_update_songs" translatable="false">Fetch songs</string>
     <string name="admin_downloading_antechamber" translatable="false">Downloading antechamber songs…</string>

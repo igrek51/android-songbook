@@ -294,7 +294,7 @@
     <string name="missing_song_titles">Artysta - Tytuł</string>
     <string name="missing_song_title_invalid_format">Niepoprawny format. Spróbuj: \"Artysta - Tytuł\"</string>
     <string name="dialog_warning">Ostrzeżenie</string>
-    <string name="publish_song_no_change">Nie powinieneś wysyłać tej piosenki, ponieważ nie dokonałeś żadnych zmian w stosunku do oryginalnej piosenki. Zmodyfikuj swoją piosenkę, jeśli chcesz wysłać poprawioną wersję.</string>
+    <string name="publish_song_no_change">Ta piosenka jest już opublikowana. Nie dokonałeś żadnych zmian w stosunku do oryginalnej piosenki. Zmodyfikuj swoją piosenkę, jeśli chcesz wysłać poprawioną wersję.</string>
     <string name="antechamber_new_song_sent">Piosenka została wysłana.</string>
     <string name="confirm_unsaved_save">Zapisz</string>
     <string name="confirm_discard_changes">Porzuć</string>
