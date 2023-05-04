@@ -11,6 +11,9 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.DeviceIdProvider
 import igrek.songbook.persistence.general.model.Song
+import igrek.songbook.persistence.general.model.SongNamespace
+import igrek.songbook.persistence.general.model.SongStatus
+import igrek.songbook.settings.chordsnotation.ChordsNotation
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -19,6 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import okhttp3.Request
 import okhttp3.RequestBody
+import java.util.Date
 
 
 @OptIn(DelicateCoroutinesApi::class)
@@ -39,7 +43,9 @@ class SongCastService(
         private set
     var members: List<CastMember> = listOf()
         private set
-    var currentSong: CastSong? = null
+    var castSongDto: CastSong? = null
+        private set
+    var ephemeralSong: Song? = null
         private set
     var currentScroll: CastScroll? = null
         private set
@@ -77,7 +83,7 @@ class SongCastService(
     private fun clearRoom() {
         sessionShortId = null
         members = listOf()
-        currentSong = null
+        castSongDto = null
         currentScroll = null
         chatMessages = listOf()
     }
@@ -173,7 +179,8 @@ class SongCastService(
                     jsonData
                 )
             this.members = responseData.members
-            this.currentSong = responseData.song
+            this.castSongDto = responseData.song
+            this.ephemeralSong = buildEphemeralSong(responseData.song)
             this.currentScroll = responseData.scroll
             this.chatMessages = responseData.chat_messages
             responseData
@@ -211,6 +218,32 @@ class SongCastService(
             }, onFailure = { e ->
                 UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
             })
+        }
+    }
+
+    private fun buildEphemeralSong(songDto: CastSong?): Song? {
+        if (songDto == null)
+            return null
+        val now: Long = Date().time
+        return Song(
+            id = songDto.id.hashCode().toLong(),
+            title = songDto.title,
+            categories = mutableListOf(),
+            content = songDto.content,
+            versionNumber = 1,
+            createTime = now,
+            updateTime = now,
+            status = SongStatus.PUBLISHED,
+            customCategoryName = songDto.artist,
+            chordsNotation = ChordsNotation.mustParseById(songDto.chords_notation_id),
+            namespace = SongNamespace.Ephemeral,
+        )
+    }
+
+    fun openCurrentSong() {
+        val ephemeralSongN = ephemeralSong ?: return
+        GlobalScope.launch {
+            appFactory.songOpener.get().openSongPreview(ephemeralSongN)
         }
     }
 

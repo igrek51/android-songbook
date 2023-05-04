@@ -614,4 +614,6 @@
     <string name="songcast_randomize_name">Randomize name</string>
     <string name="button_more_description">More</string>
     <string name="button_menu_description">Menu</string>
+    <string name="songcast_current_song">Current song: %s</string>
+    <string name="songcast_open_current_song">Open current song</string>
 </resources>

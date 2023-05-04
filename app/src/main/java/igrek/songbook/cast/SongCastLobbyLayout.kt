@@ -1,14 +1,15 @@
 package igrek.songbook.cast
 
 import android.view.View
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.core.text.HtmlCompat
 import com.google.android.material.textfield.TextInputLayout
 import igrek.songbook.R
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.SafeClickListener
 import igrek.songbook.info.errorcheck.UiErrorHandler
+import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -35,6 +36,8 @@ class SongCastLobbyLayout(
     private var membersListView: StringListView? = null
     private var membersListView2: StringListView? = null
     private var songcastLobbyHint: TextView? = null
+    private var selectedSongText: TextView? = null
+    private var openSelectedSongButton: Button? = null
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
@@ -57,6 +60,16 @@ class SongCastLobbyLayout(
         }
 
         songcastLobbyHint = layout.findViewById(R.id.songcastLobbyHint)
+
+        selectedSongText = layout.findViewById(R.id.selectedSongText)
+
+        openSelectedSongButton = layout.findViewById<Button?>(R.id.openSelectedSongButton)?.also {
+            it.setOnClickListener {
+                safeExecute {
+                    songCastService.openCurrentSong()
+                }
+            }
+        }
 
         layout.findViewById<ImageButton>(R.id.moreActionsButton)
             ?.setOnClickListener(SafeClickListener {
@@ -113,6 +126,12 @@ class SongCastLobbyLayout(
             R.string.songcast_lobby_text_guest_hint
         }
         songcastLobbyHint?.text = uiInfoService.resRichString(textRestId)
+
+        val songName = when (songCastService.castSongDto) {
+            null -> "None"
+            else -> "${songCastService.castSongDto?.title} - ${songCastService.castSongDto?.artist}"
+        }
+        selectedSongText?.text = uiInfoService.resString(R.string.songcast_current_song, songName)
     }
 
     private fun copySessionCode() {
