@@ -23,6 +23,11 @@ class SongHasher {
         val json = jsonSerializer.encodeToString(HashableCustomSongsDto.serializer(), dto)
         return ShaHasher().singleHash(json)
     }
+
+    fun hashSongContent(dto: TitledSongDto): String {
+        val json = jsonSerializer.encodeToString(TitledSongDto.serializer(), dto)
+        return ShaHasher().singleHash(json)
+    }
 }
 
 @Serializable
@@ -48,3 +53,11 @@ data class HashableCustomSongDto(
         )
     }
 }
+
+@Serializable
+data class TitledSongDto(
+    var title: String,
+    var artist: String?,
+    var content: String,
+    var chordsNotationId: Long,
+)

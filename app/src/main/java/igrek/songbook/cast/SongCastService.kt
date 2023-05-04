@@ -41,13 +41,13 @@ class SongCastService(
         private set
     var sessionShortId: String? = null
         private set
-    var members: List<CastMember> = listOf()
+    private var members: List<CastMember> = listOf()
         private set
     var castSongDto: CastSong? = null
         private set
-    var ephemeralSong: Song? = null
+    private var ephemeralSong: Song? = null
         private set
-    var currentScroll: CastScroll? = null
+    private var currentScroll: CastScroll? = null
         private set
     var chatMessages: List<CastChatMessage> = listOf()
         private set

@@ -616,4 +616,5 @@
     <string name="button_menu_description">Menu</string>
     <string name="songcast_current_song">Current song: %s</string>
     <string name="songcast_open_current_song">Open current song</string>
+    <string name="songcast_chat">Chat:</string>
 </resources>

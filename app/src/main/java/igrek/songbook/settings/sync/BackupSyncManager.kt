@@ -86,7 +86,7 @@ class BackupSyncManager(
     private val logger = LoggerFactory.logger
 
     fun makeDriveBackupUI(logout: Boolean = true) {
-        logger.debug("making application data Backup in Google Drive")
+        logger.info("making application data Backup in Google Drive")
         requestSingIn(logout) { driveService: Drive ->
             showSyncProgress(0, 2)
             GlobalScope.launch(Dispatchers.IO) {
@@ -430,6 +430,7 @@ class BackupSyncManager(
     }
 
     fun makeAutomaticBackup() {
+        logger.debug("making automatic Backup")
         GlobalScope.launch(Dispatchers.Main) {
             runCatching {
                 makeDriveBackupUI(logout = false)

@@ -119,6 +119,21 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
+                android:id="@+id/selectedSongText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:gravity="bottom"
+                android:text="@string/songcast_current_song"
+                android:textSize="18sp" />
+            <Button
+                android:id="@+id/openSelectedSongButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/songcast_open_current_song" />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
@@ -145,19 +160,17 @@
                 />
 
             <TextView
-                android:id="@+id/selectedSongText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:gravity="bottom"
-                android:text="@string/songcast_current_song"
+                android:text="@string/songcast_chat"
                 android:textSize="18sp" />
-            <Button
-                android:id="@+id/openSelectedSongButton"
+            <igrek.songbook.layout.list.StringListView
+                android:id="@+id/chatListView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="@string/songcast_open_current_song" />
+                />
 
         </LinearLayout>
     </ScrollView>

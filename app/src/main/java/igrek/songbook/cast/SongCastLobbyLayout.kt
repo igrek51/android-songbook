@@ -18,6 +18,7 @@ import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.layout.list.StringListView
 import igrek.songbook.system.ClipboardManager
+import igrek.songbook.util.formatTimestampTime
 import kotlinx.coroutines.*
 
 @OptIn(DelicateCoroutinesApi::class)
@@ -35,6 +36,7 @@ class SongCastLobbyLayout(
     private var roomCodeInput: TextInputLayout? = null
     private var membersListView: StringListView? = null
     private var membersListView2: StringListView? = null
+    private var chatListView: StringListView? = null
     private var songcastLobbyHint: TextView? = null
     private var selectedSongText: TextView? = null
     private var openSelectedSongButton: Button? = null
@@ -78,11 +80,12 @@ class SongCastLobbyLayout(
 
         membersListView = layout.findViewById<StringListView>(R.id.membersListView)?.also {
             it.init()
-            it.onClickCallback = { }
         }
         membersListView2 = layout.findViewById<StringListView>(R.id.membersListView2)?.also {
             it.init()
-            it.onClickCallback = { }
+        }
+        chatListView = layout.findViewById<StringListView>(R.id.chatListView)?.also {
+            it.init()
         }
 
         layout.post {
@@ -119,6 +122,11 @@ class SongCastLobbyLayout(
         membersListView?.items = songCastService.presenters.map { formatMember(it) }
 
         membersListView2?.items = songCastService.spectators.map { formatMember(it) }
+
+        chatListView?.items = songCastService.chatMessages.map {
+            val timeFormatted = formatTimestampTime(it.timestamp)
+            "[$timeFormatted] ${it.author}: ${it.text}"
+        }
 
         val textRestId = if (songCastService.isPresenter()) {
             R.string.songcast_lobby_text_presenter_hint

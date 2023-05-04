@@ -79,6 +79,10 @@ class UserDataDao(
                 reload(resetOnError = false)
             }
         }.recoverCatching {
+            appFactory.crashlyticsLogger.get().reportNonFatalError(it)
+            reloadSync(resetOnError = false)
+        }.recoverCatching {
+            delay(1000)
             reloadSync(resetOnError = false)
         }.recover { t ->
             logger.error("failed to load user data", t)
@@ -136,8 +140,9 @@ class UserDataDao(
 
     private suspend fun reloadSync(resetOnError: Boolean) {
         val path = localDbService.appFilesDir.absolutePath
-        withContext(Dispatchers.Main) {
-            dataTransferMutex.withLock {
+        dataTransferMutex.withLock {
+            logger.debug("Sync-loading data from $path")
+            withContext(Dispatchers.Main) {
                 unlockedSongsDao = UnlockedSongsDao(path, resetOnError = resetOnError)
                 favouriteSongsDao = FavouriteSongsDao(path, resetOnError = resetOnError)
                 customSongsDao = CustomSongsDao(path, resetOnError = resetOnError)
