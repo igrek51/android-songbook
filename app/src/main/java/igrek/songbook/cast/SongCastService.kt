@@ -4,6 +4,7 @@ import igrek.songbook.R
 import igrek.songbook.admin.HttpRequester
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
+import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
@@ -14,14 +15,23 @@ import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.settings.chordsnotation.ChordsNotation
+import igrek.songbook.util.buildSongName
+import io.socket.client.Ack
+import io.socket.client.AckWithTimeout
+import io.socket.client.IO
+import io.socket.client.Socket
+import io.socket.emitter.Emitter
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import okhttp3.Request
 import okhttp3.RequestBody
+import org.json.JSONObject
 import java.util.Date
 
 
@@ -33,8 +43,9 @@ class SongCastService(
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val deviceIdProvider by LazyExtractor(deviceIdProvider)
 
-    private val httpRequester = HttpRequester()
     private val logger: Logger = LoggerFactory.logger
+    private val httpRequester = HttpRequester()
+    private var ioSocket: Socket? = null
 
     private var myName: String = ""
     var myMemberPublicId: String = ""
@@ -51,6 +62,7 @@ class SongCastService(
         private set
     var chatMessages: List<CastChatMessage> = listOf()
         private set
+    var onSessionUpdated: () -> Unit = {}
 
     val presenters: List<CastMember> get() = members.filter { it.type == CastMemberType.OWNER.value }
     val spectators: List<CastMember> get() = members.filter { it.type == CastMemberType.GUEST.value }
@@ -59,6 +71,7 @@ class SongCastService(
     companion object {
         private const val songbookApiBase = "https://songbook.igrek.dev"
         private const val createSessionUrl = "$songbookApiBase/api/cast"
+        private const val socketioUrl = "$songbookApiBase"
         private val joinSessionUrl = { session: String -> "${songbookApiBase}/api/cast/$session/join" }
         private val dropSessionUrl = { session: String -> "${songbookApiBase}/api/cast/$session/drop" }
         private val sessionUrl = { session: String -> "${songbookApiBase}/api/cast/$session" }
@@ -86,6 +99,9 @@ class SongCastService(
         castSongDto = null
         currentScroll = null
         chatMessages = listOf()
+        ioSocket?.disconnect()
+        ioSocket?.close()
+        ioSocket = null
     }
 
     fun createSessionAsync(memberName: String): Deferred<Result<CastSessionJoined>> {
@@ -112,6 +128,7 @@ class SongCastService(
                 true -> logger.info("SongCast session rejoined: ${responseData.short_id}")
                 false -> logger.info("SongCast session created: ${responseData.short_id}")
             }
+            connectSocketIO()
             responseData
         }
     }
@@ -140,6 +157,7 @@ class SongCastService(
                 true -> logger.info("SongCast session rejoined: ${responseData.short_id}")
                 false -> logger.info("SongCast session joined: ${responseData.short_id}")
             }
+            connectSocketIO()
             responseData
         }
     }
@@ -247,6 +265,126 @@ class SongCastService(
         }
     }
 
+    private val onSocketIOBroadcast: Emitter.Listener = Emitter.Listener { args ->
+        GlobalScope.launch(Dispatchers.IO) {
+            safeExecute {
+                val data = args[0] as JSONObject
+                logger.debug("socket.io broadcast: $data")
+                when (val type = data.getString("type")) {
+
+                    "SongSelectedEvent" -> {
+                        val eventData = data.getJSONObject("data")
+                        onSongSelectedEvent(eventData)
+                    }
+
+                    "SongDeselectedEvent" -> {
+                        onSongDeselectedEvent()
+                    }
+
+                    "CastMembersUpdatedEvent" -> {
+                        refreshSessionDetails()
+                    }
+
+                    else -> {
+                        logger.warn("Unknown SongCast event type: $type")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun onSongSelectedEvent(eventData: JSONObject) {
+        val id = eventData.getString("id")
+        val title = eventData.getString("title")
+        val artist: String? = eventData.optString("artist")
+        val content = eventData.getString("content")
+        val chordsNotationId = eventData.getLong("chords_notation_id")
+        val chosenBy = eventData.getString("chosen_by")
+        logger.debug("SongSelectedEvent: $eventData")
+
+        this.castSongDto = CastSong(
+            id = id,
+            title = title,
+            artist = artist,
+            content = content,
+            chords_notation_id = chordsNotationId,
+            chosen_by = chosenBy,
+        )
+        this.ephemeralSong = buildEphemeralSong(this.castSongDto)
+
+        val presenter: CastMember? = members.find { it.public_member_id == chosenBy }
+        val presenterName = presenter?.name ?: "Unknown"
+        val songName = buildSongName(title, artist)
+        uiInfoService.showInfo(R.string.songcast_presenter_chose_song, presenterName, songName)
+
+        GlobalScope.launch(Dispatchers.Main) {
+            onSessionUpdated()
+        }
+        if (isFollowingCurrentSong(presenter)) {
+            openCurrentSong()
+        }
+    }
+
+    private fun onSongDeselectedEvent() {
+        this.castSongDto = null
+        this.ephemeralSong = null
+        GlobalScope.launch(Dispatchers.Main) {
+            onSessionUpdated()
+        }
+    }
+
+    private fun isFollowingCurrentSong(presenter: CastMember?): Boolean {
+        return when (presenter?.public_member_id) {
+            myMemberPublicId -> false
+            else -> true
+        }
+    }
+
+    private suspend fun refreshSessionDetails() {
+        logger.debug("refreshing SongCast session...")
+        val result = getSessionDetailsAsync().await()
+        result.fold(onSuccess = {
+            GlobalScope.launch(Dispatchers.Main) {
+                onSessionUpdated()
+            }
+        }, onFailure = { e ->
+            UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
+        })
+    }
+
+    private val onClientSubscribed: Emitter.Listener = Emitter.Listener { args ->
+        logger.debug("ACK: SongCast client subscribed to socket.io")
+    }
+
+    private fun connectSocketIO() {
+        GlobalScope.launch(Dispatchers.IO) {
+            safeExecute {
+                val opts = IO.Options()
+                opts.path = "/socket.io/cast"
+                val socket = IO.socket(socketioUrl, opts)
+                ioSocket = socket
+
+                socket.on("broadcast_new_event", onSocketIOBroadcast)
+                socket.on("subscribe_for_session_events_ack", onClientSubscribed)
+
+                socket.connect()
+                logger.debug("SongCast connected to socket.io")
+                logger.debug("socket.isActive: ${socket.isActive}")
+
+                val args: Array<Any> = arrayOf(
+                    JSONObject(
+                        mapOf("session_id" to sessionShortId)
+                    )
+                )
+
+                delay(500)
+                socket.emit("subscribe_for_session_events", args, Ack {
+                    logger.debug("ACK: subscribe_for_session_events: $it")
+                })
+            }
+        }
+    }
+
 }
 
 @Serializable
@@ -318,7 +456,6 @@ data class CastSongSelected(
 data class CastChatMessageSent(
     var text: String,
 )
-
 
 enum class CastMemberType(val value: String) {
     OWNER("owner"), // can pick current song, presenter

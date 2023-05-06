@@ -617,4 +617,5 @@
     <string name="songcast_current_song">Current song: %s</string>
     <string name="songcast_open_current_song">Open current song</string>
     <string name="songcast_chat">Chat:</string>
+    <string name="songcast_presenter_chose_song">\"%s\" cast the song: %s</string>
 </resources>

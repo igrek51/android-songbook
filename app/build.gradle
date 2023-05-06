@@ -152,6 +152,10 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.12'
     // JWT
     implementation 'com.auth0.android:jwtdecode:2.0.2'
+    // Socket.IO
+    implementation ('io.socket:socket.io-client:2.1.0') {
+        exclude group: 'org.json', module: 'json'
+    }
     // PDFBox
     implementation 'com.tom-roush:pdfbox-android:2.0.25.0' // don't upgrade due to huge bundle size
     // Unit tests

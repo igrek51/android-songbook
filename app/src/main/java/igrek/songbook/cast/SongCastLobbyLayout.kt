@@ -92,6 +92,8 @@ class SongCastLobbyLayout(
             updateSessionDetails()
             refreshSessionDetails()
         }
+
+        songCastService.onSessionUpdated = ::onSessionUpdated
     }
 
     private fun refreshSessionDetails() {
@@ -140,6 +142,12 @@ class SongCastLobbyLayout(
             else -> "${songCastService.castSongDto?.title} - ${songCastService.castSongDto?.artist}"
         }
         selectedSongText?.text = uiInfoService.resString(R.string.songcast_current_song, songName)
+    }
+
+    private fun onSessionUpdated() {
+        if (isLayoutVisible()) {
+            updateSessionDetails()
+        }
     }
 
     private fun copySessionCode() {
