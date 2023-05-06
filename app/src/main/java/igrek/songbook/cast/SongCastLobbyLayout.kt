@@ -18,7 +18,7 @@ import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.layout.list.StringListView
 import igrek.songbook.system.ClipboardManager
-import igrek.songbook.util.formatTimestampTime
+import igrek.songbook.util.formatTimestampKitchen
 import kotlinx.coroutines.*
 
 @OptIn(DelicateCoroutinesApi::class)
@@ -40,6 +40,7 @@ class SongCastLobbyLayout(
     private var songcastLobbyHint: TextView? = null
     private var selectedSongText: TextView? = null
     private var openSelectedSongButton: Button? = null
+    private var chatMessageInput: TextInputLayout? = null
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
@@ -88,12 +89,18 @@ class SongCastLobbyLayout(
             it.init()
         }
 
+        chatMessageInput = layout.findViewById<TextInputLayout?>(R.id.chatMessageInput)
+        layout.findViewById<ImageButton>(R.id.chatSendButton)
+            ?.setOnClickListener(SafeClickListener {
+                sendChatMessage()
+            })
+
+        songCastService.onSessionUpdated = ::onSessionUpdated
+
         layout.post {
             updateSessionDetails()
             refreshSessionDetails()
         }
-
-        songCastService.onSessionUpdated = ::onSessionUpdated
     }
 
     private fun refreshSessionDetails() {
@@ -102,6 +109,25 @@ class SongCastLobbyLayout(
             result.fold(onSuccess = {
                 GlobalScope.launch(Dispatchers.Main) {
                     updateSessionDetails()
+                }
+            }, onFailure = { e ->
+                UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
+            })
+        }
+    }
+
+    private fun sendChatMessage() {
+        uiInfoService.showInfo(R.string.songcast_chat_message_sending)
+        val text = chatMessageInput?.editText?.text.toString()
+        GlobalScope.launch {
+            val payload = CastChatMessageSent(
+                text = text,
+            )
+            val result = songCastService.postChatMessageAsync(payload).await()
+            result.fold(onSuccess = {
+                uiInfoService.showInfo(R.string.songcast_chat_message_sent)
+                withContext(Dispatchers.Main) {
+                    chatMessageInput?.editText?.setText("")
                 }
             }, onFailure = { e ->
                 UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
@@ -126,7 +152,7 @@ class SongCastLobbyLayout(
         membersListView2?.items = songCastService.spectators.map { formatMember(it) }
 
         chatListView?.items = songCastService.chatMessages.map {
-            val timeFormatted = formatTimestampTime(it.timestamp)
+            val timeFormatted = formatTimestampKitchen(it.timestamp)
             "[$timeFormatted] ${it.author}: ${it.text}"
         }
 
@@ -160,6 +186,9 @@ class SongCastLobbyLayout(
             mutableListOf(
                 ContextMenuBuilder.Action(R.string.songcast_exit_room) {
                     leaveRoomConfirm()
+                },
+                ContextMenuBuilder.Action(R.string.songcast_refresh_session_details) {
+                    refreshSessionDetails()
                 },
             )
         )

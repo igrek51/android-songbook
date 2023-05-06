@@ -618,4 +618,9 @@
     <string name="songcast_open_current_song">Open current song</string>
     <string name="songcast_chat">Chat:</string>
     <string name="songcast_presenter_chose_song">\"%s\" cast the song: %s</string>
+    <string name="songcast_chat_message_sending">Sending...</string>
+    <string name="songcast_chat_message_sent">Message sent</string>
+    <string name="songcast_send_chat_icon_description">Send message</string>
+    <string name="songcast_hint_chat_message">Message</string>
+    <string name="songcast_refresh_session_details">Refresh</string>
 </resources>

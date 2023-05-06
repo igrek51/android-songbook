@@ -100,7 +100,6 @@ class SongCastService(
         currentScroll = null
         chatMessages = listOf()
         ioSocket?.disconnect()
-        ioSocket?.close()
         ioSocket = null
     }
 
@@ -218,6 +217,19 @@ class SongCastService(
         }
     }
 
+    fun postChatMessageAsync(payload: CastChatMessageSent): Deferred<Result<Unit>> {
+        val deviceId = deviceIdProvider.getDeviceId()
+        val json = httpRequester.jsonSerializer.encodeToString(CastChatMessageSent.serializer(), payload)
+        val request: Request = Request.Builder()
+            .url(sessionChatUrl(sessionShortId ?: ""))
+            .header(authDeviceHeader, deviceId)
+            .post(RequestBody.create(httpRequester.jsonType, json))
+            .build()
+        return httpRequester.httpRequestAsync(request) {
+            logger.info("SongCast: chat message sent: ${payload.text}")
+        }
+    }
+
     fun reportSongSelected(song: Song) {
         GlobalScope.launch {
             if (!isPresenter())
@@ -262,34 +274,6 @@ class SongCastService(
         val ephemeralSongN = ephemeralSong ?: return
         GlobalScope.launch {
             appFactory.songOpener.get().openSongPreview(ephemeralSongN)
-        }
-    }
-
-    private val onSocketIOBroadcast: Emitter.Listener = Emitter.Listener { args ->
-        GlobalScope.launch(Dispatchers.IO) {
-            safeExecute {
-                val data = args[0] as JSONObject
-                logger.debug("socket.io broadcast: $data")
-                when (val type = data.getString("type")) {
-
-                    "SongSelectedEvent" -> {
-                        val eventData = data.getJSONObject("data")
-                        onSongSelectedEvent(eventData)
-                    }
-
-                    "SongDeselectedEvent" -> {
-                        onSongDeselectedEvent()
-                    }
-
-                    "CastMembersUpdatedEvent" -> {
-                        refreshSessionDetails()
-                    }
-
-                    else -> {
-                        logger.warn("Unknown SongCast event type: $type")
-                    }
-                }
-            }
         }
     }
 
@@ -352,7 +336,38 @@ class SongCastService(
         })
     }
 
-    private val onClientSubscribed: Emitter.Listener = Emitter.Listener { args ->
+
+    private val onSocketIOBroadcast: Emitter.Listener = Emitter.Listener { args ->
+        GlobalScope.launch(Dispatchers.IO) {
+            safeExecute {
+                val data = args[0] as JSONObject
+                logger.debug("socket.io broadcast: $data")
+                when (val type = data.getString("type")) {
+
+                    "SongSelectedEvent" -> {
+                        val eventData = data.getJSONObject("data")
+                        onSongSelectedEvent(eventData)
+                    }
+
+                    "SongDeselectedEvent" -> {
+                        onSongDeselectedEvent()
+                    }
+
+                    "CastMembersUpdatedEvent" -> {
+                        refreshSessionDetails()
+                    }
+
+                    "ChatMessageReceivedEvent" -> {
+                        refreshSessionDetails()
+                    }
+
+                    else -> logger.warn("Unknown SongCast event type: $type")
+                }
+            }
+        }
+    }
+
+    private val onClientSubscribed: Emitter.Listener = Emitter.Listener {
         logger.debug("ACK: SongCast client subscribed to socket.io")
     }
 
@@ -367,20 +382,28 @@ class SongCastService(
                 socket.on("broadcast_new_event", onSocketIOBroadcast)
                 socket.on("subscribe_for_session_events_ack", onClientSubscribed)
 
+                socket.disconnect()
                 socket.connect()
-                logger.debug("SongCast connected to socket.io")
-                logger.debug("socket.isActive: ${socket.isActive}")
 
-                val args: Array<Any> = arrayOf(
-                    JSONObject(
-                        mapOf("session_id" to sessionShortId)
-                    )
-                )
+                for (i in 1..20) {
+                    if (socket.connected())
+                        break
+                    logger.warn("Reconnecting to socket.io ($i)")
+                    socket.disconnect()
+                    socket.connect()
+                    delay(100 + i * 100L)
+                    if (i == 10 && !socket.connected()) {
+                        throw RuntimeException("Failed to connect to events stream (socket.io)")
+                    }
+                }
 
-                delay(500)
-                socket.emit("subscribe_for_session_events", args, Ack {
-                    logger.debug("ACK: subscribe_for_session_events: $it")
+                socket.emit("subscribe_for_session_events", JSONObject(
+                    mapOf("session_id" to sessionShortId)
+                ), Ack {
+                    logger.debug("ACK: subscribe_for_session_events")
                 })
+
+                logger.debug("SongCast connected to socket.io")
             }
         }
     }
