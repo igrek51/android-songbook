@@ -98,13 +98,13 @@ abstract class AbstractJsonDao<T>(
             throw e
         } catch (e: EmptyFileException) {
             logger.warn("File seems to be empty, trying alternative read: $file")
-            val bytes: ByteArray = readFromFileAlternative(filename)
+            val bytes: ByteArray = readFromPhantomFile(filename)
             val content: String = bytes.toString(Charsets.UTF_8)
             return json.decodeFromString(serializer, content)
         }
     }
 
-    private fun readFromFileAlternative(filename: String): ByteArray {
+    private fun readFromPhantomFile(filename: String): ByteArray {
         val appFilesDir = appFactory.localFilesystem.get().appFilesDir
         val file = File(appFilesDir, filename)
 
@@ -131,7 +131,7 @@ abstract class AbstractJsonDao<T>(
         if (bytes.isEmpty()) {
             throw RuntimeException("File seems to be empty (due to insufficient permissions or corrupted file): $file")
         }
-        logger.debug("successfully read ${bytes.size} bytes from a file: $file")
+        logger.debug("successfully recovered ${bytes.size} bytes from a file: $file")
         return bytes
     }
 
