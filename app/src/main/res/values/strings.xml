@@ -600,7 +600,7 @@
     You\'re a <b>Spectator</b> in this room. Wait for the presenter to choose a song.
 ]]></string>
     <string name="songcast_code_copied">Room code copied to clipboard</string>
-    <string name="songcast_room_code_empty">Room code is empty</string>
+    <string name="songcast_room_code_empty">Enter the 6-digit Room code</string>
     <string name="songcast_room_code_invalid">Room code is invalid, expected 6-digit number</string>
     <string name="songcast_joining_room">Joining the room…</string>
     <string name="songcast_room_joined">Welcome to the Machine, %s.</string>

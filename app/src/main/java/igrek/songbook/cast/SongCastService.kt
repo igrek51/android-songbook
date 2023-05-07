@@ -20,6 +20,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import okhttp3.Request
@@ -72,7 +73,7 @@ class SongCastService(
         return isInRoom() && presenters.any { it.public_member_id == myMemberPublicId }
     }
 
-    private fun clearRoom() {
+    private fun exitRoom() {
         sessionCode = null
         sessionState.initialized = false
         sessionState.members = listOf()
@@ -99,14 +100,11 @@ class SongCastService(
                     CastSessionJoined.serializer(),
                     jsonData
                 )
-            this.sessionCode = responseData.short_id
-            this.myName = responseData.member_name
-            this.myMemberPublicId = responseData.public_member_id
             when (responseData.rejoined) {
                 true -> logger.info("SongCast session rejoined: ${responseData.short_id}")
                 false -> logger.info("SongCast session created: ${responseData.short_id}")
             }
-            streamSocket.connect(responseData.short_id)
+            initRoom(responseData)
             responseData
         }
     }
@@ -128,21 +126,33 @@ class SongCastService(
                     CastSessionJoined.serializer(),
                     jsonData
                 )
-            this.sessionCode = responseData.short_id
-            this.myName = responseData.member_name
-            this.myMemberPublicId = responseData.public_member_id
             when (responseData.rejoined) {
                 true -> logger.info("SongCast session rejoined: ${responseData.short_id}")
                 false -> logger.info("SongCast session joined: ${responseData.short_id}")
             }
-            streamSocket.connect(sessionCode)
+            initRoom(responseData)
             responseData
+        }
+    }
+
+    private fun initRoom(responseData: CastSessionJoined) {
+        this.sessionCode = responseData.short_id
+        this.myName = responseData.member_name
+        this.myMemberPublicId = responseData.public_member_id
+        streamSocket.connect(responseData.short_id)
+
+        GlobalScope.launch(Dispatchers.IO) {
+            while (isInRoom()) {
+                refreshSessionDetails()
+                val interval = 10_000 + (0..1000).random().toLong()
+                delay(interval)
+            }
         }
     }
 
     fun dropSessionAsync(): Deferred<Result<Unit>> {
         val nSessionCode = sessionCode
-        clearRoom()
+        exitRoom()
 
         if (nSessionCode == null) {
             logger.warn("SongCast session not dropped - not joined")
