@@ -2,11 +2,15 @@ package igrek.songbook.persistence.user
 
 import igrek.songbook.info.errorcheck.ContextError
 import igrek.songbook.info.logger.LoggerFactory
+import igrek.songbook.inject.appFactory
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileNotFoundException
+
 
 abstract class AbstractJsonDao<T>(
     private val path: String,
@@ -78,7 +82,7 @@ abstract class AbstractJsonDao<T>(
         try {
             val size = file.length()
             if (size == 0L) {
-                throw RuntimeException("File seems to be empty (due to insufficient permissions or corrupted file): $file")
+                throw EmptyFileException("File seems to be empty (due to insufficient permissions or corrupted file): $file")
             }
             val bytes: ByteArray = file.readBytes()
             if (bytes.isEmpty()) {
@@ -92,7 +96,43 @@ abstract class AbstractJsonDao<T>(
                 throw RuntimeException("Permission denied to read a file: $file", e)
             }
             throw e
+        } catch (e: EmptyFileException) {
+            logger.warn("File seems to be empty, trying alternative read: $file")
+            val bytes: ByteArray = readFromFileAlternative(filename)
+            val content: String = bytes.toString(Charsets.UTF_8)
+            return json.decodeFromString(serializer, content)
         }
+    }
+
+    private fun readFromFileAlternative(filename: String): ByteArray {
+        val appFilesDir = appFactory.localFilesystem.get().appFilesDir
+        val file = File(appFilesDir, filename)
+
+        val size = file.length()
+        if (size > 0) {
+            logger.debug("relative file has non-zero size: $file")
+            return file.readBytes()
+        }
+
+        val buffer = ByteArray(4096)
+        val byteOutput = ByteArrayOutputStream()
+        val inputStream = FileInputStream(file)
+        try {
+            var read: Int
+            while (inputStream.read(buffer).also { read = it } != -1) {
+                byteOutput.write(buffer, 0, read)
+            }
+        } finally {
+            byteOutput.close()
+            inputStream.close()
+        }
+
+        val bytes: ByteArray = byteOutput.toByteArray()
+        if (bytes.isEmpty()) {
+            throw RuntimeException("File seems to be empty (due to insufficient permissions or corrupted file): $file")
+        }
+        logger.debug("successfully read ${bytes.size} bytes from a file: $file")
+        return bytes
     }
 
     fun read(resetOnError: Boolean) {
@@ -114,6 +154,9 @@ abstract class AbstractJsonDao<T>(
         val content = json.encodeToString(serializer, obj)
         val filename = buildFilename(dbName, schemaVersion)
         val file = File(path, filename)
+        if (content.isEmpty()) {
+            logger.error("Empty content to save, aborting: $file")
+        }
         file.writeText(content, Charsets.UTF_8)
         return file
     }
@@ -165,3 +208,5 @@ abstract class AbstractJsonDao<T>(
         save()
     }
 }
+
+class EmptyFileException(message: String) : RuntimeException(message)
