@@ -9,6 +9,7 @@ import io.socket.client.Socket
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONObject
@@ -21,9 +22,10 @@ class StreamSocket(
     private val logger: Logger = LoggerFactory.logger
     private var ioSocket: Socket? = null
     private val debug: Boolean = false
+    private var connectJob: Job? = null
 
     fun connect(sessionCode: String) {
-        GlobalScope.launch(Dispatchers.IO) {
+        connectJob = GlobalScope.launch(Dispatchers.IO) {
             safeExecute {
                 val opts = IO.Options()
                 opts.path = "/socket.io/cast"
@@ -96,5 +98,8 @@ class StreamSocket(
     fun close() {
         ioSocket?.disconnect()
         ioSocket = null
+        if (connectJob?.isActive == true) {
+            connectJob?.cancel()
+        }
     }
 }

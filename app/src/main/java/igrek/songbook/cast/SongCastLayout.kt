@@ -28,6 +28,7 @@ class SongCastLayout(
 
     private var nameInput: TextInputLayout? = null
     private var roomCodeInput: TextInputLayout? = null
+    private var myName: String = ""
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
@@ -40,13 +41,16 @@ class SongCastLayout(
         }
 
         nameInput = layout.findViewById<TextInputLayout?>(R.id.nameInput)?.also {
-            val newName = AnimalNameFeeder().generateName()
-            it.editText?.setText(newName)
+            it.editText?.setText(myName)
 
             it.setEndIconOnClickListener {
                 randomizeName()
             }
         }
+        if (myName.isBlank()) {
+            randomizeName()
+        }
+
         roomCodeInput = layout.findViewById(R.id.roomCodeInput)
 
         layout.findViewById<Button>(R.id.createNewRoomButton)
@@ -73,8 +77,9 @@ class SongCastLayout(
     }
 
     private fun getMemberName(): String {
-        return nameInput?.editText?.text.toString().takeIf { it.isNotBlank() }
+        myName = nameInput?.editText?.text.toString().takeIf { it.isNotBlank() }
             ?: AnimalNameFeeder().generateName()
+        return myName
     }
 
     private suspend fun createRoom() {

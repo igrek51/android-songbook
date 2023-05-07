@@ -98,6 +98,7 @@ class SongCastLobbyLayout(
         songCastService.onSessionUpdated = ::onSessionUpdated
 
         layout.post {
+            appFactory.softKeyboardService.get().hideSoftKeyboard()
             updateSessionDetails()
             refreshSessionDetails()
         }
