@@ -53,7 +53,7 @@ class SongCastLobbyLayout(
         }
 
         roomCodeInput = layout.findViewById<TextInputLayout?>(R.id.roomCodeInput)?.also {
-            it.editText?.setText(songCastService.sessionShortId.orEmpty())
+            it.editText?.setText(songCastService.sessionCode.orEmpty())
             it.editText?.setOnClickListener {
                 copySessionCode()
             }
@@ -89,7 +89,7 @@ class SongCastLobbyLayout(
             it.init()
         }
 
-        chatMessageInput = layout.findViewById<TextInputLayout?>(R.id.chatMessageInput)
+        chatMessageInput = layout.findViewById(R.id.chatMessageInput)
         layout.findViewById<ImageButton>(R.id.chatSendButton)
             ?.setOnClickListener(SafeClickListener {
                 sendChatMessage()
@@ -143,7 +143,7 @@ class SongCastLobbyLayout(
     }
 
     private fun updateSessionDetails() {
-        val sessionShortId = songCastService.sessionShortId ?: ""
+        val sessionShortId = songCastService.sessionCode ?: ""
         val splittedCode = sessionShortId.take(3) + " " + sessionShortId.drop(3)
         roomCodeInput?.editText?.setText(splittedCode)
 
@@ -151,7 +151,7 @@ class SongCastLobbyLayout(
 
         membersListView2?.items = songCastService.spectators.map { formatMember(it) }
 
-        chatListView?.items = songCastService.chatMessages.map {
+        chatListView?.items = songCastService.sessionState.chatMessages.map {
             val timeFormatted = formatTimestampKitchen(it.timestamp)
             "[$timeFormatted] ${it.author}: ${it.text}"
         }
@@ -163,9 +163,9 @@ class SongCastLobbyLayout(
         }
         songcastLobbyHint?.text = uiInfoService.resRichString(textRestId)
 
-        val songName = when (songCastService.castSongDto) {
+        val songName = when (songCastService.sessionState.castSongDto) {
             null -> "None"
-            else -> "${songCastService.castSongDto?.title} - ${songCastService.castSongDto?.artist}"
+            else -> "${songCastService.sessionState.castSongDto?.title} - ${songCastService.sessionState.castSongDto?.artist}"
         }
         selectedSongText?.text = uiInfoService.resString(R.string.songcast_current_song, songName)
     }
@@ -177,7 +177,7 @@ class SongCastLobbyLayout(
     }
 
     private fun copySessionCode() {
-        clipboardManager.copyToSystemClipboard(songCastService.sessionShortId.orEmpty())
+        clipboardManager.copyToSystemClipboard(songCastService.sessionCode.orEmpty())
         uiInfoService.showInfo(R.string.songcast_code_copied)
     }
 
