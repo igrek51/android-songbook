@@ -105,14 +105,7 @@ class SongCastLobbyLayout(
 
     private fun refreshSessionDetails() {
         GlobalScope.launch {
-            val result = songCastService.getSessionDetailsAsync().await()
-            result.fold(onSuccess = {
-                GlobalScope.launch(Dispatchers.Main) {
-                    updateSessionDetails()
-                }
-            }, onFailure = { e ->
-                UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
-            })
+            songCastService.refreshSessionDetails()
         }
     }
 

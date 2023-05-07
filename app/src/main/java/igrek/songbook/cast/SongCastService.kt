@@ -72,12 +72,9 @@ class SongCastService(
         return isInRoom() && presenters.any { it.public_member_id == myMemberPublicId }
     }
 
-    fun isSpectator(): Boolean {
-        return isInRoom() && spectators.any { it.public_member_id == myMemberPublicId }
-    }
-
     private fun clearRoom() {
         sessionCode = null
+        sessionState.initialized = false
         sessionState.members = listOf()
         sessionState.castSongDto = null
         sessionState.currentScroll = null
@@ -163,7 +160,7 @@ class SongCastService(
         }
     }
 
-    fun getSessionDetailsAsync(): Deferred<Result<CastSession>> {
+    private fun getSessionDetailsAsync(): Deferred<Result<CastSession>> {
         val deviceId = deviceIdProvider.getDeviceId()
         val request: Request = Request.Builder()
             .url(sessionUrl(sessionCode ?: ""))
@@ -182,6 +179,7 @@ class SongCastService(
             this.ephemeralSong = buildEphemeralSong(responseData.song)
             sessionState.currentScroll = responseData.scroll
             sessionState.chatMessages = responseData.chat_messages
+            sessionState.initialized = true
             responseData
         }
     }
@@ -281,7 +279,7 @@ class SongCastService(
         val presenter: CastMember? = sessionState.members.find { it.public_member_id == chosenBy }
         val presenterName = presenter?.name ?: "Unknown"
         val songName = buildSongName(title, artist)
-        uiInfoService.showInfo(R.string.songcast_presenter_chose_song, presenterName, songName)
+        uiInfoService.showInfo(R.string.songcast_song_selected, presenterName, songName)
         notifySessionUpdated()
         if (isFollowingCurrentSong(presenter)) {
             openCurrentSong()
@@ -290,6 +288,7 @@ class SongCastService(
 
     private fun isFollowingCurrentSong(presenter: CastMember?): Boolean {
         return when (presenter?.public_member_id) {
+            null -> false
             myMemberPublicId -> false
             else -> true
         }
@@ -321,14 +320,49 @@ class SongCastService(
         }
     }
 
-    private suspend fun refreshSessionDetails() {
+    suspend fun refreshSessionDetails() {
         logger.debug("refreshing SongCast session...")
+        val oldState = sessionState.copy()
         val result = getSessionDetailsAsync().await()
         result.fold(onSuccess = {
+            compareSessionStates(oldState, sessionState)
             notifySessionUpdated()
         }, onFailure = { e ->
             UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
         })
+    }
+
+    private fun compareSessionStates(oldState: SessionState, newState: SessionState) {
+        if (!oldState.initialized)
+            return
+
+        if (oldState.chatMessages != newState.chatMessages) {
+            val newMessages = newState.chatMessages.minus(oldState.chatMessages.toSet())
+            if (newMessages.isNotEmpty()) {
+                val message = newMessages.last()
+                uiInfoService.showInfo(R.string.songcast_new_chat_message, message.author, message.text)
+            }
+        }
+        if (oldState.members != newState.members) {
+            val droppedMembers = oldState.members.toSet().minus(newState.members.toSet())
+            droppedMembers.forEach { member ->
+                uiInfoService.showInfo(R.string.songcast_member_dropped, member.name)
+            }
+            val newMembers = newState.members.toSet().minus(oldState.members.toSet())
+            newMembers.forEach { member ->
+                uiInfoService.showInfo(R.string.songcast_new_member_joined, member.name)
+            }
+        }
+        if (oldState.castSongDto != newState.castSongDto) {
+            val castSongDto = newState.castSongDto
+            if (castSongDto != null) {
+                val chosenById = castSongDto.chosen_by
+                val presenter: CastMember? = sessionState.members.find { it.public_member_id == chosenById }
+                val presenterName = presenter?.name ?: "Unknown"
+                val songName = buildSongName(castSongDto.title, castSongDto.artist)
+                uiInfoService.showInfo(R.string.songcast_song_selected, presenterName, songName)
+            }
+        }
     }
 
     private fun notifySessionUpdated() = GlobalScope.launch(Dispatchers.Main) {
@@ -372,7 +406,7 @@ data class CastMember(
 @Serializable
 data class CastSong(
     var id: String,
-    var chosen_by: String,
+    var chosen_by: String, // public member ID
     var title: String,
     var artist: String?,
     var content: String,
@@ -408,6 +442,7 @@ data class CastChatMessageSent(
 )
 
 data class SessionState(
+    var initialized: Boolean = false,
     var members: List<CastMember> = listOf(),
     var castSongDto: CastSong? = null,
     var currentScroll: CastScroll? = null,
