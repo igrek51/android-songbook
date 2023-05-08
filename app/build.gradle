@@ -28,7 +28,7 @@ android {
     compileSdkVersion 33
     defaultConfig {
         applicationId "igrek.songbook"
-        minSdkVersion 19 // Android 4.4 KitKat
+        minSdkVersion 21 // Android 5.0 Lollipop
         targetSdkVersion 33 // Android 13
         versionCode getVersionCode()
         versionName getVersionName()
@@ -77,6 +77,16 @@ android {
         targetCompatibility '1.8'
         incremental = true
     }
+    kotlinOptions {
+        freeCompilerArgs = ["-Xallow-result-return-type", "-opt-in=kotlin.RequiresOptIn"]
+        jvmTarget = "1.8"
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.4" // based on https://developer.android.com/jetpack/androidx/releases/compose-kotlin
+    }
     configurations.all {
         resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
     }
@@ -85,9 +95,6 @@ android {
             includeAndroidResources = true
             returnDefaultValues = true
         }
-    }
-    kotlinOptions {
-        freeCompilerArgs = ["-Xallow-result-return-type", "-opt-in=kotlin.RequiresOptIn"]
     }
 }
 
@@ -103,8 +110,25 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.activity:activity-ktx:1.7.1'
     implementation 'androidx.work:work-runtime:2.8.1'
+    // Kotlin
+    implementation "androidx.core:core-ktx:1.10.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc'
+    testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     // Material Design UI components
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.9.0'  // TODO REMOVE
+    // Jetpack Compose
+    def composeBom = platform('androidx.compose:compose-bom:2023.04.01')
+    implementation composeBom
+    implementation 'androidx.compose.material3:material3:1.1.0-rc01' // Material Design 3
+//    implementation 'androidx.compose.ui:ui-tooling-preview' // Android Studio Preview support
+    debugImplementation 'androidx.compose.ui:ui-tooling'
+    implementation 'androidx.activity:activity-compose:1.7.1' // Integration with activities
+//    implementation 'androidx.compose.runtime:runtime-rxjava2' // Integration with RxJava
     // Firebase
     implementation 'com.google.firebase:firebase-analytics-ktx:21.2.2'
     implementation 'com.google.firebase:firebase-crashlytics:18.3.7'
@@ -126,15 +150,6 @@ dependencies {
     }
     // Google Play Billing
     implementation 'com.android.billingclient:billing-ktx:5.2.0'
-    // Kotlin
-    implementation "androidx.core:core-ktx:1.10.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
-    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc'
-    testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
-    testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     // Jackson
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3'
     // Guava
@@ -163,6 +178,9 @@ dependencies {
     testImplementation 'org.mockito:mockito-core:2.28.2'
     testImplementation 'org.assertj:assertj-core:3.24.2'
     // Android instumentation tests
+    androidTestImplementation composeBom
+    androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
+    debugImplementation 'androidx.compose.ui:ui-test-manifest'
     androidTestImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test:runner:1.5.2'
     androidTestImplementation 'androidx.test:rules:1.5.0'
