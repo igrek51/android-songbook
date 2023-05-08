@@ -37,6 +37,7 @@ import igrek.songbook.admin.ApiResponseError
 import igrek.songbook.compose.AppTheme
 import igrek.songbook.compose.LabelText
 import igrek.songbook.compose.RichText
+import igrek.songbook.compose.colorLightBackground
 import igrek.songbook.compose.md_theme_light_primaryContainer
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.LocalizedError
@@ -197,7 +198,10 @@ private fun MainPage(layout: SongCastLayout) {
 
         Spacer(modifier = Modifier.size(16.dp))
 
-        TabRow(selectedTabIndex = tabIndex) {
+        TabRow(
+            selectedTabIndex = tabIndex,
+            containerColor = colorLightBackground,
+        ) {
             tabNames.forEachIndexed { index, title ->
                 Tab(
                     text = { Text(title) },
@@ -216,6 +220,7 @@ private fun MainPage(layout: SongCastLayout) {
 @Composable
 private fun TabCreateRoom(layout: SongCastLayout) {
     Column {
+        LabelText(R.string.songcast_create_room_hint)
         Button(
             onClick = {
                 GlobalScope.launch {
@@ -246,7 +251,7 @@ private fun TabJoinRoom(layout: SongCastLayout) {
         OutlinedTextField(
             value = layout.stateModel.roomCode,
             onValueChange = { layout.stateModel.roomCode = it },
-            label = { stringResource(R.string.songcast_room_code_hint) },
+            label = { Text(stringResource(R.string.songcast_room_code_hint)) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth(),
