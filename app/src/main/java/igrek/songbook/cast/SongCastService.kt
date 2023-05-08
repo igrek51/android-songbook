@@ -145,7 +145,7 @@ class SongCastService(
                         millis.limitBetween(0, 25 * 60 * 1000) / 5 // 0-5 min
                     }
                 }
-                val interval = 10_000 + noActivityPenalty + (0..1000).random().toLong()
+                val interval = 5_000 + noActivityPenalty + (0..1000).random().toLong()
                 delay(interval)
             }
         }

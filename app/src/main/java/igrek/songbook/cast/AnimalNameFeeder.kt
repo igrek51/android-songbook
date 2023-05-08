@@ -656,7 +656,6 @@ val adjectives: List<String> = listOf(
     "praising",
     "precious",
     "precise",
-    "preeminent",
     "preferable",
     "prestigious",
     "pretty",

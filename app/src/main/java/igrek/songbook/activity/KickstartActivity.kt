@@ -19,6 +19,11 @@ import kotlinx.coroutines.launch
 @OptIn(DelicateCoroutinesApi::class)
 class KickstartActivity : MainActivity() {
 
+    private suspend fun bootstrapUI() {
+        openNavItem(R.id.nav_song_cast)
+//        clickButtonById(R.id.createNewRoomButton)
+    }
+
     private val logger: Logger = LoggerFactory.logger
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,11 +38,6 @@ class KickstartActivity : MainActivity() {
                 logger.error("Error during bootstraping UI", e)
             }
         }
-    }
-
-    private suspend fun bootstrapUI() {
-        openNavItem(R.id.nav_song_cast)
-        clickButtonById(R.id.createNewRoomButton)
     }
 
     private suspend fun openNavItem(navItemResId: Int) {
