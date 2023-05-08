@@ -20,6 +20,14 @@ fun Float.limitBetween(min: Float, max: Float): Float {
     return this
 }
 
+fun Long.limitBetween(min: Long, max: Long): Long {
+    if (this < 0)
+        return min
+    if (this > max)
+        return max
+    return this
+}
+
 fun Float.cutOffMin(min: Float): Float {
     return if (this < min) min else this
 }

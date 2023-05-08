@@ -15,10 +15,12 @@ import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.util.buildSongName
+import igrek.songbook.util.limitBetween
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -49,6 +51,8 @@ class SongCastService(
     private var ephemeralSong: Song? = null
     var onSessionUpdated: () -> Unit = {}
     var sessionState: SessionState = SessionState()
+    private var periodicRefreshJob: Job? = null
+    private var lastSessionDetailsChange: Long = 0
 
     val presenters: List<CastMember> get() = sessionState.members.filter { it.type == CastMemberType.OWNER.value }
     val spectators: List<CastMember> get() = sessionState.members.filter { it.type == CastMemberType.GUEST.value }
@@ -71,16 +75,6 @@ class SongCastService(
 
     fun isPresenter(): Boolean {
         return isInRoom() && presenters.any { it.public_member_id == myMemberPublicId }
-    }
-
-    private fun exitRoom() {
-        sessionCode = null
-        sessionState.initialized = false
-        sessionState.members = listOf()
-        sessionState.castSongDto = null
-        sessionState.currentScroll = null
-        sessionState.chatMessages = listOf()
-        streamSocket.close()
     }
 
     fun createSessionAsync(memberName: String): Deferred<Result<CastSessionJoined>> {
@@ -141,13 +135,35 @@ class SongCastService(
         this.myMemberPublicId = responseData.public_member_id
         streamSocket.connect(responseData.short_id)
 
-        GlobalScope.launch(Dispatchers.IO) {
+        periodicRefreshJob = GlobalScope.launch(Dispatchers.IO) {
             while (isInRoom()) {
                 refreshSessionDetails()
-                val interval = 10_000 + (0..1000).random().toLong()
+                val noActivityPenalty: Long = when (lastSessionDetailsChange) {
+                    0L -> 0
+                    else -> {
+                        val millis = Date().time - lastSessionDetailsChange
+                        millis.limitBetween(0, 25 * 60 * 1000) / 5 // 0-5 min
+                    }
+                }
+                val interval = 10_000 + noActivityPenalty + (0..1000).random().toLong()
                 delay(interval)
             }
         }
+    }
+
+    private fun exitRoom() {
+        sessionCode = null
+        sessionState.initialized = false
+        sessionState.members = listOf()
+        sessionState.castSongDto = null
+        sessionState.currentScroll = null
+        sessionState.chatMessages = listOf()
+        streamSocket.close()
+        if (periodicRefreshJob?.isActive == true) {
+            periodicRefreshJob?.cancel()
+        }
+        periodicRefreshJob = null
+        lastSessionDetailsChange = 0
     }
 
     fun dropSessionAsync(): Deferred<Result<Unit>> {
@@ -335,16 +351,18 @@ class SongCastService(
         val oldState = sessionState.copy()
         val result = getSessionDetailsAsync().await()
         result.fold(onSuccess = {
-            compareSessionStates(oldState, sessionState)
+            val compareResult = compareSessionStates(oldState, sessionState)
+            if (compareResult)
+                lastSessionDetailsChange = Date().time
             notifySessionUpdated()
         }, onFailure = { e ->
             UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
         })
     }
 
-    private fun compareSessionStates(oldState: SessionState, newState: SessionState) {
+    private fun compareSessionStates(oldState: SessionState, newState: SessionState): Boolean {
         if (!oldState.initialized)
-            return
+            return true
 
         if (oldState.chatMessages != newState.chatMessages) {
             val newMessages = newState.chatMessages.minus(oldState.chatMessages.toSet())
@@ -352,6 +370,7 @@ class SongCastService(
                 val message = newMessages.last()
                 uiInfoService.showInfo(R.string.songcast_new_chat_message, message.author, message.text)
             }
+            return true
         }
         if (oldState.members != newState.members) {
             val droppedMembers = oldState.members.toSet().minus(newState.members.toSet())
@@ -362,6 +381,7 @@ class SongCastService(
             newMembers.forEach { member ->
                 uiInfoService.showInfo(R.string.songcast_new_member_joined, member.name)
             }
+            return true
         }
         if (oldState.castSongDto != newState.castSongDto) {
             val castSongDto = newState.castSongDto
@@ -372,7 +392,9 @@ class SongCastService(
                 val songName = buildSongName(castSongDto.title, castSongDto.artist)
                 uiInfoService.showInfo(R.string.songcast_song_selected, presenterName, songName)
             }
+            return true
         }
+        return false
     }
 
     private fun notifySessionUpdated() = GlobalScope.launch(Dispatchers.Main) {

@@ -40,7 +40,7 @@ class StreamSocket(
                 }
 
                 socket.on("subscribe_for_session_events_ack") {
-                    logger.debug("ACK: SongCast client subscribed to socket.io")
+                    logger.debug("SongCast subscribed to socket.io room events (ACK)")
                 }
 
                 if (debug) {
@@ -53,13 +53,13 @@ class StreamSocket(
                 }
 
                 socket.on(Socket.EVENT_CONNECT) {
-                    logger.debug("socket.io: CONNECT event, id: ${socket.id()}")
+                    logger.debug("socket.io: Connected, id: ${socket.id()}")
                     socket.emit("subscribe_for_session_events", JSONObject(
                         mapOf("session_id" to sessionCode)
                     ))
                 }
                 socket.on(Socket.EVENT_DISCONNECT) {
-                    logger.debug("socket.io: DISCONNECT event")
+                    logger.debug("socket.io: Disconnected")
                 }
                 socket.on(Socket.EVENT_CONNECT_ERROR) {
                     logger.error("socket.io: Connection Eror")
@@ -83,10 +83,12 @@ class StreamSocket(
                 socket.emit("subscribe_for_session_events", JSONObject(
                     mapOf("session_id" to sessionCode)
                 ), Ack {
-                    logger.debug("ACK: subscribe_for_session_events")
+                    if (debug)
+                        logger.debug("ACK: subscribe_for_session_events")
                 })
 
-                logger.debug("SongCast connected to socket.io")
+                if (debug)
+                    logger.debug("SongCast connected to socket.io")
             }
         }
     }
