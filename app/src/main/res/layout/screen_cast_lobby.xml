@@ -78,8 +78,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="wrap_content"
+        android:fillViewport="false">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -192,7 +192,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
                 </com.google.android.material.textfield.TextInputLayout>
-
                 <ImageButton
                     android:id="@+id/chatSendButton"
                     android:layout_width="36dp"
@@ -208,9 +207,12 @@
                     android:scaleType="fitCenter"
                     android:src="@drawable/send"
                     android:contentDescription="@string/songcast_send_chat_icon_description" />
-
             </LinearLayout>
 
+            <androidx.compose.ui.platform.ComposeView
+                android:id="@+id/compose_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </ScrollView>

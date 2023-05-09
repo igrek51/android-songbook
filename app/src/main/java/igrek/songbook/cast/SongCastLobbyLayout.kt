@@ -1,11 +1,40 @@
+@file:OptIn(DelicateCoroutinesApi::class)
+
 package igrek.songbook.cast
 
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.google.android.material.textfield.TextInputLayout
 import igrek.songbook.R
+import igrek.songbook.compose.AppTheme
+import igrek.songbook.compose.LabelText
+import igrek.songbook.compose.RichText
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.SafeClickListener
 import igrek.songbook.info.errorcheck.UiErrorHandler
@@ -21,7 +50,6 @@ import igrek.songbook.system.ClipboardManager
 import igrek.songbook.util.formatTimestampKitchen
 import kotlinx.coroutines.*
 
-@OptIn(DelicateCoroutinesApi::class)
 class SongCastLobbyLayout(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     songCastService: LazyInject<SongCastService> = appFactory.songCastService,
@@ -42,6 +70,8 @@ class SongCastLobbyLayout(
     private var openSelectedSongButton: Button? = null
     private var chatMessageInput: TextInputLayout? = null
 
+    val state = SongCastLobbyState()
+
     override fun showLayout(layout: View) {
         super.showLayout(layout)
 
@@ -51,6 +81,10 @@ class SongCastLobbyLayout(
             }
             return
         }
+
+        val sessionShortId = songCastService.sessionCode ?: ""
+        val splittedCode = sessionShortId.take(3) + " " + sessionShortId.drop(3)
+        state.roomCode = splittedCode
 
         roomCodeInput = layout.findViewById<TextInputLayout?>(R.id.roomCodeInput)?.also {
             it.editText?.setText(songCastService.sessionCode.orEmpty())
@@ -97,6 +131,16 @@ class SongCastLobbyLayout(
 
         songCastService.onSessionUpdated = ::onSessionUpdated
 
+        val thisLayout = this
+        layout.findViewById<ComposeView>(R.id.compose_view).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AppTheme {
+                    MainPage(thisLayout)
+                }
+            }
+        }
+
         layout.post {
             appFactory.softKeyboardService.get().hideSoftKeyboard()
             updateSessionDetails()
@@ -108,6 +152,10 @@ class SongCastLobbyLayout(
         GlobalScope.launch {
             songCastService.refreshSessionDetails()
         }
+    }
+
+    fun openCurrentSong() {
+        songCastService.openCurrentSong()
     }
 
     private fun sendChatMessage() {
@@ -161,7 +209,12 @@ class SongCastLobbyLayout(
             null -> "None"
             else -> "${songCastService.sessionState.castSongDto?.title} - ${songCastService.sessionState.castSongDto?.artist}"
         }
-        selectedSongText?.text = uiInfoService.resString(R.string.songcast_current_song, songName)
+        state.currentSongName = songName
+
+        state.members.clear()
+        state.members.addAll(songCastService.presenters.map { formatMember(it) })
+
+        state.isPresenter = songCastService.isPresenter()
     }
 
     private fun onSessionUpdated() {
@@ -170,7 +223,7 @@ class SongCastLobbyLayout(
         }
     }
 
-    private fun copySessionCode() {
+    fun copySessionCode() {
         clipboardManager.copyToSystemClipboard(songCastService.sessionCode.orEmpty())
         uiInfoService.showInfo(R.string.songcast_code_copied)
     }
@@ -213,4 +266,75 @@ class SongCastLobbyLayout(
         }
     }
 
+}
+
+class SongCastLobbyState {
+    var isPresenter: Boolean by mutableStateOf(false)
+    var roomCode: String by mutableStateOf("")
+    var currentSongName: String by mutableStateOf("")
+    var members: MutableList<String> = mutableStateListOf()
+    var chatMessages: MutableList<String> = mutableStateListOf()
+}
+
+@Composable
+private fun MainPage(layout: SongCastLobbyLayout) {
+//    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+    Column {
+        when (layout.state.isPresenter) {
+            true -> RichText(R.string.songcast_lobby_text_presenter_hint)
+            else -> RichText(R.string.songcast_lobby_text_guest_hint)
+        }
+
+        OutlinedTextField(
+            value = layout.state.roomCode,
+            onValueChange = { },
+            label = { Text(stringResource(R.string.songcast_room_code_hint)) },
+            singleLine = true,
+            enabled = false,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 0.dp),
+            textStyle = LocalTextStyle.current.copy(
+                textAlign = TextAlign.Center,
+                color = Color.White,
+                fontSize = 26.sp,
+                letterSpacing = 5.sp,
+            ),
+            trailingIcon = {
+                IconButton(
+                    onClick = {
+                        layout.copySessionCode()
+                    },
+                ) {
+                    Icon(
+                        painterResource(id = R.drawable.copy),
+                        contentDescription = stringResource(R.string.copy_to_clipboard),
+                    )
+                }
+            },
+        )
+
+        LabelText(R.string.songcast_current_song, layout.state.currentSongName)
+
+        Button(
+            onClick = {
+                GlobalScope.launch {
+                    safeExecute {
+                        layout.openCurrentSong()
+                    }
+                }
+            },
+            modifier = Modifier.fillMaxWidth(),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.0.dp),
+        ) {
+            Text(stringResource(R.string.songcast_open_current_song))
+        }
+
+        Text(stringResource(R.string.songcast_members_presenters))
+
+        layout.state.members.forEach {
+            Text(text = it)
+        }
+
+    }
 }

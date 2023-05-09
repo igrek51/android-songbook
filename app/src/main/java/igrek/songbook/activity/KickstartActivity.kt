@@ -3,6 +3,7 @@ package igrek.songbook.activity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.core.view.isVisible
 import com.google.android.material.navigation.NavigationView
@@ -16,12 +17,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+
 @OptIn(DelicateCoroutinesApi::class)
 class KickstartActivity : MainActivity() {
 
     private suspend fun bootstrapUI() {
         openNavItem(R.id.nav_song_cast)
-//        clickButtonById(R.id.createNewRoomButton)
     }
 
     private val logger: Logger = LoggerFactory.logger
@@ -56,6 +57,25 @@ class KickstartActivity : MainActivity() {
             findViewById<View>(viewResId)?.isVisible == true
         }
         findViewById<View>(viewResId)?.performClick()
+    }
+
+    private fun findButtonByText(text: String): View? {
+        return getAllChildren(window.decorView).find {
+            it is android.widget.Button && it.text == text
+        }
+    }
+
+    private fun getAllChildren(view: View): List<View> {
+        val result = ArrayList<View>()
+        if (view !is ViewGroup) {
+            result.add(view)
+        } else {
+            for (index in 0 until view.childCount) {
+                val child = view.getChildAt(index)
+                result.addAll(getAllChildren(child))
+            }
+        }
+        return result
     }
 
 }

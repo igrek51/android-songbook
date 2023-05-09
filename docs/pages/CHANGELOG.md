@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Added Support for *Song Cast* - displaying songs on many devices over Internet connection.
+  You can create a room so that your friends could join it.
+  Once the presenter chooses a song,
+  it will be broadcasted and displayed on all devices connected to a room.
+- Some of the layouts started to use Jetpack Compose and Material Design Components.
+
+### Changed
+- Default chrods displaying style is now *Chords Above*.
+- Minimal SDK version has been set to API 21 (Android 5.0 Lollipop).
+- Bluetooth song sharing has been rejected in favour of Song Cast over Internet.
 
 ## [1.34.5] - 1897 - 2023-04-13
 ### Added

@@ -581,9 +581,9 @@
     <string name="settings_restore_custom_songs_backup">Restore \"My Songs\" from a local backup</string>
     <string name="action_copy_dialog">Copy</string>
     <string name="nav_song_cast">Song Cast</string>
-    <string name="songcast_create_new_room">Create a Room</string>
+    <string name="songcast_create_new_room">Create a room</string>
     <string name="songcast_enter_room_number_to_join">Enter 6-digit code to join the room:</string>
-    <string name="songcast_create_room_hint">Launch a new Song Cast room so that others can join it.</string>
+    <string name="songcast_create_room_hint">Start a new Song Cast session so that others can join it.</string>
     <string name="songcast_room_code_hint">Room code</string>
     <string name="songcast_hint_my_name">Your name</string>
     <string name="songcast_join_room">Join the room</string>
@@ -617,7 +617,7 @@
     <string name="songcast_randomize_name">Randomize name</string>
     <string name="button_more_description">More</string>
     <string name="button_menu_description">Menu</string>
-    <string name="songcast_current_song">Current song: %s</string>
+    <string name="songcast_current_song" formatted="false">Current song: %s</string>
     <string name="songcast_open_current_song">Open current song</string>
     <string name="songcast_chat">Chat:</string>
     <string name="songcast_chat_message_sending">Sending…</string>

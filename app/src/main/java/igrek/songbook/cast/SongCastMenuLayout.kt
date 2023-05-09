@@ -31,7 +31,6 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import igrek.songbook.R
 import igrek.songbook.admin.ApiResponseError
 import igrek.songbook.compose.AppTheme
@@ -49,8 +48,6 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import kotlinx.coroutines.*
 
-
-@OptIn(DelicateCoroutinesApi::class)
 class SongCastLayout(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     songCastService: LazyInject<SongCastService> = appFactory.songCastService,
@@ -60,7 +57,7 @@ class SongCastLayout(
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val songCastService by LazyExtractor(songCastService)
 
-    val stateModel = StateModel()
+    val state = SongCastMenuState()
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
@@ -72,7 +69,7 @@ class SongCastLayout(
             return
         }
 
-        if (stateModel.myName.isBlank()) {
+        if (state.myName.isBlank()) {
             randomizeName()
         }
 
@@ -88,14 +85,14 @@ class SongCastLayout(
     }
 
     fun randomizeName() {
-        stateModel.myName = AnimalNameFeeder().generateName()
+        state.myName = AnimalNameFeeder().generateName()
     }
 
     private fun getMemberName(): String {
-        if (stateModel.myName.isBlank()) {
-            stateModel.myName = AnimalNameFeeder().generateName()
+        if (state.myName.isBlank()) {
+            state.myName = AnimalNameFeeder().generateName()
         }
-        return stateModel.myName
+        return state.myName
     }
 
     suspend fun createRoom() {
@@ -124,7 +121,7 @@ class SongCastLayout(
     }
 
     suspend fun joinRoom() {
-        val roomCode = stateModel.roomCode.replace(" ", "").trim()
+        val roomCode = state.roomCode.replace(" ", "").trim()
         if (roomCode.isBlank()) {
             throw LocalizedError(R.string.songcast_room_code_empty)
         }
@@ -163,7 +160,7 @@ class SongCastLayout(
 
 }
 
-class StateModel : ViewModel() {
+class SongCastMenuState {
     var myName: String by mutableStateOf("")
     var roomCode: String by mutableStateOf("")
 }
@@ -177,8 +174,8 @@ private fun MainPage(layout: SongCastLayout) {
         RichText(R.string.songcast_feature_hint)
 
         OutlinedTextField(
-            value = layout.stateModel.myName,
-            onValueChange = { layout.stateModel.myName = it },
+            value = layout.state.myName,
+            onValueChange = { layout.state.myName = it },
             label = { Text(stringResource(R.string.songcast_hint_my_name)) },
             singleLine = true,
             trailingIcon = {
@@ -249,8 +246,8 @@ private fun TabJoinRoom(layout: SongCastLayout) {
     Column {
         LabelText(R.string.songcast_enter_room_number_to_join)
         OutlinedTextField(
-            value = layout.stateModel.roomCode,
-            onValueChange = { layout.stateModel.roomCode = it },
+            value = layout.state.roomCode,
+            onValueChange = { layout.state.roomCode = it },
             label = { Text(stringResource(R.string.songcast_room_code_hint)) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),

@@ -16,7 +16,6 @@ class UiErrorHandler(
     private val uiInfoService by LazyExtractor(uiInfoService)
 
     fun handleError(t: Throwable, contextResId: Int = R.string.error_occurred_s) {
-        LoggerFactory.logger.error(t)
         val err: String = when {
             t.message != null -> t.message
             else -> t::class.simpleName
@@ -25,6 +24,7 @@ class UiErrorHandler(
         if (t is LocalizedError) {
             uiInfoService.showInfo(t.messageRes, indefinite = true)
         } else {
+            LoggerFactory.logger.error(t)
             uiInfoService.showInfoAction(
                 contextResId,
                 err,
