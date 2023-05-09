@@ -629,4 +629,5 @@
     <string name="songcast_member_dropped">%s left the room.</string>
     <string name="songcast_new_chat_message" formatted="false">Chat: %s: %s</string>
     <string name="songcast_song_selected" formatted="false">%s opened a song: %s</string>
+    <string name="songcast_chat_message_empty">Enter message</string>
 </resources>

@@ -3,9 +3,7 @@
 package igrek.songbook.cast
 
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
-import android.widget.TextView
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,7 +31,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.android.material.textfield.TextInputLayout
 import igrek.songbook.R
 import igrek.songbook.compose.AppTheme
 import igrek.songbook.compose.LabelText
@@ -48,7 +45,6 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
-import igrek.songbook.layout.list.StringListView
 import igrek.songbook.system.ClipboardManager
 import igrek.songbook.util.formatTimestampKitchen
 import kotlinx.coroutines.*
@@ -63,15 +59,6 @@ class SongCastLobbyLayout(
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val songCastService by LazyExtractor(songCastService)
     private val clipboardManager by LazyExtractor(clipboardManager)
-
-    private var roomCodeInput: TextInputLayout? = null
-    private var membersListView: StringListView? = null
-    private var membersListView2: StringListView? = null
-    private var chatListView: StringListView? = null
-    private var songcastLobbyHint: TextView? = null
-    private var selectedSongText: TextView? = null
-    private var openSelectedSongButton: Button? = null
-    private var chatMessageInput: TextInputLayout? = null
 
     val state = SongCastLobbyState()
 
@@ -89,47 +76,9 @@ class SongCastLobbyLayout(
         val splittedCode = sessionShortId.take(3) + " " + sessionShortId.drop(3)
         state.roomCode = splittedCode
 
-        roomCodeInput = layout.findViewById<TextInputLayout?>(R.id.roomCodeInput)?.also {
-            it.editText?.setText(songCastService.sessionCode.orEmpty())
-            it.editText?.setOnClickListener {
-                copySessionCode()
-            }
-            it.setEndIconOnClickListener {
-                copySessionCode()
-            }
-        }
-
-        songcastLobbyHint = layout.findViewById(R.id.songcastLobbyHint)
-
-        selectedSongText = layout.findViewById(R.id.selectedSongText)
-
-        openSelectedSongButton = layout.findViewById<Button?>(R.id.openSelectedSongButton)?.also {
-            it.setOnClickListener {
-                safeExecute {
-                    songCastService.openCurrentSong()
-                }
-            }
-        }
-
         layout.findViewById<ImageButton>(R.id.moreActionsButton)
             ?.setOnClickListener(SafeClickListener {
                 showMoreActions()
-            })
-
-        membersListView = layout.findViewById<StringListView>(R.id.membersListView)?.also {
-            it.init()
-        }
-        membersListView2 = layout.findViewById<StringListView>(R.id.membersListView2)?.also {
-            it.init()
-        }
-        chatListView = layout.findViewById<StringListView>(R.id.chatListView)?.also {
-            it.init()
-        }
-
-        chatMessageInput = layout.findViewById(R.id.chatMessageInput)
-        layout.findViewById<ImageButton>(R.id.chatSendButton)
-            ?.setOnClickListener(SafeClickListener {
-                sendChatMessage()
             })
 
         songCastService.onSessionUpdated = ::onSessionUpdated
@@ -163,7 +112,12 @@ class SongCastLobbyLayout(
 
     fun sendChatMessage() {
         uiInfoService.showInfo(R.string.songcast_chat_message_sending)
-        val text = chatMessageInput?.editText?.text.toString()
+        val text = state.currentChat
+        if (text.isBlank()) {
+            uiInfoService.showInfo(R.string.songcast_chat_message_empty)
+            return
+        }
+
         GlobalScope.launch {
             val payload = CastChatMessageSent(
                 text = text,
@@ -172,7 +126,7 @@ class SongCastLobbyLayout(
             result.fold(onSuccess = {
                 uiInfoService.showInfo(R.string.songcast_chat_message_sent)
                 withContext(Dispatchers.Main) {
-                    chatMessageInput?.editText?.setText("")
+                    state.currentChat = ""
                 }
             }, onFailure = { e ->
                 UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
@@ -188,31 +142,13 @@ class SongCastLobbyLayout(
     }
 
     private fun updateSessionDetails() {
-        val sessionShortId = songCastService.sessionCode ?: ""
-        val splittedCode = sessionShortId.take(3) + " " + sessionShortId.drop(3)
-        roomCodeInput?.editText?.setText(splittedCode)
-
-        membersListView?.items = songCastService.presenters.map { formatMember(it) }
-
-        membersListView2?.items = songCastService.spectators.map { formatMember(it) }
-
-        chatListView?.items = songCastService.sessionState.chatMessages.map {
-            val timeFormatted = formatTimestampKitchen(it.timestamp)
-            "[$timeFormatted] ${it.author}: ${it.text}"
-        }
-
-        val textRestId = if (songCastService.isPresenter()) {
-            R.string.songcast_lobby_text_presenter_hint
-        } else {
-            R.string.songcast_lobby_text_guest_hint
-        }
-        songcastLobbyHint?.text = uiInfoService.resRichString(textRestId)
-
         val songName = when (songCastService.sessionState.castSongDto) {
             null -> "None"
             else -> "${songCastService.sessionState.castSongDto?.title} - ${songCastService.sessionState.castSongDto?.artist}"
         }
         state.currentSongName = songName
+
+        state.isPresenter = songCastService.isPresenter()
 
         state.presenters.clear()
         state.presenters.addAll(songCastService.presenters.map { formatMember(it) })
@@ -224,8 +160,6 @@ class SongCastLobbyLayout(
             val timeFormatted = formatTimestampKitchen(it.timestamp)
             "[$timeFormatted] ${it.author}: ${it.text}"
         }.toMutableList()
-
-        state.isPresenter = songCastService.isPresenter()
     }
 
     private fun onSessionUpdated() {
@@ -304,9 +238,7 @@ private fun MainPage(layout: SongCastLobbyLayout) {
             label = { Text(stringResource(R.string.songcast_room_code_hint)) },
             singleLine = true,
             enabled = false,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 0.dp),
+            modifier = Modifier.fillMaxWidth().padding(vertical = 0.dp),
             textStyle = LocalTextStyle.current.copy(
                 textAlign = TextAlign.Center,
                 color = Color.White,
