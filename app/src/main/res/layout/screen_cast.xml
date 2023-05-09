@@ -62,75 +62,10 @@
             android:fillViewport="true"
             android:orientation="vertical">
 
-            <TextView
+            <androidx.compose.ui.platform.ComposeView
+                android:id="@+id/compose_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:gravity="bottom"
-                android:text="@string/songcast_feature_hint"
-                android:textSize="18sp" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/nameInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                app:endIconMode="custom"
-                app:endIconDrawable="@android:drawable/ic_popup_sync"
-                app:endIconContentDescription="@string/songcast_randomize_name"
-                android:hint="@string/songcast_hint_my_name"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                >
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="@android:color/darker_gray" />
-
-            <Button
-                android:id="@+id/createNewRoomButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="@string/songcast_create_new_room"
-                />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:gravity="bottom"
-                android:text="@string/songcast_enter_room_number_to_join"
-                android:textSize="18sp" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/roomCodeInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                app:endIconMode="clear_text"
-                android:hint="@string/songcast_room_code_hint"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                >
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <Button
-                android:id="@+id/joinRoomButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="@string/songcast_join_room" />
+                android:layout_height="match_parent" />
 
         </LinearLayout>
     </ScrollView>

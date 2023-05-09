@@ -581,12 +581,15 @@
     <string name="settings_restore_custom_songs_backup">Restore \"My Songs\" from a local backup</string>
     <string name="action_copy_dialog">Copy</string>
     <string name="nav_song_cast">Song Cast</string>
-    <string name="songcast_create_new_room">Create new room</string>
-    <string name="songcast_enter_room_number_to_join">Or enter 6-digit code to join the room:</string>
+    <string name="songcast_create_new_room">Create a Room</string>
+    <string name="songcast_enter_room_number_to_join">Enter 6-digit code to join the room:</string>
+    <string name="songcast_create_room_hint">Launch a new Song Cast room so that others can join it.</string>
     <string name="songcast_room_code_hint">Room code</string>
     <string name="songcast_hint_my_name">Your name</string>
     <string name="songcast_join_room">Join the room</string>
-    <string name="songcast_feature_hint"><b>Song Cast</b> is a Songbook\'s protocol to display songs on many devices. Create a room so that your friends could join it. Once the presenter chooses a song, it will be broadcasted and displayed on all devices connected to a room.</string>
+    <string name="songcast_feature_hint"><![CDATA[
+    <b>Song Cast</b> is a Songbook\'s protocol to display songs on many devices. Create a room so that your friends could join it. Once the presenter chooses a song, it will be broadcasted and displayed on all devices connected to a room.
+]]></string>
     <string name="songcast_lobby">Song Cast Lobby</string>
     <string name="songcast_room_created">Room created. Welcome to the Machine, %s.</string>
     <string name="songcast_room_created_rejoined">We\'ve found your room. Welcome again, %s.</string>
@@ -617,13 +620,13 @@
     <string name="songcast_current_song">Current song: %s</string>
     <string name="songcast_open_current_song">Open current song</string>
     <string name="songcast_chat">Chat:</string>
-    <string name="songcast_chat_message_sending">Sending...</string>
+    <string name="songcast_chat_message_sending">Sending…</string>
     <string name="songcast_chat_message_sent">Message sent</string>
     <string name="songcast_send_chat_icon_description">Send message</string>
     <string name="songcast_hint_chat_message">Message</string>
     <string name="songcast_refresh_session_details">Refresh</string>
     <string name="songcast_new_member_joined">%s joined the room.</string>
     <string name="songcast_member_dropped">%s left the room.</string>
-    <string name="songcast_new_chat_message">Chat: %s: %s</string>
-    <string name="songcast_song_selected">%s opened a song: %s</string>
+    <string name="songcast_new_chat_message" formatted="false">Chat: %s: %s</string>
+    <string name="songcast_song_selected" formatted="false">%s opened a song: %s</string>
 </resources>
