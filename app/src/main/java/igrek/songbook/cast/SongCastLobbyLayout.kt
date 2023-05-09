@@ -156,10 +156,11 @@ class SongCastLobbyLayout(
         state.spectators.clear()
         state.spectators.addAll(songCastService.spectators.map { formatMember(it) })
 
-        state.chatMessages = songCastService.sessionState.chatMessages.map {
+        state.chatMessages.clear()
+        state.chatMessages.addAll(songCastService.sessionState.chatMessages.map {
             val timeFormatted = formatTimestampKitchen(it.timestamp)
             "[$timeFormatted] ${it.author}: ${it.text}"
-        }.toMutableList()
+        })
     }
 
     private fun onSessionUpdated() {
