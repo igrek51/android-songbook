@@ -119,16 +119,12 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc'
     testImplementation "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
     testImplementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-    // Material Design UI components
-    implementation 'com.google.android.material:material:1.9.0'  // TODO REMOVE
     // Jetpack Compose
     def composeBom = platform('androidx.compose:compose-bom:2023.04.01')
     implementation composeBom
     implementation 'androidx.compose.material3:material3:1.1.0-rc01' // Material Design 3
-//    implementation 'androidx.compose.ui:ui-tooling-preview' // Android Studio Preview support
     debugImplementation 'androidx.compose.ui:ui-tooling'
     implementation 'androidx.activity:activity-compose:1.7.1' // Integration with activities
-//    implementation 'androidx.compose.runtime:runtime-rxjava2' // Integration with RxJava
     // Firebase
     implementation 'com.google.firebase:firebase-analytics-ktx:21.2.2'
     implementation 'com.google.firebase:firebase-crashlytics:18.3.7'
