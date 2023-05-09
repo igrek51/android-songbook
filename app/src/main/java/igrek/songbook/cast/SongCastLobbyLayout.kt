@@ -7,8 +7,10 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -21,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
@@ -158,7 +161,7 @@ class SongCastLobbyLayout(
         songCastService.openCurrentSong()
     }
 
-    private fun sendChatMessage() {
+    fun sendChatMessage() {
         uiInfoService.showInfo(R.string.songcast_chat_message_sending)
         val text = chatMessageInput?.editText?.text.toString()
         GlobalScope.launch {
@@ -211,8 +214,16 @@ class SongCastLobbyLayout(
         }
         state.currentSongName = songName
 
-        state.members.clear()
-        state.members.addAll(songCastService.presenters.map { formatMember(it) })
+        state.presenters.clear()
+        state.presenters.addAll(songCastService.presenters.map { formatMember(it) })
+
+        state.spectators.clear()
+        state.spectators.addAll(songCastService.spectators.map { formatMember(it) })
+
+        state.chatMessages = songCastService.sessionState.chatMessages.map {
+            val timeFormatted = formatTimestampKitchen(it.timestamp)
+            "[$timeFormatted] ${it.author}: ${it.text}"
+        }.toMutableList()
 
         state.isPresenter = songCastService.isPresenter()
     }
@@ -272,7 +283,9 @@ class SongCastLobbyState {
     var isPresenter: Boolean by mutableStateOf(false)
     var roomCode: String by mutableStateOf("")
     var currentSongName: String by mutableStateOf("")
-    var members: MutableList<String> = mutableStateListOf()
+    var currentChat: String by mutableStateOf("")
+    var presenters: MutableList<String> = mutableStateListOf()
+    var spectators: MutableList<String> = mutableStateListOf()
     var chatMessages: MutableList<String> = mutableStateListOf()
 }
 
@@ -331,9 +344,44 @@ private fun MainPage(layout: SongCastLobbyLayout) {
         }
 
         Text(stringResource(R.string.songcast_members_presenters))
-
-        layout.state.members.forEach {
+        layout.state.presenters.forEach {
             Text(text = it)
+        }
+
+        Text(stringResource(R.string.songcast_members_spectators))
+        layout.state.spectators.forEach {
+            Text(text = it)
+        }
+
+        Text(stringResource(R.string.songcast_chat))
+        layout.state.chatMessages.forEach {
+            Text(text = it)
+        }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            OutlinedTextField(
+                value = layout.state.currentChat,
+                onValueChange = { layout.state.currentChat = it },
+                label = { Text(stringResource(R.string.songcast_hint_chat_message)) },
+                singleLine = false,
+                modifier = Modifier.weight(1f),
+            )
+            IconButton(
+                modifier = Modifier.size(36.dp).padding(4.dp),
+                onClick = {
+                    GlobalScope.launch {
+                        safeExecute {
+                            layout.sendChatMessage()
+                        }
+                    }
+                }
+            ) {
+                Icon(
+                    painterResource(id = R.drawable.send),
+                    contentDescription = stringResource(R.string.songcast_send_chat_icon_description),
+                    tint = Color.White,
+                )
+            }
         }
 
     }
