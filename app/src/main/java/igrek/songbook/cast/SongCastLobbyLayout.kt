@@ -55,7 +55,6 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
-import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.system.ClipboardManager
 import igrek.songbook.util.formatTimestampKitchen
 import kotlinx.coroutines.*
@@ -168,13 +167,7 @@ class SongCastLobbyLayout(
         state.spectators.addAll(songCastService.spectators)
 
         state.chatEventData.clear()
-        state.chatEventData.addAll(songCastService.sessionState.chatMessages.map {
-            MessageChatEvent(
-                timestamp = it.timestamp,
-                author = it.author,
-                text = it.text,
-            )
-        })
+        state.chatEventData.addAll(songCastService.generateChatEvents())
     }
 
     private fun onSessionUpdated() {
@@ -279,7 +272,6 @@ private fun MainPage(layout: SongCastLobbyLayout) {
         )
 
         LabelText(R.string.songcast_current_song, layout.state.currentSongName)
-
         Button(
             onClick = {
                 GlobalScope.launch {
@@ -294,24 +286,15 @@ private fun MainPage(layout: SongCastLobbyLayout) {
             Text(stringResource(R.string.songcast_open_current_song))
         }
 
-        Text(stringResource(R.string.songcast_members_presenters))
-        layout.state.presenters.forEach {
-            Text(text = layout.formatMember(it))
-        }
 
-        Text(stringResource(R.string.songcast_members_spectators))
-        layout.state.spectators.forEach {
-            Text(text = layout.formatMember(it))
-        }
-
-        Messages(layout)
+        EventsLog(layout)
     }
 }
 
 @Composable
-private fun Messages(layout: SongCastLobbyLayout) {
+private fun EventsLog(layout: SongCastLobbyLayout) {
     layout.state.chatEventData.forEach {
-        CChatEvent(it)
+        CChatEvent(it, layout)
     }
 
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -350,7 +333,7 @@ private fun Messages(layout: SongCastLobbyLayout) {
 }
 
 @Composable
-private fun CChatEvent(event: ChatEvent) {
+private fun CChatEvent(event: ChatEvent, layout: SongCastLobbyLayout) {
     when (event) {
         is SystemChatEvent -> {
             TimeHeader(event.timestamp)
@@ -358,22 +341,26 @@ private fun CChatEvent(event: ChatEvent) {
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 text = event.text,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
 
         is MessageChatEvent -> {
             TimeHeader(event.timestamp)
             Card(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp, horizontal = 16.dp),
+                modifier = Modifier.fillMaxWidth().padding(4.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
                 Text(
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp, horizontal = 8.dp),
                     textAlign = TextAlign.Left,
                     fontWeight = FontWeight.Bold,
                     text = event.author,
                     style = MaterialTheme.typography.bodySmall,
                 )
                 Text(
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp, horizontal = 8.dp),
                     textAlign = TextAlign.Left,
                     text = event.text,
                     style = MaterialTheme.typography.bodySmall,
@@ -388,7 +375,22 @@ private fun CChatEvent(event: ChatEvent) {
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 text = "${event.author} opened song: $songName",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+            Button(
+                onClick = {
+                    GlobalScope.launch {
+                        safeExecute {
+                            layout.openCurrentSong()
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.0.dp),
+            ) {
+                Text(stringResource(R.string.songcast_open_current_song))
+            }
         }
     }
 }
@@ -417,22 +419,3 @@ private fun RowScope.TimeHeaderLine() {
         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
     )
 }
-
-open class ChatEvent
-
-data class SystemChatEvent(
-    val timestamp: Long,
-    val text: String,
-) : ChatEvent()
-
-data class MessageChatEvent(
-    val timestamp: Long,
-    val author: String,
-    val text: String,
-) : ChatEvent()
-
-data class SongChatEvent(
-    val timestamp: Long,
-    val author: String,
-    val song: Song,
-) : ChatEvent()

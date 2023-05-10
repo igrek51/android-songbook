@@ -56,11 +56,13 @@ class ActivityController(
     }
 
     fun onStart() {
-        if (initialized) {
-            val activityName = activity::class.simpleName
-            logger.debug("starting $activityName...")
-            userDataDao.requestSave(false)
-        }
+        if (!initialized)
+            return
+
+        val activityName = activity::class.simpleName
+        logger.debug("starting $activityName...")
+        userDataDao.requestSave(false)
+        appFactory.songCastService.get().refreshSessionIfInRoom()
     }
 
     fun onStop() {

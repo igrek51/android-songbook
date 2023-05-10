@@ -53,6 +53,7 @@ class SongCastService(
     var sessionState: SessionState = SessionState()
     private var periodicRefreshJob: Job? = null
     private var lastSessionDetailsChange: Long = 0
+    private var joinTimestamp: Long = 0
 
     val presenters: List<CastMember> get() = sessionState.members.filter { it.type == CastMemberType.OWNER.value }
     val spectators: List<CastMember> get() = sessionState.members.filter { it.type == CastMemberType.GUEST.value }
@@ -134,10 +135,10 @@ class SongCastService(
         this.myName = responseData.member_name
         this.myMemberPublicId = responseData.public_member_id
         streamSocket.connect(responseData.short_id)
+        this.joinTimestamp = Date().time / 1000
 
         periodicRefreshJob = GlobalScope.launch(Dispatchers.IO) {
             while (isInRoom()) {
-                refreshSessionDetails()
                 val noActivityPenalty: Long = when (lastSessionDetailsChange) {
                     0L -> 0
                     else -> {
@@ -146,6 +147,8 @@ class SongCastService(
                     }
                 }
                 val interval = 5_000 + noActivityPenalty + (0..1000).random().toLong()
+                logger.debug("refreshing SongCast session, next in ${interval/1000}s...")
+                refreshSessionDetails()
                 delay(interval)
             }
         }
@@ -346,8 +349,15 @@ class SongCastService(
         }
     }
 
+    fun refreshSessionIfInRoom() {
+        if (!isInRoom())
+            return
+        GlobalScope.launch(Dispatchers.IO) {
+            refreshSessionDetails()
+        }
+    }
+
     suspend fun refreshSessionDetails() {
-        logger.debug("refreshing SongCast session...")
         val oldState = sessionState.copy()
         val result = getSessionDetailsAsync().await()
         result.fold(onSuccess = {
@@ -399,6 +409,50 @@ class SongCastService(
 
     private fun notifySessionUpdated() = GlobalScope.launch(Dispatchers.Main) {
         onSessionUpdated()
+    }
+
+    fun generateChatEvents(): List<ChatEvent> {
+        val allEvents = mutableListOf<ChatEvent>()
+        allEvents.addAll(
+            presenters.map {
+                val name = if (it.public_member_id == myMemberPublicId) "You (${it.name})" else it.name
+                SystemChatEvent(
+                    timestamp = this.joinTimestamp,
+                    text = "$name joined the room as Presenter",
+                )
+            }
+        )
+        allEvents.addAll(
+            spectators.map {
+                val name = if (it.public_member_id == myMemberPublicId) "You (${it.name})" else it.name
+                SystemChatEvent(
+                    timestamp = this.joinTimestamp,
+                    text = "$name joined the room as Spectator",
+                )
+            }
+        )
+
+        allEvents.addAll(sessionState.chatMessages.map {
+            MessageChatEvent(
+                timestamp = it.timestamp,
+                author = it.author,
+                text = it.text,
+            )
+        })
+
+        sessionState.castSongDto?.let { castSongDto ->
+            ephemeralSong?.let { ephemeralSong ->
+                allEvents.add(
+                    SongChatEvent(
+                        timestamp = ephemeralSong.createTime / 1000,
+                        author = castSongDto.chosen_by,
+                        song = ephemeralSong,
+                    )
+                )
+            }
+        }
+
+        return allEvents.sortedBy { it.timestamp }
     }
 
 }
