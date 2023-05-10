@@ -7,12 +7,15 @@ import android.widget.ImageButton
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -44,6 +47,7 @@ import androidx.compose.ui.unit.sp
 import igrek.songbook.R
 import igrek.songbook.compose.AppTheme
 import igrek.songbook.compose.RichText
+import igrek.songbook.compose.md_theme_light_primaryContainer
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.SafeClickListener
 import igrek.songbook.info.errorcheck.UiErrorHandler
@@ -194,6 +198,28 @@ class SongCastLobbyLayout(
         }
     }
 
+    private fun leaveOrMinimizeConfirm() {
+        uiInfoService.dialogThreeChoices(
+            titleResId = R.string.songcast_leave_or_stay_title,
+            messageResId = R.string.songcast_leave_or_minimize_room,
+            negativeButton = R.string.songcast_action_leave, negativeAction = {
+                GlobalScope.launch {
+                    exitRoom()
+                }
+            },
+            positiveButton = R.string.songcast_action_stay, positiveAction = {
+                uiInfoService.showInfo(R.string.songcast_room_is_still_open)
+                super.onBackClicked()
+            }
+        )
+
+        ConfirmDialogBuilder().confirmAction(R.string.songcast_confirm_leave_room) {
+            GlobalScope.launch {
+                exitRoom()
+            }
+        }
+    }
+
     private suspend fun exitRoom() {
         uiInfoService.showInfo(R.string.songcast_you_left_the_room)
         val result = songCastService.dropSessionAsync().await()
@@ -205,12 +231,10 @@ class SongCastLobbyLayout(
     }
 
     override fun onBackClicked() {
-        uiInfoService.showInfo(R.string.songcast_room_is_still_open)
-        super.onBackClicked()
-//        when (songCastService.isInRoom()) {
-//            true -> leaveRoomConfirm()
-//            else -> super.onBackClicked()
-//        }
+        when (songCastService.isInRoom()) {
+            true -> leaveOrMinimizeConfirm()
+            else -> super.onBackClicked()
+        }
     }
 }
 
@@ -228,7 +252,9 @@ class SongCastLobbyState {
 private fun MainPage(layout: SongCastLobbyLayout) {
     Column {
         Card(
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
             when (layout.state.isPresenter) {
@@ -243,7 +269,9 @@ private fun MainPage(layout: SongCastLobbyLayout) {
             label = { Text(stringResource(R.string.songcast_room_code_hint)) },
             singleLine = true,
             enabled = false,
-            modifier = Modifier.fillMaxWidth().padding(vertical = 0.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 0.dp),
             textStyle = LocalTextStyle.current.copy(
                 textAlign = TextAlign.Center,
                 color = Color.White,
@@ -291,7 +319,10 @@ private fun EventsLog(layout: SongCastLobbyLayout) {
             })
         )
         IconButton(
-            modifier = Modifier.size(36.dp).padding(4.dp).align(Alignment.CenterVertically),
+            modifier = Modifier
+                .size(36.dp)
+                .padding(4.dp)
+                .align(Alignment.CenterVertically),
             onClick = {
                 GlobalScope.launch {
                     safeExecute {
@@ -326,18 +357,24 @@ private fun CLogEvent(event: LogEvent, layout: SongCastLobbyLayout) {
         is MessageLogEvent -> {
             TimeHeader(event.timestamp)
             Card(
-                modifier = Modifier.fillMaxWidth().padding(4.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
                 Text(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp, horizontal = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 2.dp, horizontal = 8.dp),
                     textAlign = TextAlign.Left,
                     fontWeight = FontWeight.Bold,
                     text = event.author,
                     style = MaterialTheme.typography.bodySmall,
                 )
                 Text(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp, horizontal = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 2.dp, horizontal = 8.dp),
                     textAlign = TextAlign.Left,
                     text = event.text,
                     style = MaterialTheme.typography.bodySmall,
@@ -366,6 +403,13 @@ private fun CLogEvent(event: LogEvent, layout: SongCastLobbyLayout) {
                 modifier = Modifier.fillMaxWidth(),
                 elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.0.dp),
             ) {
+                Icon(
+                    painterResource(id = R.drawable.note),
+                    contentDescription = null,
+                    modifier = Modifier.size(ButtonDefaults.IconSize),
+                    tint = md_theme_light_primaryContainer,
+                )
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
                 Text(stringResource(R.string.songcast_open_current_song, songName))
             }
         }
@@ -376,7 +420,9 @@ private fun CLogEvent(event: LogEvent, layout: SongCastLobbyLayout) {
 fun TimeHeader(timestamp: Long) {
     val timeFormatted = formatTimestampKitchen(timestamp)
     Row(
-        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp).height(12.dp)
+        modifier = Modifier
+            .padding(vertical = 8.dp, horizontal = 16.dp)
+            .height(12.dp)
     ) {
         TimeHeaderLine()
         Text(
@@ -392,7 +438,9 @@ fun TimeHeader(timestamp: Long) {
 @Composable
 private fun RowScope.TimeHeaderLine() {
     Divider(
-        modifier = Modifier.weight(1f).align(Alignment.CenterVertically),
+        modifier = Modifier
+            .weight(1f)
+            .align(Alignment.CenterVertically),
         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
     )
 }

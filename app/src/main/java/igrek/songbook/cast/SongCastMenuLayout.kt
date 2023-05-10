@@ -103,7 +103,7 @@ class SongCastMenuLayout(
         uiInfoService.showInfo(R.string.songcast_creating_room, indefinite = true)
         val result = songCastService.createSessionAsync(getMemberName()).await()
         result.fold(onSuccess = { response: CastSessionJoined ->
-            layoutController.showLayout(SongCastLobbyLayout::class) {
+            layoutController.showLayout(SongCastLobbyLayout::class, disableReturn = true) {
                 GlobalScope.launch(Dispatchers.Main) {
                     delay(100) // WTF: Android hackaround
                     when (response.rejoined) {
@@ -136,7 +136,7 @@ class SongCastMenuLayout(
         uiInfoService.showInfo(R.string.songcast_joining_room, indefinite = true)
         val result = songCastService.joinSessionAsync(roomCode, getMemberName()).await()
         result.fold(onSuccess = { response: CastSessionJoined ->
-            layoutController.showLayout(SongCastLobbyLayout::class) {
+            layoutController.showLayout(SongCastLobbyLayout::class, disableReturn = true) {
                 GlobalScope.launch(Dispatchers.Main) {
                     delay(100) // WTF: Android hackaround
                     when (response.rejoined) {

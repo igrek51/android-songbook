@@ -78,6 +78,10 @@ class SongCastService(
         return isInRoom() && presenters.any { it.public_member_id == myMemberPublicId }
     }
 
+    fun findMemberByPublicId(publicId: String): CastMember? {
+        return sessionState.members.find { it.public_member_id == publicId }
+    }
+
     fun createSessionAsync(memberName: String): Deferred<Result<CastSessionJoined>> {
         logger.info("Creating SongCast session by member '$memberName'...")
         val deviceId = deviceIdProvider.getDeviceId()
@@ -415,7 +419,7 @@ class SongCastService(
         val allEvents = mutableListOf<LogEvent>()
         allEvents.addAll(
             presenters.map {
-                val name = if (it.public_member_id == myMemberPublicId) "You (${it.name})" else it.name
+                val name = if (it.public_member_id == myMemberPublicId) "${it.name} (You)" else it.name
                 SystemLogEvent(
                     timestamp = this.joinTimestamp,
                     text = "$name joined the room as Presenter",
@@ -424,7 +428,7 @@ class SongCastService(
         )
         allEvents.addAll(
             spectators.map {
-                val name = if (it.public_member_id == myMemberPublicId) "You (${it.name})" else it.name
+                val name = if (it.public_member_id == myMemberPublicId) "${it.name} (You)" else it.name
                 SystemLogEvent(
                     timestamp = this.joinTimestamp,
                     text = "$name joined the room as Spectator",
@@ -442,10 +446,11 @@ class SongCastService(
 
         sessionState.castSongDto?.let { castSongDto ->
             ephemeralSong?.let { ephemeralSong ->
+                val member = findMemberByPublicId(castSongDto.chosen_by)
                 allEvents.add(
                     SongLogEvent(
                         timestamp = ephemeralSong.createTime / 1000,
-                        author = castSongDto.chosen_by,
+                        author = member?.name ?: "Unknown",
                         song = ephemeralSong,
                     )
                 )

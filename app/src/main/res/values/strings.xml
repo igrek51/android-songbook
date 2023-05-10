@@ -629,6 +629,10 @@
     <string name="songcast_new_chat_message" formatted="false">Chat: %s: %s</string>
     <string name="songcast_song_selected" formatted="false">%s opened a song: %s</string>
     <string name="songcast_chat_message_empty">Enter message</string>
-    <string name="songcast_room_is_still_open">SongCast room is still open.</string>
+    <string name="songcast_room_is_still_open">SongCast is minimized and running in background.</string>
     <string name="songcast_connection_context">SongCast connection failed</string>
+    <string name="songcast_leave_or_minimize_room">You are in a SongCast room.\nWould you like to leave it or stay and minimize it?</string>
+    <string name="songcast_action_leave">Leave</string>
+    <string name="songcast_action_stay">Stay</string>
+    <string name="songcast_leave_or_stay_title">Should I stay or should I go?</string>
 </resources>
