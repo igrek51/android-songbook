@@ -3,9 +3,11 @@
 package igrek.songbook.cast
 
 import android.view.View
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -14,6 +16,8 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -48,7 +52,7 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import kotlinx.coroutines.*
 
-class SongCastLayout(
+class SongCastMenuLayout(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     songCastService: LazyInject<SongCastService> = appFactory.songCastService,
 ) : InflatedLayout(
@@ -166,12 +170,17 @@ class SongCastMenuState {
 }
 
 @Composable
-private fun MainPage(layout: SongCastLayout) {
+private fun MainPage(layout: SongCastMenuLayout) {
     var tabIndex by remember { mutableStateOf(0) }
     val tabNames = listOf("Create Room", "Join Room")
 
     Column {
-        RichText(R.string.songcast_feature_hint)
+        Card(
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        ) {
+            RichText(R.string.songcast_feature_hint)
+        }
 
         OutlinedTextField(
             value = layout.state.myName,
@@ -215,7 +224,7 @@ private fun MainPage(layout: SongCastLayout) {
 }
 
 @Composable
-private fun TabCreateRoom(layout: SongCastLayout) {
+private fun TabCreateRoom(layout: SongCastMenuLayout) {
     Column {
         LabelText(R.string.songcast_create_room_hint)
         Button(
@@ -242,7 +251,7 @@ private fun TabCreateRoom(layout: SongCastLayout) {
 }
 
 @Composable
-private fun TabJoinRoom(layout: SongCastLayout) {
+private fun TabJoinRoom(layout: SongCastMenuLayout) {
     Column {
         LabelText(R.string.songcast_enter_room_number_to_join)
         OutlinedTextField(

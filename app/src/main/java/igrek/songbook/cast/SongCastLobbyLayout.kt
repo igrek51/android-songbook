@@ -6,14 +6,22 @@ import android.view.View
 import android.widget.ImageButton
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +36,8 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,6 +55,7 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
+import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.system.ClipboardManager
 import igrek.songbook.util.formatTimestampKitchen
 import kotlinx.coroutines.*
@@ -67,7 +78,7 @@ class SongCastLobbyLayout(
 
         if (!songCastService.isInRoom()) {
             GlobalScope.launch(Dispatchers.Main) {
-                layoutController.showLayout(SongCastLayout::class, disableReturn = true)
+                layoutController.showLayout(SongCastMenuLayout::class, disableReturn = true)
             }
             return
         }
@@ -112,7 +123,7 @@ class SongCastLobbyLayout(
 
     fun sendChatMessage() {
         uiInfoService.showInfo(R.string.songcast_chat_message_sending)
-        val text = state.currentChat
+        val text = state.currentChat.trim()
         if (text.isBlank()) {
             uiInfoService.showInfo(R.string.songcast_chat_message_empty)
             return
@@ -134,7 +145,7 @@ class SongCastLobbyLayout(
         }
     }
 
-    private fun formatMember(member: CastMember): String {
+    fun formatMember(member: CastMember): String {
         if (member.public_member_id == songCastService.myMemberPublicId) {
             return "- ${member.name} (You)"
         }
@@ -151,15 +162,18 @@ class SongCastLobbyLayout(
         state.isPresenter = songCastService.isPresenter()
 
         state.presenters.clear()
-        state.presenters.addAll(songCastService.presenters.map { formatMember(it) })
+        state.presenters.addAll(songCastService.presenters)
 
         state.spectators.clear()
-        state.spectators.addAll(songCastService.spectators.map { formatMember(it) })
+        state.spectators.addAll(songCastService.spectators)
 
-        state.chatMessages.clear()
-        state.chatMessages.addAll(songCastService.sessionState.chatMessages.map {
-            val timeFormatted = formatTimestampKitchen(it.timestamp)
-            "[$timeFormatted] ${it.author}: ${it.text}"
+        state.chatEventData.clear()
+        state.chatEventData.addAll(songCastService.sessionState.chatMessages.map {
+            MessageChatEvent(
+                timestamp = it.timestamp,
+                author = it.author,
+                text = it.text,
+            )
         })
     }
 
@@ -202,7 +216,7 @@ class SongCastLobbyLayout(
         }, onFailure = { e ->
             UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
         })
-        layoutController.showLayout(SongCastLayout::class, disableReturn = true)
+        layoutController.showLayout(SongCastMenuLayout::class, disableReturn = true)
     }
 
     override fun onBackClicked() {
@@ -219,18 +233,22 @@ class SongCastLobbyState {
     var roomCode: String by mutableStateOf("")
     var currentSongName: String by mutableStateOf("")
     var currentChat: String by mutableStateOf("")
-    var presenters: MutableList<String> = mutableStateListOf()
-    var spectators: MutableList<String> = mutableStateListOf()
-    var chatMessages: MutableList<String> = mutableStateListOf()
+    var presenters: MutableList<CastMember> = mutableStateListOf()
+    var spectators: MutableList<CastMember> = mutableStateListOf()
+    var chatEventData: MutableList<ChatEvent> = mutableStateListOf()
 }
 
 @Composable
 private fun MainPage(layout: SongCastLobbyLayout) {
-//    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
     Column {
-        when (layout.state.isPresenter) {
-            true -> RichText(R.string.songcast_lobby_text_presenter_hint)
-            else -> RichText(R.string.songcast_lobby_text_guest_hint)
+        Card(
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        ) {
+            when (layout.state.isPresenter) {
+                true -> RichText(R.string.songcast_lobby_text_presenter_hint)
+                else -> RichText(R.string.songcast_lobby_text_guest_hint)
+            }
         }
 
         OutlinedTextField(
@@ -278,44 +296,143 @@ private fun MainPage(layout: SongCastLobbyLayout) {
 
         Text(stringResource(R.string.songcast_members_presenters))
         layout.state.presenters.forEach {
-            Text(text = it)
+            Text(text = layout.formatMember(it))
         }
 
         Text(stringResource(R.string.songcast_members_spectators))
         layout.state.spectators.forEach {
-            Text(text = it)
+            Text(text = layout.formatMember(it))
         }
 
-        Text(stringResource(R.string.songcast_chat))
-        layout.state.chatMessages.forEach {
-            Text(text = it)
-        }
+        Messages(layout)
+    }
+}
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            OutlinedTextField(
-                value = layout.state.currentChat,
-                onValueChange = { layout.state.currentChat = it },
-                label = { Text(stringResource(R.string.songcast_hint_chat_message)) },
-                singleLine = false,
-                modifier = Modifier.weight(1f),
-            )
-            IconButton(
-                modifier = Modifier.size(36.dp).padding(4.dp),
-                onClick = {
-                    GlobalScope.launch {
-                        safeExecute {
-                            layout.sendChatMessage()
-                        }
+@Composable
+private fun Messages(layout: SongCastLobbyLayout) {
+    layout.state.chatEventData.forEach {
+        CChatEvent(it)
+    }
+
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        OutlinedTextField(
+            value = layout.state.currentChat,
+            onValueChange = { layout.state.currentChat = it },
+            label = { Text(stringResource(R.string.songcast_hint_chat_message)) },
+            singleLine = true,
+            modifier = Modifier.weight(1f),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
+            keyboardActions = KeyboardActions(onSend = {
+                GlobalScope.launch {
+                    safeExecute {
+                        layout.sendChatMessage()
                     }
                 }
+            })
+        )
+        IconButton(
+            modifier = Modifier.size(36.dp).padding(4.dp).align(Alignment.CenterVertically),
+            onClick = {
+                GlobalScope.launch {
+                    safeExecute {
+                        layout.sendChatMessage()
+                    }
+                }
+            }
+        ) {
+            Icon(
+                painterResource(id = R.drawable.send),
+                contentDescription = stringResource(R.string.songcast_send_chat_icon_description),
+                tint = Color.White,
+            )
+        }
+    }
+}
+
+@Composable
+private fun CChatEvent(event: ChatEvent) {
+    when (event) {
+        is SystemChatEvent -> {
+            TimeHeader(event.timestamp)
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                text = event.text,
+            )
+        }
+
+        is MessageChatEvent -> {
+            TimeHeader(event.timestamp)
+            Card(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp, horizontal = 16.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
-                Icon(
-                    painterResource(id = R.drawable.send),
-                    contentDescription = stringResource(R.string.songcast_send_chat_icon_description),
-                    tint = Color.White,
+                Text(
+                    textAlign = TextAlign.Left,
+                    fontWeight = FontWeight.Bold,
+                    text = event.author,
+                    style = MaterialTheme.typography.bodySmall,
+                )
+                Text(
+                    textAlign = TextAlign.Left,
+                    text = event.text,
+                    style = MaterialTheme.typography.bodySmall,
                 )
             }
         }
 
+        is SongChatEvent -> {
+            TimeHeader(event.timestamp)
+            val songName = event.song.displayName()
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                text = "${event.author} opened song: $songName",
+            )
+        }
     }
 }
+
+@Composable
+fun TimeHeader(timestamp: Long) {
+    val timeFormatted = formatTimestampKitchen(timestamp)
+    Row(
+        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp).height(12.dp)
+    ) {
+        TimeHeaderLine()
+        Text(
+            text = timeFormatted,
+            modifier = Modifier.padding(horizontal = 16.dp),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        TimeHeaderLine()
+    }
+}
+
+@Composable
+private fun RowScope.TimeHeaderLine() {
+    Divider(
+        modifier = Modifier.weight(1f).align(Alignment.CenterVertically),
+        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+    )
+}
+
+open class ChatEvent
+
+data class SystemChatEvent(
+    val timestamp: Long,
+    val text: String,
+) : ChatEvent()
+
+data class MessageChatEvent(
+    val timestamp: Long,
+    val author: String,
+    val text: String,
+) : ChatEvent()
+
+data class SongChatEvent(
+    val timestamp: Long,
+    val author: String,
+    val song: Song,
+) : ChatEvent()

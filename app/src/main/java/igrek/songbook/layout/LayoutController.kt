@@ -15,7 +15,7 @@ import igrek.songbook.about.WebviewLayoutController
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.billing.BillingLayoutController
-import igrek.songbook.cast.SongCastLayout
+import igrek.songbook.cast.SongCastMenuLayout
 import igrek.songbook.cast.SongCastLobbyLayout
 import igrek.songbook.custom.CustomSongsListLayoutController
 import igrek.songbook.custom.EditSongLayoutController
@@ -90,10 +90,12 @@ class LayoutController(
         PlaylistFillLayoutController::class to appFactory.playlistFillLayoutController,
         LogsLayoutController::class to appFactory.logsLayoutController,
         SongCastLobbyLayout::class to appFactory.songCastLobbyLayout,
-        SongCastLayout::class to appFactory.songCastLayout,
+        SongCastMenuLayout::class to appFactory.songCastMenuLayout,
     )
     private val logger = LoggerFactory.logger
     private val layoutCache = hashMapOf<Int, View>()
+    var initializedLayout: KClass<out MainLayout>? = null
+        private set
 
     suspend fun init() {
         withContext(Dispatchers.Main) {
@@ -166,6 +168,7 @@ class LayoutController(
 
         mainLayout.showLayout(properLayoutView)
         postInitLayout(mainLayout)
+        initializedLayout = mainLayout::class
     }
 
     private fun createLayout(layoutResourceId: Int): Pair<View, Boolean> {
