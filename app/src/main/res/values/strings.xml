@@ -592,7 +592,7 @@
 ]]></string>
     <string name="songcast_lobby">Song Cast Lobby</string>
     <string name="songcast_room_created">Room created. Welcome to the Machine, %s.</string>
-    <string name="songcast_room_created_rejoined">We\'ve found your room. Welcome again, %s.</string>
+    <string name="songcast_room_created_rejoined">We\'ve found your previous room. Welcome again, %s.</string>
     <string name="songcast_creating_room">Creating a room…</string>
     <string name="songcast_lobby_text_presenter_hint"><![CDATA[
     You\'re a <b>Presenter</b> in this room. Once you open any song, the other members will see it too.
@@ -631,7 +631,7 @@
     <string name="songcast_chat_message_empty">Enter message</string>
     <string name="songcast_room_is_still_open">SongCast is minimized and running in background.</string>
     <string name="songcast_connection_context">SongCast connection failed</string>
-    <string name="songcast_leave_or_minimize_room">You are in a SongCast room.\nWould you like to leave it or stay and minimize it?</string>
+    <string name="songcast_leave_or_minimize_room">You are in a Song Cast room.\nWould you like to leave it or stay connected by minimizing it?</string>
     <string name="songcast_action_leave">Leave</string>
     <string name="songcast_action_stay">Stay</string>
     <string name="songcast_leave_or_stay_title">Should I stay or should I go?</string>

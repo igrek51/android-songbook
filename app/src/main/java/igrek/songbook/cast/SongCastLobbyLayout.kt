@@ -212,12 +212,6 @@ class SongCastLobbyLayout(
                 super.onBackClicked()
             }
         )
-
-        ConfirmDialogBuilder().confirmAction(R.string.songcast_confirm_leave_room) {
-            GlobalScope.launch {
-                exitRoom()
-            }
-        }
     }
 
     private suspend fun exitRoom() {

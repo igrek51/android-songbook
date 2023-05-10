@@ -78,7 +78,7 @@ class SongCastService(
         return isInRoom() && presenters.any { it.public_member_id == myMemberPublicId }
     }
 
-    fun findMemberByPublicId(publicId: String): CastMember? {
+    private fun findMemberByPublicId(publicId: String): CastMember? {
         return sessionState.members.find { it.public_member_id == publicId }
     }
 
@@ -166,9 +166,6 @@ class SongCastService(
         sessionState.currentScroll = null
         sessionState.chatMessages = listOf()
         streamSocket.close()
-        if (periodicRefreshJob?.isActive == true) {
-            periodicRefreshJob?.cancel()
-        }
         periodicRefreshJob = null
         lastSessionDetailsChange = 0
     }
