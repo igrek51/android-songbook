@@ -43,7 +43,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import igrek.songbook.R
 import igrek.songbook.compose.AppTheme
-import igrek.songbook.compose.LabelText
 import igrek.songbook.compose.RichText
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.SafeClickListener
@@ -144,13 +143,6 @@ class SongCastLobbyLayout(
         }
     }
 
-    fun formatMember(member: CastMember): String {
-        if (member.public_member_id == songCastService.myMemberPublicId) {
-            return "- ${member.name} (You)"
-        }
-        return "- ${member.name}"
-    }
-
     private fun updateSessionDetails() {
         val songName = when (songCastService.sessionState.castSongDto) {
             null -> "None"
@@ -166,8 +158,8 @@ class SongCastLobbyLayout(
         state.spectators.clear()
         state.spectators.addAll(songCastService.spectators)
 
-        state.chatEventData.clear()
-        state.chatEventData.addAll(songCastService.generateChatEvents())
+        state.logEventData.clear()
+        state.logEventData.addAll(songCastService.generateChatEvents())
     }
 
     private fun onSessionUpdated() {
@@ -213,12 +205,13 @@ class SongCastLobbyLayout(
     }
 
     override fun onBackClicked() {
-        when (songCastService.isInRoom()) {
-            true -> leaveRoomConfirm()
-            else -> super.onBackClicked()
-        }
+        uiInfoService.showInfo(R.string.songcast_room_is_still_open)
+        super.onBackClicked()
+//        when (songCastService.isInRoom()) {
+//            true -> leaveRoomConfirm()
+//            else -> super.onBackClicked()
+//        }
     }
-
 }
 
 class SongCastLobbyState {
@@ -228,7 +221,7 @@ class SongCastLobbyState {
     var currentChat: String by mutableStateOf("")
     var presenters: MutableList<CastMember> = mutableStateListOf()
     var spectators: MutableList<CastMember> = mutableStateListOf()
-    var chatEventData: MutableList<ChatEvent> = mutableStateListOf()
+    var logEventData: MutableList<LogEvent> = mutableStateListOf()
 }
 
 @Composable
@@ -271,30 +264,14 @@ private fun MainPage(layout: SongCastLobbyLayout) {
             },
         )
 
-        LabelText(R.string.songcast_current_song, layout.state.currentSongName)
-        Button(
-            onClick = {
-                GlobalScope.launch {
-                    safeExecute {
-                        layout.openCurrentSong()
-                    }
-                }
-            },
-            modifier = Modifier.fillMaxWidth(),
-            elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.0.dp),
-        ) {
-            Text(stringResource(R.string.songcast_open_current_song))
-        }
-
-
         EventsLog(layout)
     }
 }
 
 @Composable
 private fun EventsLog(layout: SongCastLobbyLayout) {
-    layout.state.chatEventData.forEach {
-        CChatEvent(it, layout)
+    layout.state.logEventData.forEach {
+        CLogEvent(it, layout)
     }
 
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -333,9 +310,9 @@ private fun EventsLog(layout: SongCastLobbyLayout) {
 }
 
 @Composable
-private fun CChatEvent(event: ChatEvent, layout: SongCastLobbyLayout) {
+private fun CLogEvent(event: LogEvent, layout: SongCastLobbyLayout) {
     when (event) {
-        is SystemChatEvent -> {
+        is SystemLogEvent -> {
             TimeHeader(event.timestamp)
             Text(
                 modifier = Modifier.fillMaxWidth(),
@@ -346,7 +323,7 @@ private fun CChatEvent(event: ChatEvent, layout: SongCastLobbyLayout) {
             )
         }
 
-        is MessageChatEvent -> {
+        is MessageLogEvent -> {
             TimeHeader(event.timestamp)
             Card(
                 modifier = Modifier.fillMaxWidth().padding(4.dp),
@@ -368,13 +345,13 @@ private fun CChatEvent(event: ChatEvent, layout: SongCastLobbyLayout) {
             }
         }
 
-        is SongChatEvent -> {
+        is SongLogEvent -> {
             TimeHeader(event.timestamp)
             val songName = event.song.displayName()
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
-                text = "${event.author} opened song: $songName",
+                text = stringResource(R.string.songcast_song_selected, event.author, songName),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -389,7 +366,7 @@ private fun CChatEvent(event: ChatEvent, layout: SongCastLobbyLayout) {
                 modifier = Modifier.fillMaxWidth(),
                 elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.0.dp),
             ) {
-                Text(stringResource(R.string.songcast_open_current_song))
+                Text(stringResource(R.string.songcast_open_current_song, songName))
             }
         }
     }

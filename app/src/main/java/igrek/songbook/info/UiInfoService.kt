@@ -40,8 +40,8 @@ open class UiInfoService(
         info: String = "",
         infoResId: Int = 0,
         actionResId: Int = 0,
-        action: (() -> Unit)? = null, // dissmiss by default
         indefinite: Boolean = false,
+        action: (() -> Unit)? = null, // dissmiss by default
     ) {
         GlobalScope.launch(Dispatchers.Main) {
             val snackbarLength =

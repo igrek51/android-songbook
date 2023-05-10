@@ -618,7 +618,7 @@
     <string name="button_more_description">More</string>
     <string name="button_menu_description">Menu</string>
     <string name="songcast_current_song" formatted="false">Current song: %s</string>
-    <string name="songcast_open_current_song">Open current song</string>
+    <string name="songcast_open_current_song">Open song: %s</string>
     <string name="songcast_chat_message_sending">Sending…</string>
     <string name="songcast_chat_message_sent">Message sent</string>
     <string name="songcast_send_chat_icon_description">Send message</string>
@@ -629,4 +629,6 @@
     <string name="songcast_new_chat_message" formatted="false">Chat: %s: %s</string>
     <string name="songcast_song_selected" formatted="false">%s opened a song: %s</string>
     <string name="songcast_chat_message_empty">Enter message</string>
+    <string name="songcast_room_is_still_open">SongCast room is still open.</string>
+    <string name="songcast_connection_context">SongCast connection failed</string>
 </resources>

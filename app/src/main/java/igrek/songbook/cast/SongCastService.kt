@@ -44,7 +44,7 @@ class SongCastService(
     private var streamSocket = StreamSocket(::onEventBroadcast)
 
     private var myName: String = ""
-    var myMemberPublicId: String = ""
+    private var myMemberPublicId: String = ""
         private set
     var sessionCode: String? = null
         private set
@@ -366,7 +366,7 @@ class SongCastService(
                 lastSessionDetailsChange = Date().time
             notifySessionUpdated()
         }, onFailure = { e ->
-            UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
+            UiErrorHandler().handleContextError(e, R.string.songcast_connection_context)
         })
     }
 
@@ -411,12 +411,12 @@ class SongCastService(
         onSessionUpdated()
     }
 
-    fun generateChatEvents(): List<ChatEvent> {
-        val allEvents = mutableListOf<ChatEvent>()
+    fun generateChatEvents(): List<LogEvent> {
+        val allEvents = mutableListOf<LogEvent>()
         allEvents.addAll(
             presenters.map {
                 val name = if (it.public_member_id == myMemberPublicId) "You (${it.name})" else it.name
-                SystemChatEvent(
+                SystemLogEvent(
                     timestamp = this.joinTimestamp,
                     text = "$name joined the room as Presenter",
                 )
@@ -425,7 +425,7 @@ class SongCastService(
         allEvents.addAll(
             spectators.map {
                 val name = if (it.public_member_id == myMemberPublicId) "You (${it.name})" else it.name
-                SystemChatEvent(
+                SystemLogEvent(
                     timestamp = this.joinTimestamp,
                     text = "$name joined the room as Spectator",
                 )
@@ -433,7 +433,7 @@ class SongCastService(
         )
 
         allEvents.addAll(sessionState.chatMessages.map {
-            MessageChatEvent(
+            MessageLogEvent(
                 timestamp = it.timestamp,
                 author = it.author,
                 text = it.text,
@@ -443,7 +443,7 @@ class SongCastService(
         sessionState.castSongDto?.let { castSongDto ->
             ephemeralSong?.let { ephemeralSong ->
                 allEvents.add(
-                    SongChatEvent(
+                    SongLogEvent(
                         timestamp = ephemeralSong.createTime / 1000,
                         author = castSongDto.chosen_by,
                         song = ephemeralSong,
