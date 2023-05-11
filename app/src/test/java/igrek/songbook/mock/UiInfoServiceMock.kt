@@ -8,10 +8,16 @@ import org.mockito.Mockito
 
 
 class UiInfoServiceMock : UiInfoService(
-        activity = SingletonInject { Mockito.mock(AppCompatActivity::class.java) },
-        uiResourceService = SingletonInject { Mockito.mock(UiResourceService::class.java) },
+    activity = SingletonInject { Mockito.mock(AppCompatActivity::class.java) },
+    uiResourceService = SingletonInject { Mockito.mock(UiResourceService::class.java) },
 ) {
-    override fun showSnackbar(info: String, infoResId: Int, actionResId: Int, action: (() -> Unit)?, indefinite: Boolean) {
+    override fun showSnackbar(
+        info: String,
+        infoResId: Int,
+        actionResId: Int,
+        indefinite: Boolean,
+        action: (() -> Unit)?,
+    ) {
         print(info)
     }
 
@@ -22,5 +28,4 @@ class UiInfoServiceMock : UiInfoService(
     override fun resString(resourceId: Int, vararg args: Any?): String {
         return resourceId.toString() + args.joinToString()
     }
-
 }
