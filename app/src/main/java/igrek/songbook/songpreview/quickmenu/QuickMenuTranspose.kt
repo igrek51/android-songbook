@@ -15,6 +15,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.preferences.PreferencesState
 
+// Singleton
 class QuickMenuTranspose(
     lyricsLoader: LazyInject<LyricsLoader> = appFactory.lyricsLoader,
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,

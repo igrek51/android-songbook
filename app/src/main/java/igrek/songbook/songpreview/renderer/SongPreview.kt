@@ -15,6 +15,7 @@ import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
+import igrek.songbook.songpreview.quickmenu.QuickMenuCast
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.canvas.BaseCanvasView
 import igrek.songbook.system.WindowManagerService
@@ -29,6 +30,7 @@ class SongPreview(
     autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
     quickMenuTranspose: LazyInject<QuickMenuTranspose> = appFactory.quickMenuTranspose,
     quickMenuAutoscroll: LazyInject<QuickMenuAutoscroll> = appFactory.quickMenuAutoscroll,
+    quickMenuCast: LazyInject<QuickMenuCast> = appFactory.quickMenuCast,
     windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
     lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
     playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
@@ -37,6 +39,7 @@ class SongPreview(
     private val autoscroll by LazyExtractor(autoscrollService)
     private val quickMenuTranspose by LazyExtractor(quickMenuTranspose)
     private val quickMenuAutoscroll by LazyExtractor(quickMenuAutoscroll)
+    private val quickMenuCast by LazyExtractor(quickMenuCast)
     private val windowManagerService by LazyExtractor(windowManagerService)
     private val lyricsThemeService by LazyExtractor(lyricsThemeService)
     private val playlistService by LazyExtractor(playlistService)
@@ -175,7 +178,7 @@ class SongPreview(
     }
 
     private fun drawQuickMenuOverlay() {
-        if (quickMenuTranspose.isVisible) {
+        if (quickMenuTranspose.isVisible || quickMenuCast.isVisible) {
             //dimmed background
             setColor(0x000000, 110)
             fillRect(0f, 0f, w.toFloat(), h.toFloat())
@@ -281,6 +284,7 @@ class SongPreview(
         if (songPreviewController.isQuickMenuVisible) {
             quickMenuTranspose.isVisible = false
             quickMenuAutoscroll.isVisible = false
+            quickMenuCast.isVisible = false
             repaint()
         } else {
             if (autoscroll.isRunning) {

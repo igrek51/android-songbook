@@ -42,6 +42,7 @@ import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
+import igrek.songbook.songpreview.quickmenu.QuickMenuCast
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.OverlayRecyclerAdapter
 import igrek.songbook.songpreview.renderer.SongPreview
@@ -62,6 +63,7 @@ class SongPreviewLayoutController(
     navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
     appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
     quickMenuTranspose: LazyInject<QuickMenuTranspose> = appFactory.quickMenuTranspose,
+    quickMenuCast: LazyInject<QuickMenuCast> = appFactory.quickMenuCast,
     quickMenuAutoscroll: LazyInject<QuickMenuAutoscroll> = appFactory.quickMenuAutoscroll,
     autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
     softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
@@ -82,6 +84,7 @@ class SongPreviewLayoutController(
     private val navigationMenuController by LazyExtractor(navigationMenuController)
     private val activity by LazyExtractor(appCompatActivity)
     private val quickMenuTranspose by LazyExtractor(quickMenuTranspose)
+    private val quickMenuCast by LazyExtractor(quickMenuCast)
     private val quickMenuAutoscroll by LazyExtractor(quickMenuAutoscroll)
     private val autoscrollService by LazyExtractor(autoscrollService)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
@@ -112,7 +115,7 @@ class SongPreviewLayoutController(
         mutableMapOf()
 
     val isQuickMenuVisible: Boolean
-        get() = quickMenuTranspose.isVisible || quickMenuAutoscroll.isVisible
+        get() = quickMenuTranspose.isVisible || quickMenuAutoscroll.isVisible || quickMenuCast.isVisible
 
     init {
         autoscrollService.get().scrollStateSubject
@@ -158,6 +161,7 @@ class SongPreviewLayoutController(
         // create quick menu panels
         val quickMenuContainer = layout.findViewById<FrameLayout>(R.id.quickMenuContainer)
         val inflater = activity.layoutInflater
+
         // transpose panel
         val quickMenuTransposeView = inflater.inflate(R.layout.component_quick_menu_transpose, null)
         quickMenuTransposeView.layoutParams = ViewGroup.LayoutParams(
@@ -167,6 +171,7 @@ class SongPreviewLayoutController(
         quickMenuContainer.addView(quickMenuTransposeView)
         quickMenuTranspose.setQuickMenuView(quickMenuTransposeView)
         quickMenuTranspose.isVisible = false
+
         // autoscroll panel
         val quickMenuAutoscrollView =
             inflater.inflate(R.layout.component_quick_menu_autoscroll, null)
@@ -177,6 +182,16 @@ class SongPreviewLayoutController(
         quickMenuContainer.addView(quickMenuAutoscrollView)
         quickMenuAutoscroll.setQuickMenuView(quickMenuAutoscrollView)
         quickMenuAutoscroll.isVisible = false
+
+        // cast panel
+        val quickMenuCastView = inflater.inflate(R.layout.component_quick_menu_cast, null)
+        quickMenuCastView.layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT
+        )
+        quickMenuContainer.addView(quickMenuCastView)
+        quickMenuCast.setQuickMenuView(quickMenuCastView)
+        quickMenuCast.isVisible = false
 
         // overlaying RecyclerView
         overlayScrollView = activity.findViewById<RecyclerView>(R.id.overlayScrollView)?.apply {
@@ -242,15 +257,16 @@ class SongPreviewLayoutController(
             setOnClickListener { showMoreActions() }
         }
 
-        songCastButton = layout.findViewById<ImageButton>(R.id.songCastButton)?.apply {
-            setOnClickListener {
-                layoutController.showLayout(SongCastLobbyLayout::class)
+        songCastButton = layout.findViewById<ImageButton>(R.id.songCastButton)?.also {
+            it.setOnClickListener {
+                toggleCastPanel()
             }
+            originalButtonBackgrounds[it.id] = it.colorFilter to it.background
         }
         updateSongCastButton()
 
-        exitFullscreenButton =
-            layout.findViewById<FloatingActionButton>(R.id.exitFullscreenButton)?.apply {
+        exitFullscreenButton = layout.findViewById<FloatingActionButton>(R.id.exitFullscreenButton)
+            ?.apply {
                 setOnClickListener { setFullscreen(false) }
             }
         setFullscreen(false)
@@ -320,8 +336,9 @@ class SongPreviewLayoutController(
     }
 
     private fun toggleTransposePanel() {
-        quickMenuAutoscroll.isVisible = false
         quickMenuTranspose.isVisible = !quickMenuTranspose.isVisible
+        quickMenuAutoscroll.isVisible = false
+        quickMenuCast.isVisible = false
         songPreview?.repaint()
         if (quickMenuTranspose.isVisible) {
             activity.findViewById<View>(R.id.transpose0Button)?.requestFocus()
@@ -331,15 +348,25 @@ class SongPreviewLayoutController(
     private fun toggleAutoscrollPanel() {
         quickMenuTranspose.isVisible = false
         quickMenuAutoscroll.isVisible = !quickMenuAutoscroll.isVisible
+        quickMenuCast.isVisible = false
         songPreview?.repaint()
         if (quickMenuAutoscroll.isVisible) {
             activity.findViewById<View>(R.id.autoscrollToggleButton)?.requestFocus()
         }
     }
 
+    private fun toggleCastPanel() {
+        quickMenuTranspose.isVisible = false
+        quickMenuAutoscroll.isVisible = false
+        quickMenuCast.isVisible = !quickMenuCast.isVisible
+        songPreview?.repaint()
+    }
+
     fun isTransposePanelVisible(): Boolean = quickMenuTranspose.isVisible
 
     fun isAutoscrollPanelVisible(): Boolean = quickMenuAutoscroll.isVisible
+
+    fun isCastPanelVisible(): Boolean = quickMenuCast.isVisible
 
     private fun goToBeginning() {
         resetOverlayScroll()
@@ -379,6 +406,7 @@ class SongPreviewLayoutController(
                 songPreview?.repaint()
             }
             quickMenuAutoscroll.isVisible -> quickMenuAutoscroll.isVisible = false
+            quickMenuCast.isVisible -> quickMenuCast.isVisible = false
             fullscreen -> setFullscreen(false)
             else -> layoutController.showPreviousLayoutOrQuit()
         }

@@ -418,23 +418,19 @@ fun TimeHeader(timestamp: Long) {
             .padding(vertical = 8.dp, horizontal = 16.dp)
             .height(12.dp)
     ) {
-        TimeHeaderLine()
+        Divider(
+            modifier = Modifier.weight(1f).align(Alignment.CenterVertically),
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+        )
         Text(
             text = timeFormatted,
             modifier = Modifier.padding(horizontal = 16.dp),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        TimeHeaderLine()
+        Divider(
+            modifier = Modifier.weight(1f).align(Alignment.CenterVertically),
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+        )
     }
-}
-
-@Composable
-private fun RowScope.TimeHeaderLine() {
-    Divider(
-        modifier = Modifier
-            .weight(1f)
-            .align(Alignment.CenterVertically),
-        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
-    )
 }

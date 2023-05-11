@@ -15,7 +15,7 @@ import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.util.buildSongName
-import igrek.songbook.util.limitBetween
+import igrek.songbook.util.interpolate
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -147,7 +147,8 @@ class SongCastService(
                     0L -> 0
                     else -> {
                         val millis = Date().time - lastSessionDetailsChange
-                        millis.limitBetween(0, 25 * 60 * 1000) / 5 // 0-5 min
+                        val fraction = millis.interpolate(0, 4 * 60_000) // 0-4 min -> 0-1
+                        (fraction * 5 * 60_000).toLong() // 0-5 min
                     }
                 }
                 val interval = 5_000 + noActivityPenalty + (0..1000).random().toLong()

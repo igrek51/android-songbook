@@ -28,6 +28,14 @@ fun Long.limitBetween(min: Long, max: Long): Long {
     return this
 }
 
+fun Long.interpolate(min: Long, max: Long): Float {
+    if (this < min)
+        return 0f
+    if (this > max)
+        return 1f
+    return (this - min).toFloat() / (max - min)
+}
+
 fun Float.cutOffMin(min: Float): Float {
     return if (this < min) min else this
 }
