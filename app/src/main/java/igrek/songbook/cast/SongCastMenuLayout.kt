@@ -3,7 +3,6 @@
 package igrek.songbook.cast
 
 import android.view.View
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -82,7 +81,7 @@ class SongCastMenuLayout(
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 AppTheme {
-                    MainPage(thisLayout)
+                    MainComponent(thisLayout)
                 }
             }
         }
@@ -170,7 +169,7 @@ class SongCastMenuState {
 }
 
 @Composable
-private fun MainPage(layout: SongCastMenuLayout) {
+private fun MainComponent(layout: SongCastMenuLayout) {
     var tabIndex by remember { mutableStateOf(0) }
     val tabNames = listOf("Create Room", "Join Room")
 

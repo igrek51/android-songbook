@@ -280,7 +280,7 @@ class AutoscrollService(
 
                     songPreview.repaint()
 
-                    if (eyeFocus <= songPreview.visibleLines) {
+                    if (eyeFocus <= songPreview.allLines) {
                         timerHandler.postDelayed(timerRunnable, AUTOSCROLL_INTERVAL_TIME)
                     } else {
                         // autoscroll has come to an end (eye focus at the bottom)
@@ -449,7 +449,7 @@ class AutoscrollService(
 
     private fun countdownToNextSong() {
         state = AutoscrollState.NEXT_SONG_COUNTDOWN
-        val visibleLinesAtEnd = songPreview?.visibleLinesAtEnd ?: 0f
+        val visibleLinesAtEnd = songPreview?.visualLinesAtEnd ?: 0f
         val visibleLinesMillis = visibleLinesAtEnd / autoscrollSpeed * 1000
         var waitTimeMs: Long = when {
             (songPreview?.scroll ?: 0f) <= 0f -> { // at the beginning

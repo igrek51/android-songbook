@@ -1,5 +1,8 @@
 package igrek.songbook.cast
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import igrek.songbook.R
 import igrek.songbook.admin.HttpRequester
 import igrek.songbook.info.UiInfoService
@@ -24,7 +27,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
 import okhttp3.Request
 import okhttp3.RequestBody
 import org.json.JSONObject
@@ -45,15 +47,15 @@ class SongCastService(
 
     private var myName: String = ""
     private var myMemberPublicId: String = ""
-        private set
     var sessionCode: String? = null
-        private set
     private var ephemeralSong: Song? = null
     var onSessionUpdated: () -> Unit = {}
     var sessionState: SessionState = SessionState()
     private var periodicRefreshJob: Job? = null
     private var lastSessionDetailsChange: Long = 0
     private var joinTimestamp: Long = 0
+    var clientFollowScroll: Boolean by mutableStateOf(true)
+    var presenterFocusControl: CastFocusControl by mutableStateOf(CastFocusControl.default)
 
     val presenters: List<CastMember> get() = sessionState.members.filter { it.type == CastMemberType.OWNER.value }
     val spectators: List<CastMember> get() = sessionState.members.filter { it.type == CastMemberType.GUEST.value }
@@ -76,6 +78,10 @@ class SongCastService(
 
     fun isPresenter(): Boolean {
         return isInRoom() && presenters.any { it.public_member_id == myMemberPublicId }
+    }
+
+    fun isPresenting(): Boolean {
+        return isPresenter() && sessionState.castSongDto?.chosen_by == myMemberPublicId
     }
 
     private fun findMemberByPublicId(publicId: String): CastMember? {
@@ -224,7 +230,28 @@ class SongCastService(
             .post(RequestBody.create(httpRequester.jsonType, json))
             .build()
         return httpRequester.httpRequestAsync(request) {
+            sessionState.castSongDto = CastSong(
+                id = payload.id,
+                chosen_by = myMemberPublicId,
+                title = payload.title,
+                artist = payload.artist,
+                content = payload.content,
+                chords_notation_id = payload.chords_notation_id,
+            )
             logger.info("SongCast: Song selection sent: ${payload.title} - ${payload.artist}")
+        }
+    }
+
+    fun postScrollControlAsync(payload: CastScroll): Deferred<Result<Unit>> {
+        val deviceId = deviceIdProvider.getDeviceId()
+        val json = httpRequester.jsonSerializer.encodeToString(CastScroll.serializer(), payload)
+        val request: Request = Request.Builder()
+            .url(sessionScrollUrl(sessionCode ?: ""))
+            .header(authDeviceHeader, deviceId)
+            .post(RequestBody.create(httpRequester.jsonType, json))
+            .build()
+        return httpRequester.httpRequestAsync(request) {
+            logger.debug("SongCast: scroll control sent")
         }
     }
 
@@ -347,6 +374,10 @@ class SongCastService(
                 refreshSessionDetails()
             }
 
+            "SongScrolledEvent" -> {
+                refreshSessionDetails()
+            }
+
             else -> logger.warn("Unknown SongCast event type: $type")
         }
     }
@@ -460,76 +491,6 @@ class SongCastService(
 
 }
 
-@Serializable
-data class CastSessionJoin(
-    var member_name: String,
-)
-
-@Serializable
-data class CastSessionJoined(
-    var short_id: String,
-    var public_member_id: String,
-    var member_name: String,
-    var rejoined: Boolean,
-)
-
-@Serializable
-data class CastSession(
-    var short_id: String,
-    var create_timestamp: Long, // in seconds
-    var update_timestamp: Long, // in seconds
-    var ttl: Long, // in seconds
-    var members: List<CastMember>,
-    var song: CastSong?,
-    var scroll: CastScroll?,
-    var chat_messages: List<CastChatMessage>,
-)
-
-@Serializable
-data class CastMember(
-    var public_member_id: String,
-    var name: String,
-    var type: String,
-)
-
-@Serializable
-data class CastSong(
-    var id: String,
-    var chosen_by: String, // public member ID
-    var title: String,
-    var artist: String?,
-    var content: String,
-    var chords_notation_id: Long,
-)
-
-@Serializable
-data class CastScroll(
-    var view_start: Float,
-    var view_end: Float,
-    var visible_text: String?,
-)
-
-@Serializable
-data class CastChatMessage(
-    var timestamp: Long, // in seconds
-    var author: String,
-    var text: String,
-)
-
-@Serializable
-data class CastSongSelected(
-    var id: String,
-    var title: String,
-    var artist: String?,
-    var content: String,
-    var chords_notation_id: Long,
-)
-
-@Serializable
-data class CastChatMessageSent(
-    var text: String,
-)
-
 data class SessionState(
     var initialized: Boolean = false,
     var members: List<CastMember> = listOf(),
@@ -537,9 +498,3 @@ data class SessionState(
     var currentScroll: CastScroll? = null,
     var chatMessages: List<CastChatMessage> = listOf(),
 )
-
-enum class CastMemberType(val value: String) {
-    OWNER("owner"), // can pick current song, presenter
-    GUEST("guest"), // read-only spectator
-    ;
-}

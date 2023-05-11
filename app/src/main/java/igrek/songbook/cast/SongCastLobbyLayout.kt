@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.ImageButton
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,8 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -101,7 +98,7 @@ class SongCastLobbyLayout(
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 AppTheme {
-                    MainPage(thisLayout)
+                    MainComponent(thisLayout)
                 }
             }
         }
@@ -243,7 +240,7 @@ class SongCastLobbyState {
 }
 
 @Composable
-private fun MainPage(layout: SongCastLobbyLayout) {
+private fun MainComponent(layout: SongCastLobbyLayout) {
     Column {
         Card(
             modifier = Modifier

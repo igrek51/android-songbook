@@ -16,6 +16,8 @@ class SingletonInject<T>(private val supplier: () -> T) : LazyInject<T> {
         }
         return cachedSnapshot
     }
+
+    val g: T get() = get()
 }
 
 class PrototypeInject<T>(private val supplier: () -> T) : LazyInject<T> {

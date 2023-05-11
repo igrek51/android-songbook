@@ -65,6 +65,7 @@ import igrek.songbook.songpreview.SongDetailsService
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
+import igrek.songbook.songpreview.autoscroll.ScrollService
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuCast
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
@@ -186,4 +187,5 @@ class AppFactory(
     val songCastLobbyLayout = SingletonInject { SongCastLobbyLayout() }
     val songCastService = SingletonInject { SongCastService() }
     val quickMenuCast = SingletonInject { QuickMenuCast() }
+    val scrollService = SingletonInject { ScrollService() }
 }

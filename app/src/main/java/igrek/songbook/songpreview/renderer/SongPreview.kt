@@ -44,7 +44,8 @@ class SongPreview(
     private val lyricsThemeService by LazyExtractor(lyricsThemeService)
     private val playlistService by LazyExtractor(playlistService)
 
-    private var lyricsModel: LyricsModel = LyricsModel()
+    var lyricsModel: LyricsModel = LyricsModel()
+        private set
     var scroll: Float = 0f
         private set
     var scrollX: Float = 0f
@@ -111,20 +112,27 @@ class SongPreview(
         lines.size * lineheight + lineheight
     }
 
-    val visibleLinesAtEnd: Float
-        get() {
-            val bottom = textBottomY.get()
-            return if (bottom < h) {
-                bottom / lineheightPx
-            } else {
-                h / lineheightPx
-            }
+    val visualLinesAtEnd: Float get() {
+        val bottom = textBottomY.get()
+        return if (bottom < h) {
+            bottom / lineheightPx
+        } else {
+            h / lineheightPx
         }
+    }
 
-    val visibleLines: Float
-        get() {
-            return textBottomY.get() / lineheightPx
-        }
+    val allLines: Float get() {
+        return textBottomY.get() / lineheightPx
+    }
+
+    val firstVisibleLine: Float get() {
+        return scroll / lineheightPx
+    }
+
+    val lastVisibleLine: Float get() {
+        return firstVisibleLine + visualLinesAtEnd
+    }
+
 
     private val textRightX: SimpleCache<Float> = SimpleCache {
         (lyricsModel.lines.maxOfOrNull { it.maxRightX } ?: 0f) * fontsizePx
@@ -452,6 +460,8 @@ class SongPreview(
             scroll >= maxScroll -> false
             else -> true
         }
+
+        appFactory.scrollService.g.reportSongScrolled(py / lineheightPx)
 
         repaint()
         return scrollable
