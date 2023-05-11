@@ -12,11 +12,13 @@ import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import igrek.songbook.layout.LayoutController
 import igrek.songbook.persistence.DeviceIdProvider
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.settings.chordsnotation.ChordsNotation
+import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.util.buildSongName
 import igrek.songbook.util.interpolate
 import kotlinx.coroutines.Deferred
@@ -37,9 +39,11 @@ import java.util.Date
 class SongCastService(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     deviceIdProvider: LazyInject<DeviceIdProvider> = appFactory.deviceIdProvider,
+    layoutController: LazyInject<LayoutController> = appFactory.layoutController,
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val deviceIdProvider by LazyExtractor(deviceIdProvider)
+    protected val layoutController by LazyExtractor(layoutController)
 
     private val logger: Logger = LoggerFactory.logger
     private val httpRequester = HttpRequester()
@@ -375,6 +379,7 @@ class SongCastService(
             }
 
             "SongScrolledEvent" -> {
+                logger.debug("SongCast: SongScrolledEvent received")
                 refreshSessionDetails()
             }
 
@@ -434,6 +439,16 @@ class SongCastService(
                 val presenterName = presenter?.name ?: "Unknown"
                 val songName = buildSongName(castSongDto.title, castSongDto.artist)
                 uiInfoService.showInfo(R.string.songcast_song_selected, presenterName, songName)
+            }
+            return true
+        }
+        if (oldState.currentScroll != newState.currentScroll) {
+            val scrollDto = newState.currentScroll
+            if (scrollDto != null) {
+                if (clientFollowScroll && !isPresenting() && layoutController.isState(SongPreviewLayoutController::class)) {
+                    logger.debug("Scrolling by SongCast event")
+                    appFactory.scrollService.g.controlScrollFocus(scrollDto.view_start, scrollDto.view_end, scrollDto.visible_text)
+                }
             }
             return true
         }

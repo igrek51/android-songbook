@@ -11,6 +11,7 @@ import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import igrek.songbook.songpreview.renderer.SongPreview
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -97,6 +98,22 @@ class ScrollService(
                 })
             }
         }
+    }
+
+    fun controlScrollFocus(viewStart: Float, viewEnd: Float, visibleText: String?) {
+        val songPreview: SongPreview = appFactory.songPreviewLayoutController.g.songPreview ?: return
+        val lyricsModel = songPreview.lyricsModel
+
+        val viewCenterPrimalIndex: Float = (viewStart + viewEnd) / 2
+        val centerLine = lyricsModel.lines.minBy { abs(it.primalIndex - viewCenterPrimalIndex) }
+        val centerLineIndex = lyricsModel.lines.indexOf(centerLine)
+        val centerLinePx = centerLineIndex * songPreview.lineheightPx
+        var targetScroll = centerLinePx - songPreview.h / 2
+        if (targetScroll < 0) targetScroll = 0f
+        if (targetScroll > songPreview.maxScroll) targetScroll = songPreview.maxScroll
+
+        val scrollDiff = targetScroll - songPreview.scroll
+        songPreview.scrollByLines(scrollDiff)
     }
 
 }
