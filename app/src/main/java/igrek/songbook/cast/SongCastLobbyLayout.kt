@@ -278,6 +278,7 @@ private fun MainComponent(layout: SongCastLobbyLayout) {
                 ) {
                     Icon(
                         painterResource(id = R.drawable.copy),
+                        modifier = Modifier.size(ButtonDefaults.IconSize),
                         contentDescription = stringResource(R.string.copy_to_clipboard),
                     )
                 }

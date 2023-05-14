@@ -142,6 +142,7 @@ private fun MainComponent(controller: QuickMenuCast) {
             Icon(
                 painterResource(id = R.drawable.cast),
                 contentDescription = null,
+                modifier = Modifier.size(ButtonDefaults.IconSize),
                 tint = md_theme_light_primaryContainer,
             )
             Spacer(Modifier.size(ButtonDefaults.IconSpacing))

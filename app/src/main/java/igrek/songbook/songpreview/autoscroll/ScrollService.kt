@@ -19,6 +19,7 @@ import igrek.songbook.util.applyMin
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
@@ -135,14 +136,16 @@ class ScrollService(
 
         val lineStartFraction: Float = viewStart - floor(viewStart)
         val startLine = lyricsModel.lines.minBy { abs(it.primalIndex - viewStart) }
-        val startLineIndex = lyricsModel.lines.indexOf(startLine) + lineStartFraction
-        var targetScroll = (startLineIndex + lineStartFraction) * songPreview.lineheightPx
-        if (targetScroll < 0) targetScroll = 0f
-        if (targetScroll > songPreview.maxScroll) targetScroll = songPreview.maxScroll
+        val startLineIndex = lyricsModel.lines.indexOf(startLine)
+        var targetLineScroll = startLineIndex + lineStartFraction
+        if (targetLineScroll < 0) targetLineScroll = 0f
+        if (targetLineScroll > songPreview.maxScroll) targetLineScroll = songPreview.maxScroll
 
-        val scrollDiff = targetScroll - songPreview.scroll
+        val scrollDiff = targetLineScroll - songPreview.scroll
         if (abs(scrollDiff) <= 0.01f) return
-        songPreview.scrollByLines(scrollDiff)
+        GlobalScope.launch(Dispatchers.Main) {
+            songPreview.scrollByLines(scrollDiff)
+        }
     }
 
 }

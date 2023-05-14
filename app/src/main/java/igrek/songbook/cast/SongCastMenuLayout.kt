@@ -239,6 +239,7 @@ private fun NameTextField(controller: SongCastMenuLayout) {
             ) {
                 Icon(
                     Icons.Filled.Refresh,
+                    modifier = Modifier.size(ButtonDefaults.IconSize),
                     contentDescription = stringResource(R.string.songcast_randomize_name),
                 )
             }

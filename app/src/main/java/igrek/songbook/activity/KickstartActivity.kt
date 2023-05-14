@@ -29,7 +29,8 @@ class KickstartActivity : MainActivity() {
     private suspend fun bootstrapUI() {
         openNavItem(R.id.nav_song_cast)
         waitForLayout(SongCastMenuLayout::class)
-        appFactory.songCastMenuLayout.get().createRoom()
+//        appFactory.songCastMenuLayout.get().createRoom()
+        appFactory.songCastMenuLayout.get().restoreRoom()
     }
 
     private val logger: Logger = LoggerFactory.logger
