@@ -22,8 +22,8 @@ data class Word(
 }
 
 
-internal fun List<Line>.nonEmptyLines(): List<Line> =
-    this.filterNot { it.isBlank }.ifEmpty { listOf(Line()) }
+internal fun List<Line>.nonEmptyLines(primalIndex: Int): List<Line> =
+    this.filterNot { it.isBlank }.ifEmpty { listOf(Line(primalIndex = primalIndex)) }
 
 internal fun List<Line>.clearBlanksOnEnd(): List<Line> =
     this.dropLastWhile { it.isBlank }
@@ -57,9 +57,9 @@ internal fun Fragment.toWords(lengthMapper: TypefaceLengthMapper): List<Word> {
     }.filterNot { it.text.isEmpty() }
 }
 
-internal fun List<List<Word>>.toLines(): List<Line> =
+internal fun List<List<Word>>.toLines(primalIndex: Int): List<Line> =
     this.map {
-        Line(it.toFragments())
+        Line(fragments = it.toFragments(), primalIndex = primalIndex)
     }
 
 internal fun List<Word>.toFragments(): List<Fragment> =
@@ -84,9 +84,12 @@ internal fun List<Line>.addLineWrappers(
     screenWRelative: Float,
     lengthMapper: TypefaceLengthMapper
 ): List<Line> =
-    this.mapIndexed { index, line ->
+    this.mapIndexed { index, line: Line ->
         if (index < this.size - 1 && !line.isBlank) {
-            Line(line.fragments + createLineWrapper(screenWRelative, lengthMapper))
+            Line(
+                fragments = line.fragments + createLineWrapper(screenWRelative, lengthMapper),
+                primalIndex = line.primalIndex,
+            )
         } else {
             line
         }

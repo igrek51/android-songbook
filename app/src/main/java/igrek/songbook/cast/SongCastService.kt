@@ -43,7 +43,7 @@ class SongCastService(
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val deviceIdProvider by LazyExtractor(deviceIdProvider)
-    protected val layoutController by LazyExtractor(layoutController)
+    private val layoutController by LazyExtractor(layoutController)
 
     private val logger: Logger = LoggerFactory.logger
     private val httpRequester = HttpRequester()
@@ -56,6 +56,7 @@ class SongCastService(
     var onSessionUpdated: () -> Unit = {}
     var sessionState: SessionState = SessionState()
     private var periodicRefreshJob: Job? = null
+    private var periodicReconnectJob: Job? = null
     private var lastSessionDetailsChange: Long = 0
     private var joinTimestamp: Long = 0
     var clientFollowScroll: Boolean by mutableStateOf(true)
@@ -76,9 +77,7 @@ class SongCastService(
         private const val authDeviceHeader = "X-Songbook-Device-Id"
     }
 
-    fun isInRoom(): Boolean {
-        return sessionCode != null
-    }
+    fun isInRoom(): Boolean = sessionCode != null
 
     fun isPresenter(): Boolean {
         return isInRoom() && presenters.any { it.public_member_id == myMemberPublicId }
@@ -153,18 +152,36 @@ class SongCastService(
 
         periodicRefreshJob = GlobalScope.launch(Dispatchers.IO) {
             while (isInRoom()) {
-                val noActivityPenalty: Long = when (lastSessionDetailsChange) {
-                    0L -> 0
-                    else -> {
-                        val millis = Date().time - lastSessionDetailsChange
-                        val fraction = millis.interpolate(0, 4 * 60_000) // 0-4 min -> 0-1
-                        (fraction * 5 * 60_000).toLong() // 0-5 min
+                try {
+                    val noActivityPenalty: Long = when (lastSessionDetailsChange) {
+                        0L -> 0
+                        else -> {
+                            val millis = Date().time - lastSessionDetailsChange
+                            val fraction = millis.interpolate(0, 4 * 60_000) // 0-4 min -> 0-1
+                            (fraction * 5 * 60_000).toLong() // 0-5 min
+                        }
                     }
+                    val interval = 5_000 + noActivityPenalty + (0..1000).random().toLong()
+                    logger.debug("refreshing SongCast session, next in ${interval / 1000}s...")
+                    refreshSessionDetails()
+                    delay(interval)
+                } catch (e: Throwable) {
+                    UiErrorHandler().handleContextError(e, R.string.songcast_connection_context)
                 }
-                val interval = 5_000 + noActivityPenalty + (0..1000).random().toLong()
-                logger.debug("refreshing SongCast session, next in ${interval/1000}s...")
-                refreshSessionDetails()
-                delay(interval)
+            }
+        }
+
+        periodicReconnectJob = GlobalScope.launch(Dispatchers.IO) {
+            while (isInRoom()) {
+                try {
+                    if (streamSocket.ioSocket?.connected() == false) {
+                        uiInfoService.showInfo(R.string.songcast_reconnecting_to_room)
+                        streamSocket.reconnect()
+                    }
+                    delay(2_000)
+                } catch (e: Throwable) {
+                    UiErrorHandler().handleContextError(e, R.string.songcast_connection_context)
+                }
             }
         }
     }
@@ -178,6 +195,7 @@ class SongCastService(
         sessionState.chatMessages = listOf()
         streamSocket.close()
         periodicRefreshJob = null
+        periodicReconnectJob = null
         lastSessionDetailsChange = 0
     }
 
@@ -328,7 +346,7 @@ class SongCastService(
         val chosenBy = eventData.getString("chosen_by")
         logger.debug("SongSelectedEvent: $eventData")
 
-        sessionState.castSongDto = CastSong(
+        val castSongDto = CastSong(
             id = id,
             title = title,
             artist = artist,
@@ -336,11 +354,16 @@ class SongCastService(
             chords_notation_id = chordsNotationId,
             chosen_by = chosenBy,
         )
+        sessionState.castSongDto = castSongDto
+        onSongSelectedEvent2(castSongDto)
+    }
+
+    private fun onSongSelectedEvent2(castSongDto: CastSong) {
         this.ephemeralSong = buildEphemeralSong(sessionState.castSongDto)
 
-        val presenter: CastMember? = sessionState.members.find { it.public_member_id == chosenBy }
+        val presenter: CastMember? = sessionState.members.find { it.public_member_id == castSongDto.chosen_by }
         val presenterName = presenter?.name ?: "Unknown"
-        val songName = buildSongName(title, artist)
+        val songName = buildSongName(castSongDto.title, castSongDto.artist)
         uiInfoService.showInfo(R.string.songcast_song_selected, presenterName, songName)
         notifySessionUpdated()
         if (isFollowingCurrentSong(presenter)) {
@@ -365,16 +388,16 @@ class SongCastService(
             }
 
             "SongDeselectedEvent" -> {
-                sessionState.castSongDto = null
-                this.ephemeralSong = null
-                notifySessionUpdated()
+                refreshSessionDetails()
             }
 
             "CastMembersUpdatedEvent" -> {
+                logger.debug("SongCast: CastMembersUpdatedEvent received")
                 refreshSessionDetails()
             }
 
             "ChatMessageReceivedEvent" -> {
+                logger.debug("SongCast: ChatMessageReceivedEvent received")
                 refreshSessionDetails()
             }
 
@@ -416,7 +439,9 @@ class SongCastService(
             val newMessages = newState.chatMessages.minus(oldState.chatMessages.toSet())
             if (newMessages.isNotEmpty()) {
                 val message = newMessages.last()
-                uiInfoService.showInfo(R.string.songcast_new_chat_message, message.author, message.text)
+                if (message.author != this.myName) {
+                    uiInfoService.showInfo(R.string.songcast_new_chat_message, message.author, message.text)
+                }
             }
             return true
         }
@@ -434,11 +459,7 @@ class SongCastService(
         if (oldState.castSongDto != newState.castSongDto) {
             val castSongDto = newState.castSongDto
             if (castSongDto != null) {
-                val chosenById = castSongDto.chosen_by
-                val presenter: CastMember? = sessionState.members.find { it.public_member_id == chosenById }
-                val presenterName = presenter?.name ?: "Unknown"
-                val songName = buildSongName(castSongDto.title, castSongDto.artist)
-                uiInfoService.showInfo(R.string.songcast_song_selected, presenterName, songName)
+                onSongSelectedEvent2(castSongDto)
             }
             return true
         }
@@ -446,8 +467,8 @@ class SongCastService(
             val scrollDto = newState.currentScroll
             if (scrollDto != null) {
                 if (clientFollowScroll && !isPresenting() && layoutController.isState(SongPreviewLayoutController::class)) {
-                    logger.debug("Scrolling by SongCast event")
-                    appFactory.scrollService.g.controlScrollFocus(scrollDto.view_start, scrollDto.view_end, scrollDto.visible_text)
+                    logger.debug("Scrolling by SongCast event: ${scrollDto.view_start}")
+                    appFactory.scrollService.g.adaptToScrollControl(scrollDto.view_start, scrollDto.view_end, scrollDto.visible_text)
                 }
             }
             return true

@@ -78,11 +78,9 @@ class SongPreview(
         const val GESTURE_HORIZONTAL_SWIPE = 0.25f // minimal factor of swiped screen width
     }
 
-    private val fontsizePx: Float
-        get() = windowManagerService.dp2px(this.fontsizeTmp)
+    private val fontsizePx: Float get() = windowManagerService.dp2px(this.fontsizeTmp)
 
-    val lineheightPx: Float
-        get() = fontsizePx * LINEHEIGHT_SCALE_FACTOR
+    val lineheightPx: Float get() = fontsizePx * LINEHEIGHT_SCALE_FACTOR
 
     internal val maxScroll: Float
         get() {
@@ -121,28 +119,19 @@ class SongPreview(
         }
     }
 
-    val allLines: Float get() {
-        return textBottomY.get() / lineheightPx
-    }
+    val allLines: Float get() = textBottomY.get() / lineheightPx
 
-    val firstVisibleLine: Float get() {
-        return scroll / lineheightPx
-    }
+    val firstVisibleLine: Float get() = scroll / lineheightPx
 
-    val lastVisibleLine: Float get() {
-        return firstVisibleLine + visualLinesAtEnd
-    }
-
+    val lastVisibleLine: Float get() = firstVisibleLine + visualLinesAtEnd
 
     private val textRightX: SimpleCache<Float> = SimpleCache {
         (lyricsModel.lines.maxOfOrNull { it.maxRightX } ?: 0f) * fontsizePx
     }
 
-    val scrollThickness: Float
-        get() = scrollThicknessCache.get()
+    val scrollThickness: Float get() = scrollThicknessCache.get()
 
-    val eyeFocusLines: Float
-        get() = autoscroll.eyeFocus
+    val eyeFocusLines: Float get() = autoscroll.eyeFocus
 
     override fun reset() {
         super.reset()

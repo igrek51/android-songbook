@@ -11,7 +11,7 @@ class DoubleLineWrapper(
 
     fun wrapDoubleLine(chords: Line, texts: Line): List<Line> {
         if (horizontalScroll || (texts.end() <= screenWRelative && chords.end() <= screenWRelative)) {
-            return listOf(chords, texts).nonEmptyLines()
+            return listOf(chords, texts).nonEmptyLines(texts.primalIndex)
         }
 
         val chordWords: List<Word> = chords.fragments.toWords(lengthMapper)
@@ -19,15 +19,15 @@ class DoubleLineWrapper(
 
         val (wrappedChordWords, wrappedTextWords) = wrapDoubleWords(chordWords, textWords)
 
-        val chordLines: List<Line> = wrappedChordWords.toLines()
+        val chordLines: List<Line> = wrappedChordWords.toLines(texts.primalIndex)
             .clearBlanksOnEnd()
             .addLineWrappers(screenWRelative, lengthMapper)
-        val textLines: List<Line> = wrappedTextWords.toLines()
+        val textLines: List<Line> = wrappedTextWords.toLines(texts.primalIndex)
             .clearBlanksOnEnd()
             .addLineWrappers(screenWRelative, lengthMapper)
         val lines = chordLines zipUneven textLines
 
-        return lines.nonEmptyLines()
+        return lines.nonEmptyLines(texts.primalIndex)
     }
 
     private fun wrapDoubleWords(

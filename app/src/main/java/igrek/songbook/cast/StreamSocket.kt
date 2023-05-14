@@ -20,7 +20,7 @@ class StreamSocket(
 ) {
 
     private val logger: Logger = LoggerFactory.logger
-    private var ioSocket: Socket? = null
+    var ioSocket: Socket? = null
     private val debug: Boolean = false
     private var connectJob: Job? = null
 
@@ -91,6 +91,21 @@ class StreamSocket(
 
                 if (debug)
                     logger.debug("SongCast connected to socket.io")
+            }
+        }
+    }
+
+    suspend fun reconnect() {
+        val socket = ioSocket ?: return
+        for (i in 1..20) {
+            if (socket.connected())
+                break
+            logger.warn("Reconnecting to socket.io ($i)")
+            socket.disconnect()
+            socket.connect()
+            delay(100 + i * 100L)
+            if (i == 20 && !socket.connected()) {
+                throw RuntimeException("Failed to connect to socket.io events stream, reconnecting...")
             }
         }
     }

@@ -12,6 +12,10 @@ fun Float.limitTo(max: Float): Float {
     return if (this > max) max else this
 }
 
+fun Float.applyMin(min: Float): Float {
+    return if (this < min) min else this
+}
+
 fun Float.limitBetween(min: Float, max: Float): Float {
     if (this < 0f)
         return min

@@ -10,17 +10,17 @@ class LineWrapper(
 
     fun wrapLine(line: Line): List<Line> {
         if (line.end() <= screenWRelative || horizontalScroll) {
-            return listOf(line).nonEmptyLines()
+            return listOf(line).nonEmptyLines(line.primalIndex)
         }
 
         val words: List<Word> = line.fragments.toWords(lengthMapper)
 
         val wrappedWords = wrapWords(words)
 
-        return wrappedWords.toLines()
+        return wrappedWords.toLines(line.primalIndex)
             .clearBlanksOnEnd()
             .addLineWrappers(screenWRelative, lengthMapper)
-            .nonEmptyLines()
+            .nonEmptyLines(line.primalIndex)
     }
 
     internal fun wrapWords(words: List<Word>): List<List<Word>> {

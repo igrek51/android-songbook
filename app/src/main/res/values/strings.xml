@@ -635,4 +635,5 @@
     <string name="songcast_action_leave">Leave</string>
     <string name="songcast_action_stay">Stay connected</string>
     <string name="songcast_leave_or_stay_title">Should I stay or should I go?</string>
+    <string name="songcast_reconnecting_to_room">Reconnecting to Song Cast room…</string>
 </resources>

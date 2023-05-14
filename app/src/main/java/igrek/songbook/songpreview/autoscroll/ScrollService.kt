@@ -4,14 +4,18 @@ package igrek.songbook.songpreview.autoscroll
 
 import android.annotation.SuppressLint
 import igrek.songbook.R
+import igrek.songbook.cast.CastFocusControl
 import igrek.songbook.cast.CastScroll
 import igrek.songbook.cast.SongCastService
 import igrek.songbook.chords.model.LyricsLine
 import igrek.songbook.info.errorcheck.UiErrorHandler
+import igrek.songbook.info.logger.Logger
+import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.songpreview.renderer.SongPreview
+import igrek.songbook.util.applyMin
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -28,6 +32,7 @@ class ScrollService(
 ) {
     private val songCastService by LazyExtractor(songCastService)
 
+    private val logger: Logger = LoggerFactory.logger
     private val scrollSubject = PublishSubject.create<Float>()
     private val aggregatedScrollSubject = PublishSubject.create<Float>()
     private var scrolledBuffer = 0f
@@ -57,20 +62,24 @@ class ScrollService(
             }, UiErrorHandler::handleError)
     }
 
-    private fun getVisibleScroll(): CastScroll? {
+    private fun getVisibleShareScroll(): CastScroll? {
         val songPreview = appFactory.songPreviewLayoutController.g.songPreview ?: return null
         val lyricsLoader = appFactory.lyricsLoader.g
         val lyricsModel = songPreview.lyricsModel
 
-        val linesStartIndex: Int = floor(songPreview.firstVisibleLine).roundToInt()
-        val linesEndIndex: Int = floor(songPreview.lastVisibleLine).roundToInt()
+        val firstVisibleLine: Float = songPreview.firstVisibleLine.applyMin(0f)
+        val lastVisibleLine: Float = songPreview.lastVisibleLine.applyMin(0f)
+        val linesStartIndex: Int = floor(firstVisibleLine).roundToInt()
+        val linesEndIndex: Int = floor(lastVisibleLine).roundToInt()
+        val linesStartFraction: Float = firstVisibleLine - linesStartIndex
+        val linesEndFractoin: Float = lastVisibleLine - linesEndIndex
 
         val visualLines: List<LyricsLine> = lyricsModel.lines.filterIndexed { index, lyricsLine ->
             index in linesStartIndex..linesEndIndex
         }
 
-        val primalStartIndex: Int = visualLines.minOf { it.primalIndex }
-        val primalEndIndex: Int = visualLines.maxOf { it.primalIndex }
+        val primalStartIndex: Int = visualLines.minOfOrNull { it.primalIndex } ?: 0
+        val primalEndIndex: Int = visualLines.maxOfOrNull { it.primalIndex } ?: 0
 
         val primalLines = lyricsLoader.originalLyrics.lines.filterIndexed { index, lyricsLine ->
             index in primalStartIndex..primalEndIndex
@@ -81,38 +90,58 @@ class ScrollService(
         }
 
         return CastScroll(
-            view_start = primalStartIndex.toFloat(),
-            view_end = primalEndIndex.toFloat(),
+            view_start = primalStartIndex.toFloat() + linesStartFraction,
+            view_end = primalEndIndex.toFloat() + linesEndFractoin,
             visible_text = visibleText,
+        )
+    }
+    private fun getVisibleSlidesScroll(visualLinesCount: Int): CastScroll? {
+        // TODO
+
+        return CastScroll(
+            view_start = 0f,
+            view_end = 0f,
+            visible_text = "",
         )
     }
 
     private fun onPartiallyScrolled(scrolledByLines: Float) {
-        if (songCastService.isPresenting()) {
-            GlobalScope.launch {
-                val payload = getVisibleScroll() ?: return@launch
-                val result = songCastService.postScrollControlAsync(payload).await()
-                result.fold(onSuccess = {
-                }, onFailure = { e ->
-                    UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
-                })
-            }
+        if (songCastService.isPresenting() && songCastService.presenterFocusControl != CastFocusControl.NONE) {
+            shareScrollControl()
         }
     }
 
-    fun controlScrollFocus(viewStart: Float, viewEnd: Float, visibleText: String?) {
+    private fun shareScrollControl() {
+        GlobalScope.launch {
+            val payload = when (songCastService.presenterFocusControl) {
+                CastFocusControl.SHARE_SCROLL -> getVisibleShareScroll()
+                CastFocusControl.SLIDES_1 -> getVisibleSlidesScroll(1)
+                CastFocusControl.SLIDES_2 -> getVisibleSlidesScroll(2)
+                CastFocusControl.SLIDES_4 -> getVisibleSlidesScroll(4)
+                else -> null
+            } ?: return@launch
+            logger.debug("Sharing scroll control: ${payload.view_start}")
+            val result = songCastService.postScrollControlAsync(payload).await()
+            result.fold(onSuccess = {
+            }, onFailure = { e ->
+                UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
+            })
+        }
+    }
+
+    fun adaptToScrollControl(viewStart: Float, viewEnd: Float, visibleText: String?) {
         val songPreview: SongPreview = appFactory.songPreviewLayoutController.g.songPreview ?: return
         val lyricsModel = songPreview.lyricsModel
 
-        val viewCenterPrimalIndex: Float = (viewStart + viewEnd) / 2
-        val centerLine = lyricsModel.lines.minBy { abs(it.primalIndex - viewCenterPrimalIndex) }
-        val centerLineIndex = lyricsModel.lines.indexOf(centerLine)
-        val centerLinePx = centerLineIndex * songPreview.lineheightPx
-        var targetScroll = centerLinePx - songPreview.h / 2
+        val lineStartFraction: Float = viewStart - floor(viewStart)
+        val startLine = lyricsModel.lines.minBy { abs(it.primalIndex - viewStart) }
+        val startLineIndex = lyricsModel.lines.indexOf(startLine) + lineStartFraction
+        var targetScroll = (startLineIndex + lineStartFraction) * songPreview.lineheightPx
         if (targetScroll < 0) targetScroll = 0f
         if (targetScroll > songPreview.maxScroll) targetScroll = songPreview.maxScroll
 
         val scrollDiff = targetScroll - songPreview.scroll
+        if (abs(scrollDiff) <= 0.01f) return
         songPreview.scrollByLines(scrollDiff)
     }
 
