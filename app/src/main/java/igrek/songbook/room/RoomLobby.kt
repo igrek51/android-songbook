@@ -11,7 +11,6 @@ import igrek.songbook.room.protocol.*
 import kotlinx.coroutines.*
 import java.util.*
 
-@OptIn(DelicateCoroutinesApi::class)
 class RoomLobby(
     bluetoothService: LazyInject<BluetoothService> = appFactory.bluetoothService,
 ) {

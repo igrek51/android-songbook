@@ -45,7 +45,6 @@ import java.io.IOException
 import java.util.*
 
 
-@OptIn(DelicateCoroutinesApi::class)
 class BackupSyncManager(
     appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,

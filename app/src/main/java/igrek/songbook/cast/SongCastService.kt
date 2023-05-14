@@ -22,7 +22,6 @@ import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.util.buildSongName
 import igrek.songbook.util.interpolate
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -35,7 +34,6 @@ import org.json.JSONObject
 import java.util.Date
 
 
-@OptIn(DelicateCoroutinesApi::class)
 class SongCastService(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     deviceIdProvider: LazyInject<DeviceIdProvider> = appFactory.deviceIdProvider,

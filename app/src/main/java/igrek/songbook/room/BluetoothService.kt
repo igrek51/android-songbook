@@ -31,7 +31,6 @@ import java.io.IOException
 import java.util.concurrent.ConcurrentHashMap
 
 
-@OptIn(DelicateCoroutinesApi::class)
 @SuppressLint("MissingPermission")
 class BluetoothService(
     appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,

@@ -29,12 +29,14 @@ import igrek.songbook.settings.sync.BackupSyncManager
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.system.LinkOpener
 import igrek.songbook.system.WindowManagerService
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
+import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
-@OptIn(DelicateCoroutinesApi::class)
 class AppInitializer(
     windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,

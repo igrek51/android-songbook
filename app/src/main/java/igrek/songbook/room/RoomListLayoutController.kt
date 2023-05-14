@@ -16,7 +16,6 @@ import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.InputDialogBuilder
 import kotlinx.coroutines.*
 
-@OptIn(DelicateCoroutinesApi::class)
 class RoomListLayoutController(
     bluetoothService: LazyInject<BluetoothService> = appFactory.bluetoothService,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,

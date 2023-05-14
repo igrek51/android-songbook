@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
 import igrek.songbook.info.UiInfoService
+import igrek.songbook.info.errorcheck.ContextError
 import igrek.songbook.info.errorcheck.RetryAttempt
 import igrek.songbook.info.errorcheck.UiErrorHandler
-import igrek.songbook.info.errorcheck.ContextError
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
@@ -33,7 +33,6 @@ import java.util.concurrent.TimeUnit
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-@OptIn(DelicateCoroutinesApi::class)
 @SuppressLint("CheckResult")
 class UserDataDao(
     localFilesystem: LazyInject<LocalFilesystem> = appFactory.localFilesystem,

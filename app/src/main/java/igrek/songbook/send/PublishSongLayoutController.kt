@@ -23,7 +23,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-@OptIn(DelicateCoroutinesApi::class)
 class PublishSongLayoutController(
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,

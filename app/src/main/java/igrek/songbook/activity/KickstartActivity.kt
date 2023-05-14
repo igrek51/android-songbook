@@ -17,7 +17,6 @@ import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.util.waitUntil
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -25,7 +24,6 @@ import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
 
-@OptIn(DelicateCoroutinesApi::class)
 class KickstartActivity : MainActivity() {
 
     private suspend fun bootstrapUI() {

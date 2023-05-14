@@ -21,7 +21,6 @@ import kotlinx.serialization.Serializable
 import okhttp3.Request
 import okhttp3.RequestBody
 
-@OptIn(DelicateCoroutinesApi::class)
 class EditorSessionService(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,

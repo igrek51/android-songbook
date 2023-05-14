@@ -24,7 +24,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-@OptIn(DelicateCoroutinesApi::class)
 class AdminSongsLayoutContoller(
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,

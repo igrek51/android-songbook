@@ -32,7 +32,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
-@OptIn(DelicateCoroutinesApi::class)
 class CommanderService(
     appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,

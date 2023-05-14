@@ -26,7 +26,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-@OptIn(DelicateCoroutinesApi::class)
 class SongContextMenuBuilder(
     activity: LazyInject<Activity> = appFactory.activity,
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,

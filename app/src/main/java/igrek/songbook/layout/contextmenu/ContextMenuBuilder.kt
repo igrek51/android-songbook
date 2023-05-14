@@ -12,7 +12,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-@OptIn(DelicateCoroutinesApi::class)
 class ContextMenuBuilder(
     activity: LazyInject<Activity> = appFactory.activity,
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,

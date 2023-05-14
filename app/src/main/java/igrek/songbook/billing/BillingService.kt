@@ -26,7 +26,6 @@ const val PRODUCT_ID_NO_ADS = "no_ads_forever"
 const val PRODUCT_ID_DONATE_1_BEER = "donate_1_beer"
 
 
-@OptIn(DelicateCoroutinesApi::class)
 class BillingService(
     activity: LazyInject<Activity> = appFactory.activity,
     context: LazyInject<Context> = appFactory.context,

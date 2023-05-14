@@ -9,8 +9,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-
-@OptIn(DelicateCoroutinesApi::class)
 class SinglePicker<T>(
     private val context: Context,
     private val entityNames: LinkedHashMap<T, String>,

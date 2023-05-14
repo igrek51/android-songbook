@@ -16,7 +16,6 @@ import kotlinx.coroutines.*
 import okhttp3.*
 import java.io.*
 
-@OptIn(DelicateCoroutinesApi::class)
 class SongsUpdater(
     okHttpClient: LazyInject<OkHttpClient> = appFactory.okHttpClient,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,

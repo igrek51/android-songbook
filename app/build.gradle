@@ -78,7 +78,11 @@ android {
         incremental = true
     }
     kotlinOptions {
-        freeCompilerArgs = ["-Xallow-result-return-type", "-opt-in=kotlin.RequiresOptIn"]
+        freeCompilerArgs = [
+            "-Xallow-result-return-type",
+            "-opt-in=kotlin.RequiresOptIn",
+            "-opt-in=kotlinx.coroutines.DelicateCoroutinesApi",
+        ]
         jvmTarget = "1.8"
     }
     buildFeatures {

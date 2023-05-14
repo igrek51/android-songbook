@@ -11,14 +11,12 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.language.AppLanguageService
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-@OptIn(DelicateCoroutinesApi::class)
 class CrashlyticsLogger(
     activity: LazyInject<Activity> = appFactory.activity,
     appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,

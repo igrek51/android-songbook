@@ -22,7 +22,6 @@ import org.junit.runner.RunWith
  * A test for a Work-in-progress-features
  */
 @Suppress("DEPRECATION")
-@OptIn(DelicateCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 class FeatureInProgressTest {
 

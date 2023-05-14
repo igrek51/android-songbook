@@ -14,15 +14,17 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.send.SongLanguageDetector
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.Response
-import java.util.*
+import java.util.Date
 
-@OptIn(DelicateCoroutinesApi::class)
 class AntechamberService(
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,

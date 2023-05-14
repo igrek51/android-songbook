@@ -43,7 +43,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-@OptIn(DelicateCoroutinesApi::class)
 class NavigationMenuController(
     activity: LazyInject<Activity> = appFactory.activity,
     activityController: LazyInject<ActivityController> = appFactory.activityController,

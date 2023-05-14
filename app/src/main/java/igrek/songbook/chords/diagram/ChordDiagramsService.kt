@@ -23,7 +23,6 @@ import igrek.songbook.chords.model.LyricsModel
 import igrek.songbook.chords.parser.ChordParser
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
-import igrek.songbook.info.errorcheck.SafeExecutor
 import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -34,12 +33,10 @@ import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.enums.ChordsInstrument
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.system.SoftKeyboardService
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-@OptIn(DelicateCoroutinesApi::class)
 class ChordDiagramsService(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,

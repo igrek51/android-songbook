@@ -74,14 +74,14 @@ class ScrollService(
         val linesStartFraction: Float = firstVisibleLine - linesStartIndex
         val linesEndFractoin: Float = lastVisibleLine - linesEndIndex
 
-        val visualLines: List<LyricsLine> = lyricsModel.lines.filterIndexed { index, lyricsLine ->
+        val visualLines: List<LyricsLine> = lyricsModel.lines.filterIndexed { index, _ ->
             index in linesStartIndex..linesEndIndex
         }
 
         val primalStartIndex: Int = visualLines.minOfOrNull { it.primalIndex } ?: 0
         val primalEndIndex: Int = visualLines.maxOfOrNull { it.primalIndex } ?: 0
 
-        val primalLines = lyricsLoader.originalLyrics.lines.filterIndexed { index, lyricsLine ->
+        val primalLines = lyricsLoader.originalLyrics.lines.filterIndexed { index, _ ->
             index in primalStartIndex..primalEndIndex
         }
 

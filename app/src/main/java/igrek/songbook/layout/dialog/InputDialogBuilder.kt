@@ -20,7 +20,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-@OptIn(DelicateCoroutinesApi::class)
 class InputDialogBuilder(
     activity: LazyInject<Activity> = appFactory.activity,
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,

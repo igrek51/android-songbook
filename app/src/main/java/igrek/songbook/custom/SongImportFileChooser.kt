@@ -37,8 +37,6 @@ import java.nio.charset.Charset
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-
-@OptIn(DelicateCoroutinesApi::class)
 class SongImportFileChooser(
     activity: LazyInject<Activity> = appFactory.activity,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,

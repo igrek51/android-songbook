@@ -14,7 +14,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-@OptIn(DelicateCoroutinesApi::class)
 class StreamSocket(
     private val onEventBroadcast: suspend (data: JSONObject) -> Unit,
 ) {

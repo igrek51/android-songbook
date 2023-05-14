@@ -17,7 +17,6 @@ import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.*
 import java.util.concurrent.TimeUnit
 
-@OptIn(DelicateCoroutinesApi::class)
 @SuppressLint("CheckResult")
 class BillingLayoutController(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,

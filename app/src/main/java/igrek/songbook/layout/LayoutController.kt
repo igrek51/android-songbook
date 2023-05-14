@@ -49,7 +49,6 @@ import kotlinx.coroutines.*
 import kotlin.reflect.KClass
 
 
-@OptIn(DelicateCoroutinesApi::class)
 class LayoutController(
     appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
     navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,

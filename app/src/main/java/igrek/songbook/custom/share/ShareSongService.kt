@@ -26,7 +26,6 @@ import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
 
 
-@OptIn(DelicateCoroutinesApi::class)
 open class ShareSongService(
     songOpener: LazyInject<SongOpener> = appFactory.songOpener,
     activity: LazyInject<Activity> = appFactory.activity,

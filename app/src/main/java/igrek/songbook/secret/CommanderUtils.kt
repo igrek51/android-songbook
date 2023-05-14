@@ -30,7 +30,6 @@ import java.io.BufferedReader
 import java.io.File
 
 
-@OptIn(DelicateCoroutinesApi::class)
 class CommanderUtils(
     appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,

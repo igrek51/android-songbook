@@ -29,7 +29,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
-@OptIn(DelicateCoroutinesApi::class)
 @SuppressLint("CheckResult")
 class AdService(
     appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
