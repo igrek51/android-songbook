@@ -48,6 +48,7 @@ import igrek.songbook.compose.md_theme_light_primaryContainer
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.SafeClickListener
 import igrek.songbook.info.errorcheck.UiErrorHandler
+import igrek.songbook.info.errorcheck.safeAsyncExecutor
 import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -314,12 +315,8 @@ private fun EventsLog(layout: SongCastLobbyLayout) {
                 .size(36.dp)
                 .padding(4.dp)
                 .align(Alignment.CenterVertically),
-            onClick = {
-                GlobalScope.launch {
-                    safeExecute {
-                        layout.sendChatMessage()
-                    }
-                }
+            onClick = safeAsyncExecutor {
+                layout.sendChatMessage()
             }
         ) {
             Icon(
@@ -384,12 +381,8 @@ private fun CLogEvent(event: LogEvent, layout: SongCastLobbyLayout) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Button(
-                onClick = {
-                    GlobalScope.launch {
-                        safeExecute {
-                            layout.openCurrentSong()
-                        }
-                    }
+                onClick = safeAsyncExecutor {
+                    layout.openCurrentSong()
                 },
                 modifier = Modifier.fillMaxWidth(),
                 elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.0.dp),

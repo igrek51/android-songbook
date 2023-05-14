@@ -45,7 +45,7 @@ import igrek.songbook.compose.md_theme_light_primaryContainer
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.LocalizedError
 import igrek.songbook.info.errorcheck.UiErrorHandler
-import igrek.songbook.info.errorcheck.safeExecute
+import igrek.songbook.info.errorcheck.safeAsyncExecutor
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -253,12 +253,8 @@ private fun TabCreateRoom(controller: SongCastMenuLayout) {
         LabelText(R.string.songcast_create_room_hint)
         NameTextField(controller)
         Button(
-            onClick = {
-                GlobalScope.launch {
-                    safeExecute {
-                        controller.createRoom()
-                    }
-                }
+            onClick = safeAsyncExecutor {
+                controller.createRoom()
             },
             modifier = Modifier.fillMaxWidth(),
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.0.dp),
@@ -289,12 +285,8 @@ private fun TabJoinRoom(controller: SongCastMenuLayout) {
             modifier = Modifier.fillMaxWidth(),
         )
         Button(
-            onClick = {
-                GlobalScope.launch {
-                    safeExecute {
-                        controller.joinRoom()
-                    }
-                }
+            onClick = safeAsyncExecutor {
+                controller.joinRoom()
             },
             modifier = Modifier.fillMaxWidth(),
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.0.dp),
@@ -316,12 +308,8 @@ private fun TabRestoreRoom(controller: SongCastMenuLayout) {
     Column {
         LabelText(R.string.songcast_restore_room_hint)
         Button(
-            onClick = {
-                GlobalScope.launch {
-                    safeExecute {
-                        controller.restoreRoom()
-                    }
-                }
+            onClick = safeAsyncExecutor {
+                controller.restoreRoom()
             },
             modifier = Modifier.fillMaxWidth(),
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.0.dp),

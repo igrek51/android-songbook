@@ -1,12 +1,13 @@
 package igrek.songbook.info.errorcheck
 
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 
 class SafeExecutor(
     action: suspend () -> Unit,
 ) {
-
     init {
         execute(action)
     }
@@ -20,7 +21,6 @@ class SafeExecutor(
             UiErrorHandler().handleError(t)
         }
     }
-
 }
 
 inline fun safeExecute(block: () -> Unit) {
@@ -28,5 +28,25 @@ inline fun safeExecute(block: () -> Unit) {
         block()
     } catch (t: Throwable) {
         UiErrorHandler().handleError(t)
+    }
+}
+
+fun safeAsyncExecute(block: suspend () -> Unit) {
+    GlobalScope.launch {
+        try {
+            block()
+        } catch (t: Throwable) {
+            UiErrorHandler().handleError(t)
+        }
+    }
+}
+
+fun safeAsyncExecutor(block: suspend () -> Unit): () -> Unit = {
+    GlobalScope.launch {
+        try {
+            block()
+        } catch (t: Throwable) {
+            UiErrorHandler().handleError(t)
+        }
     }
 }

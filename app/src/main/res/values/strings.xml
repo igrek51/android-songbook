@@ -640,4 +640,5 @@
     <string name="songcast_restoring_room_not_found">No active room found for you.</string>
     <string name="songcast_restore_room_hint">If you\'ve been disconnected from an open room for some reason, you can recover your room without entering the code.</string>
     <string name="songcast_restore_a_room">Restore a room</string>
+    <string name="songcast_open_lobby">Song Cast Lobby</string>
 </resources>
