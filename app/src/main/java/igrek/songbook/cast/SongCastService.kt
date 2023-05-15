@@ -69,6 +69,7 @@ class SongCastService(
         const val songbookApiBase = "https://songbook.igrek.dev"
         private const val createSessionUrl = "$songbookApiBase/api/cast"
         private val joinSessionUrl = { session: String -> "${songbookApiBase}/api/cast/$session/join" }
+        private val rejoinSessionUrl = "${songbookApiBase}/api/cast/rejoin"
         private val dropSessionUrl = { session: String -> "${songbookApiBase}/api/cast/$session/drop" }
         private val sessionUrl = { session: String -> "${songbookApiBase}/api/cast/$session" }
         private val sessionSongUrl = { session: String -> "${songbookApiBase}/api/cast/$session/song" }
@@ -130,14 +131,29 @@ class SongCastService(
         return httpRequester.httpRequestAsync(request) { response ->
             val jsonData = response.body()?.string() ?: ""
             val responseData: CastSessionJoined =
-                httpRequester.jsonSerializer.decodeFromString(
-                    CastSessionJoined.serializer(),
-                    jsonData
-                )
+                httpRequester.jsonSerializer.decodeFromString(CastSessionJoined.serializer(), jsonData)
             when (responseData.rejoined) {
                 true -> logger.info("SongCast session rejoined: ${responseData.short_id}")
                 false -> logger.info("SongCast session joined: ${responseData.short_id}")
             }
+            initRoom(responseData)
+            responseData
+        }
+    }
+
+    fun restoreSessionAsync(): Deferred<Result<CastSessionJoined>> {
+        logger.info("Restoring SongCast session...")
+        val deviceId = deviceIdProvider.getDeviceId()
+        val request: Request = Request.Builder()
+            .url(rejoinSessionUrl)
+            .header(authDeviceHeader, deviceId)
+            .get()
+            .build()
+        return httpRequester.httpRequestAsync(request) { response ->
+            val jsonData = response.body()?.string() ?: ""
+            val responseData: CastSessionJoined =
+                httpRequester.jsonSerializer.decodeFromString(CastSessionJoined.serializer(), jsonData)
+            logger.info("SongCast session restored: ${responseData.short_id}")
             initRoom(responseData)
             responseData
         }

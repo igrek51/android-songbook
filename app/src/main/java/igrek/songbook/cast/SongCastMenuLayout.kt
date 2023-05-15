@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -161,6 +162,26 @@ class SongCastMenuLayout(
         })
     }
 
+    suspend fun restoreRoom() {
+        uiInfoService.showInfo(R.string.songcast_restoring_room, indefinite = true)
+        val result = songCastService.restoreSessionAsync().await()
+        result.fold(onSuccess = { response: CastSessionJoined ->
+            layoutController.showLayout(SongCastLobbyLayout::class, disableReturn = true) {
+                GlobalScope.launch(Dispatchers.Main) {
+                    delay(100) // WTF: Android hackaround
+                    uiInfoService.showInfo(R.string.songcast_room_joined_rejoined, response.member_name)
+                }
+            }
+        }, onFailure = { e ->
+            if (e is ApiResponseError) {
+                if (e.response.code() == 404) {
+                    throw LocalizedError(R.string.songcast_restoring_room_not_found)
+                }
+            }
+            UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
+        })
+    }
+
 }
 
 class SongCastMenuState {
@@ -169,9 +190,9 @@ class SongCastMenuState {
 }
 
 @Composable
-private fun MainComponent(layout: SongCastMenuLayout) {
+private fun MainComponent(controller: SongCastMenuLayout) {
     var tabIndex by remember { mutableStateOf(0) }
-    val tabNames = listOf("Create Room", "Join Room")
+    val tabNames = listOf("Host", "Join", "Restore")
 
     Column {
         Card(
@@ -180,26 +201,6 @@ private fun MainComponent(layout: SongCastMenuLayout) {
         ) {
             RichText(R.string.songcast_feature_hint)
         }
-
-        OutlinedTextField(
-            value = layout.state.myName,
-            onValueChange = { layout.state.myName = it },
-            label = { Text(stringResource(R.string.songcast_hint_my_name)) },
-            singleLine = true,
-            trailingIcon = {
-                IconButton(
-                    onClick = {
-                        layout.randomizeName()
-                    },
-                ) {
-                    Icon(
-                        Icons.Filled.Refresh,
-                        contentDescription = stringResource(R.string.songcast_randomize_name),
-                    )
-                }
-            },
-            modifier = Modifier.fillMaxWidth(),
-        )
 
         Spacer(modifier = Modifier.size(16.dp))
 
@@ -216,21 +217,46 @@ private fun MainComponent(layout: SongCastMenuLayout) {
             }
         }
         when (tabIndex) {
-            0 -> TabCreateRoom(layout)
-            1 -> TabJoinRoom(layout)
+            0 -> TabCreateRoom(controller)
+            1 -> TabJoinRoom(controller)
+            2 -> TabRestoreRoom(controller)
         }
     }
 }
 
 @Composable
-private fun TabCreateRoom(layout: SongCastMenuLayout) {
+private fun NameTextField(controller: SongCastMenuLayout) {
+    OutlinedTextField(
+        value = controller.state.myName,
+        onValueChange = { controller.state.myName = it },
+        label = { Text(stringResource(R.string.songcast_hint_my_name)) },
+        singleLine = true,
+        trailingIcon = {
+            IconButton(
+                onClick = {
+                    controller.randomizeName()
+                },
+            ) {
+                Icon(
+                    Icons.Filled.Refresh,
+                    contentDescription = stringResource(R.string.songcast_randomize_name),
+                )
+            }
+        },
+        modifier = Modifier.fillMaxWidth(),
+    )
+}
+
+@Composable
+private fun TabCreateRoom(controller: SongCastMenuLayout) {
     Column {
         LabelText(R.string.songcast_create_room_hint)
+        NameTextField(controller)
         Button(
             onClick = {
                 GlobalScope.launch {
                     safeExecute {
-                        layout.createRoom()
+                        controller.createRoom()
                     }
                 }
             },
@@ -250,12 +276,13 @@ private fun TabCreateRoom(layout: SongCastMenuLayout) {
 }
 
 @Composable
-private fun TabJoinRoom(layout: SongCastMenuLayout) {
+private fun TabJoinRoom(controller: SongCastMenuLayout) {
     Column {
+        NameTextField(controller)
         LabelText(R.string.songcast_enter_room_number_to_join)
         OutlinedTextField(
-            value = layout.state.roomCode,
-            onValueChange = { layout.state.roomCode = it },
+            value = controller.state.roomCode,
+            onValueChange = { controller.state.roomCode = it },
             label = { Text(stringResource(R.string.songcast_room_code_hint)) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -265,7 +292,7 @@ private fun TabJoinRoom(layout: SongCastMenuLayout) {
             onClick = {
                 GlobalScope.launch {
                     safeExecute {
-                        layout.joinRoom()
+                        controller.joinRoom()
                     }
                 }
             },
@@ -280,6 +307,33 @@ private fun TabJoinRoom(layout: SongCastMenuLayout) {
             )
             Spacer(Modifier.size(ButtonDefaults.IconSpacing))
             Text(stringResource(R.string.songcast_join_room))
+        }
+    }
+}
+
+@Composable
+private fun TabRestoreRoom(controller: SongCastMenuLayout) {
+    Column {
+        LabelText(R.string.songcast_restore_room_hint)
+        Button(
+            onClick = {
+                GlobalScope.launch {
+                    safeExecute {
+                        controller.restoreRoom()
+                    }
+                }
+            },
+            modifier = Modifier.fillMaxWidth(),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.0.dp),
+        ) {
+            Icon(
+                Icons.Filled.Search,
+                contentDescription = null,
+                modifier = Modifier.size(ButtonDefaults.IconSize),
+                tint = md_theme_light_primaryContainer,
+            )
+            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+            Text(stringResource(R.string.songcast_restore_a_room))
         }
     }
 }
