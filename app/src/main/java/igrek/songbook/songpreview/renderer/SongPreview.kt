@@ -10,6 +10,7 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.playlist.PlaylistService
+import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.SongPreviewLayoutController
@@ -34,6 +35,7 @@ class SongPreview(
     windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
     lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
     playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) : BaseCanvasView(context), View.OnTouchListener {
     private val songPreviewController by LazyExtractor(songPreviewLayoutController)
     private val autoscroll by LazyExtractor(autoscrollService)
@@ -43,6 +45,7 @@ class SongPreview(
     private val windowManagerService by LazyExtractor(windowManagerService)
     private val lyricsThemeService by LazyExtractor(lyricsThemeService)
     private val playlistService by LazyExtractor(playlistService)
+    val preferencesState by LazyExtractor(preferencesState)
 
     var lyricsModel: LyricsModel = LyricsModel()
         private set
@@ -158,6 +161,9 @@ class SongPreview(
             if (autoscroll.isEyeFocusZoneOn) {
                 lyricsRenderer?.drawEyeFocusZone(lineheightPx)
             }
+            if (preferencesState.castFocusControl.slide) {
+                lyricsRenderer?.drawCastFocusZone(lineheightPx)
+            }
             lyricsRenderer?.drawFileContent(fontsizePx, lineheightPx)
         }
 
@@ -216,8 +222,8 @@ class SongPreview(
                 // pinch to font scaling
                 if (pointersDst0 != null) {
                     val pointersDst1 = hypot(
-                        (event.getX(1) - event.getX(0)).toDouble(), (event.getY(1) - event
-                            .getY(0)).toDouble()
+                        (event.getX(1) - event.getX(0)).toDouble(),
+                        (event.getY(1) - event.getY(0)).toDouble()
                     ).toFloat()
                     val scale = (pointersDst1 / pointersDst0!! - 1) * FONTSIZE_SCALE_FACTOR + 1
                     val fontsize1 = fontsize0!! * scale

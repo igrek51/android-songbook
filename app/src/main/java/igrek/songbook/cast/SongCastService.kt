@@ -57,7 +57,12 @@ class SongCastService(
     private var lastSessionChange: Long = 0
     private var joinTimestamp: Long = 0
     var clientFollowScroll: Boolean by mutableStateOf(true)
-    var presenterFocusControl: CastFocusControl by mutableStateOf(CastFocusControl.default)
+
+    var presenterFocusControl: CastFocusControl
+        get() = appFactory.preferencesState.g.castFocusControl
+        set(value) {
+            appFactory.preferencesState.g.castFocusControl = value
+        }
 
     companion object {
         const val songbookApiBase = "https://songbook.igrek.dev"

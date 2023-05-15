@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import com.google.android.material.navigation.NavigationView
 import igrek.songbook.R
 import igrek.songbook.cast.SongCastMenuLayout
+import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.appFactory
@@ -30,7 +31,9 @@ class KickstartActivity : MainActivity() {
         openNavItem(R.id.nav_song_cast)
         waitForLayout(SongCastMenuLayout::class)
 //        appFactory.songCastMenuLayout.get().createRoom()
-        appFactory.songCastMenuLayout.get().restoreRoom()
+        safeExecute {
+            appFactory.songCastMenuLayout.get().restoreRoom()
+        }
     }
 
     private val logger: Logger = LoggerFactory.logger

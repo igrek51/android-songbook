@@ -18,7 +18,6 @@ class LyricsRenderer internal constructor(
     private val displayStyle: DisplayStyle,
     private val horizontalScroll: Boolean,
 ) {
-
     private val w: Float = canvas.w.toFloat()
     private val h: Float = canvas.h.toFloat()
 
@@ -88,7 +87,10 @@ class LyricsRenderer internal constructor(
         lineheight: Float,
         lineIndex: Int,
     ) {
-        val y = lineheight * lineIndex - scroll
+        val y = when (canvas.preferencesState.castFocusControl.slide) {
+            false -> lineheight * lineIndex - scroll
+            true -> lineheight * lineIndex - scroll + h / 2
+        }
         if (y > h)
             return
         if (y + lineheight < 0)
@@ -188,6 +190,25 @@ class LyricsRenderer internal constructor(
             val thickness = canvas.scrollThickness * 2f
             canvas.setColor(eyeFocusZoneColor)
             canvas.fillRect(w - thickness, eyeFocusTop, w, eyeFocusBottom)
+        }
+    }
+
+    fun drawCastFocusZone(lineheight: Float) {
+        val eyeFocusTop = h / 2 - lineheight / 2
+        val eyeFocusBottom = h / 2 + lineheight / 2
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            canvas.fillRectGradientH(
+                0f,
+                eyeFocusTop,
+                w,
+                eyeFocusBottom,
+                eyeFocusZoneColorTransparent,
+                eyeFocusZoneColor,
+            )
+        } else {
+            canvas.setColor(eyeFocusZoneColor)
+            canvas.fillRect(0f, eyeFocusTop, w, eyeFocusBottom)
         }
     }
 

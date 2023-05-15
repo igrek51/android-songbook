@@ -45,14 +45,17 @@ import igrek.songbook.info.errorcheck.safeAsyncExecutor
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import igrek.songbook.settings.preferences.PreferencesState
 
 // Singleton
 class QuickMenuCast(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     songCastService: LazyInject<SongCastService> = appFactory.songCastService,
+    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
     val songCastService by LazyExtractor(songCastService)
+    private val preferencesState by LazyExtractor(preferencesState)
 
     var isVisible = false
         set(visible) {
@@ -69,7 +72,6 @@ class QuickMenuCast(
 
     fun setQuickMenuView(quickMenuView: View) {
         this.quickMenuView = quickMenuView
-
         val thisMenu = this
         quickMenuView.findViewById<ComposeView>(R.id.compose_quick_menu_cast).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -81,7 +83,6 @@ class QuickMenuCast(
         }
     }
 }
-
 
 
 @Composable

@@ -55,7 +55,7 @@ class ScrollService(
             }, UiErrorHandler::handleError)
 
         aggregatedScrollSubject
-            .throttleLast(500, TimeUnit.MILLISECONDS)
+            .throttleLast(700, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 onPartiallyScrolled(it)
