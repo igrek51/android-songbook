@@ -8,13 +8,13 @@ import android.os.Looper
 import android.view.KeyEvent
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import igrek.songbook.info.errorcheck.RetryDelayed
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.AppContextFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import igrek.songbook.info.errorcheck.RetryDelayed
 
 
 open class MainActivity(
@@ -70,6 +70,16 @@ open class MainActivity(
     override fun onStop() {
         super.onStop()
         activityData.activityController.onStop()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activityData.activityController.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activityData.activityController.onPause()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

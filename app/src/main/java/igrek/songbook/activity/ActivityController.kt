@@ -26,6 +26,8 @@ class ActivityController(
 
     private val logger = LoggerFactory.logger
     var initialized = false
+    var isForeground = true
+        private set
 
     fun onConfigurationChanged(newConfig: Configuration) {
         // resize event
@@ -62,7 +64,6 @@ class ActivityController(
         val activityName = activity::class.simpleName
         logger.debug("starting $activityName...")
         userDataDao.requestSave(false)
-        appFactory.songCastService.get().refreshSessionIfInRoom()
     }
 
     fun onStop() {
@@ -82,6 +83,15 @@ class ActivityController(
             }
             logger.info("activity destroyed")
         }
+    }
+
+    fun onResume() {
+        isForeground = true
+        appFactory.songCastService.get().refreshSessionIfInRoom()
+    }
+
+    fun onPause() {
+        isForeground = false
     }
 
     fun minimize() {

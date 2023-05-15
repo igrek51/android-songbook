@@ -94,6 +94,7 @@ class ScrollService(
             view_start = primalStartIndex.toFloat() + linesStartFraction,
             view_end = primalEndIndex.toFloat() + linesEndFractoin,
             visible_text = visibleText,
+            mode = songCastService.presenterFocusControl.id,
         )
     }
     private fun getVisibleSlidesScroll(visualLinesCount: Int): CastScroll? {
@@ -103,6 +104,7 @@ class ScrollService(
             view_start = 0f,
             view_end = 0f,
             visible_text = "",
+            mode = songCastService.presenterFocusControl.id,
         )
     }
 
@@ -130,7 +132,7 @@ class ScrollService(
         }
     }
 
-    fun adaptToScrollControl(viewStart: Float, viewEnd: Float, visibleText: String?) {
+    fun adaptToScrollControl(viewStart: Float, viewEnd: Float, visibleText: String?, modeId: Long) {
         val songPreview: SongPreview = appFactory.songPreviewLayoutController.g.songPreview ?: return
         val lyricsModel = songPreview.lyricsModel
 

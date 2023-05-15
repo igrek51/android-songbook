@@ -46,7 +46,6 @@ class SongCastService(
     private val logger: Logger = LoggerFactory.logger
     private val httpRequester = HttpRequester()
     private var streamSocket = StreamSocket(::onEventBroadcast)
-
     private var myName: String = ""
     private var myMemberPublicId: String = ""
     var sessionCode: String? = null
@@ -55,19 +54,16 @@ class SongCastService(
     var sessionState: SessionState = SessionState()
     private var periodicRefreshJob: Job? = null
     private var periodicReconnectJob: Job? = null
-    private var lastSessionDetailsChange: Long = 0
+    private var lastSessionChange: Long = 0
     private var joinTimestamp: Long = 0
     var clientFollowScroll: Boolean by mutableStateOf(true)
     var presenterFocusControl: CastFocusControl by mutableStateOf(CastFocusControl.default)
-
-    val presenters: List<CastMember> get() = sessionState.members.filter { it.type == CastMemberType.OWNER.value }
-    val spectators: List<CastMember> get() = sessionState.members.filter { it.type == CastMemberType.GUEST.value }
 
     companion object {
         const val songbookApiBase = "https://songbook.igrek.dev"
         private const val createSessionUrl = "$songbookApiBase/api/cast"
         private val joinSessionUrl = { session: String -> "${songbookApiBase}/api/cast/$session/join" }
-        private val rejoinSessionUrl = "${songbookApiBase}/api/cast/rejoin"
+        private const val rejoinSessionUrl = "${songbookApiBase}/api/cast/rejoin"
         private val dropSessionUrl = { session: String -> "${songbookApiBase}/api/cast/$session/drop" }
         private val sessionUrl = { session: String -> "${songbookApiBase}/api/cast/$session" }
         private val sessionSongUrl = { session: String -> "${songbookApiBase}/api/cast/$session/song" }
@@ -75,6 +71,9 @@ class SongCastService(
         private val sessionChatUrl = { session: String -> "${songbookApiBase}/api/cast/$session/chat" }
         private const val authDeviceHeader = "X-Songbook-Device-Id"
     }
+
+    val presenters: List<CastMember> get() = sessionState.members.filter { it.type == CastMemberType.OWNER.value }
+    val spectators: List<CastMember> get() = sessionState.members.filter { it.type == CastMemberType.GUEST.value }
 
     fun isInRoom(): Boolean = sessionCode != null
 
@@ -165,39 +164,64 @@ class SongCastService(
         this.joinTimestamp = Date().time / 1000
 
         periodicRefreshJob = GlobalScope.launch(Dispatchers.IO) {
-            while (isInRoom()) {
-                try {
-                    val noActivityPenalty: Long = when {
-                        lastSessionDetailsChange == 0L -> 0
-                        streamSocket.ioSocket?.connected() == false -> 0
-                        else -> {
-                            val millis = Date().time - lastSessionDetailsChange
-                            val fraction = millis.interpolate(0, 4 * 60_000) // 0-4 min -> 0-1
-                            (fraction * 4 * 60_000).toLong() // 0-1 -> 0-4 min
-                        }
-                    }
-                    val interval = 5_000 + noActivityPenalty + (0..1000).random().toLong()
-                    logger.debug("refreshing SongCast session, next in ${interval / 1000}s...")
-                    refreshSessionDetails()
-                    delay(interval)
-                } catch (e: Throwable) {
-                    UiErrorHandler().handleContextError(e, R.string.songcast_connection_context)
-                }
+            try {
+                periodicRefresh()
+            } catch (e: Throwable) {
+                UiErrorHandler().handleContextError(e, R.string.songcast_connection_context)
             }
         }
-
         periodicReconnectJob = GlobalScope.launch(Dispatchers.IO) {
-            while (isInRoom()) {
+            periodicReconnect()
+        }
+    }
+
+    private suspend fun periodicRefresh() {
+        val activityController = appFactory.activityController.get()
+        var lastShot: Long = Date().time
+        while (isInRoom()) {
+            val interval: Long? = when {
+                !activityController.isForeground -> null
+                lastSessionChange == 0L -> 0
+                streamSocket.ioSocket?.connected() == false -> (2000..3000).random().toLong()
+                else -> {
+                    val millis = Date().time - lastSessionChange
+                    val fraction = millis.interpolate(0, 4 * 60_000) // 0-4 min -> 0-1
+                    val penalty = (fraction * 4 * 60_000).toLong() // 0-1 -> 0-4 min
+                    (5_000..6_000).random().toLong() + penalty
+                }
+            }
+
+            if (interval != null && Date().time - lastShot >= interval) {
+                val waitedS = (Date().time - lastShot) / 1000
+                logger.debug("refreshing SongCast session, waited ${waitedS}s...")
+                refreshSessionDetails()
+                lastShot = Date().time
+            }
+            delay(1000)
+        }
+    }
+
+    private suspend fun periodicReconnect() {
+        val activityController = appFactory.activityController.get()
+        var lastShot: Long = Date().time
+        while (isInRoom()) {
+            val interval: Long? = when {
+                !activityController.isForeground -> null
+                !streamSocket.initialized -> null
+                streamSocket.ioSocket?.connected() == false -> 0
+                else -> null
+            }
+
+            if (interval != null && Date().time - lastShot >= interval) {
                 try {
-                    if (streamSocket.ioSocket?.connected() == false && !streamSocket.initialized) {
-                        uiInfoService.showInfo(R.string.songcast_reconnecting_to_room)
-                        streamSocket.reconnect()
-                    }
-                    delay(2_000)
+                    uiInfoService.showInfo(R.string.songcast_reconnecting_to_room)
+                    streamSocket.reconnect()
                 } catch (e: Throwable) {
                     UiErrorHandler().handleContextError(e, R.string.songcast_connection_context)
                 }
+                lastShot = Date().time
             }
+            delay(1_000)
         }
     }
 
@@ -211,7 +235,7 @@ class SongCastService(
         streamSocket.close()
         periodicRefreshJob = null
         periodicReconnectJob = null
-        lastSessionDetailsChange = 0
+        lastSessionChange = 0
     }
 
     fun dropSessionAsync(): Deferred<Result<Unit>> {
@@ -370,10 +394,10 @@ class SongCastService(
             chosen_by = chosenBy,
         )
         sessionState.castSongDto = castSongDto
-        onSongSelectedEvent2(castSongDto)
+        onSongSelectedEventDto(castSongDto)
     }
 
-    private fun onSongSelectedEvent2(castSongDto: CastSong) {
+    private fun onSongSelectedEventDto(castSongDto: CastSong) {
         this.ephemeralSong = buildEphemeralSong(sessionState.castSongDto)
 
         val presenter: CastMember? = sessionState.members.find { it.public_member_id == castSongDto.chosen_by }
@@ -396,32 +420,29 @@ class SongCastService(
 
     private suspend fun onEventBroadcast(data: JSONObject) {
         when (val type = data.getString("type")) {
-
             "SongSelectedEvent" -> {
                 val eventData = data.getJSONObject("data")
                 onSongSelectedEvent(eventData)
             }
-
             "SongDeselectedEvent" -> {
                 refreshSessionDetails()
             }
-
             "CastMembersUpdatedEvent" -> {
                 logger.debug("SongCast: CastMembersUpdatedEvent received")
                 refreshSessionDetails()
             }
-
             "ChatMessageReceivedEvent" -> {
                 logger.debug("SongCast: ChatMessageReceivedEvent received")
                 refreshSessionDetails()
             }
-
             "SongScrolledEvent" -> {
                 logger.debug("SongCast: SongScrolledEvent received")
                 refreshSessionDetails()
             }
-
-            else -> logger.warn("Unknown SongCast event type: $type")
+            else -> {
+                logger.warn("Unknown SongCast event type: $type")
+                refreshSessionDetails()
+            }
         }
     }
 
@@ -439,7 +460,7 @@ class SongCastService(
         result.fold(onSuccess = {
             val compareResult = compareSessionStates(oldState, sessionState)
             if (compareResult)
-                lastSessionDetailsChange = Date().time
+                lastSessionChange = Date().time
             notifySessionUpdated()
         }, onFailure = { e ->
             UiErrorHandler().handleContextError(e, R.string.songcast_connection_context)
@@ -450,6 +471,13 @@ class SongCastService(
         if (!oldState.initialized)
             return true
 
+        if (oldState.castSongDto != newState.castSongDto) {
+            val castSongDto = newState.castSongDto
+            if (castSongDto != null) {
+                onSongSelectedEventDto(castSongDto)
+            }
+            return true
+        }
         if (oldState.chatMessages != newState.chatMessages) {
             val newMessages = newState.chatMessages.minus(oldState.chatMessages.toSet())
             if (newMessages.isNotEmpty()) {
@@ -471,19 +499,14 @@ class SongCastService(
             }
             return true
         }
-        if (oldState.castSongDto != newState.castSongDto) {
-            val castSongDto = newState.castSongDto
-            if (castSongDto != null) {
-                onSongSelectedEvent2(castSongDto)
-            }
-            return true
-        }
         if (oldState.currentScroll != newState.currentScroll) {
             val scrollDto = newState.currentScroll
             if (scrollDto != null) {
                 if (clientFollowScroll && !isPresenting() && layoutController.isState(SongPreviewLayoutController::class)) {
                     logger.debug("Scrolling by SongCast event: ${scrollDto.view_start}")
-                    appFactory.scrollService.g.adaptToScrollControl(scrollDto.view_start, scrollDto.view_end, scrollDto.visible_text)
+                    appFactory.scrollService.g.adaptToScrollControl(
+                        scrollDto.view_start, scrollDto.view_end, scrollDto.visible_text, scrollDto.mode,
+                    )
                 }
             }
             return true
@@ -536,10 +559,8 @@ class SongCastService(
                 )
             }
         }
-
         return allEvents.sortedBy { it.timestamp }
     }
-
 }
 
 data class SessionState(
