@@ -192,7 +192,11 @@ class SongCastMenuState {
 @Composable
 private fun MainComponent(controller: SongCastMenuLayout) {
     var tabIndex by remember { mutableStateOf(0) }
-    val tabNames = listOf("Host", "Join", "Restore")
+    val tabNames = listOf(
+        stringResource(R.string.songcast_host_tab),
+        stringResource(R.string.songcast_join_tab),
+        stringResource(R.string.songcast_restore_tab),
+    )
 
     Column {
         Card(

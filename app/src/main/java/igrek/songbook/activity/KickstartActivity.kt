@@ -39,10 +39,10 @@ class KickstartActivity : MainActivity() {
         super.onCreate(savedInstanceState)
         GlobalScope.launch(Dispatchers.Main) {
             appFactory.appInitializer.get().waitUntilInitialized()
-            logger.debug("WIP: Bootstraping UI...")
+            logger.debug("Kickstart: Bootstraping UI...")
             try {
                 bootstrapUI()
-                logger.debug("WIP: UI ready")
+                logger.debug("Kickstart: UI ready")
             } catch (e: Throwable) {
                 logger.error("Error during bootstraping UI", e)
             }

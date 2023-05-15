@@ -85,6 +85,8 @@ class SongCastService(
         return isPresenter() && sessionState.castSongDto?.chosen_by == myMemberPublicId
     }
 
+    fun isSongSelected(): Boolean = sessionState.castSongDto != null
+
     private fun findMemberByPublicId(publicId: String): CastMember? {
         return sessionState.members.find { it.public_member_id == publicId }
     }
@@ -139,7 +141,6 @@ class SongCastService(
     }
 
     fun restoreSessionAsync(): Deferred<Result<CastSessionJoined>> {
-        logger.info("Restoring SongCast session...")
         val deviceId = deviceIdProvider.getDeviceId()
         val request: Request = Request.Builder()
             .url(rejoinSessionUrl)
@@ -194,7 +195,9 @@ class SongCastService(
             if (interval != null && Date().time - lastShot >= interval) {
                 val waitedS = (Date().time - lastShot) / 1000
                 logger.debug("refreshing SongCast session, waited ${waitedS}s...")
-                refreshSessionDetails()
+                val result = refreshSessionDetails()
+                if (result.isFailure)
+                    return
                 lastShot = Date().time
             }
             delay(1000)
@@ -311,9 +314,7 @@ class SongCastService(
             .header(authDeviceHeader, deviceId)
             .post(RequestBody.create(httpRequester.jsonType, json))
             .build()
-        return httpRequester.httpRequestAsync(request) {
-            logger.debug("SongCast: scroll control sent")
-        }
+        return httpRequester.httpRequestAsync(request) {}
     }
 
     fun postChatMessageAsync(payload: CastChatMessageSent): Deferred<Result<Unit>> {
@@ -436,7 +437,6 @@ class SongCastService(
                 refreshSessionDetails()
             }
             "SongScrolledEvent" -> {
-                logger.debug("SongCast: SongScrolledEvent received")
                 refreshSessionDetails()
             }
             else -> {
@@ -454,7 +454,7 @@ class SongCastService(
         }
     }
 
-    suspend fun refreshSessionDetails() {
+    suspend fun refreshSessionDetails(): Result<Unit> {
         val oldState = sessionState.copy()
         val result = getSessionDetailsAsync().await()
         result.fold(onSuccess = {
@@ -462,8 +462,10 @@ class SongCastService(
             if (compareResult)
                 lastSessionChange = Date().time
             notifySessionUpdated()
+            return Result.success(Unit)
         }, onFailure = { e ->
             UiErrorHandler().handleContextError(e, R.string.songcast_connection_context)
+            return Result.failure(e)
         })
     }
 

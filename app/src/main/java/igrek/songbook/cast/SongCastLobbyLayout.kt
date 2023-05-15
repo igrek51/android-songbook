@@ -188,6 +188,14 @@ class SongCastLobbyLayout(
         )
     }
 
+    fun openLastSong() {
+        appFactory.songOpener.get().openLastSong()
+    }
+
+    fun waitingForPresenter(): Boolean {
+        return songCastService.isPresenter() && !songCastService.isSongSelected()
+    }
+
     private fun leaveRoomConfirm() {
         ConfirmDialogBuilder().confirmAction(R.string.songcast_confirm_leave_room) {
             GlobalScope.launch {
@@ -241,7 +249,7 @@ class SongCastLobbyState {
 }
 
 @Composable
-private fun MainComponent(layout: SongCastLobbyLayout) {
+private fun MainComponent(controller: SongCastLobbyLayout) {
     Column {
         Card(
             modifier = Modifier
@@ -249,21 +257,19 @@ private fun MainComponent(layout: SongCastLobbyLayout) {
                 .padding(8.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
-            when (layout.state.isPresenter) {
+            when (controller.state.isPresenter) {
                 true -> RichText(R.string.songcast_lobby_text_presenter_hint)
                 else -> RichText(R.string.songcast_lobby_text_guest_hint)
             }
         }
 
         OutlinedTextField(
-            value = layout.state.roomCode,
+            value = controller.state.roomCode,
             onValueChange = { },
             label = { Text(stringResource(R.string.songcast_room_code_hint)) },
             singleLine = true,
             enabled = false,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 0.dp),
+            modifier = Modifier.fillMaxWidth().padding(vertical = 0.dp),
             textStyle = LocalTextStyle.current.copy(
                 textAlign = TextAlign.Center,
                 color = Color.White,
@@ -273,7 +279,7 @@ private fun MainComponent(layout: SongCastLobbyLayout) {
             trailingIcon = {
                 IconButton(
                     onClick = {
-                        layout.copySessionCode()
+                        controller.copySessionCode()
                     },
                 ) {
                     Icon(
@@ -285,20 +291,23 @@ private fun MainComponent(layout: SongCastLobbyLayout) {
             },
         )
 
-        EventsLog(layout)
+        if (controller.waitingForPresenter())
+            OpenLastSongButton(controller)
+
+        EventsLog(controller)
     }
 }
 
 @Composable
-private fun EventsLog(layout: SongCastLobbyLayout) {
-    layout.state.logEventData.forEach {
-        CLogEvent(it, layout)
+private fun EventsLog(controller: SongCastLobbyLayout) {
+    controller.state.logEventData.forEach {
+        CLogEvent(it, controller)
     }
 
     Row(verticalAlignment = Alignment.CenterVertically) {
         OutlinedTextField(
-            value = layout.state.currentChat,
-            onValueChange = { layout.state.currentChat = it },
+            value = controller.state.currentChat,
+            onValueChange = { controller.state.currentChat = it },
             label = { Text(stringResource(R.string.songcast_hint_chat_message)) },
             singleLine = true,
             modifier = Modifier.weight(1f),
@@ -306,7 +315,7 @@ private fun EventsLog(layout: SongCastLobbyLayout) {
             keyboardActions = KeyboardActions(onSend = {
                 GlobalScope.launch {
                     safeExecute {
-                        layout.sendChatMessage()
+                        controller.sendChatMessage()
                     }
                 }
             })
@@ -317,7 +326,7 @@ private fun EventsLog(layout: SongCastLobbyLayout) {
                 .padding(4.dp)
                 .align(Alignment.CenterVertically),
             onClick = safeAsyncExecutor {
-                layout.sendChatMessage()
+                controller.sendChatMessage()
             }
         ) {
             Icon(
@@ -330,7 +339,7 @@ private fun EventsLog(layout: SongCastLobbyLayout) {
 }
 
 @Composable
-private fun CLogEvent(event: LogEvent, layout: SongCastLobbyLayout) {
+private fun CLogEvent(event: LogEvent, controller: SongCastLobbyLayout) {
     when (event) {
         is SystemLogEvent -> {
             TimeHeader(event.timestamp)
@@ -383,7 +392,7 @@ private fun CLogEvent(event: LogEvent, layout: SongCastLobbyLayout) {
             )
             Button(
                 onClick = safeAsyncExecutor {
-                    layout.openCurrentSong()
+                    controller.openCurrentSong()
                 },
                 modifier = Modifier.fillMaxWidth(),
                 elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.0.dp),
@@ -423,5 +432,25 @@ fun TimeHeader(timestamp: Long) {
             modifier = Modifier.weight(1f).align(Alignment.CenterVertically),
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
         )
+    }
+}
+
+@Composable
+fun OpenLastSongButton(controller: SongCastLobbyLayout) {
+    Button(
+        onClick = safeAsyncExecutor {
+            controller.openLastSong()
+        },
+        modifier = Modifier.fillMaxWidth(),
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.0.dp),
+    ) {
+        Icon(
+            painterResource(id = R.drawable.note),
+            contentDescription = null,
+            modifier = Modifier.size(ButtonDefaults.IconSize),
+            tint = md_theme_light_primaryContainer,
+        )
+        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+        Text(stringResource(R.string.songcast_open_last_song))
     }
 }

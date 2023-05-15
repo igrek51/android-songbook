@@ -43,7 +43,7 @@ class StreamSocket(
                 }
 
                 socket.on("subscribe_for_session_events_ack") {
-                    logger.debug("SongCast subscribed to socket.io room events (ACK)")
+                    logger.debug("ACK: SongCast subscribed to socket.io room events")
                 }
 
                 if (debug) {
@@ -56,7 +56,7 @@ class StreamSocket(
                 }
 
                 socket.on(Socket.EVENT_CONNECT) {
-                    logger.debug("socket.io: Connected, id: ${socket.id()}")
+                    logger.debug("socket.io: Connected with id: ${socket.id()}")
                     socket.emit("subscribe_for_session_events", JSONObject(
                         mapOf("session_id" to sessionCode)
                     ))

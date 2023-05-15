@@ -132,7 +132,7 @@ class ScrollService(
         }
     }
 
-    fun adaptToScrollControl(viewStart: Float, viewEnd: Float, visibleText: String?, modeId: Long) {
+    fun adaptToScrollControl(viewStart: Float, viewEnd: Float, visibleText: String?, modeId: Long?) {
         val songPreview: SongPreview = appFactory.songPreviewLayoutController.g.songPreview ?: return
         val lyricsModel = songPreview.lyricsModel
 

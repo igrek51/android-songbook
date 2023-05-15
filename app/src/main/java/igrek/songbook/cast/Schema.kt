@@ -49,7 +49,7 @@ data class CastScroll(
     var view_start: Float,
     var view_end: Float,
     var visible_text: String?,
-    var mode: Long,
+    var mode: Long?,
 )
 
 @Serializable
