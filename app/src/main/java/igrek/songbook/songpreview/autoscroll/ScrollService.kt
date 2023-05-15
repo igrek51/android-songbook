@@ -68,7 +68,7 @@ class ScrollService(
         val lyricsLoader = appFactory.lyricsLoader.g
         val lyricsModel = songPreview.lyricsModel
 
-        val firstVisibleLine: Float = songPreview.firstVisibleLine.applyMin(0f)
+        val firstVisibleLine: Float = songPreview.lineScroll.applyMin(0f)
         val lastVisibleLine: Float = songPreview.lastVisibleLine.applyMin(0f)
         val linesStartIndex: Int = floor(firstVisibleLine).roundToInt()
         val linesEndIndex: Int = floor(lastVisibleLine).roundToInt()
@@ -134,17 +134,20 @@ class ScrollService(
         val songPreview: SongPreview = appFactory.songPreviewLayoutController.g.songPreview ?: return
         val lyricsModel = songPreview.lyricsModel
 
-        val lineStartFraction: Float = viewStart - floor(viewStart)
-        val startLine = lyricsModel.lines.minBy { abs(it.primalIndex - viewStart) }
-        val startLineIndex = lyricsModel.lines.indexOf(startLine)
+        val viewStartFloor = floor(viewStart)
+        val lineStartFraction: Float = viewStart - viewStartFloor
+        val startLineIndex = lyricsModel.lines
+            .indexOfFirst { it.primalIndex >= viewStartFloor }
+            .takeIf { it >= 0 } ?: return
         var targetLineScroll = startLineIndex + lineStartFraction
         if (targetLineScroll < 0) targetLineScroll = 0f
-        if (targetLineScroll > songPreview.maxScroll) targetLineScroll = songPreview.maxScroll
 
-        val scrollDiff = targetLineScroll - songPreview.scroll
+        val scrollDiff = targetLineScroll - songPreview.lineScroll
         if (abs(scrollDiff) <= 0.01f) return
+        val scrollByPx = scrollDiff * songPreview.lineheightPx
+        logger.debug("scrolling by $scrollDiff lines, first line index: $startLineIndex")
         GlobalScope.launch(Dispatchers.Main) {
-            songPreview.scrollByLines(scrollDiff)
+            songPreview.overlayScrollView?.smoothScrollBy(0, scrollByPx.toInt())
         }
     }
 

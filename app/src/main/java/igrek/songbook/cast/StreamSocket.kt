@@ -20,6 +20,7 @@ class StreamSocket(
 
     private val logger: Logger = LoggerFactory.logger
     var ioSocket: Socket? = null
+    var initialized: Boolean = false
     private val debug: Boolean = false
     private var connectJob: Job? = null
 
@@ -30,6 +31,7 @@ class StreamSocket(
                 opts.path = "/socket.io/cast"
                 val socket = IO.socket(SongCastService.songbookApiBase, opts)
                 ioSocket = socket
+                initialized = false
 
                 socket.on("broadcast_new_event") { args ->
                     GlobalScope.launch(Dispatchers.IO) {
@@ -88,6 +90,7 @@ class StreamSocket(
                         logger.debug("ACK: subscribe_for_session_events")
                 })
 
+                initialized = true
                 if (debug)
                     logger.debug("SongCast connected to socket.io")
             }

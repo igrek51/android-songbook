@@ -167,12 +167,13 @@ class SongCastService(
         periodicRefreshJob = GlobalScope.launch(Dispatchers.IO) {
             while (isInRoom()) {
                 try {
-                    val noActivityPenalty: Long = when (lastSessionDetailsChange) {
-                        0L -> 0
+                    val noActivityPenalty: Long = when {
+                        lastSessionDetailsChange == 0L -> 0
+                        streamSocket.ioSocket?.connected() == false -> 0
                         else -> {
                             val millis = Date().time - lastSessionDetailsChange
                             val fraction = millis.interpolate(0, 4 * 60_000) // 0-4 min -> 0-1
-                            (fraction * 5 * 60_000).toLong() // 0-5 min
+                            (fraction * 4 * 60_000).toLong() // 0-1 -> 0-4 min
                         }
                     }
                     val interval = 5_000 + noActivityPenalty + (0..1000).random().toLong()
@@ -188,7 +189,7 @@ class SongCastService(
         periodicReconnectJob = GlobalScope.launch(Dispatchers.IO) {
             while (isInRoom()) {
                 try {
-                    if (streamSocket.ioSocket?.connected() == false) {
+                    if (streamSocket.ioSocket?.connected() == false && !streamSocket.initialized) {
                         uiInfoService.showInfo(R.string.songcast_reconnecting_to_room)
                         streamSocket.reconnect()
                     }
