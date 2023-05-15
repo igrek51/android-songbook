@@ -54,8 +54,6 @@ class AutoscrollService(
         set(value) {
             preferencesState.autoscrollSpeedVolumeKeys = value
         }
-    val isEyeFocusZoneOn: Boolean
-        get() = preferencesState.autoscrollShowEyeFocus
 
     private val logger = LoggerFactory.logger
     private var state: AutoscrollState = AutoscrollState.OFF
@@ -194,7 +192,7 @@ class AutoscrollService(
     fun onAutoscrollStopUIEvent() {
         if (isRunning) {
             stop()
-            songPreview?.repaint()
+            songPreview?.canvas?.repaint()
             uiInfoService.showInfo(R.string.autoscroll_stopped)
         }
     }
@@ -245,7 +243,7 @@ class AutoscrollService(
                     eyeFocus += elapsedTimeS * autoscrollSpeed
                     previousStepTime = System.currentTimeMillis()
 
-                    songPreview.repaint()
+                    songPreview.canvas.repaint()
 
                     if (remainingWaitingTimeS <= 0) {
                         state = AutoscrollState.SCROLLING
@@ -278,7 +276,7 @@ class AutoscrollService(
                     val lineheightPart = autoscrollSpeed * AUTOSCROLL_INTERVAL_TIME / 1000
                     eyeFocus += lineheightPart
 
-                    songPreview.repaint()
+                    songPreview.canvas.repaint()
 
                     if (eyeFocus <= songPreview.allLines) {
                         timerHandler.postDelayed(timerRunnable, AUTOSCROLL_INTERVAL_TIME)
@@ -411,7 +409,7 @@ class AutoscrollService(
                             actionResId = R.string.action_stop_autoscroll,
                         ) {
                             this.stop()
-                            songPreview.repaint()
+                            songPreview.canvas.repaint()
                         }
                     }
                     canCountdownToNextSong() -> {
@@ -431,7 +429,7 @@ class AutoscrollService(
             actionResId = R.string.action_stop_autoscroll,
         ) {
             this.stop()
-            songPreview?.repaint()
+            songPreview?.canvas?.repaint()
         }
     }
 

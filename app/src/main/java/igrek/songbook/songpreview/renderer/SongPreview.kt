@@ -1,5 +1,6 @@
 package igrek.songbook.songpreview.renderer
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.MotionEvent
 import android.view.View
@@ -11,14 +12,12 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.settings.preferences.PreferencesState
-import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.LyricsThemeService
-import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuCast
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
-import igrek.songbook.songpreview.renderer.canvas.BaseCanvasView
+import igrek.songbook.songpreview.renderer.canvas.CanvasView
 import igrek.songbook.system.WindowManagerService
 import igrek.songbook.util.lookup.SimpleCache
 import kotlin.math.abs
@@ -27,7 +26,9 @@ import kotlin.math.hypot
 
 class SongPreview(
     context: Context,
-    songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
+    val onInit: () -> Unit,
+    val onFontsizeChanged: (fontsize: Float) -> Unit,
+    val onPreviewSizeChanged: () -> Unit,
     autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
     quickMenuTranspose: LazyInject<QuickMenuTranspose> = appFactory.quickMenuTranspose,
     quickMenuAutoscroll: LazyInject<QuickMenuAutoscroll> = appFactory.quickMenuAutoscroll,
@@ -36,8 +37,7 @@ class SongPreview(
     lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
     playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
-) : BaseCanvasView(context), View.OnTouchListener {
-    private val songPreviewController by LazyExtractor(songPreviewLayoutController)
+) : View.OnTouchListener {
     private val autoscroll by LazyExtractor(autoscrollService)
     private val quickMenuTranspose by LazyExtractor(quickMenuTranspose)
     private val quickMenuAutoscroll by LazyExtractor(quickMenuAutoscroll)
@@ -45,8 +45,9 @@ class SongPreview(
     private val windowManagerService by LazyExtractor(windowManagerService)
     private val lyricsThemeService by LazyExtractor(lyricsThemeService)
     private val playlistService by LazyExtractor(playlistService)
-    val preferencesState by LazyExtractor(preferencesState)
 
+    val canvas: CanvasView = CanvasView(context, onInit, ::onRepaint, onPreviewSizeChanged)
+    private val lyricsRenderer: LyricsRenderer = LyricsRenderer(this, canvas, preferencesState.get())
     var lyricsModel: LyricsModel = LyricsModel()
         private set
     var scroll: Float = 0f
@@ -58,7 +59,6 @@ class SongPreview(
     private var fontsizeTmp: Float = 0f
     private var pointersDst0: Float? = null
     private var fontsize0: Float? = null
-    private var lyricsRenderer: LyricsRenderer? = null
     private var startTouchY = 0f
     private var startTouchX = 0f
     private var startTouchScrollX = 0f
@@ -81,6 +81,12 @@ class SongPreview(
         const val GESTURE_HORIZONTAL_SWIPE = 0.25f // minimal factor of swiped screen width
     }
 
+    val w: Int get() = canvas.w
+    val h: Int get() = canvas.h
+
+    private val isQuickMenuVisible: Boolean
+        get() = quickMenuTranspose.isVisible || quickMenuAutoscroll.isVisible || quickMenuCast.isVisible
+
     private val fontsizePx: Float get() = windowManagerService.dp2px(this.fontsizeTmp)
 
     val lineheightPx: Float get() = fontsizePx * LINEHEIGHT_SCALE_FACTOR
@@ -89,8 +95,8 @@ class SongPreview(
         get() {
             val bottomY = textBottomY.get()
             val reserve = bottomMarginCache.get()
-            return if (bottomY > h) {
-                bottomY + reserve - h
+            return if (bottomY > canvas.h) {
+                bottomY + reserve - canvas.h
             } else {
                 0f
             }
@@ -98,8 +104,8 @@ class SongPreview(
 
     internal val maxScrollX: Float
         get() {
-            return if (textRightX.get() > w) {
-                textRightX.get() - w
+            return if (textRightX.get() > canvas.w) {
+                textRightX.get() - canvas.w
             } else {
                 0f
             }
@@ -115,10 +121,10 @@ class SongPreview(
 
     val visualLinesAtEnd: Float get() {
         val bottom = textBottomY.get()
-        return if (bottom < h) {
+        return if (bottom < canvas.h) {
             bottom / lineheightPx
         } else {
-            h / lineheightPx
+            canvas.h / lineheightPx
         }
     }
 
@@ -136,8 +142,8 @@ class SongPreview(
 
     val eyeFocusLines: Float get() = autoscroll.eyeFocus
 
-    override fun reset() {
-        super.reset()
+    fun reset() {
+        canvas.reset()
         scroll = 0f
         scrollX = 0f
         startScroll = 0f
@@ -149,45 +155,16 @@ class SongPreview(
         textRightX.invalidate()
     }
 
-    override fun init() {
-        songPreviewController.onGraphicsInitializedEvent(w, paint)
+    private fun onRepaint() {
+        lyricsRenderer.drawAll(
+            lineheightPx,
+            fontsizePx,
+            lyricsModel,
+            quickMenuVisible = quickMenuTranspose.isVisible || quickMenuCast.isVisible,
+        )
     }
 
-    override fun onRepaint() {
-        drawBackground()
-
-        if (this.lyricsRenderer != null) {
-            lyricsRenderer?.drawScrollBars()
-            if (autoscroll.isEyeFocusZoneOn) {
-                lyricsRenderer?.drawEyeFocusZone(lineheightPx)
-            }
-            if (preferencesState.castFocusControl.slide) {
-                lyricsRenderer?.drawCastFocusZone(lineheightPx)
-            }
-            lyricsRenderer?.drawFileContent(fontsizePx, lineheightPx)
-        }
-
-        drawQuickMenuOverlay()
-    }
-
-    private fun drawBackground() {
-        val backgroundColor = when (lyricsThemeService.colorScheme) {
-            ColorScheme.DARK -> 0x000000
-            ColorScheme.BRIGHT -> 0xf0f0f0
-        }
-
-        setColor(backgroundColor)
-        clearScreen()
-    }
-
-    private fun drawQuickMenuOverlay() {
-        if (quickMenuTranspose.isVisible || quickMenuCast.isVisible) {
-            //dimmed background
-            setColor(0x000000, 110)
-            fillRect(0f, 0f, w.toFloat(), h.toFloat())
-        }
-    }
-
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(v: View, event: MotionEvent): Boolean {
         when (event.actionMasked) {
             MotionEvent.ACTION_DOWN -> onTouchDown(event)
@@ -263,7 +240,7 @@ class SongPreview(
         }
         startTouchY = event.getY(pointerIndex)
 
-        songPreviewController.onFontsizeChangedEvent(fontsizeTmp)
+        onFontsizeChanged(fontsizeTmp)
     }
 
     private fun onTouchUp(event: MotionEvent) {
@@ -271,7 +248,7 @@ class SongPreview(
             if (!multiTouch) {
                 val dx = event.x - startTouchX
                 val adx = abs(dx)
-                if (adx > GESTURE_HORIZONTAL_SWIPE * w) {
+                if (adx > GESTURE_HORIZONTAL_SWIPE * canvas.w) {
                     if (dx > 0) {
                         playlistService.goToNextOrPrevious(-1)
                     } else {
@@ -284,11 +261,11 @@ class SongPreview(
 
     fun onClick() {
         val now = System.currentTimeMillis()
-        if (songPreviewController.isQuickMenuVisible) {
+        if (isQuickMenuVisible) {
             quickMenuTranspose.isVisible = false
             quickMenuAutoscroll.isVisible = false
             quickMenuCast.isVisible = false
-            repaint()
+            canvas.repaint()
         } else {
             if (autoscroll.isRunning) {
                 autoscroll.onAutoscrollStopUIEvent()
@@ -309,26 +286,11 @@ class SongPreview(
         autoscroll.onAutoscrollToggleUIEvent()
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-        if (isInitialized) {
-            songPreviewController.onPreviewSizeChange(w)
-        }
-    }
-
     fun setLyricsModel(lyricsModel: LyricsModel) {
         this.lyricsModel = lyricsModel
         textBottomY.invalidate()
         textRightX.invalidate()
-        this.lyricsRenderer = LyricsRenderer(
-            this,
-            lyricsModel,
-            lyricsThemeService.fontTypeface,
-            lyricsThemeService.colorScheme,
-            lyricsThemeService.displayStyle,
-            lyricsThemeService.horizontalScroll,
-        )
-        repaint()
+        canvas.repaint()
     }
 
     fun setFontSizes(fontsizeDp: Float) {
@@ -338,17 +300,13 @@ class SongPreview(
     }
 
     private fun previewFontsize(fontsize1: Float) {
-        val minScreen = if (w > h) h else w
+        val minScreen = if (canvas.w > canvas.h) canvas.h else canvas.w
         if (fontsize1 >= 5 && fontsize1 <= minScreen / 5) {
             setFontSizes(fontsize1)
-            repaint()
+            canvas.repaint()
         }
     }
 
-    /**
-     * @param lineheightPart lineheight part to move (em)
-     * @return if it can be scrolled
-     */
     fun scrollByLines(lineheightPart: Float): Boolean {
         return scrollByPxVertical(lineheightPart * lineheightPx)
     }
@@ -458,7 +416,7 @@ class SongPreview(
 
         appFactory.scrollService.g.reportSongScrolled(py / lineheightPx)
 
-        repaint()
+        canvas.repaint()
         return scrollable
     }
 
@@ -479,7 +437,7 @@ class SongPreview(
             }
         }
 
-        repaint()
+        canvas.repaint()
     }
 
     fun canScrollDown(): Boolean {
@@ -500,6 +458,6 @@ class SongPreview(
     fun goToBeginning() {
         scroll = 0f
         scrollX = 0f
-        repaint()
+        canvas.repaint()
     }
 }

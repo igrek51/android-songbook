@@ -2,7 +2,6 @@ package igrek.songbook.songpreview
 
 import android.annotation.SuppressLint
 import android.graphics.ColorFilter
-import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
@@ -110,11 +109,7 @@ class SongPreviewLayoutController(
     private var autoscrollButton: ImageButton? = null
     private var setFavouriteButton: ImageButton? = null
     private var songCastButton: ImageButton? = null
-    private val originalButtonBackgrounds: MutableMap<Int, Pair<ColorFilter, Drawable>> =
-        mutableMapOf()
-
-    val isQuickMenuVisible: Boolean
-        get() = quickMenuTranspose.isVisible || quickMenuAutoscroll.isVisible || quickMenuCast.isVisible
+    private val originalButtonBackgrounds: MutableMap<Int, Pair<ColorFilter, Drawable>> = mutableMapOf()
 
     init {
         autoscrollService.get().scrollStateSubject
@@ -150,12 +145,17 @@ class SongPreviewLayoutController(
 
         appBarLayout = layout.findViewById(R.id.appBarLayout)
 
-        // create songPreview
-        songPreview = SongPreview(activity).apply {
+        // songPreview canvas
+        songPreview = SongPreview(
+            activity,
+            onInit = ::onGraphicsInitialized,
+            onFontsizeChanged = ::onFontsizeChanged,
+            onPreviewSizeChanged = ::onPreviewSizeChanged,
+        ).apply {
             reset()
         }
         val songPreviewContainer = layout.findViewById<ViewGroup>(R.id.songPreviewContainer)
-        songPreviewContainer.addView(songPreview)
+        songPreviewContainer.addView(songPreview?.canvas)
 
         // create quick menu panels
         val quickMenuContainer = layout.findViewById<FrameLayout>(R.id.quickMenuContainer)
@@ -281,7 +281,9 @@ class SongPreviewLayoutController(
         return R.layout.screen_song_preview
     }
 
-    fun onGraphicsInitializedEvent(w: Int, paint: Paint?) {
+    fun onGraphicsInitialized() {
+        val w = songPreview?.canvas?.w ?: return
+        val paint = songPreview?.canvas?.paint ?: return
         currentSong?.let {
             // load file and parse it
             val fileContent = it.content.orEmpty()
@@ -327,7 +329,7 @@ class SongPreviewLayoutController(
         }
     }
 
-    fun onFontsizeChangedEvent(fontsize: Float) {
+    private fun onFontsizeChanged(fontsize: Float) {
         lyricsThemeService.fontsize = fontsize
         // parse without reading a whole file again
         lyricsLoader.onFontSizeChanged()
@@ -338,7 +340,7 @@ class SongPreviewLayoutController(
         quickMenuTranspose.isVisible = !quickMenuTranspose.isVisible
         quickMenuAutoscroll.isVisible = false
         quickMenuCast.isVisible = false
-        songPreview?.repaint()
+        songPreview?.canvas?.repaint()
         if (quickMenuTranspose.isVisible) {
             activity.findViewById<View>(R.id.transpose0Button)?.requestFocus()
         }
@@ -348,7 +350,7 @@ class SongPreviewLayoutController(
         quickMenuTranspose.isVisible = false
         quickMenuAutoscroll.isVisible = !quickMenuAutoscroll.isVisible
         quickMenuCast.isVisible = false
-        songPreview?.repaint()
+        songPreview?.canvas?.repaint()
         if (quickMenuAutoscroll.isVisible) {
             activity.findViewById<View>(R.id.autoscrollToggleButton)?.requestFocus()
         }
@@ -358,7 +360,7 @@ class SongPreviewLayoutController(
         quickMenuTranspose.isVisible = false
         quickMenuAutoscroll.isVisible = false
         quickMenuCast.isVisible = !quickMenuCast.isVisible
-        songPreview?.repaint()
+        songPreview?.canvas?.repaint()
     }
 
     fun isTransposePanelVisible(): Boolean = quickMenuTranspose.isVisible
@@ -402,7 +404,7 @@ class SongPreviewLayoutController(
         when {
             quickMenuTranspose.isVisible -> {
                 quickMenuTranspose.isVisible = false
-                songPreview?.repaint()
+                songPreview?.canvas?.repaint()
             }
             quickMenuAutoscroll.isVisible -> quickMenuAutoscroll.isVisible = false
             quickMenuCast.isVisible -> quickMenuCast.isVisible = false
@@ -418,9 +420,11 @@ class SongPreviewLayoutController(
             setFullscreen(false)
     }
 
-    fun onPreviewSizeChange(w: Int) {
-        lyricsLoader.onPreviewSizeChange(w, songPreview?.paint)
-        onLyricsModelUpdated()
+    private fun onPreviewSizeChanged() {
+        songPreview?.canvas?.let { canvas ->
+            lyricsLoader.onPreviewSizeChange(canvas.w, canvas.paint)
+            onLyricsModelUpdated()
+        }
     }
 
     private fun highlightButton(button: ImageButton) {

@@ -5,21 +5,19 @@ import android.os.Build
 import igrek.songbook.chords.model.LyricsLine
 import igrek.songbook.chords.model.LyricsModel
 import igrek.songbook.chords.model.LyricsTextType
+import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.DisplayStyle
-import igrek.songbook.settings.theme.FontTypeface
 import igrek.songbook.songpreview.renderer.canvas.Align
+import igrek.songbook.songpreview.renderer.canvas.CanvasView
 
 class LyricsRenderer internal constructor(
-    private val canvas: SongPreview,
-    private val lyricsModel: LyricsModel,
-    fontTypeface: FontTypeface,
-    colorScheme: ColorScheme,
-    private val displayStyle: DisplayStyle,
-    private val horizontalScroll: Boolean,
+    private val songPreview: SongPreview,
+    private val canvas: CanvasView,
+    private val preferencesState: PreferencesState,
 ) {
-    private val w: Float = canvas.w.toFloat()
-    private val h: Float = canvas.h.toFloat()
+    private val w: Float get() = canvas.w.toFloat()
+    private val h: Float get() = canvas.h.toFloat()
 
     private var normalTypeface: Typeface? = null
     private var boldTypeface: Typeface? = null
@@ -33,11 +31,12 @@ class LyricsRenderer internal constructor(
     private var eyeFocusZoneColorTransparent: Int
 
     init {
-        val typefaceFamily = fontTypeface.typeface
+        val typefaceFamily = preferencesState.fontTypeface.typeface
         normalTypeface = Typeface.create(typefaceFamily, Typeface.NORMAL)
         boldTypeface = Typeface.create(typefaceFamily, Typeface.BOLD)
         italicTypeface = Typeface.create(typefaceFamily, Typeface.ITALIC)
 
+        val colorScheme = preferencesState.colorScheme
         textColor = when (colorScheme) {
             ColorScheme.DARK -> 0xffffff
             ColorScheme.BRIGHT -> 0x000000
@@ -68,14 +67,45 @@ class LyricsRenderer internal constructor(
         }
     }
 
+    fun drawAll(
+        lineheightPx: Float,
+        fontsizePx: Float,
+        lyricsModel: LyricsModel,
+        quickMenuVisible: Boolean,
+    ) {
+        drawBackground()
+
+        drawScrollBars()
+        if (preferencesState.autoscrollShowEyeFocus) {
+            drawEyeFocusZone(lineheightPx)
+        }
+        if (preferencesState.castFocusControl.slide) {
+            drawCastFocusZone(lineheightPx)
+        }
+        drawFileContent(lyricsModel, fontsizePx, lineheightPx)
+
+        if (quickMenuVisible) {
+            drawQuickMenuOverlay()
+        }
+    }
+
+    private fun drawBackground() {
+        val backgroundColor = when (preferencesState.colorScheme) {
+            ColorScheme.DARK -> 0x000000
+            ColorScheme.BRIGHT -> 0xf0f0f0
+        }
+        canvas.setColor(backgroundColor)
+        canvas.clearScreen()
+    }
+
     /**
      * @param fontsize   fontsize in pixels
      * @param lineheight
      */
-    fun drawFileContent(fontsize: Float, lineheight: Float) {
+    private fun drawFileContent(lyricsModel: LyricsModel, fontsize: Float, lineheight: Float) {
         canvas.setFontSize(fontsize)
         lyricsModel.lines.forEachIndexed { lineIndex, line ->
-            drawTextLine(line, canvas.scroll, canvas.scrollX, fontsize, lineheight, lineIndex)
+            drawTextLine(line, songPreview.scroll, songPreview.scrollX, fontsize, lineheight, lineIndex)
         }
     }
 
@@ -87,7 +117,7 @@ class LyricsRenderer internal constructor(
         lineheight: Float,
         lineIndex: Int,
     ) {
-        val y = when (canvas.preferencesState.castFocusControl.slide) {
+        val y = when (preferencesState.castFocusControl.slide) {
             false -> lineheight * lineIndex - scroll
             true -> lineheight * lineIndex - scroll + h / 2
         }
@@ -121,8 +151,8 @@ class LyricsRenderer internal constructor(
                 LyricsTextType.CHORDS -> {
                     canvas.setFontTypeface(boldTypeface)
                     canvas.setColor(chordColor)
-                    val x = if (displayStyle == DisplayStyle.ChordsAlignedRight) {
-                        fragment.x * fontsize - canvas.scrollThickness - scrollX
+                    val x = if (preferencesState.chordsDisplayStyle == DisplayStyle.ChordsAlignedRight) {
+                        fragment.x * fontsize - songPreview.scrollThickness - scrollX
                     } else {
                         fragment.x * fontsize - scrollX
                     }
@@ -143,21 +173,21 @@ class LyricsRenderer internal constructor(
         }
     }
 
-    fun drawScrollBars() {
+    private fun drawScrollBars() {
         //vertical scrollbar
-        val scroll = canvas.scroll
-        val maxScroll = canvas.maxScroll
+        val scroll = songPreview.scroll
+        val maxScroll = songPreview.maxScroll
         val range = maxScroll + h
         val top = scroll / range
         val bottom = (scroll + h) / range
 
         canvas.setColor(scrollColor)
-        val scrollThickness = canvas.scrollThickness
+        val scrollThickness = songPreview.scrollThickness
         canvas.fillRect(w - scrollThickness, top * h, w, bottom * h)
 
         //horizontal scrollbar
-        if (horizontalScroll) {
-            val maxScrollX = canvas.maxScrollX
+        if (preferencesState.horizontalScroll) {
+            val maxScrollX = songPreview.maxScrollX
             if (maxScrollX > 0) {
                 val scrollX = canvas.scrollX
                 val rangeX = maxScrollX + w
@@ -168,16 +198,16 @@ class LyricsRenderer internal constructor(
         }
     }
 
-    fun drawEyeFocusZone(lineheight: Float) {
-        val eyeFocusLines = canvas.eyeFocusLines
+    private fun drawEyeFocusZone(lineheight: Float) {
+        val eyeFocusLines = songPreview.eyeFocusLines
         if (eyeFocusLines <= 0f)
             return
 
-        val eyeFocusTop = (eyeFocusLines - 1f) * lineheight - canvas.scroll
+        val eyeFocusTop = (eyeFocusLines - 1f) * lineheight - songPreview.scroll
         val eyeFocusBottom = eyeFocusTop + 2f * lineheight
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val thickness = canvas.scrollThickness * 4f
+            val thickness = songPreview.scrollThickness * 4f
             canvas.fillRectGradientH(
                 w - thickness,
                 eyeFocusTop,
@@ -187,13 +217,13 @@ class LyricsRenderer internal constructor(
                 eyeFocusZoneColor
             )
         } else {
-            val thickness = canvas.scrollThickness * 2f
+            val thickness = songPreview.scrollThickness * 2f
             canvas.setColor(eyeFocusZoneColor)
             canvas.fillRect(w - thickness, eyeFocusTop, w, eyeFocusBottom)
         }
     }
 
-    fun drawCastFocusZone(lineheight: Float) {
+    private fun drawCastFocusZone(lineheight: Float) {
         val eyeFocusTop = h / 2 - lineheight / 2
         val eyeFocusBottom = h / 2 + lineheight / 2
 
@@ -212,4 +242,9 @@ class LyricsRenderer internal constructor(
         }
     }
 
+    private fun drawQuickMenuOverlay() {
+        //dimmed background
+        canvas.setColor(0x000000, 110)
+        canvas.fillRect(0f, 0f, canvas.w.toFloat(), canvas.h.toFloat())
+    }
 }
