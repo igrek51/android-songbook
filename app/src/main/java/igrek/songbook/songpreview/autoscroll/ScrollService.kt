@@ -8,6 +8,7 @@ import igrek.songbook.cast.CastScrollControl
 import igrek.songbook.cast.CastScroll
 import igrek.songbook.cast.SongCastService
 import igrek.songbook.chords.model.LyricsLine
+import igrek.songbook.chords.model.LyricsModel
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
@@ -98,12 +99,22 @@ class ScrollService(
         )
     }
     private fun getVisibleSlidesScroll(visualLinesCount: Int): CastScroll? {
-        // TODO
+        val songPreview = appFactory.songPreviewLayoutController.g.songPreview ?: return null
+        val lyricsModel: LyricsModel = songPreview.lyricsModel
+        val lineheight = songPreview.lineheightPx
+        val wholeLinesSkipped = (songPreview.scroll / lineheight).toInt().takeIf { it >= 0 } ?: 0
+
+        val visualLines: List<LyricsLine> = lyricsModel.lines.filterIndexed { index, _ ->
+            index in wholeLinesSkipped..(wholeLinesSkipped + visualLinesCount)
+        }
+        val visibleText = visualLines.joinToString("\n") {
+            it.displayString()
+        }
 
         return CastScroll(
-            view_start = 0f,
-            view_end = 0f,
-            visible_text = "",
+            view_start = wholeLinesSkipped.toFloat(),
+            view_end = (wholeLinesSkipped + visualLinesCount).toFloat(),
+            visible_text = visibleText,
             mode = songCastService.presenterFocusControl.id,
         )
     }
@@ -121,9 +132,10 @@ class ScrollService(
                 CastScrollControl.SLIDES_1 -> getVisibleSlidesScroll(1)
                 CastScrollControl.SLIDES_2 -> getVisibleSlidesScroll(2)
                 CastScrollControl.SLIDES_4 -> getVisibleSlidesScroll(4)
+                CastScrollControl.SLIDES_8 -> getVisibleSlidesScroll(8)
                 else -> null
             } ?: return@launch
-            logger.debug("Sharing scroll control: ${payload.view_start}")
+            logger.debug("Sharing scroll control: ${payload.view_start}, ${payload.visible_text}")
             val result = songCastService.postScrollControlAsync(payload).await()
             result.fold(onSuccess = {
             }, onFailure = { e ->

@@ -11,7 +11,7 @@ enum class CastScrollControl(
     SLIDES_1(2, "Slides mode: 1 line", 1),
     SLIDES_2(3, "Slides mode: 2 lines", 2),
     SLIDES_4(4, "Slides mode: 4 lines", 4),
-    SLIDES_8(4, "Slides mode: 8 lines", 8),
+    SLIDES_8(5, "Slides mode: 8 lines", 8),
     ;
 
     companion object {
