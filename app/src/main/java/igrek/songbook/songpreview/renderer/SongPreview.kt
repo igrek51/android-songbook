@@ -21,6 +21,10 @@ import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.canvas.CanvasView
 import igrek.songbook.system.WindowManagerService
 import igrek.songbook.util.lookup.SimpleCache
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.hypot
 
@@ -130,10 +134,18 @@ class SongPreview(
     }
     val scrollThickness: Float get() = scrollThicknessCache.get()
     val eyeFocusLines: Float get() = autoscroll.eyeFocus
-    private val isQuickMenuVisible: Boolean
-        get() = quickMenuTranspose.isVisible || quickMenuAutoscroll.isVisible || quickMenuCast.isVisible
+
+    private val isQuickMenuVisible: Boolean get() =
+        quickMenuTranspose.isVisible || quickMenuAutoscroll.isVisible || quickMenuCast.isVisible
+
     val isCastPresentingSlides: Boolean
         get() = songCastService.isPresenting() && preferencesState.castScrollControl.slideLines > 0
+    private var slideCurrentIndex: Int = -1
+    private var slideTargetIndex: Int = -1
+    private var slideCurrentText: String = ""
+    private var slideTargetText: String = ""
+    private var slideAnimationProgress: Float = 1f
+    private val isSlidesMode: Boolean get() = slideTargetIndex >= 0
 
     fun reset() {
         canvas.reset()
@@ -146,15 +158,28 @@ class SongPreview(
         lyricsModel = LyricsModel()
         textBottomY.invalidate()
         textRightX.invalidate()
+        slideAnimationProgress = 1f
+        slideCurrentIndex = -1
+        slideTargetIndex = -1
+        slideCurrentText = ""
+        slideTargetText = ""
     }
 
     private fun onRepaint() {
-        lyricsRenderer.drawAll(
-            lineheightPx,
-            fontsizePx,
-            lyricsModel,
-            quickMenuVisible = quickMenuTranspose.isVisible || quickMenuCast.isVisible,
-        )
+        when (isSlidesMode) {
+            true -> lyricsRenderer.drawSlides(
+                slideCurrentIndex, slideTargetIndex,
+                slideCurrentText, slideTargetText,
+                slideAnimationProgress,
+                lineheightPx, fontsizePx,
+            )
+            else -> lyricsRenderer.drawAllLyrics(
+                lineheightPx,
+                fontsizePx,
+                lyricsModel,
+                quickMenuVisible = quickMenuTranspose.isVisible || quickMenuCast.isVisible,
+            )
+        }
     }
 
     fun setLyricsModel(lyricsModel: LyricsModel) {
@@ -429,5 +454,28 @@ class SongPreview(
         scroll = 0f
         scrollX = 0f
         canvas.repaint()
+    }
+
+    fun showSlide(slideIndex: Int, slideText: String) {
+        if (this.slideTargetIndex == -1) {
+            this.slideCurrentIndex = slideIndex
+            this.slideTargetIndex = slideIndex
+            this.slideCurrentText = slideText
+            this.slideTargetText = slideText
+            this.slideAnimationProgress = 1f
+        } else {
+            this.slideCurrentText = this.slideTargetText
+            this.slideTargetIndex = slideIndex
+            this.slideTargetText = slideText
+            this.slideAnimationProgress = 0f
+        }
+        GlobalScope.launch (Dispatchers.Main) {
+            canvas.repaint()
+            while (slideAnimationProgress < 1f) {
+                delay(50)
+                slideAnimationProgress += 1f / 20
+                canvas.repaint()
+            }
+        }
     }
 }

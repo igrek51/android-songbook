@@ -76,7 +76,7 @@ class LyricsRenderer internal constructor(
         }
     }
 
-    fun drawAll(
+    fun drawAllLyrics(
         lineheightPx: Float,
         fontsizePx: Float,
         lyricsModel: LyricsModel,
@@ -238,5 +238,34 @@ class LyricsRenderer internal constructor(
     private fun drawQuickMenuOverlay() {
         canvas.setColor(0x000000, 110) //dimmed background
         canvas.fillRect(0f, 0f, canvas.w.toFloat(), canvas.h.toFloat())
+    }
+
+    fun drawSlides(
+        slideCurrentIndex: Int,
+        slideTargetIndex: Int,
+        slideCurrentText: String,
+        slideTargetText: String,
+        slideAnimationProgress: Float,
+        lineheightPx: Float,
+        fontsizePx: Float,
+    ) {
+        drawBackground()
+
+        val targetLines = slideTargetText.split("\n")
+        val linesNum = targetLines.size
+
+        canvas.setFontSize(fontsizePx)
+        canvas.setFontTypeface(normalTypeface)
+        canvas.setColor(textColor)
+
+        targetLines.forEachIndexed { lineIndex, line ->
+            val lineY = h/2 - linesNum * lineheightPx / 2 + lineIndex * lineheightPx
+            canvas.drawText(
+                line,
+                w/2,
+                lineY,
+                Align.HCENTER,
+            )
+        }
     }
 }

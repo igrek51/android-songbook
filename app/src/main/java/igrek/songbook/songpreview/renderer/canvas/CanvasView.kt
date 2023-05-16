@@ -101,8 +101,7 @@ class CanvasView(
         when {
             align.isFlagSet(Align.LEFT) -> paint.textAlign = Paint.Align.LEFT
             align.isFlagSet(Align.HCENTER) -> paint.textAlign = Paint.Align.CENTER
-            else -> // right
-                paint.textAlign = Paint.Align.RIGHT
+            else -> paint.textAlign = Paint.Align.RIGHT
         }
         val textBounds = Rect()
         paint.getTextBounds(text, 0, text.length, textBounds)

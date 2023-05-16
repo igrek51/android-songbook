@@ -179,7 +179,9 @@ class ScrollService(
     }
 
     private fun adaptToSlideScrollControl(viewStart: Float, visibleText: String?) {
-
+        val slideIndex = viewStart.toInt()
+        val songPreview: SongPreview = appFactory.songPreviewLayoutController.g.songPreview ?: return
+        songPreview.showSlide(slideIndex, visibleText ?: "")
     }
 
 }
