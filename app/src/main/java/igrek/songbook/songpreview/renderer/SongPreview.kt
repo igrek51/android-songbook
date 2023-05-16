@@ -6,6 +6,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.animation.OvershootInterpolator
 import androidx.recyclerview.widget.RecyclerView
+import igrek.songbook.cast.SongCastService
 import igrek.songbook.chords.model.LyricsModel
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -37,6 +38,7 @@ class SongPreview(
     lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
     playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    songCastService: LazyInject<SongCastService> = appFactory.songCastService,
 ) : View.OnTouchListener {
     private val autoscroll by LazyExtractor(autoscrollService)
     private val quickMenuTranspose by LazyExtractor(quickMenuTranspose)
@@ -45,9 +47,11 @@ class SongPreview(
     private val windowManagerService by LazyExtractor(windowManagerService)
     private val lyricsThemeService by LazyExtractor(lyricsThemeService)
     private val playlistService by LazyExtractor(playlistService)
+    private val preferencesState by LazyExtractor(preferencesState)
+    private val songCastService by LazyExtractor(songCastService)
 
     val canvas: CanvasView = CanvasView(context, onInit, ::onRepaint, onPreviewSizeChanged)
-    private val lyricsRenderer: LyricsRenderer = LyricsRenderer(this, canvas, preferencesState.get())
+    private var lyricsRenderer: LyricsRenderer = LyricsRenderer(this, canvas, preferencesState.get())
     var lyricsModel: LyricsModel = LyricsModel()
         private set
     var scroll: Float = 0f
@@ -83,64 +87,53 @@ class SongPreview(
 
     val w: Int get() = canvas.w
     val h: Int get() = canvas.h
-
-    private val isQuickMenuVisible: Boolean
-        get() = quickMenuTranspose.isVisible || quickMenuAutoscroll.isVisible || quickMenuCast.isVisible
-
     private val fontsizePx: Float get() = windowManagerService.dp2px(this.fontsizeTmp)
-
     val lineheightPx: Float get() = fontsizePx * LINEHEIGHT_SCALE_FACTOR
 
-    internal val maxScroll: Float
-        get() {
-            val bottomY = textBottomY.get()
-            val reserve = bottomMarginCache.get()
-            return if (bottomY > canvas.h) {
-                bottomY + reserve - canvas.h
-            } else {
-                0f
-            }
+    internal val maxScroll: Float get() {
+        val bottomY = textBottomY.get()
+        val reserve = bottomMarginCache.get()
+        return when {
+            isCastPresentingSlides -> bottomY + preferencesState.castScrollControl.slideLines * lineheightPx
+            bottomY > canvas.h -> bottomY + reserve - canvas.h
+            else -> 0f
         }
+    }
 
-    internal val maxScrollX: Float
-        get() {
-            return if (textRightX.get() > canvas.w) {
-                textRightX.get() - canvas.w
-            } else {
-                0f
-            }
+    internal val maxScrollX: Float get() {
+        return when (textRightX.get() > canvas.w) {
+            true -> textRightX.get() - canvas.w
+            false -> 0f
         }
+    }
 
     private val textBottomY: SimpleCache<Float> = SimpleCache {
         val lines = lyricsModel.lines
         if (lines.isEmpty())
             return@SimpleCache 0f
-        val lineheight = lineheightPx
-        lines.size * lineheight + lineheight
+        (lines.size + 1) * lineheightPx
     }
 
     val visualLinesAtEnd: Float get() {
         val bottom = textBottomY.get()
-        return if (bottom < canvas.h) {
-            bottom / lineheightPx
-        } else {
-            canvas.h / lineheightPx
+        return when (bottom < canvas.h) {
+            true -> bottom / lineheightPx
+            false -> canvas.h / lineheightPx
         }
     }
 
-    val allLines: Float get() = textBottomY.get() / lineheightPx
-
-    val lineScroll: Float get() = scroll / lineheightPx
-
-    val lastVisibleLine: Float get() = lineScroll + visualLinesAtEnd
-
+    val allLinesEm: Float get() = textBottomY.get() / lineheightPx
+    val scrollEm: Float get() = scroll / lineheightPx
+    val lastVisibleLine: Float get() = scrollEm + visualLinesAtEnd
     private val textRightX: SimpleCache<Float> = SimpleCache {
         (lyricsModel.lines.maxOfOrNull { it.maxRightX } ?: 0f) * fontsizePx
     }
-
     val scrollThickness: Float get() = scrollThicknessCache.get()
-
     val eyeFocusLines: Float get() = autoscroll.eyeFocus
+    private val isQuickMenuVisible: Boolean
+        get() = quickMenuTranspose.isVisible || quickMenuAutoscroll.isVisible || quickMenuCast.isVisible
+    val isCastPresentingSlides: Boolean
+        get() = songCastService.isPresenting() && preferencesState.castScrollControl.slideLines > 0
 
     fun reset() {
         canvas.reset()
@@ -162,6 +155,28 @@ class SongPreview(
             lyricsModel,
             quickMenuVisible = quickMenuTranspose.isVisible || quickMenuCast.isVisible,
         )
+    }
+
+    fun setLyricsModel(lyricsModel: LyricsModel) {
+        this.lyricsModel = lyricsModel
+        textBottomY.invalidate()
+        textRightX.invalidate()
+        lyricsRenderer = LyricsRenderer(this, canvas, preferencesState)
+        canvas.repaint()
+    }
+
+    fun setFontSizes(fontsizeDp: Float) {
+        this.fontsizeTmp = fontsizeDp
+        textBottomY.invalidate()
+        textRightX.invalidate()
+    }
+
+    private fun previewFontsize(fontsize1: Float) {
+        val minScreen = if (canvas.w > canvas.h) canvas.h else canvas.w
+        if (fontsize1 >= 5 && fontsize1 <= minScreen / 5) {
+            setFontSizes(fontsize1)
+            canvas.repaint()
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -286,27 +301,6 @@ class SongPreview(
         autoscroll.onAutoscrollToggleUIEvent()
     }
 
-    fun setLyricsModel(lyricsModel: LyricsModel) {
-        this.lyricsModel = lyricsModel
-        textBottomY.invalidate()
-        textRightX.invalidate()
-        canvas.repaint()
-    }
-
-    fun setFontSizes(fontsizeDp: Float) {
-        this.fontsizeTmp = fontsizeDp
-        textBottomY.invalidate()
-        textRightX.invalidate()
-    }
-
-    private fun previewFontsize(fontsize1: Float) {
-        val minScreen = if (canvas.w > canvas.h) canvas.h else canvas.w
-        if (fontsize1 >= 5 && fontsize1 <= minScreen / 5) {
-            setFontSizes(fontsize1)
-            canvas.repaint()
-        }
-    }
-
     fun scrollByLines(lineheightPart: Float): Boolean {
         return scrollByPxVertical(lineheightPart * lineheightPx)
     }
@@ -325,10 +319,7 @@ class SongPreview(
             scroll < 0 -> {
                 val exceeds = -scroll
                 when {
-                    autoscroll.isRunning -> {
-                        scroll = 0f
-                    }
-
+                    autoscroll.isRunning -> scroll = 0f
                     py < 0 && recyclerScrollState == RecyclerView.SCROLL_STATE_DRAGGING -> {
                         if (exceeds < maxAbroad) {
                             scroll += py * (1f - 1f / maxAbroad * exceeds)
@@ -359,7 +350,6 @@ class SongPreview(
                     else -> scroll += py
                 }
             }
-
             scroll > maxScroll -> {
                 val exceeds = scroll - maxScroll
                 when {
@@ -393,14 +383,9 @@ class SongPreview(
                     else -> scroll += py
                 }
             }
-
-            else -> {
-                when {
-                    autoscroll.isWaiting && py > 0 -> {}
-                    else -> {
-                        scroll += py
-                    }
-                }
+            else -> when {
+                autoscroll.isWaiting && py > 0 -> {}
+                else -> scroll += py
             }
         }
 
@@ -413,9 +398,7 @@ class SongPreview(
             scroll >= maxScroll -> false
             else -> true
         }
-
         appFactory.scrollService.g.reportSongScrolled(py / lineheightPx)
-
         canvas.repaint()
         return scrollable
     }
@@ -425,31 +408,18 @@ class SongPreview(
             scrollX = 0f
             return
         }
-
         scrollX += px
         when {
-            scrollX < 0f -> {
-                scrollX = 0f
-            }
-
-            scrollX > maxScrollX -> {
-                scrollX = maxScrollX
-            }
+            scrollX < 0f -> scrollX = 0f
+            scrollX > maxScrollX -> scrollX = maxScrollX
         }
-
         canvas.repaint()
     }
 
-    fun canScrollDown(): Boolean {
-        if (maxScroll <= 0)
-            return false
-        return scroll < maxScroll
-    }
+    fun canScrollDown(): Boolean = maxScroll > 0 && scroll < maxScroll
 
     fun onManuallyScrolled(dy: Float) {
-        // lines scrolled
         val linePartScrolled = dy / lineheightPx
-        // monitor scroll changes\
         if (abs(linePartScrolled) > 0.01f) {
             autoscroll.canvasScrollSubject.onNext(linePartScrolled)
         }

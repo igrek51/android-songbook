@@ -1,6 +1,6 @@
 package igrek.songbook.settings.preferences
 
-import igrek.songbook.cast.CastFocusControl
+import igrek.songbook.cast.CastScrollControl
 import igrek.songbook.chords.diagram.guitar.ChordDiagramStyle
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -60,7 +60,7 @@ class PreferencesState(
     var deviceId: String by PreferenceDelegate(PreferencesField.DeviceId)
     var lastAppVersionCode: Long by PreferenceDelegate(PreferencesField.LastAppVersionCode)
     var saveCustomSongsBackups: Boolean by PreferenceDelegate(PreferencesField.SaveCustomSongsBackups)
-    var castFocusControl: CastFocusControl by PreferenceDelegate(PreferencesField.CastFocusControl)
+    var castScrollControl: CastScrollControl by PreferenceDelegate(PreferencesField.CastScrollControl)
 
 }
 

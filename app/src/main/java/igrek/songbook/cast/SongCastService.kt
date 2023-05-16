@@ -58,10 +58,10 @@ class SongCastService(
     private var joinTimestamp: Long = 0
     var clientFollowScroll: Boolean by mutableStateOf(true)
 
-    var presenterFocusControl: CastFocusControl
-        get() = appFactory.preferencesState.g.castFocusControl
+    var presenterFocusControl: CastScrollControl
+        get() = appFactory.preferencesState.g.castScrollControl
         set(value) {
-            appFactory.preferencesState.g.castFocusControl = value
+            appFactory.preferencesState.g.castScrollControl = value
         }
 
     companion object {

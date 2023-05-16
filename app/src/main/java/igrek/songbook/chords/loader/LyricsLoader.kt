@@ -37,7 +37,6 @@ class LyricsLoader(
     private val logger = LoggerFactory.logger
     private val chordsTransposerManager = ChordsTransposerManager()
     private var screenW = 0
-    private var paint: Paint? = null
     private var originalSongNotation: ChordsNotation = ChordsNotation.default
     var originalLyrics: LyricsModel = LyricsModel()
         private set
@@ -51,7 +50,6 @@ class LyricsLoader(
     fun load(
         fileContent: String,
         screenW: Int?,
-        paint: Paint?,
         initialTransposed: Int,
         srcNotation: ChordsNotation,
     ) {
@@ -66,8 +64,6 @@ class LyricsLoader(
 
         if (screenW != null)
             this.screenW = screenW
-        if (paint != null)
-            this.paint = paint
 
         originalSongNotation = srcNotation
 
@@ -125,9 +121,8 @@ class LyricsLoader(
         arrangedLyrics = lyricsWrapper.arrangeModel(inflatedLyrics)
     }
 
-    fun onPreviewSizeChange(screenW: Int, paint: Paint?) {
+    fun onPreviewSizeChange(screenW: Int) {
         this.screenW = screenW
-        this.paint = paint
         arrangeLyrics()
     }
 

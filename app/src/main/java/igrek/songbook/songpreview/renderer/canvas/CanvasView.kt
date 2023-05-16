@@ -1,11 +1,16 @@
 package igrek.songbook.songpreview.renderer.canvas
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.LinearGradient
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.RectF
+import android.graphics.Shader
 import android.graphics.Shader.TileMode
+import android.graphics.Typeface
 import android.os.Build
 import android.view.View
-import androidx.annotation.RequiresApi
 
 
 class CanvasView(
@@ -19,7 +24,8 @@ class CanvasView(
     var w: Int = 0
     var h: Int = 0
 
-    var paint: Paint = Paint()
+    private var paint: Paint = Paint()
+    private var strokePaint: Paint = Paint()
     private var canvas: Canvas? = null
     private var initialized: Boolean = false
     private val lock = Any()
@@ -36,8 +42,13 @@ class CanvasView(
 
     fun reset() {
         paint = Paint()
+        paint.style = Paint.Style.FILL
         paint.isAntiAlias = true
         paint.isFilterBitmap = true
+        strokePaint = Paint()
+        strokePaint.style = Paint.Style.STROKE
+        strokePaint.isAntiAlias = true
+        strokePaint.isFilterBitmap = true
         canvas = null
         initialized = false
     }
@@ -125,27 +136,45 @@ class CanvasView(
     }
 
     fun clearScreen() {
-        paint.style = Paint.Style.FILL
         canvas?.drawPaint(paint)
     }
 
     fun fillRect(left: Float, top: Float, right: Float, bottom: Float) {
-        paint.style = Paint.Style.FILL
         canvas?.drawRect(left, top, right, bottom, paint)
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
+    fun borderRect(
+        color: Int,
+        left: Float,
+        top: Float,
+        right: Float,
+        bottom: Float,
+        thickness: Float,
+    ) {
+        if (color and -0x1000000 == 0) // if alpha channel is not set - set it to max (opaque)
+            strokePaint.color = color or -0x1000000
+        else
+            strokePaint.color = color
+        strokePaint.strokeWidth = thickness
+        canvas?.drawRect(left, top, right, bottom, strokePaint)
+    }
+
     fun fillRectGradientH(
         left: Float,
         top: Float,
         right: Float,
         bottom: Float,
         color1: Int,
-        color2: Int
+        color2: Int,
     ) {
-        val shader: Shader = LinearGradient(left, top, right, top, color1, color2, TileMode.CLAMP)
-        val paint = Paint()
-        paint.shader = shader
-        canvas?.drawRect(RectF(left, top, right, bottom), paint)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val shader: Shader = LinearGradient(left, top, right, top, color1, color2, TileMode.CLAMP)
+            val paint = Paint()
+            paint.shader = shader
+            canvas?.drawRect(RectF(left, top, right, bottom), paint)
+        } else {
+            setColor(color2)
+            fillRect(left, top, right, bottom)
+        }
     }
 }

@@ -4,7 +4,7 @@ package igrek.songbook.songpreview.autoscroll
 
 import android.annotation.SuppressLint
 import igrek.songbook.R
-import igrek.songbook.cast.CastFocusControl
+import igrek.songbook.cast.CastScrollControl
 import igrek.songbook.cast.CastScroll
 import igrek.songbook.cast.SongCastService
 import igrek.songbook.chords.model.LyricsLine
@@ -68,7 +68,7 @@ class ScrollService(
         val lyricsLoader = appFactory.lyricsLoader.g
         val lyricsModel = songPreview.lyricsModel
 
-        val firstVisibleLine: Float = songPreview.lineScroll.applyMin(0f)
+        val firstVisibleLine: Float = songPreview.scrollEm.applyMin(0f)
         val lastVisibleLine: Float = songPreview.lastVisibleLine.applyMin(0f)
         val linesStartIndex: Int = floor(firstVisibleLine).roundToInt()
         val linesEndIndex: Int = floor(lastVisibleLine).roundToInt()
@@ -109,7 +109,7 @@ class ScrollService(
     }
 
     private fun onPartiallyScrolled(scrolledByLines: Float) {
-        if (songCastService.isPresenting() && songCastService.presenterFocusControl != CastFocusControl.NONE) {
+        if (songCastService.isPresenting() && songCastService.presenterFocusControl != CastScrollControl.NONE) {
             shareScrollControl()
         }
     }
@@ -117,10 +117,10 @@ class ScrollService(
     private fun shareScrollControl() {
         GlobalScope.launch {
             val payload = when (songCastService.presenterFocusControl) {
-                CastFocusControl.SHARE_SCROLL -> getVisibleShareScroll()
-                CastFocusControl.SLIDES_1 -> getVisibleSlidesScroll(1)
-                CastFocusControl.SLIDES_2 -> getVisibleSlidesScroll(2)
-                CastFocusControl.SLIDES_4 -> getVisibleSlidesScroll(4)
+                CastScrollControl.SHARE_SCROLL -> getVisibleShareScroll()
+                CastScrollControl.SLIDES_1 -> getVisibleSlidesScroll(1)
+                CastScrollControl.SLIDES_2 -> getVisibleSlidesScroll(2)
+                CastScrollControl.SLIDES_4 -> getVisibleSlidesScroll(4)
                 else -> null
             } ?: return@launch
             logger.debug("Sharing scroll control: ${payload.view_start}")
@@ -144,7 +144,7 @@ class ScrollService(
         var targetLineScroll = startLineIndex + lineStartFraction
         if (targetLineScroll < 0) targetLineScroll = 0f
 
-        val scrollDiff = targetLineScroll - songPreview.lineScroll
+        val scrollDiff = targetLineScroll - songPreview.scrollEm
         if (abs(scrollDiff) <= 0.01f) return
         val scrollByPx = scrollDiff * songPreview.lineheightPx
         logger.debug("scrolling by $scrollDiff lines, first line index: $startLineIndex")

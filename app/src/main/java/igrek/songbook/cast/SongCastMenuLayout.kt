@@ -255,8 +255,8 @@ private fun NameTextField(controller: SongCastMenuLayout) {
 @Composable
 private fun TabCreateRoom(controller: SongCastMenuLayout) {
     Column {
-        LabelText(R.string.songcast_create_room_hint)
         NameTextField(controller)
+        LabelText(R.string.songcast_create_room_hint)
         Button(
             onClick = safeAsyncExecutor {
                 controller.createRoom()

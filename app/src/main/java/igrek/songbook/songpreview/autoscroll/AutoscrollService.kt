@@ -278,7 +278,7 @@ class AutoscrollService(
 
                     songPreview.canvas.repaint()
 
-                    if (eyeFocus <= songPreview.allLines) {
+                    if (eyeFocus <= songPreview.allLinesEm) {
                         timerHandler.postDelayed(timerRunnable, AUTOSCROLL_INTERVAL_TIME)
                     } else {
                         // autoscroll has come to an end (eye focus at the bottom)

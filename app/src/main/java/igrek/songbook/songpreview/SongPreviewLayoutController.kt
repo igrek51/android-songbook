@@ -281,16 +281,15 @@ class SongPreviewLayoutController(
         return R.layout.screen_song_preview
     }
 
-    fun onGraphicsInitialized() {
+    private fun onGraphicsInitialized() {
         val w = songPreview?.canvas?.w ?: return
-        val paint = songPreview?.canvas?.paint ?: return
         currentSong?.let {
             // load file and parse it
             val fileContent = it.content.orEmpty()
             val srcNotation = it.chordsNotation
             val transposed = songsRepository.transposeDao.getSongTransposition(it.songIdentifier())
             // initialize - first file loading
-            lyricsLoader.load(fileContent, w, paint, transposed, srcNotation)
+            lyricsLoader.load(fileContent, w, transposed, srcNotation)
 
             songPreview?.setFontSizes(lyricsThemeService.fontsize)
             songPreview?.setLyricsModel(lyricsLoader.arrangedLyrics)
@@ -367,8 +366,6 @@ class SongPreviewLayoutController(
 
     fun isAutoscrollPanelVisible(): Boolean = quickMenuAutoscroll.isVisible
 
-    fun isCastPanelVisible(): Boolean = quickMenuCast.isVisible
-
     private fun goToBeginning() {
         resetOverlayScroll()
         if ((songPreview?.scroll ?: 0f) == 0f && !autoscrollService.isRunning) {
@@ -376,8 +373,7 @@ class SongPreviewLayoutController(
         }
         songPreview?.goToBeginning()
         if (autoscrollService.isRunning) {
-            // restart autoscrolling
-            autoscrollService.start()
+            autoscrollService.start() // restart autoscrolling
         }
     }
 
@@ -422,7 +418,7 @@ class SongPreviewLayoutController(
 
     private fun onPreviewSizeChanged() {
         songPreview?.canvas?.let { canvas ->
-            lyricsLoader.onPreviewSizeChange(canvas.w, canvas.paint)
+            lyricsLoader.onPreviewSizeChange(canvas.w)
             onLyricsModelUpdated()
         }
     }

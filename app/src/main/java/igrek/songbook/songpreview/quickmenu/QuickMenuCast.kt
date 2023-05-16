@@ -35,7 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import igrek.songbook.R
-import igrek.songbook.cast.CastFocusControl
+import igrek.songbook.cast.CastScrollControl
 import igrek.songbook.cast.SongCastLobbyLayout
 import igrek.songbook.cast.SongCastService
 import igrek.songbook.compose.AppTheme
@@ -117,7 +117,7 @@ private fun MainComponent(controller: QuickMenuCast) {
                     expanded = false
                 }
             ) {
-                CastFocusControl.values().forEach { enumOption ->
+                CastScrollControl.values().forEach { enumOption ->
                     DropdownMenuItem(
                         text = { Text(text = enumOption.desctiption) },
                         onClick = {

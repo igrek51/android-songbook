@@ -159,11 +159,11 @@ enum class PreferencesField constructor(
 
     SaveCustomSongsBackups(true),
 
-    CastFocusControl(
+    CastScrollControl(
         GenericLongIdPreferenceType(
-            defaultValue = igrek.songbook.cast.CastFocusControl.default,
-            serializer = igrek.songbook.cast.CastFocusControl::id,
-            deserializer = igrek.songbook.cast.CastFocusControl.Companion::mustParseById,
+            defaultValue = igrek.songbook.cast.CastScrollControl.default,
+            serializer = igrek.songbook.cast.CastScrollControl::id,
+            deserializer = igrek.songbook.cast.CastScrollControl.Companion::mustParseById,
         )
     ),
 
