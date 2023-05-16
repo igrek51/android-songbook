@@ -122,7 +122,7 @@ class LyricsRenderer internal constructor(
     ) {
         val y = when (songPreview.isCastPresentingSlides) {
             false -> lineheight * lineIndex - scroll
-            true -> lineheight * lineIndex - scroll + h / 2
+            true -> lineheight * lineIndex - scroll + h / 2 - preferencesState.castScrollControl.slideLines * lineheight / 2
         }
         if (y > h) return
         if (y + lineheight < 0) return
@@ -221,13 +221,14 @@ class LyricsRenderer internal constructor(
     private fun drawCastFocusZone(lineheight: Float, scroll: Float, slideLines: Int) {
         val yOffset: Float = 0.2f * lineheight
         val lineThickness = songPreview.scrollThickness
-        val focusLineTop = h / 2 - lineThickness / 2 + yOffset
-        val focusLineBottom = h / 2 + lineThickness / 2 + yOffset
+        val topEdge = h / 2 - slideLines * lineheight / 2
+        val focusLineTop = topEdge - lineThickness / 2 + yOffset
+        val focusLineBottom = topEdge + lineThickness / 2 + yOffset
         canvas.setColor(castFocusLineColor)
         canvas.fillRect(0f, focusLineTop, w, focusLineBottom)
 
         val scrollRemainder = scroll % lineheight
-        val blockYTop = h/2 - scrollRemainder + yOffset
+        val blockYTop = topEdge - scrollRemainder + yOffset
         val blockYBottom = blockYTop + lineheight * slideLines
         canvas.setColor(castFocusZoneColor)
         canvas.fillRect(0f, blockYTop, w, blockYBottom)

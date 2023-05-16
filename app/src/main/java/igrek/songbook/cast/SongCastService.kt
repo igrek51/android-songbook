@@ -57,6 +57,7 @@ class SongCastService(
     private var lastSessionChange: Long = 0
     private var joinTimestamp: Long = 0
     var clientFollowScroll: Boolean by mutableStateOf(true)
+    var lastSharedScroll: CastScroll? = null
 
     var presenterFocusControl: CastScrollControl
         get() = appFactory.preferencesState.g.castScrollControl
@@ -244,6 +245,7 @@ class SongCastService(
         periodicRefreshJob = null
         periodicReconnectJob = null
         lastSessionChange = 0
+        lastSharedScroll = null
     }
 
     fun dropSessionAsync(): Deferred<Result<Unit>> {

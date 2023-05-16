@@ -105,7 +105,7 @@ class ScrollService(
         val wholeLinesSkipped = (songPreview.scroll / lineheight).toInt().takeIf { it >= 0 } ?: 0
 
         val visualLines: List<LyricsLine> = lyricsModel.lines.filterIndexed { index, _ ->
-            index in wholeLinesSkipped..(wholeLinesSkipped + visualLinesCount)
+            wholeLinesSkipped <= index && index < wholeLinesSkipped + visualLinesCount
         }
         val visibleText = visualLines.joinToString("\n") {
             it.displayString()
@@ -127,7 +127,7 @@ class ScrollService(
 
     private fun shareScrollControl() {
         GlobalScope.launch {
-            val payload = when (songCastService.presenterFocusControl) {
+            val payload: CastScroll = when (songCastService.presenterFocusControl) {
                 CastScrollControl.SHARE_SCROLL -> getVisibleShareScroll()
                 CastScrollControl.SLIDES_1 -> getVisibleSlidesScroll(1)
                 CastScrollControl.SLIDES_2 -> getVisibleSlidesScroll(2)
@@ -135,9 +135,11 @@ class ScrollService(
                 CastScrollControl.SLIDES_8 -> getVisibleSlidesScroll(8)
                 else -> null
             } ?: return@launch
+            if (payload == songCastService.lastSharedScroll) return@launch
             logger.debug("Sharing scroll control: ${payload.view_start}, ${payload.visible_text}")
             val result = songCastService.postScrollControlAsync(payload).await()
             result.fold(onSuccess = {
+                songCastService.lastSharedScroll = payload
             }, onFailure = { e ->
                 UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
             })
@@ -145,6 +147,17 @@ class ScrollService(
     }
 
     fun adaptToScrollControl(viewStart: Float, viewEnd: Float, visibleText: String?, modeId: Long?) {
+        when (modeId) {
+            CastScrollControl.SHARE_SCROLL.id -> adaptToShareScrollControl(viewStart)
+            CastScrollControl.SLIDES_1.id -> adaptToSlideScrollControl(viewStart, visibleText)
+            CastScrollControl.SLIDES_2.id -> adaptToSlideScrollControl(viewStart, visibleText)
+            CastScrollControl.SLIDES_4.id -> adaptToSlideScrollControl(viewStart, visibleText)
+            CastScrollControl.SLIDES_8.id -> adaptToSlideScrollControl(viewStart, visibleText)
+            else -> return
+        }
+    }
+
+    private fun adaptToShareScrollControl(viewStart: Float) {
         val songPreview: SongPreview = appFactory.songPreviewLayoutController.g.songPreview ?: return
         val lyricsModel = songPreview.lyricsModel
 
@@ -163,6 +176,10 @@ class ScrollService(
         GlobalScope.launch(Dispatchers.Main) {
             songPreview.overlayScrollView?.smoothScrollBy(0, scrollByPx.toInt())
         }
+    }
+
+    private fun adaptToSlideScrollControl(viewStart: Float, visibleText: String?) {
+
     }
 
 }
