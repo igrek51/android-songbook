@@ -231,7 +231,7 @@ class LyricsRenderer internal constructor(
         val blockYBottom = blockYTop + lineheight * slideLines
         canvas.setColor(castFocusZoneColor)
         canvas.fillRect(0f, blockYTop, w, blockYBottom)
-        canvas.borderRect(castFocusLineColor, 0f, blockYTop, w, blockYBottom, thickness=6f)
+        canvas.borderRect(castFocusLineColor, 0f, blockYTop, w, blockYBottom, thickness=4f)
     }
 
     private fun drawQuickMenuOverlay() {

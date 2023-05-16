@@ -94,7 +94,7 @@ class SongPreview(
         val bottomY = textBottomY.get()
         val reserve = bottomMarginCache.get()
         return when {
-            isCastPresentingSlides -> bottomY + preferencesState.castScrollControl.slideLines * lineheightPx
+            isCastPresentingSlides -> bottomY
             bottomY > canvas.h -> bottomY + reserve - canvas.h
             else -> 0f
         }
