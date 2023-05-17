@@ -38,7 +38,7 @@ class SongCastService {
     private val requester = SongCastRequester()
     private var streamSocket = StreamSocket(::onEventBroadcast)
     private var myName: String = ""
-    private var myMemberPublicId: String = ""
+    var myMemberPublicId: String = ""
     var sessionCode: String? = null
     private var ephemeralSong: Song? = null
     var onSessionUpdated: () -> Unit = {}
@@ -49,6 +49,7 @@ class SongCastService {
     private var joinTimestamp: Long = 0
     var clientFollowScroll: Boolean by mutableStateOf(true)
     var lastSharedScroll: CastScroll? = null
+    private val systemLogEvents: MutableList<SystemLogEvent> = mutableListOf()
 
     val presenters: List<CastMember> get() = sessionState.members.filter { it.type == CastMemberType.OWNER.value }
     val spectators: List<CastMember> get() = sessionState.members.filter { it.type == CastMemberType.GUEST.value }
@@ -86,7 +87,6 @@ class SongCastService {
         this.myMemberPublicId = responseData.public_member_id
         streamSocket.connect(responseData.short_id)
         this.joinTimestamp = Date().time / 1000
-
         periodicRefreshJob = GlobalScope.launch(Dispatchers.IO) {
             try {
                 periodicRefresh()
@@ -97,6 +97,22 @@ class SongCastService {
         periodicReconnectJob = GlobalScope.launch(Dispatchers.IO) {
             periodicReconnect()
         }
+    }
+
+    private fun exitRoom() {
+        sessionCode = null
+        requester.sessionCode = ""
+        sessionState.initialized = false
+        sessionState.members = listOf()
+        sessionState.castSongDto = null
+        sessionState.currentScroll = null
+        sessionState.chatMessages = listOf()
+        streamSocket.close()
+        periodicRefreshJob = null
+        periodicReconnectJob = null
+        lastSessionChange = 0
+        lastSharedScroll = null
+        systemLogEvents.clear()
     }
 
     private suspend fun periodicRefresh() {
@@ -113,7 +129,6 @@ class SongCastService {
                     (2_000..3_000).random().toLong() + penalty
                 }
             }
-
             if (interval != null && Date().time - lastShot >= interval) {
                 val waitedS = (Date().time - lastShot) / 1000
                 logger.debug("refreshing SongCast session, waited ${waitedS}s...")
@@ -135,7 +150,6 @@ class SongCastService {
                 streamSocket.ioSocket?.connected() == false -> 0
                 else -> null
             }
-
             if (interval != null && Date().time - lastShot >= interval) {
                 try {
                     uiInfoService.showInfo(R.string.songcast_reconnecting_to_room)
@@ -149,25 +163,8 @@ class SongCastService {
         }
     }
 
-    private fun exitRoom() {
-        sessionCode = null
-        requester.sessionCode = ""
-        sessionState.initialized = false
-        sessionState.members = listOf()
-        sessionState.castSongDto = null
-        sessionState.currentScroll = null
-        sessionState.chatMessages = listOf()
-        streamSocket.close()
-        periodicRefreshJob = null
-        periodicReconnectJob = null
-        lastSessionChange = 0
-        lastSharedScroll = null
-    }
-
     fun dropSessionAsync(): Deferred<Result<Unit>> {
-        return requester.dropSessionAsync {
-            exitRoom()
-        }
+        return requester.dropSessionAsync { exitRoom() }
     }
 
     private fun getSessionDetailsAsync(): Deferred<Result<CastSession>> {
@@ -277,7 +274,10 @@ class SongCastService {
         val presenterName = presenter?.name ?: "Unknown"
         val songName = buildSongName(castSongDto.title, castSongDto.artist)
         uiInfoService.showInfo(R.string.songcast_song_selected, presenterName, songName)
-        notifySessionUpdated()
+        addSystemLogEvent(R.string.songcast_song_selected, presenterName, songName)
+        GlobalScope.launch(Dispatchers.Main) {
+            onSessionUpdated()
+        }
         if (followsCurrentSong(presenter?.public_member_id)) {
             openCastSong()
         }
@@ -341,7 +341,9 @@ class SongCastService {
             val compareResult = compareSessionStates(oldState, sessionState)
             if (compareResult)
                 lastSessionChange = Date().time
-            notifySessionUpdated()
+            GlobalScope.launch(Dispatchers.Main) {
+                onSessionUpdated()
+            }
             return Result.success(Unit)
         }, onFailure = { e ->
             UiErrorHandler().handleContextError(e, R.string.songcast_connection_context)
@@ -355,9 +357,8 @@ class SongCastService {
 
         if (oldState.castSongDto != newState.castSongDto) {
             val castSongDto = newState.castSongDto
-            if (castSongDto != null) {
+            if (castSongDto != null)
                 onSongSelectedEventDto(castSongDto)
-            }
             return true
         }
         if (oldState.chatMessages != newState.chatMessages) {
@@ -374,10 +375,12 @@ class SongCastService {
             val droppedMembers = oldState.members.toSet().minus(newState.members.toSet())
             droppedMembers.forEach { member ->
                 uiInfoService.showInfo(R.string.songcast_member_dropped, member.name)
+                addSystemLogEvent(R.string.songcast_member_dropped, member.name)
             }
             val newMembers = newState.members.toSet().minus(oldState.members.toSet())
             newMembers.forEach { member ->
                 uiInfoService.showInfo(R.string.songcast_new_member_joined, member.name)
+                addSystemLogEvent(R.string.songcast_new_member_joined, member.name)
             }
             return true
         }
@@ -397,32 +400,16 @@ class SongCastService {
         return false
     }
 
-    private fun notifySessionUpdated() = GlobalScope.launch(Dispatchers.Main) {
-        onSessionUpdated()
+    private fun addSystemLogEvent(resourceId: Int, vararg args: Any?) {
+        val text = uiInfoService.resString(resourceId, *args)
+        systemLogEvents.add(
+            SystemLogEvent(timestamp = Date().time, text = text)
+        )
     }
 
     fun generateChatEvents(): List<LogEvent> {
         val allEvents = mutableListOf<LogEvent>()
-        val youName = uiInfoService.resString(R.string.songcast_you)
-        allEvents.addAll(
-            presenters.map {
-                val name = if (it.public_member_id == myMemberPublicId) "${it.name} ($youName)" else it.name
-                SystemLogEvent(
-                    timestamp = this.joinTimestamp,
-                    text = uiInfoService.resString(R.string.songcast_joined_the_room_as_presenter, name),
-                )
-            }
-        )
-        allEvents.addAll(
-            spectators.map {
-                val name = if (it.public_member_id == myMemberPublicId) "${it.name} ($youName)" else it.name
-                SystemLogEvent(
-                    timestamp = this.joinTimestamp,
-                    text = uiInfoService.resString(R.string.songcast_joined_the_room_as_spectator, name),
-                )
-            }
-        )
-
+        allEvents.addAll(systemLogEvents)
         allEvents.addAll(sessionState.chatMessages.map {
             MessageLogEvent(
                 timestamp = it.timestamp,

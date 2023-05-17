@@ -160,6 +160,22 @@ class SongCastLobbyLayout(
 
         state.logEventData.clear()
         state.logEventData.addAll(songCastService.generateChatEvents())
+
+        state.membersListText = generateMembersListText()
+    }
+
+    private fun generateMembersListText(): String {
+        val youName = uiInfoService.resString(R.string.songcast_you)
+        var text = "Members:\n"
+        text += songCastService.presenters.joinToString("\n") {
+            val name = if (it.public_member_id == songCastService.myMemberPublicId) "${it.name} ($youName)" else it.name
+            "- $name (Presenter)"
+        }
+        text += songCastService.spectators.joinToString("\n") {
+            val name = if (it.public_member_id == songCastService.myMemberPublicId) "${it.name} ($youName)" else it.name
+            "- $name (Spectator)"
+        }
+        return text
     }
 
     private fun onSessionUpdated() {
@@ -272,6 +288,7 @@ class SongCastLobbyState {
     var presenters: MutableList<CastMember> = mutableStateListOf()
     var spectators: MutableList<CastMember> = mutableStateListOf()
     var logEventData: MutableList<LogEvent> = mutableStateListOf()
+    var membersListText: String by mutableStateOf("")
 }
 
 @Composable
@@ -286,6 +303,8 @@ private fun MainComponent(controller: SongCastLobbyLayout) {
                 else -> RichText(R.string.songcast_lobby_text_guest_hint)
             }
         }
+
+        MembersList(controller)
 
         OutlinedTextField(
             value = controller.state.roomCode,
@@ -318,6 +337,11 @@ private fun MainComponent(controller: SongCastLobbyLayout) {
 
         EventsLog(controller)
     }
+}
+
+@Composable
+private fun MembersList(controller: SongCastLobbyLayout) {
+    Text(controller.state.membersListText)
 }
 
 @Composable
