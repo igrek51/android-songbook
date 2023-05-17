@@ -35,7 +35,7 @@ import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.DisplayStyle
 import igrek.songbook.settings.theme.FontTypeface
 import igrek.songbook.settings.theme.LyricsThemeService
-import igrek.songbook.songpreview.autoscroll.AutoscrollService
+import igrek.songbook.songpreview.scroll.AutoscrollService
 import igrek.songbook.system.LinkOpener
 import java.math.RoundingMode
 import java.text.DecimalFormat

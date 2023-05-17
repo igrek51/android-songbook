@@ -3,7 +3,7 @@ package igrek.songbook.persistence.user.history
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.user.AbstractJsonDao
 import io.reactivex.subjects.PublishSubject
-import java.util.*
+import java.util.Date
 
 class OpenHistoryDao(
     path: String,

@@ -10,7 +10,8 @@ import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 class SongDetailsService(
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,

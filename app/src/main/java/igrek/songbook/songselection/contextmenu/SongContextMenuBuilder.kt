@@ -21,7 +21,6 @@ import igrek.songbook.songpreview.SongDetailsService
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songselection.favourite.FavouriteSongsService
 import igrek.songbook.util.lookup.SimpleCache
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

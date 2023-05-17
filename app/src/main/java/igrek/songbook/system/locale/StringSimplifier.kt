@@ -1,6 +1,6 @@
 package igrek.songbook.system.locale
 
-import java.util.*
+import java.util.Locale
 
 class StringSimplifier {
 

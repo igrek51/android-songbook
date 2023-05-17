@@ -26,7 +26,6 @@ import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.room.RoomListLayoutController
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.system.SoftKeyboardService
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

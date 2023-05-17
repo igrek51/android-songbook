@@ -1,7 +1,7 @@
 package igrek.songbook.system.locale
 
 import java.text.Collator
-import java.util.*
+import java.util.Locale
 
 class InsensitiveNameComparator<T>(
     private val locale: Locale,

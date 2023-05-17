@@ -10,7 +10,7 @@ import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.settings.buttons.MediaButtonBehaviours
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songpreview.SongPreviewLayoutController
-import igrek.songbook.songpreview.autoscroll.AutoscrollService
+import igrek.songbook.songpreview.scroll.AutoscrollService
 
 class SystemKeyDispatcher(
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,

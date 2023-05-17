@@ -8,7 +8,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesState
-import java.util.*
+import java.util.Locale
 
 class ChordsNotationService(
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,

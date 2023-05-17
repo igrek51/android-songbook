@@ -6,7 +6,6 @@ import igrek.songbook.info.logger.LoggerFactory
 import io.socket.client.Ack
 import io.socket.client.IO
 import io.socket.client.Socket
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job

@@ -1,4 +1,4 @@
-package igrek.songbook.songpreview.autoscroll
+package igrek.songbook.songpreview.scroll
 
 enum class AutoscrollState {
 

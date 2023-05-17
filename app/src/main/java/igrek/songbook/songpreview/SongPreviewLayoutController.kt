@@ -38,12 +38,12 @@ import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.theme.LyricsThemeService
-import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuCast
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.OverlayRecyclerAdapter
 import igrek.songbook.songpreview.renderer.SongPreview
+import igrek.songbook.songpreview.scroll.AutoscrollService
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.favourite.FavouriteSongsService
 import igrek.songbook.system.SoftKeyboardService

@@ -7,9 +7,24 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.general.model.SongStatus
-import igrek.songbook.room.protocol.*
-import kotlinx.coroutines.*
-import java.util.*
+import igrek.songbook.room.protocol.ChatMessageMsg
+import igrek.songbook.room.protocol.DisconnectMsg
+import igrek.songbook.room.protocol.GtrMsg
+import igrek.songbook.room.protocol.HelloMsg
+import igrek.songbook.room.protocol.LoginMsg
+import igrek.songbook.room.protocol.RoomStatusMsg
+import igrek.songbook.room.protocol.RoomUsersMsg
+import igrek.songbook.room.protocol.SelectSongMsg
+import igrek.songbook.room.protocol.SongDto
+import igrek.songbook.room.protocol.WelcomeMsg
+import igrek.songbook.room.protocol.WhatsupMsg
+import igrek.songbook.room.protocol.WhosThereMsg
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.util.Calendar
+import java.util.Date
 
 class RoomLobby(
     bluetoothService: LazyInject<BluetoothService> = appFactory.bluetoothService,

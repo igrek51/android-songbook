@@ -2,7 +2,8 @@ package igrek.songbook.util
 
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
 private val iso8601Format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH)

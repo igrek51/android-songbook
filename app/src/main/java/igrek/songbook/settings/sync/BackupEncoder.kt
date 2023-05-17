@@ -1,7 +1,7 @@
 package igrek.songbook.settings.sync
 
-import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.info.errorcheck.ContextError
+import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -14,9 +14,9 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.util.zip.GZIPInputStream
 import java.util.zip.GZIPOutputStream
-import javax.crypto.spec.SecretKeySpec
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.SecretKeySpec
 
 class BackupEncoder(
     localFilesystem: LazyInject<LocalFilesystem> = appFactory.localFilesystem,

@@ -14,11 +14,11 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.theme.LyricsThemeService
-import igrek.songbook.songpreview.autoscroll.AutoscrollService
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuCast
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.canvas.CanvasView
+import igrek.songbook.songpreview.scroll.AutoscrollService
 import igrek.songbook.system.WindowManagerService
 import igrek.songbook.util.applyMin
 import igrek.songbook.util.lookup.SimpleCache

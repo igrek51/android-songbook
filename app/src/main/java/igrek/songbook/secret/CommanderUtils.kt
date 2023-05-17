@@ -22,7 +22,6 @@ import igrek.songbook.layout.dialog.InputDialogBuilder
 import igrek.songbook.persistence.LocalFilesystem
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.system.PermissionService
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

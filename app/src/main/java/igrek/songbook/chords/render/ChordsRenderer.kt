@@ -1,6 +1,10 @@
 package igrek.songbook.chords.render
 
-import igrek.songbook.chords.model.*
+import igrek.songbook.chords.model.ChordFragment
+import igrek.songbook.chords.model.ChordFragmentType
+import igrek.songbook.chords.model.LyricsFragment
+import igrek.songbook.chords.model.LyricsModel
+import igrek.songbook.chords.model.LyricsTextType
 import igrek.songbook.chords.syntax.MajorKey
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 

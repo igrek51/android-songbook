@@ -16,7 +16,10 @@ import igrek.songbook.persistence.user.custom.CustomSong
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.system.ClipboardManager
 import igrek.songbook.util.formatTimestampTime
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import okhttp3.Request
 import okhttp3.RequestBody

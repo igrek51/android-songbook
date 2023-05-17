@@ -14,7 +14,8 @@ import igrek.songbook.secret.CommanderService
 import igrek.songbook.system.LinkOpener
 import igrek.songbook.system.PackageInfoService
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 class AboutLayoutController(
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,

@@ -38,7 +38,6 @@ import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.top.TopSongsLayoutController
 import igrek.songbook.songselection.tree.SongTreeLayoutController
 import igrek.songbook.system.SoftKeyboardService
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

@@ -7,7 +7,7 @@ import android.widget.TextView
 import igrek.songbook.R
 import igrek.songbook.layout.list.GenericListView
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 class RoomChatListView(
     context: Context,

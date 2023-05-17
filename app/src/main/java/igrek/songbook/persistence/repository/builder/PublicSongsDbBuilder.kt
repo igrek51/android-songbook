@@ -2,7 +2,11 @@ package igrek.songbook.persistence.repository.builder
 
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.persistence.general.dao.PublicSongsDao
-import igrek.songbook.persistence.general.model.*
+import igrek.songbook.persistence.general.model.Category
+import igrek.songbook.persistence.general.model.Song
+import igrek.songbook.persistence.general.model.SongCategoryRelationship
+import igrek.songbook.persistence.general.model.SongIdentifier
+import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.PublicSongsRepository
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.util.lookup.FinderById

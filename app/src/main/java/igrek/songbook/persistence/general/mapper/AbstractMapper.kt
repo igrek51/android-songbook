@@ -5,7 +5,7 @@ import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
 
 abstract class AbstractMapper<T> {
 

@@ -6,7 +6,11 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.about.AboutLayoutController
 import igrek.songbook.about.WebviewLayoutController
-import igrek.songbook.activity.*
+import igrek.songbook.activity.ActivityController
+import igrek.songbook.activity.ActivityResultDispatcher
+import igrek.songbook.activity.AppInitializer
+import igrek.songbook.activity.MainActivityData
+import igrek.songbook.activity.OptionSelectDispatcher
 import igrek.songbook.admin.AdminCategoryManager
 import igrek.songbook.admin.AdminService
 import igrek.songbook.admin.SongRankService
@@ -14,12 +18,17 @@ import igrek.songbook.admin.antechamber.AdminSongsLayoutContoller
 import igrek.songbook.admin.antechamber.AntechamberService
 import igrek.songbook.billing.BillingLayoutController
 import igrek.songbook.billing.BillingService
-import igrek.songbook.cast.SongCastService
-import igrek.songbook.cast.SongCastMenuLayout
 import igrek.songbook.cast.SongCastLobbyLayout
+import igrek.songbook.cast.SongCastMenuLayout
+import igrek.songbook.cast.SongCastService
 import igrek.songbook.chords.diagram.ChordDiagramsService
 import igrek.songbook.chords.loader.LyricsLoader
-import igrek.songbook.custom.*
+import igrek.songbook.custom.CustomSongService
+import igrek.songbook.custom.CustomSongsListLayoutController
+import igrek.songbook.custom.EditSongLayoutController
+import igrek.songbook.custom.ExportFileChooser
+import igrek.songbook.custom.ImportFileChooser
+import igrek.songbook.custom.SongImportFileChooser
 import igrek.songbook.custom.share.ShareSongService
 import igrek.songbook.custom.sync.EditorSessionService
 import igrek.songbook.editor.ChordsEditorLayoutController
@@ -49,7 +58,11 @@ import igrek.songbook.room.RoomLobby
 import igrek.songbook.room.RoomLobbyLayoutController
 import igrek.songbook.secret.CommanderService
 import igrek.songbook.secret.CommanderUtils
-import igrek.songbook.send.*
+import igrek.songbook.send.ContactLayoutController
+import igrek.songbook.send.MissingSongLayoutController
+import igrek.songbook.send.PublishSongLayoutController
+import igrek.songbook.send.PublishSongService
+import igrek.songbook.send.SendMessageService
 import igrek.songbook.settings.SettingsLayoutController
 import igrek.songbook.settings.buttons.MediaButtonService
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
@@ -64,11 +77,11 @@ import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.SongDetailsService
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController
-import igrek.songbook.songpreview.autoscroll.AutoscrollService
-import igrek.songbook.songpreview.autoscroll.ScrollService
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuCast
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
+import igrek.songbook.songpreview.scroll.AutoscrollService
+import igrek.songbook.songpreview.scroll.ScrollService
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.favourite.FavouriteSongsService
 import igrek.songbook.songselection.favourite.FavouritesLayoutController
@@ -79,7 +92,12 @@ import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.top.TopSongsLayoutController
 import igrek.songbook.songselection.tree.ScrollPosBuffer
 import igrek.songbook.songselection.tree.SongTreeLayoutController
-import igrek.songbook.system.*
+import igrek.songbook.system.ClipboardManager
+import igrek.songbook.system.PackageInfoService
+import igrek.songbook.system.PermissionService
+import igrek.songbook.system.SoftKeyboardService
+import igrek.songbook.system.SystemKeyDispatcher
+import igrek.songbook.system.WindowManagerService
 import okhttp3.OkHttpClient
 
 

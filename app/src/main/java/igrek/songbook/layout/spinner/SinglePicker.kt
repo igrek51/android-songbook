@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.DialogInterface.OnClickListener
 import androidx.appcompat.app.AlertDialog
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

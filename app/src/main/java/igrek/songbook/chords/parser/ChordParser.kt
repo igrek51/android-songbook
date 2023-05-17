@@ -1,7 +1,19 @@
 package igrek.songbook.chords.parser
 
-import igrek.songbook.chords.model.*
-import igrek.songbook.chords.syntax.*
+import igrek.songbook.chords.model.Chord
+import igrek.songbook.chords.model.ChordFragment
+import igrek.songbook.chords.model.ChordFragmentType
+import igrek.songbook.chords.model.CompoundChord
+import igrek.songbook.chords.model.GeneralChord
+import igrek.songbook.chords.model.LyricsModel
+import igrek.songbook.chords.model.LyricsTextType
+import igrek.songbook.chords.model.NoteModifier
+import igrek.songbook.chords.syntax.ChordNames
+import igrek.songbook.chords.syntax.chordSuffixes
+import igrek.songbook.chords.syntax.compoundChordsDelimiters
+import igrek.songbook.chords.syntax.regexSplitSingleChordsWithDelimiters
+import igrek.songbook.chords.syntax.regexSplitcompoundChordsWithDelimiters
+import igrek.songbook.chords.syntax.singleChordsDelimiters
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 
 

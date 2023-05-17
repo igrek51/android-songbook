@@ -4,7 +4,8 @@ import com.google.common.base.Function
 import com.google.common.collect.Ordering
 import igrek.songbook.persistence.general.model.CategoryType
 import java.text.Collator
-import java.util.*
+import java.util.Collections
+import java.util.Locale
 
 class SongTreeSorter {
 

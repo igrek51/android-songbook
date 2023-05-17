@@ -13,7 +13,7 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.slider.SliderController
-import igrek.songbook.songpreview.autoscroll.AutoscrollService
+import igrek.songbook.songpreview.scroll.AutoscrollService
 import igrek.songbook.util.limitBetween
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

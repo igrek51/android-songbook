@@ -13,7 +13,7 @@ import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.favourite.FavouriteSongsService
-import java.util.*
+import java.util.Random
 
 class RandomSongOpener(
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,

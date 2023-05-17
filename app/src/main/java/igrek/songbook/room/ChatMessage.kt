@@ -1,6 +1,6 @@
 package igrek.songbook.room
 
-import java.util.*
+import java.util.Date
 
 data class ChatMessage(
     val author: String,

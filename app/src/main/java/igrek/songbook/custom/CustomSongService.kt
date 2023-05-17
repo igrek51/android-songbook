@@ -13,7 +13,7 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.custom.CustomSong
 import igrek.songbook.persistence.user.custom.CustomSongMapper
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import java.util.*
+import java.util.Date
 
 class CustomSongService(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,

@@ -1,6 +1,5 @@
 package igrek.songbook.chords.loader
 
-import android.graphics.Paint
 import igrek.songbook.chords.arranger.LyricsArranger
 import igrek.songbook.chords.detect.KeyDetector
 import igrek.songbook.chords.model.LyricsCloner
@@ -19,7 +18,7 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.theme.LyricsThemeService
-import igrek.songbook.songpreview.autoscroll.AutoscrollService
+import igrek.songbook.songpreview.scroll.AutoscrollService
 import igrek.songbook.system.WindowManagerService
 
 // Singleton

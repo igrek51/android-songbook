@@ -1,7 +1,24 @@
 package igrek.songbook.chords.syntax
 
 import igrek.songbook.chords.model.Note
-import igrek.songbook.chords.model.Note.*
+import igrek.songbook.chords.model.Note.A
+import igrek.songbook.chords.model.Note.A_FLAT
+import igrek.songbook.chords.model.Note.A_SHARP
+import igrek.songbook.chords.model.Note.B
+import igrek.songbook.chords.model.Note.B_FLAT
+import igrek.songbook.chords.model.Note.C
+import igrek.songbook.chords.model.Note.C_SHARP
+import igrek.songbook.chords.model.Note.D
+import igrek.songbook.chords.model.Note.D_FLAT
+import igrek.songbook.chords.model.Note.D_SHARP
+import igrek.songbook.chords.model.Note.E
+import igrek.songbook.chords.model.Note.E_FLAT
+import igrek.songbook.chords.model.Note.E_SHARP
+import igrek.songbook.chords.model.Note.F
+import igrek.songbook.chords.model.Note.F_SHARP
+import igrek.songbook.chords.model.Note.G
+import igrek.songbook.chords.model.Note.G_FLAT
+import igrek.songbook.chords.model.Note.G_SHARP
 
 enum class MajorKey(
     val baseMajorNote: Note,

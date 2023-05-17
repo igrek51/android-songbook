@@ -1,6 +1,10 @@
 package igrek.songbook.chords.transpose
 
-import igrek.songbook.chords.model.*
+import igrek.songbook.chords.model.Chord
+import igrek.songbook.chords.model.ChordFragment
+import igrek.songbook.chords.model.ChordFragmentType
+import igrek.songbook.chords.model.LyricsCloner
+import igrek.songbook.chords.model.LyricsModel
 
 class ChordsTransposer {
 

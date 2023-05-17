@@ -1,4 +1,4 @@
-package igrek.songbook.songpreview.autoscroll
+package igrek.songbook.songpreview.scroll
 
 import android.annotation.SuppressLint
 import android.os.Handler
