@@ -12,8 +12,7 @@ enum class CustomSongsOrdering(val id: Long, val nameResId: Int) {
     ;
 
     companion object {
-        val default: CustomSongsOrdering
-            get() = SORT_BY_TITLE
+        val default: CustomSongsOrdering = SORT_BY_TITLE
 
         fun parseById(id: Long): CustomSongsOrdering? {
             return values().firstOrNull { v -> v.id == id }

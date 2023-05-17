@@ -13,7 +13,6 @@ open class SliderController(
     private val max: Float
 ) {
     var valueSubject = PublishSubject.create<Float>()
-        internal set
 
     var value: Float
         get() {

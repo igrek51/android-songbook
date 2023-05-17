@@ -72,11 +72,6 @@ class AnalyticsLogger(
         return artist.trim() to title.trim()
     }
 
-    private fun getDeviceId(): String? {
-        return Settings.Secure.getString(activity.contentResolver, Settings.Secure.ANDROID_ID)
-            ?: null
-    }
-
     private fun logEvent(eventName: String, values: Map<String, String?>) {
         if (!preferencesState.anonymousUsageData)
             return

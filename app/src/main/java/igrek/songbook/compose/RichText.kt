@@ -35,18 +35,6 @@ fun RichText(
 }
 
 @Composable
-fun RichText(
-    html: String,
-    modifier: Modifier = Modifier,
-) {
-    AndroidView(
-        modifier = modifier,
-        factory = { context -> TextView(context) },
-        update = { it.text = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY) }
-    )
-}
-
-@Composable
 fun LabelText(
     stringRes: Int,
     vararg args: Any,

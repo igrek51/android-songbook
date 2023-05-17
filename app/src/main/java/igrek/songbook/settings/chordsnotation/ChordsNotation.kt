@@ -19,8 +19,7 @@ enum class ChordsNotation(val id: Long, val displayNameResId: Int, val shortName
     ;
 
     companion object {
-        val default: ChordsNotation
-            get() = ENGLISH
+        val default: ChordsNotation = ENGLISH
 
         fun parseById(id: Long?): ChordsNotation? {
             if (id == null)

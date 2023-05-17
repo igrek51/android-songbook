@@ -150,6 +150,7 @@ class BluetoothService(
                 try {
                     discoveryProgressChannel.send(discoveryProgress)
                 } catch (e: ClosedSendChannelException) {
+                    // channel closed
                 }
 
                 try {
@@ -166,6 +167,7 @@ class BluetoothService(
                     )
                     discoveredRoomsChannel.send(room)
                 } catch (e: ClosedSendChannelException) {
+                    // channel closed
                 }
 
             } finally {
@@ -173,6 +175,7 @@ class BluetoothService(
                 try {
                     discoveryProgressChannel.send(discoveryProgress)
                 } catch (e: ClosedSendChannelException) {
+                    // channel closed
                 }
             }
         }

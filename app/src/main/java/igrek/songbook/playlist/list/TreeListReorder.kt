@@ -162,7 +162,7 @@ class TreeListReorder(private val listView: PlaylistListView) {
                     listView.putItemHeight(i, nextHeight)
                 }
                 listView.putItemHeight(targetPosition, draggedItemHeight)
-            } else if (step < 0) {
+            } else {
                 val draggedItemHeight = listView.getItemHeight(draggedItemPos!!)
                 for (i in draggedItemPos!! downTo targetPosition + 1) {
                     val nextHeight = listView.getItemHeight(i - 1)

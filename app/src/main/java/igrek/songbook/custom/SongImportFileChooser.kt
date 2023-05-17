@@ -147,7 +147,7 @@ class SongImportFileChooser(
                 val targetMimeType = "application/pdf"
                 val openableMimeTypes = activity.contentResolver.getStreamTypes(uri, targetMimeType)
 
-                if (openableMimeTypes == null || openableMimeTypes.isEmpty()) {
+                if (openableMimeTypes.isNullOrEmpty()) {
                     throw RuntimeException("Stream type $targetMimeType is not available")
                 }
 

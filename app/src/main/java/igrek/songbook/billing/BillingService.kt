@@ -144,20 +144,18 @@ class BillingService(
         if (knownAllProducts.isEmpty())
             return
 
-        if (knownAllProducts.isNotEmpty()) {
-            val queryProductsList = knownAllProducts.map { productId ->
-                QueryProductDetailsParams.Product.newBuilder()
-                    .setProductId(productId)
-                    .setProductType(BillingClient.ProductType.INAPP)
-                    .build()
-            }
-            val queryProductDetailsParams = QueryProductDetailsParams.newBuilder()
-                .setProductList(queryProductsList)
+        val queryProductsList = knownAllProducts.map { productId ->
+            QueryProductDetailsParams.Product.newBuilder()
+                .setProductId(productId)
+                .setProductType(BillingClient.ProductType.INAPP)
                 .build()
-            billingClient?.queryProductDetailsAsync(queryProductDetailsParams) { billingResult: BillingResult, productDetailsList: List<ProductDetails> ->
-                onProductDetailsResponse(billingResult, productDetailsList)
-                initDetailsChannel.trySend(Result.success(true))
-            }
+        }
+        val queryProductDetailsParams = QueryProductDetailsParams.newBuilder()
+            .setProductList(queryProductsList)
+            .build()
+        billingClient?.queryProductDetailsAsync(queryProductDetailsParams) { billingResult: BillingResult, productDetailsList: List<ProductDetails> ->
+            onProductDetailsResponse(billingResult, productDetailsList)
+            initDetailsChannel.trySend(Result.success(true))
         }
     }
 

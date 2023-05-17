@@ -15,8 +15,7 @@ enum class ChordsInstrument(val id: Long, val displayNameResId: Int) {
     ;
 
     companion object {
-        val default: ChordsInstrument
-            get() = GUITAR
+        val default: ChordsInstrument = GUITAR
 
         fun parseById(id: Long): ChordsInstrument? {
             return values().firstOrNull { v -> v.id == id }

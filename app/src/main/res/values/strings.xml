@@ -12,7 +12,6 @@
     <string name="nav_settings">Settings</string>
     <string name="nav_exit">Exit</string>
     <string name="nav_about">About</string>
-    <string name="nav_manual">Manual</string>
     <string name="nav_contact">Contact</string>
     <string name="nav_screen_share">Bluetooth Sharing</string>
     <string name="nav_purchase">Shop</string>
@@ -62,10 +61,8 @@
     <string name="song_search_edit_hint">Title, artist or lyrics</string>
     <string name="secret_key_invalid" formatted="false">Key is not valid: %s</string>
     <string name="unlock_new_songs_unlocked">Songs unlocked: %d</string>
-    <string name="settings_scroll_initial_pause">Autoscroll initial delay: %s s</string>
     <string name="autoscroll_panel_speed">Autoscroll speed: %s line / s</string>
     <string name="settings_font_size_value">%s dp</string>
-    <string name="settings_scroll_initial_pause_value">%s s</string>
     <string name="settings_autoscroll_speed_value">%s line / s</string>
     <string name="song_details_title">ℹ️ Song details</string>
     <string name="song_details" formatted="false">
@@ -92,46 +89,12 @@
     <string name="none">None</string>
     <string name="scroll_at_the_beginning_already">Back to the beginning.</string>
     <string name="file_manager_not_found">Please install a File Manager.</string>
-    <string name="select_file_to_import">Select a text file with UTF-8 encoding to import.</string>
     <string name="selected_file_is_too_big">Selected file is too big. Is it really a TEXT file?</string>
     <string name="editing_custom_song">Custom song</string>
     <string name="custom_song_editor">Song editor</string>
     <string name="edit_song_title_label">Song Title:</string>
     <string name="edit_song_title_hint">Title…</string>
     <string name="edit_song_content_label">Lyrics and [chords]:</string>
-    <string name="chords_editor_hint">Put here the lyrics with chords. Try to stick to these following rules in order to keep songs consistent with others:
-        \n\n1. Mark chords by surrounding them with square brackets, e.g. \"between [C G# A7 F#maj7] words\".
-        \n\n2. Mix chords with the lyrics in the same line placing them just before the words where they occur in order to precisely indicate where a chord should be accentuated, e.g. \"[C]And no reli[Cmaj7]gion [F]too\". Do not place them on a separate line above text (though you can always change your displaying style in settings - so let others choose their favourite displaying style). Placing chords in the same line is extremely important, because it allows to display chord always in correct place regardless different font styles and word wrapping. Don\'t worry about your favourite chords displaying style - Songbook will do all the magic for you.
-        \n\n3. If some part of song is repeated (e.g. chorus), copy it to all its occurrences. When lyrics are continuous, it facilitates scrolling through the song and then you will not have to scroll back every time to see the refrain chords. Don\'t put any annotations or paragraphs like \"Chorus\", \"Verse\", \"Title\", \"Solo\", \"Instrumental\". Include only lyrics with chords.
-        \n\n4. Make sure you have chosen appropriate notation for your chords (\"Am\" or \"a\").
-        \n\n5. If a song has difficult rhythm with chords changing frequently, place the chords between words or even inside the words in order to indicate the syllable with a chord accent, e.g \"[G]Hotel Cali[D]fornia\". In very simple cases, you can place chords at the end of line: \"Smoke on the water [C G#]\"
-        \n\n6. You can use dash \"-\" to couple quickly changing chords: \"D Dsus2-D-Dsus4\" or use parentheses \"()\" to mark some chords optional: [C G (G7)].
-        \n\n7. Reformat and validate your song before saving it, especially when you are going to publish it.
-        \n
-        \nThere are many useful tools in editor:
-        \n- Undo: revert last changes
-        \n- Line: select whole line or next lines
-        \n- Duplicate: duplicate selection
-        \n- Reformat: Reformat and rearrange to standard chords format
-        \n- Validate: Validate chords
-        \n- Detect chords: Find and mark chords automatically based on the chosen chords notation but keeping their original horizontal position (aligned with spaces) by removing 2 redundant spaces for each inserted \"[ ]\" characters.
-        \n- Transform: Open menu with more transformations
-        \n- Move chords from upper line to matching words: merge each two lines by moving chords (aligned with spaces) from upper line to lower line with lyrics, moving them to matching words they are above.
-        \n- Move chords from upper line to the right: merge each two lines (upper with chords, lower with lyrics) by moving all chords to the end of line after lyrics
-        \n- Convert from other chords notation: Convert all chord from other chords notation to the chosen one for a song
-        \n- Remove doubled blank lines: Replace each double Enter (line break) with single one
-        \n- Replace Fis -> F#: Replace all sound names ending with \"is\" to \"#\"
-        \n- Unmark chords: Drop all chord marks: \"[\" and \"]\"
-        \n- Mark chords (not preserving indentation): Find and mark chords automatically by surrounding them with \"[ ]\". Note that horizontal position of chords may be changed afterall.
-        \n- Remove everything inside brackets: Remove text inside square brackets \"[ ]\" and the brackets themselves.
-        \n- Align misplaced chords: Moves chords placed wrongly inside word (e.g. \"w[C]ord\") to the beginning of the word.
-        \n- \u276E: move cursor by one character left
-        \n- \u276F: move cursor by one character right
-        \n- [ / ]: insert suitable bracket (either opening or closing one)
-        \n- [Mark]: Mark selection with chord brackets pair
-        \n- Copy: Copy selection
-        \n- Paste: Paste copied text
-    </string>
     <string name="import_song_content_hint">
         Song lyrics with [chords] in the same line
         \nCheck out help (?) for more details.
@@ -170,9 +133,7 @@
     <string name="language_english" translatable="false">English</string>
     <string name="language_polish" translatable="false">Polski</string>
     <string name="language_default">System default</string>
-    <string name="language_unknown">Unknown</string>
     <string name="contact_subject_song_amend">Song revision</string>
-    <string name="contact_subject_song_comment">Song comment</string>
     <string name="contact_subject_publishing_song">New song</string>
     <string name="favourite_song_has_been_set">Added to Liked Songs.</string>
     <string name="favourite_song_has_been_unset">Removed from Liked Songs.</string>
@@ -185,14 +146,12 @@
     <string name="typeface_monospace">Monospace</string>
     <string name="no_songs_to_shuffle">No songs to shuffle</string>
     <string name="action_song_copy">📋 Make a copy</string>
-    <string name="action_song_amend">Suggest correction</string>
     <string name="action_song_edit">✏️Edit</string>
     <string name="action_song_remove">❌ Delete</string>
     <string name="action_song_set_favourite">⭐️ Like</string>
     <string name="action_song_unset_favourite">⭐️ Dislike</string>
     <string name="song_action_more">More</string>
     <string name="song_copied_as_custom">Song has been copied to \"My songs\".</string>
-    <string name="song_action_choose">Choose an action</string>
     <string name="action_song_publish">🌐 Publish</string>
     <string name="settings_song_preview">Song Appearance</string>
     <string name="settings_color_scheme">Color Scheme</string>
@@ -206,15 +165,12 @@
     <string name="settings_autoscroll_section">Autoscroll</string>
     <string name="settings_random_favourite">Random liked songs</string>
     <string name="settings_random_favourite_hint">Shuffle songs from liked songs only</string>
-    <string name="settings_songs_list_section">Songs list</string>
     <string name="settings_filter_languages">Filter songs with particular languages only</string>
-    <string name="settings_autoscroll_initial_delay">Autoscroll initial delay</string>
     <string name="settings_autoscroll_speed">Autoscroll speed</string>
     <string name="settings_general_section">General</string>
     <string name="db_update_failed_incompatible">Database is not compatible with your application version. Please udpate an application.</string>
     <string name="action_rate_app">⭐️ Rate App</string>
     <string name="edit_song_open_in_editor">📑 Open in Song Editor</string>
-    <string name="tooltip">Hint</string>
     <string name="edit_song_copy">Copy</string>
     <string name="edit_song_paste">Paste</string>
     <string name="edit_song_detect_chords">Detect chords</string>
@@ -237,11 +193,10 @@
     <string name="editor_chords_invalid">Validation error: %s</string>
     <string name="chords_invalid_missing_closing_bracket">Missing closing bracket \"]\"</string>
     <string name="chords_invalid_missing_opening_bracket">Missing opening bracket \"[\"</string>
-    <string name="chords_unknown_chord" formatted="false">Unknown chord in terms of chosen notation: \"%s\"</string>
+    <string name="chords_unknown_chord">Unknown chord in terms of chosen notation: \"%s\"</string>
     <string name="action_confirmation_title">Are you sure?</string>
     <string name="confirm_remove_song">Do you really want to remove this song?</string>
     <string name="confirm_discard_custom_song_changes">Do you want to save unsaved changes?</string>
-    <string name="edit_chords_notation_button">Notation: %s</string>
     <string name="no_new_chords_detected">No new chords</string>
     <string name="new_chords_detected">I\'ve found new chords: %s</string>
     <string name="transpose_minus_5" translatable="false">-5</string>
@@ -249,8 +204,7 @@
     <string name="transpose_zero" translatable="false">0</string>
     <string name="transpose_plus_1" translatable="false">+1</string>
     <string name="transpose_plus_5" translatable="false">+5</string>
-    <string name="editor_other_chords_detected">I\'ve found chords but related to another notation: \"%s\"</string>
-    <string name="editor_onexit_validation_failed" formatted="false">There are validation errors:
+    <string name="editor_onexit_validation_failed">There are validation errors:
         \n%s
         \n
         \nDo you want to ignore these errors?</string>
@@ -272,21 +226,13 @@
     <string name="nav_latest">Latest</string>
     <string name="nav_history">History</string>
     <string name="settings_songs_db">Songs database</string>
-    <string name="settings_exclude_artists">Hide particular categories</string>
-    <string name="settings_toggle_all_languages">Toggle all languages</string>
-    <string name="settings_toggle_all_artists">Toggle all categories</string>
     <string name="settings_custom_songs">My songs</string>
-    <string name="settings_chords_end_of_line">Display chords at the end of line</string>
-    <string name="settings_chords_end_of_line_hint">Align chords to the right edge of the screen</string>
-    <string name="settings_chords_above">Display chords above lyrics</string>
-    <string name="settings_chords_above_hint">Show chords in separate line above lyrics</string>
     <string name="settings_transposition">Transposition</string>
     <string name="settings_restore_transposition">Restore last transposing key</string>
     <string name="settings_restore_transposition_hint">Remember and restore last transposing key for each song</string>
     <string name="new_playlist_name">New playlist name</string>
     <string name="confirm_send_contact">Do you really want to send it?</string>
     <string name="no_chords_recognized_in_song">No chords recognized in the song</string>
-    <string name="show_chords_definitions">Chord diagrams</string>
     <string name="choose_a_chord">Choose a chord from a song</string>
     <string name="chord_diagrams_versions" formatted="false">Chord \"%s\" variations (%s)</string>
     <string name="action_close">Close</string>
@@ -337,11 +283,11 @@
     <string name="settings_sync_restore">Restore Backup from the Cloud</string>
     <string name="settings_sync_restore_hint">Restore all application data from your Google Drive Account.\nWarning: This will overwrite all your current application data. Requires restart.</string>
     <string name="settings_sync_save_success">Data synchronized.</string>
-    <string name="settings_sync_save_error" formatted="false">Error when saving backup: %s</string>
+    <string name="settings_sync_save_error">Error when saving backup: %s</string>
     <string name="settings_sync_restore_confirm">Do you really want to restore all application data from your Google Drive Account?\nThis will overwrite all your current application data. Application restart is needed after restoring.</string>
     <string name="settings_sync_restore_confirm_file">Do you really want to restore all application data from a file?\nThis will overwrite all your current application data. Application restart is needed after restoring.</string>
     <string name="settings_sync_restore_success">Application data restored successfully. Please restart app.</string>
-    <string name="settings_sync_restore_error" formatted="false">Error when restoring data: %s</string>
+    <string name="settings_sync_restore_error">Error when restoring data: %s</string>
     <string name="settings_sync_save_file">Export Backup to a file</string>
     <string name="settings_sync_save_file_hint">Save all application data (settings, custom songs, playlists, favourites) to an external file. You can also export it to a Google Drive file.</string>
     <string name="settings_sync_restore_file">Restore Backup from a file</string>
@@ -402,19 +348,17 @@
     <string name="screen_share_join_room">Join available rooms:</string>
     <string name="screen_share_scan_rooms">Scan Rooms</string>
     <string name="screen_share_scanning_devices">Scanning all devices in proximity…</string>
-    <string name="error_communication_breakdown" formatted="false">Communication breakdown: %s</string>
+    <string name="error_communication_breakdown">Communication breakdown: %s</string>
     <string name="error_bluetooth_not_enabled">Bluetooth is not accessible. Try again.</string>
     <string name="screen_share_set_room_password">Room password (empty - no password)</string>
     <string name="room_lobby">Room Lobby</string>
-    <string name="room_chat_send">Send message</string>
     <string name="room_close_room">Leave room</string>
     <string name="room_make_discoverable">Make discoverable again</string>
     <string name="room_open_current_song">Open current song</string>
     <string name="edit_song_export_all_custom_songs">💾 Export all songs</string>
     <string name="edit_song_import_custom_songs">🗂️ Import multiple songs from a batch</string>
     <string name="custom_songs_exported">All custom songs exported</string>
-    <string name="select_file_to_open">Select file to open</string>
-    <string name="custom_songs_imported" formatted="false">%s new custom songs have been imported</string>
+    <string name="custom_songs_imported">%s new custom songs have been imported</string>
     <string name="custom_songs_mass_import_hint">Importing multiple songs is supposed to load many songs from a single JSON file of a particular type.
         \nExisting songs will not be overwritten.
         \nIf you\'d rather like to import just one song from a text file, use option \"Import from file\" when creating a song.
@@ -423,35 +367,34 @@
     <string name="error_occurred">Error occurred</string>
     <string name="command_successful">Command successful</string>
     <string name="command_failed">Command failed</string>
-    <string name="room_joining_room" formatted="false">Joining room on %s…</string>
+    <string name="room_joining_room">Joining room on %s…</string>
     <string name="room_joined_to_room">Joined to room</string>
     <string name="room_room_created">Room created</string>
     <string name="room_scanning_completed_not_found">Scanning completed. No room found.</string>
     <string name="room_dropped_from_host">Dropped from host</string>
-    <string name="room_dropped_from_host_s" formatted="false">Dropped from host: %s</string>
+    <string name="room_dropped_from_host_s">Dropped from host: %s</string>
     <string name="song_show_fullscreen">📺 Fullscreen</string>
-    <string name="room_members" formatted="false">Members:\n%s</string>
+    <string name="room_members">Members:\n%s</string>
     <string name="screen_share_enter_room_password">Enter room password:</string>
     <string name="room_wrong_password">Wrong password</string>
     <string name="room_host">Owner</string>
     <string name="room_confirm_leave_lobby">You are about to leave lobby. Do you really want to disconnect?</string>
-    <string name="room_scanning_progress" formatted="false">Scanning all devices in proximity… %s</string>
+    <string name="room_scanning_progress">Scanning all devices in proximity… %s</string>
     <string name="screen_share_feature_hint">Screen Sharing allows you to display the same songs on many devices using Bluetooth (that also requires location access to scan nearby devices). Create a room so that your friends could join it. Then every song the owner chooses will be broadcasted and displayed on all devices connected to a room.</string>
     <string name="room_current_song">Current song: </string>
     <string name="room_current_song_waiting">Not selected - waiting…</string>
     <string name="room_chat">Chat:</string>
-    <string name="room_downloading_song">Fetching song…</string>
     <string name="song_details_namespace_temporary">Temporary songs</string>
-    <string name="room_scanning_completed_found" formatted="false">Scanning completed. Found rooms: %s</string>
+    <string name="room_scanning_completed_found">Scanning completed. Found rooms: %s</string>
     <string name="room_empty_message_given">Enter a message</string>
     <string name="room_current_song_waiting_master">Not selected\nOpen a song in any window to share it with others.</string>
     <string name="room_lobby_hint">Room lobby is open. Only owner of a room can choose songs.</string>
     <string name="room_empty_room_list">No rooms</string>
     <string name="room_no_chat_messages">No messages yet</string>
     <string name="room_enter_message_hint">Message</string>
-    <string name="room_new_chat_message" formatted="false">New message: %s</string>
+    <string name="room_new_chat_message">New message: %s</string>
     <string name="room_bluetooth_will_bediscoverable">Your device will be discoverable for next 5 minutes.</string>
-    <string name="room_new_client_joined" formatted="false">New client joined: %s</string>
+    <string name="room_new_client_joined">New client joined: %s</string>
     <string name="settings_trim_whitespaces">Trim whitespaces</string>
     <string name="settings_trim_whitespaces_hint">Remove whitespaces at the beginning and at the end of lines</string>
     <string name="settings_autoscroll_autostart">Start autoscroll automatically</string>
@@ -475,7 +418,6 @@
     <string name="billing_restore_pruchases">Restore your purchases</string>
     <string name="billing_already_purchased">Already purchased</string>
     <string name="error_purchase_error" formatted="false">Purchase error: %s</string>
-    <string name="billing_loading_purchases">Loading purchases…</string>
     <string name="billing_restoring_purchases">Restoring previous purchases…</string>
     <string name="billing_purchases_restored">Purchases restored</string>
     <string name="billing_starting_purchase">Starting a new purchase…</string>
@@ -488,7 +430,6 @@
     <string name="billing_donate_1_info">If you like this app, you can express your appreciation by making a donation to the developer in a symbolic \"beer\" currency. You can donate multiple times.</string>
     <string name="billing_buy_donate_1">🍺 Send a beer to the developer</string>
     <string name="billing_price_loading">Price loading…</string>
-    <string name="billing_donate_1_amount" formatted="false">Donated beers: %s</string>
     <string name="billing_item_price" formatted="false">Price: %s</string>
     <string name="file_select_operation_canceled">File import canceled</string>
     <string name="settings_autoscroll_show_eye_focus_zone">Eye-focus progress</string>

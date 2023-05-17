@@ -9,7 +9,6 @@
     <string name="nav_settings">Ustawienia</string>
     <string name="nav_exit">Wyjście</string>
     <string name="nav_about">Informacje</string>
-    <string name="nav_manual">Podręcznik</string>
     <string name="nav_contact">Kontakt</string>
     <string name="nav_screen_share">Wspólna Sesja</string>
     <string name="nav_purchase">Sklep</string>
@@ -58,10 +57,8 @@
     <string name="song_search_edit_hint">Tytuł, artysta lub fragment piosenki</string>
     <string name="secret_key_invalid" formatted="false">Hasło niepoprawne: %s</string>
     <string name="unlock_new_songs_unlocked">Odblokowano piosenki: %d</string>
-    <string name="settings_scroll_initial_pause">Opóźnienie autoprzewijania: %s s</string>
     <string name="autoscroll_panel_speed">Szybkość autoprzewijania: %s linii / s</string>
     <string name="settings_font_size_value">%s dp</string>
-    <string name="settings_scroll_initial_pause_value">%s s</string>
     <string name="settings_autoscroll_speed_value">%s linii / s</string>
     <string name="song_details_title">ℹ️ Szczegóły piosenki</string>
     <string name="song_details" formatted="false">
@@ -88,46 +85,12 @@
     <string name="none">Brak</string>
     <string name="scroll_at_the_beginning_already">Powrót na początek.</string>
     <string name="file_manager_not_found">Brak systemowej przeglądarki plików.</string>
-    <string name="select_file_to_import">Wybierz plik z kodowaniem UTF-8 do zaimportowania.</string>
     <string name="selected_file_is_too_big">Wybrany plik jest za duży. Czy to na pewno plik TEKSTOWY?</string>
     <string name="editing_custom_song">Moja piosenka</string>
     <string name="custom_song_editor">Edytor piosenki</string>
     <string name="edit_song_title_label">Tytuł piosenki:</string>
     <string name="edit_song_title_hint">Tytuł…</string>
     <string name="edit_song_content_label">Tekst piosenki z [akordami]:</string>
-    <string name="chords_editor_hint">Umieść tu tekst piosenki z akordami. Postaraj się trzymać następujących reguł, aby zachować spójność ze standardem piosenek:
-        \n\n1. Zaznacz akordy w nawiasach kwadratowych, np. \"między [C G# A7 F#maj7] słowami\".
-        \n\n2. Mieszaj akordy z tekstem w tej samej linii, umieszczając je tuż przed słowami, gdzie występują, dokładnie wskazując moment zmiany akordu i jego akcentu w tekście, np. \"[C]And no reli[Cmaj7]gion [F]too\". Nie umieszczaj ich w osobnej linii ponad tekstem (wtedy sposób wyświetlania możesz zawsze zmienić w ustawieniach, więc pozwól innym wybrać ich ulubiony sposób wyświetlania). Umieszczanie akordów w tej samej linii jest niezmiernie ważne, bo pozwala to wyświetlać akordy zawsze w poprawnym miejscu, niezależnie od róźnych krojów czcionki i zawijania wyrazów. Nie martw się o Twój ulubiony styl wyświetlania akordów - Songbook wykona całą tą magię dla Ciebie.
-        \n\n3. Jeśli fragment piosenki się powtarza (np. refren), skopiuj go we wszystkie miejsca wystąpień. Kiedy piosenka zachowuje ciągłość, ułatwi to jej późniejsze przewijanie i nie będziesz musiał przewijać piosenki za każdym razem, aby wrócić do akordów refrenu. Nie umieszczaj odnośników lub akapitów w stylu \"Refren\", \"Zwrotka\", \"Tytuł\", \"Solo\", \"Instrumental\". Umieść tylko tekst piosenki z akordami.
-        \n\n4. Upewnij się, że wybrałeś odpowiednią notację dla swoich akordów (\"Am\" lub \"a\").
-        \n\n5. Jeśli piosenka ma trudny rytm z często zmieniającymi się akordami, umieść akordy między poszczególnymi słowami lub nawet w środku wyrazów, aby wskazać sylabę, w której akcentowany jest akord, np. \"[G]Hotel Cali[D]fornia\". W przypadku prostych akordów możesz umieścić akordy na końcu linii: \"Smoke on the water [C G#]\"
-        \n\n6. Możesz użyć kreski \"-\", aby połączyć szybko zmieniające się akordy: \"D Dsus2-D-Dsus4\" lub użyć nawiasów \"()\", aby wskazać opcjonalność akordów: [C G (G7)].
-        \n\n7. Przed zapisaniem piosenki sprawdź jej poprawność i skonwertuj do standardowego formatu, szczególnie jeśli zamierzasz udostępnić ją publicznie.
-        \n
-        \nEdytor posiada wiele przydatnych narzędzi:
-        \n- Cofnij: cofnięcie ostatnich zmian
-        \n- Linia: zaznacz całą linię lub następne linie
-        \n- Duplikuj: powiel zaznaczenie
-        \n- Uporządkuj: Sformatuj tekst i akordy do standardowego fromatu
-        \n- Sprawdź: Zweryfikuj poprawność akordów
-        \n- Wykryj akordy: Automatycznie znajdź i oznacz akordy na podstawie wybranej notacji akordów, zachowując ich oryginalną poziomą pozycję (ustawioną spacjami) poprzez usunięcie zbędnych 2 spacji na każde dodane znaczniki \"[ ]\".
-        \n- Transformuj: Otwiera listę pozostałych transformacji
-        \n- Przesuń akordy z górnych linii do pasujących słów: łączy po dwie linie (górną z akordami i dolną z tekstem), przesuwając akordy (wyrównane spacjami) z górnej linii to dolnej, dopasowując akordy do słów, nad którymi się znajdują.
-        \n- Przesuń akordy z góry na koniec linii: łączy po dwie linie (górną z akordami i dolną z tekstem), przesuwając wszystkie akordy na koniec linii za tekstem
-        \n- Konwertuj z innej notacji akordów: Konwertuje wszystkie akordy z innej notacji akordów na notację wybraną dla piosenki
-        \n- Usuń podwójne puste linie: Zamienia podwójne Entery (załamania wierszy) na pojedyncze
-        \n- Zamień Fis -> F#: Zamienia wszystkie nazwy dźwięków kończące się na \"is\" na notację \"#\"
-        \n- Odznacz akordy: Usuwa wszystkie znaczniki akordów: \"[\" i \"]\"
-        \n- Zaznacz akordy (nie zachowując wcięć): Automatycznie znajduje i zaznacza akordy poprzez otoczenie ich znakami \"[ ]\". Dodanie takich znaków może wpłynąć na poziomą pozycję akordów znajdujących się na końcu.
-        \n- Usuń nawiasy kwadratowe z zawartością: Usuwa tekst wewnątrz nawiasów kwadratowych \"[ ]\" wraz z nawiasami.
-        \n- Wyrównaj przesunięte akordy: Przesuwa akordy umieszczone nieprawidłowo w środku słowa (np. \"w[C]ord\") na początek słowa.
-        \n- \u276E: przesuwa kursor o jeden znak w lewo
-        \n- \u276F: przesuwa kursor o jeden znak w prawo
-        \n- [ / ]: wstawia pasujący nawias (otwierający lub zamykający)
-        \n- [Akord]: Wstawia parę nawiasów wokół zaznaczonego tekstu
-        \n- Kopiuj: Kopiuje zaznaczony tekst
-        \n- Wklej: Wkleja skopiowany tekst
-    </string>
     <string name="import_song_content_hint">
         Tekst piosenki z [akordami] w tej samej linii
         \nOtwórz pomoc (?), aby uzyskać więcej szczegółów.
@@ -164,9 +127,7 @@
     <string name="contact_subject_hint">Temat</string>
     <string name="settings_language">Język aplikacji</string>
     <string name="language_default">Domyślny systemowy</string>
-    <string name="language_unknown">Nieznany</string>
     <string name="contact_subject_song_amend">Poprawka do piosenki</string>
-    <string name="contact_subject_song_comment">Komentarz do piosenki</string>
     <string name="contact_subject_publishing_song">Nowa piosenka</string>
     <string name="favourite_song_has_been_set">Dodano do polubionych piosenek.</string>
     <string name="favourite_song_has_been_unset">Usunięto z polubionych piosenek.</string>
@@ -179,14 +140,12 @@
     <string name="typeface_monospace">Maszynowa (Monospace)</string>
     <string name="no_songs_to_shuffle">Brak piosenek do wylosowania</string>
     <string name="action_song_copy">📋 Utwórz kopię</string>
-    <string name="action_song_amend">Zaproponuj poprawkę</string>
     <string name="action_song_edit">✏️Edytuj</string>
     <string name="action_song_remove">❌ Usuń</string>
     <string name="action_song_set_favourite">⭐️ Polub</string>
     <string name="action_song_unset_favourite">⭐️ Usuń z polubionych</string>
     <string name="song_action_more">Więcej</string>
     <string name="song_copied_as_custom">Piosenka została skopiowana do \"Moich piosenek\".</string>
-    <string name="song_action_choose">Wybierz akcję</string>
     <string name="action_song_publish">🌐 Opublikuj</string>
     <string name="settings_song_preview">Wygląd piosenek</string>
     <string name="settings_color_scheme">Schemat kolorów</string>
@@ -200,15 +159,12 @@
     <string name="settings_autoscroll_section">Autoprzewijanie</string>
     <string name="settings_random_favourite">Losuj polubione</string>
     <string name="settings_random_favourite_hint">Losuj piosenki tylko z listy polubionych</string>
-    <string name="settings_songs_list_section">Lista piosenek</string>
     <string name="settings_filter_languages">Filtruj tylko piosenki w wybranych językach</string>
-    <string name="settings_autoscroll_initial_delay">Opóźnienie autoprzewijania</string>
     <string name="settings_autoscroll_speed">Szybkość autoprzewijania</string>
     <string name="settings_general_section">Ogólne</string>
     <string name="db_update_failed_incompatible">Baza danych nie jest kompatybilna z Twoją wersją aplikacji. Proszę, zaktualizuj aplikację.</string>
     <string name="action_rate_app">⭐️ Oceń</string>
     <string name="edit_song_open_in_editor">📑 Otwórz w edytorze</string>
-    <string name="tooltip">Wskazówka</string>
     <string name="edit_song_copy">Kopiuj</string>
     <string name="edit_song_paste">Wklej</string>
     <string name="edit_song_detect_chords">Wykryj akordy</string>
@@ -233,10 +189,8 @@
     <string name="action_confirmation_title">Jesteś pewien?</string>
     <string name="confirm_remove_song">Czy na pewno chcesz usunąć piosenkę?</string>
     <string name="confirm_discard_custom_song_changes">Czy chcesz zapisać niezapisane zmiany w piosence?</string>
-    <string name="edit_chords_notation_button">Notacja: %s</string>
     <string name="no_new_chords_detected">Brak nowych akordów</string>
     <string name="new_chords_detected">Znalazłem nowe akordy: %s</string>
-    <string name="editor_other_chords_detected">Znalazłem nowe akordy, ale z innej notacji: \"%s\"</string>
     <string name="editor_onexit_validation_failed">W piosence znaleziono błędy:
         \n%s
         \n
@@ -259,21 +213,13 @@
     <string name="nav_latest">Najnowsze</string>
     <string name="nav_history">Historia</string>
     <string name="settings_songs_db">Baza piosenek</string>
-    <string name="settings_exclude_artists">Ukryj wybrane kategorie</string>
-    <string name="settings_toggle_all_languages">Zaznacz / Odznacz wszystkie języki</string>
-    <string name="settings_toggle_all_artists">Zaznacz / Odznacz wszystkie kategorie</string>
     <string name="settings_custom_songs">Moje piosenki</string>
-    <string name="settings_chords_end_of_line">Wyświetlaj akordy na końcu linii</string>
-    <string name="settings_chords_end_of_line_hint">Wyświetlaj wszystkie akordy wyrównane do prawej strony ekranu</string>
-    <string name="settings_chords_above">Wyświetlaj akordy nad tekstem</string>
-    <string name="settings_chords_above_hint">Wyświetlaj akordy w osobnej linii ponad słowami</string>
     <string name="settings_transposition">Transpozycja</string>
     <string name="settings_restore_transposition">Przywracanie ostatniej tonacji</string>
     <string name="settings_restore_transposition_hint">Zapamiętuj i przywracaj ostatnią transpozycję akordów (tonację) dla każdej piosenki</string>
     <string name="new_playlist_name">Nazwa nowej playlisty</string>
     <string name="confirm_send_contact">Czy na pewno chcesz to wysłać?</string>
     <string name="no_chords_recognized_in_song">Nie rozpoznano akordów w piosence</string>
-    <string name="show_chords_definitions">Diagramy akordów</string>
     <string name="choose_a_chord">Wybierz akord z piosenki</string>
     <string name="chord_diagrams_versions" formatted="false">Warianty akordu \"%s\" (%s)</string>
     <string name="action_close">Zamknij</string>
@@ -376,14 +322,12 @@
     <string name="error_bluetooth_not_enabled">Bluetooth niedostępny. Spróbuj ponownie.</string>
     <string name="screen_share_set_room_password">Hasło do pokoju (puste - brak hasła)</string>
     <string name="room_lobby">Lobby pokoju</string>
-    <string name="room_chat_send">Wyślij</string>
     <string name="room_close_room">Opuść pokój</string>
     <string name="room_make_discoverable">Ponownie ustaw widoczność</string>
     <string name="room_open_current_song">Otwórz obecną piosenkę</string>
     <string name="edit_song_export_all_custom_songs">💾 Wyeksportuj wszystkie piosenki</string>
     <string name="edit_song_import_custom_songs">🗂️ Importuj wiele piosenek z paczki</string>
     <string name="custom_songs_exported">Wyeksportowano własne piosenki.</string>
-    <string name="select_file_to_open">Wybierz plik do otwarcia</string>
     <string name="custom_songs_imported">Zaimportowano %s nowych własnych piosenek.</string>
     <string name="custom_songs_mass_import_hint">Import wielu piosenek z paczki wczytuje własne piosenki z jednego pliku JSON o określonym formacie.
         \nIstniejące piosenki nie zostaną nadpisane.
@@ -410,7 +354,6 @@
     <string name="room_current_song">Aktualna piosenka: </string>
     <string name="room_current_song_waiting">Brak - oczekiwanie…</string>
     <string name="room_chat">Czat:</string>
-    <string name="room_downloading_song">Pobieranie piosenki…</string>
     <string name="song_details_namespace_temporary">Tymczasowe piosenki</string>
     <string name="room_scanning_completed_found">Skanowanie zakończone. Znalezione pokoje: %s</string>
     <string name="room_empty_message_given">Nie podano wiadomości</string>
@@ -445,7 +388,6 @@
     <string name="billing_restore_pruchases">Wczytaj poprzednie zakupy</string>
     <string name="billing_already_purchased">Już kupione</string>
     <string name="error_purchase_error" formatted="false">Błąd płatności: %s</string>
-    <string name="billing_loading_purchases">Wczytywanie płatności…</string>
     <string name="billing_restoring_purchases">Przywracanie poprzednich zakupów…</string>
     <string name="billing_purchases_restored">Płatności przywrócone</string>
     <string name="billing_starting_purchase">Rozpoczynanie płatności…</string>
@@ -458,7 +400,6 @@
     <string name="billing_donate_1_info">Jeśli podoba Ci się aplikacja, możesz wyrazić swoje uznanie, przekazując deweloperowi podarunek w symbolicznej \"piwnej\" walucie. Możesz przekazywać napiwek wiele razy.</string>
     <string name="billing_buy_donate_1">🍺 Postaw piwo deweloperowi</string>
     <string name="billing_price_loading">Wczytywanie ceny…</string>
-    <string name="billing_donate_1_amount" formatted="false">Podarowane piwa: %s</string>
     <string name="billing_item_price" formatted="false">Cena: %s</string>
     <string name="file_select_operation_canceled">Import pliku anulowany</string>
     <string name="settings_autoscroll_show_eye_focus_zone">Postęp strefy skupienia wzroku</string>

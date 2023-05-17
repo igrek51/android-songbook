@@ -52,7 +52,7 @@ class PlaylistDao(
     }
 
     private fun nextId(playlists: List<Playlist>): Long {
-        return (playlists.map { p -> p.id }.maxOrNull() ?: 0) + 1
+        return (playlists.maxOfOrNull { p -> p.id } ?: 0) + 1
     }
 
     fun isSongOnPlaylist(song: Song, playlist: Playlist): Boolean {

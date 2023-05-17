@@ -62,7 +62,6 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
                 android:layout_marginStart="20dp"
                 android:text="@string/editing_custom_song"
                 android:textSize="18sp" />
@@ -71,7 +70,6 @@
                 android:layout_width="96dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_gravity="end|center_vertical"
                 android:orientation="horizontal">
@@ -82,7 +80,6 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="end|center_vertical"
                     android:layout_marginEnd="0dp"
-                    android:layout_marginRight="0dp"
                     android:adjustViewBounds="true"
                     android:background="?android:selectableItemBackground"
                     android:clickable="true"
@@ -98,7 +95,6 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="end|center_vertical"
                     android:layout_marginEnd="0dp"
-                    android:layout_marginRight="0dp"
                     android:adjustViewBounds="true"
                     android:background="?android:selectableItemBackground"
                     android:clickable="true"
@@ -190,15 +186,12 @@
                     android:gravity="bottom"
                     android:text="@string/edit_song_content_label"
                     android:textSize="18sp"
-                    android:layout_toLeftOf="@+id/tooltipEditChordsLyricsInfo"
-                    android:layout_toStartOf="@+id/tooltipEditChordsLyricsInfo"
-                    android:layout_alignParentLeft="true" />
+                    android:layout_toStartOf="@+id/tooltipEditChordsLyricsInfo" />
 
                 <ImageButton
                     android:id="@+id/tooltipEditChordsLyricsInfo"
                     android:layout_width="30dp"
                     android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
                     android:layout_gravity="end|center_vertical"
                     android:layout_centerVertical="true"
                     android:adjustViewBounds="true"

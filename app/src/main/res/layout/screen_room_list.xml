@@ -45,7 +45,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
                 android:text="@string/nav_screen_share"
                 android:textSize="18sp" />
 
@@ -53,7 +52,6 @@
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_gravity="end|center_vertical"
                 android:orientation="horizontal">
@@ -64,7 +62,6 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="end|center_vertical"
                     android:layout_marginEnd="0dp"
-                    android:layout_marginRight="0dp"
                     android:adjustViewBounds="true"
                     android:background="?android:selectableItemBackground"
                     android:clickable="true"

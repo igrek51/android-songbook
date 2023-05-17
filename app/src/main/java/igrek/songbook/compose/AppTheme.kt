@@ -8,7 +8,7 @@ import androidx.compose.ui.text.TextStyle
 
 @Composable
 fun AppTheme(
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
     MaterialTheme(
         colorScheme = DarkSideColors,

@@ -29,10 +29,6 @@ class WindowManagerService(
         setShowWhenLocked(set)
     }
 
-    fun hideTaskbar() {
-        activity.supportActionBar?.hide()
-    }
-
     fun setFullscreen(set: Boolean) {
         val flag = WindowManager.LayoutParams.FLAG_FULLSCREEN
         if (set) {

@@ -98,7 +98,7 @@ public final class SharedSong {
 		}
 		
 		@java.lang.Override
-		public final com.google.protobuf.UnknownFieldSet getUnknownFields() {
+		public com.google.protobuf.UnknownFieldSet getUnknownFields() {
 			return this.unknownFields;
 		}
 		
@@ -309,7 +309,7 @@ public final class SharedSong {
 		private byte memoizedIsInitialized = -1;
 		
 		@java.lang.Override
-		public final boolean isInitialized() {
+		public boolean isInitialized() {
 			byte isInitialized = memoizedIsInitialized;
 			if (isInitialized == 1)
 				return true;
@@ -512,8 +512,6 @@ public final class SharedSong {
 			}
 			
 			private void maybeForceBuilderInitialization() {
-				if (com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders) {
-				}
 			}
 			
 			@java.lang.Override
@@ -634,7 +632,7 @@ public final class SharedSong {
 			}
 			
 			@java.lang.Override
-			public final boolean isInitialized() {
+			public boolean isInitialized() {
 				return true;
 			}
 			
@@ -933,12 +931,12 @@ public final class SharedSong {
 			}
 			
 			@java.lang.Override
-			public final Builder setUnknownFields(final com.google.protobuf.UnknownFieldSet unknownFields) {
+			public Builder setUnknownFields(final com.google.protobuf.UnknownFieldSet unknownFields) {
 				return super.setUnknownFields(unknownFields);
 			}
 			
 			@java.lang.Override
-			public final Builder mergeUnknownFields(final com.google.protobuf.UnknownFieldSet unknownFields) {
+			public Builder mergeUnknownFields(final com.google.protobuf.UnknownFieldSet unknownFields) {
 				return super.mergeUnknownFields(unknownFields);
 			}
 			

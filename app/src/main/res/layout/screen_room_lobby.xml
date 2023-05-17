@@ -44,7 +44,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
                 android:text="@string/room_lobby"
                 android:textSize="18sp" />
 
@@ -52,7 +51,6 @@
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_gravity="end|center_vertical"
                 android:orientation="horizontal">
@@ -63,7 +61,6 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="end|center_vertical"
                     android:layout_marginEnd="0dp"
-                    android:layout_marginRight="0dp"
                     android:adjustViewBounds="true"
                     android:background="?android:selectableItemBackground"
                     android:clickable="true"
@@ -185,7 +182,6 @@
                     android:layout_height="match_parent"
                     android:layout_alignTop="@+id/chatMessageEdit"
                     android:layout_alignEnd="@+id/chatMessageEdit"
-                    android:layout_alignRight="@+id/chatMessageEdit"
                     android:layout_alignBottom="@+id/chatMessageEdit"
                     android:layout_centerVertical="true"
                     android:layout_gravity="end|center_vertical"

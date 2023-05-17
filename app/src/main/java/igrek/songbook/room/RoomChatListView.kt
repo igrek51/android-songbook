@@ -1,5 +1,6 @@
 package igrek.songbook.room
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -29,6 +30,7 @@ class RoomChatListView(
         android.R.attr.listViewStyle
     )
 
+    @SuppressLint("SetTextI18n")
     override fun buildView(view: View, item: ChatMessage) {
         val timeFormatted = dateFormat.format(item.time)
         view.findViewById<TextView>(R.id.itemLabel)?.text =
