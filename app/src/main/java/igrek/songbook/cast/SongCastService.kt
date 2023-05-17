@@ -192,9 +192,9 @@ class SongCastService(
                 streamSocket.ioSocket?.connected() == false -> (2000..3000).random().toLong()
                 else -> {
                     val millis = Date().time - lastSessionChange
-                    val fraction = millis.interpolate(0, 4 * 60_000) // 0-4 min -> 0-1
-                    val penalty = (fraction * 4 * 60_000).toLong() // 0-1 -> 0-4 min
-                    (5_000..6_000).random().toLong() + penalty
+                    val fraction = millis.interpolate(0, 10 * 60_000) // 0-10 min -> 0-1
+                    val penalty = (fraction * 2 * 60_000).toLong() // 0-1 -> 0-2 min
+                    (2_000..3_000).random().toLong() + penalty
                 }
             }
 
