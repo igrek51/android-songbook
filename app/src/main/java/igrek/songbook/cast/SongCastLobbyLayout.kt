@@ -176,16 +176,44 @@ class SongCastLobbyLayout(
     }
 
     private fun showMoreActions() {
-        ContextMenuBuilder().showContextMenu(
-            mutableListOf(
-                ContextMenuBuilder.Action(R.string.songcast_exit_room) {
-                    leaveRoomConfirm()
-                },
-                ContextMenuBuilder.Action(R.string.songcast_refresh_session_details) {
-                    refreshSessionDetails()
+        val actions = mutableListOf(
+            ContextMenuBuilder.Action(R.string.songcast_exit_room) {
+                leaveRoomConfirm()
+            },
+            ContextMenuBuilder.Action(R.string.songcast_refresh_session_details) {
+                refreshSessionDetails()
+            },
+        )
+        if (songCastService.isPresenter()) {
+            actions.add(
+                ContextMenuBuilder.Action(R.string.songcast_promote_member_to_presenter) {
+                    choosePromotedUser()
                 },
             )
-        )
+        }
+        ContextMenuBuilder().showContextMenu(actions)
+    }
+
+    private fun choosePromotedUser() {
+        if (songCastService.spectators.isEmpty()) return
+
+        val actions = songCastService.spectators.map { member ->
+            ContextMenuBuilder.Action(member.name) {
+                promoteUser(member)
+            }
+        }
+        ContextMenuBuilder().showContextMenu(actions)
+    }
+
+    private fun promoteUser(member: CastMember) {
+        GlobalScope.launch {
+            val result = songCastService.promoteMemberAsync(member.public_member_id).await()
+            result.fold(onSuccess = {
+                uiInfoService.showInfo(R.string.songcast_member_promoted, member.name)
+            }, onFailure = { e ->
+                UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
+            })
+        }
     }
 
     fun openLastSong() {

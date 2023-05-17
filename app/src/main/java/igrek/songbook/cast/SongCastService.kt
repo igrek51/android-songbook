@@ -76,6 +76,9 @@ class SongCastService(
         private val sessionSongUrl = { session: String -> "${songbookApiBase}/api/cast/$session/song" }
         private val sessionScrollUrl = { session: String -> "${songbookApiBase}/api/cast/$session/scroll" }
         private val sessionChatUrl = { session: String -> "${songbookApiBase}/api/cast/$session/chat" }
+        private val promoteMemberUrl = { session: String, memberPubId: String ->
+            "${songbookApiBase}/api/cast/$session/member/$memberPubId/promote"
+        }
         private const val authDeviceHeader = "X-Songbook-Device-Id"
     }
 
@@ -335,6 +338,18 @@ class SongCastService(
             .build()
         return httpRequester.httpRequestAsync(request) {
             logger.info("SongCast: chat message sent: ${payload.text}")
+        }
+    }
+
+    fun promoteMemberAsync(memberPubId: String): Deferred<Result<Unit>> {
+        val deviceId = deviceIdProvider.getDeviceId()
+        val request: Request = Request.Builder()
+            .url(promoteMemberUrl(sessionCode ?: "", memberPubId))
+            .header(authDeviceHeader, deviceId)
+            .post(RequestBody.create(null, ""))
+            .build()
+        return httpRequester.httpRequestAsync(request) {
+            logger.info("SongCast: member promoted: $memberPubId")
         }
     }
 

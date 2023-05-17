@@ -569,4 +569,6 @@
     <string name="songcast_you">Ty</string>
     <string name="songcast_joined_the_room_as_presenter">%s dołączył do pokoju jako Prezenter</string>
     <string name="songcast_joined_the_room_as_spectator">%s dołączył do pokoju jako Obserwator</string>
+    <string name="songcast_promote_member_to_presenter">Awansuj na Prezentera</string>
+    <string name="songcast_member_promoted">%s został awansowany na Prezentera</string>
 </resources>
