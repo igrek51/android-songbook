@@ -4,7 +4,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import igrek.songbook.R
-import igrek.songbook.admin.HttpRequester
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
@@ -21,28 +20,22 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import okhttp3.Request
-import okhttp3.RequestBody
 import org.json.JSONObject
 import java.util.Date
 
 
-class SongCastService(
-) {
+class SongCastService {
     private val uiInfoService by LazyExtractor(appFactory.uiInfoService)
-    private val deviceIdProvider by LazyExtractor(appFactory.deviceIdProvider)
     private val layoutController by LazyExtractor(appFactory.layoutController)
-    private val preferencesState by LazyExtractor(appFactory.preferencesState)
     private val activityController by LazyExtractor(appFactory.activityController)
     private val songPreviewLayoutController by LazyExtractor(appFactory.songPreviewLayoutController)
     private val songOpener by LazyExtractor(appFactory.songOpener)
     private val scrollService by LazyExtractor(appFactory.scrollService)
 
     private val logger: Logger = LoggerFactory.logger
-    private val httpRequester = HttpRequester()
+    private val requester = SongCastRequester()
     private var streamSocket = StreamSocket(::onEventBroadcast)
     private var myName: String = ""
     private var myMemberPublicId: String = ""
@@ -57,115 +50,38 @@ class SongCastService(
     var clientFollowScroll: Boolean by mutableStateOf(true)
     var lastSharedScroll: CastScroll? = null
 
-    var presenterFocusControl: CastScrollControl
-        get() = preferencesState.castScrollControl
-        set(value) {
-            preferencesState.castScrollControl = value
-        }
-
-    companion object {
-        const val songbookApiBase = "https://songbook.igrek.dev"
-        private const val createSessionUrl = "$songbookApiBase/api/cast"
-        private val joinSessionUrl = { session: String -> "${songbookApiBase}/api/cast/$session/join" }
-        private const val rejoinSessionUrl = "${songbookApiBase}/api/cast/rejoin"
-        private val dropSessionUrl = { session: String -> "${songbookApiBase}/api/cast/$session/drop" }
-        private val sessionUrl = { session: String -> "${songbookApiBase}/api/cast/$session" }
-        private val sessionSongUrl = { session: String -> "${songbookApiBase}/api/cast/$session/song" }
-        private val sessionScrollUrl = { session: String -> "${songbookApiBase}/api/cast/$session/scroll" }
-        private val sessionChatUrl = { session: String -> "${songbookApiBase}/api/cast/$session/chat" }
-        private val promoteMemberUrl = { session: String, memberPubId: String ->
-            "${songbookApiBase}/api/cast/$session/member/$memberPubId/promote"
-        }
-        private const val authDeviceHeader = "X-Songbook-Device-Id"
-    }
-
     val presenters: List<CastMember> get() = sessionState.members.filter { it.type == CastMemberType.OWNER.value }
     val spectators: List<CastMember> get() = sessionState.members.filter { it.type == CastMemberType.GUEST.value }
 
     fun isInRoom(): Boolean = sessionCode != null
 
-    fun isPresenter(): Boolean {
-        return isInRoom() && presenters.any { it.public_member_id == myMemberPublicId }
-    }
+    fun isPresenter(): Boolean = isInRoom() && presenters.any { it.public_member_id == myMemberPublicId }
 
-    fun isPresenting(): Boolean {
-        return isPresenter() && sessionState.castSongDto?.chosen_by == myMemberPublicId
-    }
+    fun isPresenting(): Boolean = isPresenter() && sessionState.castSongDto?.chosen_by == myMemberPublicId
 
     fun isSongSelected(): Boolean = sessionState.castSongDto != null
 
-    private fun findMemberByPublicId(publicId: String): CastMember? {
-        return sessionState.members.find { it.public_member_id == publicId }
-    }
-
     fun createSessionAsync(memberName: String): Deferred<Result<CastSessionJoined>> {
-        logger.info("Creating SongCast session by member '$memberName'...")
-        val deviceId = deviceIdProvider.getDeviceId()
-        val dto = CastSessionJoin(member_name = memberName)
-        val json = httpRequester.jsonSerializer.encodeToString(CastSessionJoin.serializer(), dto)
-        val request: Request = Request.Builder()
-            .url(createSessionUrl)
-            .header(authDeviceHeader, deviceId)
-            .post(RequestBody.create(httpRequester.jsonType, json))
-            .build()
-        return httpRequester.httpRequestAsync(request) { response ->
-            val jsonData = response.body()?.string() ?: ""
-            val responseData: CastSessionJoined =
-                httpRequester.jsonSerializer.decodeFromString(
-                    CastSessionJoined.serializer(),
-                    jsonData
-                )
-            when (responseData.rejoined) {
-                true -> logger.info("SongCast session rejoined: ${responseData.short_id}")
-                false -> logger.info("SongCast session created: ${responseData.short_id}")
-            }
+        return requester.createSessionAsync(memberName) { responseData ->
             initRoom(responseData)
-            responseData
         }
     }
 
     fun joinSessionAsync(sessionCode: String, memberName: String): Deferred<Result<CastSessionJoined>> {
-        logger.info("Joining SongCast session by member '$memberName'...")
-        val deviceId = deviceIdProvider.getDeviceId()
-        val dto = CastSessionJoin(member_name = memberName)
-        val json = httpRequester.jsonSerializer.encodeToString(CastSessionJoin.serializer(), dto)
-        val request: Request = Request.Builder()
-            .url(joinSessionUrl(sessionCode))
-            .header(authDeviceHeader, deviceId)
-            .post(RequestBody.create(httpRequester.jsonType, json))
-            .build()
-        return httpRequester.httpRequestAsync(request) { response ->
-            val jsonData = response.body()?.string() ?: ""
-            val responseData: CastSessionJoined =
-                httpRequester.jsonSerializer.decodeFromString(CastSessionJoined.serializer(), jsonData)
-            when (responseData.rejoined) {
-                true -> logger.info("SongCast session rejoined: ${responseData.short_id}")
-                false -> logger.info("SongCast session joined: ${responseData.short_id}")
-            }
+        return requester.joinSessionAsync(sessionCode, memberName) { responseData ->
             initRoom(responseData)
-            responseData
         }
     }
 
     fun restoreSessionAsync(): Deferred<Result<CastSessionJoined>> {
-        val deviceId = deviceIdProvider.getDeviceId()
-        val request: Request = Request.Builder()
-            .url(rejoinSessionUrl)
-            .header(authDeviceHeader, deviceId)
-            .get()
-            .build()
-        return httpRequester.httpRequestAsync(request) { response ->
-            val jsonData = response.body()?.string() ?: ""
-            val responseData: CastSessionJoined =
-                httpRequester.jsonSerializer.decodeFromString(CastSessionJoined.serializer(), jsonData)
-            logger.info("SongCast session restored: ${responseData.short_id}")
+        return requester.restoreSessionAsync { responseData ->
             initRoom(responseData)
-            responseData
         }
     }
 
     private fun initRoom(responseData: CastSessionJoined) {
         this.sessionCode = responseData.short_id
+        this.requester.sessionCode = responseData.short_id
         this.myName = responseData.member_name
         this.myMemberPublicId = responseData.public_member_id
         streamSocket.connect(responseData.short_id)
@@ -235,6 +151,7 @@ class SongCastService(
 
     private fun exitRoom() {
         sessionCode = null
+        requester.sessionCode = ""
         sessionState.initialized = false
         sessionState.members = listOf()
         sessionState.castSongDto = null
@@ -248,58 +165,24 @@ class SongCastService(
     }
 
     fun dropSessionAsync(): Deferred<Result<Unit>> {
-        val nSessionCode = sessionCode
-        exitRoom()
-
-        if (nSessionCode == null) {
-            logger.warn("SongCast session not dropped - not joined")
-            return GlobalScope.async { Result.success(Unit) }
-        }
-        logger.info("Dropping SongCast session: $nSessionCode")
-        val deviceId = deviceIdProvider.getDeviceId()
-        val request: Request = Request.Builder()
-            .url(dropSessionUrl(nSessionCode))
-            .header(authDeviceHeader, deviceId)
-            .post(RequestBody.create(null, ""))
-            .build()
-        return httpRequester.httpRequestAsync(request) {
-            logger.info("SongCast session $nSessionCode dropped")
+        return requester.dropSessionAsync {
+            exitRoom()
         }
     }
 
     private fun getSessionDetailsAsync(): Deferred<Result<CastSession>> {
-        val deviceId = deviceIdProvider.getDeviceId()
-        val request: Request = Request.Builder()
-            .url(sessionUrl(sessionCode ?: ""))
-            .header(authDeviceHeader, deviceId)
-            .get()
-            .build()
-        return httpRequester.httpRequestAsync(request) { response ->
-            val jsonData = response.body()?.string() ?: ""
-            val responseData: CastSession =
-                httpRequester.jsonSerializer.decodeFromString(
-                    CastSession.serializer(),
-                    jsonData
-                )
+        return requester.getSessionDetailsAsync { responseData ->
             sessionState.members = responseData.members
             sessionState.castSongDto = responseData.song
             this.ephemeralSong = buildEphemeralSong(responseData.song)
             sessionState.currentScroll = responseData.scroll
             sessionState.chatMessages = responseData.chat_messages
             sessionState.initialized = true
-            responseData
         }
     }
 
     private fun postSongPresentAsync(payload: CastSongSelected): Deferred<Result<Unit>> {
-        val deviceId = deviceIdProvider.getDeviceId()
-        val json = httpRequester.jsonSerializer.encodeToString(CastSongSelected.serializer(), payload)
-        val request: Request = Request.Builder()
-            .url(sessionSongUrl(sessionCode ?: ""))
-            .header(authDeviceHeader, deviceId)
-            .post(RequestBody.create(httpRequester.jsonType, json))
-            .build()
-        return httpRequester.httpRequestAsync(request) {
+        return requester.postSongPresentAsync(payload) {
             sessionState.castSongDto = CastSong(
                 id = payload.id,
                 chosen_by = myMemberPublicId,
@@ -308,44 +191,19 @@ class SongCastService(
                 content = payload.content,
                 chords_notation_id = payload.chords_notation_id,
             )
-            logger.info("SongCast: Song selection sent: ${payload.title} - ${payload.artist}")
         }
     }
 
     fun postScrollControlAsync(payload: CastScroll): Deferred<Result<Unit>> {
-        val deviceId = deviceIdProvider.getDeviceId()
-        val json = httpRequester.jsonSerializer.encodeToString(CastScroll.serializer(), payload)
-        val request: Request = Request.Builder()
-            .url(sessionScrollUrl(sessionCode ?: ""))
-            .header(authDeviceHeader, deviceId)
-            .post(RequestBody.create(httpRequester.jsonType, json))
-            .build()
-        return httpRequester.httpRequestAsync(request) {}
+        return requester.postScrollControlAsync(payload)
     }
 
     fun postChatMessageAsync(payload: CastChatMessageSent): Deferred<Result<Unit>> {
-        val deviceId = deviceIdProvider.getDeviceId()
-        val json = httpRequester.jsonSerializer.encodeToString(CastChatMessageSent.serializer(), payload)
-        val request: Request = Request.Builder()
-            .url(sessionChatUrl(sessionCode ?: ""))
-            .header(authDeviceHeader, deviceId)
-            .post(RequestBody.create(httpRequester.jsonType, json))
-            .build()
-        return httpRequester.httpRequestAsync(request) {
-            logger.info("SongCast: chat message sent: ${payload.text}")
-        }
+        return requester.postChatMessageAsync(payload)
     }
 
     fun promoteMemberAsync(memberPubId: String): Deferred<Result<Unit>> {
-        val deviceId = deviceIdProvider.getDeviceId()
-        val request: Request = Request.Builder()
-            .url(promoteMemberUrl(sessionCode ?: "", memberPubId))
-            .header(authDeviceHeader, deviceId)
-            .post(RequestBody.create(null, ""))
-            .build()
-        return httpRequester.httpRequestAsync(request) {
-            logger.info("SongCast: member promoted: $memberPubId")
-        }
+        return requester.promoteMemberAsync(memberPubId)
     }
 
     fun reportSongOpened(song: Song) {
@@ -575,7 +433,7 @@ class SongCastService(
 
         sessionState.castSongDto?.let { castSongDto ->
             ephemeralSong?.let { ephemeralSong ->
-                val member = findMemberByPublicId(castSongDto.chosen_by)
+                val member = sessionState.members.find { it.public_member_id == castSongDto.chosen_by }
                 allEvents.add(
                     SongLogEvent(
                         timestamp = ephemeralSong.createTime / 1000,

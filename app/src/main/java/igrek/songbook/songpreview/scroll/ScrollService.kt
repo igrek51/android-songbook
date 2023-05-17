@@ -34,6 +34,7 @@ class ScrollService(
     songCastService: LazyInject<SongCastService> = appFactory.songCastService,
 ) {
     private val songCastService by LazyExtractor(songCastService)
+    private val preferencesState by LazyExtractor(appFactory.preferencesState)
 
     private val logger: Logger = LoggerFactory.logger
     private val scrollSubject = PublishSubject.create<Float>()
@@ -66,14 +67,14 @@ class ScrollService(
     }
 
     private fun onPartiallyScrolled(scrolledByLines: Float) {
-        if (songCastService.isPresenting() && songCastService.presenterFocusControl != CastScrollControl.NONE) {
+        if (songCastService.isPresenting() && preferencesState.castScrollControl != CastScrollControl.NONE) {
             shareScrollControl()
         }
     }
 
     private fun shareScrollControl() {
         GlobalScope.launch {
-            val payload: CastScroll = when (songCastService.presenterFocusControl) {
+            val payload: CastScroll = when (preferencesState.castScrollControl) {
                 CastScrollControl.SHARE_SCROLL -> getVisibleShareScroll()
                 CastScrollControl.SLIDES_1 -> getVisibleSlidesScroll(1)
                 CastScrollControl.SLIDES_2 -> getVisibleSlidesScroll(2)
@@ -121,7 +122,7 @@ class ScrollService(
             view_start = primalStartIndex.toFloat() + linesStartFraction,
             view_end = primalEndIndex.toFloat() + linesEndFractoin,
             visible_text = visibleText,
-            mode = songCastService.presenterFocusControl.id,
+            mode = preferencesState.castScrollControl.id,
         )
     }
 
@@ -135,7 +136,7 @@ class ScrollService(
                 view_start = 0f,
                 view_end = 0f,
                 visible_text = "",
-                mode = songCastService.presenterFocusControl.id,
+                mode = preferencesState.castScrollControl.id,
             )
         }
 
@@ -156,7 +157,7 @@ class ScrollService(
             view_start = primalIndexTop.toFloat(),
             view_end = primalIndexBottom.toFloat(),
             visible_text = visibleText,
-            mode = songCastService.presenterFocusControl.id,
+            mode = preferencesState.castScrollControl.id,
         )
     }
 

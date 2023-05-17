@@ -50,6 +50,7 @@ class QuickMenuCast(
     songCastService: LazyInject<SongCastService> = appFactory.songCastService,
 ) {
     val songCastService by LazyExtractor(songCastService)
+    val preferencesState by LazyExtractor(appFactory.preferencesState)
 
     var isVisible = false
         set(visible) {
@@ -85,7 +86,7 @@ private fun MainComponent(controller: QuickMenuCast) {
         Text(stringResource(R.string.songcast_settings))
 
         var expanded by remember { mutableStateOf(false) }
-        val selectedOptionText = stringResource(controller.songCastService.presenterFocusControl.descriptionResId)
+        val selectedOptionText = stringResource(controller.preferencesState.castScrollControl.descriptionResId)
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = {
@@ -115,7 +116,7 @@ private fun MainComponent(controller: QuickMenuCast) {
                     DropdownMenuItem(
                         text = { Text(stringResource(enumOption.descriptionResId)) },
                         onClick = {
-                            controller.songCastService.presenterFocusControl = enumOption
+                            controller.preferencesState.castScrollControl = enumOption
                             expanded = false
                         },
                     )

@@ -23,12 +23,16 @@ class StreamSocket(
     private val debug: Boolean = false
     private var connectJob: Job? = null
 
+    companion object {
+        const val songbookApiBase = "https://songbook.igrek.dev"
+    }
+
     fun connect(sessionCode: String) {
         connectJob = GlobalScope.launch(Dispatchers.IO) {
             safeExecute {
                 val opts = IO.Options()
                 opts.path = "/socket.io/cast"
-                val socket = IO.socket(SongCastService.songbookApiBase, opts)
+                val socket = IO.socket(songbookApiBase, opts)
                 ioSocket = socket
                 initialized = false
 
