@@ -7,6 +7,7 @@ import android.view.View
 import android.view.animation.OvershootInterpolator
 import androidx.recyclerview.widget.RecyclerView
 import igrek.songbook.cast.SongCastService
+import igrek.songbook.chords.model.LyricsLine
 import igrek.songbook.chords.model.LyricsModel
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -146,6 +147,8 @@ class SongPreview(
     private var slideTargetText: String = ""
     private var slideAnimationProgress: Float = 1f
     private val isSlidesMode: Boolean get() = slideTargetIndex >= 0
+    var castSlideMarkedLineTop: Int = 0
+    var castSlideMarkedLineBottom: Int = 0
 
     fun reset() {
         canvas.reset()
@@ -158,11 +161,13 @@ class SongPreview(
         lyricsModel = LyricsModel()
         textBottomY.invalidate()
         textRightX.invalidate()
-        slideAnimationProgress = 1f
         slideCurrentIndex = -1
         slideTargetIndex = -1
         slideCurrentText = ""
         slideTargetText = ""
+        slideAnimationProgress = 1f
+        castSlideMarkedLineTop = 0
+        castSlideMarkedLineBottom = 0
     }
 
     private fun onRepaint() {

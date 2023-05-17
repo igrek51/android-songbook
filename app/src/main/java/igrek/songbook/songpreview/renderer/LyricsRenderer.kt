@@ -71,8 +71,8 @@ class LyricsRenderer internal constructor(
             ColorScheme.BRIGHT -> 0xa03A82C5.toInt()
         }
         castFocusZoneColor = when (colorScheme) {
-            ColorScheme.DARK -> 0x803A82C5.toInt()
-            ColorScheme.BRIGHT -> 0x803A82C5.toInt()
+            ColorScheme.DARK -> 0x703A82C5L.toInt()
+            ColorScheme.BRIGHT -> 0x703A82C5L.toInt()
         }
     }
 
@@ -86,7 +86,8 @@ class LyricsRenderer internal constructor(
 
         drawScrollBars()
         if (songPreview.isCastPresentingSlides)
-            drawCastFocusZone(lineheightPx, songPreview.scroll, preferencesState.castScrollControl.slideLines)
+            drawCastFocusZone(lineheightPx, songPreview.scroll,
+                preferencesState.castScrollControl.slideLines)
         if (preferencesState.autoscrollShowEyeFocus)
             drawEyeFocusZone(lineheightPx)
         drawFileContent(lyricsModel, fontsizePx, lineheightPx)
@@ -227,9 +228,12 @@ class LyricsRenderer internal constructor(
         canvas.setColor(castFocusLineColor)
         canvas.fillRect(0f, focusLineTop, w, focusLineBottom)
 
-        val scrollRemainder = scroll % lineheight
-        val blockYTop = topEdge - scrollRemainder + yOffset
-        val blockYBottom = blockYTop + lineheight * slideLines
+        val topLineIndex = songPreview.castSlideMarkedLineTop
+        val bottomLineIndex = songPreview.castSlideMarkedLineBottom
+        val markedLinesNum = bottomLineIndex - topLineIndex + 1
+
+        val blockYTop = topEdge + yOffset + topLineIndex * lineheight - scroll
+        val blockYBottom = blockYTop + lineheight * markedLinesNum
         canvas.setColor(castFocusZoneColor)
         canvas.fillRect(0f, blockYTop, w, blockYBottom)
         canvas.borderRect(castFocusLineColor, 0f, blockYTop, w, blockYBottom, thickness=4f)

@@ -4,8 +4,8 @@ package igrek.songbook.songpreview.autoscroll
 
 import android.annotation.SuppressLint
 import igrek.songbook.R
-import igrek.songbook.cast.CastScrollControl
 import igrek.songbook.cast.CastScroll
+import igrek.songbook.cast.CastScrollControl
 import igrek.songbook.cast.SongCastService
 import igrek.songbook.chords.model.LyricsLine
 import igrek.songbook.chords.model.LyricsModel
@@ -56,67 +56,12 @@ class ScrollService(
             }, UiErrorHandler::handleError)
 
         aggregatedScrollSubject
-            .throttleLast(700, TimeUnit.MILLISECONDS)
+            .throttleLast(600, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 onPartiallyScrolled(it)
                 scrolledBuffer = 0f
             }, UiErrorHandler::handleError)
-    }
-
-    private fun getVisibleShareScroll(): CastScroll? {
-        val songPreview = appFactory.songPreviewLayoutController.g.songPreview ?: return null
-        val lyricsLoader = appFactory.lyricsLoader.g
-        val lyricsModel = songPreview.lyricsModel
-
-        val firstVisibleLine: Float = songPreview.scrollEm.applyMin(0f)
-        val lastVisibleLine: Float = songPreview.lastVisibleLine.applyMin(0f)
-        val linesStartIndex: Int = floor(firstVisibleLine).roundToInt()
-        val linesEndIndex: Int = floor(lastVisibleLine).roundToInt()
-        val linesStartFraction: Float = firstVisibleLine - linesStartIndex
-        val linesEndFractoin: Float = lastVisibleLine - linesEndIndex
-
-        val visualLines: List<LyricsLine> = lyricsModel.lines.filterIndexed { index, _ ->
-            index in linesStartIndex..linesEndIndex
-        }
-
-        val primalStartIndex: Int = visualLines.minOfOrNull { it.primalIndex } ?: 0
-        val primalEndIndex: Int = visualLines.maxOfOrNull { it.primalIndex } ?: 0
-
-        val primalLines = lyricsLoader.originalLyrics.lines.filterIndexed { index, _ ->
-            index in primalStartIndex..primalEndIndex
-        }
-
-        val visibleText = primalLines.joinToString("\n") {
-            it.displayString()
-        }
-
-        return CastScroll(
-            view_start = primalStartIndex.toFloat() + linesStartFraction,
-            view_end = primalEndIndex.toFloat() + linesEndFractoin,
-            visible_text = visibleText,
-            mode = songCastService.presenterFocusControl.id,
-        )
-    }
-    private fun getVisibleSlidesScroll(visualLinesCount: Int): CastScroll? {
-        val songPreview = appFactory.songPreviewLayoutController.g.songPreview ?: return null
-        val lyricsModel: LyricsModel = songPreview.lyricsModel
-        val lineheight = songPreview.lineheightPx
-        val wholeLinesSkipped = (songPreview.scroll / lineheight).toInt().takeIf { it >= 0 } ?: 0
-
-        val visualLines: List<LyricsLine> = lyricsModel.lines.filterIndexed { index, _ ->
-            wholeLinesSkipped <= index && index < wholeLinesSkipped + visualLinesCount
-        }
-        val visibleText = visualLines.joinToString("\n") {
-            it.displayString()
-        }
-
-        return CastScroll(
-            view_start = wholeLinesSkipped.toFloat(),
-            view_end = (wholeLinesSkipped + visualLinesCount).toFloat(),
-            visible_text = visibleText,
-            mode = songCastService.presenterFocusControl.id,
-        )
     }
 
     private fun onPartiallyScrolled(scrolledByLines: Float) {
@@ -145,6 +90,81 @@ class ScrollService(
             })
         }
     }
+
+    private fun getVisibleShareScroll(): CastScroll? {
+        val songPreview = appFactory.songPreviewLayoutController.g.songPreview ?: return null
+        val lyricsLoader = appFactory.lyricsLoader.g
+        val lyricsModel = songPreview.lyricsModel
+
+        val firstVisibleLine: Float = songPreview.scrollEm.applyMin(0f)
+        val lastVisibleLine: Float = songPreview.lastVisibleLine.applyMin(0f)
+        val linesStartIndex: Int = floor(firstVisibleLine).roundToInt()
+        val linesEndIndex: Int = floor(lastVisibleLine).roundToInt()
+        val linesStartFraction: Float = firstVisibleLine - linesStartIndex
+        val linesEndFractoin: Float = lastVisibleLine - linesEndIndex
+
+        val visualLines: List<LyricsLine> = lyricsModel.lines.filterIndexed { index, _ ->
+            index in linesStartIndex..linesEndIndex
+        }
+
+        val primalStartIndex: Int = visualLines.minOfOrNull { it.primalIndex } ?: 0
+        val primalEndIndex: Int = visualLines.maxOfOrNull { it.primalIndex } ?: 0
+        val primalLines = lyricsLoader.originalLyrics.lines.filterIndexed { index, _ ->
+            index in primalStartIndex..primalEndIndex
+        }
+        val visibleText = primalLines.joinToString("\n") {
+            it.displayString()
+        }
+
+        return CastScroll(
+            view_start = primalStartIndex.toFloat() + linesStartFraction,
+            view_end = primalEndIndex.toFloat() + linesEndFractoin,
+            visible_text = visibleText,
+            mode = songCastService.presenterFocusControl.id,
+        )
+    }
+
+    private fun getVisibleSlidesScroll(visualLinesCount: Int): CastScroll? {
+        val songPreview = appFactory.songPreviewLayoutController.g.songPreview ?: return null
+        val lyricsLoader = appFactory.lyricsLoader.g
+        val lyricsModel: LyricsModel = songPreview.lyricsModel
+        val lineheight = songPreview.lineheightPx
+        val wholeLinesSkipped = (songPreview.scroll / lineheight).toInt().takeIf { it >= 0 } ?: 0
+
+        val focusedLine = lyricsModel.lines.getOrNull(wholeLinesSkipped)
+            ?: return CastScroll(
+                view_start = 0f,
+                view_end = 0f,
+                visible_text = "",
+                mode = songCastService.presenterFocusControl.id,
+            )
+
+        val primalIndexStart: Int = focusedLine.primalIndex
+        val primalIndexEnd: Int = primalIndexStart + visualLinesCount - 1
+
+        val primalLines = lyricsLoader.originalLyrics.lines.filterIndexed { index, _ ->
+            index in primalIndexStart..primalIndexEnd
+        }
+        val visibleText = primalLines.joinToString("\n") {
+            it.displayString()
+        }
+        val markedLineIndexStart = lyricsModel.lines.indexOfFirst { it.primalIndex == primalIndexStart }
+        val markedLineIndexEnd = lyricsModel.lines.indexOfLast { it.primalIndex == primalIndexEnd }
+        songPreview.castSlideMarkedLineTop = markedLineIndexStart
+        songPreview.castSlideMarkedLineBottom = markedLineIndexEnd
+
+        GlobalScope.launch (Dispatchers.Main) {
+            songPreview.canvas.repaint()
+        }
+
+        return CastScroll(
+            view_start = primalIndexStart.toFloat(),
+            view_end = primalIndexEnd.toFloat(),
+            visible_text = visibleText,
+            mode = songCastService.presenterFocusControl.id,
+        )
+    }
+
 
     fun adaptToScrollControl(viewStart: Float, viewEnd: Float, visibleText: String?, modeId: Long?) {
         when (modeId) {
