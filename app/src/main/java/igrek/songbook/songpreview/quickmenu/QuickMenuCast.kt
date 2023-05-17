@@ -40,22 +40,16 @@ import igrek.songbook.cast.SongCastLobbyLayout
 import igrek.songbook.cast.SongCastService
 import igrek.songbook.compose.AppTheme
 import igrek.songbook.compose.md_theme_light_primaryContainer
-import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.safeAsyncExecutor
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import igrek.songbook.settings.preferences.PreferencesState
 
 // Singleton
 class QuickMenuCast(
-    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     songCastService: LazyInject<SongCastService> = appFactory.songCastService,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
-    private val uiInfoService by LazyExtractor(uiInfoService)
     val songCastService by LazyExtractor(songCastService)
-    private val preferencesState by LazyExtractor(preferencesState)
 
     var isVisible = false
         set(visible) {
@@ -88,10 +82,10 @@ class QuickMenuCast(
 @Composable
 private fun MainComponent(controller: QuickMenuCast) {
     Column(Modifier.padding(8.dp)) {
-        Text("Song Cast settings")
+        Text(stringResource(R.string.songcast_settings))
 
         var expanded by remember { mutableStateOf(false) }
-        val selectedOptionText = controller.songCastService.presenterFocusControl.desctiption
+        val selectedOptionText = stringResource(controller.songCastService.presenterFocusControl.descriptionResId)
         ExposedDropdownMenuBox(
             expanded = expanded,
             onExpandedChange = {
@@ -103,7 +97,7 @@ private fun MainComponent(controller: QuickMenuCast) {
                 readOnly = true,
                 value = selectedOptionText,
                 onValueChange = {},
-                label = { Text("Remote Control") },
+                label = { Text(stringResource(R.string.songcast_remote_control)) },
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(
                         expanded = expanded
@@ -119,7 +113,7 @@ private fun MainComponent(controller: QuickMenuCast) {
             ) {
                 CastScrollControl.values().forEach { enumOption ->
                     DropdownMenuItem(
-                        text = { Text(text = enumOption.desctiption) },
+                        text = { Text(stringResource(enumOption.descriptionResId)) },
                         onClick = {
                             controller.songCastService.presenterFocusControl = enumOption
                             expanded = false
@@ -129,7 +123,8 @@ private fun MainComponent(controller: QuickMenuCast) {
             }
         }
 
-        SwitchWithLabel("Follow presenter's scroll", controller.songCastService.clientFollowScroll) {
+        SwitchWithLabel(stringResource(R.string.songcast_follow_presenters_scroll),
+            controller.songCastService.clientFollowScroll) {
             controller.songCastService.clientFollowScroll = it
         }
 
@@ -161,20 +156,15 @@ private fun SwitchWithLabel(label: String, state: Boolean, onStateChange: (Boole
                 interactionSource = interactionSource,
                 indication = null, // This is for removing ripple when Row is clicked
                 role = Role.Switch,
-                onClick = {
-                    onStateChange(!state)
-                }
-            )
-            .padding(8.dp),
+                onClick = { onStateChange(!state) }
+            ).padding(8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(text = label)
         Spacer(modifier = Modifier.padding(start = 8.dp))
         Switch(
             checked = state,
-            onCheckedChange = {
-                onStateChange(it)
-            }
+            onCheckedChange = { onStateChange(it) }
         )
     }
 }

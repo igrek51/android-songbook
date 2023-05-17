@@ -147,7 +147,7 @@ class SongCastLobbyLayout(
 
     private fun updateSessionDetails() {
         val songName = when (songCastService.sessionState.castSongDto) {
-            null -> "None"
+            null -> uiInfoService.resString(R.string.songcast_songname_none)
             else -> "${songCastService.sessionState.castSongDto?.title} - ${songCastService.sessionState.castSongDto?.artist}"
         }
         state.currentSongName = songName
@@ -252,9 +252,7 @@ class SongCastLobbyState {
 private fun MainComponent(controller: SongCastLobbyLayout) {
     Column {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
             when (controller.state.isPresenter) {
@@ -278,9 +276,7 @@ private fun MainComponent(controller: SongCastLobbyLayout) {
             ),
             trailingIcon = {
                 IconButton(
-                    onClick = {
-                        controller.copySessionCode()
-                    },
+                    onClick = { controller.copySessionCode() },
                 ) {
                     Icon(
                         painterResource(id = R.drawable.copy),

@@ -3,6 +3,7 @@ package igrek.songbook.cast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import igrek.songbook.R
 import igrek.songbook.admin.HttpRequester
 import igrek.songbook.info.UiInfoService
@@ -529,21 +530,22 @@ class SongCastService(
 
     fun generateChatEvents(): List<LogEvent> {
         val allEvents = mutableListOf<LogEvent>()
+        val youName = uiInfoService.resString(R.string.songcast_you)
         allEvents.addAll(
             presenters.map {
-                val name = if (it.public_member_id == myMemberPublicId) "${it.name} (You)" else it.name
+                val name = if (it.public_member_id == myMemberPublicId) "${it.name} ($youName)" else it.name
                 SystemLogEvent(
                     timestamp = this.joinTimestamp,
-                    text = "$name joined the room as Presenter",
+                    text = uiInfoService.resString(R.string.songcast_joined_the_room_as_presenter, name),
                 )
             }
         )
         allEvents.addAll(
             spectators.map {
-                val name = if (it.public_member_id == myMemberPublicId) "${it.name} (You)" else it.name
+                val name = if (it.public_member_id == myMemberPublicId) "${it.name} ($youName)" else it.name
                 SystemLogEvent(
                     timestamp = this.joinTimestamp,
-                    text = "$name joined the room as Spectator",
+                    text = uiInfoService.resString(R.string.songcast_joined_the_room_as_spectator, name),
                 )
             }
         )

@@ -492,4 +492,81 @@
     <string name="settings_restore_custom_songs_backup">Przywróć \"Moje Piosenki\" z lokalnej kopii</string>
     <string name="action_copy_dialog">Kopiuj</string>
     <string name="nav_song_cast">Song Cast</string>
+    <string name="songcast_create_new_room">Stwórz pokój</string>
+    <string name="songcast_enter_room_number_to_join">Wprowadź 6-cyfrowy kod, aby dołączyć do pokoju:</string>
+    <string name="songcast_create_room_hint">Rozpocznij nową sesję Song Cast, aby inni mogli do niej dołączyć.</string>
+    <string name="songcast_room_code_hint">Kod pokoju</string>
+    <string name="songcast_hint_my_name">Twoje imię</string>
+    <string name="songcast_join_room">Dołącz do pokoju</string>
+    <string name="songcast_feature_hint"><![CDATA[
+    <b>Song Cast</b> to protokół Songbooka umożliwiający wyświetlanie piosenek na wielu urządzeniach. Stwórz pokój, aby inni uczestnicy mogli do niego dołączyć. Gdy prezenter wybierze piosenkę, zostanie ona wyświetlona na wszystkich urządzeniach podłączonych do pokoju.
+]]></string>
+    <string name="songcast_lobby">Song Cast Lobby</string>
+    <string name="songcast_room_created">Pokój utworzony. Welcome to the Machine, %s.</string>
+    <string name="songcast_room_created_rejoined">Znaleźliśmy twój poprzedni pokój. Witaj ponownie, %s.</string>
+    <string name="songcast_creating_room">Tworzenie pokoju…</string>
+    <string name="songcast_lobby_text_presenter_hint"><![CDATA[
+    Jesteś <b>Prezenterem</b> w tym pokoju. Gdy tylko otworzysz piosenkę, pozostali uczestnicy również ją zobaczą.
+    <br>
+    Udostępnij kod pokoju z innymi członkami, aby mogli do niego dołączyć jako <b>Obserwatorzy</b>.
+]]></string>
+    <string name="songcast_lobby_text_guest_hint"><![CDATA[
+    Jesteś <b>Obserwatorem</b> w tym pokoju. Poczekaj aż Prezenter wybierze piosenkę.
+]]></string>
+    <string name="songcast_code_copied">Kod pokoju skopiowany do schowka</string>
+    <string name="songcast_room_code_empty">Wprowadź 6-cyfrowy kod pokoju</string>
+    <string name="songcast_room_code_invalid">Kod pokoju jest nieprawidłowy, oczekiwano 6-cyfrowego numeru</string>
+    <string name="songcast_joining_room">Dołączenie do pokoju…</string>
+    <string name="songcast_room_joined">Welcome to the Machine, %s.</string>
+    <string name="songcast_room_joined_rejoined">Witaj ponownie, %s.</string>
+    <string name="songcast_room_not_found">Pokój z podanym kodem nie został znaleziony</string>
+    <string name="songcast_you_left_the_room">Opuściłeś pokój.</string>
+    <string name="songcast_exit_room">Opuść pokój</string>
+    <string name="songcast_confirm_leave_room">Masz zamiar opuścić pokój Song Cast. Czy na pewno chcesz go zamknąć?</string>
+    <string name="songcast_members_presenters">Prezenterzy:</string>
+    <string name="songcast_members_spectators">Obserwatorzy:</string>
+    <string name="songcast_randomize_name">Wylosuj imię</string>
+    <string name="button_more_description">Więcej</string>
+    <string name="button_menu_description">Menu</string>
+    <string name="songcast_current_song" formatted="false">Obecna piosenka: %s</string>
+    <string name="songcast_open_current_song">%s</string>
+    <string name="songcast_chat_message_sending">Wysyłanie…</string>
+    <string name="songcast_chat_message_sent">Wiadomość wysłana</string>
+    <string name="songcast_send_chat_icon_description">Wyślij wiadomość</string>
+    <string name="songcast_hint_chat_message">Czat</string>
+    <string name="songcast_refresh_session_details">Odśwież</string>
+    <string name="songcast_new_member_joined">%s dołączył do pokoju.</string>
+    <string name="songcast_member_dropped">%s opuścił pokój.</string>
+    <string name="songcast_new_chat_message" formatted="false">Czat: %s: %s</string>
+    <string name="songcast_song_selected" formatted="false">%s otworzył piosenkę: %s</string>
+    <string name="songcast_chat_message_empty">Wpisz wiadomość</string>
+    <string name="songcast_room_is_still_open">SongCast jest zminimalizowany i działa w tle.</string>
+    <string name="songcast_connection_context">Połączenie SongCast nie powiodło się</string>
+    <string name="songcast_leave_or_minimize_room">Jesteś w pokoju Song Cast.\nCzy chcesz opuścić go, czy pozostać połączonym i zminimalizować go?</string>
+    <string name="songcast_action_leave">Opuść</string>
+    <string name="songcast_action_stay">Pozostań</string>
+    <string name="songcast_leave_or_stay_title">Should I stay or should I go?</string>
+    <string name="songcast_reconnecting_to_room">Ponowne łączenie z Song Cast…</string>
+    <string name="songcast_restoring_room">Przywracanie sesji…</string>
+    <string name="songcast_restoring_room_not_found">Brak aktywnego pokoju, w którym jesteś uczestnikiem. Stwórz nowy.</string>
+    <string name="songcast_restore_room_hint">Jeśli zostałeś odłączony z pokoju z jakichś powodów, możesz odzyskać dostęp bez podawania kodu.</string>
+    <string name="songcast_restore_a_room">Przywróć pokój</string>
+    <string name="songcast_open_lobby">Song Cast Lobby</string>
+    <string name="songcast_host_tab">Załóż</string>
+    <string name="songcast_join_tab">Dołącz</string>
+    <string name="songcast_restore_tab">Przywróć</string>
+    <string name="songcast_open_last_song">Otwórz ostatnią piosenkę</string>
+    <string name="songcast_scrollcontrol_none">Brak</string>
+    <string name="songcast_scrollcontrol_scroll">Udostępnij przewijanie</string>
+    <string name="songcast_scrollcontrol_slides1">Tryb slajdów: 1 linia</string>
+    <string name="songcast_scrollcontrol_slides2">Tryb slajdów: 2 linie</string>
+    <string name="songcast_scrollcontrol_slides4">Tryb slajdów: 4 linie</string>
+    <string name="songcast_scrollcontrol_slides8">Tryb slajdów: 8 linii</string>
+    <string name="songcast_remote_control">Zdalna Kontrola</string>
+    <string name="songcast_follow_presenters_scroll">Podążaj za przewijaniem prezentera</string>
+    <string name="songcast_settings">Ustawienia Song Cast</string>
+    <string name="songcast_songname_none">Brak</string>
+    <string name="songcast_you">Ty</string>
+    <string name="songcast_joined_the_room_as_presenter">%s dołączył do pokoju jako Prezenter</string>
+    <string name="songcast_joined_the_room_as_spectator">%s dołączył do pokoju jako Obserwator</string>
 </resources>

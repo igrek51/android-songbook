@@ -1,17 +1,19 @@
 package igrek.songbook.cast
 
+import igrek.songbook.R
+
 enum class CastScrollControl(
     val id: Long,
-    val desctiption: String,
     val slideLines: Int,
+    val descriptionResId: Int,
 ) {
 
-    NONE(0, "None", 0),
-    SHARE_SCROLL(1, "Share your scroll", 0),
-    SLIDES_1(2, "Slides mode: 1 line", 1),
-    SLIDES_2(3, "Slides mode: 2 lines", 2),
-    SLIDES_4(4, "Slides mode: 4 lines", 4),
-    SLIDES_8(5, "Slides mode: 8 lines", 8),
+    NONE(0, 0, R.string.songcast_scrollcontrol_none),
+    SHARE_SCROLL(1, 0, R.string.songcast_scrollcontrol_scroll),
+    SLIDES_1(2, 1, R.string.songcast_scrollcontrol_slides1),
+    SLIDES_2(3, 2, R.string.songcast_scrollcontrol_slides2),
+    SLIDES_4(4, 4, R.string.songcast_scrollcontrol_slides4),
+    SLIDES_8(5, 8, R.string.songcast_scrollcontrol_slides8),
     ;
 
     companion object {
