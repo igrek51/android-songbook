@@ -511,11 +511,12 @@ class SongCastService(
         }
         if (oldState.currentScroll != newState.currentScroll) {
             val scrollDto = newState.currentScroll
+            val chordsNotation = ephemeralSong?.chordsNotation ?: ChordsNotation.default
             if (scrollDto != null) {
                 if (clientFollowScroll && !isPresenting() && layoutController.isState(SongPreviewLayoutController::class)) {
                     logger.debug("Scrolling by SongCast event: ${scrollDto.view_start}")
                     appFactory.scrollService.g.adaptToScrollControl(
-                        scrollDto.view_start, scrollDto.view_end, scrollDto.visible_text, scrollDto.mode,
+                        scrollDto.view_start, scrollDto.view_end, scrollDto.visible_text, scrollDto.mode, chordsNotation,
                     )
                 }
             }

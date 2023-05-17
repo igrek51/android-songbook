@@ -7,11 +7,13 @@ import android.view.View
 import android.view.animation.OvershootInterpolator
 import androidx.recyclerview.widget.RecyclerView
 import igrek.songbook.cast.SongCastService
+import igrek.songbook.chords.loader.LyricsLoader
 import igrek.songbook.chords.model.LyricsModel
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.playlist.PlaylistService
+import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.preferences.PreferencesState
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
@@ -44,6 +46,7 @@ class SongPreview(
     playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
     songCastService: LazyInject<SongCastService> = appFactory.songCastService,
+    lyricsLoader: LazyInject<LyricsLoader> = appFactory.lyricsLoader,
 ) : View.OnTouchListener {
     private val autoscroll by LazyExtractor(autoscrollService)
     private val quickMenuTranspose by LazyExtractor(quickMenuTranspose)
@@ -54,6 +57,7 @@ class SongPreview(
     private val playlistService by LazyExtractor(playlistService)
     private val preferencesState by LazyExtractor(preferencesState)
     private val songCastService by LazyExtractor(songCastService)
+    private val lyricsLoader by LazyExtractor(lyricsLoader)
 
     val canvas: CanvasView = CanvasView(context, onInit, ::onRepaint, onPreviewSizeChanged)
     private var lyricsRenderer: LyricsRenderer = LyricsRenderer(this, canvas, preferencesState.get())
@@ -145,6 +149,8 @@ class SongPreview(
     private var slideTargetIndex: Int = -1
     private var slideCurrentText: String = ""
     private var slideTargetText: String = ""
+    var slideCurrentModel: LyricsModel = LyricsModel()
+    var slideTargetModel: LyricsModel = LyricsModel()
     private var slideAnimationProgress: Float = 1f
     private val isSlidesMode: Boolean get() = slideTargetIndex >= 0
     var castSlideMarkedLineTop: Int = -1
@@ -168,6 +174,8 @@ class SongPreview(
         slideAnimationProgress = 1f
         castSlideMarkedLineTop = -1
         castSlideMarkedLineBottom = -1
+        slideCurrentModel = LyricsModel()
+        slideTargetModel = LyricsModel()
     }
 
     private fun onRepaint() {
@@ -461,7 +469,7 @@ class SongPreview(
         canvas.repaint()
     }
 
-    fun showSlide(slideIndex: Int, slideText: String) {
+    fun showSlide(slideIndex: Int, slideText: String, srcNotation: ChordsNotation) {
         if (this.slideTargetIndex == -1) {
             this.slideCurrentIndex = slideIndex
             this.slideTargetIndex = slideIndex
@@ -470,8 +478,11 @@ class SongPreview(
             this.slideAnimationProgress = 1f
         } else {
             this.slideCurrentText = this.slideTargetText
+            this.slideCurrentIndex = this.slideTargetIndex
+            this.slideCurrentModel = this.slideTargetModel
             this.slideTargetIndex = slideIndex
             this.slideTargetText = slideText
+            this.slideTargetModel = lyricsLoader.loadEphemeralLyrics(slideText, w, srcNotation)
             this.slideAnimationProgress = 0f
         }
         GlobalScope.launch (Dispatchers.Main) {

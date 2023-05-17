@@ -12,6 +12,8 @@ class LyricsExtractor(
 
     fun parseLyrics(content: String): LyricsModel {
         val normalized = if (trimWhitespaces) normalizeContent(content) else content
+        if (normalized.isEmpty())
+            return LyricsModel()
         val rawLines = normalized.lines().dropLastWhile { it.isEmpty() }
         return parseLines(rawLines)
     }

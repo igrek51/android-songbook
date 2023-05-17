@@ -251,26 +251,75 @@ class LyricsRenderer internal constructor(
         slideCurrentText: String,
         slideTargetText: String,
         slideAnimationProgress: Float,
-        lineheightPx: Float,
-        fontsizePx: Float,
+        lineheight: Float,
+        fontsize: Float,
     ) {
         drawBackground()
 
-        val targetLines = slideTargetText.split("\n")
-        val linesNum = targetLines.size
+        val linesNum = songPreview.slideTargetModel.lines.size
+        val yOffset = h / 2 - linesNum * lineheight / 2
 
-        canvas.setFontSize(fontsizePx)
+        canvas.setFontSize(fontsize)
         canvas.setFontTypeface(normalTypeface)
         canvas.setColor(textColor)
 
-        targetLines.forEachIndexed { lineIndex, line ->
-            val lineY = h/2 - linesNum * lineheightPx / 2 + lineIndex * lineheightPx
-            canvas.drawText(
-                line,
-                w/2,
-                lineY,
-                Align.HCENTER,
-            )
+        songPreview.slideTargetModel.lines.forEachIndexed { lineIndex, line ->
+            drawSlidesLine(line, lineIndex, yOffset, fontsize, lineheight)
+        }
+    }
+
+    private fun drawSlidesLine(
+        line: LyricsLine,
+        lineIndex: Int,
+        yOffset: Float,
+        fontsize: Float,
+        lineheight: Float
+    ) {
+        val y = yOffset + lineIndex * lineheight
+        val scrollX = canvas.scrollX
+
+        if (line.fragments.isNotEmpty()) {
+            val lastFragment = line.fragments[line.fragments.size - 1]
+            if (lastFragment.type == LyricsTextType.LINEWRAPPER) {
+                canvas.setFontTypeface(normalTypeface)
+                canvas.setColor(linewrapperColor)
+                canvas.drawText(lastFragment.text, w - 4, y + 0.9f * lineheight, Align.RIGHT)
+            }
+        }
+        for (fragment in line.fragments) {
+            when (fragment.type) {
+                LyricsTextType.REGULAR_TEXT -> {
+                    canvas.setFontTypeface(normalTypeface)
+                    canvas.setColor(textColor)
+                    canvas.drawText(
+                        fragment.text,
+                        fragment.x * fontsize - scrollX,
+                        y + lineheight,
+                        Align.LEFT,
+                    )
+                }
+                LyricsTextType.CHORDS -> {
+                    canvas.setFontTypeface(boldTypeface)
+                    canvas.setColor(chordColor)
+                    val x = if (preferencesState.chordsDisplayStyle == DisplayStyle.ChordsAlignedRight) {
+                        fragment.x * fontsize - songPreview.scrollThickness - scrollX
+                    } else {
+                        fragment.x * fontsize - scrollX
+                    }
+                    canvas.drawText(fragment.text, x, y + lineheight, Align.LEFT)
+                }
+                LyricsTextType.COMMENT -> {
+                    canvas.setFontTypeface(italicTypeface)
+                    canvas.setColor(commentColor)
+                    canvas.drawText(
+                        fragment.text,
+                        fragment.x * fontsize - scrollX,
+                        y + lineheight,
+                        Align.LEFT,
+                    )
+                }
+                LyricsTextType.LINEWRAPPER -> {}
+            }
         }
     }
 }

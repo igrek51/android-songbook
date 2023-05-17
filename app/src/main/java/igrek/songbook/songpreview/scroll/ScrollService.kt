@@ -15,6 +15,7 @@ import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.songpreview.renderer.SongPreview
 import igrek.songbook.util.applyMin
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -160,13 +161,13 @@ class ScrollService(
     }
 
 
-    fun adaptToScrollControl(viewStart: Float, viewEnd: Float, visibleText: String?, modeId: Long?) {
+    fun adaptToScrollControl(viewStart: Float, viewEnd: Float, visibleText: String?, modeId: Long?, srcNotation: ChordsNotation) {
         when (modeId) {
             CastScrollControl.SHARE_SCROLL.id -> adaptToShareScrollControl(viewStart)
-            CastScrollControl.SLIDES_1.id -> adaptToSlideScrollControl(viewStart, visibleText)
-            CastScrollControl.SLIDES_2.id -> adaptToSlideScrollControl(viewStart, visibleText)
-            CastScrollControl.SLIDES_4.id -> adaptToSlideScrollControl(viewStart, visibleText)
-            CastScrollControl.SLIDES_8.id -> adaptToSlideScrollControl(viewStart, visibleText)
+            CastScrollControl.SLIDES_1.id -> adaptToSlideScrollControl(viewStart, visibleText, srcNotation)
+            CastScrollControl.SLIDES_2.id -> adaptToSlideScrollControl(viewStart, visibleText, srcNotation)
+            CastScrollControl.SLIDES_4.id -> adaptToSlideScrollControl(viewStart, visibleText, srcNotation)
+            CastScrollControl.SLIDES_8.id -> adaptToSlideScrollControl(viewStart, visibleText, srcNotation)
             else -> return
         }
     }
@@ -192,10 +193,10 @@ class ScrollService(
         }
     }
 
-    private fun adaptToSlideScrollControl(viewStart: Float, visibleText: String?) {
+    private fun adaptToSlideScrollControl(viewStart: Float, visibleText: String?, srcNotation: ChordsNotation) {
         val slideIndex = viewStart.toInt()
         val songPreview: SongPreview = appFactory.songPreviewLayoutController.g.songPreview ?: return
-        songPreview.showSlide(slideIndex, visibleText ?: "")
+        songPreview.showSlide(slideIndex, visibleText ?: "", srcNotation)
     }
 
 }

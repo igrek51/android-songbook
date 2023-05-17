@@ -1,5 +1,6 @@
 package igrek.songbook.chords.loader
 
+import android.graphics.Typeface
 import igrek.songbook.chords.arranger.LyricsArranger
 import igrek.songbook.chords.detect.KeyDetector
 import igrek.songbook.chords.model.LyricsCloner
@@ -17,6 +18,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.theme.DisplayStyle
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.scroll.AutoscrollService
 import igrek.songbook.system.WindowManagerService
@@ -82,8 +84,7 @@ class LyricsLoader(
     }
 
     private fun transposeAndFormatLyrics() {
-        val lyrics =
-            ChordsTransposer().transposeLyrics(originalLyrics, chordsTransposerManager.transposedBy)
+        val lyrics = ChordsTransposer().transposeLyrics(originalLyrics, chordsTransposerManager.transposedBy)
         songKey = KeyDetector().detectKey(lyrics)
 
         val toNotation = preferencesState.chordsNotation
@@ -142,6 +143,52 @@ class LyricsLoader(
 
     fun onTransposeResetEvent() {
         chordsTransposerManager.onTransposeResetEvent()
+    }
+
+    fun loadEphemeralLyrics(
+        content: String,
+        screenW: Int,
+        srcNotation: ChordsNotation,
+    ): LyricsModel {
+        val trimWhitespaces: Boolean = preferencesState.trimWhitespaces
+        val toNotation: ChordsNotation = preferencesState.chordsNotation
+        val forceSharpNotes: Boolean = preferencesState.forceSharpNotes
+        val fontsize: Float = lyricsThemeService.fontsize
+        val typeface: Typeface = lyricsThemeService.fontTypeface.typeface
+        val displayStyle: DisplayStyle = lyricsThemeService.displayStyle
+        val horizontalScroll: Boolean = preferencesState.horizontalScroll
+
+        // Extract lyrics and chords
+        val lyricsExtractor = LyricsExtractor(trimWhitespaces = trimWhitespaces)
+        val loadedLyrics = lyricsExtractor.parseLyrics(content)
+        // Parse chords
+        val unknownChords = ChordParser(srcNotation).parseAndFillChords(loadedLyrics)
+        unknownChords.takeIf { it.isNotEmpty() }?.let {
+            logger.warn("Unknown chords: ${unknownChords.joinToString(", ")}")
+        }
+
+        // Format chords
+        val songKey = KeyDetector().detectKey(loadedLyrics)
+        val originalModifiers = toNotation == originalSongNotation
+        ChordsRenderer(toNotation, songKey, forceSharpNotes).formatLyrics(
+            loadedLyrics,
+            originalModifiers,
+        )
+
+        // Inflate text
+        val realFontsize = windowManagerService.dp2px(fontsize)
+        val screenWRelative = screenW.toFloat() / realFontsize
+        val lyricsInflater = LyricsInflater(typeface, realFontsize)
+        val inflatedLyrics = lyricsInflater.inflateLyrics(loadedLyrics)
+
+        // Arrange lines
+        val lyricsWrapper = LyricsArranger(
+            displayStyle,
+            screenWRelative,
+            lyricsInflater.lengthMapper,
+            horizontalScroll,
+        )
+        return lyricsWrapper.arrangeModel(inflatedLyrics)
     }
 
 }
