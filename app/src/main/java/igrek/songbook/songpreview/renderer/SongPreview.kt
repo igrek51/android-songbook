@@ -7,7 +7,6 @@ import android.view.View
 import android.view.animation.OvershootInterpolator
 import androidx.recyclerview.widget.RecyclerView
 import igrek.songbook.cast.SongCastService
-import igrek.songbook.chords.model.LyricsLine
 import igrek.songbook.chords.model.LyricsModel
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -21,6 +20,7 @@ import igrek.songbook.songpreview.quickmenu.QuickMenuCast
 import igrek.songbook.songpreview.quickmenu.QuickMenuTranspose
 import igrek.songbook.songpreview.renderer.canvas.CanvasView
 import igrek.songbook.system.WindowManagerService
+import igrek.songbook.util.applyMin
 import igrek.songbook.util.lookup.SimpleCache
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -147,8 +147,8 @@ class SongPreview(
     private var slideTargetText: String = ""
     private var slideAnimationProgress: Float = 1f
     private val isSlidesMode: Boolean get() = slideTargetIndex >= 0
-    var castSlideMarkedLineTop: Int = 0
-    var castSlideMarkedLineBottom: Int = 0
+    var castSlideMarkedLineTop: Int = -1
+    var castSlideMarkedLineBottom: Int = -1
 
     fun reset() {
         canvas.reset()
@@ -166,8 +166,8 @@ class SongPreview(
         slideCurrentText = ""
         slideTargetText = ""
         slideAnimationProgress = 1f
-        castSlideMarkedLineTop = 0
-        castSlideMarkedLineBottom = 0
+        castSlideMarkedLineTop = -1
+        castSlideMarkedLineBottom = -1
     }
 
     private fun onRepaint() {
@@ -482,5 +482,26 @@ class SongPreview(
                 canvas.repaint()
             }
         }
+    }
+
+    fun evaluateCastSlideZone() {
+        val visualLinesCount = preferencesState.castScrollControl.slideLines
+        val wholeLinesSkipped = (scroll / lineheightPx).applyMin(0f).toInt()
+
+        val focusedLine = lyricsModel.lines.getOrNull(wholeLinesSkipped)
+            ?: run {
+                castSlideMarkedLineTop = -1
+                castSlideMarkedLineBottom = -1
+                return
+            }
+
+        val primalIndexStart: Int = focusedLine.primalIndex
+        val primalIndexEnd: Int = primalIndexStart + visualLinesCount - 1
+
+        val markedLineIndexStart = lyricsModel.lines.indexOfFirst { it.primalIndex == primalIndexStart }
+        val markedLineIndexEnd = lyricsModel.lines.indexOfLast { it.primalIndex == primalIndexEnd }
+            .takeIf { it >= 0 } ?: (lyricsModel.lines.size - 1)
+        castSlideMarkedLineTop = markedLineIndexStart
+        castSlideMarkedLineBottom = markedLineIndexEnd
     }
 }

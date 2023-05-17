@@ -56,7 +56,7 @@ class ScrollService(
             }, UiErrorHandler::handleError)
 
         aggregatedScrollSubject
-            .throttleLast(600, TimeUnit.MILLISECONDS)
+            .throttleLast(800, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 onPartiallyScrolled(it)
@@ -128,38 +128,32 @@ class ScrollService(
         val songPreview = appFactory.songPreviewLayoutController.g.songPreview ?: return null
         val lyricsLoader = appFactory.lyricsLoader.g
         val lyricsModel: LyricsModel = songPreview.lyricsModel
-        val lineheight = songPreview.lineheightPx
-        val wholeLinesSkipped = (songPreview.scroll / lineheight).toInt().takeIf { it >= 0 } ?: 0
 
-        val focusedLine = lyricsModel.lines.getOrNull(wholeLinesSkipped)
-            ?: return CastScroll(
+        if (songPreview.castSlideMarkedLineTop == -1 || songPreview.castSlideMarkedLineBottom == -1) {
+            return CastScroll(
                 view_start = 0f,
                 view_end = 0f,
                 visible_text = "",
                 mode = songCastService.presenterFocusControl.id,
             )
+        }
 
-        val primalIndexStart: Int = focusedLine.primalIndex
-        val primalIndexEnd: Int = primalIndexStart + visualLinesCount - 1
+        val topLine = lyricsModel.lines.getOrNull(songPreview.castSlideMarkedLineTop)
+        val bottomLine = lyricsModel.lines.getOrNull(songPreview.castSlideMarkedLineBottom)
+
+        val primalIndexTop = topLine?.primalIndex ?: 0
+        val primalIndexBottom = bottomLine?.primalIndex ?: 0
 
         val primalLines = lyricsLoader.originalLyrics.lines.filterIndexed { index, _ ->
-            index in primalIndexStart..primalIndexEnd
+            index in primalIndexTop..primalIndexBottom
         }
         val visibleText = primalLines.joinToString("\n") {
             it.displayString()
         }
-        val markedLineIndexStart = lyricsModel.lines.indexOfFirst { it.primalIndex == primalIndexStart }
-        val markedLineIndexEnd = lyricsModel.lines.indexOfLast { it.primalIndex == primalIndexEnd }
-        songPreview.castSlideMarkedLineTop = markedLineIndexStart
-        songPreview.castSlideMarkedLineBottom = markedLineIndexEnd
-
-        GlobalScope.launch (Dispatchers.Main) {
-            songPreview.canvas.repaint()
-        }
 
         return CastScroll(
-            view_start = primalIndexStart.toFloat(),
-            view_end = primalIndexEnd.toFloat(),
+            view_start = primalIndexTop.toFloat(),
+            view_end = primalIndexBottom.toFloat(),
             visible_text = visibleText,
             mode = songCastService.presenterFocusControl.id,
         )

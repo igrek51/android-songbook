@@ -86,8 +86,7 @@ class LyricsRenderer internal constructor(
 
         drawScrollBars()
         if (songPreview.isCastPresentingSlides)
-            drawCastFocusZone(lineheightPx, songPreview.scroll,
-                preferencesState.castScrollControl.slideLines)
+            drawCastFocusZone(lineheightPx, songPreview.scroll, preferencesState.castScrollControl.slideLines)
         if (preferencesState.autoscrollShowEyeFocus)
             drawEyeFocusZone(lineheightPx)
         drawFileContent(lyricsModel, fontsizePx, lineheightPx)
@@ -228,15 +227,17 @@ class LyricsRenderer internal constructor(
         canvas.setColor(castFocusLineColor)
         canvas.fillRect(0f, focusLineTop, w, focusLineBottom)
 
+        songPreview.evaluateCastSlideZone()
         val topLineIndex = songPreview.castSlideMarkedLineTop
         val bottomLineIndex = songPreview.castSlideMarkedLineBottom
-        val markedLinesNum = bottomLineIndex - topLineIndex + 1
-
-        val blockYTop = topEdge + yOffset + topLineIndex * lineheight - scroll
-        val blockYBottom = blockYTop + lineheight * markedLinesNum
-        canvas.setColor(castFocusZoneColor)
-        canvas.fillRect(0f, blockYTop, w, blockYBottom)
-        canvas.borderRect(castFocusLineColor, 0f, blockYTop, w, blockYBottom, thickness=4f)
+        if (topLineIndex >= 0 && bottomLineIndex >= 0) {
+            val markedLinesNum = bottomLineIndex - topLineIndex + 1
+            val blockYTop = topEdge + yOffset + topLineIndex * lineheight - scroll
+            val blockYBottom = blockYTop + lineheight * markedLinesNum
+            canvas.setColor(castFocusZoneColor)
+            canvas.fillRect(0f, blockYTop, w, blockYBottom)
+            canvas.borderRect(castFocusLineColor, 0f, blockYTop, w, blockYBottom, thickness=4f)
+        }
     }
 
     private fun drawQuickMenuOverlay() {
