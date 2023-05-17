@@ -3,18 +3,13 @@ package igrek.songbook.cast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
 import igrek.songbook.R
 import igrek.songbook.admin.HttpRequester
-import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
-import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import igrek.songbook.layout.LayoutController
-import igrek.songbook.persistence.DeviceIdProvider
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.general.model.SongStatus
@@ -36,13 +31,15 @@ import java.util.Date
 
 
 class SongCastService(
-    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-    deviceIdProvider: LazyInject<DeviceIdProvider> = appFactory.deviceIdProvider,
-    layoutController: LazyInject<LayoutController> = appFactory.layoutController,
 ) {
-    private val uiInfoService by LazyExtractor(uiInfoService)
-    private val deviceIdProvider by LazyExtractor(deviceIdProvider)
-    private val layoutController by LazyExtractor(layoutController)
+    private val uiInfoService by LazyExtractor(appFactory.uiInfoService)
+    private val deviceIdProvider by LazyExtractor(appFactory.deviceIdProvider)
+    private val layoutController by LazyExtractor(appFactory.layoutController)
+    private val preferencesState by LazyExtractor(appFactory.preferencesState)
+    private val activityController by LazyExtractor(appFactory.activityController)
+    private val songPreviewLayoutController by LazyExtractor(appFactory.songPreviewLayoutController)
+    private val songOpener by LazyExtractor(appFactory.songOpener)
+    private val scrollService by LazyExtractor(appFactory.scrollService)
 
     private val logger: Logger = LoggerFactory.logger
     private val httpRequester = HttpRequester()
@@ -61,9 +58,9 @@ class SongCastService(
     var lastSharedScroll: CastScroll? = null
 
     var presenterFocusControl: CastScrollControl
-        get() = appFactory.preferencesState.g.castScrollControl
+        get() = preferencesState.castScrollControl
         set(value) {
-            appFactory.preferencesState.g.castScrollControl = value
+            preferencesState.castScrollControl = value
         }
 
     companion object {
@@ -187,7 +184,6 @@ class SongCastService(
     }
 
     private suspend fun periodicRefresh() {
-        val activityController = appFactory.activityController.get()
         var lastShot: Long = Date().time
         while (isInRoom()) {
             val interval: Long? = when {
@@ -215,7 +211,6 @@ class SongCastService(
     }
 
     private suspend fun periodicReconnect() {
-        val activityController = appFactory.activityController.get()
         var lastShot: Long = Date().time
         while (isInRoom()) {
             val interval: Long? = when {
@@ -353,9 +348,12 @@ class SongCastService(
         }
     }
 
-    fun reportSongSelected(song: Song) {
+    fun reportSongOpened(song: Song) {
         GlobalScope.launch {
             if (!isPresenter())
+                return@launch
+            // opening the one that is already presented
+            if (song.namespace == SongNamespace.Ephemeral && song.id == sessionState.castSongDto?.id)
                 return@launch
 
             val payload = CastSongSelected(
@@ -371,13 +369,6 @@ class SongCastService(
             }, onFailure = { e ->
                 UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
             })
-        }
-    }
-
-    fun openCurrentSong() {
-        val ephemeralSongN = ephemeralSong ?: return
-        GlobalScope.launch {
-            appFactory.songOpener.get().openSongPreview(ephemeralSongN)
         }
     }
 
@@ -429,16 +420,24 @@ class SongCastService(
         val songName = buildSongName(castSongDto.title, castSongDto.artist)
         uiInfoService.showInfo(R.string.songcast_song_selected, presenterName, songName)
         notifySessionUpdated()
-        if (isFollowingCurrentSong(presenter)) {
-            openCurrentSong()
+        if (followsCurrentSong(presenter?.public_member_id)) {
+            openCastSong()
         }
     }
 
-    private fun isFollowingCurrentSong(presenter: CastMember?): Boolean {
-        return when (presenter?.public_member_id) {
-            null -> false
-            myMemberPublicId -> false
+    private fun followsCurrentSong(pubMemberId: String?): Boolean {
+        return when {
+            pubMemberId == null -> false
+            pubMemberId == myMemberPublicId -> false
+            songPreviewLayoutController.currentSong == ephemeralSong -> false // already opened
             else -> true
+        }
+    }
+
+    fun openCastSong() {
+        val ephemeralSongN = ephemeralSong ?: return
+        GlobalScope.launch {
+            songOpener.openSongPreview(ephemeralSongN)
         }
     }
 
@@ -530,7 +529,7 @@ class SongCastService(
             if (scrollDto != null) {
                 if (clientFollowScroll && !isPresenting() && layoutController.isState(SongPreviewLayoutController::class)) {
                     logger.debug("Scrolling by SongCast event: ${scrollDto.view_start}")
-                    appFactory.scrollService.g.adaptToScrollControl(
+                    scrollService.adaptToScrollControl(
                         scrollDto.view_start, scrollDto.view_end, scrollDto.visible_text, scrollDto.mode, chordsNotation,
                     )
                 }

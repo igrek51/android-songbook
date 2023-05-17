@@ -118,7 +118,7 @@ class SongCastLobbyLayout(
     }
 
     fun openCurrentSong() {
-        songCastService.openCurrentSong()
+        songCastService.openCastSong()
     }
 
     fun sendChatMessage() {
@@ -130,9 +130,7 @@ class SongCastLobbyLayout(
         }
 
         GlobalScope.launch {
-            val payload = CastChatMessageSent(
-                text = text,
-            )
+            val payload = CastChatMessageSent(text = text)
             val result = songCastService.postChatMessageAsync(payload).await()
             result.fold(onSuccess = {
                 uiInfoService.showInfo(R.string.songcast_chat_message_sent)

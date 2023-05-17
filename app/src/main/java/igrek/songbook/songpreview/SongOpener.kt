@@ -38,7 +38,7 @@ open class SongOpener(
         songPreviewLayoutController.currentSong = song
         layoutController.showLayout(SongPreviewLayoutController::class)
         songsRepository.openHistoryDao.registerOpenedSong(song.id, song.namespace)
-        songCastService.reportSongSelected(song)
+        songCastService.reportSongOpened(song)
         AnalyticsLogger().logEventSongOpened(song)
     }
 
@@ -55,7 +55,7 @@ open class SongOpener(
         val currentSong = songPreviewLayoutController.currentSong
         if (currentSong != null) {
             layoutController.showLayout(SongPreviewLayoutController::class)
-            songCastService.reportSongSelected(currentSong)
+            songCastService.reportSongOpened(currentSong)
             return
         }
 
