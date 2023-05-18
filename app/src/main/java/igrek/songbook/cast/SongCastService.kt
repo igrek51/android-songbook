@@ -4,6 +4,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import igrek.songbook.R
+import igrek.songbook.custom.sync.SongHasher
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
@@ -49,7 +50,7 @@ class SongCastService {
     private var joinTimestamp: Long = 0
     var clientFollowScroll: Boolean by mutableStateOf(true)
     var lastSharedScroll: CastScroll? = null
-    private val systemLogEvents: MutableList<SystemLogEvent> = mutableListOf()
+    private val logEvents: MutableList<LogEvent> = mutableListOf()
 
     val presenters: List<CastMember> get() = sessionState.members.filter { it.type == CastMemberType.OWNER.value }
     val spectators: List<CastMember> get() = sessionState.members.filter { it.type == CastMemberType.GUEST.value }
@@ -87,6 +88,21 @@ class SongCastService {
         this.myMemberPublicId = responseData.public_member_id
         streamSocket.connect(responseData.short_id)
         this.joinTimestamp = Date().time / 1000
+        addSystemLogEvent(R.string.songcast_new_member_joined, responseData.member_name)
+        GlobalScope.launch {
+            refreshSessionDetails()
+            val ephemeralSongN = ephemeralSong ?: return@launch
+            val castSongDtoN = sessionState.castSongDto ?: return@launch
+            val presenter: CastMember? = sessionState.members.find { it.public_member_id == castSongDtoN.chosen_by }
+            val presenterName = presenter?.name ?: "Unknown"
+            logEvents.add(
+                SongLogEvent(
+                    timestampMs = Date().time,
+                    author = presenterName,
+                    song = ephemeralSongN,
+                )
+            )
+        }
         periodicRefreshJob = GlobalScope.launch(Dispatchers.IO) {
             try {
                 periodicRefresh()
@@ -112,7 +128,7 @@ class SongCastService {
         periodicReconnectJob = null
         lastSessionChange = 0
         lastSharedScroll = null
-        systemLogEvents.clear()
+        logEvents.clear()
     }
 
     private suspend fun periodicRefresh() {
@@ -211,8 +227,9 @@ class SongCastService {
             if (song.namespace == SongNamespace.Ephemeral && song.id == sessionState.castSongDto?.id)
                 return@launch
 
+            val castSongId: String = SongHasher().hashSong(song)
             val payload = CastSongSelected(
-                id = song.id,
+                id = castSongId,
                 title = song.title,
                 artist = song.artist,
                 content = song.content.orEmpty(),
@@ -273,8 +290,17 @@ class SongCastService {
         val presenter: CastMember? = sessionState.members.find { it.public_member_id == castSongDto.chosen_by }
         val presenterName = presenter?.name ?: "Unknown"
         val songName = buildSongName(castSongDto.title, castSongDto.artist)
+        ephemeralSong?.let { ephemeralSong ->
+            logEvents.add(
+                SongLogEvent(
+                    timestampMs = Date().time,
+                    author = presenterName,
+                    song = ephemeralSong,
+                )
+            )
+        }
         uiInfoService.showInfo(R.string.songcast_song_selected, presenterName, songName)
-        addSystemLogEvent(R.string.songcast_song_selected, presenterName, songName)
+
         GlobalScope.launch(Dispatchers.Main) {
             onSessionUpdated()
         }
@@ -402,35 +428,22 @@ class SongCastService {
 
     private fun addSystemLogEvent(resourceId: Int, vararg args: Any?) {
         val text = uiInfoService.resString(resourceId, *args)
-        systemLogEvents.add(
-            SystemLogEvent(timestamp = Date().time, text = text)
+        logEvents.add(
+            SystemLogEvent(timestampMs = Date().time, text = text)
         )
     }
 
     fun generateChatEvents(): List<LogEvent> {
         val allEvents = mutableListOf<LogEvent>()
-        allEvents.addAll(systemLogEvents)
+        allEvents.addAll(logEvents)
         allEvents.addAll(sessionState.chatMessages.map {
             MessageLogEvent(
-                timestamp = it.timestamp,
+                timestampMs = it.timestamp * 1000,
                 author = it.author,
                 text = it.text,
             )
         })
-
-        sessionState.castSongDto?.let { castSongDto ->
-            ephemeralSong?.let { ephemeralSong ->
-                val member = sessionState.members.find { it.public_member_id == castSongDto.chosen_by }
-                allEvents.add(
-                    SongLogEvent(
-                        timestamp = ephemeralSong.createTime / 1000,
-                        author = member?.name ?: "Unknown",
-                        song = ephemeralSong,
-                    )
-                )
-            }
-        }
-        return allEvents.sortedBy { it.timestamp }
+        return allEvents.sortedBy { it.timestampMs }
     }
 }
 

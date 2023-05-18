@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -43,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import igrek.songbook.R
 import igrek.songbook.compose.AppTheme
+import igrek.songbook.compose.DarkColors
 import igrek.songbook.compose.RichText
 import igrek.songbook.compose.md_theme_light_primaryContainer
 import igrek.songbook.info.UiInfoService
@@ -107,7 +110,6 @@ class SongCastLobbyLayout(
         layout.post {
             appFactory.softKeyboardService.get().hideSoftKeyboard()
             updateSessionDetails()
-            refreshSessionDetails()
         }
     }
 
@@ -160,22 +162,16 @@ class SongCastLobbyLayout(
 
         state.logEventData.clear()
         state.logEventData.addAll(songCastService.generateChatEvents())
-
-        state.membersListText = generateMembersListText()
     }
 
-    private fun generateMembersListText(): String {
-        val youName = uiInfoService.resString(R.string.songcast_you)
-        var text = "Members:\n"
-        text += songCastService.presenters.joinToString("\n") {
-            val name = if (it.public_member_id == songCastService.myMemberPublicId) "${it.name} ($youName)" else it.name
-            "- $name (Presenter)"
+    fun formatMember(member: CastMember): String {
+        return when (member.public_member_id) {
+            songCastService.myMemberPublicId -> {
+                val youName = uiInfoService.resString(R.string.songcast_you)
+                "${member.name} ($youName)"
+            }
+            else -> member.name
         }
-        text += songCastService.spectators.joinToString("\n") {
-            val name = if (it.public_member_id == songCastService.myMemberPublicId) "${it.name} ($youName)" else it.name
-            "- $name (Spectator)"
-        }
-        return text
     }
 
     private fun onSessionUpdated() {
@@ -288,14 +284,15 @@ class SongCastLobbyState {
     var presenters: MutableList<CastMember> = mutableStateListOf()
     var spectators: MutableList<CastMember> = mutableStateListOf()
     var logEventData: MutableList<LogEvent> = mutableStateListOf()
-    var membersListText: String by mutableStateOf("")
 }
 
 @Composable
 private fun MainComponent(controller: SongCastLobbyLayout) {
-    Column {
+    Column(modifier = Modifier.padding(horizontal = 6.dp)) {
         Card(
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
             when (controller.state.isPresenter) {
@@ -303,21 +300,31 @@ private fun MainComponent(controller: SongCastLobbyLayout) {
                 else -> RichText(R.string.songcast_lobby_text_guest_hint)
             }
         }
+        RoomCodeField(controller)
+        MembersLists(controller)
+        if (controller.waitingForPresenter())
+            OpenLastSongButton(controller)
+        EventsLog(controller)
+    }
+}
 
-        MembersList(controller)
-
+@Composable
+private fun RoomCodeField(controller: SongCastLobbyLayout) {
+    Row(Modifier.padding(vertical = 8.dp)) {
         OutlinedTextField(
             value = controller.state.roomCode,
             onValueChange = { },
             label = { Text(stringResource(R.string.songcast_room_code_hint)) },
             singleLine = true,
             enabled = false,
-            modifier = Modifier.fillMaxWidth().padding(vertical = 0.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 0.dp),
             textStyle = LocalTextStyle.current.copy(
                 textAlign = TextAlign.Center,
                 color = Color.White,
-                fontSize = 26.sp,
-                letterSpacing = 5.sp,
+                fontSize = 24.sp,
+                letterSpacing = 6.sp,
             ),
             trailingIcon = {
                 IconButton(
@@ -331,17 +338,39 @@ private fun MainComponent(controller: SongCastLobbyLayout) {
                 }
             },
         )
-
-        if (controller.waitingForPresenter())
-            OpenLastSongButton(controller)
-
-        EventsLog(controller)
     }
 }
 
 @Composable
-private fun MembersList(controller: SongCastLobbyLayout) {
-    Text(controller.state.membersListText)
+private fun MembersLists(controller: SongCastLobbyLayout) {
+    if (controller.state.presenters.isNotEmpty()) {
+        TextHeader(stringResource(R.string.songcast_members_presenters))
+        MembersList(controller, controller.state.presenters)
+    }
+    if (controller.state.spectators.isNotEmpty()) {
+        TextHeader(stringResource(R.string.songcast_members_spectators))
+        MembersList(controller, controller.state.spectators)
+    }
+}
+
+@Composable
+private fun MembersList(controller: SongCastLobbyLayout, members: List<CastMember>) {
+    members.forEach { member ->
+        Row(Modifier.padding(horizontal = 8.dp)) {
+            Icon(
+                Icons.Filled.Person,
+                contentDescription = null,
+                modifier = Modifier.size(ButtonDefaults.IconSize),
+                tint = md_theme_light_primaryContainer,
+            )
+            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+            Text(
+                text = controller.formatMember(member),
+                style = MaterialTheme.typography.labelMedium,
+                color = DarkColors.onSurface,
+            )
+        }
+    }
 }
 
 @Composable
@@ -388,7 +417,7 @@ private fun EventsLog(controller: SongCastLobbyLayout) {
 private fun CLogEvent(event: LogEvent, controller: SongCastLobbyLayout) {
     when (event) {
         is SystemLogEvent -> {
-            TimeHeader(event.timestamp)
+            TimeHeader(event.timestampMs)
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
@@ -399,7 +428,7 @@ private fun CLogEvent(event: LogEvent, controller: SongCastLobbyLayout) {
         }
 
         is MessageLogEvent -> {
-            TimeHeader(event.timestamp)
+            TimeHeader(event.timestampMs)
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -427,7 +456,7 @@ private fun CLogEvent(event: LogEvent, controller: SongCastLobbyLayout) {
         }
 
         is SongLogEvent -> {
-            TimeHeader(event.timestamp)
+            TimeHeader(event.timestampMs)
             val songName = event.song.displayName()
             Text(
                 modifier = Modifier.fillMaxWidth(),
@@ -436,67 +465,81 @@ private fun CLogEvent(event: LogEvent, controller: SongCastLobbyLayout) {
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Button(
-                onClick = safeAsyncExecutor {
-                    controller.openCurrentSong()
-                },
-                modifier = Modifier.fillMaxWidth(),
-                elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.0.dp),
-            ) {
-                Icon(
-                    painterResource(id = R.drawable.note),
-                    contentDescription = null,
-                    modifier = Modifier.size(ButtonDefaults.IconSize),
-                    tint = md_theme_light_primaryContainer,
-                )
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text(stringResource(R.string.songcast_open_current_song, songName))
+            val isLastSong = event == controller.state.logEventData.last { it is SongLogEvent }
+            if (isLastSong) {
+                Row(Modifier.padding(vertical = 8.dp)) {
+                    Button(
+                        onClick = safeAsyncExecutor {
+                            controller.openCurrentSong()
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.0.dp),
+                    ) {
+                        Icon(
+                            painterResource(id = R.drawable.note),
+                            contentDescription = null,
+                            modifier = Modifier.size(ButtonDefaults.IconSize),
+                            tint = md_theme_light_primaryContainer,
+                        )
+                        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                        Text(stringResource(R.string.songcast_open_current_song, songName))
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-fun TimeHeader(timestamp: Long) {
-    val timeFormatted = formatTimestampKitchen(timestamp)
-    Row(
-        modifier = Modifier
-            .padding(vertical = 8.dp, horizontal = 16.dp)
-            .height(12.dp)
-    ) {
+fun TimeHeader(timestampMs: Long) {
+    val timeFormatted = formatTimestampKitchen(timestampMs / 1000)
+    TextHeader(timeFormatted)
+}
+
+@Composable
+fun TextHeader(text: String) {
+    Row(modifier = Modifier
+        .padding(vertical = 8.dp, horizontal = 16.dp)
+        .height(12.dp)) {
         Divider(
-            modifier = Modifier.weight(1f).align(Alignment.CenterVertically),
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+            modifier = Modifier
+                .weight(1f)
+                .align(Alignment.CenterVertically),
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
         )
         Text(
-            text = timeFormatted,
+            text = text,
             modifier = Modifier.padding(horizontal = 16.dp),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Divider(
-            modifier = Modifier.weight(1f).align(Alignment.CenterVertically),
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+            modifier = Modifier
+                .weight(1f)
+                .align(Alignment.CenterVertically),
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
         )
     }
 }
 
 @Composable
 fun OpenLastSongButton(controller: SongCastLobbyLayout) {
-    Button(
-        onClick = safeAsyncExecutor {
-            controller.openLastSong()
-        },
-        modifier = Modifier.fillMaxWidth(),
-        elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.0.dp),
-    ) {
-        Icon(
-            painterResource(id = R.drawable.note),
-            contentDescription = null,
-            modifier = Modifier.size(ButtonDefaults.IconSize),
-            tint = md_theme_light_primaryContainer,
-        )
-        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-        Text(stringResource(R.string.songcast_open_last_song))
+    Row(Modifier.padding(vertical = 8.dp)) {
+        Button(
+            onClick = safeAsyncExecutor {
+                controller.openLastSong()
+            },
+            modifier = Modifier.fillMaxWidth(),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.0.dp),
+        ) {
+            Icon(
+                painterResource(id = R.drawable.note),
+                contentDescription = null,
+                modifier = Modifier.size(ButtonDefaults.IconSize),
+                tint = md_theme_light_primaryContainer,
+            )
+            Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+            Text(stringResource(R.string.songcast_open_last_song))
+        }
     }
 }

@@ -3,22 +3,22 @@ package igrek.songbook.cast
 import igrek.songbook.persistence.general.model.Song
 
 open class LogEvent(
-    open val timestamp: Long,
+    open val timestampMs: Long, // in milliseconds
 )
 
 data class SystemLogEvent(
-    override val timestamp: Long,
+    override val timestampMs: Long,
     val text: String,
-) : LogEvent(timestamp)
+) : LogEvent(timestampMs)
 
 data class MessageLogEvent(
-    override val timestamp: Long,
+    override val timestampMs: Long,
     val author: String,
     val text: String,
-) : LogEvent(timestamp)
+) : LogEvent(timestampMs)
 
 data class SongLogEvent(
-    override val timestamp: Long,
+    override val timestampMs: Long,
     val author: String,
     val song: Song,
-) : LogEvent(timestamp)
+) : LogEvent(timestampMs)

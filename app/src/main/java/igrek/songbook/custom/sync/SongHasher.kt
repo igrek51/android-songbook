@@ -1,5 +1,6 @@
 package igrek.songbook.custom.sync
 
+import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.user.custom.CustomSong
 import igrek.songbook.secret.ShaHasher
 import kotlinx.serialization.Serializable
@@ -25,6 +26,17 @@ class SongHasher {
     }
 
     fun hashSongContent(dto: TitledSongDto): String {
+        val json = jsonSerializer.encodeToString(TitledSongDto.serializer(), dto)
+        return ShaHasher().singleHash(json)
+    }
+
+    fun hashSong(song: Song): String {
+        val dto = TitledSongDto(
+            title = song.title,
+            artist = song.artist,
+            content = song.content ?: "",
+            chordsNotationId = song.chordsNotation.id,
+        )
         val json = jsonSerializer.encodeToString(TitledSongDto.serializer(), dto)
         return ShaHasher().singleHash(json)
     }

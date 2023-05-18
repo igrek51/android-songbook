@@ -553,8 +553,8 @@
     <string name="songcast_you_left_the_room">You\'ve left the room</string>
     <string name="songcast_exit_room">Exit room</string>
     <string name="songcast_confirm_leave_room">You are about to leave the Song Cast room. Do you really want to close it?</string>
-    <string name="songcast_members_presenters">Presenters:</string>
-    <string name="songcast_members_spectators">Spectators:</string>
+    <string name="songcast_members_presenters">Presenters</string>
+    <string name="songcast_members_spectators">Spectators</string>
     <string name="songcast_randomize_name">Randomize name</string>
     <string name="button_more_description">More</string>
     <string name="button_menu_description">Menu</string>
@@ -568,7 +568,7 @@
     <string name="songcast_new_member_joined">%s joined the room.</string>
     <string name="songcast_member_dropped">%s left the room.</string>
     <string name="songcast_new_chat_message" formatted="false">Chat: %s: %s</string>
-    <string name="songcast_song_selected" formatted="false">%s opened a song: %s</string>
+    <string name="songcast_song_selected" formatted="false">%s opened a song:\n%s</string>
     <string name="songcast_chat_message_empty">Enter message</string>
     <string name="songcast_room_is_still_open">SongCast is minimized and running in background.</string>
     <string name="songcast_connection_context">SongCast connection failed</string>

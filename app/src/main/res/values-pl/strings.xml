@@ -523,8 +523,8 @@
     <string name="songcast_you_left_the_room">Opuściłeś pokój.</string>
     <string name="songcast_exit_room">Opuść pokój</string>
     <string name="songcast_confirm_leave_room">Masz zamiar opuścić pokój Song Cast. Czy na pewno chcesz go zamknąć?</string>
-    <string name="songcast_members_presenters">Prezenterzy:</string>
-    <string name="songcast_members_spectators">Obserwatorzy:</string>
+    <string name="songcast_members_presenters">Prezenterzy</string>
+    <string name="songcast_members_spectators">Obserwatorzy</string>
     <string name="songcast_randomize_name">Wylosuj imię</string>
     <string name="button_more_description">Więcej</string>
     <string name="button_menu_description">Menu</string>
@@ -538,7 +538,7 @@
     <string name="songcast_new_member_joined">%s dołączył do pokoju.</string>
     <string name="songcast_member_dropped">%s opuścił pokój.</string>
     <string name="songcast_new_chat_message" formatted="false">Czat: %s: %s</string>
-    <string name="songcast_song_selected" formatted="false">%s otworzył piosenkę: %s</string>
+    <string name="songcast_song_selected" formatted="false">%s otworzył piosenkę:\n%s</string>
     <string name="songcast_chat_message_empty">Wpisz wiadomość</string>
     <string name="songcast_room_is_still_open">SongCast jest zminimalizowany i działa w tle.</string>
     <string name="songcast_connection_context">Połączenie SongCast nie powiodło się</string>
