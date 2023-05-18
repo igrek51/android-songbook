@@ -571,4 +571,5 @@
     <string name="songcast_joined_the_room_as_spectator">%s dołączył do pokoju jako Obserwator</string>
     <string name="songcast_promote_member_to_presenter">Awansuj na Prezentera</string>
     <string name="songcast_member_promoted">%s został awansowany na Prezentera</string>
+    <string name="songcast_session_created">Pokój Song Cast został utworzony.</string>
 </resources>

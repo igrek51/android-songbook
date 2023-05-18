@@ -72,7 +72,7 @@ class ScrollService(
         }
     }
 
-    private fun shareScrollControl() {
+    fun shareScrollControl() {
         GlobalScope.launch {
             val payload: CastScroll = when (preferencesState.castScrollControl) {
                 CastScrollControl.SHARE_SCROLL -> getVisibleShareScroll()

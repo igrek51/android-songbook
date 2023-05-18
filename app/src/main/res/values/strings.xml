@@ -538,7 +538,7 @@
     <string name="songcast_lobby_text_presenter_hint"><![CDATA[
     You\'re a <b>Presenter</b> in this room. Once you open any song, the other members will see it too.
     <br>
-    Share the code with others so they can join this room as <b>spectators</b>.
+    Share the code with others so they can join this room as <b>Spectators</b>.
 ]]></string>
     <string name="songcast_lobby_text_guest_hint"><![CDATA[
     You\'re a <b>Spectator</b> in this room. Wait for the presenter to choose a song.
@@ -601,4 +601,5 @@
     <string name="songcast_joined_the_room_as_spectator">%s joined the room as Spectator</string>
     <string name="songcast_promote_member_to_presenter">Promote to presenter</string>
     <string name="songcast_member_promoted">%s has been promoted to Presenter</string>
+    <string name="songcast_session_created">Song Cast room created.</string>
 </resources>

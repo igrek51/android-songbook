@@ -475,6 +475,7 @@ class SongPreview(
             this.slideTargetIndex = slideIndex
             this.slideCurrentText = slideText
             this.slideTargetText = slideText
+            this.slideTargetModel = lyricsLoader.loadEphemeralLyrics(slideText, w, srcNotation)
             this.slideAnimationProgress = 1f
         } else {
             this.slideCurrentText = this.slideTargetText

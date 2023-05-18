@@ -102,6 +102,12 @@ class SongCastService {
                     song = ephemeralSongN,
                 )
             )
+            logEvents.add(
+                SystemLogEvent(
+                    timestampMs = sessionState.createdTime * 1000,
+                    text = uiInfoService.resString(R.string.songcast_session_created),
+                )
+            )
         }
         periodicRefreshJob = GlobalScope.launch(Dispatchers.IO) {
             try {
@@ -190,6 +196,7 @@ class SongCastService {
             this.ephemeralSong = buildEphemeralSong(responseData.song)
             sessionState.currentScroll = responseData.scroll
             sessionState.chatMessages = responseData.chat_messages
+            sessionState.createdTime = responseData.create_timestamp
             sessionState.initialized = true
         }
     }
@@ -238,6 +245,7 @@ class SongCastService {
 
             val result = postSongPresentAsync(payload).await()
             result.fold(onSuccess = {
+                scrollService.shareScrollControl()
             }, onFailure = { e ->
                 UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
             })
@@ -453,4 +461,5 @@ data class SessionState(
     var castSongDto: CastSong? = null,
     var currentScroll: CastScroll? = null,
     var chatMessages: List<CastChatMessage> = listOf(),
+    var createdTime: Long = 0, // in seconds
 )

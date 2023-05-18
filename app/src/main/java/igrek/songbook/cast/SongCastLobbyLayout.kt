@@ -428,22 +428,27 @@ private fun CLogEvent(event: LogEvent, controller: SongCastLobbyLayout) {
         }
 
         is MessageLogEvent -> {
-            TimeHeader(event.timestampMs)
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(4.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 2.dp, horizontal = 8.dp),
-                    textAlign = TextAlign.Left,
-                    fontWeight = FontWeight.Bold,
-                    text = event.author,
-                    style = MaterialTheme.typography.bodySmall,
-                )
+                Row(Modifier.fillMaxWidth().padding(vertical = 2.dp, horizontal = 8.dp)) {
+                    Text(
+                        textAlign = TextAlign.Left,
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.bodySmall,
+                        text = event.author,
+                    )
+                    Spacer(Modifier.size(8.dp))
+                    Text(
+                        textAlign = TextAlign.Left,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        text = formatTimestampKitchen(event.timestampMs / 1000),
+                    )
+                }
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
