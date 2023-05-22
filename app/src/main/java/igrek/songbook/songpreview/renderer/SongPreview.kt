@@ -26,6 +26,7 @@ import igrek.songbook.util.applyMin
 import igrek.songbook.util.lookup.SimpleCache
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -153,6 +154,7 @@ class SongPreview(
     private val isSlidesMode: Boolean get() = slideTargetIndex >= 0
     var castSlideMarkedLineTop: Int = -1
     var castSlideMarkedLineBottom: Int = -1
+    private var slideAnimationJob: Job? = null
 
     fun reset() {
         canvas.reset()
@@ -477,9 +479,14 @@ class SongPreview(
             this.slideTargetModel = lyricsLoader.loadEphemeralLyrics(slideText, w, srcNotation)
             this.slideAnimationProgress = 0f
         }
-        GlobalScope.launch (Dispatchers.Main) {
+        slideAnimationJob?.let {
+            if (it.isActive) {
+                it.cancel()
+            }
+        }
+        this.slideAnimationJob = GlobalScope.launch (Dispatchers.Main) {
             canvas.repaint()
-            val animationTime = 500L
+            val animationTime = 300L
             val animationSteps = 10
             while (slideAnimationProgress < 1f) {
                 delay(animationTime / animationSteps)
