@@ -159,7 +159,7 @@ class LayoutController(
 
         val (properLayoutView, _) = createLayout(mainLayout.getLayoutResourceId())
 
-        val mainContentLayoutN = mainContentLayout ?: return
+        val mainContentLayoutN: CoordinatorLayout = mainContentLayout ?: return
         val firstTimeView = mainContentLayoutN.childCount == 0
 
         mainContentLayoutN.removeAllViews()

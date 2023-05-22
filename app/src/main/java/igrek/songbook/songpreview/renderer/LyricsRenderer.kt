@@ -86,7 +86,7 @@ class LyricsRenderer internal constructor(
 
         drawScrollBars()
         if (songPreview.isCastPresentingSlides)
-            drawCastFocusZone(lineheightPx, songPreview.scroll, preferencesState.castScrollControl.slideLines)
+            drawCastPresenterFocusZone(lineheightPx, songPreview.scroll, preferencesState.castScrollControl.slideLines)
         if (preferencesState.autoscrollShowEyeFocus)
             drawEyeFocusZone(lineheightPx)
         drawFileContent(lyricsModel, fontsizePx, lineheightPx)
@@ -218,12 +218,12 @@ class LyricsRenderer internal constructor(
         )
     }
 
-    private fun drawCastFocusZone(lineheight: Float, scroll: Float, slideLines: Int) {
+    private fun drawCastPresenterFocusZone(lineheight: Float, scroll: Float, slideLines: Int) {
         val yOffset: Float = 0.2f * lineheight
-        val lineThickness = songPreview.scrollThickness
+        val lineThickness = songPreview.scrollThickness * 0.3f
         val topEdge = h / 2 - slideLines * lineheight / 2
-        val focusLineTop = topEdge - lineThickness / 2 + yOffset
-        val focusLineBottom = topEdge + lineThickness / 2 + yOffset
+        val focusLineTop = topEdge - lineThickness + yOffset
+        val focusLineBottom = topEdge + lineThickness + yOffset
         canvas.setColor(castFocusLineColor)
         canvas.fillRect(0f, focusLineTop, w, focusLineBottom)
 

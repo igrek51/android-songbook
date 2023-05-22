@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import igrek.songbook.R
 import igrek.songbook.cast.CastScrollControl
@@ -83,18 +84,21 @@ class QuickMenuCast(
 @Composable
 private fun MainComponent(controller: QuickMenuCast) {
     Column(Modifier.padding(8.dp)) {
-        Text(stringResource(R.string.songcast_settings))
+        Text(
+            stringResource(R.string.songcast_settings),
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 8.dp),
+        )
 
         var expanded by remember { mutableStateOf(false) }
         val selectedOptionText = stringResource(controller.preferencesState.castScrollControl.descriptionResId)
         ExposedDropdownMenuBox(
             expanded = expanded,
-            onExpandedChange = {
-                expanded = !expanded
-            }
+            onExpandedChange = { expanded = !expanded },
+            modifier = Modifier.fillMaxWidth(),
         ) {
             TextField(
-                modifier = Modifier.menuAnchor(),
+                modifier = Modifier.menuAnchor().fillMaxWidth(),
                 readOnly = true,
                 value = selectedOptionText,
                 onValueChange = {},
@@ -110,7 +114,8 @@ private fun MainComponent(controller: QuickMenuCast) {
                 expanded = expanded,
                 onDismissRequest = {
                     expanded = false
-                }
+                },
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 CastScrollControl.values().forEach { enumOption ->
                     DropdownMenuItem(
@@ -158,7 +163,7 @@ private fun SwitchWithLabel(label: String, state: Boolean, onStateChange: (Boole
                 indication = null, // This is for removing ripple when Row is clicked
                 role = Role.Switch,
                 onClick = { onStateChange(!state) }
-            ).padding(8.dp),
+            ).padding(8.dp).fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(text = label)

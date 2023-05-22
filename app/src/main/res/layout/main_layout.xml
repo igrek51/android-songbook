@@ -20,10 +20,15 @@
             android:orientation="vertical">
 
             <androidx.coordinatorlayout.widget.CoordinatorLayout
-                android:id="@+id/main_content"
+                android:id="@+id/main_content_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1" />
+                android:layout_weight="1">
+                <androidx.coordinatorlayout.widget.CoordinatorLayout
+                    android:id="@+id/main_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
             <FrameLayout
                 android:id="@+id/ad_view_container"

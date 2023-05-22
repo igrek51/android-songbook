@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog
 import igrek.songbook.R
 import igrek.songbook.admin.AdminService
 import igrek.songbook.admin.antechamber.AntechamberService
+import igrek.songbook.cast.SongCastMenuLayout
 import igrek.songbook.custom.CustomSongService
 import igrek.songbook.custom.share.ShareSongService
 import igrek.songbook.info.UiResourceService
@@ -126,6 +127,11 @@ class SongContextMenuBuilder(
                 availableCondition = { layoutController.isState(SongPreviewLayoutController::class) },
                 executor = {
                     songPreviewLayoutController.toggleFullscreen()
+                }),
+            SongContextAction(R.string.songcast_share_with_songcast,
+                availableCondition = { layoutController.isState(SongPreviewLayoutController::class) },
+                executor = {
+                    layoutController.showLayout(SongCastMenuLayout::class)
                 }),
             SongContextAction(R.string.admin_antechamber_edit_action,
                 availableCondition = { adminService.isAdminEnabled() },
