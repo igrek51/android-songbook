@@ -1,5 +1,3 @@
-@file:OptIn(DelicateCoroutinesApi::class)
-
 package igrek.songbook.cast
 
 import android.view.View

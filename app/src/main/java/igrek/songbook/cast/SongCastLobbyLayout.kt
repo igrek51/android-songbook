@@ -1,9 +1,8 @@
-@file:OptIn(DelicateCoroutinesApi::class)
-
 package igrek.songbook.cast
 
 import android.view.View
 import android.widget.ImageButton
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -30,9 +31,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -373,19 +377,32 @@ private fun MembersList(controller: SongCastLobbyLayout, members: List<CastMembe
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun EventsLog(controller: SongCastLobbyLayout) {
     controller.state.logEventData.forEach {
         CLogEvent(it, controller)
     }
 
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val coroutineScope = rememberCoroutineScope()
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.bringIntoViewRequester(bringIntoViewRequester),
+    ) {
         OutlinedTextField(
             value = controller.state.currentChat,
             onValueChange = { controller.state.currentChat = it },
             label = { Text(stringResource(R.string.songcast_hint_chat_message)) },
             singleLine = true,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f).onFocusChanged {
+                if (it.isFocused) {
+                    coroutineScope.launch {
+                        delay(400) // wait for keyboard to appear
+                        bringIntoViewRequester.bringIntoView()
+                    }
+                }
+            },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
             keyboardActions = KeyboardActions(onSend = {
                 GlobalScope.launch {
@@ -393,7 +410,7 @@ private fun EventsLog(controller: SongCastLobbyLayout) {
                         controller.sendChatMessage()
                     }
                 }
-            })
+            }),
         )
         IconButton(
             modifier = Modifier

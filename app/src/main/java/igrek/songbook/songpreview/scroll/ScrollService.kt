@@ -1,5 +1,3 @@
-@file:OptIn(DelicateCoroutinesApi::class)
-
 package igrek.songbook.songpreview.scroll
 
 import android.annotation.SuppressLint
@@ -20,7 +18,6 @@ import igrek.songbook.songpreview.renderer.SongPreview
 import igrek.songbook.util.applyMin
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
