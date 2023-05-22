@@ -49,6 +49,7 @@ class SongCastService {
     private var lastSessionChange: Long = 0
     private var joinTimestamp: Long = 0
     var clientFollowScroll: Boolean by mutableStateOf(true)
+    var clientOpenPresentedSongs: Boolean by mutableStateOf(true)
     var lastSharedScroll: CastScroll? = null
     private val logEvents: MutableList<LogEvent> = mutableListOf()
 
@@ -312,13 +313,14 @@ class SongCastService {
         GlobalScope.launch(Dispatchers.Main) {
             onSessionUpdated()
         }
-        if (followsCurrentSong(presenter?.public_member_id)) {
+        if (followsPresentedSong(presenter?.public_member_id)) {
             openCastSong()
         }
     }
 
-    private fun followsCurrentSong(pubMemberId: String?): Boolean {
+    private fun followsPresentedSong(pubMemberId: String?): Boolean {
         return when {
+            !clientOpenPresentedSongs -> false
             pubMemberId == null -> false
             pubMemberId == myMemberPublicId -> false
             songPreviewLayoutController.currentSong == ephemeralSong -> false // already opened

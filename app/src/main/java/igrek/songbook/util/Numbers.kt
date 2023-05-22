@@ -17,7 +17,7 @@ fun Float.applyMin(min: Float): Float {
 }
 
 fun Float.limitBetween(min: Float, max: Float): Float {
-    if (this < 0f)
+    if (this < min)
         return min
     if (this > max)
         return max
@@ -25,7 +25,7 @@ fun Float.limitBetween(min: Float, max: Float): Float {
 }
 
 fun Long.limitBetween(min: Long, max: Long): Long {
-    if (this < 0)
+    if (this < min)
         return min
     if (this > max)
         return max

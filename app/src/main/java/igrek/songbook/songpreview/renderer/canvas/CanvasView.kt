@@ -134,6 +134,10 @@ class CanvasView(
         paint.color = rgb or (alpha shl 24)
     }
 
+    fun setColor(rgb: Int, alpha: Float) {
+        paint.color = rgb or ((alpha * 255).toInt() shl 24)
+    }
+
     fun clearScreen() {
         canvas?.drawPaint(paint)
     }

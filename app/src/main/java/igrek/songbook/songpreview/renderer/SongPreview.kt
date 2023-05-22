@@ -147,8 +147,6 @@ class SongPreview(
         get() = songCastService.isPresenting() && preferencesState.castScrollControl.slideLines > 0
     private var slideCurrentIndex: Int = -1
     private var slideTargetIndex: Int = -1
-    private var slideCurrentText: String = ""
-    private var slideTargetText: String = ""
     var slideCurrentModel: LyricsModel = LyricsModel()
     var slideTargetModel: LyricsModel = LyricsModel()
     private var slideAnimationProgress: Float = 1f
@@ -169,8 +167,6 @@ class SongPreview(
         textRightX.invalidate()
         slideCurrentIndex = -1
         slideTargetIndex = -1
-        slideCurrentText = ""
-        slideTargetText = ""
         slideAnimationProgress = 1f
         castSlideMarkedLineTop = -1
         castSlideMarkedLineBottom = -1
@@ -182,7 +178,6 @@ class SongPreview(
         when (isSlidesMode) {
             true -> lyricsRenderer.drawSlides(
                 slideCurrentIndex, slideTargetIndex,
-                slideCurrentText, slideTargetText,
                 slideAnimationProgress,
                 lineheightPx, fontsizePx,
             )
@@ -473,24 +468,22 @@ class SongPreview(
         if (this.slideTargetIndex == -1) {
             this.slideCurrentIndex = slideIndex
             this.slideTargetIndex = slideIndex
-            this.slideCurrentText = slideText
-            this.slideTargetText = slideText
             this.slideTargetModel = lyricsLoader.loadEphemeralLyrics(slideText, w, srcNotation)
             this.slideAnimationProgress = 1f
         } else {
-            this.slideCurrentText = this.slideTargetText
             this.slideCurrentIndex = this.slideTargetIndex
             this.slideCurrentModel = this.slideTargetModel
             this.slideTargetIndex = slideIndex
-            this.slideTargetText = slideText
             this.slideTargetModel = lyricsLoader.loadEphemeralLyrics(slideText, w, srcNotation)
             this.slideAnimationProgress = 0f
         }
         GlobalScope.launch (Dispatchers.Main) {
             canvas.repaint()
+            val animationTime = 500L
+            val animationSteps = 10
             while (slideAnimationProgress < 1f) {
-                delay(50)
-                slideAnimationProgress += 1f / 20
+                delay(animationTime / animationSteps)
+                slideAnimationProgress += 1f / animationSteps
                 canvas.repaint()
             }
         }

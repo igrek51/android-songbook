@@ -3,10 +3,7 @@
 package igrek.songbook.songpreview.quickmenu
 
 import android.view.View
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,7 +15,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -26,13 +22,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import igrek.songbook.R
@@ -40,6 +34,7 @@ import igrek.songbook.cast.CastScrollControl
 import igrek.songbook.cast.SongCastLobbyLayout
 import igrek.songbook.cast.SongCastService
 import igrek.songbook.compose.AppTheme
+import igrek.songbook.compose.SwitchWithLabel
 import igrek.songbook.compose.md_theme_light_primaryContainer
 import igrek.songbook.info.errorcheck.safeAsyncExecutor
 import igrek.songbook.inject.LazyExtractor
@@ -134,6 +129,11 @@ private fun MainComponent(controller: QuickMenuCast) {
             controller.songCastService.clientFollowScroll = it
         }
 
+        SwitchWithLabel(stringResource(R.string.songcast_open_presented_song_automatically),
+            controller.songCastService.clientOpenPresentedSongs) {
+            controller.songCastService.clientOpenPresentedSongs = it
+        }
+
         Button(
             onClick = safeAsyncExecutor {
                 appFactory.layoutController.g.showLayout(SongCastLobbyLayout::class)
@@ -150,27 +150,5 @@ private fun MainComponent(controller: QuickMenuCast) {
             Spacer(Modifier.size(ButtonDefaults.IconSpacing))
             Text(stringResource(R.string.songcast_open_lobby))
         }
-    }
-}
-
-@Composable
-private fun SwitchWithLabel(label: String, state: Boolean, onStateChange: (Boolean) -> Unit) {
-    val interactionSource = remember { MutableInteractionSource() }
-    Row(
-        modifier = Modifier
-            .clickable(
-                interactionSource = interactionSource,
-                indication = null, // This is for removing ripple when Row is clicked
-                role = Role.Switch,
-                onClick = { onStateChange(!state) }
-            ).padding(8.dp).fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Text(text = label)
-        Spacer(modifier = Modifier.padding(start = 8.dp))
-        Switch(
-            checked = state,
-            onCheckedChange = { onStateChange(it) }
-        )
     }
 }

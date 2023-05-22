@@ -9,6 +9,7 @@ import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.DisplayStyle
 import igrek.songbook.songpreview.renderer.canvas.Align
 import igrek.songbook.songpreview.renderer.canvas.CanvasView
+import igrek.songbook.util.limitBetween
 
 class LyricsRenderer internal constructor(
     private val songPreview: SongPreview,
@@ -248,23 +249,38 @@ class LyricsRenderer internal constructor(
     fun drawSlides(
         slideCurrentIndex: Int,
         slideTargetIndex: Int,
-        slideCurrentText: String,
-        slideTargetText: String,
         slideAnimationProgress: Float,
         lineheight: Float,
         fontsize: Float,
     ) {
         drawBackground()
-
-        val linesNum = songPreview.slideTargetModel.lines.size
-        val yOffset = h / 2 - linesNum * lineheight / 2
-
         canvas.setFontSize(fontsize)
-        canvas.setFontTypeface(normalTypeface)
-        canvas.setColor(textColor)
 
-        songPreview.slideTargetModel.lines.forEachIndexed { lineIndex, line ->
-            drawSlidesLine(line, lineIndex, yOffset, fontsize, lineheight)
+        val fadeDirection = when {
+            slideCurrentIndex < slideTargetIndex -> slideTargetIndex - slideCurrentIndex
+            slideCurrentIndex > slideTargetIndex -> slideTargetIndex - slideCurrentIndex
+            else -> 0
+        }
+        val normalizedProgress = slideAnimationProgress.limitBetween(0f, 1f)
+        // old (current) slide fading out
+        run {
+            val linesNum = songPreview.slideCurrentModel.lines.size
+            val fadeOffset = -normalizedProgress * fadeDirection * lineheight
+            val yOffset = h / 2 - linesNum * lineheight / 2 + fadeOffset
+            val alpha = 1f - normalizedProgress
+            songPreview.slideCurrentModel.lines.forEachIndexed { lineIndex, line ->
+                drawSlidesLine(line, lineIndex, yOffset, fontsize, lineheight, alpha)
+            }
+        }
+        // new (target) slide fading in
+        run {
+            val linesNum = songPreview.slideTargetModel.lines.size
+            val fadeOffset = (1f - normalizedProgress) * fadeDirection * lineheight
+            val yOffset = h / 2 - linesNum * lineheight / 2 + fadeOffset
+            val alpha = normalizedProgress
+            songPreview.slideTargetModel.lines.forEachIndexed { lineIndex, line ->
+                drawSlidesLine(line, lineIndex, yOffset, fontsize, lineheight, alpha)
+            }
         }
     }
 
@@ -273,7 +289,8 @@ class LyricsRenderer internal constructor(
         lineIndex: Int,
         yOffset: Float,
         fontsize: Float,
-        lineheight: Float
+        lineheight: Float,
+        alpha: Float,
     ) {
         val y = yOffset + lineIndex * lineheight
         val scrollX = canvas.scrollX
@@ -282,7 +299,7 @@ class LyricsRenderer internal constructor(
             val lastFragment = line.fragments[line.fragments.size - 1]
             if (lastFragment.type == LyricsTextType.LINEWRAPPER) {
                 canvas.setFontTypeface(normalTypeface)
-                canvas.setColor(linewrapperColor)
+                canvas.setColor(linewrapperColor, alpha)
                 canvas.drawText(lastFragment.text, w - 4, y + 0.9f * lineheight, Align.RIGHT)
             }
         }
@@ -290,7 +307,7 @@ class LyricsRenderer internal constructor(
             when (fragment.type) {
                 LyricsTextType.REGULAR_TEXT -> {
                     canvas.setFontTypeface(normalTypeface)
-                    canvas.setColor(textColor)
+                    canvas.setColor(textColor, alpha)
                     canvas.drawText(
                         fragment.text,
                         fragment.x * fontsize - scrollX,
@@ -300,7 +317,7 @@ class LyricsRenderer internal constructor(
                 }
                 LyricsTextType.CHORDS -> {
                     canvas.setFontTypeface(boldTypeface)
-                    canvas.setColor(chordColor)
+                    canvas.setColor(chordColor, alpha)
                     val x = if (preferencesState.chordsDisplayStyle == DisplayStyle.ChordsAlignedRight) {
                         fragment.x * fontsize - songPreview.scrollThickness - scrollX
                     } else {
@@ -310,7 +327,7 @@ class LyricsRenderer internal constructor(
                 }
                 LyricsTextType.COMMENT -> {
                     canvas.setFontTypeface(italicTypeface)
-                    canvas.setColor(commentColor)
+                    canvas.setColor(commentColor, alpha)
                     canvas.drawText(
                         fragment.text,
                         fragment.x * fontsize - scrollX,

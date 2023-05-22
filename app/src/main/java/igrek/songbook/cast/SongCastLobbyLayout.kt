@@ -51,6 +51,7 @@ import igrek.songbook.R
 import igrek.songbook.compose.AppTheme
 import igrek.songbook.compose.DarkColors
 import igrek.songbook.compose.RichText
+import igrek.songbook.compose.SwitchWithLabel
 import igrek.songbook.compose.md_theme_light_primaryContainer
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.SafeClickListener
@@ -75,7 +76,7 @@ class SongCastLobbyLayout(
     _layoutResourceId = R.layout.screen_cast_lobby
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
-    private val songCastService by LazyExtractor(songCastService)
+    val songCastService by LazyExtractor(songCastService)
     private val clipboardManager by LazyExtractor(clipboardManager)
 
     val state = SongCastLobbyState()
@@ -306,6 +307,12 @@ private fun MainComponent(controller: SongCastLobbyLayout) {
         }
         RoomCodeField(controller)
         MembersLists(controller)
+
+        SwitchWithLabel(stringResource(R.string.songcast_open_presented_song_automatically),
+            controller.songCastService.clientOpenPresentedSongs) {
+            controller.songCastService.clientOpenPresentedSongs = it
+        }
+
         if (controller.waitingForPresenter())
             OpenLastSongButton(controller)
         EventsLog(controller)
