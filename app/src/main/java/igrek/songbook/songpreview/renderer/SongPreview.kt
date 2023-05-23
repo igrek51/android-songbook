@@ -83,6 +83,7 @@ class SongPreview(
         this.windowManagerService.dp2px(EOF_BOTTOM_RESERVE)
     }
     private val scrollThicknessCache = SimpleCache { this.windowManagerService.dp2px(4f) }
+    val densityPixelSize = SimpleCache { this.windowManagerService.dp2px(1f) }
     private var lastClickTime: Long? = null
     private var recyclerScrollState = RecyclerView.SCROLL_STATE_IDLE
     var overlayScrollResetter: () -> Unit = {}
@@ -153,8 +154,7 @@ class SongPreview(
     var slideTargetModel: LyricsModel = LyricsModel()
     private var slideAnimationProgress: Float = 1f
     private val isSlidesMode: Boolean get() = slideTargetIndex >= 0
-    var castSlideMarkedLineTop: Int = -1
-    var castSlideMarkedLineBottom: Int = -1
+    var castSlideMarkedLinesIndices: MutableList<Int> = mutableListOf()
     private var slideAnimationJob: Job? = null
 
     fun reset() {
@@ -171,8 +171,7 @@ class SongPreview(
         slideCurrentIndex = -1
         slideTargetIndex = -1
         slideAnimationProgress = 1f
-        castSlideMarkedLineTop = -1
-        castSlideMarkedLineBottom = -1
+        castSlideMarkedLinesIndices.clear()
         slideCurrentModel = LyricsModel()
         slideTargetModel = LyricsModel()
     }
@@ -505,18 +504,23 @@ class SongPreview(
 
         val focusedLine = lyricsModel.lines.getOrNull(wholeLinesSkipped)
             ?: run {
-                castSlideMarkedLineTop = -1
-                castSlideMarkedLineBottom = -1
+                castSlideMarkedLinesIndices.clear()
                 return
             }
 
         val primalIndexStart: Int = focusedLine.primalIndex
         val primalIndexEnd: Int = primalIndexStart + visualLinesCount - 1
 
-        val markedLineIndexStart = lyricsModel.lines.indexOfFirst { it.primalIndex == primalIndexStart }
-        val markedLineIndexEnd = lyricsModel.lines.indexOfLast { it.primalIndex == primalIndexEnd }
+        castSlideMarkedLinesIndices.clear()
+        for (primalIndex in primalIndexStart .. primalIndexEnd) {
+            lyricsModel.lines.indexOfFirst { it.primalIndex == primalIndex }
+                .takeIf { it >= 0 }
+                ?.let {
+                    castSlideMarkedLinesIndices.add(it)
+                }
+        }
+        val enclosingLineIndex = lyricsModel.lines.indexOfLast { it.primalIndex == primalIndexEnd }
             .takeIf { it >= 0 } ?: (lyricsModel.lines.size - 1)
-        castSlideMarkedLineTop = markedLineIndexStart
-        castSlideMarkedLineBottom = markedLineIndexEnd
+        castSlideMarkedLinesIndices.add(enclosingLineIndex)
     }
 }

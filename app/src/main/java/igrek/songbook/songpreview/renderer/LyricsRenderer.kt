@@ -72,8 +72,8 @@ class LyricsRenderer internal constructor(
             ColorScheme.BRIGHT -> 0xa03A82C5.toInt()
         }
         castFocusZoneColor = when (colorScheme) {
-            ColorScheme.DARK -> 0x703A82C5L.toInt()
-            ColorScheme.BRIGHT -> 0x703A82C5L.toInt()
+            ColorScheme.DARK -> 0x603A82C5L.toInt()
+            ColorScheme.BRIGHT -> 0x603A82C5L.toInt()
         }
     }
 
@@ -221,23 +221,47 @@ class LyricsRenderer internal constructor(
 
     private fun drawCastPresenterFocusZone(lineheight: Float, scroll: Float, slideLines: Int) {
         val yOffset: Float = 0.2f * lineheight
-        val lineThickness = songPreview.scrollThickness * 0.3f
-        val topEdge = h / 2 - slideLines * lineheight / 2
-        val focusLineTop = topEdge - lineThickness + yOffset
-        val focusLineBottom = topEdge + lineThickness + yOffset
-        canvas.setColor(castFocusLineColor)
-        canvas.fillRect(0f, focusLineTop, w, focusLineBottom)
+        val topEdge = h / 2 - slideLines * lineheight / 2 + yOffset
 
+        // cursor line
+        val triangleH = lineheight * 0.4f
+        canvas.fillTriangle(
+            0f, topEdge + triangleH / 2,
+            0f + triangleH, topEdge,
+            0f, topEdge - triangleH / 2,
+            castFocusLineColor,
+        )
+        canvas.fillTriangle(
+            w, topEdge + triangleH / 2,
+            w, topEdge - triangleH / 2,
+            w - triangleH, topEdge,
+            castFocusLineColor,
+        )
+        canvas.dashLine(
+            triangleH, topEdge,
+            w - triangleH, topEdge,
+            castFocusLineColor,
+            lineheight * 0.05f,
+        )
+
+        // focus zone
         songPreview.evaluateCastSlideZone()
-        val topLineIndex = songPreview.castSlideMarkedLineTop
-        val bottomLineIndex = songPreview.castSlideMarkedLineBottom
-        if (topLineIndex >= 0 && bottomLineIndex >= 0) {
-            val markedLinesNum = bottomLineIndex - topLineIndex + 1
-            val blockYTop = topEdge + yOffset + topLineIndex * lineheight - scroll
-            val blockYBottom = blockYTop + lineheight * markedLinesNum
-            canvas.setColor(castFocusZoneColor)
-            canvas.fillRect(0f, blockYTop, w, blockYBottom)
-            canvas.borderRect(castFocusLineColor, 0f, blockYTop, w, blockYBottom, thickness=4f)
+        val markedIndices = songPreview.castSlideMarkedLinesIndices.takeIf { it.isNotEmpty() } ?: return
+        val topLineIndex = markedIndices.first()
+        val bottomLineIndex = markedIndices.last()
+        val markedLinesNum = bottomLineIndex - topLineIndex + 1
+        val blockYTop = topEdge + topLineIndex * lineheight - scroll
+        val blockYBottom = blockYTop + lineheight * markedLinesNum
+        canvas.setColor(castFocusZoneColor)
+        canvas.fillRect(0f, blockYTop, w, blockYBottom)
+        canvas.borderRect(castFocusLineColor, 0f, blockYTop, w, blockYBottom, thickness=lineheight * 0.05f)
+
+        // middle borders
+        canvas.setColor(castFocusLineColor)
+        val thickness = 1f.dp
+        markedIndices.drop(1).dropLast(1).forEach {  lineIndex ->
+            val y = topEdge + lineIndex * lineheight - scroll
+            canvas.fillRect(0f, y, w, y + thickness)
         }
     }
 
@@ -338,5 +362,9 @@ class LyricsRenderer internal constructor(
                 LyricsTextType.LINEWRAPPER -> {}
             }
         }
+    }
+
+    private inline val Float.dp: Float get() {
+        return this * songPreview.densityPixelSize.get()
     }
 }

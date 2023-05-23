@@ -73,10 +73,10 @@ class ScrollService(
         GlobalScope.launch {
             val payload: CastScroll = when (preferencesState.castScrollControl) {
                 CastScrollControl.SHARE_SCROLL -> getVisibleShareScroll()
-                CastScrollControl.SLIDES_1 -> getVisibleSlidesScroll(1)
-                CastScrollControl.SLIDES_2 -> getVisibleSlidesScroll(2)
-                CastScrollControl.SLIDES_4 -> getVisibleSlidesScroll(4)
-                CastScrollControl.SLIDES_8 -> getVisibleSlidesScroll(8)
+                CastScrollControl.SLIDES_1 -> getVisibleSlidesScroll()
+                CastScrollControl.SLIDES_2 -> getVisibleSlidesScroll()
+                CastScrollControl.SLIDES_4 -> getVisibleSlidesScroll()
+                CastScrollControl.SLIDES_8 -> getVisibleSlidesScroll()
                 else -> null
             } ?: return@launch
             if (payload == songCastService.lastSharedScroll) return@launch
@@ -123,12 +123,12 @@ class ScrollService(
         )
     }
 
-    private fun getVisibleSlidesScroll(visualLinesCount: Int): CastScroll? {
+    private fun getVisibleSlidesScroll(): CastScroll? {
         val songPreview = appFactory.songPreviewLayoutController.g.songPreview ?: return null
         val lyricsLoader = appFactory.lyricsLoader.g
         val lyricsModel: LyricsModel = songPreview.lyricsModel
 
-        if (songPreview.castSlideMarkedLineTop == -1 || songPreview.castSlideMarkedLineBottom == -1) {
+        if (songPreview.castSlideMarkedLinesIndices.isEmpty()) {
             return CastScroll(
                 view_start = 0f,
                 view_end = 0f,
@@ -137,8 +137,10 @@ class ScrollService(
             )
         }
 
-        val topLine = lyricsModel.lines.getOrNull(songPreview.castSlideMarkedLineTop)
-        val bottomLine = lyricsModel.lines.getOrNull(songPreview.castSlideMarkedLineBottom)
+        val castSlideMarkedLineTop = songPreview.castSlideMarkedLinesIndices.first()
+        val castSlideMarkedLineBottom = songPreview.castSlideMarkedLinesIndices.last()
+        val topLine = lyricsModel.lines.getOrNull(castSlideMarkedLineTop)
+        val bottomLine = lyricsModel.lines.getOrNull(castSlideMarkedLineBottom)
 
         val primalIndexTop = topLine?.primalIndex ?: 0
         val primalIndexBottom = bottomLine?.primalIndex ?: 0

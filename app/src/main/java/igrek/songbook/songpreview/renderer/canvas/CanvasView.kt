@@ -2,8 +2,11 @@ package igrek.songbook.songpreview.renderer.canvas
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.DashPathEffect
 import android.graphics.LinearGradient
 import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.Path.FillType
 import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Shader
@@ -26,6 +29,7 @@ class CanvasView(
 
     private var paint: Paint = Paint()
     private var strokePaint: Paint = Paint()
+    private var dashPaint: Paint = Paint()
     private var canvas: Canvas? = null
     private var initialized: Boolean = false
     private val lock = Any()
@@ -41,14 +45,22 @@ class CanvasView(
     }
 
     fun reset() {
+
         paint = Paint()
         paint.style = Paint.Style.FILL
         paint.isAntiAlias = true
         paint.isFilterBitmap = true
+
         strokePaint = Paint()
         strokePaint.style = Paint.Style.STROKE
         strokePaint.isAntiAlias = true
         strokePaint.isFilterBitmap = true
+
+        dashPaint = Paint()
+        dashPaint.style = Paint.Style.FILL_AND_STROKE
+        dashPaint.isAntiAlias = true
+        dashPaint.isFilterBitmap = true
+
         canvas = null
         initialized = false
     }
@@ -179,5 +191,37 @@ class CanvasView(
             setColor(color2)
             fillRect(left, top, right, bottom)
         }
+    }
+
+    fun fillTriangle(
+        p1x: Float, p1y: Float,
+        p2x: Float, p2y: Float,
+        p3x: Float, p3y: Float,
+        color: Int,
+    ) {
+        paint.color = color
+        val path = Path()
+        path.fillType = FillType.EVEN_ODD
+        path.moveTo(p1x, p1y)
+        path.lineTo(p2x, p2y)
+        path.lineTo(p3x, p3y)
+        path.lineTo(p1x, p1y)
+        path.close()
+        canvas?.drawPath(path, paint)
+    }
+
+    fun dashLine(
+        p1x: Float, p1y: Float,
+        p2x: Float, p2y: Float,
+        color: Int, thickness: Float,
+    ) {
+        dashPaint.color = color
+        dashPaint.strokeWidth = thickness
+        dashPaint.pathEffect = DashPathEffect(floatArrayOf(15f, 10f), 0f)
+
+        val baseline = Path()
+        baseline.moveTo(p1x, p1y)
+        baseline.lineTo(p2x, p2y)
+        canvas?.drawPath(baseline, dashPaint)
     }
 }
