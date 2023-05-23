@@ -84,44 +84,8 @@ private fun MainComponent(controller: QuickMenuCast) {
             modifier = Modifier.padding(bottom = 8.dp),
         )
 
-        var expanded by remember { mutableStateOf(false) }
-        val selectedOptionText = stringResource(controller.preferencesState.castScrollControl.descriptionResId)
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = !expanded },
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            TextField(
-                modifier = Modifier.menuAnchor().fillMaxWidth(),
-                readOnly = true,
-                value = selectedOptionText,
-                onValueChange = {},
-                label = { Text(stringResource(R.string.songcast_remote_control)) },
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(
-                        expanded = expanded
-                    )
-                },
-                colors = ExposedDropdownMenuDefaults.textFieldColors()
-            )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = {
-                    expanded = false
-                },
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                CastScrollControl.values().forEach { enumOption ->
-                    DropdownMenuItem(
-                        text = { Text(stringResource(enumOption.descriptionResId)) },
-                        onClick = {
-                            controller.preferencesState.castScrollControl = enumOption
-                            expanded = false
-                        },
-                    )
-                }
-            }
-        }
+        if (controller.songCastService.isPresenting())
+            ScrollControlDropdown(controller)
 
         SwitchWithLabel(stringResource(R.string.songcast_follow_presenters_scroll),
             controller.songCastService.clientFollowScroll) {
@@ -150,4 +114,45 @@ private fun MainComponent(controller: QuickMenuCast) {
             Text(stringResource(R.string.songcast_open_lobby))
         }
     }
+}
+
+@Composable
+private fun ScrollControlDropdown(controller: QuickMenuCast) {
+    var expanded by remember { mutableStateOf(false) }
+    val selectedOptionText = stringResource(controller.preferencesState.castScrollControl.descriptionResId)
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        TextField(
+            modifier = Modifier.menuAnchor().fillMaxWidth(),
+            readOnly = true,
+            value = selectedOptionText,
+            onValueChange = {},
+            label = { Text(stringResource(R.string.songcast_remote_control)) },
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+            },
+            colors = ExposedDropdownMenuDefaults.textFieldColors()
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = {
+                expanded = false
+            },
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            CastScrollControl.values().forEach { enumOption ->
+                DropdownMenuItem(
+                    text = { Text(stringResource(enumOption.descriptionResId)) },
+                    onClick = {
+                        controller.preferencesState.castScrollControl = enumOption
+                        expanded = false
+                    },
+                )
+            }
+        }
+    }
+
 }

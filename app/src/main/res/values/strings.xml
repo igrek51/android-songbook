@@ -592,7 +592,7 @@
     <string name="songcast_scrollcontrol_slides2">Slides mode: 2 lines</string>
     <string name="songcast_scrollcontrol_slides4">Slides mode: 4 lines</string>
     <string name="songcast_scrollcontrol_slides8">Slides mode: 8 lines</string>
-    <string name="songcast_remote_control">Remote Control</string>
+    <string name="songcast_remote_control">Remote Control when presenting</string>
     <string name="songcast_follow_presenters_scroll">Follow presenter\'s scroll</string>
     <string name="songcast_settings">Song Cast settings</string>
     <string name="songcast_songname_none">None</string>

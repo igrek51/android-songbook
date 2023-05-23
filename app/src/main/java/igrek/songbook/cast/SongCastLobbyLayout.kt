@@ -167,6 +167,8 @@ class SongCastLobbyLayout(
 
         state.logEventData.clear()
         state.logEventData.addAll(songCastService.generateChatEvents())
+
+        state.waitingForPresenter = songCastService.isPresenter() && !songCastService.isSongSelected()
     }
 
     fun formatMember(member: CastMember): String {
@@ -180,9 +182,7 @@ class SongCastLobbyLayout(
     }
 
     private fun onSessionUpdated() {
-        if (isLayoutVisible()) {
-            updateSessionDetails()
-        }
+        updateSessionDetails()
     }
 
     fun copySessionCode() {
@@ -238,10 +238,6 @@ class SongCastLobbyLayout(
         appFactory.songOpener.get().openLastSong()
     }
 
-    fun waitingForPresenter(): Boolean {
-        return songCastService.isPresenter() && !songCastService.isSongSelected()
-    }
-
     private fun leaveRoomConfirm() {
         ConfirmDialogBuilder().confirmAction(R.string.songcast_confirm_leave_room) {
             GlobalScope.launch {
@@ -292,6 +288,7 @@ class SongCastLobbyState {
     var presenters: MutableList<CastMember> = mutableStateListOf()
     var spectators: MutableList<CastMember> = mutableStateListOf()
     var logEventData: MutableList<LogEvent> = mutableStateListOf()
+    var waitingForPresenter: Boolean by mutableStateOf(true)
 }
 
 @Composable
@@ -316,7 +313,7 @@ private fun MainComponent(controller: SongCastLobbyLayout) {
             controller.songCastService.clientOpenPresentedSongs = it
         }
 
-        if (controller.waitingForPresenter())
+        if (controller.state.waitingForPresenter)
             OpenLastSongButton(controller)
         EventsLog(controller)
     }

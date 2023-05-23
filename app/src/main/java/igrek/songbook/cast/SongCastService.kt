@@ -110,9 +110,7 @@ class SongCastService {
                     text = uiInfoService.resString(R.string.songcast_session_created),
                 )
             )
-            mainScope.launch {
-                onSessionUpdated()
-            }
+            refreshUI()
         }
         periodicRefreshJob = ioScope.launch {
             try {
@@ -323,9 +321,7 @@ class SongCastService {
             action = { openPresentedSong() },
         )
 
-        mainScope.launch {
-            onSessionUpdated()
-        }
+        refreshUI()
         if (followsPresentedSong(presenter?.public_member_id)) {
             openPresentedSong()
         }
@@ -392,9 +388,7 @@ class SongCastService {
             val compareResult = compareSessionStates(oldState, sessionState)
             if (compareResult)
                 lastSessionChange = Date().time
-            mainScope.launch {
-                onSessionUpdated()
-            }
+            refreshUI()
             return Result.success(Unit)
         }, onFailure = { e ->
             UiErrorHandler().handleContextError(e, R.string.songcast_connection_context)
@@ -477,6 +471,7 @@ class SongCastService {
         logEvents.add(
             SystemLogEvent(timestampMs = Date().time, text = text)
         )
+        refreshUI()
     }
 
     fun generateChatEvents(): List<LogEvent> {
@@ -490,6 +485,12 @@ class SongCastService {
             )
         })
         return allEvents.sortedBy { it.timestampMs }
+    }
+
+    private fun refreshUI() {
+        mainScope.launch {
+            onSessionUpdated()
+        }
     }
 }
 
