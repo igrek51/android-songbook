@@ -210,16 +210,7 @@ class SongCastService {
     }
 
     private fun postSongPresentAsync(payload: CastSongSelected): Deferred<Result<Unit>> {
-        return requester.postSongPresentAsync(payload) {
-            sessionState.castSongDto = CastSong(
-                id = payload.id,
-                chosen_by = myMemberPublicId,
-                title = payload.title,
-                artist = payload.artist,
-                content = payload.content,
-                chords_notation_id = payload.chords_notation_id,
-            )
-        }
+        return requester.postSongPresentAsync(payload) {}
     }
 
     fun postScrollControlAsync(payload: CastScroll): Deferred<Result<Unit>> {
@@ -246,6 +237,14 @@ class SongCastService {
             artist = song.artist,
             content = song.content.orEmpty(),
             chords_notation_id = song.chordsNotation.id,
+        )
+        sessionState.castSongDto = CastSong(
+            id = payload.id,
+            chosen_by = myMemberPublicId,
+            title = payload.title,
+            artist = payload.artist,
+            content = payload.content,
+            chords_notation_id = payload.chords_notation_id,
         )
 
         songPreviewLayoutController.addOnInitListener {
