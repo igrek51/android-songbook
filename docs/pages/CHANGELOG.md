@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   You can create a room so that your friends could join it.
   Once the presenter chooses a song,
   it will be broadcasted and displayed on all devices connected to a room.
+  Share the code with others so they can join this room as **Spectators**.
+  As a presenter you can control the song's scroll on all devices by either sharing scroll position or enabling *Slides mode*
+  (click *Song Cast* icon in a song preview).
+  *Slides mode* presents only selected lines of the song and animates them on Spectator's device.
 - Some of the layouts started to use Jetpack Compose and Material Design Components.
 
 ### Changed

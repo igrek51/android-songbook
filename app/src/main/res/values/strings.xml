@@ -539,6 +539,9 @@
     You\'re a <b>Presenter</b> in this room. Once you open any song, the other members will see it too.
     <br>
     Share the code with others so they can join this room as <b>Spectators</b>.
+    As a presenter you can control the song\'s scroll position on all devices or enable <b>Slides mode</b>
+    (click <b>Song Cast</b> icon in a song preview).
+    <b>Slides mode</b> presents only selected lines of the song and animates them on Spectator's device.
 ]]></string>
     <string name="songcast_lobby_text_guest_hint"><![CDATA[
     You\'re a <b>Spectator</b> in this room. Wait for the presenter to choose a song.
@@ -587,7 +590,7 @@
     <string name="songcast_restore_tab">Restore</string>
     <string name="songcast_open_last_song">Open last song</string>
     <string name="songcast_scrollcontrol_none">None</string>
-    <string name="songcast_scrollcontrol_scroll">Share your scroll</string>
+    <string name="songcast_scrollcontrol_scroll">Share scroll position</string>
     <string name="songcast_scrollcontrol_slides1">Slides mode: 1 line</string>
     <string name="songcast_scrollcontrol_slides2">Slides mode: 2 lines</string>
     <string name="songcast_scrollcontrol_slides4">Slides mode: 4 lines</string>

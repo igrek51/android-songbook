@@ -509,6 +509,8 @@
     Jesteś <b>Prezenterem</b> w tym pokoju. Gdy tylko otworzysz piosenkę, pozostali uczestnicy również ją zobaczą.
     <br>
     Udostępnij kod pokoju z innymi członkami, aby mogli do niego dołączyć jako <b>Obserwatorzy</b>.
+    Jako prezenter możesz kontrolować pozycję przewijania lub włączyć <b>tryb slajdów</b> (kliknij ikonę <b>Song Cast</b> na podglądzie piosenki).
+    <b>Tryb slajdów</b> prezentuje tylko wybrane linie piosenki i animuje je na urządzeniach Obserwatorów.
 ]]></string>
     <string name="songcast_lobby_text_guest_hint"><![CDATA[
     Jesteś <b>Obserwatorem</b> w tym pokoju. Poczekaj aż Prezenter wybierze piosenkę.
@@ -557,7 +559,7 @@
     <string name="songcast_restore_tab">Przywróć</string>
     <string name="songcast_open_last_song">Otwórz ostatnią piosenkę</string>
     <string name="songcast_scrollcontrol_none">Brak</string>
-    <string name="songcast_scrollcontrol_scroll">Udostępnij przewijanie</string>
+    <string name="songcast_scrollcontrol_scroll">Udostępnij pozycję przewijania</string>
     <string name="songcast_scrollcontrol_slides1">Tryb slajdów: 1 linia</string>
     <string name="songcast_scrollcontrol_slides2">Tryb slajdów: 2 linie</string>
     <string name="songcast_scrollcontrol_slides4">Tryb slajdów: 4 linie</string>
