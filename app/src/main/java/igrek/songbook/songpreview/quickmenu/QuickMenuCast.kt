@@ -75,7 +75,6 @@ class QuickMenuCast(
     }
 }
 
-
 @Composable
 private fun MainComponent(controller: QuickMenuCast) {
     Column(Modifier.padding(8.dp)) {

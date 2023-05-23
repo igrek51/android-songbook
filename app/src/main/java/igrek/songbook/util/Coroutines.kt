@@ -10,3 +10,4 @@ private val exceptionHandler = CoroutineExceptionHandler { _, throwable: Throwab
 }
 val mainScope = CoroutineScope(Dispatchers.Main + exceptionHandler)
 val defaultScope = CoroutineScope(Dispatchers.Default + exceptionHandler)
+val ioScope = CoroutineScope(Dispatchers.IO + exceptionHandler)

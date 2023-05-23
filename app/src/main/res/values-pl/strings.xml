@@ -574,4 +574,8 @@
     <string name="songcast_session_created">Pokój Song Cast został utworzony.</string>
     <string name="songcast_share_with_songcast">Otwórz w Song Cast</string>
     <string name="songcast_open_presented_song_automatically">Otwieraj prezentowane piosenki automatycznie</string>
+    <string name="songcast_action_open_song">Otwórz</string>
+    <string name="songcast_action_lobby">Lobby</string>
+    <string name="songcast_no_spectators">Brak obserwatorów do wybrania</string>
+    <string name="songcast_choose_member_to_promote">Wybierz Obserwatora</string>
 </resources>

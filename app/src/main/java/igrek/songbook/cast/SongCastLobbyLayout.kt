@@ -210,14 +210,17 @@ class SongCastLobbyLayout(
     }
 
     private fun choosePromotedUser() {
-        if (songCastService.spectators.isEmpty()) return
+        if (songCastService.spectators.isEmpty()) {
+            uiInfoService.showInfo(R.string.songcast_no_spectators)
+            return
+        }
 
         val actions = songCastService.spectators.map { member ->
             ContextMenuBuilder.Action(member.name) {
                 promoteUser(member)
             }
         }
-        ContextMenuBuilder().showContextMenu(actions)
+        ContextMenuBuilder().showContextMenu(R.string.songcast_choose_member_to_promote, actions)
     }
 
     private fun promoteUser(member: CastMember) {

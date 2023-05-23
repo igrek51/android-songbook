@@ -18,9 +18,9 @@ import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.util.buildSongName
 import igrek.songbook.util.defaultScope
 import igrek.songbook.util.interpolate
+import igrek.songbook.util.ioScope
+import igrek.songbook.util.mainScope
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -91,7 +91,7 @@ class SongCastService {
         streamSocket.connect(responseData.short_id)
         this.joinTimestamp = Date().time / 1000
         addSystemLogEvent(R.string.songcast_new_member_joined, responseData.member_name)
-        GlobalScope.launch {
+        defaultScope.launch {
             refreshSessionDetails()
             val ephemeralSongN = ephemeralSong ?: return@launch
             val castSongDtoN = sessionState.castSongDto ?: return@launch
@@ -110,15 +110,18 @@ class SongCastService {
                     text = uiInfoService.resString(R.string.songcast_session_created),
                 )
             )
+            mainScope.launch {
+                onSessionUpdated()
+            }
         }
-        periodicRefreshJob = GlobalScope.launch(Dispatchers.IO) {
+        periodicRefreshJob = ioScope.launch {
             try {
                 periodicRefresh()
             } catch (e: Throwable) {
                 UiErrorHandler().handleContextError(e, R.string.songcast_connection_context)
             }
         }
-        periodicReconnectJob = GlobalScope.launch(Dispatchers.IO) {
+        periodicReconnectJob = ioScope.launch {
             periodicReconnect()
         }
     }
@@ -176,8 +179,13 @@ class SongCastService {
             }
             if (interval != null && Date().time - lastShot >= interval) {
                 try {
-                    uiInfoService.showInfo(R.string.songcast_reconnecting_to_room)
+                    uiInfoService.showInfoAction(
+                        R.string.songcast_reconnecting_to_room,
+                        actionResId = R.string.songcast_action_lobby,
+                        action = { showLobby() },
+                    )
                     streamSocket.reconnect()
+                    uiInfoService.clearSnackBars()
                 } catch (e: Throwable) {
                     UiErrorHandler().handleContextError(e, R.string.songcast_connection_context)
                 }
@@ -309,9 +317,13 @@ class SongCastService {
                 )
             )
         }
-        uiInfoService.showInfo(R.string.songcast_song_selected, presenterName, songName)
+        uiInfoService.showInfoAction(
+            R.string.songcast_song_selected, presenterName, songName,
+            actionResId = R.string.songcast_action_open_song,
+            action = { openPresentedSong() },
+        )
 
-        GlobalScope.launch(Dispatchers.Main) {
+        mainScope.launch {
             onSessionUpdated()
         }
         if (followsPresentedSong(presenter?.public_member_id)) {
@@ -331,7 +343,7 @@ class SongCastService {
 
     fun openPresentedSong() {
         val ephemeralSongN = ephemeralSong ?: return
-        GlobalScope.launch {
+        defaultScope.launch {
             songOpener.openSongPreview(ephemeralSongN) {
                 adaptToScrollControl()
             }
@@ -368,7 +380,7 @@ class SongCastService {
     fun refreshSessionIfInRoom() {
         if (!isInRoom())
             return
-        GlobalScope.launch(Dispatchers.IO) {
+        ioScope.launch {
             refreshSessionDetails()
         }
     }
@@ -380,7 +392,7 @@ class SongCastService {
             val compareResult = compareSessionStates(oldState, sessionState)
             if (compareResult)
                 lastSessionChange = Date().time
-            GlobalScope.launch(Dispatchers.Main) {
+            mainScope.launch {
                 onSessionUpdated()
             }
             return Result.success(Unit)
@@ -405,7 +417,11 @@ class SongCastService {
             if (newMessages.isNotEmpty()) {
                 val message = newMessages.last()
                 if (message.author != this.myName) {
-                    uiInfoService.showInfo(R.string.songcast_new_chat_message, message.author, message.text)
+                    uiInfoService.showInfoAction(
+                        R.string.songcast_new_chat_message, message.author, message.text,
+                        actionResId = R.string.songcast_action_lobby,
+                        action = { showLobby() },
+                    )
                 }
             }
             return true
@@ -413,12 +429,20 @@ class SongCastService {
         if (oldState.members != newState.members) {
             val droppedMembers = oldState.members.toSet().minus(newState.members.toSet())
             droppedMembers.forEach { member ->
-                uiInfoService.showInfo(R.string.songcast_member_dropped, member.name)
+                uiInfoService.showInfoAction(
+                    R.string.songcast_member_dropped, member.name,
+                    actionResId = R.string.songcast_action_lobby,
+                    action = { showLobby() },
+                )
                 addSystemLogEvent(R.string.songcast_member_dropped, member.name)
             }
             val newMembers = newState.members.toSet().minus(oldState.members.toSet())
             newMembers.forEach { member ->
-                uiInfoService.showInfo(R.string.songcast_new_member_joined, member.name)
+                uiInfoService.showInfoAction(
+                    R.string.songcast_new_member_joined, member.name,
+                    actionResId = R.string.songcast_action_lobby,
+                    action = { showLobby() },
+                )
                 addSystemLogEvent(R.string.songcast_new_member_joined, member.name)
             }
             return true
@@ -431,6 +455,10 @@ class SongCastService {
             return true
         }
         return false
+    }
+
+    private fun showLobby() {
+        layoutController.showLayout(SongCastLobbyLayout::class)
     }
 
     private fun adaptToScrollControl() {
