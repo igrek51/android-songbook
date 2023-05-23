@@ -24,6 +24,7 @@ import igrek.songbook.songpreview.scroll.AutoscrollService
 import igrek.songbook.system.WindowManagerService
 import igrek.songbook.util.applyMin
 import igrek.songbook.util.lookup.SimpleCache
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -485,14 +486,16 @@ class SongPreview(
             }
         }
         this.slideAnimationJob = GlobalScope.launch (Dispatchers.Main) {
-            canvas.repaint()
-            val animationTime = 300L
-            val animationSteps = 10
-            while (slideAnimationProgress < 1f) {
-                delay(animationTime / animationSteps)
-                slideAnimationProgress += 1f / animationSteps
+            try {
                 canvas.repaint()
-            }
+                val animationTime = 300L
+                val animationSteps = 10
+                while (slideAnimationProgress < 1f) {
+                    delay(animationTime / animationSteps)
+                    slideAnimationProgress += 1f / animationSteps
+                    canvas.repaint()
+                }
+            } catch (_: CancellationException) {}
         }
     }
 

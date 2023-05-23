@@ -48,7 +48,9 @@ import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.favourite.FavouriteSongsService
 import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.WindowManagerService
+import igrek.songbook.util.mainScope
 import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 
@@ -110,6 +112,7 @@ class SongPreviewLayoutController(
     private var setFavouriteButton: ImageButton? = null
     private var songCastButton: ImageButton? = null
     private val originalButtonBackgrounds: MutableMap<Int, Pair<ColorFilter, Drawable>> = mutableMapOf()
+    private val onInitListeners: MutableList<() -> Unit> = mutableListOf()
 
     init {
         autoscrollService.get().scrollStateSubject
@@ -283,11 +286,12 @@ class SongPreviewLayoutController(
 
     private fun onGraphicsInitialized() {
         val w = songPreview?.canvas?.w ?: return
-        currentSong?.let {
+        val currentSong = currentSong ?: return
+        mainScope.launch {
             // load file and parse it
-            val fileContent = it.content.orEmpty()
-            val srcNotation = it.chordsNotation
-            val transposed = songsRepository.transposeDao.getSongTransposition(it.songIdentifier())
+            val fileContent = currentSong.content.orEmpty()
+            val srcNotation = currentSong.chordsNotation
+            val transposed = songsRepository.transposeDao.getSongTransposition(currentSong.songIdentifier())
             // initialize - first file loading
             lyricsLoader.load(fileContent, w, transposed, srcNotation)
 
@@ -295,8 +299,15 @@ class SongPreviewLayoutController(
             songPreview?.setLyricsModel(lyricsLoader.arrangedLyrics)
             resetOverlayScroll()
 
-            autoscrollService.onLoad(it.songIdentifier())
+            autoscrollService.onLoad(currentSong.songIdentifier())
+
+            onInitListeners.forEach { it() }
+            onInitListeners.clear()
         }
+    }
+
+    fun addOnInitListener(onInitListener: () -> Unit) {
+        onInitListeners.add(onInitListener)
     }
 
     private fun resetOverlayScroll() {

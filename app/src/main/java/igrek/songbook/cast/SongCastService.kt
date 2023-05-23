@@ -16,6 +16,7 @@ import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.util.buildSongName
+import igrek.songbook.util.defaultScope
 import igrek.songbook.util.interpolate
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -228,28 +229,28 @@ class SongCastService {
     }
 
     fun reportSongOpened(song: Song) {
-        GlobalScope.launch {
-            if (!isPresenter())
-                return@launch
-            // opening the one that is already presented
-            if (song.namespace == SongNamespace.Ephemeral && song.id == sessionState.castSongDto?.id)
-                return@launch
+        if (!isPresenter()) return
+        // opening the song presented by someone else (or returning to the same one)
+        if (song.namespace == SongNamespace.Ephemeral) return
 
-            val castSongId: String = SongHasher().hashSong(song)
-            val payload = CastSongSelected(
-                id = castSongId,
-                title = song.title,
-                artist = song.artist,
-                content = song.content.orEmpty(),
-                chords_notation_id = song.chordsNotation.id,
-            )
+        val castSongId: String = SongHasher().hashSong(song)
+        val payload = CastSongSelected(
+            id = castSongId,
+            title = song.title,
+            artist = song.artist,
+            content = song.content.orEmpty(),
+            chords_notation_id = song.chordsNotation.id,
+        )
 
-            val result = postSongPresentAsync(payload).await()
-            result.fold(onSuccess = {
-                scrollService.shareScrollControl()
-            }, onFailure = { e ->
-                UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
-            })
+        songPreviewLayoutController.addOnInitListener {
+            defaultScope.launch {
+                val result = postSongPresentAsync(payload).await()
+                result.fold(onSuccess = {
+                    scrollService.shareScrollControl()
+                }, onFailure = { e ->
+                    UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
+                })
+            }
         }
     }
 
@@ -314,7 +315,7 @@ class SongCastService {
             onSessionUpdated()
         }
         if (followsPresentedSong(presenter?.public_member_id)) {
-            openCastSong()
+            openPresentedSong()
         }
     }
 
@@ -328,10 +329,12 @@ class SongCastService {
         }
     }
 
-    fun openCastSong() {
+    fun openPresentedSong() {
         val ephemeralSongN = ephemeralSong ?: return
         GlobalScope.launch {
-            songOpener.openSongPreview(ephemeralSongN)
+            songOpener.openSongPreview(ephemeralSongN) {
+                adaptToScrollControl()
+            }
         }
     }
 
@@ -422,18 +425,23 @@ class SongCastService {
         }
         if (oldState.currentScroll != newState.currentScroll) {
             val scrollDto = newState.currentScroll
-            val chordsNotation = ephemeralSong?.chordsNotation ?: ChordsNotation.default
-            if (scrollDto != null) {
-                if (clientFollowScroll && !isPresenting() && layoutController.isState(SongPreviewLayoutController::class)) {
-                    logger.debug("Scrolling by SongCast event: ${scrollDto.view_start}")
-                    scrollService.adaptToScrollControl(
-                        scrollDto.view_start, scrollDto.view_end, scrollDto.visible_text, scrollDto.mode, chordsNotation,
-                    )
-                }
+            scrollDto?.run {
+                adaptToScrollControl()
             }
             return true
         }
         return false
+    }
+
+    private fun adaptToScrollControl() {
+        val scrollDto = sessionState.currentScroll ?: return
+        val chordsNotation = ephemeralSong?.chordsNotation ?: ChordsNotation.default
+        if (clientFollowScroll && !isPresenting() && layoutController.isState(SongPreviewLayoutController::class)) {
+            logger.debug("scrolling by SongCast event: mode=${scrollDto.mode}, start=${scrollDto.view_start}")
+            scrollService.adaptToScrollControl(
+                scrollDto.view_start, scrollDto.view_end, scrollDto.visible_text, scrollDto.mode, chordsNotation,
+            )
+        }
     }
 
     private fun addSystemLogEvent(resourceId: Int, vararg args: Any?) {

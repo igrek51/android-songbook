@@ -32,13 +32,16 @@ open class SongOpener(
     private val songCastService by LazyExtractor(songCastService)
     private val playlistService by LazyExtractor(playlistService)
 
-    fun openSongPreview(song: Song, playlist: Playlist? = null) {
+    fun openSongPreview(song: Song, playlist: Playlist? = null, onInit: (() -> Unit)? = null) {
         logger.info("Opening song: $song")
         playlistService.currentPlaylist = playlist
         songPreviewLayoutController.currentSong = song
+        onInit?.let {
+            songPreviewLayoutController.addOnInitListener(onInit)
+        }
+        songCastService.reportSongOpened(song)
         layoutController.showLayout(SongPreviewLayoutController::class)
         songsRepository.openHistoryDao.registerOpenedSong(song.id, song.namespace)
-        songCastService.reportSongOpened(song)
         AnalyticsLogger().logEventSongOpened(song)
     }
 

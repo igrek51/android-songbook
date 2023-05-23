@@ -125,7 +125,7 @@ class SongCastLobbyLayout(
     }
 
     fun openCurrentSong() {
-        songCastService.openCastSong()
+        songCastService.openPresentedSong()
     }
 
     fun sendChatMessage() {
