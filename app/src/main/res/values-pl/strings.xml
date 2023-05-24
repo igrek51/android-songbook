@@ -580,4 +580,9 @@
     <string name="songcast_action_lobby">Lobby</string>
     <string name="songcast_no_spectators">Brak obserwatorów do wybrania</string>
     <string name="songcast_choose_member_to_promote">Wybierz Obserwatora</string>
+    <string name="chords_editor_transpose">Transponuj akordy</string>
+    <string name="chords_editor_transpose_by_title">Transpozycja o</string>
+    <string name="chords_editor_x_semitones">%s półtonów</string>
+    <string name="chords_editor_x_semitone">%s półton</string>
+    <string name="chords_editor_transposed">Transpozycja zakończona.</string>
 </resources>

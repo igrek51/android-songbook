@@ -195,8 +195,41 @@ class ChordsEditorLayoutController(
             ContextMenuBuilder.Action(R.string.chords_editor_detect_chords_keeping_indent) {
                 wrapHistoryContext { transformer?.detectChords(keepIndentation = false) }
             },
+            ContextMenuBuilder.Action(R.string.chords_editor_transpose) {
+                showTransposeMenu()
+            },
         )
         contextMenuBuilder.showContextMenu(R.string.edit_song_transform_chords, actions)
+    }
+
+    private fun showTransposeMenu() {
+        val actions = mutableListOf<ContextMenuBuilder.Action>()
+        var label: String
+
+        for (i in -11..-2) {
+            label = uiInfoService.resString(R.string.chords_editor_x_semitones, i.toString())
+            val action = ContextMenuBuilder.Action(label) {
+                wrapHistoryContext { transformer?.transposeBy(i) }
+            }
+            actions.add(action)
+        }
+        label = uiInfoService.resString(R.string.chords_editor_x_semitone, "-1")
+        actions.add(ContextMenuBuilder.Action(label) {
+            wrapHistoryContext { transformer?.transposeBy(-1) }
+        })
+        label = uiInfoService.resString(R.string.chords_editor_x_semitone, "+1")
+        actions.add(ContextMenuBuilder.Action(label) {
+            wrapHistoryContext { transformer?.transposeBy(+1) }
+        })
+        for (i in 2..11) {
+            label = uiInfoService.resString(R.string.chords_editor_x_semitones, "+$i")
+            val action = ContextMenuBuilder.Action(label) {
+                wrapHistoryContext { transformer?.transposeBy(i) }
+            }
+            actions.add(action)
+        }
+
+        contextMenuBuilder.showContextMenu(R.string.chords_editor_transpose_by_title, actions)
     }
 
     private fun wrapHistoryContext(action: () -> Unit) {

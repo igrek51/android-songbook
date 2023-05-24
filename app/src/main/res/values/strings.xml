@@ -541,7 +541,7 @@
     Share the code with others so they can join this room as <b>Spectators</b>.
     As a presenter you can control the song\'s scroll position on all devices or enable <b>Slides mode</b>
     (click <b>Song Cast</b> icon in a song preview).
-    <b>Slides mode</b> presents only selected lines of the song and animates them on Spectator's device.
+    <b>Slides mode</b> presents only selected lines of the song and animates them on Spectator\'s device.
 ]]></string>
     <string name="songcast_lobby_text_guest_hint"><![CDATA[
     You\'re a <b>Spectator</b> in this room. Wait for the presenter to choose a song.
@@ -611,4 +611,9 @@
     <string name="songcast_action_lobby">Lobby</string>
     <string name="songcast_no_spectators">No spectators to promote</string>
     <string name="songcast_choose_member_to_promote">Choose member</string>
+    <string name="chords_editor_transpose">Transpose chords</string>
+    <string name="chords_editor_transpose_by_title">Transpose by</string>
+    <string name="chords_editor_x_semitones">%s semitones</string>
+    <string name="chords_editor_x_semitone">%s semitone</string>
+    <string name="chords_editor_transposed">Tranposing completed</string>
 </resources>

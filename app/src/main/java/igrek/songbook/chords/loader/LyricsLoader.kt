@@ -153,9 +153,9 @@ class LyricsLoader(
         val trimWhitespaces: Boolean = preferencesState.trimWhitespaces
         val toNotation: ChordsNotation = preferencesState.chordsNotation
         val forceSharpNotes: Boolean = preferencesState.forceSharpNotes
-        val fontsize: Float = lyricsThemeService.fontsize
-        val typeface: Typeface = lyricsThemeService.fontTypeface.typeface
-        val displayStyle: DisplayStyle = lyricsThemeService.displayStyle
+        val fontsize: Float = preferencesState.fontsize
+        val typeface: Typeface = preferencesState.fontTypeface.typeface
+        val displayStyle: DisplayStyle = preferencesState.chordsDisplayStyle
         val horizontalScroll: Boolean = preferencesState.horizontalScroll
 
         // Extract lyrics and chords

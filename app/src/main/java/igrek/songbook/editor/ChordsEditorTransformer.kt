@@ -2,8 +2,14 @@ package igrek.songbook.editor
 
 import igrek.songbook.R
 import igrek.songbook.chords.converter.ChordsNotationConverter
+import igrek.songbook.chords.detect.KeyDetector
 import igrek.songbook.chords.parser.ChordParser
+import igrek.songbook.chords.parser.LyricsExtractor
+import igrek.songbook.chords.render.ChordsRenderer
+import igrek.songbook.chords.transpose.ChordsTransposer
 import igrek.songbook.info.UiInfoService
+import igrek.songbook.info.errorcheck.safeExecute
+import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -498,6 +504,41 @@ class ChordsEditorTransformer(
 
     fun detectAndMoveChordsAboveToInline() {
         transformLyrics(this::transformDetectAndMoveChordsAboveToInline)
+    }
+
+    fun transposeBy(semitones: Int) {
+        safeExecute {
+            transformLyrics { lyrics ->
+                transposeLyrics(lyrics, semitones)
+            }
+            uiInfoService.showInfo(R.string.chords_editor_transposed)
+        }
+    }
+
+    private fun transposeLyrics(content: String, semitones: Int): String {
+        val trimWhitespaces: Boolean = preferencesState.trimWhitespaces
+        val forceSharpNotes: Boolean = preferencesState.forceSharpNotes
+
+        // Extract lyrics and chords
+        val lyricsExtractor = LyricsExtractor(trimWhitespaces = trimWhitespaces)
+        val loadedLyrics = lyricsExtractor.parseLyrics(content)
+        // Parse chords
+        val unknownChords = ChordParser(chordsNotation).parseAndFillChords(loadedLyrics)
+        unknownChords.takeIf { it.isNotEmpty() }?.let {
+            logger.warn("Unknown chords: ${unknownChords.joinToString(", ")}")
+        }
+
+        // transpose
+        val transposedLyrics = ChordsTransposer().transposeLyrics(loadedLyrics, semitones)
+
+        // Format chords
+        val songKey = KeyDetector().detectKey(transposedLyrics)
+        val transposedLyrics2 = ChordsRenderer(chordsNotation, songKey, forceSharpNotes).formatLyrics(
+            transposedLyrics,
+            originalModifiers = false,
+        )
+
+        return transposedLyrics2.displayString()
     }
 
 }
