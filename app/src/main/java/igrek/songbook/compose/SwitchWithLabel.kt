@@ -15,7 +15,12 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SwitchWithLabel(label: String, state: Boolean, onStateChange: (Boolean) -> Unit) {
+fun SwitchWithLabel(
+    label: String,
+    state: Boolean,
+    tooltip: String? = null,
+    onStateChange: (Boolean) -> Unit,
+) {
     val interactionSource = remember { MutableInteractionSource() }
     Row(
         modifier = Modifier
@@ -24,11 +29,14 @@ fun SwitchWithLabel(label: String, state: Boolean, onStateChange: (Boolean) -> U
                 indication = null, // This is for removing ripple when Row is clicked
                 role = Role.Switch,
                 onClick = { onStateChange(!state) }
-            ).padding(6.dp),
+            ).padding(horizontal = 6.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(text = label)
-        Spacer(modifier = Modifier.padding(start = 8.dp))
+        if (tooltip != null) {
+            Tooltip(tooltip)
+        }
+        Spacer(modifier = Modifier.padding(start = 6.dp))
         Switch(
             checked = state,
             onCheckedChange = { onStateChange(it) }

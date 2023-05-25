@@ -84,17 +84,23 @@ private fun MainComponent(controller: QuickMenuCast) {
             modifier = Modifier.padding(bottom = 8.dp),
         )
 
+        SwitchWithLabel(
+            stringResource(R.string.songcast_open_presented_song_automatically),
+            controller.songCastService.clientOpenPresentedSongs,
+            tooltip = stringResource(R.string.songcast_open_presented_song_automatically_tooltip),
+        ) {
+            controller.songCastService.clientOpenPresentedSongs = it
+        }
+
         if (controller.songCastService.isPresenting())
             ScrollControlDropdown(controller)
 
-        SwitchWithLabel(stringResource(R.string.songcast_follow_presenters_scroll),
-            controller.songCastService.clientFollowScroll) {
+        SwitchWithLabel(
+            stringResource(R.string.songcast_follow_presenters_scroll),
+            controller.songCastService.clientFollowScroll,
+            tooltip = stringResource(R.string.songcast_follow_presenters_scroll_tooltip),
+        ) {
             controller.songCastService.clientFollowScroll = it
-        }
-
-        SwitchWithLabel(stringResource(R.string.songcast_open_presented_song_automatically),
-            controller.songCastService.clientOpenPresentedSongs) {
-            controller.songCastService.clientOpenPresentedSongs = it
         }
 
         Button(
