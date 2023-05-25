@@ -225,7 +225,7 @@ class SongCastService {
         return requester.promoteMemberAsync(memberPubId)
     }
 
-    fun reportSongOpened(song: Song) {
+    fun presentMyOpenedSong(song: Song) {
         if (!isPresenter()) return
         // opening the song presented by someone else (or returning to the same one)
         if (song.namespace == SongNamespace.Ephemeral) return
@@ -246,6 +246,7 @@ class SongCastService {
             content = payload.content,
             chords_notation_id = payload.chords_notation_id,
         )
+        sessionState.currentScroll = null
 
         songPreviewLayoutController.addOnInitListener {
             defaultScope.launch {
@@ -296,6 +297,7 @@ class SongCastService {
             chosen_by = chosenBy,
         )
         sessionState.castSongDto = castSongDto
+        sessionState.currentScroll = null
         onSongSelectedEventDto(castSongDto)
     }
 
@@ -399,11 +401,12 @@ class SongCastService {
         if (!oldState.initialized)
             return true
 
+        var changed = false
         if (oldState.castSongDto != newState.castSongDto) {
             val castSongDto = newState.castSongDto
             if (castSongDto != null)
                 onSongSelectedEventDto(castSongDto)
-            return true
+            changed = true
         }
         if (oldState.chatMessages != newState.chatMessages) {
             val newMessages = newState.chatMessages.minus(oldState.chatMessages.toSet())
@@ -417,7 +420,7 @@ class SongCastService {
                     )
                 }
             }
-            return true
+            changed = true
         }
         if (oldState.members != newState.members) {
             val droppedMembers = oldState.members.toSet().minus(newState.members.toSet())
@@ -438,16 +441,16 @@ class SongCastService {
                 )
                 addSystemLogEvent(R.string.songcast_new_member_joined, member.name)
             }
-            return true
+            changed = true
         }
         if (oldState.currentScroll != newState.currentScroll) {
             val scrollDto = newState.currentScroll
             scrollDto?.run {
                 adaptToScrollControl()
             }
-            return true
+            changed = true
         }
-        return false
+        return changed
     }
 
     fun showLobby() {
