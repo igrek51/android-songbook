@@ -33,13 +33,13 @@ fun SwitchWithLabel(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(text = label)
-        if (tooltip != null) {
-            Tooltip(tooltip)
-        }
         Spacer(modifier = Modifier.padding(start = 6.dp))
         Switch(
             checked = state,
             onCheckedChange = { onStateChange(it) }
         )
+        if (tooltip != null) {
+            Tooltip(tooltip)
+        }
     }
 }

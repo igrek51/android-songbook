@@ -81,8 +81,11 @@ private fun MainComponent(controller: QuickMenuCast) {
         Text(
             stringResource(R.string.songcast_settings),
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 8.dp),
+            modifier = Modifier.padding(top = 8.dp, bottom = 8.dp, start = 8.dp),
         )
+
+        if (controller.songCastService.isPresenting())
+            ScrollControlDropdown(controller)
 
         SwitchWithLabel(
             stringResource(R.string.songcast_open_presented_song_automatically),
@@ -91,9 +94,6 @@ private fun MainComponent(controller: QuickMenuCast) {
         ) {
             controller.songCastService.clientOpenPresentedSongs = it
         }
-
-        if (controller.songCastService.isPresenting())
-            ScrollControlDropdown(controller)
 
         SwitchWithLabel(
             stringResource(R.string.songcast_follow_presenters_scroll),

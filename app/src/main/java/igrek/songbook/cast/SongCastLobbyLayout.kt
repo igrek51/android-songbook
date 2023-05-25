@@ -335,14 +335,6 @@ private fun MainComponent(controller: SongCastLobbyLayout) {
         RoomCodeField(controller)
         MembersLists(controller)
 
-        SwitchWithLabel(
-            stringResource(R.string.songcast_open_presented_song_automatically),
-            controller.songCastService.clientOpenPresentedSongs,
-            tooltip = stringResource(R.string.songcast_open_presented_song_automatically_tooltip),
-        ) {
-            controller.songCastService.clientOpenPresentedSongs = it
-        }
-
         if (controller.state.waitingForPresenter)
             OpenLastSongButton(controller)
         EventsLog(controller)

@@ -554,7 +554,7 @@
     <string name="songcast_room_joined_rejoined">Welcome again, %s.</string>
     <string name="songcast_room_not_found">Room with the given code was not found</string>
     <string name="songcast_you_left_the_room">You\'ve left the room</string>
-    <string name="songcast_exit_room">Exit room</string>
+    <string name="songcast_exit_room">🚪 Exit room</string>
     <string name="songcast_confirm_leave_room">You are about to leave the Song Cast room. Do you really want to close it?</string>
     <string name="songcast_members_presenters">Presenters</string>
     <string name="songcast_members_spectators">Spectators</string>
@@ -567,7 +567,7 @@
     <string name="songcast_chat_message_sent">Message sent</string>
     <string name="songcast_send_chat_icon_description">Send message</string>
     <string name="songcast_hint_chat_message">Chat</string>
-    <string name="songcast_refresh_session_details">Refresh</string>
+    <string name="songcast_refresh_session_details">🔄 Refresh</string>
     <string name="songcast_new_member_joined">%s joined the room.</string>
     <string name="songcast_member_dropped">%s left the room.</string>
     <string name="songcast_new_chat_message" formatted="false">Chat: %s: %s</string>
@@ -595,18 +595,18 @@
     <string name="songcast_scrollcontrol_slides2">Slides mode: 2 lines</string>
     <string name="songcast_scrollcontrol_slides4">Slides mode: 4 lines</string>
     <string name="songcast_scrollcontrol_slides8">Slides mode: 8 lines</string>
-    <string name="songcast_remote_control">Remote Control when presenting</string>
+    <string name="songcast_remote_control">Remote control when presenting</string>
     <string name="songcast_follow_presenters_scroll">Follow presenter\'s scroll</string>
     <string name="songcast_settings">Song Cast settings</string>
     <string name="songcast_songname_none">None</string>
     <string name="songcast_you">You</string>
     <string name="songcast_joined_the_room_as_presenter">%s joined the room as Presenter</string>
     <string name="songcast_joined_the_room_as_spectator">%s joined the room as Spectator</string>
-    <string name="songcast_promote_member_to_presenter">Promote to presenter</string>
+    <string name="songcast_promote_member_to_presenter">👤 Promote to presenter</string>
     <string name="songcast_member_promoted">%s has been promoted to Presenter</string>
     <string name="songcast_session_created">Song Cast room created.</string>
     <string name="songcast_share_with_songcast">Open in Song Cast</string>
-    <string name="songcast_open_presented_song_automatically">Follow presented song</string>
+    <string name="songcast_open_presented_song_automatically">Focus presented song</string>
     <string name="songcast_action_open_song">Show</string>
     <string name="songcast_action_lobby">Lobby</string>
     <string name="songcast_no_spectators">No spectators to promote</string>

@@ -523,7 +523,7 @@
     <string name="songcast_room_joined_rejoined">Witaj ponownie, %s.</string>
     <string name="songcast_room_not_found">Pokój z podanym kodem nie został znaleziony</string>
     <string name="songcast_you_left_the_room">Opuściłeś pokój.</string>
-    <string name="songcast_exit_room">Opuść pokój</string>
+    <string name="songcast_exit_room">🚪 Opuść pokój</string>
     <string name="songcast_confirm_leave_room">Masz zamiar opuścić pokój Song Cast. Czy na pewno chcesz go zamknąć?</string>
     <string name="songcast_members_presenters">Prezenterzy</string>
     <string name="songcast_members_spectators">Obserwatorzy</string>
@@ -536,7 +536,7 @@
     <string name="songcast_chat_message_sent">Wiadomość wysłana</string>
     <string name="songcast_send_chat_icon_description">Wyślij wiadomość</string>
     <string name="songcast_hint_chat_message">Czat</string>
-    <string name="songcast_refresh_session_details">Odśwież</string>
+    <string name="songcast_refresh_session_details">🔄 Odśwież</string>
     <string name="songcast_new_member_joined">%s dołączył do pokoju.</string>
     <string name="songcast_member_dropped">%s opuścił pokój.</string>
     <string name="songcast_new_chat_message" formatted="false">Czat: %s: %s</string>
@@ -564,14 +564,14 @@
     <string name="songcast_scrollcontrol_slides2">Tryb slajdów: 2 linie</string>
     <string name="songcast_scrollcontrol_slides4">Tryb slajdów: 4 linie</string>
     <string name="songcast_scrollcontrol_slides8">Tryb slajdów: 8 linii</string>
-    <string name="songcast_remote_control">Zdalna Kontrola podczas prezentowania</string>
+    <string name="songcast_remote_control">Zdalna kontrola podczas prezentowania</string>
     <string name="songcast_follow_presenters_scroll">Podążaj za przewijaniem prezentera</string>
     <string name="songcast_settings">Ustawienia Song Cast</string>
     <string name="songcast_songname_none">Brak</string>
     <string name="songcast_you">Ty</string>
     <string name="songcast_joined_the_room_as_presenter">%s dołączył do pokoju jako Prezenter</string>
     <string name="songcast_joined_the_room_as_spectator">%s dołączył do pokoju jako Obserwator</string>
-    <string name="songcast_promote_member_to_presenter">Awansuj na Prezentera</string>
+    <string name="songcast_promote_member_to_presenter">👤 Awansuj na Prezentera</string>
     <string name="songcast_member_promoted">%s został awansowany na Prezentera</string>
     <string name="songcast_session_created">Pokój Song Cast został utworzony.</string>
     <string name="songcast_share_with_songcast">Otwórz w Song Cast</string>
