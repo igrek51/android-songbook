@@ -503,7 +503,6 @@ val adjectives: List<String> = listOf(
     "indulgent",
     "industrious",
     "inestimable",
-    "inexpensive",
     "infallible",
     "influential",
     "ingenious",
