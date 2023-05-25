@@ -495,6 +495,14 @@ class SongCastService {
             onSessionUpdated()
         }
     }
+
+    fun isSameSongPresented(song: Song?): Boolean {
+        val songN = song ?: return false
+        val ephemeralSongN = ephemeralSong ?: return false
+        val hash1 = SongHasher().hashSong(songN)
+        val hash2 = SongHasher().hashSong(ephemeralSongN)
+        return hash1 == hash2
+    }
 }
 
 data class SessionState(

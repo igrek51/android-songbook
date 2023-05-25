@@ -78,13 +78,13 @@ class QuickMenuCast {
 
     private fun updateState() {
         state.isPresenting = songCastService.isPresenting()
-        state.songIsPresented = songCastService.ephemeralSong == songPreviewLayoutController.currentSong
+        state.sameSongPresented = songCastService.isSameSongPresented(songPreviewLayoutController.currentSong)
     }
 }
 
 class QuickMenuCastState {
     var isPresenting: Boolean by mutableStateOf(false)
-    var songIsPresented: Boolean by mutableStateOf(false)
+    var sameSongPresented: Boolean by mutableStateOf(false)
 }
 
 @Composable
@@ -97,13 +97,13 @@ private fun MainComponent(controller: QuickMenuCast) {
         )
 
         val songStatusResId = when {
-            controller.state.songIsPresented && controller.state.isPresenting -> R.string.songcast_youre_presenting_this_song
-            controller.state.songIsPresented -> R.string.songcast_youre_spectating_this_song
+            controller.state.sameSongPresented && controller.state.isPresenting -> R.string.songcast_youre_presenting_this_song
+            controller.state.sameSongPresented -> R.string.songcast_youre_spectating_this_song
             else -> R.string.songcast_this_song_is_not_presented
         }
         Text(
             stringResource(songStatusResId),
-            modifier = Modifier.padding(vertical = 4.dp).fillMaxWidth(),
+            modifier = Modifier.padding(top = 4.dp, bottom = 8.dp).fillMaxWidth(),
             textAlign = TextAlign.Center,
         )
 
