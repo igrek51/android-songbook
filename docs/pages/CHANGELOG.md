@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (click *Song Cast* icon in a song preview).
   *Slides mode* presents only selected lines of the song and animates them on Spectator's device.
 - Some of the layouts started to use Jetpack Compose and Material Design Components.
+- You can now transpose chords in the Chords Editor.
+  Click *Transform* button, pick *Transpose chords* option and select the number of semitones.
 
 ### Changed
 - Default chrods displaying style is now *Chords Above*.

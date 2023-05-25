@@ -140,7 +140,7 @@ class SongCastLobbyLayout(
             val payload = CastChatMessageSent(text = text)
             val result = songCastService.postChatMessageAsync(payload).await()
             result.fold(onSuccess = {
-                uiInfoService.showInfo(R.string.songcast_chat_message_sent)
+                uiInfoService.clearSnackBars()
                 withContext(Dispatchers.Main) {
                     state.currentChat = ""
                 }
