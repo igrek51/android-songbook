@@ -42,7 +42,7 @@ class SongCastService {
     private var myName: String = ""
     var myMemberPublicId: String = ""
     var sessionCode: String? = null
-    private var ephemeralSong: Song? = null
+    var ephemeralSong: Song? = null
     var onSessionUpdated: () -> Unit = {}
     var sessionState: SessionState = SessionState()
     private var periodicRefreshJob: Job? = null
@@ -246,6 +246,7 @@ class SongCastService {
             content = payload.content,
             chords_notation_id = payload.chords_notation_id,
         )
+        ephemeralSong = buildEphemeralSong(sessionState.castSongDto)
         sessionState.currentScroll = null
 
         songPreviewLayoutController.addOnInitListener {
@@ -333,7 +334,7 @@ class SongCastService {
             !clientOpenPresentedSongs -> false
             pubMemberId == null -> false
             pubMemberId == myMemberPublicId -> false
-            songPreviewLayoutController.currentSong == ephemeralSong -> false // already opened
+            //songPreviewLayoutController.currentSong == ephemeralSong -> false // already opened
             else -> true
         }
     }

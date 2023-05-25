@@ -80,7 +80,7 @@ class ScrollService(
                 else -> null
             } ?: return@launch
             if (payload == songCastService.lastSharedScroll) return@launch
-            logger.debug("Sharing scroll control: ${payload.view_start}, ${payload.visible_text}")
+            logger.debug("Sharing scroll control: ${payload.view_start}")
             val result = songCastService.postScrollControlAsync(payload).await()
             result.fold(onSuccess = {
                 songCastService.lastSharedScroll = payload

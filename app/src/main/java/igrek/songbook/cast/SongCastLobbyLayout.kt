@@ -58,7 +58,6 @@ import igrek.songbook.R
 import igrek.songbook.compose.AppTheme
 import igrek.songbook.compose.DarkColors
 import igrek.songbook.compose.RichText
-import igrek.songbook.compose.SwitchWithLabel
 import igrek.songbook.compose.md_theme_light_primaryContainer
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.SafeClickListener

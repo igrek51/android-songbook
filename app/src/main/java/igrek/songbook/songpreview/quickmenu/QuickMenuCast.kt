@@ -28,25 +28,25 @@ import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import igrek.songbook.R
 import igrek.songbook.cast.CastScrollControl
 import igrek.songbook.cast.SongCastLobbyLayout
-import igrek.songbook.cast.SongCastService
 import igrek.songbook.compose.AppTheme
 import igrek.songbook.compose.SwitchWithLabel
 import igrek.songbook.compose.md_theme_light_primaryContainer
 import igrek.songbook.info.errorcheck.safeAsyncExecutor
 import igrek.songbook.inject.LazyExtractor
-import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 
 // Singleton
-class QuickMenuCast(
-    songCastService: LazyInject<SongCastService> = appFactory.songCastService,
-) {
-    val songCastService by LazyExtractor(songCastService)
+class QuickMenuCast {
+    val songCastService by LazyExtractor(appFactory.songCastService)
     val preferencesState by LazyExtractor(appFactory.preferencesState)
+    val songPreviewLayoutController by LazyExtractor(appFactory.songPreviewLayoutController)
+
+    val state = QuickMenuCastState()
 
     var isVisible = false
         set(visible) {
@@ -54,6 +54,7 @@ class QuickMenuCast(
             quickMenuView?.let { quickMenuView ->
                 if (visible) {
                     quickMenuView.visibility = View.VISIBLE
+                    updateState()
                 } else {
                     quickMenuView.visibility = View.GONE
                 }
@@ -62,6 +63,7 @@ class QuickMenuCast(
     private var quickMenuView: View? = null
 
     fun setQuickMenuView(quickMenuView: View) {
+        updateState()
         this.quickMenuView = quickMenuView
         val thisMenu = this
         quickMenuView.findViewById<ComposeView>(R.id.compose_quick_menu_cast).apply {
@@ -73,6 +75,16 @@ class QuickMenuCast(
             }
         }
     }
+
+    private fun updateState() {
+        state.isPresenting = songCastService.isPresenting()
+        state.songIsPresented = songCastService.ephemeralSong == songPreviewLayoutController.currentSong
+    }
+}
+
+class QuickMenuCastState {
+    var isPresenting: Boolean by mutableStateOf(false)
+    var songIsPresented: Boolean by mutableStateOf(false)
 }
 
 @Composable
@@ -84,8 +96,18 @@ private fun MainComponent(controller: QuickMenuCast) {
             modifier = Modifier.padding(top = 8.dp, bottom = 8.dp, start = 8.dp),
         )
 
-        if (controller.songCastService.isPresenting())
-            ScrollControlDropdown(controller)
+        val songStatusResId = when {
+            controller.state.songIsPresented && controller.state.isPresenting -> R.string.songcast_youre_presenting_this_song
+            controller.state.songIsPresented -> R.string.songcast_youre_spectating_this_song
+            else -> R.string.songcast_this_song_is_not_presented
+        }
+        Text(
+            stringResource(songStatusResId),
+            modifier = Modifier.padding(vertical = 4.dp).fillMaxWidth(),
+            textAlign = TextAlign.Center,
+        )
+
+        ScrollControlDropdown(controller)
 
         SwitchWithLabel(
             stringResource(R.string.songcast_open_presented_song_automatically),
