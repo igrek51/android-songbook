@@ -19,7 +19,7 @@ Our chief weapons are:
 - [Custom songs and chords editor](./chords-editor.md)
 - Playlists
 - [Chord diagrams](./chord-diagrams.md) for guitar, ukulele, mandolin and piano
-- [Sharing & Displaying songs on multiple devices at the same time via Bluetooth](./bluetooth-sharing.md)
+- [Sharing & Displaying songs on many devices over Internet connection](./song-cast.md)
 - [Several chord notations](./chord-notations.md): English (`Am Bbm Bb B C Dm`), German (`a b B H C d`), Solfege, Dutch, Japanese
 - Recognizing the key of the song
 - Automatic chords detection

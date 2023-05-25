@@ -57,7 +57,7 @@ nav:
     - Displaying Styles: displaying-styles.md
     - Chord Notations: chord-notations.md
     - Controls: controls.md
-    - Bluetooth Sharing: bluetooth-sharing.md
+    - Song Cast: song-cast.md
   - Custom Songs:
     - Chord Format Specification: chord-format.md
     - Local Chords Editor: chords-editor.md

@@ -15,7 +15,7 @@ Our chief weapons are:
 - Custom songs and chords editor
 - Playlists
 - Chord diagrams for guitar, ukulele, mandolin and piano
-- Sharing & Displaying songs on multiple devices at the same time via Bluetooth
+- Song Cast protocol - Sharing & Displaying songs on many devices over Internet connection
 - Several chord notations: English (`Am Bbm Bb B C Dm`), German (`a b B H C d`), Solfege, Dutch, Japanese
 - Recognizing the key of the song
 - Automatic chords detection

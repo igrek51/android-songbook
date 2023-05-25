@@ -157,11 +157,10 @@ You can control *Songbook* with:
 
 Find out more about [Controls](./controls.md).
 
-## Bluetooth Sharing
-You can display the same song on many devices using **Bluetooth Sharing**.
-
+## Song Cast
+**Song Cast** is a *Songbook*'s protocol to display songs on many devices.
 Create a room so that your friends could join it.
-Then every song the owner chooses will be broadcasted and displayed on all devices connected to a room.
+Once the presenter chooses a song, it will be broadcasted and displayed on all devices connected to a room.
 
 ## Sharing by Link
 You can share your own songs by link.

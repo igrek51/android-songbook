@@ -11,7 +11,7 @@ Główne funkcje:
 - Dodawanie własnych piosenek z zaawansowanym edytorem akordów
 - Playlisty z piosenkami
 - Diagramy akordów dla gitary, ukulele, mandoliny oraz na pianino
-- Udostępnianie i wyświetlanie piosenek na wielu urządzeniach jednocześnie przez Bluetooth
+- Protokół Song Cast - Udostępnianie i wyświetlanie piosenek na wielu urządzeniach przez Internet
 - Wsparcie dla kilku notacji akordów: Niemiecka ("a b B H C d"), Angielska ("Am Bbm Bb B C Dm"), Solfeż ("Do Re Mi Fa"), Holenderska, Japońska
 - Rozpoznawanie tonacji piosenki
 - Automatyczne wykrywanie akordów
