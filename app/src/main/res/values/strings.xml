@@ -571,7 +571,7 @@
     <string name="songcast_new_member_joined">%s joined the room.</string>
     <string name="songcast_member_dropped">%s left the room.</string>
     <string name="songcast_new_chat_message" formatted="false">Chat: %s: %s</string>
-    <string name="songcast_song_selected" formatted="false">%s opened a song:\n%s</string>
+    <string name="songcast_song_selected" formatted="false">%s presented a song:\n%s</string>
     <string name="songcast_chat_message_empty">Enter message</string>
     <string name="songcast_room_is_still_open">SongCast is minimized and running in background.</string>
     <string name="songcast_connection_context">SongCast connection failed</string>
@@ -582,7 +582,7 @@
     <string name="songcast_reconnecting_to_room">Reconnecting to Song Cast room…</string>
     <string name="songcast_restoring_room">Restoring session…</string>
     <string name="songcast_restoring_room_not_found">No active room in which you were a member. Create a new one.</string>
-    <string name="songcast_restore_room_hint">If you\'ve been disconnected from an open room for some reason, you can recover your room without entering the code.</string>
+    <string name="songcast_restore_room_hint">If you\'ve been disconnected from an open room for unknown reason, you can recover your room without entering the code.</string>
     <string name="songcast_restore_a_room">Restore a room</string>
     <string name="songcast_open_lobby">Song Cast Lobby</string>
     <string name="songcast_host_tab">Host</string>
@@ -607,7 +607,7 @@
     <string name="songcast_session_created">Song Cast room created.</string>
     <string name="songcast_share_with_songcast">Open in Song Cast</string>
     <string name="songcast_open_presented_song_automatically">Open presented songs automatically</string>
-    <string name="songcast_action_open_song">Open</string>
+    <string name="songcast_action_open_song">Show</string>
     <string name="songcast_action_lobby">Lobby</string>
     <string name="songcast_no_spectators">No spectators to promote</string>
     <string name="songcast_choose_member_to_promote">Choose member</string>
@@ -616,4 +616,5 @@
     <string name="chords_editor_x_semitones">%s semitones</string>
     <string name="chords_editor_x_semitone">%s semitone</string>
     <string name="chords_editor_transposed">Tranposing completed</string>
+    <string name="songcast_refreshing_session">Refreshing…</string>
 </resources>

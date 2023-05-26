@@ -18,6 +18,7 @@ import androidx.core.text.HtmlCompat
 fun RichText(
     resHtml: Int,
     modifier: Modifier = Modifier,
+    maxlines: Int = 0,
 ) {
     val html = stringResource(resHtml)
     AndroidView(
@@ -30,6 +31,11 @@ fun RichText(
         update = {
             it.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
             it.text = HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY)
+            if (maxlines > 0) {
+                it.maxLines = maxlines
+                it.ellipsize = android.text.TextUtils.TruncateAt.END
+                it.setHorizontallyScrolling(true)
+            }
         }
     )
 }

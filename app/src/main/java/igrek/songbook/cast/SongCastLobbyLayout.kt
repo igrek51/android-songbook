@@ -1,8 +1,14 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package igrek.songbook.cast
 
 import android.view.View
 import android.widget.ImageButton
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +27,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
@@ -57,7 +64,6 @@ import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.SafeClickListener
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.errorcheck.safeAsyncExecutor
-import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -65,7 +71,9 @@ import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.system.ClipboardManager
+import igrek.songbook.util.defaultScope
 import igrek.songbook.util.formatTimestampKitchen
+import igrek.songbook.util.mainScope
 import kotlinx.coroutines.*
 
 class SongCastLobbyLayout(
@@ -85,7 +93,7 @@ class SongCastLobbyLayout(
         super.showLayout(layout)
 
         if (!songCastService.isInRoom()) {
-            GlobalScope.launch(Dispatchers.Main) {
+            mainScope.launch {
                 layoutController.showLayout(SongCastMenuLayout::class, disableReturn = true)
             }
             return
@@ -119,8 +127,11 @@ class SongCastLobbyLayout(
     }
 
     private fun refreshSessionDetails() {
-        GlobalScope.launch {
-            songCastService.refreshSessionDetails()
+        uiInfoService.showInfo(R.string.songcast_refreshing_session)
+        defaultScope.launch {
+            songCastService.refreshSessionDetails().onSuccess {
+                uiInfoService.clearSnackBars()
+            }
         }
     }
 
@@ -129,14 +140,14 @@ class SongCastLobbyLayout(
     }
 
     fun sendChatMessage() {
-        uiInfoService.showInfo(R.string.songcast_chat_message_sending)
         val text = state.currentChat.trim()
         if (text.isBlank()) {
             uiInfoService.showInfo(R.string.songcast_chat_message_empty)
             return
         }
+        uiInfoService.showInfo(R.string.songcast_chat_message_sending)
 
-        GlobalScope.launch {
+        defaultScope.launch {
             val payload = CastChatMessageSent(text = text)
             val result = songCastService.postChatMessageAsync(payload).await()
             result.fold(onSuccess = {
@@ -224,7 +235,7 @@ class SongCastLobbyLayout(
     }
 
     private fun promoteUser(member: CastMember) {
-        GlobalScope.launch {
+        defaultScope.launch {
             val result = songCastService.promoteMemberAsync(member.public_member_id).await()
             result.fold(onSuccess = {
                 uiInfoService.showInfo(R.string.songcast_member_promoted, member.name)
@@ -240,7 +251,7 @@ class SongCastLobbyLayout(
 
     private fun leaveRoomConfirm() {
         ConfirmDialogBuilder().confirmAction(R.string.songcast_confirm_leave_room) {
-            GlobalScope.launch {
+            defaultScope.launch {
                 exitRoom()
             }
         }
@@ -251,12 +262,16 @@ class SongCastLobbyLayout(
             titleResId = R.string.songcast_leave_or_stay_title,
             messageResId = R.string.songcast_leave_or_minimize_room,
             negativeButton = R.string.songcast_action_leave, negativeAction = {
-                GlobalScope.launch {
+                defaultScope.launch {
                     exitRoom()
                 }
             },
             positiveButton = R.string.songcast_action_stay, positiveAction = {
-                uiInfoService.showInfo(R.string.songcast_room_is_still_open)
+                uiInfoService.showInfoAction(
+                    R.string.songcast_room_is_still_open,
+                    actionResId = R.string.songcast_action_lobby,
+                    action = { songCastService.showLobby() },
+                )
                 super.onBackClicked()
             }
         )
@@ -295,16 +310,28 @@ class SongCastLobbyState {
 private fun MainComponent(controller: SongCastLobbyLayout) {
     Column(modifier = Modifier.padding(horizontal = 6.dp)) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
-            when (controller.state.isPresenter) {
-                true -> RichText(R.string.songcast_lobby_text_presenter_hint)
-                else -> RichText(R.string.songcast_lobby_text_guest_hint)
+            val resId = when (controller.state.isPresenter) {
+                true -> R.string.songcast_lobby_text_presenter_hint
+                else -> R.string.songcast_lobby_text_guest_hint
+            }
+            var showMore by remember { mutableStateOf(false) }
+            Column(modifier = Modifier
+                .animateContentSize(animationSpec = tween(100))
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                ) { showMore = !showMore }) {
+                if (showMore) {
+                    RichText(resId)
+                } else {
+                    RichText(resId, maxlines = 1)
+                }
             }
         }
+
         RoomCodeField(controller)
         MembersLists(controller)
 
@@ -412,10 +439,8 @@ private fun EventsLog(controller: SongCastLobbyLayout) {
             },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
             keyboardActions = KeyboardActions(onSend = {
-                GlobalScope.launch {
-                    safeExecute {
-                        controller.sendChatMessage()
-                    }
+                defaultScope.launch {
+                    controller.sendChatMessage()
                 }
             }),
         )

@@ -450,7 +450,7 @@ class SongCastService {
         return false
     }
 
-    private fun showLobby() {
+    fun showLobby() {
         layoutController.showLayout(SongCastLobbyLayout::class)
     }
 

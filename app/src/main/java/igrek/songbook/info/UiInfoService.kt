@@ -128,11 +128,13 @@ open class UiInfoService(
     }
 
     fun clearSnackBars() {
-        infobars.forEach { (_, snackbar) ->
-            if (snackbar.isShown)
-                snackbar.dismiss()
+        GlobalScope.launch(Dispatchers.Main) {
+            infobars.forEach { (_, snackbar) ->
+                if (snackbar.isShown)
+                    snackbar.dismiss()
+            }
+            infobars.clear()
         }
-        infobars.clear()
     }
 
     open fun resString(resourceId: Int, vararg args: Any?): String =
