@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.35.0] - 1898 - 2023-05-26
 ### Added
 - Added Support for *Song Cast* - displaying songs on many devices over Internet connection.
   You can create a room so that your friends could join it.
