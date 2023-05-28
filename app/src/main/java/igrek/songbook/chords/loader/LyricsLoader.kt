@@ -1,6 +1,7 @@
 package igrek.songbook.chords.loader
 
 import android.graphics.Typeface
+import igrek.songbook.R
 import igrek.songbook.chords.arranger.LyricsArranger
 import igrek.songbook.chords.detect.KeyDetector
 import igrek.songbook.chords.model.LyricsCloner
@@ -34,6 +35,7 @@ class LyricsLoader(
     private val lyricsThemeService by LazyExtractor(lyricsThemeService)
     private val windowManagerService by LazyExtractor(windowManagerService)
     private val preferencesState by LazyExtractor(preferencesState)
+    private val uiInfoService by LazyExtractor(appFactory.uiInfoService)
 
     private val logger = LoggerFactory.logger
     private val chordsTransposerManager = ChordsTransposerManager()
@@ -75,7 +77,8 @@ class LyricsLoader(
             val lyrics = lyricsExtractor.parseLyrics(fileContent)
             val unknownChords = ChordParser(srcNotation).parseAndFillChords(lyrics)
             unknownChords.takeIf { it.isNotEmpty() }?.let {
-                logger.warn("Unknown chords: ${unknownChords.joinToString(", ")}")
+                val warningMessage = uiInfoService.resString(R.string.unknown_chords_in_song, unknownChords.joinToString(", "))
+                uiInfoService.showInfo(warningMessage)
             }
             lyrics
         }

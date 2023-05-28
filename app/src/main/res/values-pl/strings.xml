@@ -591,4 +591,5 @@
     <string name="songcast_this_song_is_not_presented">Ta piosenka nie jest obecnie prezentowana.</string>
     <string name="songcast_youre_presenting_this_song">Prezentujesz tą piosenkę.</string>
     <string name="songcast_youre_spectating_this_song">Obserwujesz tą piosenkę.</string>
+    <string name="unknown_chords_in_song">Nieznane akordy: %s</string>
 </resources>
