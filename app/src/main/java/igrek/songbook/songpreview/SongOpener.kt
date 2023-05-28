@@ -16,6 +16,8 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.history.OpenedSong
 import igrek.songbook.persistence.user.playlist.Playlist
 import igrek.songbook.playlist.PlaylistService
+import igrek.songbook.util.defaultScope
+import kotlinx.coroutines.launch
 
 open class SongOpener(
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
@@ -32,14 +34,20 @@ open class SongOpener(
     private val songCastService by LazyExtractor(songCastService)
     private val playlistService by LazyExtractor(playlistService)
 
-    fun openSongPreview(song: Song, playlist: Playlist? = null, onInit: (() -> Unit)? = null) {
+    fun openSongPreview(
+        song: Song,
+        playlist: Playlist? = null,
+        onInit: (() -> Unit)? = null,
+    ) {
         logger.info("Opening song: $song")
         playlistService.currentPlaylist = playlist
         songPreviewLayoutController.currentSong = song
         onInit?.let {
             songPreviewLayoutController.addOnInitListener(onInit)
         }
-        songCastService.presentMyOpenedSong(song)
+        defaultScope.launch {
+            songCastService.presentMyOpenedSong(song)
+        }
         layoutController.showLayout(SongPreviewLayoutController::class)
         songsRepository.openHistoryDao.registerOpenedSong(song.id, song.namespace)
         AnalyticsLogger().logEventSongOpened(song)
@@ -56,7 +64,9 @@ open class SongOpener(
     fun openLastSong() {
         playlistService.currentPlaylist = null
         songPreviewLayoutController.currentSong?.let { currentSong ->
-            songCastService.presentMyOpenedSong(currentSong)
+            defaultScope.launch {
+                songCastService.presentMyOpenedSong(currentSong)
+            }
             layoutController.showLayout(SongPreviewLayoutController::class)
             return
         }

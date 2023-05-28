@@ -27,13 +27,19 @@ class HttpRequester {
         useArrayPolymorphism = false
     }
 
-    fun <T> httpRequestAsync(request: Request, responseExtractor: (Response) -> T): Deferred<Result<T>> {
+    fun <T> httpRequestAsync(
+        request: Request,
+        responseExtractor: suspend (Response) -> T,
+    ): Deferred<Result<T>> {
         return GlobalScope.async {
             httpRequestSync(request, responseExtractor)
         }
     }
 
-    private fun <T> httpRequestSync(request: Request, responseExtractor: (Response) -> T): Result<T> {
+    private suspend fun <T> httpRequestSync(
+        request: Request,
+        responseExtractor: suspend (Response) -> T,
+    ): Result<T> {
         try {
 
             val response: Response = okHttpClient.newCall(request).execute()

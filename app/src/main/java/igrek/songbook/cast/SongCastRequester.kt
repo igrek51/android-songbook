@@ -20,7 +20,7 @@ class SongCastRequester {
     var sessionCode: String = ""
 
     companion object {
-        const val songbookApiBase = "https://songbook.igrek.dev"
+        private const val songbookApiBase = "https://songbook.igrek.dev"
         private const val createSessionUrl = "$songbookApiBase/api/cast"
         private val joinSessionUrl = { session: String -> "${songbookApiBase}/api/cast/$session/join" }
         private const val rejoinSessionUrl = "${songbookApiBase}/api/cast/rejoin"
@@ -37,7 +37,7 @@ class SongCastRequester {
 
     fun createSessionAsync(
         memberName: String,
-        onSuccess: (responseData: CastSessionJoined) -> Unit,
+        onSuccess: suspend (responseData: CastSessionJoined) -> Unit,
     ): Deferred<Result<CastSessionJoined>> {
         logger.info("Creating SongCast session by member '$memberName'...")
         val deviceId = deviceIdProvider.getDeviceId()
@@ -67,7 +67,7 @@ class SongCastRequester {
     fun joinSessionAsync(
         sessionCode: String,
         memberName: String,
-        onSuccess: (responseData: CastSessionJoined) -> Unit,
+        onSuccess: suspend (responseData: CastSessionJoined) -> Unit,
     ): Deferred<Result<CastSessionJoined>> {
         logger.info("Joining SongCast session by member '$memberName'...")
         val deviceId = deviceIdProvider.getDeviceId()
@@ -92,7 +92,7 @@ class SongCastRequester {
     }
 
     fun restoreSessionAsync(
-        onSuccess: (responseData: CastSessionJoined) -> Unit,
+        onSuccess: suspend (responseData: CastSessionJoined) -> Unit,
     ): Deferred<Result<CastSessionJoined>> {
         val deviceId = deviceIdProvider.getDeviceId()
         val request: Request = Request.Builder()
@@ -133,7 +133,7 @@ class SongCastRequester {
     }
 
     fun getSessionDetailsAsync(
-        onSuccess: (responseData: CastSession) -> Unit,
+        onSuccess: suspend (responseData: CastSession) -> Unit,
     ): Deferred<Result<CastSession>> {
         val deviceId = deviceIdProvider.getDeviceId()
         val request: Request = Request.Builder()

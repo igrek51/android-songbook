@@ -16,10 +16,10 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.songpreview.renderer.SongPreview
 import igrek.songbook.util.applyMin
+import igrek.songbook.util.defaultScope
+import igrek.songbook.util.mainScope
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import kotlin.math.abs
@@ -70,7 +70,7 @@ class ScrollService(
     }
 
     fun shareScrollControl() {
-        GlobalScope.launch {
+        defaultScope.launch {
             val payload: CastScroll = when (preferencesState.castScrollControl) {
                 CastScrollControl.SHARE_SCROLL -> getVisibleShareScroll()
                 CastScrollControl.SLIDES_1 -> getVisibleSlidesScroll()
@@ -188,7 +188,7 @@ class ScrollService(
         if (abs(scrollDiff) <= 0.01f) return
         val scrollByPx = scrollDiff * songPreview.lineheightPx
         logger.debug("scrolling by $scrollDiff lines, first line index: $startLineIndex")
-        GlobalScope.launch(Dispatchers.Main) {
+        mainScope.launch {
             songPreview.overlayScrollView?.smoothScrollBy(0, scrollByPx.toInt())
         }
     }

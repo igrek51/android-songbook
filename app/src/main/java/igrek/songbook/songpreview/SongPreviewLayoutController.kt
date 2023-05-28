@@ -113,6 +113,7 @@ class SongPreviewLayoutController(
     private var songCastButton: ImageButton? = null
     private val originalButtonBackgrounds: MutableMap<Int, Pair<ColorFilter, Drawable>> = mutableMapOf()
     private val onInitListeners: MutableList<() -> Unit> = mutableListOf()
+    private var graphicsInitialized: Boolean = false
 
     init {
         autoscrollService.get().scrollStateSubject
@@ -149,6 +150,7 @@ class SongPreviewLayoutController(
         appBarLayout = layout.findViewById(R.id.appBarLayout)
 
         // songPreview canvas
+        graphicsInitialized = false
         songPreview = SongPreview(
             activity,
             onInit = ::onGraphicsInitialized,
@@ -301,12 +303,19 @@ class SongPreviewLayoutController(
 
             autoscrollService.onLoad(currentSong.songIdentifier())
 
+            graphicsInitialized = true
             onInitListeners.forEach { it() }
             onInitListeners.clear()
         }
     }
 
     fun addOnInitListener(onInitListener: () -> Unit) {
+        if (graphicsInitialized) {
+            mainScope.launch {
+                onInitListener()
+            }
+            return
+        }
         onInitListeners.add(onInitListener)
     }
 

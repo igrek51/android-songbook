@@ -24,6 +24,8 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.json.JSONObject
 import java.util.Date
 
@@ -42,17 +44,19 @@ class SongCastService {
     private var myName: String = ""
     var myMemberPublicId: String = ""
     var sessionCode: String? = null
-    var ephemeralSong: Song? = null
+    private var ephemeralSong: Song? = null
     var onSessionUpdated: () -> Unit = {}
     var sessionState: SessionState = SessionState()
+    private var oldState: SessionState = SessionState()
     private var periodicRefreshJob: Job? = null
     private var periodicReconnectJob: Job? = null
-    private var lastSessionChange: Long = 0
+    private var lastSessionChange: Long = 0 // millis
     private var joinTimestamp: Long = 0
     var clientFollowScroll: Boolean by mutableStateOf(true)
     var clientOpenPresentedSongs: Boolean by mutableStateOf(true)
     var lastSharedScroll: CastScroll? = null
     private val logEvents: MutableList<LogEvent> = mutableListOf()
+    private val sessionStateMutex = Mutex()
 
     val presenters: List<CastMember> get() = sessionState.members.filter { it.type == CastMemberType.OWNER.value }
     val spectators: List<CastMember> get() = sessionState.members.filter { it.type == CastMemberType.GUEST.value }
@@ -83,41 +87,55 @@ class SongCastService {
         }
     }
 
-    private fun initRoom(responseData: CastSessionJoined) {
-        this.sessionCode = responseData.short_id
-        this.requester.sessionCode = responseData.short_id
-        this.myName = responseData.member_name
-        this.myMemberPublicId = responseData.public_member_id
+    private suspend fun initRoom(responseData: CastSessionJoined) {
+        sessionCode = responseData.short_id
+        requester.sessionCode = responseData.short_id
+        myName = responseData.member_name
+        myMemberPublicId = responseData.public_member_id
+        joinTimestamp = Date().time / 1000
+
+        logEvents.clear()
+        sessionStateMutex.withLock {
+            sessionState.initialized = false
+            sessionState.members = listOf()
+            sessionState.castSongDto = null
+            sessionState.currentScroll = null
+            sessionState.chatMessages = listOf()
+            sessionState.createdTime = 0
+            ephemeralSong = null
+        }
+        streamSocket.close()
         streamSocket.connect(responseData.short_id)
-        this.joinTimestamp = Date().time / 1000
+        lastSessionChange = Date().time
+        lastSharedScroll = null
+
         addSystemLogEvent(R.string.songcast_new_member_joined, responseData.member_name)
         defaultScope.launch {
             refreshSessionDetails()
-            val ephemeralSongN = ephemeralSong ?: return@launch
-            val castSongDtoN = sessionState.castSongDto ?: return@launch
-            val presenter: CastMember? = sessionState.members.find { it.public_member_id == castSongDtoN.chosen_by }
-            val presenterName = presenter?.name ?: "Unknown"
-            logEvents.add(
-                SongLogEvent(
-                    timestampMs = Date().time,
-                    author = presenterName,
-                    song = ephemeralSongN,
-                )
-            )
             logEvents.add(
                 SystemLogEvent(
                     timestampMs = sessionState.createdTime * 1000,
                     text = uiInfoService.resString(R.string.songcast_session_created),
                 )
             )
+            run {
+                val ephemeralSongN = ephemeralSong ?: return@run
+                val castSongDtoN = sessionState.castSongDto ?: return@run
+                val presenter: CastMember? =
+                    sessionState.members.find { it.public_member_id == castSongDtoN.chosen_by }
+                val presenterName = presenter?.name ?: "Unknown"
+                logEvents.add(
+                    SongLogEvent(
+                        timestampMs = Date().time,
+                        author = presenterName,
+                        song = ephemeralSongN,
+                    )
+                )
+            }
             refreshUI()
         }
         periodicRefreshJob = ioScope.launch {
-            try {
-                periodicRefresh()
-            } catch (e: Throwable) {
-                UiErrorHandler().handleContextError(e, R.string.songcast_connection_context)
-            }
+            periodicRefresh()
         }
         periodicReconnectJob = ioScope.launch {
             periodicReconnect()
@@ -132,6 +150,7 @@ class SongCastService {
         sessionState.castSongDto = null
         sessionState.currentScroll = null
         sessionState.chatMessages = listOf()
+        ephemeralSong = null
         streamSocket.close()
         periodicRefreshJob = null
         periodicReconnectJob = null
@@ -156,13 +175,20 @@ class SongCastService {
             }
             if (interval != null && Date().time - lastShot >= interval) {
                 val waitedS = (Date().time - lastShot) / 1000
-                logger.debug("refreshing SongCast session, waited ${waitedS}s...")
-                val result = refreshSessionDetails()
-                if (result.isFailure)
-                    return
+
+                try {
+                    logger.debug("refreshing SongCast session, waited ${waitedS}s...")
+                    refreshSessionDetails().onFailure {
+                        throw it
+                    }
+                } catch (e: Throwable) {
+                    UiErrorHandler().handleContextError(e, R.string.songcast_connection_context)
+                    delay(5_000)
+                }
+
                 lastShot = Date().time
             }
-            delay(1000)
+            delay(1_000)
         }
     }
 
@@ -199,13 +225,16 @@ class SongCastService {
 
     private fun getSessionDetailsAsync(): Deferred<Result<CastSession>> {
         return requester.getSessionDetailsAsync { responseData ->
-            sessionState.members = responseData.members
-            sessionState.castSongDto = responseData.song
-            this.ephemeralSong = buildEphemeralSong(responseData.song)
-            sessionState.currentScroll = responseData.scroll
-            sessionState.chatMessages = responseData.chat_messages
-            sessionState.createdTime = responseData.create_timestamp
-            sessionState.initialized = true
+            sessionStateMutex.withLock {
+                oldState = sessionState.copy()
+                sessionState.members = responseData.members
+                sessionState.castSongDto = responseData.song
+                sessionState.currentScroll = responseData.scroll
+                sessionState.chatMessages = responseData.chat_messages
+                sessionState.createdTime = responseData.create_timestamp
+                sessionState.initialized = true
+                ephemeralSong = responseData.song?.let { buildEphemeralSong(it) }
+            }
         }
     }
 
@@ -225,7 +254,7 @@ class SongCastService {
         return requester.promoteMemberAsync(memberPubId)
     }
 
-    fun presentMyOpenedSong(song: Song) {
+    suspend fun presentMyOpenedSong(song: Song) {
         if (!isPresenter()) return
         // opening the song presented by someone else (or returning to the same one)
         if (song.namespace == SongNamespace.Ephemeral) return
@@ -238,7 +267,7 @@ class SongCastService {
             content = song.content.orEmpty(),
             chords_notation_id = song.chordsNotation.id,
         )
-        sessionState.castSongDto = CastSong(
+        val castSongDto = CastSong(
             id = payload.id,
             chosen_by = myMemberPublicId,
             title = payload.title,
@@ -246,8 +275,18 @@ class SongCastService {
             content = payload.content,
             chords_notation_id = payload.chords_notation_id,
         )
-        ephemeralSong = buildEphemeralSong(sessionState.castSongDto)
-        sessionState.currentScroll = null
+        val ephemeralSongN = buildEphemeralSong(castSongDto)
+        sessionStateMutex.withLock {
+            sessionState.castSongDto = castSongDto
+            sessionState.currentScroll = null
+            ephemeralSong = ephemeralSongN
+        }
+
+        logEvents.add(
+            SongLogEvent(timestampMs = Date().time, author = myName, song = ephemeralSongN)
+        )
+        val songName = buildSongName(payload.title, payload.artist)
+        uiInfoService.showInfo(R.string.songcast_song_selected_by_me, songName)
 
         songPreviewLayoutController.addOnInitListener {
             defaultScope.launch {
@@ -261,9 +300,7 @@ class SongCastService {
         }
     }
 
-    private fun buildEphemeralSong(songDto: CastSong?): Song? {
-        if (songDto == null)
-            return null
+    private fun buildEphemeralSong(songDto: CastSong): Song {
         val now: Long = Date().time
         return Song(
             id = songDto.id,
@@ -278,62 +315,6 @@ class SongCastService {
             chordsNotation = ChordsNotation.mustParseById(songDto.chords_notation_id),
             namespace = SongNamespace.Ephemeral,
         )
-    }
-
-    private fun onSongSelectedEvent(eventData: JSONObject) {
-        val id = eventData.getString("id")
-        val title = eventData.getString("title")
-        val artist: String? = eventData.optString("artist")
-        val content = eventData.getString("content")
-        val chordsNotationId = eventData.getLong("chords_notation_id")
-        val chosenBy = eventData.getString("chosen_by")
-        logger.debug("SongSelectedEvent: $eventData")
-
-        val castSongDto = CastSong(
-            id = id,
-            title = title,
-            artist = artist,
-            content = content,
-            chords_notation_id = chordsNotationId,
-            chosen_by = chosenBy,
-        )
-        sessionState.castSongDto = castSongDto
-        sessionState.currentScroll = null
-        onSongSelectedEventDto(castSongDto)
-    }
-
-    private fun onSongSelectedEventDto(castSongDto: CastSong) {
-        this.ephemeralSong = buildEphemeralSong(sessionState.castSongDto)
-
-        val presenter: CastMember? = sessionState.members.find { it.public_member_id == castSongDto.chosen_by }
-        val presenterName = presenter?.name ?: "Unknown"
-        val songName = buildSongName(castSongDto.title, castSongDto.artist)
-        ephemeralSong?.let { ephemeralSong ->
-            logEvents.add(
-                SongLogEvent(
-                    timestampMs = Date().time,
-                    author = presenterName,
-                    song = ephemeralSong,
-                )
-            )
-        }
-        val amIPresenting = presenter?.public_member_id == myMemberPublicId
-        val followsSong = followsPresentedSong(presenter?.public_member_id)
-        when {
-            amIPresenting || followsSong -> uiInfoService.showInfo(
-                R.string.songcast_song_selected, presenterName, songName,
-            )
-            else -> uiInfoService.showInfoAction(
-                R.string.songcast_song_selected, presenterName, songName,
-                actionResId = R.string.songcast_action_open_song,
-                action = { openPresentedSong() },
-            )
-        }
-
-        refreshUI()
-        if (followsSong) {
-            openPresentedSong()
-        }
     }
 
     private fun followsPresentedSong(pubMemberId: String?): Boolean {
@@ -357,24 +338,11 @@ class SongCastService {
 
     private suspend fun onEventBroadcast(data: JSONObject) {
         when (val type = data.getString("type")) {
-            "SongSelectedEvent" -> {
-                val eventData = data.getJSONObject("data")
-                onSongSelectedEvent(eventData)
-            }
-            "SongDeselectedEvent" -> {
-                refreshSessionDetails()
-            }
-            "CastMembersUpdatedEvent" -> {
-                logger.debug("SongCast: CastMembersUpdatedEvent received")
-                refreshSessionDetails()
-            }
-            "ChatMessageReceivedEvent" -> {
-                logger.debug("SongCast: ChatMessageReceivedEvent received")
-                refreshSessionDetails()
-            }
-            "SongScrolledEvent" -> {
-                refreshSessionDetails()
-            }
+            "SongSelectedEvent" -> refreshSessionDetails()
+            "SongDeselectedEvent" -> refreshSessionDetails()
+            "CastMembersUpdatedEvent" -> refreshSessionDetails()
+            "ChatMessageReceivedEvent" -> refreshSessionDetails()
+            "SongScrolledEvent" -> refreshSessionDetails()
             else -> {
                 logger.warn("Unknown SongCast event type: $type")
                 refreshSessionDetails()
@@ -391,12 +359,13 @@ class SongCastService {
     }
 
     suspend fun refreshSessionDetails(): Result<Unit> {
-        val oldState = sessionState.copy()
         val result = getSessionDetailsAsync().await()
         result.fold(onSuccess = {
-            val compareResult = compareSessionStates(oldState, sessionState)
-            if (compareResult)
-                lastSessionChange = Date().time
+            sessionStateMutex.withLock {
+                val compareResult = watchSessionState(oldState, sessionState)
+                if (compareResult)
+                    lastSessionChange = Date().time
+            }
             refreshUI()
             return Result.success(Unit)
         }, onFailure = { e ->
@@ -405,15 +374,15 @@ class SongCastService {
         })
     }
 
-    private fun compareSessionStates(oldState: SessionState, newState: SessionState): Boolean {
+    private fun watchSessionState(oldState: SessionState, newState: SessionState): Boolean {
         if (!oldState.initialized)
             return true
 
         var changed = false
         if (oldState.castSongDto != newState.castSongDto) {
-            val castSongDto = newState.castSongDto
-            if (castSongDto != null)
+            newState.castSongDto?.let { castSongDto ->
                 onSongSelectedEventDto(castSongDto)
+            }
             changed = true
         }
         if (oldState.chatMessages != newState.chatMessages) {
@@ -459,6 +428,34 @@ class SongCastService {
             changed = true
         }
         return changed
+    }
+
+    private fun onSongSelectedEventDto(castSongDto: CastSong) {
+        val presenter: CastMember? = sessionState.members.find { it.public_member_id == castSongDto.chosen_by }
+        val presenterName = presenter?.name ?: "Unknown"
+        val songName = buildSongName(castSongDto.title, castSongDto.artist)
+        ephemeralSong?.let { ephemeralSong ->
+            logEvents.add(
+                SongLogEvent(timestampMs = Date().time, author = presenterName, song = ephemeralSong)
+            )
+        }
+        val amIPresenting = presenter?.public_member_id == myMemberPublicId
+        val followsSong = followsPresentedSong(presenter?.public_member_id)
+        when {
+            amIPresenting || followsSong -> uiInfoService.showInfo(
+                R.string.songcast_song_selected, presenterName, songName,
+            )
+            else -> uiInfoService.showInfoAction(
+                R.string.songcast_song_selected, presenterName, songName,
+                actionResId = R.string.songcast_action_open_song,
+                action = { openPresentedSong() },
+            )
+        }
+
+        refreshUI()
+        if (followsSong) {
+            openPresentedSong()
+        }
     }
 
     fun showLobby() {
@@ -513,7 +510,7 @@ class SongCastService {
 }
 
 data class SessionState(
-    var initialized: Boolean = false,
+    var initialized: Boolean = false, // first fetch done
     var members: List<CastMember> = listOf(),
     var castSongDto: CastSong? = null,
     var currentScroll: CastScroll? = null,
