@@ -55,24 +55,27 @@ open class SongOpener(
 
     fun openLastSong() {
         playlistService.currentPlaylist = null
-        val currentSong = songPreviewLayoutController.currentSong
-        if (currentSong != null) {
+        songPreviewLayoutController.currentSong?.let { currentSong ->
+            songCastService.presentMyOpenedSong(currentSong)
             layoutController.showLayout(SongPreviewLayoutController::class)
             return
         }
 
-        val openedSong: OpenedSong? = songsRepository.openHistoryDao.historyDb.songs.firstOrNull()
-        if (openedSong != null) {
-            val namespace = when {
-                openedSong.custom -> SongNamespace.Custom
-                else -> SongNamespace.Public
-            }
-            val songIdentifier = SongIdentifier(openedSong.songId, namespace)
-            if (openSongIdentifier(songIdentifier))
+        val openedSong: OpenedSong = songsRepository.openHistoryDao.historyDb.songs.firstOrNull()
+            ?: run {
+                uiInfoService.showInfo(R.string.no_last_song)
                 return
-        }
+            }
 
-        uiInfoService.showInfo(R.string.no_last_song)
+        val namespace = when {
+            openedSong.custom -> SongNamespace.Custom
+            else -> SongNamespace.Public
+        }
+        val songIdentifier = SongIdentifier(openedSong.songId, namespace)
+        val opened = openSongIdentifier(songIdentifier)
+        if (!opened) {
+            uiInfoService.showInfo(R.string.no_last_song)
+        }
     }
 
     fun hasLastSong(): Boolean {

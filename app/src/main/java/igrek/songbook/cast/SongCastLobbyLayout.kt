@@ -134,10 +134,6 @@ class SongCastLobbyLayout(
         }
     }
 
-    fun openCurrentSong() {
-        songCastService.openPresentedSong()
-    }
-
     fun sendChatMessage() {
         val text = state.currentChat.trim()
         if (text.isBlank()) {
@@ -246,6 +242,10 @@ class SongCastLobbyLayout(
 
     fun openLastSong() {
         appFactory.songOpener.get().openLastSong()
+    }
+
+    fun openCurrentSong() {
+        songCastService.openPresentedSong()
     }
 
     private fun leaveRoomConfirm() {

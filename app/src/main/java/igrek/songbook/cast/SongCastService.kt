@@ -317,14 +317,21 @@ class SongCastService {
                 )
             )
         }
-        uiInfoService.showInfoAction(
-            R.string.songcast_song_selected, presenterName, songName,
-            actionResId = R.string.songcast_action_open_song,
-            action = { openPresentedSong() },
-        )
+        val amIPresenting = presenter?.public_member_id == myMemberPublicId
+        val followsSong = followsPresentedSong(presenter?.public_member_id)
+        when {
+            amIPresenting || followsSong -> uiInfoService.showInfo(
+                R.string.songcast_song_selected, presenterName, songName,
+            )
+            else -> uiInfoService.showInfoAction(
+                R.string.songcast_song_selected, presenterName, songName,
+                actionResId = R.string.songcast_action_open_song,
+                action = { openPresentedSong() },
+            )
+        }
 
         refreshUI()
-        if (followsPresentedSong(presenter?.public_member_id)) {
+        if (followsSong) {
             openPresentedSong()
         }
     }
@@ -334,7 +341,7 @@ class SongCastService {
             !clientOpenPresentedSongs -> false
             pubMemberId == null -> false
             pubMemberId == myMemberPublicId -> false
-            //songPreviewLayoutController.currentSong == ephemeralSong -> false // already opened
+            //songPreviewLayoutController.currentSong == ephemeralSong -> false // the same song opened again
             else -> true
         }
     }
