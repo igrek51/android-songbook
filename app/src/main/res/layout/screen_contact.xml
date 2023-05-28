@@ -30,6 +30,17 @@
                 android:textSize="18sp" />
 
             <EditText
+                android:id="@+id/contactAuthorEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="#07ffffff"
+                android:gravity="center_vertical"
+                android:hint="@string/contact_author_hint"
+                android:inputType="text"
+                android:padding="8dp" />
+
+            <EditText
                 android:id="@+id/contactSubjectEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -50,17 +61,6 @@
                 android:hint="@string/contact_message_hint"
                 android:inputType="text|textMultiLine"
                 android:minHeight="200dp"
-                android:padding="8dp" />
-
-            <EditText
-                android:id="@+id/contactAuthorEdit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="#07ffffff"
-                android:gravity="center_vertical"
-                android:hint="@string/contact_author_hint"
-                android:inputType="text"
                 android:padding="8dp" />
 
             <Button

@@ -16,6 +16,7 @@ class UiInfoServiceMock : UiInfoService(
         infoResId: Int,
         actionResId: Int,
         indefinite: Boolean,
+        durationMillis: Int,
         action: (() -> Unit)?,
     ) {
         print(info)

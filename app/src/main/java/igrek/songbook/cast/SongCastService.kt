@@ -20,6 +20,7 @@ import igrek.songbook.util.defaultScope
 import igrek.songbook.util.interpolate
 import igrek.songbook.util.ioScope
 import igrek.songbook.util.mainScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -134,11 +135,19 @@ class SongCastService {
             }
             refreshUI()
         }
+        if (periodicRefreshJob?.isActive == true)
+            periodicRefreshJob?.cancel()
+        if (periodicReconnectJob?.isActive == true)
+            periodicReconnectJob?.cancel()
         periodicRefreshJob = ioScope.launch {
-            periodicRefresh()
+            try {
+                periodicRefresh()
+            } catch (e: CancellationException) {}
         }
         periodicReconnectJob = ioScope.launch {
-            periodicReconnect()
+            try {
+                periodicReconnect()
+            } catch (e: CancellationException) {}
         }
     }
 
@@ -157,6 +166,10 @@ class SongCastService {
         lastSessionChange = 0
         lastSharedScroll = null
         logEvents.clear()
+        if (periodicRefreshJob?.isActive == true)
+            periodicRefreshJob?.cancel()
+        if (periodicReconnectJob?.isActive == true)
+            periodicReconnectJob?.cancel()
     }
 
     private suspend fun periodicRefresh() {
