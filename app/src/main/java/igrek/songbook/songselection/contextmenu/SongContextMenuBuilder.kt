@@ -52,6 +52,7 @@ class SongContextMenuBuilder(
     private val adminService by LazyExtractor(adminService)
     private val antechamberService by LazyExtractor(antechamberService)
     private val shareSongService by LazyExtractor(shareSongService)
+    private val songCastService by LazyExtractor(appFactory.songCastService)
 
     private var allActions: SimpleCache<List<SongContextAction>> =
         SimpleCache { createAllActions() }
@@ -77,16 +78,14 @@ class SongContextMenuBuilder(
                 }),
             SongContextAction(R.string.action_song_set_favourite,
                 availableCondition = { song ->
-                    !favouriteSongsService.isSongFavourite(song)
-                            && !layoutController.isState(SongPreviewLayoutController::class)
+                    !favouriteSongsService.isSongFavourite(song) && !isSongPreviewVisible()
                 },
                 executor = { song ->
                     favouriteSongsService.setSongFavourite(song)
                 }),
             SongContextAction(R.string.action_song_unset_favourite,
                 availableCondition = { song ->
-                    favouriteSongsService.isSongFavourite(song)
-                            && !layoutController.isState(SongPreviewLayoutController::class)
+                    favouriteSongsService.isSongFavourite(song) && !isSongPreviewVisible()
                 },
                 executor = { song ->
                     favouriteSongsService.unsetSongFavourite(song)
@@ -119,17 +118,19 @@ class SongContextMenuBuilder(
                     customSongService.exportSong(song)
                 }),
             SongContextAction(R.string.song_details_title,
-                availableCondition = { !layoutController.isState(SongPreviewLayoutController::class) },
+                availableCondition = { !isSongPreviewVisible() },
                 executor = { song ->
                     songDetailsService.showSongDetails(song)
                 }),
             SongContextAction(R.string.song_show_fullscreen,
-                availableCondition = { layoutController.isState(SongPreviewLayoutController::class) },
+                availableCondition = { isSongPreviewVisible() },
                 executor = {
                     songPreviewLayoutController.toggleFullscreen()
                 }),
             SongContextAction(R.string.songcast_share_with_songcast,
-                availableCondition = { layoutController.isState(SongPreviewLayoutController::class) },
+                availableCondition = {
+                    isSongPreviewVisible() && !songCastService.isInRoom()
+                },
                 executor = {
                     layoutController.showLayout(SongCastMenuLayout::class)
                 }),
@@ -174,6 +175,10 @@ class SongContextMenuBuilder(
             action.displayName = uiResourceService.resString(action.displayNameResId)
         }
         return actions
+    }
+
+    private fun isSongPreviewVisible(): Boolean {
+        return layoutController.isState(SongPreviewLayoutController::class)
     }
 
     fun showSongActions(song: Song) {

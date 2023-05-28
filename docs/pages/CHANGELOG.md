@@ -9,22 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.35.1] - 1899 - 2023-05-26
 ### Added
-- Added Support for *Song Cast* - displaying songs on many devices over Internet connection.
+- Added Support for **Song Cast** - displaying songs on many devices over Internet connection.
   You can create a room so that your friends could join it.
-  Once the presenter chooses a song,
+  Once the *Presenter* chooses a song,
   it will be broadcasted and displayed on all devices connected to a room.
-  Share the code with others so they can join this room as **Spectators**.
-  As a presenter you can control the song's scroll on all devices by either sharing scroll position or enabling *Slides mode*
-  (click *Song Cast* icon in a song preview).
-  *Slides mode* presents only selected lines of the song and animates them on Spectator's device.
+  Share the code with others so they can join this room as *Spectators*.
+  As a presenter you can control the song's scroll on all devices by either sharing scroll position or enabling **Slides mode**
+  (click **Song Cast** icon in a song preview).
+  **Slides mode** presents only selected lines of the song and animates them on Spectator's device.
 - Some of the layouts started to use Jetpack Compose and Material Design Components.
-- You can now transpose chords in the Chords Editor.
+- You can now transpose chords in the **Chords Editor**.
   Click *Transform* button, pick *Transpose chords* option and select the number of semitones.
 
 ### Changed
 - Default chrods displaying style is now *Chords Above*.
 - Minimal SDK version has been set to API 21 (Android 5.0 Lollipop).
 - Bluetooth song sharing has been rejected in favour of Song Cast over Internet.
+  Sharing over Internet is more reliable and does not require additional permissions.
 
 ## [1.34.5] - 1897 - 2023-04-13
 ### Added
