@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.35.2] - 1900 - 2023-05-29
+## [1.35.3] - 1901 - 2023-05-29
 ### Added
 - Added Support for **Song Cast** - displaying songs on many devices over Internet connection.
   You can create a room so that your friends could join it.
