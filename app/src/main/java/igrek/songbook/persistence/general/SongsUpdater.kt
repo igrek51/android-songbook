@@ -178,7 +178,7 @@ class SongsUpdater(
     private fun showUpdateIsAvailable() {
         uiInfoService.showInfoAction(
             R.string.update_is_available,
-            indefinite = true,
+            durationMillis = 30_000,
             actionResId = R.string.action_update
         ) {
             uiInfoService.clearSnackBars()

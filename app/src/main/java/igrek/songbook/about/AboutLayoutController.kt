@@ -80,7 +80,7 @@ class AboutLayoutController(
     fun showFirstTimeManualPrompt() {
         uiInfoService.showInfoAction(
             infoResId = R.string.prompt_first_time_manual,
-            indefinite = true,
+            durationMillis = 20_000,
             actionResId = R.string.prompt_first_time_manual_action,
             action = { showManual() }
         )

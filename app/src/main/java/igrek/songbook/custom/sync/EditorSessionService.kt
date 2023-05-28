@@ -155,7 +155,7 @@ class EditorSessionService(
 
     private fun synchronizeStep5SessionLink(session: EditorSessionDto) {
         val editorLink = editorSessionUrl(session.id)
-        uiInfoService.showInfoAction(R.string.sync_session_songs_synchronized, indefinite=false,
+        uiInfoService.showInfoAction(R.string.sync_session_songs_synchronized,
             actionResId=R.string.sync_copy_link) {
             clipboardManager.copyToSystemClipboard(editorLink)
             GlobalScope.launch {

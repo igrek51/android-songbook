@@ -190,8 +190,8 @@ class AppInitializer(
     private fun promptChangelog() {
         uiInfoService.showInfoAction(
             R.string.changelog_checkout_latest_changes,
-            actionResId=R.string.action_open_changelog,
-            indefinite = true,
+            actionResId = R.string.action_open_changelog,
+            durationMillis = 20_000,
         ) {
             webviewLayoutController.openChangelog()
         }

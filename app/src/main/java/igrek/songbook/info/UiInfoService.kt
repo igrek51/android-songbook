@@ -39,11 +39,15 @@ open class UiInfoService(
         infoResId: Int = 0,
         actionResId: Int = 0,
         indefinite: Boolean = false,
+        durationMillis: Int = 0,
         action: (() -> Unit)? = null, // dissmiss by default
     ) {
         GlobalScope.launch(Dispatchers.Main) {
-            val snackbarLength =
-                if (indefinite) Snackbar.LENGTH_INDEFINITE else Snackbar.LENGTH_LONG
+            val duration = when {
+                indefinite -> Snackbar.LENGTH_INDEFINITE
+                durationMillis > 0 -> durationMillis
+                else -> Snackbar.LENGTH_LONG
+            }
             val infoV = info.takeIf { it.isNotEmpty() } ?: uiResourceService.resString(infoResId)
 
             // dont create new snackbars if one is already shown
@@ -55,9 +59,9 @@ open class UiInfoService(
             }
             var snackbar: Snackbar? = infobars[view]
             if (snackbar == null || !snackbar.isShown) { // a new one
-                snackbar = Snackbar.make(view, infoV, snackbarLength)
+                snackbar = Snackbar.make(view, infoV, duration)
             } else { // visible - reuse it one more time
-                snackbar.duration = snackbarLength
+                snackbar.duration = duration
                 snackbar.setText(infoV)
             }
 
@@ -96,8 +100,9 @@ open class UiInfoService(
     fun showInfoAction(
         infoResId: Int,
         vararg args: String,
-        indefinite: Boolean = false,
         actionResId: Int,
+        indefinite: Boolean = false,
+        durationMillis: Int = 0,
         action: () -> Unit,
     ) {
         val info = uiResourceService.resString(infoResId, *args)
@@ -105,7 +110,8 @@ open class UiInfoService(
             info = info,
             actionResId = actionResId,
             action = action,
-            indefinite = indefinite
+            indefinite = indefinite,
+            durationMillis = durationMillis,
         )
     }
 

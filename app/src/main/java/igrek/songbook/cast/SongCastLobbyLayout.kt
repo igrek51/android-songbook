@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 
 package igrek.songbook.cast
 
@@ -134,7 +134,7 @@ class SongCastLobbyLayout(
         }
     }
 
-    fun sendChatMessage() {
+    fun sendChatMessage(chatViewRequester: BringIntoViewRequester) {
         val text = state.currentChat.trim()
         if (text.isBlank()) {
             uiInfoService.showInfo(R.string.songcast_chat_message_empty)
@@ -149,6 +149,11 @@ class SongCastLobbyLayout(
                 uiInfoService.clearSnackBars()
                 withContext(Dispatchers.Main) {
                     state.currentChat = ""
+                }
+                mainScope.launch {
+                    chatViewRequester.bringIntoView()
+                    delay(400) // wait for keyboard to appear
+                    chatViewRequester.bringIntoView()
                 }
             }, onFailure = { e ->
                 UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
@@ -405,18 +410,17 @@ private fun MembersList(controller: SongCastLobbyLayout, members: List<CastMembe
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun EventsLog(controller: SongCastLobbyLayout) {
     controller.state.logEventData.forEach {
         CLogEvent(it, controller)
     }
 
-    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    val chatViewRequester = remember { BringIntoViewRequester() }
     val coroutineScope = rememberCoroutineScope()
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.bringIntoViewRequester(bringIntoViewRequester),
+        modifier = Modifier.bringIntoViewRequester(chatViewRequester),
     ) {
         OutlinedTextField(
             value = controller.state.currentChat,
@@ -426,15 +430,16 @@ private fun EventsLog(controller: SongCastLobbyLayout) {
             modifier = Modifier.weight(1f).onFocusChanged {
                 if (it.isFocused) {
                     coroutineScope.launch {
+                        chatViewRequester.bringIntoView()
                         delay(400) // wait for keyboard to appear
-                        bringIntoViewRequester.bringIntoView()
+                        chatViewRequester.bringIntoView()
                     }
                 }
             },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
             keyboardActions = KeyboardActions(onSend = {
                 defaultScope.launch {
-                    controller.sendChatMessage()
+                    controller.sendChatMessage(chatViewRequester)
                 }
             }),
         )
@@ -444,7 +449,7 @@ private fun EventsLog(controller: SongCastLobbyLayout) {
                 .padding(4.dp)
                 .align(Alignment.CenterVertically),
             onClick = safeAsyncExecutor {
-                controller.sendChatMessage()
+                controller.sendChatMessage(chatViewRequester)
             }
         ) {
             Icon(
