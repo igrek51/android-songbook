@@ -53,18 +53,12 @@ import kotlinx.coroutines.withContext
 import kotlin.reflect.KClass
 
 
-class LayoutController(
-    appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
-    navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
-    activityController: LazyInject<ActivityController> = appFactory.activityController,
-    adService: LazyInject<AdService> = appFactory.adService,
-    systemKeyDispatcher: LazyInject<SystemKeyDispatcher> = appFactory.systemKeyDispatcher,
-) {
-    private val activity by LazyExtractor(appCompatActivity)
-    private val navigationMenuController by LazyExtractor(navigationMenuController)
-    private val activityController by LazyExtractor(activityController)
-    private val adService by LazyExtractor(adService)
-    private val systemKeyDispatcher by LazyExtractor(systemKeyDispatcher)
+class LayoutController {
+    private val activity: AppCompatActivity by LazyExtractor(appFactory.appCompatActivity)
+    private val navigationMenuController: NavigationMenuController by LazyExtractor(appFactory.navigationMenuController)
+    private val activityController: ActivityController by LazyExtractor(appFactory.activityController)
+    private val adService: AdService by LazyExtractor(appFactory.adService)
+    private val systemKeyDispatcher: SystemKeyDispatcher by LazyExtractor(appFactory.systemKeyDispatcher)
 
     private var mainContentLayout: CoordinatorLayout? = null
     private var currentLayout: MainLayout? = null
