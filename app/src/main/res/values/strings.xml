@@ -561,14 +561,11 @@
     <string name="songcast_randomize_name">Randomize name</string>
     <string name="button_more_description">More</string>
     <string name="button_menu_description">Menu</string>
-    <string name="songcast_current_song" formatted="false">Current song: %s</string>
     <string name="songcast_open_current_song">%s</string>
     <string name="songcast_chat_message_sending">Sending…</string>
-    <string name="songcast_chat_message_sent">Message sent</string>
     <string name="songcast_send_chat_icon_description">Send message</string>
     <string name="songcast_hint_chat_message">Chat</string>
     <string name="songcast_refresh_session_details">🔄 Refresh</string>
-    <string name="songcast_new_member_joined">%s joined the room.</string>
     <string name="songcast_member_dropped">%s left the room.</string>
     <string name="songcast_new_chat_message" formatted="false">Chat: %s: %s</string>
     <string name="songcast_song_selected" formatted="false">%s presented a song:\n%s</string>

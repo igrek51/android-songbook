@@ -110,7 +110,11 @@ class SongCastService {
         lastSessionChange = Date().time
         lastSharedScroll = null
 
-        addSystemLogEvent(R.string.songcast_new_member_joined, responseData.member_name)
+        val memberJoinedResId = when (isPresenter()) {
+            true -> R.string.songcast_joined_the_room_as_presenter
+            false -> R.string.songcast_joined_the_room_as_spectator
+        }
+        addSystemLogEvent(memberJoinedResId, responseData.member_name)
         defaultScope.launch {
             refreshSessionDetails()
             logEvents.add(
@@ -424,12 +428,16 @@ class SongCastService {
             }
             val newMembers = newState.members.toSet().minus(oldState.members.toSet())
             newMembers.forEach { member ->
+                val memberJoinedResId = when (member.type) {
+                    CastMemberType.OWNER.value -> R.string.songcast_joined_the_room_as_presenter
+                    else -> R.string.songcast_joined_the_room_as_spectator
+                }
                 uiInfoService.showInfoAction(
-                    R.string.songcast_new_member_joined, member.name,
+                    memberJoinedResId, member.name,
                     actionResId = R.string.songcast_action_lobby,
                     action = { showLobby() },
                 )
-                addSystemLogEvent(R.string.songcast_new_member_joined, member.name)
+                addSystemLogEvent(memberJoinedResId, member.name)
             }
             changed = true
         }

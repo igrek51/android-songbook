@@ -220,7 +220,7 @@
 
                 <EditText
                     android:id="@+id/songContentEdit"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:background="#07ffffff"
                     android:gravity="top"

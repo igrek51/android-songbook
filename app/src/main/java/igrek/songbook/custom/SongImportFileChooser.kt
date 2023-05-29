@@ -151,12 +151,15 @@ class SongImportFileChooser(
                     throw RuntimeException("Stream type $targetMimeType is not available")
                 }
 
-                val inputStream = activity.contentResolver
+                val fileDescriptor = activity.contentResolver
                     .openTypedAssetFileDescriptor(uri, openableMimeTypes[0], null)
-                    ?.createInputStream() ?: throw RuntimeException("Can't open file descriptor")
-
-                inputStream.use {
-                    extractPhysicalFileContent(it, filename, targetMimeType)
+                    ?: throw RuntimeException("Can't open file descriptor")
+                fileDescriptor.use {
+                    val inputStream = fileDescriptor.createInputStream()
+                        ?: throw RuntimeException("Can't open file descriptor")
+                    inputStream.use {
+                        extractPhysicalFileContent(it, filename, targetMimeType)
+                    }
                 }
             }
 

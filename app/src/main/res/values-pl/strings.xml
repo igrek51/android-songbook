@@ -267,7 +267,7 @@
     <string name="settings_sync_restore_file_hint">Przywróć zapisane dane aplikacji z wybranego pliku.\nUwaga: Przywracanie nadpisze twoje obecne niezapisane dane aplikacji. Wymagany restart.</string>
     <string name="operation_cancelled">Operacja anulowana</string>
     <string name="error_unable_to_sing_in_google">Błąd logowania do konta Google</string>
-    <string name="settings_sync_in_progress">Synchronizacja w trakcie… %s%%</string>
+    <string name="settings_sync_in_progress" formatted="false">Synchronizacja w trakcie… %s%%</string>
     <string name="settings_sync_restore_partial_success">Brak wszystkich plików kopii. Kopia zapasowa przywrócona częściowo. Zrestartuj aplikację.</string>
     <string name="sync_singed_out">Jesteś wylogowany.</string>
     <string name="settings_sync_restore_failed">Błąd przywracania: brak kopii zapasowej</string>
@@ -530,14 +530,11 @@
     <string name="songcast_randomize_name">Wylosuj imię</string>
     <string name="button_more_description">Więcej</string>
     <string name="button_menu_description">Menu</string>
-    <string name="songcast_current_song" formatted="false">Obecna piosenka: %s</string>
     <string name="songcast_open_current_song">%s</string>
     <string name="songcast_chat_message_sending">Wysyłanie…</string>
-    <string name="songcast_chat_message_sent">Wiadomość wysłana</string>
     <string name="songcast_send_chat_icon_description">Wyślij wiadomość</string>
     <string name="songcast_hint_chat_message">Czat</string>
     <string name="songcast_refresh_session_details">🔄 Odśwież</string>
-    <string name="songcast_new_member_joined">%s dołączył do pokoju.</string>
     <string name="songcast_member_dropped">%s opuścił pokój.</string>
     <string name="songcast_new_chat_message" formatted="false">Czat: %s: %s</string>
     <string name="songcast_song_selected" formatted="false">%s zaprezentował piosenkę:\n%s</string>
