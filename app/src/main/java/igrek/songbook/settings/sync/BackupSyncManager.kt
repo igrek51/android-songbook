@@ -187,21 +187,6 @@ class BackupSyncManager(
         )
     }
 
-    private fun backupOldFile(driveService: Drive, syncFile: String) {
-        logger.debug("backing up file $syncFile")
-        val fileId: String = findOrCreateDriveFile(driveService, syncFile)
-
-        val dataDirPath = localDbService.appDataDir.absolutePath
-        val localFile = File(dataDirPath, syncFile)
-        if (!localFile.exists())
-            throw FileNotFoundException("file not found: ${localFile.absoluteFile}")
-        val fileContent = FileContent(null, localFile)
-
-        val metadata = com.google.api.services.drive.model.File().setName(syncFile)
-        driveService.files().update(fileId, metadata, fileContent).execute()
-        logger.info("file $syncFile ($fileId) backed up: ${localFile.readLines()}")
-    }
-
     private fun restoreOldFile(driveService: Drive, syncFile: String) {
         logger.debug("restoring file $syncFile")
         val fileId: String = findDriveFile(driveService, syncFile)

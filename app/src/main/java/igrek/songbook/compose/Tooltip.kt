@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
@@ -41,11 +40,4 @@ fun Tooltip(
             )
         }
     }
-}
-
-@Composable
-fun Tooltip(
-    hintResId: Int,
-) {
-    Tooltip(stringResource(id = hintResId))
 }

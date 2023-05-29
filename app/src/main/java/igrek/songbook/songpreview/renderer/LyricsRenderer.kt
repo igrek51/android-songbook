@@ -301,9 +301,8 @@ class LyricsRenderer internal constructor(
             val linesNum = songPreview.slideTargetModel.lines.size
             val fadeOffset = (1f - normalizedProgress) * fadeDirection * lineheight
             val yOffset = h / 2 - linesNum * lineheight / 2 + fadeOffset
-            val alpha = normalizedProgress
             songPreview.slideTargetModel.lines.forEachIndexed { lineIndex, line ->
-                drawSlidesLine(line, lineIndex, yOffset, fontsize, lineheight, alpha)
+                drawSlidesLine(line, lineIndex, yOffset, fontsize, lineheight, normalizedProgress)
             }
         }
     }

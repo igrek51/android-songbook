@@ -80,10 +80,10 @@ class UserDataDao(
         }.recoverCatching {
             logger.error("failed to load user data. Trying synchronous load...")
             appFactory.crashlyticsLogger.get().reportNonFatalError(it)
-            reloadSync(resetOnError = false)
+            reloadSync()
         }.recoverCatching {
             delay(1000)
-            reloadSync(resetOnError = false)
+            reloadSync()
         }.recover { t ->
             logger.error("failed to load user data", t)
             throw ContextError("Corrupted user data", t)
@@ -138,7 +138,8 @@ class UserDataDao(
         logger.debug("User data loaded")
     }
 
-    private suspend fun reloadSync(resetOnError: Boolean) {
+    private suspend fun reloadSync() {
+        val resetOnError = false
         val path = localDbService.appFilesDir.absolutePath
         dataTransferMutex.withLock {
             logger.debug("Sync-loading data from $path")

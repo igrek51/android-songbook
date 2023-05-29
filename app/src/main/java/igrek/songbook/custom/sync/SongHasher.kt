@@ -25,11 +25,6 @@ class SongHasher {
         return ShaHasher().singleHash(json)
     }
 
-    fun hashSongContent(dto: TitledSongDto): String {
-        val json = jsonSerializer.encodeToString(TitledSongDto.serializer(), dto)
-        return ShaHasher().singleHash(json)
-    }
-
     fun hashSong(song: Song): String {
         val dto = TitledSongDto(
             title = song.title,

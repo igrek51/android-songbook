@@ -74,16 +74,9 @@ class SongListView : ListView, AdapterView.OnItemClickListener,
         invalidate()
     }
 
-    /**
-     * @param position of element to scroll
-     */
-    private fun scrollTo(position: Int) {
-        setSelection(position)
-        invalidate()
-    }
-
     fun scrollToBeginning() {
-        scrollTo(0)
+        setSelection(0)
+        invalidate()
     }
 
     fun restoreScrollPosition(scrollPosition: ListScrollPosition?) {

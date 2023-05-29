@@ -24,14 +24,6 @@ fun Float.limitBetween(min: Float, max: Float): Float {
     return this
 }
 
-fun Long.limitBetween(min: Long, max: Long): Long {
-    if (this < min)
-        return min
-    if (this > max)
-        return max
-    return this
-}
-
 fun Long.interpolate(min: Long, max: Long): Float {
     if (this < min)
         return 0f

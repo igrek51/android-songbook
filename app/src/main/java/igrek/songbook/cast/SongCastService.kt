@@ -146,12 +146,16 @@ class SongCastService {
         periodicRefreshJob = ioScope.launch {
             try {
                 periodicRefresh()
-            } catch (e: CancellationException) {}
+            } catch (e: CancellationException) {
+                logger.debug("Periodic refresh coroutine cancelled")
+            }
         }
         periodicReconnectJob = ioScope.launch {
             try {
                 periodicReconnect()
-            } catch (e: CancellationException) {}
+            } catch (e: CancellationException) {
+                logger.debug("Periodic reconnect coroutine cancelled")
+            }
         }
     }
 

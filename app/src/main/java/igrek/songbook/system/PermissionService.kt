@@ -44,18 +44,14 @@ class PermissionService(
     fun ensureStorageReadAccess() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             ActivityCompat.requestPermissions(
-                activity, arrayOf(
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                ),
-                1
+                activity, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1
             )
         } else {
             ActivityCompat.requestPermissions(
                 activity, arrayOf(
                     Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE
-                ),
-                1
+                ), 1
             )
         }
     }

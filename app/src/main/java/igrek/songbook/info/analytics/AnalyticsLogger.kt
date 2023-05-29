@@ -1,8 +1,6 @@
 package igrek.songbook.info.analytics
 
-import android.app.Activity
 import android.os.Bundle
-import android.provider.Settings
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import igrek.songbook.inject.LazyExtractor
@@ -12,10 +10,8 @@ import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.settings.preferences.PreferencesState
 
 class AnalyticsLogger(
-    activity: LazyInject<Activity> = appFactory.activity,
     preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
 ) {
-    private val activity by LazyExtractor(activity)
     private val preferencesState by LazyExtractor(preferencesState)
 
     private val firebaseAnalytics = Firebase.analytics

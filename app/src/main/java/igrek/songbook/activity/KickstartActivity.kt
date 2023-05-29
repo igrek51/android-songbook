@@ -5,9 +5,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
-import androidx.compose.ui.geometry.Offset
 import androidx.core.view.isVisible
 import com.google.android.material.navigation.NavigationView
 import igrek.songbook.R
@@ -87,17 +84,6 @@ class KickstartActivity : MainActivity() {
             }
         }
         return result
-    }
-
-    private fun MutableInteractionSource.simulateClick() {
-        val interaction = this
-        GlobalScope.launch {
-            delay(1000)
-            val press = PressInteraction.Press(Offset.Zero.copy(100f, 20f))
-            interaction.emit(press)
-            delay(1000)
-            interaction.emit(PressInteraction.Release(press))
-        }
     }
 
     private suspend fun waitForLayout(laoutClass: KClass<out MainLayout>) {
