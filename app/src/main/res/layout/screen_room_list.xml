@@ -111,7 +111,8 @@
                 android:background="#07ffffff"
                 android:gravity="center_vertical"
                 android:inputType="text"
-                android:padding="8dp" />
+                android:padding="8dp"
+                android:hint="@string/screen_share_your_name" />
 
 
             <View

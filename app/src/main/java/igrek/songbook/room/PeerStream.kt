@@ -35,19 +35,21 @@ class PeerStream(
     private suspend fun receiveLooper() {
         while (remoteSocket.isConnected) {
             try {
-                delay(100L) //pause and wait for rest of data.
-                var availableBytes = inStream.available()
-                if (availableBytes > 0) {
-                    val buffer = ByteArray(maxBuffer)
-                    if (availableBytes > maxBuffer)
-                        availableBytes = maxBuffer
-                    val actualBytes = inStream.read(buffer, 0, availableBytes)
+                withContext(Dispatchers.IO) {
+                    delay(100L) //pause and wait for rest of data.
+                    var availableBytes = inStream.available()
+                    if (availableBytes > 0) {
+                        val buffer = ByteArray(maxBuffer)
+                        if (availableBytes > maxBuffer)
+                            availableBytes = maxBuffer
+                        val actualBytes = inStream.read(buffer, 0, availableBytes)
 
-                    val str = String(buffer, 0, actualBytes)
+                        val str = String(buffer, 0, actualBytes)
 
-                    readMutex.withLock {
-                        inBuffer.append(str)
-                        findCompleteMessage()
+                        readMutex.withLock {
+                            inBuffer.append(str)
+                            findCompleteMessage()
+                        }
                     }
                 }
             } catch (e: Throwable) {

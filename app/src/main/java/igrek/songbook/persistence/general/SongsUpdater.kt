@@ -101,30 +101,32 @@ class SongsUpdater(
         forcedUpdate: Boolean
     ) {
         try {
-            val inputStream: InputStream = response.body()!!.byteStream()
-            val input = BufferedInputStream(inputStream)
-            try {
-                songsRepository.close()
-                val output = FileOutputStream(songsDbFile)
-                val data = ByteArray(1024)
-                var total: Long = 0
-                var count: Int
-                while (true) {
-                    count = input.read(data)
-                    if (count == -1)
-                        break
-                    total += count
-                    output.write(data, 0, count)
+            withContext(Dispatchers.IO) {
+                val inputStream: InputStream = response.body()!!.byteStream()
+                val input = BufferedInputStream(inputStream)
+                try {
+                    songsRepository.close()
+                    val output = FileOutputStream(songsDbFile)
+                    val data = ByteArray(1024)
+                    var total: Long = 0
+                    var count: Int
+                    while (true) {
+                        count = input.read(data)
+                        if (count == -1)
+                            break
+                        total += count
+                        output.write(data, 0, count)
+                    }
+                    output.flush()
+                    output.close()
+                    input.close()
+                } catch (e: Throwable) {
+                    songsRepository.saveAndReloadAllSongs()
+                    throw e
                 }
-                output.flush()
-                output.close()
-                input.close()
-            } catch (e: Throwable) {
-                songsRepository.saveAndReloadAllSongs()
-                throw e
             }
 
-            GlobalScope.launch (Dispatchers.IO) {
+            GlobalScope.launch(Dispatchers.IO) {
                 try {
                     songsRepository.saveAndReloadAllSongs()
                     if (forcedUpdate) {

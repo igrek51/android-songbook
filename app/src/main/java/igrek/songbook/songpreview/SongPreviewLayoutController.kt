@@ -129,6 +129,7 @@ class SongPreviewLayoutController(
             }, UiErrorHandler::handleError)
     }
 
+    @SuppressLint("InflateParams")
     override fun showLayout(layout: View) {
         if (preferencesState.keepScreenOn)
             windowManagerService.keepScreenOn(true)
