@@ -493,7 +493,7 @@ class SongCastService {
         if (clientFollowScroll && !isPresenting() && layoutController.isState(SongPreviewLayoutController::class)) {
             logger.debug("scrolling by SongCast event: mode=${scrollDto.mode}, start=${scrollDto.view_start}")
             scrollService.adaptToScrollControl(
-                scrollDto.view_start, scrollDto.view_end, scrollDto.visible_text, scrollDto.mode, chordsNotation,
+                scrollDto.view_start, scrollDto.visible_text, scrollDto.mode, chordsNotation,
             )
         }
     }

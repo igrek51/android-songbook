@@ -58,12 +58,12 @@ class ScrollService(
             .throttleLast(800, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                onPartiallyScrolled(it)
+                onPartiallyScrolled()
                 scrolledBuffer = 0f
             }, UiErrorHandler::handleError)
     }
 
-    private fun onPartiallyScrolled(scrolledByLines: Float) {
+    private fun onPartiallyScrolled() {
         if (songCastService.isPresenting() && preferencesState.castScrollControl != CastScrollControl.NONE) {
             shareScrollControl()
         }
@@ -161,7 +161,12 @@ class ScrollService(
     }
 
 
-    fun adaptToScrollControl(viewStart: Float, viewEnd: Float, visibleText: String?, modeId: Long?, srcNotation: ChordsNotation) {
+    fun adaptToScrollControl(
+        viewStart: Float,
+        visibleText: String?,
+        modeId: Long?,
+        srcNotation: ChordsNotation
+    ) {
         when (modeId) {
             CastScrollControl.SHARE_SCROLL.id -> adaptToShareScrollControl(viewStart)
             CastScrollControl.SLIDES_1.id -> adaptToSlideScrollControl(viewStart, visibleText, srcNotation)
