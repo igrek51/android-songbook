@@ -11,7 +11,6 @@ import com.google.android.gms.ads.AdRequest.*
 import igrek.songbook.BuildConfig
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
-import igrek.songbook.editor.ChordsEditorLayoutController
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
@@ -20,7 +19,6 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.GlobalFocusTraverser
 import igrek.songbook.layout.MainLayout
 import igrek.songbook.settings.preferences.PreferencesState
-import igrek.songbook.songpreview.SongPreviewLayoutController
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.Dispatchers
@@ -84,8 +82,8 @@ class AdService(
     private fun bannerToBeDisplayed(currentLayout: MainLayout): Boolean {
         return when {
             BuildConfig.DEBUG && hideAdsOnDebug -> false
-            SongPreviewLayoutController::class.isInstance(currentLayout) -> false
-            ChordsEditorLayoutController::class.isInstance(currentLayout) -> false
+            //SongPreviewLayoutController::class.isInstance(currentLayout) -> false
+            //ChordsEditorLayoutController::class.isInstance(currentLayout) -> false
             preferencesState.adsStatus == 1L -> false
             preferencesState.purchasedAdFree -> false
             activityController.isAndroidTv() -> false
@@ -116,12 +114,15 @@ class AdService(
     @Suppress("DEPRECATION")
     private fun requestAdRefresh() {
         logger.debug("initializing ad banner")
-        val adViewContainer: FrameLayout? = activity.findViewById(R.id.ad_view_container)
+        val adViewContainer: FrameLayout = activity.findViewById(R.id.ad_view_container) ?: run {
+            logger.warn("ad view container not found")
+            return
+        }
 
         val adView = AdView(activity)
-        adViewContainer?.removeAllViews()
-        adViewContainer?.addView(adView)
-        adViewContainer?.visibility = View.VISIBLE
+        adViewContainer.removeAllViews()
+        adViewContainer.addView(adView)
+        adViewContainer.visibility = View.VISIBLE
 
         adView.adListener = object : AdListener() {
             override fun onAdLoaded() {}
@@ -156,7 +157,7 @@ class AdService(
 
         val density = outMetrics.density
 
-        var adContainerWidthPixels = adViewContainer?.width?.toFloat() ?: 0f
+        var adContainerWidthPixels = adViewContainer.width.toFloat()
         if (adContainerWidthPixels == 0f) {
             adContainerWidthPixels = outMetrics.widthPixels.toFloat()
         }
@@ -180,6 +181,10 @@ class AdService(
         }
 
         globalFocusTraverser.setUpDownKeyListener(adView)
+
+        if (!adSize.isAutoHeight) {
+            adViewContainer.minimumHeight = adSize.getHeightInPixels(activity)
+        }
 
         val adRequest = Builder().build()
         GlobalScope.launch(Dispatchers.Main) {
