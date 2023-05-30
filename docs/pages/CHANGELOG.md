@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.35.4] - 1902 - 2023-05-31
+### Fixed
+- Fixed layout displaying issue.
+
 ## [1.35.3] - 1901 - 2023-05-29
 ### Added
 - Added Support for **Song Cast** - displaying songs on many devices over Internet connection.
