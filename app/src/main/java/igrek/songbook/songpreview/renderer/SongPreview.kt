@@ -187,7 +187,7 @@ class SongPreview(
                 lineheightPx,
                 fontsizePx,
                 lyricsModel,
-                quickMenuVisible = quickMenuTranspose.isVisible || quickMenuCast.isVisible,
+                quickMenuVisible = quickMenuTranspose.isVisible || quickMenuAutoscroll.isVisible || quickMenuCast.isVisible,
             )
         }
     }

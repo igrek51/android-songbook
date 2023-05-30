@@ -1,6 +1,7 @@
 package igrek.songbook.songpreview.renderer
 
 import android.graphics.Typeface
+import android.os.Build
 import igrek.songbook.chords.model.LyricsLine
 import igrek.songbook.chords.model.LyricsModel
 import igrek.songbook.chords.model.LyricsTextType
@@ -208,7 +209,10 @@ class LyricsRenderer internal constructor(
         val eyeFocusTop = (eyeFocusLines - 1f) * lineheight - songPreview.scroll
         val eyeFocusBottom = eyeFocusTop + 2f * lineheight
 
-        val thickness = songPreview.scrollThickness * 4f
+        val thickness = when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> songPreview.scrollThickness * 4f
+            else -> songPreview.scrollThickness * 2f
+        }
         canvas.fillRectGradientH(
             w - thickness,
             eyeFocusTop,
