@@ -384,10 +384,9 @@ class CustomSongsListLayoutController(
         if (!groupingEnabled)
             customCategory = null
 
-        val customSongsTitle = uiResourceService.resString(R.string.nav_custom_song)
         tabTitleLabel?.text = when {
-            customCategory != null && groupingEnabled -> "$customSongsTitle: ${customCategory?.name}"
-            else -> customSongsTitle
+            customCategory != null && groupingEnabled -> customCategory?.name.orEmpty()
+            else -> uiResourceService.resString(R.string.nav_custom_song)
         }
 
         goBackButton?.visibility = when {

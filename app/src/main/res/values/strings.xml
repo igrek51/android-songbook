@@ -146,7 +146,7 @@
     <string name="typeface_monospace">Monospace</string>
     <string name="no_songs_to_shuffle">No songs to shuffle</string>
     <string name="action_song_copy">📋 Make a copy</string>
-    <string name="action_song_edit">✏️Edit</string>
+    <string name="action_song_edit">✏️ Edit</string>
     <string name="action_song_remove">❌ Delete</string>
     <string name="action_song_set_favourite">⭐️ Like</string>
     <string name="action_song_unset_favourite">⭐️ Dislike</string>
@@ -602,7 +602,7 @@
     <string name="songcast_promote_member_to_presenter">👤 Promote to presenter</string>
     <string name="songcast_member_promoted">%s has been promoted to Presenter</string>
     <string name="songcast_session_created">Song Cast room created.</string>
-    <string name="songcast_share_with_songcast">Open in Song Cast</string>
+    <string name="songcast_share_with_songcast">🎥 Open in Song Cast</string>
     <string name="songcast_open_presented_song_automatically">Focus presented song</string>
     <string name="songcast_action_open_song">Show</string>
     <string name="songcast_action_lobby">Lobby</string>
