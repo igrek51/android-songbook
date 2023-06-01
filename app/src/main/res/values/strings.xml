@@ -476,7 +476,7 @@
     <string name="open_saved_song">Open</string>
     <string name="song_import_loading_file">Loading song from a file…</string>
     <string name="action_report_error">Send Report</string>
-    <string name="report_error_sent">Error Report has been sent. Thank you.</string>
+    <string name="report_error_sent">Report of an error has been sent. Thank you.</string>
     <string name="custom_songs_synchornize">🔃 Synchronize with Web Editor</string>
     <string name="sync_session_songs_synchronized">Synchronized. Session will be active for 24 hours</string>
     <string name="sync_copy_link">Copy Link</string>
