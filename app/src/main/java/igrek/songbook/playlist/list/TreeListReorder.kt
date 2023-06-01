@@ -103,7 +103,6 @@ class TreeListReorder(private val listView: PlaylistListView) {
     }
 
     fun handleItemDragging() {
-
         val dyTotal =
             lastTouchY - startTouchY + ((listView.scrollHandler?.scrollOffset ?: 0) - (scrollStart
                 ?: 0))

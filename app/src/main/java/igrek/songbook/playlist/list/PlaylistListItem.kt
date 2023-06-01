@@ -5,7 +5,7 @@ import igrek.songbook.persistence.user.playlist.Playlist
 
 open class PlaylistListItem(
     val playlist: Playlist? = null,
-    val song: Song? = null
+    val song: Song? = null,
 ) {
 
     override fun toString(): String {

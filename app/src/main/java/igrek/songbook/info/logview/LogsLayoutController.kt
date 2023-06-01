@@ -29,11 +29,11 @@ class LogsLayoutController(
 
         itemsListView = layout.findViewById<LogListView>(R.id.itemsListView)?.also {
             it.init()
+            it.enableNestedScrolling()
             it.onClickCallback = { item: LogEntry ->
                 copyItemToClipboard(item)
             }
             it.items = listOf()
-            it.emptyView = layout.findViewById(R.id.emptyListTextView)
         }
 
         itemsListView?.let {

@@ -120,6 +120,7 @@ abstract class AbstractJsonDao<T>(
         try {
             var read: Int
             while (inputStream.read(buffer).also { read = it } != -1) {
+                logger.debug("bytes read from a phantom file: $read")
                 byteOutput.write(buffer, 0, read)
             }
         } finally {

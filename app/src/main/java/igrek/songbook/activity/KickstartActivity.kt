@@ -25,12 +25,12 @@ import kotlin.reflect.KClass
 class KickstartActivity : MainActivity() {
 
     private suspend fun bootstrapUI() {
-        openNavItem(R.id.nav_song_cast)
-        waitForLayout(SongCastMenuLayout::class)
-//        appFactory.songCastMenuLayout.get().createRoom()
-        safeExecute {
-            appFactory.songCastMenuLayout.get().restoreRoom()
-        }
+//        openNavItem(R.id.nav_song_cast)
+//        waitForLayout(SongCastMenuLayout::class)
+//        safeExecute {
+//            appFactory.songCastMenuLayout.get().restoreRoom()
+//        }
+        appFactory.commanderService.get().commandAttempt("logs")
     }
 
     private val logger: Logger = LoggerFactory.logger

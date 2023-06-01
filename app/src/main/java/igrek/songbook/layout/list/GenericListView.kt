@@ -31,7 +31,7 @@ abstract class GenericListView<T>(
             adapter.clear()
             adapter.addAll(items)
             adapter.notifyDataSetChanged()
-            alignListViewHeight()
+            //alignListViewHeight()
         }
 
     abstract fun buildView(view: View, item: T)
@@ -42,6 +42,9 @@ abstract class GenericListView<T>(
         onItemClickListener = this
         onItemLongClickListener = this
         choiceMode = CHOICE_MODE_SINGLE
+        itemsCanFocus = true
+        isFocusable = true
+        descendantFocusability = ViewGroup.FOCUS_BEFORE_DESCENDANTS
         setAdapter(adapter)
     }
 

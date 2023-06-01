@@ -202,7 +202,7 @@ class CommanderService(
         }
     }
 
-    private fun commandAttempt(key: String) {
+    fun commandAttempt(key: String) {
         logger.info("secret command entered: $key")
 
         GlobalScope.launch(Dispatchers.Main) {
