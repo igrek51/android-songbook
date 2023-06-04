@@ -92,10 +92,11 @@ class ScrollService(
 
     private fun getVisibleShareScroll(): CastScroll? {
         val songPreview = appFactory.songPreviewLayoutController.g.songPreview ?: return null
+        val scrollEm: Float = songPreview.scrollEm.takeIf { !it.isNaN() } ?: return null
         val lyricsLoader = appFactory.lyricsLoader.g
         val lyricsModel = songPreview.lyricsModel
 
-        val firstVisibleLine: Float = songPreview.scrollEm.applyMin(0f)
+        val firstVisibleLine: Float = scrollEm.applyMin(0f)
         val lastVisibleLine: Float = songPreview.lastVisibleLine.applyMin(0f)
         val linesStartIndex: Int = floor(firstVisibleLine).roundToInt()
         val linesEndIndex: Int = floor(lastVisibleLine).roundToInt()

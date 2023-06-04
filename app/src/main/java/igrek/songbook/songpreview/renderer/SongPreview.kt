@@ -135,7 +135,10 @@ class SongPreview(
     }
 
     val allLinesEm: Float get() = textBottomY.get() / lineheightPx
-    val scrollEm: Float get() = scroll / lineheightPx
+    val scrollEm: Float get() = when {
+        lineheightPx == 0f -> 0f
+        else -> scroll / lineheightPx
+    }
     val lastVisibleLine: Float get() = scrollEm + visualLinesAtEnd
     private val textRightX: SimpleCache<Float> = SimpleCache {
         (lyricsModel.lines.maxOfOrNull { it.maxRightX } ?: 0f) * fontsizePx
