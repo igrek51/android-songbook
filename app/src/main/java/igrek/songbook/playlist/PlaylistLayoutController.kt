@@ -11,6 +11,7 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -54,6 +55,7 @@ import igrek.songbook.cast.AnimalNameFeeder
 import igrek.songbook.compose.AppTheme
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
+import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -382,9 +384,7 @@ class PlaylistLayoutController(
 
 @Composable
 private fun MainComponent(controller: PlaylistLayoutController) {
-    Column(
-        modifier = Modifier.padding(horizontal = 6.dp)
-    ) {
+    Column {
         Card(
             modifier = Modifier.fillMaxWidth().padding(8.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
@@ -454,6 +454,7 @@ fun ReorderableListView(
     val itemAnimatedOffsets: MutableMap<Int, Animatable<Float, AnimationVector1D>> = remember { mutableStateMapOf() }
     val listState: LazyListState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+    val scrollDiff = remember { mutableStateOf(0f) }
 
     LazyColumn(state = listState) {
         items(items.size) { index ->
@@ -462,8 +463,12 @@ fun ReorderableListView(
             val offsetYAnimated = remember { Animatable(0f) }
             itemAnimatedOffsets[index] = offsetYAnimated
 
+            val offsetY = offsetYAnimated.value.roundToInt() + when {
+                index == draggingIndex.value -> scrollDiff.value.roundToInt()
+                else -> 0
+            }
             var itemModifier = Modifier
-                .offset { IntOffset(0, offsetYAnimated.value.roundToInt()) }
+                .offset { IntOffset(0, offsetY) }
                 .fillMaxWidth()
                 .onGloballyPositioned { coordinates: LayoutCoordinates ->
                     itemHeights[index] = coordinates.size.height.toFloat()
@@ -474,12 +479,14 @@ fun ReorderableListView(
                     onDragStart = { offset: Offset ->
                         draggingIndex.value = index
                         dragTargetIndex.value = null
+                        scrollDiff.value = 0f
                         coroutineScope.launch {
                             offsetYAnimated.snapTo(0f)
                         }
                     },
                     onDragEnd = {
-                        val (swapped, movedBy) = calculateItemsToSwap(index, items.size, offsetYAnimated.targetValue, itemHeights)
+                        val relativateOffset = offsetYAnimated.targetValue + scrollDiff.value
+                        val (swapped, movedBy) = calculateItemsToSwap(index, items.size, relativateOffset, itemHeights)
                         when {
                             swapped < 0 -> {
                                 val minIndex = min(index, index + swapped)
@@ -531,56 +538,53 @@ fun ReorderableListView(
                     },
                     onDrag = { change: PointerInputChange, dragAmount: Offset ->
                         change.consume()
-                        val (swapped, movedBy) = calculateItemsToSwap(index, items.size, offsetYAnimated.targetValue, itemHeights)
+
+                        val relativateOffset = offsetYAnimated.targetValue + scrollDiff.value
+                        val thisHeight = itemHeights[index] ?: 0f
+                        val (swapped, movedBy) = calculateItemsToSwap(index, items.size, relativateOffset, itemHeights)
                         dragTargetIndex.value = when {
                             swapped < 0 -> index + swapped - 1
                             swapped > 0 -> index + swapped
                             else -> null
                         }
 
-//                        var priorVisibleHeight = -listState.firstVisibleItemScrollOffset.toFloat()
-//                        listState.layoutInfo.visibleItemsInfo.forEach {
-//                            if (it.index < index) {
-//                                priorVisibleHeight += itemHeights[it.index] ?: 0f
-//                            } else if (it.index == index) {
-//                                priorVisibleHeight += (itemHeights[it.index] ?: 0f) / 2
-//                            }
-//                        }
-//                        var beyondVisibleHeight = 0f
-//                        listState.layoutInfo.visibleItemsInfo.dropLast(1).forEach {
-//                            if (it.index > index) {
-//                                beyondVisibleHeight += itemHeights[it.index] ?: 0f
-//                            } else if (it.index == index) {
-//                                beyondVisibleHeight += (itemHeights[it.index] ?: 0f) / 2
-//                            }
-//                        }
-//
-//                        var overscrolledY = 0f
-//                        if (offsetYAnimated.targetValue < 0) {
-//                            val overscrolled = -priorVisibleHeight - offsetYAnimated.targetValue
-//                            if (overscrolled > 0) {
-//                                logger.debug("overscrolled - ", overscrolled)
-//                                overscrolledY = -overscrolled
-//                            }
-//                        }
-//                        if (offsetYAnimated.targetValue > 0) {
-//                            val overscrolled = -beyondVisibleHeight + offsetYAnimated.targetValue
-//                            if (overscrolled > 0) {
-//                                logger.debug("overscrolled - ", overscrolled)
-//                                overscrolledY = overscrolled
-//                            }
-//                        }
+                        var priorVisibleHeight = thisHeight / 2 -listState.firstVisibleItemScrollOffset.toFloat()
+                        listState.layoutInfo.visibleItemsInfo.forEach {
+                            if (it.index < index) {
+                                priorVisibleHeight += itemHeights[it.index] ?: 0f
+                            }
+                        }
+                        var beyondVisibleHeight = thisHeight / 2
+                        listState.layoutInfo.visibleItemsInfo.dropLast(1).forEach {
+                            if (it.index > index) {
+                                beyondVisibleHeight += itemHeights[it.index] ?: 0f
+                            }
+                        }
 
-//                        logger.debug("listState.firstVisibleItemScrollOffset", listState.firstVisibleItemScrollOffset)
-//                        logger.debug("priorVisibleHeight", priorVisibleHeight)
-//                        logger.debug("beyondVisibleHeight", beyondVisibleHeight)
-//                        logger.debug("offsetYAnimated.targetValue", offsetYAnimated.targetValue)
-//                        logger.debug("viewportStartOffset scope", listState.layoutInfo.viewportEndOffset)
+                        val borderArea = thisHeight * 1.5f
+                        var overscrolledY = 0f
+                        when {
+                            relativateOffset < 0 && listState.canScrollBackward -> {
+                                val overscrolled = priorVisibleHeight + relativateOffset - borderArea
+                                if (overscrolled < 0) {
+                                    overscrolledY = overscrolled
+                                }
+                            }
+                            relativateOffset > 0 && listState.canScrollForward -> {
+                                val overscrolled = -beyondVisibleHeight + relativateOffset + borderArea
+                                if (overscrolled > 0) {
+                                    overscrolledY = overscrolled
+                                }
+                            }
+                        }
 
                         coroutineScope.launch {
-//                            val scrollBy = overscrolledY * 1f
-                            offsetYAnimated.snapTo(offsetYAnimated.targetValue + dragAmount.y )//+ scrollBy)
-//                            listState.scrollBy(scrollBy)
+                            offsetYAnimated.snapTo(offsetYAnimated.targetValue + dragAmount.y)
+                            if (overscrolledY != 0f) {
+                                val scrollBy = overscrolledY * 0.1f
+                                val consumedScroll = listState.scrollBy(scrollBy)
+                                scrollDiff.value += consumedScroll
+                            }
                         }
                     }
                 )
