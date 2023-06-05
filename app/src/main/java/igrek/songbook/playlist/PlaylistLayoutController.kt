@@ -10,9 +10,7 @@ import android.widget.TextView
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,16 +21,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,15 +46,12 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import igrek.songbook.R
 import igrek.songbook.compose.AppTheme
-import igrek.songbook.compose.md_theme_light_primaryContainer
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
-import igrek.songbook.info.errorcheck.safeAsyncExecutor
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -449,6 +444,7 @@ fun ReorderableListView(
 ) {
 //    val reorderedItems = remember { mutableStateListOf(*items.toTypedArray()) }
     val draggingIndex = remember { mutableStateOf(-1) }
+    val dragTargetIndex: MutableState<Int?> = remember { mutableStateOf(null) }
     val itemHeights: MutableMap<Int, Float> = remember { mutableStateMapOf() }
     val itemAnimatedOffsets: MutableMap<Int, Animatable<Float, AnimationVector1D>> = remember { mutableStateMapOf() }
     val listState = rememberLazyListState()
@@ -473,6 +469,7 @@ fun ReorderableListView(
                 detectDragGestures(
                     onDragStart = {
                         draggingIndex.value = index
+                        dragTargetIndex.value = null
                         coroutineScope.launch {
                             offsetYAnimated.snapTo(0f)
                         }
@@ -520,16 +517,22 @@ fun ReorderableListView(
                         }
 
                         draggingIndex.value = -1
+                        dragTargetIndex.value = null
                         logger.debug("onDragEnd")
                     },
                     onDragCancel = {
                         draggingIndex.value = -1
+                        dragTargetIndex.value = null
                         logger.debug("onDragCanc3el")
                     },
                     onDrag = { change: PointerInputChange, dragAmount: Offset ->
                         change.consume()
-//                            val (swapped, movedBy) = calculateItemsToSwap(index, items.size, offsetYAnimated.targetValue, itemHeights)
-//                            val newPos = index + swapped
+                        val (swapped, movedBy) = calculateItemsToSwap(index, items.size, offsetYAnimated.targetValue, itemHeights)
+                        dragTargetIndex.value = when {
+                            swapped < 0 -> index + swapped - 1
+                            swapped > 0 -> index + swapped
+                            else -> null
+                        }
                         coroutineScope.launch {
                             offsetYAnimated.snapTo(offsetYAnimated.targetValue + dragAmount.y)
 
@@ -548,11 +551,6 @@ fun ReorderableListView(
                 modifier = itemModifier,
             ) {
                 Row {
-                    Text(
-                        text = item,
-                        modifier = Modifier.padding(16.dp),
-                    )
-                    Spacer(Modifier.weight(1f))
                     IconButton(
                         modifier = reorderButtonModifier
                             .padding(4.dp)
@@ -566,8 +564,20 @@ fun ReorderableListView(
                             tint = Color.White,
                         )
                     }
-
+                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                    Text(
+                        text = item,
+                        modifier = Modifier.padding(16.dp),
+                    )
+                    Spacer(Modifier.weight(1f))
                 }
+            }
+
+            if (dragTargetIndex.value == index) {
+                Divider(
+                    modifier = Modifier,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
+                )
             }
 
         }
