@@ -7,51 +7,31 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.AnimationVector1D
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.scrollBy
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.PointerInputChange
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.LayoutCoordinates
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import igrek.songbook.R
 import igrek.songbook.cast.AnimalNameFeeder
 import igrek.songbook.compose.AppTheme
+import igrek.songbook.compose.ReorderListView
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
@@ -76,14 +56,6 @@ import igrek.songbook.songselection.tree.NoParentItemException
 import igrek.songbook.util.ListMover
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.yield
-import java.lang.Integer.max
-import java.lang.Integer.min
-import kotlin.math.abs
-import kotlin.math.roundToInt
 
 class PlaylistLayoutController(
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
@@ -402,250 +374,26 @@ private fun MainComponent(controller: PlaylistLayoutController) {
             }
         }
 
-        ReorderableListView(entities)
-    }
-}
-
-private fun calculateItemsToSwap(
-    itemIndex: Int,
-    itemsCount: Int,
-    offsetY: Float,
-    itemHeights: Map<Int, Float>,
-): Pair<Int, Float> {
-    val thisItemHeight: Float = itemHeights[itemIndex] ?: return 0 to 0f
-    var swapped = 0
-    var movedBy = 0f
-    var overlapY: Float = abs(offsetY)
-    when {
-        offsetY < 0 -> {
-            while (true) {
-                val newPosition: Int = itemIndex + swapped
-                if (newPosition <= 0) return swapped to movedBy
-                val nextItemHeight = itemHeights[newPosition - 1] ?: thisItemHeight // guess the height is the same
-                if (overlapY <= thisItemHeight / 2 + nextItemHeight / 2)
-                    return swapped to movedBy
-                overlapY -= nextItemHeight
-                movedBy -= nextItemHeight
-                swapped -= 1
-            }
-        }
-        offsetY > 0 -> {
-            while (true) {
-                val newPosition: Int = itemIndex + swapped
-                if (newPosition >= itemsCount - 1) return swapped to movedBy
-                val nextItemHeight = itemHeights[newPosition + 1] ?: thisItemHeight
-                if (overlapY <= thisItemHeight / 2 + nextItemHeight / 2)
-                    return swapped to movedBy
-                overlapY -= nextItemHeight
-                movedBy += nextItemHeight
-                swapped += 1
-            }
-        }
-        else -> return 0 to 0f
-    }
-}
-
-@Composable
-fun ReorderableListView(
-    items: MutableList<String>,
-) {
-    val draggingIndex = remember { mutableStateOf(-1) }
-    val dragTargetIndex: MutableState<Int?> = remember { mutableStateOf(null) }
-    val itemHeights: MutableMap<Int, Float> = remember { mutableStateMapOf() }
-    val itemAnimatedOffsets: MutableMap<Int, Animatable<Float, AnimationVector1D>> = remember { mutableStateMapOf() }
-    val scrollState = rememberScrollState()
-    val coroutineScope = rememberCoroutineScope()
-    val scrollDiff = remember { mutableStateOf(0f) }
-    val parentViewportHeight = remember { mutableStateOf(0f) }
-    val scrollJob: MutableState<Job?> = remember { mutableStateOf(null) }
-
-    Column(
-        modifier = Modifier
-        .verticalScroll(scrollState)
-        .onGloballyPositioned { coordinates: LayoutCoordinates ->
-            parentViewportHeight.value = coordinates.parentLayoutCoordinates?.size?.height?.toFloat() ?: 0f
-        },
-    ) {
-        for (index in items.indices) {
-            val item = items[index]
-
-            val offsetYAnimated = remember { Animatable(0f) }
-            itemAnimatedOffsets[index] = offsetYAnimated
-
-            val offsetY = offsetYAnimated.value.roundToInt() + when (index) {
-                draggingIndex.value -> scrollDiff.value.roundToInt()
-                else -> 0
-            }
-            var itemModifier = Modifier
-                .offset { IntOffset(0, offsetY) }
-                .fillMaxWidth()
-                .onGloballyPositioned { coordinates: LayoutCoordinates ->
-                    itemHeights[index] = coordinates.size.height.toFloat()
-                }
-
-            val reorderButtonModifier = Modifier.pointerInput(index) {
-                detectDragGestures(
-                    onDragStart = { _: Offset ->
-                        draggingIndex.value = index
-                        dragTargetIndex.value = null
-                        scrollDiff.value = 0f
-                        coroutineScope.launch {
-                            offsetYAnimated.snapTo(0f)
-                        }
-                    },
-                    onDragEnd = {
-                        val relativateOffset = offsetYAnimated.targetValue + scrollDiff.value
-                        val (swapped, movedBy) = calculateItemsToSwap(index, items.size, relativateOffset, itemHeights)
-                        when {
-                            swapped < 0 -> {
-                                val minIndex = min(index, index + swapped)
-                                val maxIndex = max(index, index + swapped)
-                                val endOffset = offsetYAnimated.targetValue + scrollDiff.value - movedBy
-                                for (i in minIndex + 1 .. maxIndex) {
-                                    coroutineScope.launch {
-                                        val heightPx = itemHeights[i] ?: 0f
-                                        itemAnimatedOffsets[i]?.snapTo(-heightPx)
-                                        itemAnimatedOffsets[i]?.animateTo(0f)
-                                    }
-                                }
-                                coroutineScope.launch {
-                                    itemAnimatedOffsets[minIndex]?.snapTo(endOffset)
-                                    itemAnimatedOffsets[minIndex]?.animateTo(0f)
-                                }
-                                items.add(index + swapped, items.removeAt(index))
-                            }
-                            swapped > 0 -> {
-                                val minIndex = min(index, index + swapped)
-                                val maxIndex = max(index, index + swapped)
-                                val endOffset = offsetYAnimated.targetValue + scrollDiff.value - movedBy
-                                for (i in minIndex until maxIndex) {
-                                    coroutineScope.launch {
-                                        val heightPx = itemHeights[i] ?: 0f
-                                        itemAnimatedOffsets[i]?.snapTo(+heightPx)
-                                        itemAnimatedOffsets[i]?.animateTo(0f)
-                                    }
-                                }
-                                coroutineScope.launch {
-                                    itemAnimatedOffsets[maxIndex]?.snapTo(endOffset)
-                                    itemAnimatedOffsets[maxIndex]?.animateTo(0f)
-                                }
-                                items.add(index + swapped, items.removeAt(index))
-                            }
-                            else -> {
-                                coroutineScope.launch {
-                                    offsetYAnimated.animateTo(0f)
-                                }
-                            }
-                        }
-
-                        draggingIndex.value = -1
-                        dragTargetIndex.value = null
-                        scrollJob.value?.cancel()
-                        scrollJob.value = null
-                    },
-                    onDragCancel = {
-                        draggingIndex.value = -1
-                        dragTargetIndex.value = null
-                        coroutineScope.launch {
-                            offsetYAnimated.animateTo(0f)
-                        }
-                        scrollJob.value?.cancel()
-                        scrollJob.value = null
-                    },
-                    onDrag = { change: PointerInputChange, dragAmount: Offset ->
-                        change.consume()
-
-                        scrollJob.value?.cancel()
-                        scrollJob.value = null
-
-                        val relativateOffset = offsetYAnimated.targetValue + scrollDiff.value
-                        val thisHeight = itemHeights[index] ?: 0f
-                        val (swapped, _) = calculateItemsToSwap(index, items.size, relativateOffset, itemHeights)
-                        dragTargetIndex.value = when {
-                            swapped < 0 -> index + swapped - 1
-                            swapped > 0 -> index + swapped
-                            else -> null
-                        }
-
-                        var priorVisibleHeight = thisHeight / 2 - scrollState.value
-                        for (i in 0 until index) {
-                            priorVisibleHeight += itemHeights[i] ?: 0f
-                        }
-                        val beyondVisibleHeight = parentViewportHeight.value - priorVisibleHeight
-
-                        val borderArea = thisHeight * 2.5f
-                        var overscrolledY = 0f
-                        when {
-                            offsetYAnimated.targetValue < 0 && scrollState.canScrollBackward -> {
-                                val overscrolled = priorVisibleHeight + relativateOffset - borderArea
-                                if (overscrolled < 0) {
-                                    overscrolledY = overscrolled
-                                }
-                            }
-                            offsetYAnimated.targetValue > 0 && scrollState.canScrollForward -> {
-                                val overscrolled = -beyondVisibleHeight + relativateOffset + borderArea
-                                if (overscrolled > 0) {
-                                    overscrolledY = overscrolled
-                                }
-                            }
-                        }
-
-                        coroutineScope.launch {
-                            offsetYAnimated.snapTo(offsetYAnimated.targetValue + dragAmount.y)
-                            if (overscrolledY != 0f) {
-                                val scrollBy = overscrolledY * 0.06f
-                                val consumedScroll = scrollState.scrollBy(scrollBy)
-                                scrollDiff.value += consumedScroll
-
-                                scrollJob.value = coroutineScope.launch {
-                                    while ((scrollState.canScrollForward && overscrolledY > 0) || (scrollState.canScrollBackward && overscrolledY < 0)) {
-                                        yield()
-                                        delay(30)
-                                        val consumedScroll = scrollState.scrollBy(scrollBy)
-                                        scrollDiff.value += consumedScroll
-                                    }
-                                }
-                            }
-                        }
-                    }
-                )
-            }
-
-            if (draggingIndex.value == index) {
-                itemModifier = itemModifier.background(Color.LightGray.copy(alpha = 0.2f))
-            }
-
-            Box(
-                modifier = itemModifier,
-            ) {
-                Row (Modifier.padding(vertical = 8.dp, horizontal = 2.dp)) {
-                    IconButton(
-                        modifier = reorderButtonModifier.align(Alignment.CenterVertically),
-                        onClick = {}
-                    ) {
-                        Icon(
-                            painterResource(id = R.drawable.reorder),
-                            contentDescription = null,
-                            modifier = Modifier.size(ButtonDefaults.IconSize),
-                            tint = Color.White,
-                        )
-                    }
-                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                    Text(
-                        modifier = Modifier.align(Alignment.CenterVertically),
-                        text = item,
+        ReorderListView(entities) { item: String, reorderButtonModifier: Modifier ->
+            Row (Modifier.padding(vertical = 8.dp, horizontal = 2.dp)) {
+                IconButton(
+                    modifier = reorderButtonModifier.align(Alignment.CenterVertically),
+                    onClick = {}
+                ) {
+                    Icon(
+                        painterResource(id = R.drawable.reorder),
+                        contentDescription = null,
+                        modifier = Modifier.size(ButtonDefaults.IconSize),
+                        tint = Color.White,
                     )
-                    Spacer(Modifier.weight(1f))
                 }
-            }
-
-            if (dragTargetIndex.value == index) {
-                Divider(
-                    modifier = Modifier,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
+                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                Text(
+                    modifier = Modifier.align(Alignment.CenterVertically),
+                    text = item,
                 )
+                Spacer(Modifier.weight(1f))
             }
-
         }
     }
 }
