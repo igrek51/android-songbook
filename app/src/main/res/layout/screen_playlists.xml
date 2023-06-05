@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:orientation="vertical"
-    android:weightSum="1"
-    android:descendantFocusability="afterDescendants">
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar1"
             android:layout_width="match_parent"
@@ -85,31 +82,11 @@
                 android:src="@drawable/add" />
 
         </androidx.appcompat.widget.Toolbar>
-
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/appBarLayout"
-        android:padding="0dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <igrek.songbook.playlist.list.PlaylistListView
-            android:id="@+id/playlistListView"
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/compose_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/emptyListLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:text="@string/empty_playlists"
-            android:visibility="gone" />
-    </RelativeLayout>
-
-</RelativeLayout>
+</LinearLayout>

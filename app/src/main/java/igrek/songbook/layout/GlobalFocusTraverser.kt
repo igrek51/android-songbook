@@ -409,7 +409,7 @@ class GlobalFocusTraverser(
                 else -> 0
             }
             layoutController.isState(PlaylistLayoutController::class) -> when (currentViewId) {
-                R.id.navMenuButton, R.id.goBackButton, R.id.addPlaylistButton -> R.id.playlistListView
+                R.id.navMenuButton, R.id.goBackButton, R.id.addPlaylistButton -> R.id.compose_view
                 else -> 0
             }
             layoutController.isState(OpenHistoryLayoutController::class) -> when (currentViewId) {
@@ -505,7 +505,7 @@ class GlobalFocusTraverser(
                 else -> 0
             }
             layoutController.isState(PlaylistLayoutController::class) -> when (currentViewId) {
-                R.id.playlistListView -> R.id.navMenuButton
+                R.id.compose_view -> R.id.navMenuButton
                 else -> 0
             }
             layoutController.isState(OpenHistoryLayoutController::class) -> when (currentViewId) {

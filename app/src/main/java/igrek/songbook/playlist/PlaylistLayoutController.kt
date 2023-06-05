@@ -1,6 +1,5 @@
 package igrek.songbook.playlist
 
-
 import android.os.Handler
 import android.os.Looper
 import android.view.KeyEvent
@@ -8,8 +7,36 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.core.view.isVisible
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationVector1D
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerInputChange
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
 import igrek.songbook.R
+import igrek.songbook.compose.AppTheme
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
@@ -34,6 +61,10 @@ import igrek.songbook.songselection.tree.NoParentItemException
 import igrek.songbook.util.ListMover
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlin.math.abs
+import kotlin.math.roundToInt
 
 class PlaylistLayoutController(
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
@@ -64,19 +95,29 @@ class PlaylistLayoutController(
     override fun showLayout(layout: View) {
         super.showLayout(layout)
 
-        itemsListView = layout.findViewById(R.id.playlistListView)
+//        itemsListView = layout.findViewById(R.id.playlistListView)
 
         addButton = layout.findViewById(R.id.addPlaylistButton)
         addButton?.setOnClickListener { handleAddButton() }
 
         playlistTitleLabel = layout.findViewById(R.id.playlistTitleLabel)
-        emptyListLabel = layout.findViewById(R.id.emptyListLabel)
+//        emptyListLabel = layout.findViewById(R.id.emptyListLabel)
 
         goBackButton = layout.findViewById(R.id.goBackButton)
         goBackButton?.setOnClickListener { goUp() }
 
-        itemsListView!!.init(activity, this, ::itemMoved)
+        itemsListView?.init(activity, this, ::itemMoved)
         updateItemsList()
+
+        val thisLayout = this
+        layout.findViewById<ComposeView>(R.id.compose_view).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AppTheme {
+                    MainComponent(thisLayout)
+                }
+            }
+        }
 
         val localFocus = LocalFocusTraverser(
             currentViewGetter = { itemsListView?.selectedView },
@@ -89,7 +130,7 @@ class PlaylistLayoutController(
             },
             nextLeft = { currentFocusId: Int, currentView: View ->
                 when (currentFocusId) {
-                    R.id.itemMoreButton, R.id.playlistListView, R.id.itemMoveButton -> {
+                    R.id.itemMoreButton, R.id.compose_view, R.id.itemMoveButton -> {
                         (currentView as ViewGroup).descendantFocusability =
                             ViewGroup.FOCUS_BLOCK_DESCENDANTS
                         itemsListView?.requestFocusFromTouch()
@@ -99,39 +140,21 @@ class PlaylistLayoutController(
                     currentFocusId == R.id.itemSongMoreButton -> R.id.itemMoveButton
                     currentFocusId == R.id.itemMoreButton -> -1
                     currentFocusId == R.id.itemMoveButton -> -1
-                    currentFocusId == R.id.playlistListView && playlistService.currentPlaylist != null -> R.id.goBackButton
+                    currentFocusId == R.id.compose_view && playlistService.currentPlaylist != null -> R.id.goBackButton
                     currentFocusId == R.id.main_content && playlistService.currentPlaylist != null -> R.id.goBackButton
-                    currentFocusId == R.id.playlistListView && playlistService.currentPlaylist == null -> R.id.navMenuButton
+                    currentFocusId == R.id.compose_view && playlistService.currentPlaylist == null -> R.id.navMenuButton
                     else -> 0
                 }
             },
             nextRight = { currentFocusId: Int, currentView: View ->
                 when (currentFocusId) {
-                    R.id.playlistListView -> when {
-                        currentView.findViewById<View>(R.id.itemMoveButton)?.isVisible == true -> {
-                            (currentView as? ViewGroup)?.descendantFocusability =
-                                ViewGroup.FOCUS_BEFORE_DESCENDANTS
-                            R.id.itemMoveButton
-                        }
-                        currentView.findViewById<View>(R.id.itemSongMoreButton)?.isVisible == true -> {
-                            (currentView as? ViewGroup)?.descendantFocusability =
-                                ViewGroup.FOCUS_BEFORE_DESCENDANTS
-                            R.id.itemSongMoreButton
-                        }
-                        currentView.findViewById<View>(R.id.itemMoreButton)?.isVisible == true -> {
-                            (currentView as? ViewGroup)?.descendantFocusability =
-                                ViewGroup.FOCUS_BEFORE_DESCENDANTS
-                            R.id.itemMoreButton
-                        }
-                        else -> 0
-                    }
                     R.id.itemMoveButton -> R.id.itemSongMoreButton
                     else -> 0
                 }
             },
             nextUp = { currentFocusId: Int, currentView: View ->
                 when (currentFocusId) {
-                    R.id.itemSongMoreButton, R.id.itemMoreButton, R.id.playlistListView, R.id.itemMoveButton -> {
+                    R.id.itemSongMoreButton, R.id.itemMoreButton, R.id.compose_view, R.id.itemMoveButton -> {
                         (currentView as ViewGroup).descendantFocusability =
                             ViewGroup.FOCUS_BLOCK_DESCENDANTS
                         itemsListView?.requestFocusFromTouch()
@@ -151,7 +174,7 @@ class PlaylistLayoutController(
             },
             nextDown = { currentFocusId: Int, currentView: View ->
                 when (currentFocusId) {
-                    R.id.itemSongMoreButton, R.id.itemMoreButton, R.id.playlistListView, R.id.itemMoveButton -> {
+                    R.id.itemSongMoreButton, R.id.itemMoreButton, R.id.compose_view, R.id.itemMoveButton -> {
                         (currentView as ViewGroup).descendantFocusability =
                             ViewGroup.FOCUS_BLOCK_DESCENDANTS
                         itemsListView?.requestFocusFromTouch()
@@ -232,7 +255,7 @@ class PlaylistLayoutController(
             null -> uiInfoService.resString(R.string.empty_playlists)
             else -> uiInfoService.resString(R.string.empty_playlist_songs)
         }
-        emptyListLabel?.visibility = when (itemsListView!!.count) {
+        emptyListLabel?.visibility = when (itemsListView?.count) {
             0 -> View.VISIBLE
             else -> View.GONE
         }
@@ -308,7 +331,8 @@ class PlaylistLayoutController(
 
     @Synchronized
     fun itemMoved(position: Int, step: Int): List<PlaylistListItem> {
-        val existingSongs = playlistService.currentPlaylist!!.songs
+        val songs = playlistService.currentPlaylist?.songs ?: return emptyList()
+        val existingSongs = songs
             .filter { s ->
                 val namespace = when {
                     s.custom -> SongNamespace.Custom
@@ -338,4 +362,171 @@ class PlaylistLayoutController(
         return items
     }
 
+}
+
+@Composable
+private fun MainComponent(controller: PlaylistLayoutController) {
+    Column(
+        modifier = Modifier.padding(horizontal = 6.dp)
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        ) {
+            Text("DUPA")
+        }
+
+        val entities = remember {
+            mutableListOf("A", "B", "C", "D").also { it ->
+                it.addAll((0..100).map { it.toString() })
+            }
+        }
+
+        ReorderableListView(entities)
+    }
+}
+
+private fun calculateItemsToSwap(
+    itemIndex: Int,
+    itemsCount: Int,
+    offsetY: Float,
+    itemHeights: Map<Int, Float>,
+): Pair<Int, Float> {
+    val thisItemHeight: Float = itemHeights[itemIndex] ?: return 0 to 0f
+    var swapped = 0
+    var movedBy = 0f
+    var overlapY: Float = abs(offsetY)
+    when {
+        offsetY < 0 -> {
+            while (true) {
+                val newPosition: Int = itemIndex + swapped
+                if (newPosition <= 0) return swapped to movedBy
+                val nextItemHeight = itemHeights[newPosition - 1] ?: return swapped to movedBy
+                if (overlapY <= thisItemHeight / 2 + nextItemHeight / 2)
+                    return swapped to movedBy
+                overlapY -= nextItemHeight
+                movedBy -= nextItemHeight
+                swapped -= 1
+            }
+        }
+        offsetY > 0 -> {
+            while (true) {
+                val newPosition: Int = itemIndex + swapped
+                if (newPosition >= itemsCount - 1) return swapped to movedBy
+                val nextItemHeight = itemHeights[newPosition + 1] ?: return swapped to movedBy
+                if (overlapY <= thisItemHeight / 2 + nextItemHeight / 2)
+                    return swapped to movedBy
+                overlapY -= nextItemHeight
+                movedBy += nextItemHeight
+                swapped += 1
+            }
+        }
+        else -> return 0 to 0f
+    }
+}
+
+@Composable
+fun ReorderableListView(
+    items: MutableList<String>,
+) {
+//    val reorderedItems = remember { mutableStateListOf(*items.toTypedArray()) }
+    val draggingIndex = remember { mutableStateOf(-1) }
+    val itemHeights: MutableMap<Int, Float> = remember { mutableStateMapOf() }
+    val itemAnimatedOffsets: MutableMap<Int, Animatable<Float, AnimationVector1D>> = remember { mutableStateMapOf() }
+
+    LazyColumn {
+        items(items.size) { index ->
+            val item = items[index]
+
+            val offsetYAnimated = remember { Animatable(0f) }
+            itemAnimatedOffsets[index] = offsetYAnimated
+
+            // Update the dragging index when the item is long pressed
+            var itemModifier = Modifier
+                .offset { IntOffset(0, offsetYAnimated.value.roundToInt()) }
+                .pointerInput(index) {
+                    coroutineScope {
+                        detectDragGestures(
+                            onDragStart = {
+                                draggingIndex.value = index
+                                launch {
+                                    offsetYAnimated.snapTo(0f)
+                                }
+                            },
+                            onDragEnd = {
+                                val (swapped, movedBy) = calculateItemsToSwap(index, items.size, offsetYAnimated.targetValue, itemHeights)
+                                when {
+                                    swapped < 0 -> {
+                                        val fromIndex = index + swapped
+                                        val toIndex = index
+                                        items.add(index + swapped, items.removeAt(index))
+                                        for (i in fromIndex + 1 until toIndex) {
+                                            launch {
+                                                val heightPx = itemHeights[i] ?: 0f
+                                                itemAnimatedOffsets[i]?.snapTo(-heightPx)
+                                                itemAnimatedOffsets[i]?.animateTo(0f)
+                                            }
+                                        }
+                                        launch {
+                                            offsetYAnimated.snapTo(offsetYAnimated.targetValue - movedBy)
+                                            offsetYAnimated.animateTo(0f)
+                                        }
+                                    }
+                                    swapped > 0 -> {
+                                        val fromIndex = index
+                                        val toIndex = index + swapped
+                                        items.add(index + swapped, items.removeAt(index))
+                                        for (i in fromIndex + 1 until toIndex) {
+                                            launch {
+                                                val heightPx = itemHeights[i] ?: 0f
+                                                itemAnimatedOffsets[i]?.snapTo(+heightPx)
+                                                itemAnimatedOffsets[i]?.animateTo(0f)
+                                            }
+                                        }
+                                        launch {
+                                            offsetYAnimated.snapTo(offsetYAnimated.targetValue - movedBy)
+                                            offsetYAnimated.animateTo(0f)
+                                        }
+                                    }
+                                    else -> {
+                                        launch {
+                                            offsetYAnimated.animateTo(0f)
+                                        }
+                                    }
+                                }
+
+                                draggingIndex.value = -1
+                            },
+                            onDragCancel = {
+                                draggingIndex.value = -1
+                            },
+                            onDrag = { change: PointerInputChange, dragAmount: Offset ->
+                                change.consume()
+                                launch {
+                                    offsetYAnimated.snapTo(offsetYAnimated.targetValue + dragAmount.y)
+                                }
+                            }
+                        )
+                    }
+                }
+                .fillMaxWidth()
+                .onGloballyPositioned { coordinates: LayoutCoordinates ->
+                    itemHeights[index] = coordinates.size.height.toFloat()
+                }
+
+            if (draggingIndex.value == index) {
+                itemModifier = itemModifier.background(Color.LightGray.copy(alpha = 0.2f))
+            }
+
+            Box(
+                modifier = itemModifier,
+            ) {
+                Text(
+                    text = item,
+                    modifier = Modifier.padding(16.dp),
+                )
+            }
+
+        }
+    }
 }
