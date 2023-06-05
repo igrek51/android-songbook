@@ -1,103 +1,97 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package igrek.songbook.playlist
 
-import android.os.Handler
-import android.os.Looper
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import igrek.songbook.R
-import igrek.songbook.cast.AnimalNameFeeder
 import igrek.songbook.compose.AppTheme
 import igrek.songbook.compose.ReorderListView
+import igrek.songbook.compose.SimpleListColumn
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
-import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.LocalFocusTraverser
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.layout.dialog.InputDialogBuilder
-import igrek.songbook.layout.list.ListItemClickListener
+import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.playlist.Playlist
-import igrek.songbook.playlist.list.PlaylistListItem
+import igrek.songbook.persistence.user.playlist.PlaylistSong
 import igrek.songbook.playlist.list.PlaylistListView
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
-import igrek.songbook.songselection.listview.ListScrollPosition
 import igrek.songbook.songselection.tree.NoParentItemException
-import igrek.songbook.util.ListMover
+import igrek.songbook.util.mainScope
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.launch
 
-class PlaylistLayoutController(
-    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-    songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
-    contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
-    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-    songOpener: LazyInject<SongOpener> = appFactory.songOpener,
-    playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
-) : InflatedLayout(
+class PlaylistLayoutController : InflatedLayout(
     _layoutResourceId = R.layout.screen_playlists
-), ListItemClickListener<PlaylistListItem> {
-    private val songsRepository by LazyExtractor(songsRepository)
-    private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
-    private val contextMenuBuilder by LazyExtractor(contextMenuBuilder)
-    private val uiInfoService by LazyExtractor(uiInfoService)
-    private val songOpener by LazyExtractor(songOpener)
-    private val playlistService by LazyExtractor(playlistService)
+) {
+    private val songsRepository: SongsRepository by LazyExtractor(appFactory.songsRepository)
+    private val songContextMenuBuilder: SongContextMenuBuilder by LazyExtractor(appFactory.songContextMenuBuilder)
+    private val contextMenuBuilder: ContextMenuBuilder by LazyExtractor(appFactory.contextMenuBuilder)
+    private val uiInfoService: UiInfoService by LazyExtractor(appFactory.uiInfoService)
+    private val songOpener: SongOpener by LazyExtractor(appFactory.songOpener)
+    private val playlistService: PlaylistService by LazyExtractor(appFactory.playlistService)
 
     private var itemsListView: PlaylistListView? = null
     private var addButton: ImageButton? = null
-    private var emptyListLabel: TextView? = null
     private var playlistTitleLabel: TextView? = null
     private var goBackButton: ImageButton? = null
 
-    private var storedScroll: ListScrollPosition? = null
+    val state = PlaylistLayoutState()
     private var subscriptions = mutableListOf<Disposable>()
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
 
-//        itemsListView = layout.findViewById(R.id.playlistListView)
-
         addButton = layout.findViewById(R.id.addPlaylistButton)
         addButton?.setOnClickListener { handleAddButton() }
 
         playlistTitleLabel = layout.findViewById(R.id.playlistTitleLabel)
-//        emptyListLabel = layout.findViewById(R.id.emptyListLabel)
 
         goBackButton = layout.findViewById(R.id.goBackButton)
         goBackButton?.setOnClickListener { goUp() }
 
-        itemsListView?.init(activity, this, ::itemMoved)
         updateItemsList()
 
         val thisLayout = this
@@ -208,50 +202,30 @@ class PlaylistLayoutController(
     }
 
     private fun updateItemsList() {
-        val items = if (playlistService.currentPlaylist == null) {
-            songsRepository.playlistDao.playlistDb.playlists
-                .map { p -> PlaylistListItem(playlist = p) }
-                .toMutableList()
-        } else {
-            playlistService.currentPlaylist?.songs
-                ?.mapNotNull { s ->
-                    val namespace = when {
-                        s.custom -> SongNamespace.Custom
-                        else -> SongNamespace.Public
-                    }
-                    val id = SongIdentifier(s.songId, namespace)
-                    val song = songsRepository.allSongsRepo.songFinder.find(id)
-                    when {
-                        song != null -> PlaylistListItem(song = song)
-                        else -> null
-                    }
-                }
-                ?.toMutableList()
-        }
-
-        itemsListView?.items = items
-
-        if (storedScroll != null) {
-            Handler(Looper.getMainLooper()).post {
-                itemsListView?.restoreScrollPosition(storedScroll)
+        val playlist: Playlist? = playlistService.currentPlaylist
+        state.currentPlaylist.value = playlist
+        when (playlist) {
+            null -> {
+                state.playlistItems.value = songsRepository.playlistDao.playlistDb.playlists
+            }
+            else -> {
+                state.songItems.value = playlist.songs
+                    .mapNotNull { s ->
+                        val namespace = when {
+                            s.custom -> SongNamespace.Custom
+                            else -> SongNamespace.Public
+                        }
+                        val id = SongIdentifier(s.songId, namespace)
+                        val song = songsRepository.allSongsRepo.songFinder.find(id)
+                        song
+                    }.toMutableList()
             }
         }
 
-        playlistTitleLabel?.text = when (playlistService.currentPlaylist) {
+        playlistTitleLabel?.text = when (playlist) {
             null -> uiInfoService.resString(R.string.nav_playlists)
-            else -> playlistService.currentPlaylist?.name
+            else -> playlist.name
         }
-
-        emptyListLabel?.text = when (playlistService.currentPlaylist) {
-            null -> uiInfoService.resString(R.string.empty_playlists)
-            else -> uiInfoService.resString(R.string.empty_playlist_songs)
-        }
-        emptyListLabel?.visibility = when (itemsListView?.count) {
-            0 -> View.VISIBLE
-            else -> View.GONE
-        }
-
-        addButton?.visibility = View.VISIBLE
 
         goBackButton?.visibility = when (playlistService.currentPlaylist) {
             null -> View.GONE
@@ -269,35 +243,26 @@ class PlaylistLayoutController(
                 throw NoParentItemException()
 
             playlistService.currentPlaylist = null
+            mainScope.launch {
+                state.scrollState.scrollTo(0)
+            }
             updateItemsList()
         } catch (e: NoParentItemException) {
             layoutController.showPreviousLayoutOrQuit()
         }
     }
 
-    override fun onItemClick(item: PlaylistListItem) {
-        storedScroll = itemsListView?.currentScrollPosition
-        if (item.song != null) {
-            songOpener.openSongPreview(item.song, playlist = playlistService.currentPlaylist)
-        } else if (item.playlist != null) {
-            playlistService.currentPlaylist = item.playlist
-            updateItemsList()
-        }
+    suspend fun onPlaylistClick(playlist: Playlist) {
+        playlistService.currentPlaylist = playlist
+        state.scrollState.scrollTo(0)
+        updateItemsList()
     }
 
-    override fun onItemLongClick(item: PlaylistListItem) {
-        onMoreActions(item)
+    fun onSongClick(song: Song) {
+        songOpener.openSongPreview(song, playlist = playlistService.currentPlaylist)
     }
 
-    override fun onMoreActions(item: PlaylistListItem) {
-        if (item.song != null) {
-            songContextMenuBuilder.showSongActions(item.song)
-        } else if (item.playlist != null) {
-            showPlaylistActions(item.playlist)
-        }
-    }
-
-    private fun showPlaylistActions(playlist: Playlist) {
+    fun onPlaylistMore(playlist: Playlist) {
         val actions = mutableListOf(
             ContextMenuBuilder.Action(R.string.rename_playlist) {
                 renamePlaylist(playlist)
@@ -309,91 +274,181 @@ class PlaylistLayoutController(
                 }
             }
         )
+        contextMenuBuilder.showContextMenu(actions)
+    }
 
-        contextMenuBuilder.showContextMenu(R.string.choose_playlist, actions)
+    fun onSongMore(song: Song) {
+        songContextMenuBuilder.showSongActions(song)
+    }
+
+    fun onReorderedSongs(newItems: MutableList<Song>) {
+        val newPlaylistSongs: MutableList<PlaylistSong> = newItems.map { song ->
+            PlaylistSong(song.id, song.isCustom())
+        }.toMutableList()
+        playlistService.currentPlaylist?.songs = newPlaylistSongs
     }
 
     private fun renamePlaylist(playlist: Playlist) {
-        InputDialogBuilder().input("Edit playlist name", playlist.name) { name ->
+        InputDialogBuilder().input(uiInfoService.resString(R.string.edit_playlist_name), playlist.name) { name ->
             playlist.name = name
             songsRepository.playlistDao.savePlaylist(playlist)
         }
     }
+}
 
-    @Synchronized
-    fun itemMoved(position: Int, step: Int): List<PlaylistListItem> {
-        val songs = playlistService.currentPlaylist?.songs ?: return emptyList()
-        val existingSongs = songs
-            .filter { s ->
-                val namespace = when {
-                    s.custom -> SongNamespace.Custom
-                    else -> SongNamespace.Public
-                }
-                val id = SongIdentifier(s.songId, namespace)
-                val song = songsRepository.allSongsRepo.songFinder.find(id)
-                song != null
-            }.toMutableList()
-        ListMover(existingSongs).move(position, step)
-        playlistService.currentPlaylist?.songs = existingSongs
-        val items = existingSongs
-            .mapNotNull { s ->
-                val namespace = when {
-                    s.custom -> SongNamespace.Custom
-                    else -> SongNamespace.Public
-                }
-                val id = SongIdentifier(s.songId, namespace)
-                val song = songsRepository.allSongsRepo.songFinder.find(id)
-                when {
-                    song != null -> PlaylistListItem(song = song)
-                    else -> null
-                }
-            }
-            .toMutableList()
-        itemsListView?.items = items
-        return items
-    }
-
+class PlaylistLayoutState {
+    val scrollState: ScrollState = ScrollState(0)
+    val currentPlaylist: MutableState<Playlist?> = mutableStateOf(null)
+    val playlistItems: MutableState<MutableList<Playlist>> = mutableStateOf(mutableListOf())
+    val songItems: MutableState<MutableList<Song>> = mutableStateOf(mutableListOf())
 }
 
 @Composable
 private fun MainComponent(controller: PlaylistLayoutController) {
     Column {
-        Card(
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-        ) {
-            Text("DUPA")
-        }
+        val currentPlaylist = controller.state.currentPlaylist.value
+        if (currentPlaylist == null) {
+            if (controller.state.playlistItems.value.isNotEmpty()) {
 
-        val entities = remember {
-            mutableListOf("Dupa").also { l ->
-                val a = AnimalNameFeeder()
-                repeat(50) {
-                    l.add(a.generateName())
+                SimpleListColumn(
+                    items = controller.state.playlistItems.value,
+                    scrollState = controller.state.scrollState,
+                ) { playlist: Playlist ->
+                    PlaylistItemComposable(controller, playlist)
                 }
-            }
-        }
 
-        ReorderListView(entities) { item: String, reorderButtonModifier: Modifier ->
-            Row (Modifier.padding(vertical = 8.dp, horizontal = 2.dp)) {
-                IconButton(
-                    modifier = reorderButtonModifier.align(Alignment.CenterVertically),
-                    onClick = {}
-                ) {
-                    Icon(
-                        painterResource(id = R.drawable.reorder),
-                        contentDescription = null,
-                        modifier = Modifier.size(ButtonDefaults.IconSize),
-                        tint = Color.White,
+            } else {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(
+                        text = stringResource(R.string.empty_playlists),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text(
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                    text = item,
-                )
-                Spacer(Modifier.weight(1f))
             }
+        } else {
+            if (controller.state.songItems.value.isNotEmpty()) {
+
+                ReorderListView(
+                    items = controller.state.songItems.value,
+                    scrollState = controller.state.scrollState,
+                    onReorder = { newItems ->
+                        controller.onReorderedSongs(newItems)
+                    },
+                ) { song: Song, reorderButtonModifier: Modifier ->
+                    SongItemComposable(controller, song, reorderButtonModifier)
+                }
+
+            } else {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(
+                        text = stringResource(R.string.empty_playlist_songs),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun PlaylistItemComposable(controller: PlaylistLayoutController, playlist: Playlist) {
+    Row(
+        Modifier.padding(vertical = 2.dp)
+            .combinedClickable(
+                onClick = {
+                    mainScope.launch {
+                        controller.onPlaylistClick(playlist)
+                    }
+                },
+                onLongClick = {
+                    mainScope.launch {
+                        controller.onPlaylistMore(playlist)
+                    }
+                },
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Icon(
+            painterResource(id = R.drawable.playlist),
+            contentDescription = null,
+            modifier = Modifier.size(24.dp),
+            tint = Color.White,
+        )
+        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+        Text(
+            text = playlist.name,
+            fontWeight = FontWeight.Bold,
+        )
+        Spacer(Modifier.weight(1f))
+        IconButton(
+            onClick = {
+              mainScope.launch {
+                  controller.onPlaylistMore(playlist)
+              }
+            },
+        ) {
+            Icon(
+                painterResource(id = R.drawable.more),
+                contentDescription = null,
+                modifier = Modifier.size(24.dp),
+                tint = Color.White,
+            )
+        }
+    }
+}
+
+@Composable
+private fun SongItemComposable(controller: PlaylistLayoutController, song: Song, reorderButtonModifier: Modifier) {
+    Row (
+        Modifier.padding(vertical = 2.dp)
+            .combinedClickable(
+                onClick = {
+                    mainScope.launch {
+                        controller.onSongClick(song)
+                    }
+                },
+                onLongClick = {
+                    mainScope.launch {
+                        controller.onSongMore(song)
+                    }
+                },
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        IconButton(
+            modifier = reorderButtonModifier.align(Alignment.CenterVertically),
+            onClick = {},
+        ) {
+            Icon(
+                painterResource(id = R.drawable.reorder),
+                contentDescription = null,
+                modifier = Modifier.size(24.dp),
+                tint = Color.White,
+            )
+        }
+        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+        Text(
+            modifier = Modifier.align(Alignment.CenterVertically),
+            text = song.displayName(),
+        )
+        Spacer(Modifier.weight(1f))
+        IconButton(
+            onClick = {
+                mainScope.launch {
+                    controller.onSongMore(song)
+                }
+            },
+        ) {
+            Icon(
+                painterResource(id = R.drawable.more),
+                contentDescription = null,
+                modifier = Modifier.size(24.dp),
+                tint = Color.White,
+            )
         }
     }
 }

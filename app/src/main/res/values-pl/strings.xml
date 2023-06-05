@@ -590,4 +590,5 @@
     <string name="songcast_youre_spectating_this_song">Obserwujesz tą piosenkę.</string>
     <string name="unknown_chords_in_song">Nieznane akordy: %s</string>
     <string name="songcast_song_selected_by_me">Prezentujesz piosenkę:\n%s</string>
+    <string name="edit_playlist_name">Zmień nazwę playlisty</string>
 </resources>

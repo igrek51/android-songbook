@@ -40,13 +40,14 @@ import kotlin.math.roundToInt
 @Composable
 fun <T> ReorderListView(
     items: MutableList<T>,
+    scrollState: ScrollState = rememberScrollState(),
+    onReorder: (newItems: MutableList<T>) -> Unit,
     itemContent: @Composable (item: T, reorderButtonModifier: Modifier) -> Unit,
 ) {
     val draggingIndex: MutableState<Int> = remember { mutableStateOf(-1) }
     val dragTargetIndex: MutableState<Int?> = remember { mutableStateOf(null) }
     val itemHeights: MutableMap<Int, Float> = remember { mutableStateMapOf() }
     val itemAnimatedOffsets: MutableMap<Int, Animatable<Float, AnimationVector1D>> = remember { mutableStateMapOf() }
-    val scrollState: ScrollState = rememberScrollState()
     val scrollDiff: MutableState<Float> = remember { mutableStateOf(0f) }
     val parentViewportHeight: MutableState<Float> = remember { mutableStateOf(0f) }
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
@@ -82,7 +83,7 @@ fun <T> ReorderListView(
             val reorderButtonModifier = Modifier.createReorderButtonModifier(
                 items, index, draggingIndex, dragTargetIndex, itemHeights, itemAnimatedOffsets,
                 scrollState, scrollDiff, parentViewportHeight, coroutineScope, scrollJob,
-                offsetYAnimated,
+                offsetYAnimated, onReorder,
             )
 
             Box(modifier = itemModifier) {
@@ -112,6 +113,7 @@ private fun <T> Modifier.createReorderButtonModifier(
     coroutineScope: CoroutineScope,
     scrollJob: MutableState<Job?>,
     offsetYAnimated: Animatable<Float, AnimationVector1D>,
+    onReorder: (newItems: MutableList<T>) -> Unit,
 ) = this.pointerInput(index) {
     detectDragGestures(
 
@@ -144,6 +146,7 @@ private fun <T> Modifier.createReorderButtonModifier(
                         itemAnimatedOffsets[index + swapped]?.animateTo(0f)
                     }
                     items.add(index + swapped, items.removeAt(index))
+                    onReorder(items)
                 }
                 swapped > 0 -> {
                     for (i in minIndex until maxIndex) {
@@ -158,6 +161,7 @@ private fun <T> Modifier.createReorderButtonModifier(
                         itemAnimatedOffsets[index + swapped]?.animateTo(0f)
                     }
                     items.add(index + swapped, items.removeAt(index))
+                    onReorder(items)
                 }
                 else -> coroutineScope.launch {
                     offsetYAnimated.animateTo(0f)

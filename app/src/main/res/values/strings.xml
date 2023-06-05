@@ -621,4 +621,5 @@
     <string name="songcast_youre_spectating_this_song">You\'re spectating this song.</string>
     <string name="unknown_chords_in_song">Unknown chords: %s</string>
     <string name="songcast_song_selected_by_me">You\'re presenting a song:\n%s</string>
+    <string name="edit_playlist_name">Rename playlist</string>
 </resources>
