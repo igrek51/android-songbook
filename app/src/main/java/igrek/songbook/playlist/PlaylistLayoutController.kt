@@ -378,12 +378,13 @@ private fun PlaylistItemComposable(controller: PlaylistLayoutController, playlis
             modifier = Modifier.size(24.dp),
             tint = Color.White,
         )
-        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
         Text(
+            modifier = Modifier
+                .weight(1f)
+                .padding(vertical = 2.dp, horizontal = 4.dp),
             text = playlist.name,
             fontWeight = FontWeight.Bold,
         )
-        Spacer(Modifier.weight(1f))
         IconButton(
             onClick = {
               mainScope.launch {
@@ -404,7 +405,7 @@ private fun PlaylistItemComposable(controller: PlaylistLayoutController, playlis
 @Composable
 private fun SongItemComposable(controller: PlaylistLayoutController, song: Song, reorderButtonModifier: Modifier) {
     Row (
-        Modifier.padding(vertical = 2.dp)
+        Modifier.padding(0.dp)
             .combinedClickable(
                 onClick = {
                     mainScope.launch {
@@ -419,8 +420,20 @@ private fun SongItemComposable(controller: PlaylistLayoutController, song: Song,
             ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        Icon(
+            painterResource(id = R.drawable.note),
+            modifier = Modifier.size(24.dp).padding(0.dp),
+            contentDescription = null,
+            tint = Color.White,
+        )
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .padding(vertical = 12.dp, horizontal = 4.dp),
+            text = song.displayName(),
+        )
         IconButton(
-            modifier = reorderButtonModifier.align(Alignment.CenterVertically),
+            modifier = reorderButtonModifier.size(32.dp).padding(4.dp),
             onClick = {},
         ) {
             Icon(
@@ -430,13 +443,8 @@ private fun SongItemComposable(controller: PlaylistLayoutController, song: Song,
                 tint = Color.White,
             )
         }
-        Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-        Text(
-            modifier = Modifier.align(Alignment.CenterVertically),
-            text = song.displayName(),
-        )
-        Spacer(Modifier.weight(1f))
         IconButton(
+            modifier = Modifier.size(32.dp).padding(4.dp),
             onClick = {
                 mainScope.launch {
                     controller.onSongMore(song)
