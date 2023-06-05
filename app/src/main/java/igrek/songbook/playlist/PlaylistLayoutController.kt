@@ -20,9 +20,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -55,7 +54,6 @@ import igrek.songbook.cast.AnimalNameFeeder
 import igrek.songbook.compose.AppTheme
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
-import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -78,7 +76,10 @@ import igrek.songbook.songselection.tree.NoParentItemException
 import igrek.songbook.util.ListMover
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.yield
 import java.lang.Integer.max
 import java.lang.Integer.min
 import kotlin.math.abs
@@ -452,19 +453,27 @@ fun ReorderableListView(
     val dragTargetIndex: MutableState<Int?> = remember { mutableStateOf(null) }
     val itemHeights: MutableMap<Int, Float> = remember { mutableStateMapOf() }
     val itemAnimatedOffsets: MutableMap<Int, Animatable<Float, AnimationVector1D>> = remember { mutableStateMapOf() }
-    val listState: LazyListState = rememberLazyListState()
+    val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()
     val scrollDiff = remember { mutableStateOf(0f) }
+    val parentViewportHeight = remember { mutableStateOf(0f) }
+    val scrollJob: MutableState<Job?> = remember { mutableStateOf(null) }
 
-    LazyColumn(state = listState) {
-        items(items.size) { index ->
+    Column(
+        modifier = Modifier
+        .verticalScroll(scrollState)
+        .onGloballyPositioned { coordinates: LayoutCoordinates ->
+            parentViewportHeight.value = coordinates.parentLayoutCoordinates?.size?.height?.toFloat() ?: 0f
+        },
+    ) {
+        for (index in items.indices) {
             val item = items[index]
 
             val offsetYAnimated = remember { Animatable(0f) }
             itemAnimatedOffsets[index] = offsetYAnimated
 
-            val offsetY = offsetYAnimated.value.roundToInt() + when {
-                index == draggingIndex.value -> scrollDiff.value.roundToInt()
+            val offsetY = offsetYAnimated.value.roundToInt() + when (index) {
+                draggingIndex.value -> scrollDiff.value.roundToInt()
                 else -> 0
             }
             var itemModifier = Modifier
@@ -476,7 +485,7 @@ fun ReorderableListView(
 
             val reorderButtonModifier = Modifier.pointerInput(index) {
                 detectDragGestures(
-                    onDragStart = { offset: Offset ->
+                    onDragStart = { _: Offset ->
                         draggingIndex.value = index
                         dragTargetIndex.value = null
                         scrollDiff.value = 0f
@@ -491,7 +500,7 @@ fun ReorderableListView(
                             swapped < 0 -> {
                                 val minIndex = min(index, index + swapped)
                                 val maxIndex = max(index, index + swapped)
-                                val endOffset = offsetYAnimated.targetValue - movedBy
+                                val endOffset = offsetYAnimated.targetValue + scrollDiff.value - movedBy
                                 for (i in minIndex + 1 .. maxIndex) {
                                     coroutineScope.launch {
                                         val heightPx = itemHeights[i] ?: 0f
@@ -508,7 +517,7 @@ fun ReorderableListView(
                             swapped > 0 -> {
                                 val minIndex = min(index, index + swapped)
                                 val maxIndex = max(index, index + swapped)
-                                val endOffset = offsetYAnimated.targetValue - movedBy
+                                val endOffset = offsetYAnimated.targetValue + scrollDiff.value - movedBy
                                 for (i in minIndex until maxIndex) {
                                     coroutineScope.launch {
                                         val heightPx = itemHeights[i] ?: 0f
@@ -531,46 +540,49 @@ fun ReorderableListView(
 
                         draggingIndex.value = -1
                         dragTargetIndex.value = null
+                        scrollJob.value?.cancel()
+                        scrollJob.value = null
                     },
                     onDragCancel = {
                         draggingIndex.value = -1
                         dragTargetIndex.value = null
+                        coroutineScope.launch {
+                            offsetYAnimated.animateTo(0f)
+                        }
+                        scrollJob.value?.cancel()
+                        scrollJob.value = null
                     },
                     onDrag = { change: PointerInputChange, dragAmount: Offset ->
                         change.consume()
 
+                        scrollJob.value?.cancel()
+                        scrollJob.value = null
+
                         val relativateOffset = offsetYAnimated.targetValue + scrollDiff.value
                         val thisHeight = itemHeights[index] ?: 0f
-                        val (swapped, movedBy) = calculateItemsToSwap(index, items.size, relativateOffset, itemHeights)
+                        val (swapped, _) = calculateItemsToSwap(index, items.size, relativateOffset, itemHeights)
                         dragTargetIndex.value = when {
                             swapped < 0 -> index + swapped - 1
                             swapped > 0 -> index + swapped
                             else -> null
                         }
 
-                        var priorVisibleHeight = thisHeight / 2 -listState.firstVisibleItemScrollOffset.toFloat()
-                        listState.layoutInfo.visibleItemsInfo.forEach {
-                            if (it.index < index) {
-                                priorVisibleHeight += itemHeights[it.index] ?: 0f
-                            }
+                        var priorVisibleHeight = thisHeight / 2 - scrollState.value
+                        for (i in 0 until index) {
+                            priorVisibleHeight += itemHeights[i] ?: 0f
                         }
-                        var beyondVisibleHeight = thisHeight / 2
-                        listState.layoutInfo.visibleItemsInfo.dropLast(1).forEach {
-                            if (it.index > index) {
-                                beyondVisibleHeight += itemHeights[it.index] ?: 0f
-                            }
-                        }
+                        val beyondVisibleHeight = parentViewportHeight.value - priorVisibleHeight
 
-                        val borderArea = thisHeight * 1.5f
+                        val borderArea = thisHeight * 2.5f
                         var overscrolledY = 0f
                         when {
-                            relativateOffset < 0 && listState.canScrollBackward -> {
+                            offsetYAnimated.targetValue < 0 && scrollState.canScrollBackward -> {
                                 val overscrolled = priorVisibleHeight + relativateOffset - borderArea
                                 if (overscrolled < 0) {
                                     overscrolledY = overscrolled
                                 }
                             }
-                            relativateOffset > 0 && listState.canScrollForward -> {
+                            offsetYAnimated.targetValue > 0 && scrollState.canScrollForward -> {
                                 val overscrolled = -beyondVisibleHeight + relativateOffset + borderArea
                                 if (overscrolled > 0) {
                                     overscrolledY = overscrolled
@@ -581,9 +593,18 @@ fun ReorderableListView(
                         coroutineScope.launch {
                             offsetYAnimated.snapTo(offsetYAnimated.targetValue + dragAmount.y)
                             if (overscrolledY != 0f) {
-                                val scrollBy = overscrolledY * 0.1f
-                                val consumedScroll = listState.scrollBy(scrollBy)
+                                val scrollBy = overscrolledY * 0.06f
+                                val consumedScroll = scrollState.scrollBy(scrollBy)
                                 scrollDiff.value += consumedScroll
+
+                                scrollJob.value = coroutineScope.launch {
+                                    while ((scrollState.canScrollForward && overscrolledY > 0) || (scrollState.canScrollBackward && overscrolledY < 0)) {
+                                        yield()
+                                        delay(30)
+                                        val consumedScroll = scrollState.scrollBy(scrollBy)
+                                        scrollDiff.value += consumedScroll
+                                    }
+                                }
                             }
                         }
                     }
