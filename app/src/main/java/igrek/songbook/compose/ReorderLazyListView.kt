@@ -29,6 +29,7 @@ import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import igrek.songbook.info.logger.LoggerFactory.logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -40,28 +41,30 @@ fun <T> ReorderLazyListView(
     items: MutableList<T>,
     scrollState: LazyListState = rememberLazyListState(),
     onReorder: (newItems: MutableList<T>) -> Unit,
+    itemKey: ((index: Int, item: T) -> Any),
     itemContent: @Composable (item: T, reorderButtonModifier: Modifier) -> Unit,
 ) {
     val draggingIndex: MutableState<Int> = remember { mutableStateOf(-1) }
     val dragTargetIndex: MutableState<Int?> = remember { mutableStateOf(null) }
     val itemHeights: MutableMap<Int, Float> = remember { mutableStateMapOf() }
     val itemAnimatedOffsets: MutableMap<Int, Animatable<Float, AnimationVector1D>> = remember { mutableStateMapOf() }
-    val scrollDiff: MutableState<Float> = remember { mutableStateOf(0f) }
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
 
     LazyColumn(
         state = scrollState,
     ) {
-        itemsIndexed(items) { index: Int, item: T ->
+        itemsIndexed(items, key = itemKey) { index: Int, item: T ->
 
             val reorderButtonModifier = Modifier.createReorderButtonModifier(
                 items, index, draggingIndex, dragTargetIndex, itemHeights, itemAnimatedOffsets,
-                scrollDiff, coroutineScope,
-                onReorder,
+                coroutineScope, onReorder,
             )
-            ReorderListViewItem(
-                item, index, draggingIndex, dragTargetIndex, itemHeights, itemAnimatedOffsets,
-                scrollDiff, itemContent, reorderButtonModifier,
+            val offsetYAnimated: Animatable<Float, AnimationVector1D> = remember { Animatable(0f) }
+            itemAnimatedOffsets[index] = offsetYAnimated
+
+            ReorderListViewItem<T>(
+                item, index, draggingIndex, dragTargetIndex, itemHeights, offsetYAnimated,
+                itemContent, reorderButtonModifier,
             )
 
         }
@@ -75,23 +78,22 @@ private fun <T> Modifier.createReorderButtonModifier(
     dragTargetIndex: MutableState<Int?>,
     itemHeights: MutableMap<Int, Float>,
     itemAnimatedOffsets: MutableMap<Int, Animatable<Float, AnimationVector1D>>,
-    scrollDiff: MutableState<Float>,
     coroutineScope: CoroutineScope,
     onReorder: (newItems: MutableList<T>) -> Unit,
 ) = this.pointerInput(index) {
     detectDragGestures(
         onDragStart = { _: Offset ->
-            onDragStart(index, draggingIndex, dragTargetIndex, itemAnimatedOffsets, scrollDiff, coroutineScope)
+            onDragStart(index, draggingIndex, itemAnimatedOffsets, coroutineScope)
         },
         onDragEnd = {
-            onDragEnd(items, index, draggingIndex, dragTargetIndex, itemHeights, itemAnimatedOffsets, scrollDiff, coroutineScope, onReorder)
+            onDragEnd(items, index, draggingIndex, dragTargetIndex, itemHeights, itemAnimatedOffsets, coroutineScope, onReorder)
         },
         onDragCancel = {
             onDragCancel(index, draggingIndex, dragTargetIndex, itemAnimatedOffsets, coroutineScope)
         },
         onDrag = { change: PointerInputChange, dragAmount: Offset ->
             change.consume()
-            onDrag(dragAmount, items, index, dragTargetIndex, itemHeights, itemAnimatedOffsets, scrollDiff, coroutineScope)
+            onDrag(dragAmount, items, index, dragTargetIndex, itemHeights, itemAnimatedOffsets, coroutineScope)
         }
     )
 }
@@ -99,14 +101,10 @@ private fun <T> Modifier.createReorderButtonModifier(
 private fun onDragStart(
     index: Int,
     draggingIndex: MutableState<Int>,
-    dragTargetIndex: MutableState<Int?>,
     itemAnimatedOffsets: MutableMap<Int, Animatable<Float, AnimationVector1D>>,
-    scrollDiff: MutableState<Float>,
     coroutineScope: CoroutineScope,
 ) {
     draggingIndex.value = index
-    dragTargetIndex.value = null
-    scrollDiff.value = 0f
     coroutineScope.launch {
         itemAnimatedOffsets[index]?.snapTo(0f)
     }
@@ -119,11 +117,10 @@ private fun <T> onDragEnd(
     dragTargetIndex: MutableState<Int?>,
     itemHeights: MutableMap<Int, Float>,
     itemAnimatedOffsets: MutableMap<Int, Animatable<Float, AnimationVector1D>>,
-    scrollDiff: MutableState<Float>,
     coroutineScope: CoroutineScope,
     onReorder: (newItems: MutableList<T>) -> Unit,
 ) {
-    val relativateOffset = (itemAnimatedOffsets[index]?.targetValue ?: 0f) + scrollDiff.value
+    val relativateOffset = itemAnimatedOffsets[index]?.targetValue ?: 0f
     val (swapped, movedBy) = calculateItemsToSwap(index, items.size, relativateOffset, itemHeights)
     val minIndex = Integer.min(index, index + swapped)
     val maxIndex = Integer.max(index, index + swapped)
@@ -189,13 +186,11 @@ private fun <T> onDrag(
     dragTargetIndex: MutableState<Int?>,
     itemHeights: MutableMap<Int, Float>,
     itemAnimatedOffsets: MutableMap<Int, Animatable<Float, AnimationVector1D>>,
-    scrollDiff: MutableState<Float>,
     coroutineScope: CoroutineScope,
 ) {
     val offsetYAnimatedVal = itemAnimatedOffsets[index]?.targetValue ?: 0f
-    val relativateOffset = offsetYAnimatedVal + scrollDiff.value
 
-    val (swapped, _) = calculateItemsToSwap(index, items.size, relativateOffset, itemHeights)
+    val (swapped, _) = calculateItemsToSwap(index, items.size, offsetYAnimatedVal, itemHeights)
     dragTargetIndex.value = when {
         swapped < 0 -> index + swapped - 1
         swapped > 0 -> index + swapped
@@ -215,20 +210,14 @@ private fun <T> ReorderListViewItem(
     draggingIndex: MutableState<Int>,
     dragTargetIndex: MutableState<Int?>,
     itemHeights: MutableMap<Int, Float>,
-    itemAnimatedOffsets: MutableMap<Int, Animatable<Float, AnimationVector1D>>,
-    scrollDiff: MutableState<Float>,
+    offsetYAnimated: Animatable<Float, AnimationVector1D>,
     itemContent: @Composable (item: T, reorderButtonModifier: Modifier) -> Unit,
     reorderButtonModifier: Modifier,
 ) {
-    val offsetYAnimated: Animatable<Float, AnimationVector1D> = remember { Animatable(0f) }
-    itemAnimatedOffsets[index] = offsetYAnimated
-    val offsetY = offsetYAnimated.value.roundToInt() + when (index) {
-        draggingIndex.value -> scrollDiff.value.roundToInt()
-        else -> 0
-    }
+    logger.debug("Render item: $index")
 
     var itemModifier = Modifier
-        .offset { IntOffset(0, offsetY) }
+        .offset { IntOffset(0, offsetYAnimated.value.roundToInt() ) }
         .fillMaxWidth()
         .onGloballyPositioned { coordinates: LayoutCoordinates ->
             itemHeights[index] = coordinates.size.height.toFloat()
