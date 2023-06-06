@@ -276,9 +276,6 @@ private fun MainComponent(controller: PlaylistLayoutController) {
                     onReorder = { newItems ->
                         controller.onSongsReordered(newItems)
                     },
-                    itemKey = { _: Int, item: Song ->
-                        item.id
-                    },
                 ) { song: Song, reorderButtonModifier: Modifier ->
                     SongItemComposable(controller, song, reorderButtonModifier)
                 }
