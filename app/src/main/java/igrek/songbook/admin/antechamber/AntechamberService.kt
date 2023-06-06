@@ -53,7 +53,7 @@ class AntechamberService(
     private val jsonSerializer = Json {
         encodeDefaults = true
         ignoreUnknownKeys = false
-        isLenient = false
+        isLenient = true
         allowStructuredMapKeys = true
         prettyPrint = false
         useArrayPolymorphism = false

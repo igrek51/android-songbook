@@ -1308,7 +1308,7 @@ val guitarChordsDiagrams: Map<String, List<String>> = mapOf(
         "x,x,0,2,1,1",
         "x,x,12,14,13,13"
     ),
-    "Fadd9" to listOf("13,12,10,12,10,x", "x,8,7,5,8,5"),
+    "Fadd9" to listOf("x,x,3,2,1,3", "13,12,10,12,10,x", "x,8,7,5,8,5"),
     "F6add9" to listOf("1,0,0,0,1,1", "13,12,12,12,13,13", "x,8,7,7,8,8", "13,x,12,12,10,x"),
     "Fmaj7b5" to listOf(
         "1,x,2,2,0,x",
