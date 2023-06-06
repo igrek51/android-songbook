@@ -2,6 +2,7 @@
 
 package igrek.songbook.playlist
 
+import android.annotation.SuppressLint
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -368,6 +369,7 @@ private fun MainComponent(controller: PlaylistLayoutController) {
     }
 }
 
+@SuppressLint("ModifierParameter")
 @Composable
 private fun PlaylistItemComposable(controller: PlaylistLayoutController, playlist: Playlist, reorderButtonModifier: Modifier) {
     Row(
@@ -437,6 +439,7 @@ private fun PlaylistItemComposable(controller: PlaylistLayoutController, playlis
     }
 }
 
+@SuppressLint("ModifierParameter")
 @Composable
 private fun SongItemComposable(controller: PlaylistLayoutController, song: Song, reorderButtonModifier: Modifier) {
     Row (
