@@ -3,9 +3,7 @@
 package igrek.songbook.playlist
 
 import android.annotation.SuppressLint
-import android.view.KeyEvent
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -47,7 +45,6 @@ import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
-import igrek.songbook.layout.LocalFocusTraverser
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.layout.dialog.InputDialogBuilder
@@ -57,7 +54,6 @@ import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.playlist.Playlist
 import igrek.songbook.persistence.user.playlist.PlaylistSong
-import igrek.songbook.playlist.list.PlaylistListView
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.tree.NoParentItemException
@@ -76,7 +72,6 @@ class PlaylistLayoutController : InflatedLayout(
     private val songOpener: SongOpener by LazyExtractor(appFactory.songOpener)
     private val playlistService: PlaylistService by LazyExtractor(appFactory.playlistService)
 
-    private var itemsListView: PlaylistListView? = null
     private var addButton: ImageButton? = null
     private var playlistTitleLabel: TextView? = null
     private var goBackButton: ImageButton? = null
@@ -105,78 +100,6 @@ class PlaylistLayoutController : InflatedLayout(
                     MainComponent(thisLayout)
                 }
             }
-        }
-
-        val localFocus = LocalFocusTraverser(
-            currentViewGetter = { itemsListView?.selectedView },
-            currentFocusGetter = { appFactory.activity.get().currentFocus?.id },
-            preNextFocus = { _: Int, _: View ->
-                when {
-                    appFactory.navigationMenuController.get().isDrawerShown() -> R.id.nav_view
-                    else -> 0
-                }
-            },
-            nextLeft = { currentFocusId: Int, currentView: View ->
-                when (currentFocusId) {
-                    R.id.itemMoreButton, R.id.compose_view, R.id.itemMoveButton -> {
-                        (currentView as ViewGroup).descendantFocusability =
-                            ViewGroup.FOCUS_BLOCK_DESCENDANTS
-                        itemsListView?.requestFocusFromTouch()
-                    }
-                }
-                when {
-                    currentFocusId == R.id.itemSongMoreButton -> R.id.itemMoveButton
-                    currentFocusId == R.id.itemMoreButton -> -1
-                    currentFocusId == R.id.itemMoveButton -> -1
-                    currentFocusId == R.id.compose_view && playlistService.currentPlaylist != null -> R.id.goBackButton
-                    currentFocusId == R.id.main_content && playlistService.currentPlaylist != null -> R.id.goBackButton
-                    currentFocusId == R.id.compose_view && playlistService.currentPlaylist == null -> R.id.navMenuButton
-                    else -> 0
-                }
-            },
-            nextRight = { currentFocusId: Int, currentView: View ->
-                when (currentFocusId) {
-                    R.id.itemMoveButton -> R.id.itemSongMoreButton
-                    else -> 0
-                }
-            },
-            nextUp = { currentFocusId: Int, currentView: View ->
-                when (currentFocusId) {
-                    R.id.itemSongMoreButton, R.id.itemMoreButton, R.id.compose_view, R.id.itemMoveButton -> {
-                        (currentView as ViewGroup).descendantFocusability =
-                            ViewGroup.FOCUS_BLOCK_DESCENDANTS
-                        itemsListView?.requestFocusFromTouch()
-                    }
-                }
-                when {
-                    currentFocusId == R.id.itemSongMoreButton -> -1
-                    currentFocusId == R.id.itemMoreButton -> -1
-                    (itemsListView?.selectedItemPosition ?: 0) <= 0 -> {
-                        when {
-                            playlistService.currentPlaylist != null -> R.id.goBackButton
-                            else -> R.id.navMenuButton
-                        }
-                    }
-                    else -> 0
-                }
-            },
-            nextDown = { currentFocusId: Int, currentView: View ->
-                when (currentFocusId) {
-                    R.id.itemSongMoreButton, R.id.itemMoreButton, R.id.compose_view, R.id.itemMoveButton -> {
-                        (currentView as ViewGroup).descendantFocusability =
-                            ViewGroup.FOCUS_BLOCK_DESCENDANTS
-                        itemsListView?.requestFocusFromTouch()
-                    }
-                }
-                0
-            },
-        )
-        itemsListView?.setOnKeyListener { _, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN) {
-                if (localFocus.handleKey(keyCode))
-                    return@setOnKeyListener true
-            }
-            return@setOnKeyListener false
         }
 
         subscriptions.forEach { s -> s.dispose() }
