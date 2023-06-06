@@ -392,13 +392,6 @@ private fun PlaylistItemComposable(controller: PlaylistLayoutController, playlis
             modifier = Modifier.padding(start = 2.dp).size(24.dp),
             tint = Color.White,
         )
-        Text(
-            modifier = Modifier
-                .weight(1f)
-                .padding(vertical = 2.dp, horizontal = 4.dp),
-            text = playlist.name,
-            fontWeight = FontWeight.Bold,
-        )
 
         val tooltipState = remember { PlainTooltipState() }
         PlainTooltipBox(
@@ -406,7 +399,8 @@ private fun PlaylistItemComposable(controller: PlaylistLayoutController, playlis
             tooltipState = tooltipState,
         ) {
             IconButton(
-                modifier = reorderButtonModifier.size(32.dp).padding(4.dp),
+                modifier = reorderButtonModifier
+                    .padding(1.dp).size(24.dp).tooltipAnchor(),
                 onClick = { mainScope.launch { tooltipState.show() } },
             ) {
                 Icon(
@@ -417,6 +411,15 @@ private fun PlaylistItemComposable(controller: PlaylistLayoutController, playlis
                 )
             }
         }
+
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .padding(vertical = 12.dp, horizontal = 4.dp),
+            text = playlist.name,
+            fontWeight = FontWeight.Bold,
+        )
+
         IconButton(
             onClick = {
               mainScope.launch {
@@ -454,15 +457,9 @@ private fun SongItemComposable(controller: PlaylistLayoutController, song: Song,
     ) {
         Icon(
             painterResource(id = R.drawable.note),
-            modifier = Modifier.padding(start = 2.dp).size(24.dp),
             contentDescription = null,
+            modifier = Modifier.padding(start = 2.dp).size(24.dp),
             tint = Color.White,
-        )
-        Text(
-            modifier = Modifier
-                .weight(1f)
-                .padding(vertical = 12.dp, horizontal = 4.dp),
-            text = song.displayName(),
         )
 
         val tooltipState = remember { PlainTooltipState() }
@@ -471,7 +468,8 @@ private fun SongItemComposable(controller: PlaylistLayoutController, song: Song,
             tooltipState = tooltipState,
         ) {
             IconButton(
-                modifier = reorderButtonModifier.size(32.dp).padding(4.dp).tooltipAnchor(),
+                modifier = reorderButtonModifier
+                    .padding(1.dp).size(24.dp).tooltipAnchor(),
                 onClick = { mainScope.launch { tooltipState.show() } },
             ) {
                 Icon(
@@ -482,6 +480,13 @@ private fun SongItemComposable(controller: PlaylistLayoutController, song: Song,
                 )
             }
         }
+
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .padding(vertical = 12.dp, horizontal = 4.dp),
+            text = song.displayName(),
+        )
 
         IconButton(
             onClick = {

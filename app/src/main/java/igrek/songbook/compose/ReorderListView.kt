@@ -80,7 +80,7 @@ fun <T> ReorderListView(
                     itemHeights[index] = coordinates.size.height.toFloat()
                 }
             if (draggingIndex.value == index) {
-                itemModifier = itemModifier.background(Color.LightGray.copy(alpha = 0.2f))
+                itemModifier = itemModifier.background(Color.LightGray.copy(alpha = 0.15f))
             }
 
             val reorderButtonModifier = Modifier.createReorderButtonModifier(
@@ -95,8 +95,12 @@ fun <T> ReorderListView(
 
             if (dragTargetIndex.value == index) {
                 Divider(
-                    thickness = 2.dp,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f),
+                    thickness = 3.dp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                )
+            } else if (draggingIndex.value != -1) {
+                Divider(
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.04f),
                 )
             } else {
                 Divider(
