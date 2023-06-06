@@ -25,6 +25,7 @@ import androidx.compose.material3.PlainTooltipState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -207,10 +208,12 @@ class PlaylistLayoutController : InflatedLayout(
         state.currentPlaylist.value = playlist
         when (playlist) {
             null -> {
-                state.playlistItems.value = songsRepository.playlistDao.playlistDb.playlists
+                val items = songsRepository.playlistDao.playlistDb.playlists
+                state.playlistItems.clear()
+                state.playlistItems.addAll(items)
             }
             else -> {
-                state.songItems.value = playlist.songs
+                val items = playlist.songs
                     .mapNotNull { s ->
                         val namespace = when {
                             s.custom -> SongNamespace.Custom
@@ -220,6 +223,8 @@ class PlaylistLayoutController : InflatedLayout(
                         val song = songsRepository.allSongsRepo.songFinder.find(id)
                         song
                     }.toMutableList()
+                state.songItems.clear()
+                state.songItems.addAll(items)
             }
         }
 
@@ -305,8 +310,8 @@ class PlaylistLayoutController : InflatedLayout(
 class PlaylistLayoutState {
     val scrollState: ScrollState = ScrollState(0)
     val currentPlaylist: MutableState<Playlist?> = mutableStateOf(null)
-    val playlistItems: MutableState<MutableList<Playlist>> = mutableStateOf(mutableListOf())
-    val songItems: MutableState<MutableList<Song>> = mutableStateOf(mutableListOf())
+    val playlistItems: MutableList<Playlist> = mutableStateListOf()
+    val songItems: MutableList<Song> = mutableStateListOf()
 }
 
 @Composable
@@ -314,10 +319,10 @@ private fun MainComponent(controller: PlaylistLayoutController) {
     Column {
         val currentPlaylist = controller.state.currentPlaylist.value
         if (currentPlaylist == null) {
-            if (controller.state.playlistItems.value.isNotEmpty()) {
+            if (controller.state.playlistItems.isNotEmpty()) {
 
                 ReorderListView(
-                    items = controller.state.playlistItems.value,
+                    items = controller.state.playlistItems,
                     scrollState = controller.state.scrollState,
                     onReorder = { newItems ->
                         controller.onPlaylistsReordered(newItems)
@@ -337,10 +342,10 @@ private fun MainComponent(controller: PlaylistLayoutController) {
                 }
             }
         } else {
-            if (controller.state.songItems.value.isNotEmpty()) {
+            if (controller.state.songItems.isNotEmpty()) {
 
                 ReorderListView(
-                    items = controller.state.songItems.value,
+                    items = controller.state.songItems,
                     scrollState = controller.state.scrollState,
                     onReorder = { newItems ->
                         controller.onSongsReordered(newItems)
@@ -384,7 +389,7 @@ private fun PlaylistItemComposable(controller: PlaylistLayoutController, playlis
         Icon(
             painterResource(id = R.drawable.playlist),
             contentDescription = null,
-            modifier = Modifier.size(24.dp),
+            modifier = Modifier.padding(start = 2.dp).size(24.dp),
             tint = Color.White,
         )
         Text(
@@ -394,16 +399,23 @@ private fun PlaylistItemComposable(controller: PlaylistLayoutController, playlis
             text = playlist.name,
             fontWeight = FontWeight.Bold,
         )
-        IconButton(
-            modifier = reorderButtonModifier.size(32.dp).padding(4.dp),
-            onClick = {},
+
+        val tooltipState = remember { PlainTooltipState() }
+        PlainTooltipBox(
+            tooltip = { Text(stringResource(R.string.drag_to_reorder_hint)) },
+            tooltipState = tooltipState,
         ) {
-            Icon(
-                painterResource(id = R.drawable.reorder),
-                contentDescription = null,
-                modifier = Modifier.size(24.dp),
-                tint = Color.White,
-            )
+            IconButton(
+                modifier = reorderButtonModifier.size(32.dp).padding(4.dp),
+                onClick = { mainScope.launch { tooltipState.show() } },
+            ) {
+                Icon(
+                    painterResource(id = R.drawable.reorder),
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp),
+                    tint = Color.White,
+                )
+            }
         }
         IconButton(
             onClick = {
@@ -442,7 +454,7 @@ private fun SongItemComposable(controller: PlaylistLayoutController, song: Song,
     ) {
         Icon(
             painterResource(id = R.drawable.note),
-            modifier = Modifier.size(24.dp).padding(0.dp),
+            modifier = Modifier.padding(start = 2.dp).size(24.dp),
             contentDescription = null,
             tint = Color.White,
         )
@@ -472,7 +484,6 @@ private fun SongItemComposable(controller: PlaylistLayoutController, song: Song,
         }
 
         IconButton(
-            modifier = Modifier.size(32.dp).padding(4.dp),
             onClick = {
                 mainScope.launch {
                     controller.onSongMore(song)
