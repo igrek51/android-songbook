@@ -371,7 +371,7 @@ private fun MainComponent(controller: PlaylistLayoutController) {
 @Composable
 private fun PlaylistItemComposable(controller: PlaylistLayoutController, playlist: Playlist, reorderButtonModifier: Modifier) {
     Row(
-        Modifier.padding(vertical = 2.dp)
+        Modifier.padding(vertical = 0.dp)
             .combinedClickable(
                 onClick = {
                     mainScope.launch {
@@ -415,7 +415,7 @@ private fun PlaylistItemComposable(controller: PlaylistLayoutController, playlis
         Text(
             modifier = Modifier
                 .weight(1f)
-                .padding(vertical = 12.dp, horizontal = 4.dp),
+                .padding(vertical = 8.dp, horizontal = 4.dp),
             text = playlist.name,
             fontWeight = FontWeight.Bold,
         )

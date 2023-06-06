@@ -112,7 +112,7 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.activity:activity-ktx:1.7.1'
+    implementation 'androidx.activity:activity-ktx:1.7.2'
     implementation 'androidx.work:work-runtime:2.8.1'
     // Kotlin
     implementation "androidx.core:core-ktx:1.10.1"
@@ -130,9 +130,9 @@ dependencies {
     implementation composeBom
     implementation 'androidx.compose.material3:material3:1.1.0' // Material Design 3
     debugImplementation 'androidx.compose.ui:ui-tooling'
-    implementation 'androidx.activity:activity-compose:1.7.1' // Integration with activities
+    implementation 'androidx.activity:activity-compose:1.7.2' // Integration with activities
     // Firebase
-    implementation 'com.google.firebase:firebase-analytics-ktx:21.2.2'
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.3.0'
     implementation 'com.google.firebase:firebase-crashlytics:18.3.7'
     // Google APIs
     implementation('com.google.api-client:google-api-client-android:1.35.2') {

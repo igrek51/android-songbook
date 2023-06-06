@@ -89,6 +89,13 @@ fun <T> ReorderListView(
                 offsetYAnimated, onReorder,
             )
 
+            if (index == 0 && dragTargetIndex.value == -1) {
+                Divider(
+                    thickness = 3.dp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                )
+            }
+
             Box(modifier = itemModifier) {
                 itemContent(item, reorderButtonModifier)
             }
