@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalFoundationApi::class)
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 
 package igrek.songbook.playlist
 
@@ -13,18 +13,20 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.PlainTooltipBox
+import androidx.compose.material3.PlainTooltipState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,7 +40,6 @@ import androidx.compose.ui.unit.dp
 import igrek.songbook.R
 import igrek.songbook.compose.AppTheme
 import igrek.songbook.compose.ReorderListView
-import igrek.songbook.compose.SimpleListColumn
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
@@ -281,11 +282,16 @@ class PlaylistLayoutController : InflatedLayout(
         songContextMenuBuilder.showSongActions(song)
     }
 
-    fun onReorderedSongs(newItems: MutableList<Song>) {
+    fun onSongsReordered(newItems: MutableList<Song>) {
         val newPlaylistSongs: MutableList<PlaylistSong> = newItems.map { song ->
             PlaylistSong(song.id, song.isCustom())
         }.toMutableList()
         playlistService.currentPlaylist?.songs = newPlaylistSongs
+    }
+
+    fun onPlaylistsReordered(newItems: MutableList<Playlist>) {
+        val newPlaylists: MutableList<Playlist> = newItems.toMutableList()
+        songsRepository.playlistDao.playlistDb.playlists = newPlaylists
     }
 
     private fun renamePlaylist(playlist: Playlist) {
@@ -310,11 +316,14 @@ private fun MainComponent(controller: PlaylistLayoutController) {
         if (currentPlaylist == null) {
             if (controller.state.playlistItems.value.isNotEmpty()) {
 
-                SimpleListColumn(
+                ReorderListView(
                     items = controller.state.playlistItems.value,
                     scrollState = controller.state.scrollState,
-                ) { playlist: Playlist ->
-                    PlaylistItemComposable(controller, playlist)
+                    onReorder = { newItems ->
+                        controller.onPlaylistsReordered(newItems)
+                    },
+                ) { playlist: Playlist, reorderButtonModifier: Modifier ->
+                    PlaylistItemComposable(controller, playlist, reorderButtonModifier)
                 }
 
             } else {
@@ -334,7 +343,7 @@ private fun MainComponent(controller: PlaylistLayoutController) {
                     items = controller.state.songItems.value,
                     scrollState = controller.state.scrollState,
                     onReorder = { newItems ->
-                        controller.onReorderedSongs(newItems)
+                        controller.onSongsReordered(newItems)
                     },
                 ) { song: Song, reorderButtonModifier: Modifier ->
                     SongItemComposable(controller, song, reorderButtonModifier)
@@ -355,7 +364,7 @@ private fun MainComponent(controller: PlaylistLayoutController) {
 }
 
 @Composable
-private fun PlaylistItemComposable(controller: PlaylistLayoutController, playlist: Playlist) {
+private fun PlaylistItemComposable(controller: PlaylistLayoutController, playlist: Playlist, reorderButtonModifier: Modifier) {
     Row(
         Modifier.padding(vertical = 2.dp)
             .combinedClickable(
@@ -385,6 +394,17 @@ private fun PlaylistItemComposable(controller: PlaylistLayoutController, playlis
             text = playlist.name,
             fontWeight = FontWeight.Bold,
         )
+        IconButton(
+            modifier = reorderButtonModifier.size(32.dp).padding(4.dp),
+            onClick = {},
+        ) {
+            Icon(
+                painterResource(id = R.drawable.reorder),
+                contentDescription = null,
+                modifier = Modifier.size(24.dp),
+                tint = Color.White,
+            )
+        }
         IconButton(
             onClick = {
               mainScope.launch {
@@ -432,17 +452,25 @@ private fun SongItemComposable(controller: PlaylistLayoutController, song: Song,
                 .padding(vertical = 12.dp, horizontal = 4.dp),
             text = song.displayName(),
         )
-        IconButton(
-            modifier = reorderButtonModifier.size(32.dp).padding(4.dp),
-            onClick = {},
+
+        val tooltipState = remember { PlainTooltipState() }
+        PlainTooltipBox(
+            tooltip = { Text(stringResource(R.string.drag_to_reorder_hint)) },
+            tooltipState = tooltipState,
         ) {
-            Icon(
-                painterResource(id = R.drawable.reorder),
-                contentDescription = null,
-                modifier = Modifier.size(24.dp),
-                tint = Color.White,
-            )
+            IconButton(
+                modifier = reorderButtonModifier.size(32.dp).padding(4.dp).tooltipAnchor(),
+                onClick = { mainScope.launch { tooltipState.show() } },
+            ) {
+                Icon(
+                    painterResource(id = R.drawable.reorder),
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp),
+                    tint = Color.White,
+                )
+            }
         }
+
         IconButton(
             modifier = Modifier.size(32.dp).padding(4.dp),
             onClick = {

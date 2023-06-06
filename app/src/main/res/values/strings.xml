@@ -622,4 +622,5 @@
     <string name="unknown_chords_in_song">Unknown chords: %s</string>
     <string name="songcast_song_selected_by_me">You\'re presenting a song:\n%s</string>
     <string name="edit_playlist_name">Rename playlist</string>
+    <string name="drag_to_reorder_hint">Drag to reorder</string>
 </resources>
