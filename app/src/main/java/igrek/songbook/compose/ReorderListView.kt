@@ -72,7 +72,6 @@ fun <T> ReorderListView(
                 scrollState, scrollDiff, parentViewportHeight, coroutineScope, scrollJob,
                 onReorder,
             )
-
             ReorderListViewItem(
                 item, index, draggingIndex, dragTargetIndex, itemHeights, itemAnimatedOffsets,
                 scrollDiff, itemContent, reorderButtonModifier,
