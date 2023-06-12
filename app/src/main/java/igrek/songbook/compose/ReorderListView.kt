@@ -7,7 +7,6 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.scrollBy
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +17,8 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,7 +46,7 @@ fun <T> ReorderListView(
     items: MutableList<T>,
     scrollState: ScrollState = rememberScrollState(),
     onReorder: (newItems: MutableList<T>) -> Unit,
-    itemContent: @Composable (item: T, reorderButtonModifier: Modifier) -> Unit,
+    itemContent: @Composable (item: T, modifier: Modifier, reorderButtonModifier: Modifier) -> Unit,
 ) {
     val draggingIndex: MutableState<Int> = remember { mutableStateOf(-1) }
     val dragTargetIndex: MutableState<Int?> = remember { mutableStateOf(null) }
@@ -55,6 +56,31 @@ fun <T> ReorderListView(
     val parentViewportHeight: MutableState<Float> = remember { mutableStateOf(0f) }
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
     val scrollJob: MutableState<Job?> = remember { mutableStateOf(null) }
+    val reorderButtonModifiers: MutableMap<Int, Modifier> = remember { mutableStateMapOf() }
+    val isDraggingMes: MutableMap<Int, State<Boolean>> = remember { mutableStateMapOf() }
+    val isDraggings: MutableMap<Int, State<Boolean>> = remember { mutableStateMapOf() }
+
+    items.indices.forEach { index: Int ->
+        val reorderButtonModifier = Modifier.createReorderButtonModifier(
+            items, index, draggingIndex, dragTargetIndex, itemHeights, itemAnimatedOffsets,
+            scrollState, scrollDiff, parentViewportHeight, coroutineScope, scrollJob,
+            onReorder,
+        )
+        reorderButtonModifiers[index] = reorderButtonModifier
+
+        val offsetYAnimated: Animatable<Float, AnimationVector1D> = remember { Animatable(0f) }
+        itemAnimatedOffsets[index] = offsetYAnimated
+
+        val isDraggingMe: State<Boolean> = derivedStateOf {
+            draggingIndex.value == index
+        }
+        isDraggingMes[index] = isDraggingMe
+
+        val isDragging: State<Boolean> = derivedStateOf {
+            draggingIndex.value != -1
+        }
+        isDraggings[index] = isDragging
+    }
 
     Column(
         modifier = Modifier
@@ -67,14 +93,10 @@ fun <T> ReorderListView(
         for (index in items.indices) {
             val item: T = items[index]
 
-            val reorderButtonModifier = Modifier.createReorderButtonModifier(
-                items, index, draggingIndex, dragTargetIndex, itemHeights, itemAnimatedOffsets,
-                scrollState, scrollDiff, parentViewportHeight, coroutineScope, scrollJob,
-                onReorder,
-            )
             ReorderListViewItem(
-                item, index, draggingIndex, dragTargetIndex, itemHeights, itemAnimatedOffsets,
-                scrollDiff, itemContent, reorderButtonModifier,
+                item, index, isDraggingMes.getValue(index), isDraggings.getValue(index), draggingIndex, dragTargetIndex,
+                itemHeights, itemAnimatedOffsets.getValue(index),
+                scrollDiff, itemContent, reorderButtonModifiers.getValue(index),
             )
 
         }
@@ -86,16 +108,16 @@ fun <T> ReorderListView(
 private fun <T> ReorderListViewItem(
     item: T,
     index: Int,
+    isDraggingMe: State<Boolean>,
+    isDragging: State<Boolean>,
     draggingIndex: MutableState<Int>,
     dragTargetIndex: MutableState<Int?>,
     itemHeights: MutableMap<Int, Float>,
-    itemAnimatedOffsets: MutableMap<Int, Animatable<Float, AnimationVector1D>>,
+    offsetYAnimated: Animatable<Float, AnimationVector1D>,
     scrollDiff: MutableState<Float>,
-    itemContent: @Composable (item: T, reorderButtonModifier: Modifier) -> Unit,
+    itemContent: @Composable (item: T, modifier: Modifier, reorderButtonModifier: Modifier) -> Unit,
     reorderButtonModifier: Modifier,
 ) {
-    val offsetYAnimated: Animatable<Float, AnimationVector1D> = remember { Animatable(0f) }
-    itemAnimatedOffsets[index] = offsetYAnimated
     val offsetY = offsetYAnimated.value.roundToInt() + when (index) {
         draggingIndex.value -> scrollDiff.value.roundToInt()
         else -> 0
@@ -107,17 +129,15 @@ private fun <T> ReorderListViewItem(
         .onGloballyPositioned { coordinates: LayoutCoordinates ->
             itemHeights[index] = coordinates.size.height.toFloat()
         }
-    if (draggingIndex.value == index) {
+    if (isDraggingMe.value) {
         itemModifier = itemModifier.background(Color.LightGray.copy(alpha = 0.15f))
     }
 
     DividerBeforeItem(index, dragTargetIndex)
 
-    Box(modifier = itemModifier) {
-        itemContent(item, reorderButtonModifier)
-    }
+    itemContent(item, itemModifier, reorderButtonModifier)
 
-    DividerAfterItem(index, draggingIndex, dragTargetIndex)
+    DividerAfterItem(index, isDragging, dragTargetIndex)
 }
 
 @Composable
@@ -136,7 +156,7 @@ private fun DividerBeforeItem(
 @Composable
 private fun DividerAfterItem(
     index: Int,
-    draggingIndex: MutableState<Int>,
+    isDragging: State<Boolean>,
     dragTargetIndex: MutableState<Int?>,
 ) {
     if (dragTargetIndex.value == index) {
@@ -144,7 +164,7 @@ private fun DividerAfterItem(
             thickness = 3.dp,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
         )
-    } else if (draggingIndex.value != -1) {
+    } else if (isDragging.value) {
         Divider(
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.04f),
         )

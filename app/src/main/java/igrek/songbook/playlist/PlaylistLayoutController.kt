@@ -253,8 +253,8 @@ private fun MainComponent(controller: PlaylistLayoutController) {
                     onReorder = { newItems ->
                         controller.onPlaylistsReordered(newItems)
                     },
-                ) { playlist: Playlist, reorderButtonModifier: Modifier ->
-                    PlaylistItemComposable(controller, playlist, reorderButtonModifier)
+                ) { playlist: Playlist, modifier: Modifier, reorderButtonModifier: Modifier ->
+                    PlaylistItemComposable(controller, playlist, modifier, reorderButtonModifier)
                 }
 
             } else {
@@ -296,9 +296,14 @@ private fun MainComponent(controller: PlaylistLayoutController) {
 
 @SuppressLint("ModifierParameter")
 @Composable
-private fun PlaylistItemComposable(controller: PlaylistLayoutController, playlist: Playlist, reorderButtonModifier: Modifier) {
+private fun PlaylistItemComposable(
+    controller: PlaylistLayoutController,
+    playlist: Playlist,
+    modifier: Modifier,
+    reorderButtonModifier: Modifier,
+) {
     Row(
-        Modifier.padding(vertical = 0.dp)
+        modifier.padding(0.dp)
             .combinedClickable(
                 onClick = {
                     mainScope.launch {

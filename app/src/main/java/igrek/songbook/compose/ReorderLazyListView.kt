@@ -30,7 +30,6 @@ import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import igrek.songbook.info.logger.LoggerFactory.logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -54,7 +53,7 @@ fun <T> ReorderLazyListView(
     val isDraggingMes: MutableMap<Int, State<Boolean>> = remember { mutableStateMapOf() }
     val isDraggings: MutableMap<Int, State<Boolean>> = remember { mutableStateMapOf() }
 
-    items.forEachIndexed { index: Int, _: T ->
+    items.indices.forEach { index: Int ->
         val reorderButtonModifier = Modifier.createReorderButtonModifier(
             items, index, draggingIndex, dragTargetIndex, itemHeights, itemAnimatedOffsets,
             coroutineScope, onReorder,
@@ -236,8 +235,6 @@ private fun <T> ReorderLazyListViewItem(
     itemContent: @Composable (item: T, modifier: Modifier, reorderButtonModifier: Modifier) -> Unit,
     reorderButtonModifier: Modifier,
 ) {
-    logger.debug("Render item: $index")
-
     var itemModifier = Modifier
         .offset { IntOffset(0, offsetYAnimated.value.roundToInt() ) }
         .fillMaxWidth()
