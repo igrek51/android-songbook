@@ -52,7 +52,7 @@ class PreferencesPersistenceTest {
         assertEquals(current, 23f)
         assertEquals(preferencesState.autoscrollSpeed, 23f)
 
-        preferencesService.saveAll()
+        preferencesService.dumpAll()
         preferencesService.loadAll()
         // check if persisted after save & reload
         current = preferencesService.getValue(PreferencesField.AutoscrollSpeed)

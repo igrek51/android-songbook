@@ -90,8 +90,8 @@ class BackupSyncManager(
             showSyncProgress(0, 2)
             GlobalScope.launch(Dispatchers.IO) {
                 runCatching {
+                    preferencesService.dumpAll()
                     userDataDao.saveNow()
-                    preferencesService.saveAll()
                     showSyncProgress(1, 2)
                     makeCompositeDriveBackup(driveService)
                 }.onFailure { error ->

@@ -23,6 +23,7 @@ import igrek.songbook.persistence.user.preferences.PreferencesDao
 import igrek.songbook.persistence.user.songtweak.SongTweakDao
 import igrek.songbook.persistence.user.transpose.TransposeDao
 import igrek.songbook.persistence.user.unlocked.UnlockedSongsDao
+import igrek.songbook.util.ioScope
 import igrek.songbook.util.launchAndJoin
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
@@ -65,7 +66,7 @@ class UserDataDao(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ toSave ->
                 if (toSave) {
-                    GlobalScope.launch(Dispatchers.IO) {
+                    ioScope.launch {
                         save()
                     }
                 }

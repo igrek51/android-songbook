@@ -67,7 +67,7 @@ class PreferencesService(
         }
     }
 
-    fun saveAll() {
+    fun dumpAll() {
         val primitiveValues = entities2primitives(entityValues)
         userDataDao.preferencesDao.setPrimitiveEntries(primitiveValues)
     }
@@ -103,7 +103,7 @@ class PreferencesService(
     fun clear() {
         userDataDao.preferencesDao.factoryReset()
         entityValues.clear()
-        saveAll()
+        dumpAll()
         loadAll()
     }
 

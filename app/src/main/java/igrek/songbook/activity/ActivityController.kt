@@ -70,14 +70,14 @@ class ActivityController(
         if (initialized) {
             val activityName = activity::class.simpleName
             logger.debug("stopping $activityName...")
-            preferencesService.saveAll()
+            preferencesService.dumpAll()
             userDataDao.requestSave(true)
         }
     }
 
     fun onDestroy() {
         if (initialized) {
-            preferencesService.saveAll()
+            preferencesService.dumpAll()
             runBlocking(Dispatchers.IO) {
                 userDataDao.saveNow()
             }

@@ -41,6 +41,7 @@ class BillingService(
     private val preferencesService by LazyExtractor(preferencesService)
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val adService by LazyExtractor(adService)
+    private val userDataDao by LazyExtractor(appFactory.userDataDao)
 
     private val logger: Logger = LoggerFactory.logger
     private var billingClient: BillingClient? = null
@@ -479,7 +480,8 @@ class BillingService(
             PRODUCT_ID_NO_ADS -> {
                 if (!preferencesState.purchasedAdFree) {
                     preferencesState.purchasedAdFree = true
-                    preferencesService.saveAll()
+                    preferencesService.dumpAll()
+                    userDataDao.requestSave(true)
                     adService.hideAdBanner()
                     purchaseEventsSubject.onNext(true)
                     logger.info("Saving Purchase in preferences data, Product ID: $productId")
