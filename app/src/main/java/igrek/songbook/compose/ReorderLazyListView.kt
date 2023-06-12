@@ -46,16 +46,15 @@ fun <T> ReorderLazyListView(
 ) {
     val draggingIndex: MutableState<Int> = remember { mutableStateOf(-1) }
     val dragTargetIndex: MutableState<Int?> = remember { mutableStateOf(null) }
-    val itemHeights: MutableMap<Int, Float> = remember { mutableStateMapOf() }
-    val itemAnimatedOffsets: MutableMap<Int, Animatable<Float, AnimationVector1D>> = remember { mutableStateMapOf() }
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
 
+    val itemHeights: MutableMap<Int, Float> = remember { mutableStateMapOf() }
+    val itemAnimatedOffsets: MutableMap<Int, Animatable<Float, AnimationVector1D>> = remember { mutableStateMapOf() }
     val reorderButtonModifiers: MutableMap<Int, Modifier> = remember { mutableStateMapOf() }
     val isDraggingMes: MutableMap<Int, State<Boolean>> = remember { mutableStateMapOf() }
     val isDraggings: MutableMap<Int, State<Boolean>> = remember { mutableStateMapOf() }
 
-    items.forEachIndexed { index: Int, item: T ->
-
+    items.forEachIndexed { index: Int, _: T ->
         val reorderButtonModifier = Modifier.createReorderButtonModifier(
             items, index, draggingIndex, dragTargetIndex, itemHeights, itemAnimatedOffsets,
             coroutineScope, onReorder,
@@ -84,8 +83,8 @@ fun <T> ReorderLazyListView(
             item (key = index) {
 
                 ReorderLazyListViewItem<T>(
-                    item, index, isDraggingMes[index]!!, isDraggings[index]!!, dragTargetIndex, itemHeights, itemAnimatedOffsets[index]!!,
-                    itemContent, reorderButtonModifiers[index]!!,
+                    item, index, isDraggingMes.getValue(index), isDraggings.getValue(index), dragTargetIndex,
+                    itemHeights, itemAnimatedOffsets.getValue(index), itemContent, reorderButtonModifiers.getValue(index),
                 )
 
             }

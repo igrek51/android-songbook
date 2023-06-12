@@ -6,7 +6,6 @@ import android.annotation.SuppressLint
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.combinedClickable
@@ -104,11 +103,6 @@ class PlaylistLayoutController : InflatedLayout(
                 }
             }
         }
-//        activity.setContent {
-//            AppTheme {
-//                MainComponent(thisLayout)
-//            }
-//        }
 
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
@@ -348,7 +342,7 @@ private fun PlaylistItemComposable(controller: PlaylistLayoutController, playlis
         Text(
             modifier = Modifier
                 .weight(1f)
-                .padding(vertical = 8.dp, horizontal = 4.dp),
+                .padding(vertical = 6.dp, horizontal = 4.dp),
             text = playlist.name,
             fontWeight = FontWeight.Bold,
         )
@@ -423,7 +417,7 @@ private fun SongItemComposable(
         Text(
             modifier = Modifier
                 .weight(1f)
-                .padding(vertical = 12.dp, horizontal = 4.dp),
+                .padding(vertical = 10.dp, horizontal = 4.dp),
             text = song.displayName(),
         )
 
