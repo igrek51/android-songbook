@@ -6,6 +6,7 @@ import android.annotation.SuppressLint
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.combinedClickable
@@ -103,6 +104,11 @@ class PlaylistLayoutController : InflatedLayout(
                 }
             }
         }
+//        activity.setContent {
+//            AppTheme {
+//                MainComponent(thisLayout)
+//            }
+//        }
 
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
@@ -276,8 +282,8 @@ private fun MainComponent(controller: PlaylistLayoutController) {
                     onReorder = { newItems ->
                         controller.onSongsReordered(newItems)
                     },
-                ) { song: Song, reorderButtonModifier: Modifier ->
-                    SongItemComposable(controller, song, reorderButtonModifier)
+                ) { song: Song, modifier: Modifier, reorderButtonModifier: Modifier ->
+                    SongItemComposable(controller, song, modifier, reorderButtonModifier)
                 }
 
             } else {
@@ -366,9 +372,14 @@ private fun PlaylistItemComposable(controller: PlaylistLayoutController, playlis
 
 @SuppressLint("ModifierParameter")
 @Composable
-private fun SongItemComposable(controller: PlaylistLayoutController, song: Song, reorderButtonModifier: Modifier) {
+private fun SongItemComposable(
+    controller: PlaylistLayoutController,
+    song: Song,
+    modifier: Modifier,
+    reorderButtonModifier: Modifier,
+) {
     Row (
-        Modifier.padding(0.dp)
+        modifier.padding(0.dp)
             .combinedClickable(
                 onClick = {
                     mainScope.launch {

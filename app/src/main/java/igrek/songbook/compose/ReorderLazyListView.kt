@@ -5,13 +5,11 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -39,13 +37,12 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 
 
-@SuppressLint("UnrememberedMutableState")
 @Composable
 fun <T> ReorderLazyListView(
     items: MutableList<T>,
     scrollState: LazyListState = rememberLazyListState(),
     onReorder: (newItems: MutableList<T>) -> Unit,
-    itemContent: @Composable (item: T, reorderButtonModifier: Modifier) -> Unit,
+    itemContent: @Composable (item: T, modifier: Modifier, reorderButtonModifier: Modifier) -> Unit,
 ) {
     val draggingIndex: MutableState<Int> = remember { mutableStateOf(-1) }
     val dragTargetIndex: MutableState<Int?> = remember { mutableStateOf(null) }
@@ -53,30 +50,45 @@ fun <T> ReorderLazyListView(
     val itemAnimatedOffsets: MutableMap<Int, Animatable<Float, AnimationVector1D>> = remember { mutableStateMapOf() }
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
 
+    val reorderButtonModifiers: MutableMap<Int, Modifier> = remember { mutableStateMapOf() }
+    val isDraggingMes: MutableMap<Int, State<Boolean>> = remember { mutableStateMapOf() }
+    val isDraggings: MutableMap<Int, State<Boolean>> = remember { mutableStateMapOf() }
+
+    items.forEachIndexed { index: Int, item: T ->
+
+        val reorderButtonModifier = Modifier.createReorderButtonModifier(
+            items, index, draggingIndex, dragTargetIndex, itemHeights, itemAnimatedOffsets,
+            coroutineScope, onReorder,
+        )
+        reorderButtonModifiers[index] = reorderButtonModifier
+
+        val offsetYAnimated: Animatable<Float, AnimationVector1D> = remember { Animatable(0f) }
+        itemAnimatedOffsets[index] = offsetYAnimated
+
+        val isDraggingMe: State<Boolean> = derivedStateOf {
+            draggingIndex.value == index
+        }
+        isDraggingMes[index] = isDraggingMe
+
+        val isDragging: State<Boolean> = derivedStateOf {
+            draggingIndex.value != -1
+        }
+        isDraggings[index] = isDragging
+    }
+
     LazyColumn(
         modifier = Modifier.fillMaxHeight(),
         state = scrollState,
     ) {
-        itemsIndexed(items) { index: Int, item: T ->
+        items.forEachIndexed { index: Int, item: T ->
+            item (key = index) {
 
-            val reorderButtonModifier = Modifier.createReorderButtonModifier(
-                items, index, draggingIndex, dragTargetIndex, itemHeights, itemAnimatedOffsets,
-                coroutineScope, onReorder,
-            )
-            val offsetYAnimated: Animatable<Float, AnimationVector1D> = remember { Animatable(0f) }
-            itemAnimatedOffsets[index] = offsetYAnimated
-            val isDraggingMe: State<Boolean> = derivedStateOf {
-                draggingIndex.value == index
+                ReorderLazyListViewItem<T>(
+                    item, index, isDraggingMes[index]!!, isDraggings[index]!!, dragTargetIndex, itemHeights, itemAnimatedOffsets[index]!!,
+                    itemContent, reorderButtonModifiers[index]!!,
+                )
+
             }
-            val isDragging: State<Boolean> = derivedStateOf {
-                draggingIndex.value != -1
-            }
-
-            ReorderLazyListViewItem<T>(
-                item, index, isDraggingMe, isDragging, dragTargetIndex, itemHeights, offsetYAnimated,
-                itemContent, reorderButtonModifier,
-            )
-
         }
     }
 }
@@ -222,7 +234,7 @@ private fun <T> ReorderLazyListViewItem(
     dragTargetIndex: MutableState<Int?>,
     itemHeights: MutableMap<Int, Float>,
     offsetYAnimated: Animatable<Float, AnimationVector1D>,
-    itemContent: @Composable (item: T, reorderButtonModifier: Modifier) -> Unit,
+    itemContent: @Composable (item: T, modifier: Modifier, reorderButtonModifier: Modifier) -> Unit,
     reorderButtonModifier: Modifier,
 ) {
     logger.debug("Render item: $index")
@@ -239,9 +251,7 @@ private fun <T> ReorderLazyListViewItem(
 
     DividerBeforeItem(index, dragTargetIndex)
 
-    Box(modifier = itemModifier) {
-        itemContent(item, reorderButtonModifier)
-    }
+    itemContent(item, itemModifier, reorderButtonModifier)
 
     DividerAfterItem(index, isDragging, dragTargetIndex)
 }
