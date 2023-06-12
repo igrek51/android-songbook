@@ -5,6 +5,10 @@ class FibonacciCounter {
     private var penultimate = 0 // last but one
     private var last = 1
 
+    fun current(): Int {
+        return last
+    }
+
     fun next(): Int {
         val oldLast = last
         last += penultimate

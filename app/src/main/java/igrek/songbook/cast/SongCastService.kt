@@ -15,10 +15,11 @@ import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.songpreview.SongPreviewLayoutController
+import igrek.songbook.util.FibonacciCounter
 import igrek.songbook.util.buildSongName
 import igrek.songbook.util.defaultScope
-import igrek.songbook.util.interpolate
 import igrek.songbook.util.ioScope
+import igrek.songbook.util.limitTo
 import igrek.songbook.util.mainScope
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Deferred
@@ -51,7 +52,7 @@ class SongCastService {
     private var oldState: SessionState = SessionState()
     private var periodicRefreshJob: Job? = null
     private var periodicReconnectJob: Job? = null
-    private var lastSessionChange: Long = 0 // millis
+    private var refreshCounter = FibonacciCounter()
     private var joinTimestamp: Long = 0
     var clientFollowScroll: Boolean by mutableStateOf(true)
     var clientOpenPresentedSongs: Boolean by mutableStateOf(true)
@@ -107,7 +108,7 @@ class SongCastService {
         }
         streamSocket.close()
         streamSocket.connect(responseData.short_id)
-        lastSessionChange = Date().time
+        refreshCounter.reset()
         lastSharedScroll = null
 
         val memberJoinedResId = when (isPresenter()) {
@@ -171,7 +172,7 @@ class SongCastService {
         streamSocket.close()
         periodicRefreshJob = null
         periodicReconnectJob = null
-        lastSessionChange = 0
+        refreshCounter.reset()
         lastSharedScroll = null
         logEvents.clear()
         if (periodicRefreshJob?.isActive == true)
@@ -185,13 +186,10 @@ class SongCastService {
         while (isInRoom()) {
             val interval: Long? = when {
                 !activityController.isForeground -> null
-                lastSessionChange == 0L -> 0
-                streamSocket.ioSocket?.connected() == false -> (2000..3000).random().toLong()
+                streamSocket.ioSocket?.connected() == false -> (500..1500).random().toLong()
                 else -> {
-                    val millis = Date().time - lastSessionChange
-                    val fraction = millis.interpolate(0, 10 * 60_000) // 0-10 min -> 0-1
-                    val penalty = (fraction * 2 * 60_000).toLong() // 0-1 -> 0-2 min
-                    (2_000..3_000).random().toLong() + penalty
+                    val penaltyMillis = refreshCounter.current().limitTo(120) * 1000 // max 2m
+                    (500..1500).random().toLong() + penaltyMillis
                 }
             }
             if (interval != null && Date().time - lastShot >= interval) {
@@ -199,6 +197,7 @@ class SongCastService {
 
                 try {
                     logger.debug("refreshing SongCast session, waited ${waitedS}s...")
+                    refreshCounter.next()
                     refreshSessionDetails().onFailure {
                         throw it
                     }
@@ -385,7 +384,7 @@ class SongCastService {
             sessionStateMutex.withLock {
                 val compareResult = watchSessionState(oldState, sessionState)
                 if (compareResult)
-                    lastSessionChange = Date().time
+                    refreshCounter.reset()
             }
             refreshUI()
             return Result.success(Unit)
