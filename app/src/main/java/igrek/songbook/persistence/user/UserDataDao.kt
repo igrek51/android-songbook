@@ -79,11 +79,12 @@ class UserDataDao(
                 reload(resetOnError = false)
             }
         }.recoverCatching {
+            delay(1000)
             logger.error("failed to load user data. Trying synchronous load...")
             appFactory.crashlyticsLogger.get().reportNonFatalError(it)
             reloadSync()
         }.recoverCatching {
-            delay(1000)
+            delay(2000)
             reloadSync()
         }.recover { t ->
             logger.error("failed to load user data", t)
