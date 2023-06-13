@@ -25,7 +25,6 @@ import androidx.compose.material3.PlainTooltipState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -40,10 +39,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import igrek.songbook.R
 import igrek.songbook.compose.AppTheme
-import igrek.songbook.compose.ReorderLazyListView
+import igrek.songbook.compose.ItemsContainer
 import igrek.songbook.compose.ReorderListView
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
+import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
@@ -135,8 +135,7 @@ class PlaylistLayoutController : InflatedLayout(
         when (playlist) {
             null -> {
                 val items = songsRepository.playlistDao.playlistDb.playlists
-                state.playlistItems.clear()
-                state.playlistItems.addAll(items)
+                state.playlistItems.replaceAll(items)
             }
             else -> {
                 val items = playlist.songs
@@ -149,8 +148,7 @@ class PlaylistLayoutController : InflatedLayout(
                         val song = songsRepository.allSongsRepo.songFinder.find(id)
                         song
                     }.toMutableList()
-                state.songItems.clear()
-                state.songItems.addAll(items)
+                state.songItems.replaceAll(items)
             }
         }
 
@@ -184,7 +182,8 @@ class PlaylistLayoutController : InflatedLayout(
     suspend fun onPlaylistClick(playlist: Playlist) {
         playlistService.currentPlaylist = playlist
         mainScope.launch {
-            state.songsScrollState.scrollToItem(0)
+//            state.songsScrollState.scrollToItem(0)
+            state.songsScrollState.scrollTo(0)
         }
         updateItemsList()
     }
@@ -233,11 +232,12 @@ class PlaylistLayoutController : InflatedLayout(
 }
 
 class PlaylistLayoutState {
-    val scrollState: ScrollState = ScrollState(0)
-    val songsScrollState: LazyListState = LazyListState(0, 0)
+    val playlistsScrollState: ScrollState = ScrollState(0)
+    val songsScrollState: ScrollState = ScrollState(0)
+    val songsLazyScrollState: LazyListState = LazyListState(0, 0)
     val currentPlaylist: MutableState<Playlist?> = mutableStateOf(null)
-    val playlistItems: MutableList<Playlist> = mutableStateListOf()
-    val songItems: MutableList<Song> = mutableStateListOf()
+    val playlistItems: ItemsContainer<Playlist> = ItemsContainer()
+    val songItems: ItemsContainer<Song> = ItemsContainer()
 }
 
 @Composable
@@ -245,11 +245,13 @@ private fun MainComponent(controller: PlaylistLayoutController) {
     Column {
         val currentPlaylist = controller.state.currentPlaylist.value
         if (currentPlaylist == null) {
-            if (controller.state.playlistItems.isNotEmpty()) {
+            if (controller.state.playlistItems.items.isNotEmpty()) {
+
+                logger.debug("playlist main component column recomposition")
 
                 ReorderListView(
-                    items = controller.state.playlistItems,
-                    scrollState = controller.state.scrollState,
+                    itemsContainer = controller.state.playlistItems,
+                    scrollState = controller.state.playlistsScrollState,
                     onReorder = { newItems ->
                         controller.onPlaylistsReordered(newItems)
                     },
@@ -268,10 +270,10 @@ private fun MainComponent(controller: PlaylistLayoutController) {
                 }
             }
         } else {
-            if (controller.state.songItems.isNotEmpty()) {
+            if (controller.state.songItems.items.isNotEmpty()) {
 
-                ReorderLazyListView(
-                    items = controller.state.songItems,
+                ReorderListView(
+                    itemsContainer = controller.state.songItems,
                     scrollState = controller.state.songsScrollState,
                     onReorder = { newItems ->
                         controller.onSongsReordered(newItems)
