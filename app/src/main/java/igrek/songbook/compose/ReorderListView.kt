@@ -45,15 +45,19 @@ import kotlin.math.roundToInt
 
 class ItemsContainer<T>(
     var items: MutableList<T> = mutableListOf(),
-    var modified: MutableState<Long> = mutableStateOf(0),
+    val modifiedMap: MutableMap<Int, MutableState<Long>> = mutableMapOf(),
 ) {
     fun replaceAll(newList: MutableList<T>) {
         items = newList
-        modified.value += 1
+        items.indices.forEach { index: Int ->
+            if (!modifiedMap.containsKey(index)) {
+                modifiedMap[index] = mutableStateOf(0)
+            }
+        }
     }
 
-    fun notifyChange() {
-        modified.value += 1
+    fun notifyItemChange(index: Int) {
+        modifiedMap.getValue(index).value += 1
     }
 }
 
@@ -63,7 +67,7 @@ fun <T> ReorderListView(
     itemsContainer: ItemsContainer<T>,
     scrollState: ScrollState = rememberScrollState(),
     onReorder: (newItems: MutableList<T>) -> Unit,
-    itemContent: @Composable (item: T, modifier: Modifier, reorderButtonModifier: Modifier) -> Unit,
+    itemContent: @Composable (itemsContainer: ItemsContainer<T>, index: Int, modifier: Modifier, reorderButtonModifier: Modifier) -> Unit,
 ) {
     val draggingIndex: MutableState<Int> = remember { mutableStateOf(-1) }
     val dragTargetIndex: MutableState<Int?> = remember { mutableStateOf(null) }
@@ -85,12 +89,11 @@ fun <T> ReorderListView(
     }
 
     itemsContainer.items.indices.forEach { index: Int ->
-        val reorderButtonModifier = Modifier.createReorderButtonModifier(
+        reorderButtonModifiers[index] = Modifier.createReorderButtonModifier(
             itemsContainer, index, draggingIndex, dragTargetIndex, itemHeights, itemAnimatedOffsets,
             scrollState, scrollDiff, parentViewportHeight, coroutineScope, scrollJob,
             onReorder,
         )
-        reorderButtonModifiers[index] = reorderButtonModifier
 
         itemAnimatedOffsets[index] = remember { Animatable(0f) }
 
@@ -132,68 +135,61 @@ fun <T> ReorderListColumn(
     itemAnimatedOffsets: Map<Int, Animatable<Float, AnimationVector1D>>,
     scrollDiff: State<Float>,
     reorderButtonModifiers: Map<Int, Modifier>,
-    itemContent: @Composable (item: T, modifier: Modifier, reorderButtonModifier: Modifier) -> Unit,
+    itemContent: @Composable (itemsContainer: ItemsContainer<T>, index: Int, modifier: Modifier, reorderButtonModifier: Modifier) -> Unit,
 ) {
-    key(itemsContainer.modified.value) {
+    DividerBeforeItem(isDragTargetFirst)
 
-        logger.debug("recompose items column")
-
-        itemsContainer.items.indices.forEach { index: Int ->
-            val item: T = itemsContainer.items[index]
-
-            ReorderListViewItem(
-                item, index,
-                isDragging, isDragTargetFirst, isDraggingMes.getValue(index), isDragTargetMes.getValue(index),
-                itemAnimatedOffsets.getValue(index), reorderButtonModifiers.getValue(index),
-                itemHeights, scrollDiff, itemContent,
-            )
-
-        }
+//  logger.debug("recompose all items")
+    itemsContainer.items.indices.forEach { index: Int ->
+        ReorderListViewItem(
+            itemsContainer, index,
+            isDragging, isDraggingMes.getValue(index), isDragTargetMes.getValue(index),
+            itemAnimatedOffsets.getValue(index), reorderButtonModifiers.getValue(index),
+            itemHeights, scrollDiff, itemContent,
+        )
     }
 }
 
 @SuppressLint("ModifierParameter")
 @Composable
 private fun <T> ReorderListViewItem(
-    item: T,
+    itemsContainer: ItemsContainer<T>,
     index: Int,
     isDragging: State<Boolean>,
-    isDragTargetFirst: State<Boolean>,
     isDraggingMe: State<Boolean>,
     isDragTargetMe: State<Boolean>,
     offsetYAnimated: Animatable<Float, AnimationVector1D>,
     reorderButtonModifier: Modifier,
     itemHeights: MutableMap<Int, Float>,
     scrollDiff: State<Float>,
-    itemContent: @Composable (item: T, modifier: Modifier, reorderButtonModifier: Modifier) -> Unit,
+    itemContent: @Composable (itemsContainer: ItemsContainer<T>, index: Int, modifier: Modifier, reorderButtonModifier: Modifier) -> Unit,
 ) {
-    logger.debug("render item $index")
+    key(itemsContainer.modifiedMap.getValue(index).value) {
+        //logger.debug("recompose item $index")
 
-    var itemModifier = Modifier
-        .offset { IntOffset(0, offsetYAnimated.value.roundToInt()) }
-        .fillMaxWidth()
-        .onGloballyPositioned { coordinates: LayoutCoordinates ->
-            itemHeights[index] = coordinates.size.height.toFloat()
+        var itemModifier = Modifier
+            .offset { IntOffset(0, offsetYAnimated.value.roundToInt()) }
+            .fillMaxWidth()
+            .onGloballyPositioned { coordinates: LayoutCoordinates ->
+                itemHeights[index] = coordinates.size.height.toFloat()
+            }
+        if (isDraggingMe.value) {
+            itemModifier = itemModifier
+                .offset { IntOffset(0, scrollDiff.value.roundToInt()) }
+                .background(Color.LightGray.copy(alpha = 0.15f))
         }
-    if (isDraggingMe.value) {
-        itemModifier = itemModifier
-            .offset { IntOffset(0, scrollDiff.value.roundToInt()) }
-            .background(Color.LightGray.copy(alpha = 0.15f))
+
+        itemContent(itemsContainer, index, itemModifier, reorderButtonModifier)
+
+        DividerAfterItem(isDragging, isDragTargetMe)
     }
-
-    DividerBeforeItem(index, isDragTargetFirst)
-
-    itemContent(item, itemModifier, reorderButtonModifier)
-
-    DividerAfterItem(isDragging, isDragTargetMe)
 }
 
 @Composable
 private fun DividerBeforeItem(
-    index: Int,
     isDragTargetFirst: State<Boolean>,
 ) {
-    if (index == 0 && isDragTargetFirst.value) {
+    if (isDragTargetFirst.value) {
         Divider(
             thickness = 3.dp,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
@@ -266,8 +262,11 @@ private fun <T> Modifier.createReorderButtonModifier(
                         itemAnimatedOffsets[index + swapped]?.snapTo(endOffset)
                         itemAnimatedOffsets[index + swapped]?.animateTo(0f)
                     }
+
                     itemsContainer.items.add(index + swapped, itemsContainer.items.removeAt(index))
-                    itemsContainer.notifyChange()
+                    for (i in minIndex..maxIndex) {
+                        itemsContainer.notifyItemChange(i)
+                    }
                     onReorder(itemsContainer.items)
                 }
                 swapped > 0 -> {
@@ -282,8 +281,11 @@ private fun <T> Modifier.createReorderButtonModifier(
                         itemAnimatedOffsets[index + swapped]?.snapTo(endOffset)
                         itemAnimatedOffsets[index + swapped]?.animateTo(0f)
                     }
+
                     itemsContainer.items.add(index + swapped, itemsContainer.items.removeAt(index))
-                    itemsContainer.notifyChange()
+                    for (i in minIndex..maxIndex) {
+                        itemsContainer.notifyItemChange(i)
+                    }
                     onReorder(itemsContainer.items)
                 }
                 else -> coroutineScope.launch {

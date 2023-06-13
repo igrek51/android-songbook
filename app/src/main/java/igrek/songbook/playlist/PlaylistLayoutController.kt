@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -43,7 +42,6 @@ import igrek.songbook.compose.ItemsContainer
 import igrek.songbook.compose.ReorderListView
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
-import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
@@ -234,7 +232,6 @@ class PlaylistLayoutController : InflatedLayout(
 class PlaylistLayoutState {
     val playlistsScrollState: ScrollState = ScrollState(0)
     val songsScrollState: ScrollState = ScrollState(0)
-    val songsLazyScrollState: LazyListState = LazyListState(0, 0)
     val currentPlaylist: MutableState<Playlist?> = mutableStateOf(null)
     val playlistItems: ItemsContainer<Playlist> = ItemsContainer()
     val songItems: ItemsContainer<Song> = ItemsContainer()
@@ -247,16 +244,14 @@ private fun MainComponent(controller: PlaylistLayoutController) {
         if (currentPlaylist == null) {
             if (controller.state.playlistItems.items.isNotEmpty()) {
 
-                logger.debug("playlist main component column recomposition")
-
                 ReorderListView(
                     itemsContainer = controller.state.playlistItems,
                     scrollState = controller.state.playlistsScrollState,
                     onReorder = { newItems ->
                         controller.onPlaylistsReordered(newItems)
                     },
-                ) { playlist: Playlist, modifier: Modifier, reorderButtonModifier: Modifier ->
-                    PlaylistItemComposable(controller, playlist, modifier, reorderButtonModifier)
+                ) { itemsContainer: ItemsContainer<Playlist>, index: Int, modifier: Modifier, reorderButtonModifier: Modifier ->
+                    PlaylistItemComposable(controller, itemsContainer, index, modifier, reorderButtonModifier)
                 }
 
             } else {
@@ -278,8 +273,8 @@ private fun MainComponent(controller: PlaylistLayoutController) {
                     onReorder = { newItems ->
                         controller.onSongsReordered(newItems)
                     },
-                ) { song: Song, modifier: Modifier, reorderButtonModifier: Modifier ->
-                    SongItemComposable(controller, song, modifier, reorderButtonModifier)
+                ) { itemsContainer: ItemsContainer<Song>, index: Int, modifier: Modifier, reorderButtonModifier: Modifier ->
+                    SongItemComposable(controller, itemsContainer, index, modifier, reorderButtonModifier)
                 }
 
             } else {
@@ -300,10 +295,13 @@ private fun MainComponent(controller: PlaylistLayoutController) {
 @Composable
 private fun PlaylistItemComposable(
     controller: PlaylistLayoutController,
-    playlist: Playlist,
+    itemsContainer: ItemsContainer<Playlist>,
+    index: Int,
     modifier: Modifier,
     reorderButtonModifier: Modifier,
 ) {
+    val playlist: Playlist = itemsContainer.items[index]
+
     Row(
         modifier.padding(0.dp)
             .combinedClickable(
@@ -375,10 +373,13 @@ private fun PlaylistItemComposable(
 @Composable
 private fun SongItemComposable(
     controller: PlaylistLayoutController,
-    song: Song,
+    itemsContainer: ItemsContainer<Song>,
+    index: Int,
     modifier: Modifier,
     reorderButtonModifier: Modifier,
 ) {
+    val song: Song = itemsContainer.items[index]
+
     Row (
         modifier.padding(0.dp)
             .combinedClickable(
