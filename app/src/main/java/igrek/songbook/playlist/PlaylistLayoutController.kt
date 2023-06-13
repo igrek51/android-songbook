@@ -180,7 +180,6 @@ class PlaylistLayoutController : InflatedLayout(
     suspend fun onPlaylistClick(playlist: Playlist) {
         playlistService.currentPlaylist = playlist
         mainScope.launch {
-//            state.songsScrollState.scrollToItem(0)
             state.songsScrollState.scrollTo(0)
         }
         updateItemsList()
