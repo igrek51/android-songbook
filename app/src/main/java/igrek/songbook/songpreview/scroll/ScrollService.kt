@@ -97,7 +97,7 @@ class ScrollService(
         val lyricsModel = songPreview.lyricsModel
 
         val firstVisibleLine: Float = scrollEm.applyMin(0f)
-        val lastVisibleLine: Float = songPreview.lastVisibleLine.applyMin(0f)
+        val lastVisibleLine: Float = (songPreview.lastVisibleLine.takeIf { !it.isNaN() } ?: return null).applyMin(0f)
         val linesStartIndex: Int = floor(firstVisibleLine).roundToInt()
         val linesEndIndex: Int = floor(lastVisibleLine).roundToInt()
         val linesStartFraction: Float = firstVisibleLine - linesStartIndex
