@@ -101,8 +101,8 @@ class EditSongLayoutController(
         songContentEdit = layout.findViewById<EditText>(R.id.songContentEdit)?.also {
             it.setText(songContent.orEmpty())
             it.setOnClickListener { openInChordsEditor() }
-            it.setOnEditorActionListener { _, _, event ->
-                when (event.action) {
+            it.setOnEditorActionListener { _, _, event: KeyEvent? ->
+                when (event?.action) {
                     KeyEvent.ACTION_DOWN -> {
                         openInChordsEditor()
                         true
