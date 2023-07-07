@@ -592,4 +592,6 @@
     <string name="songcast_song_selected_by_me">Prezentujesz piosenkę:\n%s</string>
     <string name="edit_playlist_name">Zmień nazwę playlisty</string>
     <string name="drag_to_reorder_hint">Przeciągnij, aby zmienić kolejność</string>
+    <string name="songcast_copy_web_link">Skopiuj link do pokoju</string>
+    <string name="songcast_web_link_copied">Link do pokoju skopiowany. Otwórz go w przeglądarce.</string>
 </resources>

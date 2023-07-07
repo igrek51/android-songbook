@@ -531,6 +531,10 @@ class SongCastService {
         val hash2 = SongHasher().hashSong(ephemeralSongN)
         return hash1 == hash2
     }
+
+    fun getWebRoomLink(): String {
+        return "https://songbook.igrek.dev/ui/cast/${sessionCode}/spectate"
+    }
 }
 
 data class SessionState(

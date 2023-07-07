@@ -201,6 +201,12 @@ class SongCastLobbyLayout(
         uiInfoService.showInfo(R.string.songcast_code_copied)
     }
 
+    private fun copyWebRoomLink() {
+        val url = songCastService.getWebRoomLink()
+        clipboardManager.copyToSystemClipboard(url)
+        uiInfoService.showInfo(R.string.songcast_web_link_copied)
+    }
+
     private fun showMoreActions() {
         val actions = mutableListOf(
             ContextMenuBuilder.Action(R.string.songcast_exit_room) {
@@ -208,6 +214,9 @@ class SongCastLobbyLayout(
             },
             ContextMenuBuilder.Action(R.string.songcast_refresh_session_details) {
                 refreshSessionDetails()
+            },
+            ContextMenuBuilder.Action(R.string.songcast_copy_web_link) {
+                copyWebRoomLink()
             },
         )
         if (songCastService.isPresenter()) {
