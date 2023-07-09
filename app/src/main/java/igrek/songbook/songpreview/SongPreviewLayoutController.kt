@@ -36,7 +36,7 @@ import igrek.songbook.layout.MainLayout
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuCast
@@ -73,7 +73,7 @@ class SongPreviewLayoutController(
     songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
     chordDiagramsService: LazyInject<ChordDiagramsService> = appFactory.chordDiagramsService,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
     songCastService: LazyInject<SongCastService> = appFactory.songCastService,
     activityController: LazyInject<ActivityController> = appFactory.activityController,
 ) : MainLayout {
@@ -94,7 +94,7 @@ class SongPreviewLayoutController(
     private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
     private val songsRepository by LazyExtractor(songsRepository)
     private val chordsDiagramsService by LazyExtractor(chordDiagramsService)
-    private val preferencesState by LazyExtractor(preferencesState)
+    private val preferencesState by LazyExtractor(settingsState)
     private val songCastService by LazyExtractor(songCastService)
     private val activityController by LazyExtractor(activityController)
 

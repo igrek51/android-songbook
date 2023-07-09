@@ -18,7 +18,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.general.model.Song
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.system.SoftKeyboardService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 
 class AdminService(
     navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
     antechamberService: LazyInject<AntechamberService> = appFactory.antechamberService,
@@ -36,7 +36,7 @@ class AdminService(
     adminCategoryManager: LazyInject<AdminCategoryManager> = appFactory.adminCategoryManager,
 ) {
     private val navigationMenuController by LazyExtractor(navigationMenuController)
-    private val preferencesState by LazyExtractor(preferencesState)
+    private val preferencesState by LazyExtractor(settingsState)
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val antechamberService by LazyExtractor(antechamberService)

@@ -10,7 +10,7 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.playlist.Playlist
 import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.settings.language.AppLanguageService
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.favourite.FavouriteSongsService
 import java.util.Random
@@ -20,7 +20,7 @@ class RandomSongOpener(
     favouriteSongsService: LazyInject<FavouriteSongsService> = appFactory.favouriteSongsService,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     songOpener: LazyInject<SongOpener> = appFactory.songOpener,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
     appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
     playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
 ) {
@@ -28,7 +28,7 @@ class RandomSongOpener(
     private val favouriteSongsService by LazyExtractor(favouriteSongsService)
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val songOpener by LazyExtractor(songOpener)
-    private val preferencesState by LazyExtractor(preferencesState)
+    private val preferencesState by LazyExtractor(settingsState)
     private val appLanguageService by LazyExtractor(appLanguageService)
     private val playlistService by LazyExtractor(playlistService)
 

@@ -5,14 +5,14 @@ import igrek.songbook.info.UiResourceService
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 
 class SettingsEnumService(
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
 ) {
     private val uiResourceService by LazyExtractor(uiResourceService)
-    val preferencesState by LazyExtractor(preferencesState)
+    val preferencesState by LazyExtractor(settingsState)
 
     fun instrumentEntries(): LinkedHashMap<String, String> {
         val map = LinkedHashMap<String, String>()

@@ -24,7 +24,7 @@ import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.homescreen.HomeScreenEnum
 import igrek.songbook.settings.language.AppLanguageService
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.settings.sync.BackupSyncManager
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.system.LinkOpener
@@ -44,7 +44,7 @@ class AppInitializer(
     appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
     adminService: LazyInject<AdminService> = appFactory.adminService,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
     chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
     adService: LazyInject<AdService> = appFactory.adService,
     activityController: LazyInject<ActivityController> = appFactory.activityController,
@@ -64,7 +64,7 @@ class AppInitializer(
     private val appLanguageService by LazyExtractor(appLanguageService)
     private val songsRepository by LazyExtractor(songsRepository)
     private val adminService by LazyExtractor(adminService)
-    private val preferencesState by LazyExtractor(preferencesState)
+    private val preferencesState by LazyExtractor(settingsState)
     private val chordsNotationService by LazyExtractor(chordsNotationService)
     private val adService by LazyExtractor(adService)
     private val activityController by LazyExtractor(activityController)

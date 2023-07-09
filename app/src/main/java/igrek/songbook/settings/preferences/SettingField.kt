@@ -7,9 +7,7 @@ import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.DisplayStyle
 import igrek.songbook.settings.theme.FontTypeface
 
-enum class PreferencesField constructor(
-    val typeDef: PreferenceTypeDefinition<*>
-) {
+enum class SettingField constructor(val typeDef: PreferenceTypeDefinition<*>) {
 
     Fontsize(20.0f), // dp
 
@@ -172,15 +170,11 @@ enum class PreferencesField constructor(
     ;
 
     constructor(defaultValue: String) : this(StringPreferenceType(defaultValue))
-
     constructor(defaultValue: Long) : this(LongPreferenceType(defaultValue))
-
     constructor(defaultValue: Float) : this(FloatPreferenceType(defaultValue))
-
     constructor(defaultValue: Boolean) : this(BooleanPreferenceType(defaultValue))
 
     fun preferenceName(): String {
         return this.name.replaceFirstChar { it.lowercase() }
     }
-
 }

@@ -18,7 +18,7 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.settings.theme.DisplayStyle
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.scroll.AutoscrollService
@@ -29,12 +29,12 @@ class LyricsLoader(
     autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
     lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
     windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
 ) {
     private val autoscrollService by LazyExtractor(autoscrollService)
     private val lyricsThemeService by LazyExtractor(lyricsThemeService)
     private val windowManagerService by LazyExtractor(windowManagerService)
-    private val preferencesState by LazyExtractor(preferencesState)
+    private val preferencesState by LazyExtractor(settingsState)
     private val uiInfoService by LazyExtractor(appFactory.uiInfoService)
 
     private val logger = LoggerFactory.logger

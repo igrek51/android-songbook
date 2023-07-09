@@ -8,7 +8,7 @@ import igrek.songbook.layout.GlobalFocusTraverser
 import igrek.songbook.layout.LayoutController
 import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.settings.buttons.MediaButtonBehaviours
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.scroll.AutoscrollService
 
@@ -16,14 +16,14 @@ class SystemKeyDispatcher(
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
     autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
     songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
     playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
     globalFocusTraverser: LazyInject<GlobalFocusTraverser> = appFactory.globalFocusTraverser,
 ) {
     private val layoutController by LazyExtractor(layoutController)
     private val autoscrollService by LazyExtractor(autoscrollService)
     private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
-    private val preferencesState by LazyExtractor(preferencesState)
+    private val preferencesState by LazyExtractor(settingsState)
     private val playlistService by LazyExtractor(playlistService)
     private val nextFocusTraverser by LazyExtractor(globalFocusTraverser)
 

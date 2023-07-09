@@ -14,7 +14,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
 import igrek.songbook.songpreview.quickmenu.QuickMenuCast
@@ -46,7 +46,7 @@ class SongPreview(
     windowManagerService: LazyInject<WindowManagerService> = appFactory.windowManagerService,
     lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
     playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
     songCastService: LazyInject<SongCastService> = appFactory.songCastService,
     lyricsLoader: LazyInject<LyricsLoader> = appFactory.lyricsLoader,
 ) : View.OnTouchListener {
@@ -57,12 +57,12 @@ class SongPreview(
     private val windowManagerService by LazyExtractor(windowManagerService)
     private val lyricsThemeService by LazyExtractor(lyricsThemeService)
     private val playlistService by LazyExtractor(playlistService)
-    private val preferencesState by LazyExtractor(preferencesState)
+    private val preferencesState by LazyExtractor(settingsState)
     private val songCastService by LazyExtractor(songCastService)
     private val lyricsLoader by LazyExtractor(lyricsLoader)
 
     val canvas: CanvasView = CanvasView(context, onInit, ::onRepaint, onPreviewSizeChanged)
-    private var lyricsRenderer: LyricsRenderer = LyricsRenderer(this, canvas, preferencesState.get())
+    private var lyricsRenderer: LyricsRenderer = LyricsRenderer(this, canvas, settingsState.get())
     var lyricsModel: LyricsModel = LyricsModel()
         private set
     var scroll: Float = 0f

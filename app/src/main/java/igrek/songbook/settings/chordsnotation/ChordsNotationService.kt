@@ -7,17 +7,17 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.language.AppLanguageService
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import java.util.Locale
 
 class ChordsNotationService(
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
     appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
 ) {
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val appLanguageService by LazyExtractor(appLanguageService)
-    private val preferencesState by LazyExtractor(preferencesState)
+    private val preferencesState by LazyExtractor(settingsState)
 
     var chordsNotation: ChordsNotation
         get() = preferencesState.chordsNotation

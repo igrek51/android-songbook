@@ -25,7 +25,7 @@ import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.system.SoftKeyboardService
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -40,7 +40,7 @@ class EditSongLayoutController(
     chordsEditorLayoutController: LazyInject<ChordsEditorLayoutController> = appFactory.chordsEditorLayoutController,
     chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
     contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
     adminService: LazyInject<AdminService> = appFactory.adminService,
     globalFocusTraverser: LazyInject<GlobalFocusTraverser> = appFactory.globalFocusTraverser,
@@ -56,7 +56,7 @@ class EditSongLayoutController(
     private val chordsEditorLayoutController by LazyExtractor(chordsEditorLayoutController)
     private val chordsNotationService by LazyExtractor(chordsNotationService)
     private val contextMenuBuilder by LazyExtractor(contextMenuBuilder)
-    private val preferencesState by LazyExtractor(preferencesState)
+    private val preferencesState by LazyExtractor(settingsState)
     private val songsRepository by LazyExtractor(songsRepository)
     private val adminService by LazyExtractor(adminService)
     private val globalFocusTraverser by LazyExtractor(globalFocusTraverser)

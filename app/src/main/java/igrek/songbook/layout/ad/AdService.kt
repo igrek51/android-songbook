@@ -18,7 +18,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.GlobalFocusTraverser
 import igrek.songbook.layout.MainLayout
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.Dispatchers
@@ -29,12 +29,12 @@ import java.util.concurrent.TimeUnit
 @SuppressLint("CheckResult")
 class AdService(
     appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
     globalFocusTraverser: LazyInject<GlobalFocusTraverser> = appFactory.globalFocusTraverser,
     activityController: LazyInject<ActivityController> = appFactory.activityController,
 ) {
     private val activity by LazyExtractor(appCompatActivity)
-    private val preferencesState by LazyExtractor(preferencesState)
+    private val preferencesState by LazyExtractor(settingsState)
     private val globalFocusTraverser by LazyExtractor(globalFocusTraverser)
     private val activityController by LazyExtractor(activityController)
 

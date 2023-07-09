@@ -46,7 +46,7 @@ class ShowcaseVideoMaker {
         chords diagram, show Am
         Star a song
          */
-        val preferencesState = appFactory.preferencesState.get()
+        val preferencesState = appFactory.settingsState.get()
 
         preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
         preferencesState.colorScheme = ColorScheme.BRIGHT

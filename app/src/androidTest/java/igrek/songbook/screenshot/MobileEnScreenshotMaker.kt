@@ -51,7 +51,7 @@ class MobileEnScreenshotMaker {
     @Test
     fun test_01_open_bright_song() {
         // Zombie + birght theme + chords inline
-        val preferencesState = appFactory.preferencesState.get()
+        val preferencesState = appFactory.settingsState.get()
 
         preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
         preferencesState.colorScheme = ColorScheme.BRIGHT
@@ -83,7 +83,7 @@ class MobileEnScreenshotMaker {
     @Test
     fun test_02_transpose() {
         // Soldier of Fortune + tranpose + chords right
-        val preferencesState = appFactory.preferencesState.get()
+        val preferencesState = appFactory.settingsState.get()
 
         preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
         preferencesState.colorScheme = ColorScheme.BRIGHT
@@ -118,7 +118,7 @@ class MobileEnScreenshotMaker {
     @Test
     fun test_03_autoscroll() {
         // Hey There Delilah + autoscroll + chords inline
-        val preferencesState = appFactory.preferencesState.get()
+        val preferencesState = appFactory.settingsState.get()
 
         preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
         preferencesState.colorScheme = ColorScheme.BRIGHT
@@ -152,7 +152,7 @@ class MobileEnScreenshotMaker {
     @Test
     fun test_04_editor() {
         // Space Oddity in Editor
-        val preferencesState = appFactory.preferencesState.get()
+        val preferencesState = appFactory.settingsState.get()
 
         preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
         preferencesState.colorScheme = ColorScheme.BRIGHT
@@ -196,7 +196,7 @@ class MobileEnScreenshotMaker {
     @Test
     fun test_05_ukulele_diagram() {
         // Knocking on Heaven's Door + bright + Ukulele diagram
-        val preferencesState = appFactory.preferencesState.get()
+        val preferencesState = appFactory.settingsState.get()
 
         preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
         preferencesState.colorScheme = ColorScheme.BRIGHT
@@ -230,7 +230,7 @@ class MobileEnScreenshotMaker {
     @Test
     fun test_06_preview_chords_above() {
         // Hotel California + dark + chords above
-        val preferencesState = appFactory.preferencesState.get()
+        val preferencesState = appFactory.settingsState.get()
 
         preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
         preferencesState.colorScheme = ColorScheme.DARK
@@ -260,7 +260,7 @@ class MobileEnScreenshotMaker {
     @Test
     fun test_07_piano_diagram() {
         // Knocking on Heaven's Door + bright + Ukulele diagram
-        val preferencesState = appFactory.preferencesState.get()
+        val preferencesState = appFactory.settingsState.get()
 
         preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
         preferencesState.colorScheme = ColorScheme.BRIGHT
@@ -298,7 +298,7 @@ class MobileEnScreenshotMaker {
     @Test
     fun test_08_super_cow() {
         // Top songs + Super Cow
-        val preferencesState = appFactory.preferencesState.get()
+        val preferencesState = appFactory.settingsState.get()
 
         preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
         preferencesState.colorScheme = ColorScheme.DARK
@@ -338,7 +338,7 @@ class MobileEnScreenshotMaker {
     @Test
     fun test_09_settings() {
         // Settings
-        val preferencesState = appFactory.preferencesState.get()
+        val preferencesState = appFactory.settingsState.get()
 
         preferencesState.appLanguage = AppLanguage.ENGLISH // needs restart
         preferencesState.colorScheme = ColorScheme.DARK

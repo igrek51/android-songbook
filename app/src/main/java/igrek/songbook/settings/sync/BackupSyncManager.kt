@@ -33,7 +33,7 @@ import igrek.songbook.persistence.LocalFilesystem
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.preferences.PreferencesService
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.system.filesystem.saveInputStreamToFile
 import igrek.songbook.util.formatTimestampDate
 import igrek.songbook.util.formatTimestampTime
@@ -56,7 +56,7 @@ class BackupSyncManager(
     activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,
     exportFileChooser: LazyInject<ExportFileChooser> = appFactory.exportFileChooser,
     importFileChooser: LazyInject<ImportFileChooser> = appFactory.importFileChooser,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
 ) {
     private val activity by LazyExtractor(appCompatActivity)
     private val uiInfoService by LazyExtractor(uiInfoService)
@@ -68,7 +68,7 @@ class BackupSyncManager(
     private val activityResultDispatcher by LazyExtractor(activityResultDispatcher)
     private val exportFileChooser by LazyExtractor(exportFileChooser)
     private val importFileChooser by LazyExtractor(importFileChooser)
-    private val preferencesState by LazyExtractor(preferencesState)
+    private val preferencesState by LazyExtractor(settingsState)
 
     private val oldSyncFiles = listOf(
         "files/customsongs.1.json",

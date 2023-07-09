@@ -19,7 +19,7 @@ import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.persistence.repository.AllSongsRepository
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.language.AppLanguageService
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.songselection.SongClickListener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.listview.LazySongListView
@@ -38,7 +38,7 @@ class PlaylistFillLayoutController(
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
     songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
     softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
     appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
     playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
@@ -48,7 +48,7 @@ class PlaylistFillLayoutController(
     private val songsRepository by LazyExtractor(songsRepository)
     private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
-    private val preferencesState by LazyExtractor(preferencesState)
+    private val preferencesState by LazyExtractor(settingsState)
     private val appLanguageService by LazyExtractor(appLanguageService)
     private val playlistService by LazyExtractor(playlistService)
     private val uiInfoService by LazyExtractor(uiInfoService)

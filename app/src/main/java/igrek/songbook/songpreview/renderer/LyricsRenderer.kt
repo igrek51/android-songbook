@@ -5,7 +5,7 @@ import android.os.Build
 import igrek.songbook.chords.model.LyricsLine
 import igrek.songbook.chords.model.LyricsModel
 import igrek.songbook.chords.model.LyricsTextType
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.DisplayStyle
 import igrek.songbook.songpreview.renderer.canvas.Align
@@ -15,7 +15,7 @@ import igrek.songbook.util.limitBetween
 class LyricsRenderer internal constructor(
     private val songPreview: SongPreview,
     private val canvas: CanvasView,
-    private val preferencesState: PreferencesState,
+    private val settingsState: SettingsState,
 ) {
     private val w: Float get() = canvas.w.toFloat()
     private val h: Float get() = canvas.h.toFloat()
@@ -34,12 +34,12 @@ class LyricsRenderer internal constructor(
     private var castFocusZoneColor: Int
 
     init {
-        val typefaceFamily = preferencesState.fontTypeface.typeface
+        val typefaceFamily = settingsState.fontTypeface.typeface
         normalTypeface = Typeface.create(typefaceFamily, Typeface.NORMAL)
         boldTypeface = Typeface.create(typefaceFamily, Typeface.BOLD)
         italicTypeface = Typeface.create(typefaceFamily, Typeface.ITALIC)
 
-        val colorScheme = preferencesState.colorScheme
+        val colorScheme = settingsState.colorScheme
         textColor = when (colorScheme) {
             ColorScheme.DARK -> 0xffffff
             ColorScheme.BRIGHT -> 0x000000
@@ -88,8 +88,8 @@ class LyricsRenderer internal constructor(
 
         drawScrollBars()
         if (songPreview.isCastPresentingSlides)
-            drawCastPresenterFocusZone(lineheightPx, songPreview.scroll, preferencesState.castScrollControl.slideLines)
-        if (preferencesState.autoscrollShowEyeFocus)
+            drawCastPresenterFocusZone(lineheightPx, songPreview.scroll, settingsState.castScrollControl.slideLines)
+        if (settingsState.autoscrollShowEyeFocus)
             drawEyeFocusZone(lineheightPx)
         drawFileContent(lyricsModel, fontsizePx, lineheightPx)
 
@@ -99,7 +99,7 @@ class LyricsRenderer internal constructor(
     }
 
     private fun drawBackground() {
-        val backgroundColor = when (preferencesState.colorScheme) {
+        val backgroundColor = when (settingsState.colorScheme) {
             ColorScheme.DARK -> 0x000000
             ColorScheme.BRIGHT -> 0xf0f0f0
         }
@@ -124,7 +124,7 @@ class LyricsRenderer internal constructor(
     ) {
         val y = when (songPreview.isCastPresentingSlides) {
             false -> lineheight * lineIndex - scroll
-            true -> lineheight * lineIndex - scroll + h / 2 - preferencesState.castScrollControl.slideLines * lineheight / 2
+            true -> lineheight * lineIndex - scroll + h / 2 - settingsState.castScrollControl.slideLines * lineheight / 2
         }
         if (y > h) return
         if (y + lineheight < 0) return
@@ -154,7 +154,7 @@ class LyricsRenderer internal constructor(
                 LyricsTextType.CHORDS -> {
                     canvas.setFontTypeface(boldTypeface)
                     canvas.setColor(chordColor)
-                    val x = if (preferencesState.chordsDisplayStyle == DisplayStyle.ChordsAlignedRight) {
+                    val x = if (settingsState.chordsDisplayStyle == DisplayStyle.ChordsAlignedRight) {
                         fragment.x * fontsize - songPreview.scrollThickness - scrollX
                     } else {
                         fragment.x * fontsize - scrollX
@@ -189,7 +189,7 @@ class LyricsRenderer internal constructor(
         canvas.fillRect(w - scrollThickness, top * h, w, bottom * h)
 
         //horizontal scrollbar
-        if (preferencesState.horizontalScroll) {
+        if (settingsState.horizontalScroll) {
             val maxScrollX = songPreview.maxScrollX
             if (maxScrollX > 0) {
                 val scrollX = canvas.scrollX
@@ -345,7 +345,7 @@ class LyricsRenderer internal constructor(
                 LyricsTextType.CHORDS -> {
                     canvas.setFontTypeface(boldTypeface)
                     canvas.setColor(chordColor, alpha)
-                    val x = if (preferencesState.chordsDisplayStyle == DisplayStyle.ChordsAlignedRight) {
+                    val x = if (settingsState.chordsDisplayStyle == DisplayStyle.ChordsAlignedRight) {
                         fragment.x * fontsize - songPreview.scrollThickness - scrollX
                     } else {
                         fragment.x * fontsize - scrollX

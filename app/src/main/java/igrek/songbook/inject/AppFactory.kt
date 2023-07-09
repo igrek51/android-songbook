@@ -2,7 +2,6 @@ package igrek.songbook.inject
 
 import android.app.Activity
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import igrek.songbook.about.AboutLayoutController
 import igrek.songbook.about.WebviewLayoutController
@@ -70,8 +69,7 @@ import igrek.songbook.settings.enums.SettingsEnumService
 import igrek.songbook.settings.homescreen.HomeScreenEnumService
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.PreferencesService
-import igrek.songbook.settings.preferences.PreferencesState
-import igrek.songbook.settings.preferences.SharedPreferencesService
+import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.settings.sync.BackupSyncManager
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.SongDetailsService
@@ -111,8 +109,6 @@ class AppFactory(
 
     val context: LazyInject<Context> = SingletonInject { _activity!!.applicationContext }
     val logger: LazyInject<Logger> = PrototypeInject { LoggerFactory.logger }
-    val sharedPreferences: LazyInject<SharedPreferences> =
-        PrototypeInject { SharedPreferencesService.sharedPreferencesCreator(_activity!!) }
 
     /* Services */
     val activityData = SingletonInject { MainActivityData() }
@@ -157,7 +153,7 @@ class AppFactory(
     val favouriteSongsService = SingletonInject { FavouriteSongsService() }
     val favouritesLayoutController = SingletonInject { FavouritesLayoutController() }
     val chordsNotationService = SingletonInject { ChordsNotationService() }
-    val preferencesState = SingletonInject { PreferencesState() }
+    val settingsState = SingletonInject { SettingsState() }
     val lyricsThemeService = SingletonInject { LyricsThemeService() }
     val customSongsListLayoutController = SingletonInject { CustomSongsListLayoutController() }
     val songContextMenuBuilder = SingletonInject { SongContextMenuBuilder() }

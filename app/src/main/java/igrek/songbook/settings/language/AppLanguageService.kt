@@ -8,7 +8,7 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.user.UserDataDao
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -16,12 +16,12 @@ import java.util.*
 class AppLanguageService(
     activity: LazyInject<Activity> = appFactory.activity,
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
     userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
 ) {
     private val activity by LazyExtractor(activity)
     private val uiResourceService by LazyExtractor(uiResourceService)
-    private val preferencesState by LazyExtractor(preferencesState)
+    private val preferencesState by LazyExtractor(settingsState)
     private val userDataDao by LazyExtractor(userDataDao)
 
     var selectedSongLanguages: Set<SongLanguage>

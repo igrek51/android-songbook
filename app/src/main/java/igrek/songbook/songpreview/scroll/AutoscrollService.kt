@@ -13,7 +13,7 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.playlist.PlaylistService
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.renderer.SongPreview
 import igrek.songbook.util.cutOffMin
@@ -28,13 +28,13 @@ class AutoscrollService(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
     playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val songPreviewController by LazyExtractor(songPreviewLayoutController)
     private val playlistService by LazyExtractor(playlistService)
-    private val preferencesState by LazyExtractor(preferencesState)
+    private val preferencesState by LazyExtractor(settingsState)
     private val songsRepository by LazyExtractor(songsRepository)
 
     var autoscrollSpeed: Float // [em / s]

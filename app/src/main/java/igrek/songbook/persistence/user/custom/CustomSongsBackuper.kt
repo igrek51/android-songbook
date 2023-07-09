@@ -11,7 +11,7 @@ import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.persistence.LocalFilesystem
 import igrek.songbook.persistence.user.UserDataDao
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.system.filesystem.copyFile
 import igrek.songbook.util.formatTodayDate
 import igrek.songbook.util.parseDate
@@ -25,12 +25,12 @@ class CustomSongsBackuper(
     localFilesystem: LazyInject<LocalFilesystem> = appFactory.localFilesystem,
     userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
 ) {
     private val localFilesystem by LazyExtractor(localFilesystem)
     private val userDataDao by LazyExtractor(userDataDao)
     private val uiInfoService by LazyExtractor(uiInfoService)
-    private val preferencesState by LazyExtractor(preferencesState)
+    private val preferencesState by LazyExtractor(settingsState)
 
     private val logger = LoggerFactory.logger
 

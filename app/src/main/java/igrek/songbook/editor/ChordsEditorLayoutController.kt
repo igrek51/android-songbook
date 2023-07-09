@@ -28,7 +28,7 @@ import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.settings.theme.FontTypeface
 import igrek.songbook.system.SoftKeyboardService
 
@@ -41,7 +41,7 @@ class ChordsEditorLayoutController(
     editSongLayoutController: LazyInject<EditSongLayoutController> = appFactory.editSongLayoutController,
     softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
     contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
     webviewLayoutController: LazyInject<WebviewLayoutController> = appFactory.webviewLayoutController,
 ) : MainLayout {
     private val layoutController by LazyExtractor(layoutController)
@@ -52,7 +52,7 @@ class ChordsEditorLayoutController(
     private val editSongLayoutController by LazyExtractor(editSongLayoutController)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
     private val contextMenuBuilder by LazyExtractor(contextMenuBuilder)
-    private val preferencesState by LazyExtractor(preferencesState)
+    private val preferencesState by LazyExtractor(settingsState)
     private val webviewLayoutController by LazyExtractor(webviewLayoutController)
 
     private var contentEdit: EditText? = null

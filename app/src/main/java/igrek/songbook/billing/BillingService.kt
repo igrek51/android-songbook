@@ -13,7 +13,7 @@ import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.ad.AdService
 import igrek.songbook.settings.preferences.PreferencesService
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -29,7 +29,7 @@ const val PRODUCT_ID_DONATE_1_BEER = "donate_1_beer"
 class BillingService(
     activity: LazyInject<Activity> = appFactory.activity,
     context: LazyInject<Context> = appFactory.context,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
     preferencesService: LazyInject<PreferencesService> = appFactory.preferencesService,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     adService: LazyInject<AdService> = appFactory.adService,
@@ -37,7 +37,7 @@ class BillingService(
 
     private val activity by LazyExtractor(activity)
     private val context by LazyExtractor(context)
-    private val preferencesState by LazyExtractor(preferencesState)
+    private val preferencesState by LazyExtractor(settingsState)
     private val preferencesService by LazyExtractor(preferencesService)
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val adService by LazyExtractor(adService)

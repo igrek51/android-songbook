@@ -38,7 +38,7 @@ import igrek.songbook.persistence.user.custom.CustomSongsDb
 import igrek.songbook.settings.enums.CustomSongsOrdering
 import igrek.songbook.settings.enums.SettingsEnumService
 import igrek.songbook.settings.language.AppLanguageService
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.listview.ListScrollPosition
@@ -66,7 +66,7 @@ class CustomSongsListLayoutController(
     songImportFileChooser: LazyInject<SongImportFileChooser> = appFactory.songImportFileChooser,
     settingsEnumService: LazyInject<SettingsEnumService> = appFactory.settingsEnumService,
     softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
     editorSessionService: LazyInject<EditorSessionService> = appFactory.editorSessionService,
 ) : InflatedLayout(
     _layoutResourceId = R.layout.screen_custom_songs
@@ -83,7 +83,7 @@ class CustomSongsListLayoutController(
     private val songImportFileChooser by LazyExtractor(songImportFileChooser)
     private val settingsEnumService by LazyExtractor(settingsEnumService)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
-    private val preferencesState by LazyExtractor(preferencesState)
+    private val preferencesState by LazyExtractor(settingsState)
     private val editorSessionService by LazyExtractor(editorSessionService)
 
     private var itemsListView: CustomSongListView? = null

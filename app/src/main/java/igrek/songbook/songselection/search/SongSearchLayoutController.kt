@@ -20,7 +20,7 @@ import igrek.songbook.persistence.repository.AllSongsRepository
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.send.SendMessageService
 import igrek.songbook.settings.language.AppLanguageService
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.SongClickListener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
@@ -43,7 +43,7 @@ class SongSearchLayoutController(
     softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
     songTreeLayoutController: LazyInject<SongTreeLayoutController> = appFactory.songTreeLayoutController,
     sendMessageService: LazyInject<SendMessageService> = appFactory.sendMessageService,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
     appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
 ) : InflatedLayout(
     _layoutResourceId = R.layout.screen_song_search
@@ -54,7 +54,7 @@ class SongSearchLayoutController(
     private val softKeyboardService by LazyExtractor(softKeyboardService)
     private val songTreeLayoutController by LazyExtractor(songTreeLayoutController)
     private val sendMessageService by LazyExtractor(sendMessageService)
-    private val preferencesState by LazyExtractor(preferencesState)
+    private val preferencesState by LazyExtractor(settingsState)
     private val appLanguageService by LazyExtractor(appLanguageService)
 
     private var itemsListView: LazySongListView? = null

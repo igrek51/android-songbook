@@ -43,7 +43,7 @@ import igrek.songbook.inject.appFactory
 // Singleton
 class QuickMenuCast {
     val songCastService by LazyExtractor(appFactory.songCastService)
-    val preferencesState by LazyExtractor(appFactory.preferencesState)
+    val preferencesState by LazyExtractor(appFactory.settingsState)
     val songPreviewLayoutController by LazyExtractor(appFactory.songPreviewLayoutController)
 
     val state = QuickMenuCastState()

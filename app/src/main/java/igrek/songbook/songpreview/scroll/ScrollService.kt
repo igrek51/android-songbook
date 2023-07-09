@@ -31,7 +31,7 @@ class ScrollService(
     songCastService: LazyInject<SongCastService> = appFactory.songCastService,
 ) {
     private val songCastService by LazyExtractor(songCastService)
-    private val preferencesState by LazyExtractor(appFactory.preferencesState)
+    private val preferencesState by LazyExtractor(appFactory.settingsState)
 
     private val logger: Logger = LoggerFactory.logger
     private val scrollSubject = PublishSubject.create<Float>()

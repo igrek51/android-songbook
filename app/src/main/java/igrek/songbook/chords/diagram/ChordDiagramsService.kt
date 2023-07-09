@@ -31,7 +31,7 @@ import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.settings.chordsnotation.ChordsNotation
 import igrek.songbook.settings.chordsnotation.ChordsNotationService
 import igrek.songbook.settings.enums.ChordsInstrument
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.system.SoftKeyboardService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -43,7 +43,7 @@ class ChordDiagramsService(
     contextMenuBuilder: LazyInject<ContextMenuBuilder> = appFactory.contextMenuBuilder,
     activity: LazyInject<Activity> = appFactory.activity,
     chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
     softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
@@ -51,7 +51,7 @@ class ChordDiagramsService(
     private val contextMenuBuilder by LazyExtractor(contextMenuBuilder)
     private val activity by LazyExtractor(activity)
     private val chordsNotationService by LazyExtractor(chordsNotationService)
-    private val preferencesState by LazyExtractor(preferencesState)
+    private val preferencesState by LazyExtractor(settingsState)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
 
     fun showLyricsChordsMenu(lyrics: LyricsModel) {

@@ -29,7 +29,7 @@ import igrek.songbook.settings.homescreen.HomeScreenEnum
 import igrek.songbook.settings.homescreen.HomeScreenEnumService
 import igrek.songbook.settings.language.AppLanguage
 import igrek.songbook.settings.language.AppLanguageService
-import igrek.songbook.settings.preferences.PreferencesState
+import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.settings.sync.BackupSyncManager
 import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.DisplayStyle
@@ -46,7 +46,7 @@ class SettingsFragment(
     lyricsThemeService: LazyInject<LyricsThemeService> = appFactory.lyricsThemeService,
     appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
     chordsNotationService: LazyInject<ChordsNotationService> = appFactory.chordsNotationService,
-    preferencesState: LazyInject<PreferencesState> = appFactory.preferencesState,
+    settingsState: LazyInject<SettingsState> = appFactory.settingsState,
     backupSyncManager: LazyInject<BackupSyncManager> = appFactory.backupSyncManager,
     mediaButtonService: LazyInject<MediaButtonService> = appFactory.mediaButtonService,
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
@@ -58,7 +58,7 @@ class SettingsFragment(
     private val lyricsThemeService by LazyExtractor(lyricsThemeService)
     private val appLanguageService by LazyExtractor(appLanguageService)
     private val chordsNotationService by LazyExtractor(chordsNotationService)
-    private val preferencesState by LazyExtractor(preferencesState)
+    private val preferencesState by LazyExtractor(settingsState)
     private val backupSyncManager by LazyExtractor(backupSyncManager)
     private val mediaButtonService by LazyExtractor(mediaButtonService)
     private val layoutController by LazyExtractor(layoutController)
