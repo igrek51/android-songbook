@@ -204,7 +204,7 @@
     <string name="song_already_on_playlist" formatted="false">Piosenka \"%s\" jest już na playliście \"%s\"</string>
     <string name="action_remove_from_this_playlist">🚫 Usuń z tej playlisty</string>
     <string name="song_is_not_on_playlist">Piosenka nie należy do playlisty</string>
-    <string name="song_removed_from_playlist" formatted="false">Usunięto piosenkę \"%s\" z playlisty \"%s\"</string>
+    <string name="song_removed_from_playlist" formatted="false">Usunięto \"%s\" z playlisty \"%s\"</string>
     <string name="remove_playlist">❌ Usuń playlistę</string>
     <string name="confirm_remove_playlist">Czy na pewno chcesz usunąć playlistę?</string>
     <string name="rename_playlist">✏️ Zmień nazwę</string>

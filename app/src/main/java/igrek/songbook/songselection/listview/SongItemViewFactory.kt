@@ -101,7 +101,7 @@ class SongItemViewFactory(
         playlistService.addPlaylistSongSubject
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ (it_song: Song, it_added: Boolean) ->
-                if (song == it_song && itemPlaylistAddSongButton.isVisible) {
+                if (song == it_song) {
                     itemPlaylistAddSongButton.visibility = when(it_added) {
                         true -> View.GONE
                         false -> View.VISIBLE

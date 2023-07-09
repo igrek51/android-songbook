@@ -217,7 +217,7 @@
     <string name="song_already_on_playlist" formatted="false">\"%s\" is already added to playlist \"%s\"</string>
     <string name="action_remove_from_this_playlist">🚫 Remove from this playlist</string>
     <string name="song_is_not_on_playlist">Song is not on a playlist</string>
-    <string name="song_removed_from_playlist" formatted="false">Song \"%s\" has been removed from playlist \"%s\"</string>
+    <string name="song_removed_from_playlist" formatted="false">\"%s\" removed from playlist \"%s\"</string>
     <string name="remove_playlist">❌ Delete playlist</string>
     <string name="confirm_remove_playlist">Do you really want to remove this playlist?</string>
     <string name="rename_playlist">✏️ Rename playlist</string>
