@@ -623,6 +623,6 @@
     <string name="songcast_song_selected_by_me">You\'re presenting a song:\n%s</string>
     <string name="edit_playlist_name">Rename playlist</string>
     <string name="drag_to_reorder_hint">Drag to reorder</string>
-    <string name="songcast_copy_web_link">Copy room link</string>
+    <string name="songcast_copy_web_link">📋 Copy room link</string>
     <string name="songcast_web_link_copied">Room link copied to clipboard. Open it in a browser.</string>
 </resources>

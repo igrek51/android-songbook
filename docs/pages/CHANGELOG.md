@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- You can join **Song Cast** room in a **web browser** to spectate the presented song.
+  Copy the room link from the app, share it and open in a browser on a different device.
+  It works best with **Slides mode** enabled on a presenter device.
+
+### Fixed
+- Optimized Jetpack Compose layouts.
+- Optimized reordering list on a playlist view.
+- Fixed 2 stability issues.
 
 ## [1.35.5] - 1903 - 2023-06-07
 ### Added
