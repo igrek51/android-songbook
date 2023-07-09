@@ -45,6 +45,7 @@ import kotlin.math.roundToInt
 class ItemsContainer<T>(
     var items: MutableList<T> = mutableListOf(),
     val modifiedMap: MutableMap<Int, MutableState<Long>> = mutableMapOf(),
+    val modifiedAll: MutableState<Long> = mutableStateOf(0),
 ) {
     fun replaceAll(newList: MutableList<T>) {
         items = newList
@@ -53,6 +54,7 @@ class ItemsContainer<T>(
                 modifiedMap[index] = mutableStateOf(0)
             }
         }
+        modifiedAll.value += 1
     }
 
     fun notifyItemChange(index: Int) {
@@ -105,20 +107,23 @@ fun <T> ReorderListView(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
-            .onGloballyPositioned { coordinates: LayoutCoordinates ->
-                parentViewportHeight.value = coordinates.parentLayoutCoordinates?.size?.height?.toFloat() ?: 0f
-            },
-    ) {
-        ReorderListColumn(
-            itemsContainer,
-            isDragging, isDragTargetFirst, isDraggingMes, isDragTargetMes,
-            itemHeights, itemAnimatedOffsets,
-            scrollDiff, reorderButtonModifiers, itemContent,
-        )
+    key(itemsContainer.modifiedAll.value) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .onGloballyPositioned { coordinates: LayoutCoordinates ->
+                    parentViewportHeight.value =
+                        coordinates.parentLayoutCoordinates?.size?.height?.toFloat() ?: 0f
+                },
+        ) {
+            ReorderListColumn(
+                itemsContainer,
+                isDragging, isDragTargetFirst, isDraggingMes, isDragTargetMes,
+                itemHeights, itemAnimatedOffsets,
+                scrollDiff, reorderButtonModifiers, itemContent,
+            )
+        }
     }
 }
 

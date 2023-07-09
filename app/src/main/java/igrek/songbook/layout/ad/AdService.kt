@@ -79,14 +79,15 @@ class AdService(
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun bannerToBeDisplayed(currentLayout: MainLayout): Boolean {
         return when {
             BuildConfig.DEBUG && hideAdsOnDebug -> false
-            //SongPreviewLayoutController::class.isInstance(currentLayout) -> false
-            //ChordsEditorLayoutController::class.isInstance(currentLayout) -> false
             preferencesState.adsStatus == 1L -> false
             preferencesState.purchasedAdFree -> false
             activityController.isAndroidTv() -> false
+            //SongPreviewLayoutController::class.isInstance(currentLayout) -> false
+            //ChordsEditorLayoutController::class.isInstance(currentLayout) -> false
             else -> true
         }
     }

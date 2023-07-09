@@ -31,13 +31,14 @@ class PlaylistService(
     private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
 
     var currentPlaylist: Playlist? = null
-    var addPlaylistSongSubject: PublishSubject<Song> = PublishSubject.create()
+    var addPlaylistSongSubject: PublishSubject<Pair<Song, Boolean>> = PublishSubject.create()
 
     fun addNewPlaylist(onSuccess: (Playlist) -> Unit = {}) {
         InputDialogBuilder().input(R.string.new_playlist_name, null) { name ->
             if (name.isNotBlank()) {
                 val playlist = Playlist(0, name)
                 songsRepository.playlistDao.savePlaylist(playlist)
+                uiInfoService.showInfo(R.string.playlist_created, name)
                 onSuccess(playlist)
             }
         }
@@ -82,7 +83,7 @@ class PlaylistService(
     fun addSongToCurrentPlaylist(song: Song) {
         currentPlaylist?.let { currentPlaylist ->
             addSongToPlaylist(currentPlaylist, song)
-            addPlaylistSongSubject.onNext(song)
+            addPlaylistSongSubject.onNext(song to true)
         } ?: kotlin.run {
             uiInfoService.showInfo(R.string.playlist_not_selected)
         }
@@ -93,6 +94,20 @@ class PlaylistService(
             removeFromPlaylist(song, currentPlaylist)
         } ?: kotlin.run {
             uiInfoService.showInfo(R.string.song_is_not_on_playlist)
+        }
+    }
+
+    fun toggleSongInCurrentPlaylist(song: Song) {
+        currentPlaylist?.let { currentPlaylist ->
+            if (songsRepository.playlistDao.isSongOnPlaylist(song, currentPlaylist)) {
+                removeFromPlaylist(song, currentPlaylist)
+                addPlaylistSongSubject.onNext(song to false)
+            } else {
+                addSongToPlaylist(currentPlaylist, song)
+                addPlaylistSongSubject.onNext(song to true)
+            }
+        } ?: kotlin.run {
+            uiInfoService.showInfo(R.string.playlist_not_selected)
         }
     }
 

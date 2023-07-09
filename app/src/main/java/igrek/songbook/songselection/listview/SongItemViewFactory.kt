@@ -11,6 +11,7 @@ import androidx.core.view.isVisible
 import igrek.songbook.R
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.appFactory
+import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.playlist.PlaylistFillItem
 import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
@@ -88,22 +89,26 @@ class SongItemViewFactory(
         itemSongTitleLabel.text = song.displayName()
 
         val itemPlaylistAddSongButton = itemView.findViewById<ImageButton>(R.id.itemPlaylistAddSongButton)
+        itemPlaylistAddSongButton.setOnClickListener {
+            playlistService.addSongToCurrentPlaylist(song)
+        }
         if (playlistService.isSongOnCurrentPlaylist(song)) {
             itemPlaylistAddSongButton.visibility = View.GONE
         } else {
             itemPlaylistAddSongButton.visibility = View.VISIBLE
-            itemPlaylistAddSongButton.setOnClickListener {
-                playlistService.addSongToCurrentPlaylist(song)
-            }
-
-            playlistService.addPlaylistSongSubject
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    if (song == it && itemPlaylistAddSongButton.isVisible) {
-                        itemPlaylistAddSongButton.visibility = View.GONE
-                    }
-                }, UiErrorHandler::handleError)
         }
+
+        playlistService.addPlaylistSongSubject
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ (it_song: Song, it_added: Boolean) ->
+                if (song == it_song && itemPlaylistAddSongButton.isVisible) {
+                    itemPlaylistAddSongButton.visibility = when(it_added) {
+                        true -> View.GONE
+                        false -> View.VISIBLE
+                    }
+                }
+            }, UiErrorHandler::handleError)
+
         return itemView
     }
 }

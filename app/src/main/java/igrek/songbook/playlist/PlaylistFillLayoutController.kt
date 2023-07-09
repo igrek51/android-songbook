@@ -188,7 +188,7 @@ class PlaylistFillLayoutController(
     }
 
     override fun onSongItemClick(item: SongTreeItem) {
-        playlistService.addSongToCurrentPlaylist(item.song!!)
+        playlistService.toggleSongInCurrentPlaylist(item.song!!)
     }
 
     override fun onSongItemLongClick(item: SongTreeItem) {

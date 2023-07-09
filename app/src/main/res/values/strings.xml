@@ -625,4 +625,5 @@
     <string name="drag_to_reorder_hint">Drag to reorder</string>
     <string name="songcast_copy_web_link">📋 Copy room link</string>
     <string name="songcast_web_link_copied">Room link copied to clipboard. Open it in a browser.</string>
+    <string name="playlist_created">Playlist created: %s</string>
 </resources>
