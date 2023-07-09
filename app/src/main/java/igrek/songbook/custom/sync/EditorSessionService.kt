@@ -84,6 +84,7 @@ class EditorSessionService(
         val currentRemoteHash = session.current_hash
         val lastLocalHash = songsRepository.customSongsDao.customSongs.syncSessionData.lastLocalHash
         val lastRemoteHash = songsRepository.customSongsDao.customSongs.syncSessionData.lastRemoteHash
+        val localIdToRemoteMap = songsRepository.customSongsDao.customSongs.syncSessionData.localIdToRemoteMap
 
         val localChanged = currentLocalHash != lastLocalHash
         val remoteChanged = currentRemoteHash != lastRemoteHash
@@ -91,6 +92,7 @@ class EditorSessionService(
         when {
             remoteSongs.isEmpty() -> { // don't update local, push to remote. Local version is already latest.
                 logger.info("Sync: empty remote")
+                localIdToRemoteMap.clear()
                 synchronizeStep4Push(session, localSongs, remoteSongs)
             }
             localChanged && remoteChanged -> {
@@ -121,11 +123,13 @@ class EditorSessionService(
         val pushSongs: MutableList<EditorSongDto> = mutableListOf()
         localSongs.forEach { localSong: CustomSong ->
             val localId = localSong.id
-            val remoteSongId = localIdToRemoteMap[localId] ?: run {
+            var remoteSongId: String? = localIdToRemoteMap[localId]
+            // no mapping or obsolete mapping
+            if (remoteSongId == null || remoteSongs.none { it.id == remoteSongId }) {
                 val newId = deviceIdProvider.newUUID()
                 localIdToRemoteMap[localId] = newId
                 logger.debug("assigned new remote ID to local-remote song mapping: $localId -> $newId")
-                newId
+                remoteSongId = newId
             }
 
             val pushSong = EditorSongDto.fromLocalSong(localSong, remoteSongId)
@@ -178,6 +182,7 @@ class EditorSessionService(
 
         split.localOnly.forEach { localOne ->
             deleteSongFromRemote(localOne)
+            localIdToRemoteMap.remove(localOne.id)
         }
 
         split.remoteOnly.forEach { remoteOne ->
@@ -274,7 +279,7 @@ class EditorSessionService(
 
     private fun createSongFromRemote(remoteOne: EditorSongDto): CustomSong {
         val localSong = CustomSong(
-            id = "0",
+            id = DeviceIdProvider().newUUID(),
             title = remoteOne.title,
             categoryName = remoteOne.artist,
             content = remoteOne.content,
@@ -364,16 +369,21 @@ class EditorSessionService(
         val remoteSongsById: MutableMap<String, EditorSongDto> = remoteSongs.associateBy { remoteIdSelector(it) }.toMutableMap()
 
         localSongs.forEach { localE ->
-            val localKey = localKeySelector(localE)
-            val remoteId = localIdToRemoteMap[localIdSelector(localE)]
-            if (remoteId in remoteSongsById) {
+            val localKey: String = localKeySelector(localE)
+            val localId: String = localIdSelector(localE)
+            val remoteId: String? = localIdToRemoteMap[localId]
+            if (remoteId != null && remoteId !in remoteSongsById) { // obsolete mapping entry
+                localIdToRemoteMap.remove(localId)
+            }
+            if (remoteId in remoteSongsById) { // match by ID
                 val remoteE = remoteSongsById[remoteId]!!
                 val commonPair = localE to remoteE
                 remoteSongsById.remove(remoteIdSelector(remoteE))
                 split.common.add(commonPair)
-            } else if (localKey in remoteSongsByKey) {
+            } else if (localKey in remoteSongsByKey) { // match by title & artist
                 val remoteE = remoteSongsByKey[localKey]!!
                 val commonPair = localE to remoteE
+                localIdToRemoteMap[localId] = remoteIdSelector(remoteE)
                 remoteSongsById.remove(remoteIdSelector(remoteE))
                 split.common.add(commonPair)
             } else {
