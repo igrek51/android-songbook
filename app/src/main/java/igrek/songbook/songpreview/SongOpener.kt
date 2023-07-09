@@ -40,8 +40,8 @@ open class SongOpener(
     fun openSongPreview(
         song: Song,
         playlist: Playlist? = null,
-        onInit: (() -> Unit)? = null,
         isRandom: Boolean = false,
+        onInit: (() -> Unit)? = null,
     ) {
         logger.info("Opening song: $song")
         playlistService.currentPlaylist = playlist

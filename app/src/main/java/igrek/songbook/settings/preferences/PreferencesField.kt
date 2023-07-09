@@ -167,6 +167,8 @@ enum class PreferencesField constructor(
         )
     ),
 
+    SwipeToRandomizeAgain(true),
+
     ;
 
     constructor(defaultValue: String) : this(StringPreferenceType(defaultValue))

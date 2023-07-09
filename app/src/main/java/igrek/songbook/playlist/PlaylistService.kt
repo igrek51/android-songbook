@@ -158,11 +158,11 @@ class PlaylistService(
             return false
         val nextIndex = songIndex + next
         if (nextIndex < 0) {
-            uiInfoService.showToast(R.string.playlist_at_beginning)
+            uiInfoService.showInfo(R.string.playlist_at_beginning)
             return false
         }
         if (nextIndex >= playlist.songs.size) {
-            uiInfoService.showToast(R.string.playlist_at_end)
+            uiInfoService.showInfo(R.string.playlist_at_end)
             return false
         }
         val nextPlaylistSong = playlist.songs[nextIndex]

@@ -628,7 +628,9 @@
     <string name="playlist_created">Playlist created: %s</string>
     <string name="next_playlist_song_opened">Next song from the playlist</string>
     <string name="previous_playlist_song_opened">Previous song from the playlist</string>
-    <string name="opened_a_random_song">Random song was drawn</string>
+    <string name="opened_a_random_song">Here\'s a random song</string>
     <string name="opened_a_random_song_from_playlist">Random song from the playlist</string>
     <string name="opened_a_random_song_from_favourites">Random song from liked songs</string>
+    <string name="settings_swipe_to_randomize_again">Swipe left to shuffle again</string>
+    <string name="settings_swipe_to_randomize_again_hint">Make \"swipe left\" gesture on the song view to shuffle a random song again (if there\'s no open playlist).</string>
 </resources>

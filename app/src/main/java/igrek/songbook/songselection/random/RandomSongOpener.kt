@@ -48,7 +48,7 @@ class RandomSongOpener(
             return false
         }
 
-        songOpener.openSongPreview(randomSong, playlist = playlist)
+        songOpener.openSongPreview(randomSong, playlist = playlist, isRandom = true)
 
         val messageResId = when {
             playlist != null -> R.string.opened_a_random_song_from_playlist

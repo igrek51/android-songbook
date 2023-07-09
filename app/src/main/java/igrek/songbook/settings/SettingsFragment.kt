@@ -227,6 +227,13 @@ class SettingsFragment(
             }
         )
 
+        setupSwitchPreference("swipeToRandomizeAgain",
+            onLoad = { preferencesState.swipeToRandomizeAgain },
+            onSave = { value: Boolean ->
+                preferencesState.swipeToRandomizeAgain = value
+            }
+        )
+
         setupMultiListPreference("filterLanguages",
             appLanguageService.languageFilterEntries(),
             onLoad = {

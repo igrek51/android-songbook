@@ -61,6 +61,7 @@ class PreferencesState(
     var lastAppVersionCode: Long by PreferenceDelegate(PreferencesField.LastAppVersionCode)
     var saveCustomSongsBackups: Boolean by PreferenceDelegate(PreferencesField.SaveCustomSongsBackups)
     var castScrollControl: CastScrollControl by PreferenceDelegate(PreferencesField.CastScrollControl)
+    var swipeToRandomizeAgain: Boolean by PreferenceDelegate(PreferencesField.SwipeToRandomizeAgain)
 
 }
 

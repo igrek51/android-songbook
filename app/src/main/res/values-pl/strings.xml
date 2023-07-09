@@ -600,4 +600,6 @@
     <string name="opened_a_random_song">Piosenka wylosowana.</string>
     <string name="opened_a_random_song_from_playlist">Losowa piosenka z playlisty</string>
     <string name="opened_a_random_song_from_favourites">Losowa piosenka z ulubionych</string>
+    <string name="settings_swipe_to_randomize_again">Przesuń w lewo, aby wylosować ponownie</string>
+    <string name="settings_swipe_to_randomize_again_hint">Gest \"machnięcia w lewo\" w widoku piosenki ponownie wylosuje utwór (jeśli nie ma otwartej playlisty).</string>
 </resources>
