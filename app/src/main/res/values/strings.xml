@@ -626,4 +626,9 @@
     <string name="songcast_copy_web_link">📋 Copy room link</string>
     <string name="songcast_web_link_copied">Room link copied to clipboard. Open it in a browser.</string>
     <string name="playlist_created">Playlist created: %s</string>
+    <string name="next_playlist_song_opened">Next song from the playlist</string>
+    <string name="previous_playlist_song_opened">Previous song from the playlist</string>
+    <string name="opened_a_random_song">Random song was drawn</string>
+    <string name="opened_a_random_song_from_playlist">Random song from the playlist</string>
+    <string name="opened_a_random_song_from_favourites">Random song from liked songs</string>
 </resources>

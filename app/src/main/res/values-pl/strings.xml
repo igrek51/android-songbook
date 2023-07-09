@@ -595,4 +595,9 @@
     <string name="songcast_copy_web_link">📋 Skopiuj link do pokoju</string>
     <string name="songcast_web_link_copied">Link do pokoju skopiowany. Otwórz go w przeglądarce.</string>
     <string name="playlist_created">Playlista utworzona: %s</string>
+    <string name="next_playlist_song_opened">Następna piosenka z playlisty</string>
+    <string name="previous_playlist_song_opened">Poprzednia piosenka z playlisty</string>
+    <string name="opened_a_random_song">Piosenka wylosowana.</string>
+    <string name="opened_a_random_song_from_playlist">Losowa piosenka z playlisty</string>
+    <string name="opened_a_random_song_from_favourites">Losowa piosenka z ulubionych</string>
 </resources>

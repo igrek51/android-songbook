@@ -303,9 +303,9 @@ class SongPreview(
                 val adx = abs(dx)
                 if (adx > GESTURE_HORIZONTAL_SWIPE * canvas.w) {
                     if (dx > 0) {
-                        playlistService.goToNextOrPrevious(-1)
+                        appFactory.aSongGestureController.get().goLeft()
                     } else {
-                        playlistService.goToNextOrPrevious(+1)
+                        appFactory.aSongGestureController.get().goRight()
                     }
                 }
             }

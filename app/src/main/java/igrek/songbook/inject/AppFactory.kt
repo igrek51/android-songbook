@@ -75,6 +75,7 @@ import igrek.songbook.settings.preferences.SharedPreferencesService
 import igrek.songbook.settings.sync.BackupSyncManager
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.SongDetailsService
+import igrek.songbook.songpreview.SongGestureController
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songpreview.SongPreviewLayoutController
 import igrek.songbook.songpreview.quickmenu.QuickMenuAutoscroll
@@ -206,4 +207,5 @@ class AppFactory(
     val songCastService = SingletonInject { SongCastService() }
     val quickMenuCast = SingletonInject { QuickMenuCast() }
     val scrollService = SingletonInject { ScrollService() }
+    val aSongGestureController = SingletonInject { SongGestureController() }
 }

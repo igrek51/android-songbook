@@ -34,40 +34,38 @@ open class SongOpener(
     private val songCastService by LazyExtractor(songCastService)
     private val playlistService by LazyExtractor(playlistService)
 
+    var lastSongWasRandom: Boolean = false
+        private set
+
     fun openSongPreview(
         song: Song,
         playlist: Playlist? = null,
         onInit: (() -> Unit)? = null,
+        isRandom: Boolean = false,
     ) {
         logger.info("Opening song: $song")
         playlistService.currentPlaylist = playlist
         songPreviewLayoutController.currentSong = song
+        lastSongWasRandom = isRandom
         onInit?.let {
             songPreviewLayoutController.addOnInitListener(onInit)
         }
         defaultScope.launch {
             songCastService.presentMyOpenedSong(song)
         }
-        layoutController.showLayout(SongPreviewLayoutController::class)
+        showSongPreview()
         songsRepository.openHistoryDao.registerOpenedSong(song.id, song.namespace)
         AnalyticsLogger().logEventSongOpened(song)
     }
 
-    private fun openSongIdentifier(songIdentifier: SongIdentifier): Boolean {
-        songsRepository.allSongsRepo.songFinder.find(songIdentifier)?.let { song ->
-            openSongPreview(song)
-            return true
-        }
-        return false
-    }
-
     fun openLastSong() {
         playlistService.currentPlaylist = null
+        lastSongWasRandom = false
         songPreviewLayoutController.currentSong?.let { currentSong ->
             defaultScope.launch {
                 songCastService.presentMyOpenedSong(currentSong)
             }
-            layoutController.showLayout(SongPreviewLayoutController::class)
+            showSongPreview()
             return
         }
 
@@ -86,6 +84,18 @@ open class SongOpener(
         if (!opened) {
             uiInfoService.showInfo(R.string.no_last_song)
         }
+    }
+
+    private fun openSongIdentifier(songIdentifier: SongIdentifier): Boolean {
+        songsRepository.allSongsRepo.songFinder.find(songIdentifier)?.let { song ->
+            openSongPreview(song)
+            return true
+        }
+        return false
+    }
+
+    private fun showSongPreview() {
+        layoutController.showLayout(SongPreviewLayoutController::class)
     }
 
     fun hasLastSong(): Boolean {

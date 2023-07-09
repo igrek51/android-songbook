@@ -141,7 +141,7 @@ class GlobalFocusTraverser(
 
         return when {
             layoutController.isState(SongPreviewLayoutController::class) -> when {
-                playlistService.goToNextOrPrevious(+1) -> -1
+                appFactory.aSongGestureController.get().goRight() -> -1
                 else -> when (currentViewId) {
                     R.id.main_content, R.id.overlayScrollView -> R.id.navMenuButton
                     R.id.navMenuButton -> R.id.songInfoButton
@@ -240,7 +240,7 @@ class GlobalFocusTraverser(
 
         return when {
             layoutController.isState(SongPreviewLayoutController::class) -> when {
-                playlistService.goToNextOrPrevious(-1) -> -1
+                appFactory.aSongGestureController.get().goLeft() -> -1
                 else -> when (currentViewId) {
                     R.id.main_content, R.id.overlayScrollView -> R.id.navMenuButton
                     R.id.navMenuButton -> {

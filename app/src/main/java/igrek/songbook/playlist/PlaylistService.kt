@@ -173,6 +173,10 @@ class PlaylistService(
         val songId = SongIdentifier(nextPlaylistSong.songId, namespace)
         val nextSong = songsRepository.allSongsRepo.songFinder.find(songId) ?: return false
         songOpener.openSongPreview(nextSong, playlist = playlist)
+        when {
+            next > 0 -> uiInfoService.showInfo(R.string.next_playlist_song_opened)
+            next < 0 -> uiInfoService.showInfo(R.string.previous_playlist_song_opened)
+        }
         return true
     }
 

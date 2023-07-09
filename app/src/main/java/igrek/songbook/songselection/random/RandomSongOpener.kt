@@ -32,7 +32,7 @@ class RandomSongOpener(
     private val appLanguageService by LazyExtractor(appLanguageService)
     private val playlistService by LazyExtractor(playlistService)
 
-    fun openRandomSong() {
+    fun openRandomSong(): Boolean {
         val playlist: Playlist? = when {
             preferencesState.randomPlaylistSongs && playlistService.isPlaylistOpen() -> {
                 playlistService.currentPlaylist!!
@@ -45,10 +45,18 @@ class RandomSongOpener(
         val randomSong = getRandomSong(songsCollection)
         if (randomSong == null) {
             uiInfoService.showInfo(R.string.no_songs_to_shuffle)
-            return
+            return false
         }
 
         songOpener.openSongPreview(randomSong, playlist = playlist)
+
+        val messageResId = when {
+            playlist != null -> R.string.opened_a_random_song_from_playlist
+            preferencesState.randomFavouriteSongsOnly -> R.string.opened_a_random_song_from_favourites
+            else -> R.string.opened_a_random_song
+        }
+        uiInfoService.showInfo(messageResId)
+        return true
     }
 
     private fun songsToShuffle(playlist: Playlist?): List<Song> {
