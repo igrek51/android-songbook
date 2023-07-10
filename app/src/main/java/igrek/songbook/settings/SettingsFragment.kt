@@ -37,8 +37,8 @@ import igrek.songbook.settings.theme.FontTypeface
 import igrek.songbook.settings.theme.LyricsThemeService
 import igrek.songbook.songpreview.scroll.AutoscrollService
 import igrek.songbook.system.LinkOpener
-import java.math.RoundingMode
-import java.text.DecimalFormat
+import igrek.songbook.util.roundDecimal1
+import igrek.songbook.util.roundDecimal3
 import kotlin.math.roundToInt
 
 class SettingsFragment(
@@ -66,16 +66,8 @@ class SettingsFragment(
     private val settingsEnumService by LazyExtractor(settingsEnumService)
     private val customSongsBackuper by LazyExtractor(customSongsBackuper)
 
-    private var decimalFormat1: DecimalFormat = DecimalFormat("#.#")
-    private var decimalFormat3: DecimalFormat = DecimalFormat("#.###")
-
     companion object {
         const val SEEKBAR_RESOLUTION = 10000
-    }
-
-    init {
-        decimalFormat1.roundingMode = RoundingMode.HALF_UP
-        decimalFormat3.roundingMode = RoundingMode.HALF_UP
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -170,7 +162,7 @@ class SettingsFragment(
             stringConverter = { value: Float ->
                 uiInfoService.resString(
                     R.string.settings_autoscroll_speed_value,
-                    decimal3(value)
+                    roundDecimal3(value)
                 )
             }
         )
@@ -181,57 +173,114 @@ class SettingsFragment(
                 preferencesState.fontsize = value
             },
             stringConverter = { value: Float ->
-                uiInfoService.resString(R.string.settings_font_size_value, decimal1(value))
+                uiInfoService.resString(R.string.settings_font_size_value, roundDecimal1(value))
             }
         )
 
         setupSwitchPreference("autoscrollSpeedAutoAdjustment",
             onLoad = { preferencesState.autoscrollSpeedAutoAdjustment },
-            onSave = { value: Boolean ->
-                preferencesState.autoscrollSpeedAutoAdjustment = value
-            }
+            onSave = { value: Boolean -> preferencesState.autoscrollSpeedAutoAdjustment = value },
         )
 
         setupSwitchPreference("autoscrollShowEyeFocus",
             onLoad = { preferencesState.autoscrollShowEyeFocus },
-            onSave = { value: Boolean ->
-                preferencesState.autoscrollShowEyeFocus = value
-            }
+            onSave = { value: Boolean -> preferencesState.autoscrollShowEyeFocus = value },
         )
 
         setupSwitchPreference("autoscrollIndividualSpeed",
             onLoad = { preferencesState.autoscrollIndividualSpeed },
-            onSave = { value: Boolean ->
-                preferencesState.autoscrollIndividualSpeed = value
-            }
+            onSave = { value: Boolean -> preferencesState.autoscrollIndividualSpeed = value },
         )
 
         setupSwitchPreference("autoscrollSpeedVolumeKeys",
             onLoad = { preferencesState.autoscrollSpeedVolumeKeys },
-            onSave = { value: Boolean ->
-                preferencesState.autoscrollSpeedVolumeKeys = value
-            }
+            onSave = { value: Boolean -> preferencesState.autoscrollSpeedVolumeKeys = value },
         )
 
         setupSwitchPreference("randomFavouriteSongsOnly",
             onLoad = { preferencesState.randomFavouriteSongsOnly },
-            onSave = { value: Boolean ->
-                preferencesState.randomFavouriteSongsOnly = value
-            }
+            onSave = { value: Boolean -> preferencesState.randomFavouriteSongsOnly = value },
         )
 
         setupSwitchPreference("randomPlaylistSongs",
             onLoad = { preferencesState.randomPlaylistSongs },
-            onSave = { value: Boolean ->
-                preferencesState.randomPlaylistSongs = value
-            }
+            onSave = { value: Boolean -> preferencesState.randomPlaylistSongs = value },
         )
 
         setupSwitchPreference("swipeToRandomizeAgain",
             onLoad = { preferencesState.swipeToRandomizeAgain },
+            onSave = { value: Boolean -> preferencesState.swipeToRandomizeAgain = value },
+        )
+
+        setupSwitchPreference("restoreTransposition",
+            onLoad = { preferencesState.restoreTransposition },
+            onSave = { value: Boolean -> preferencesState.restoreTransposition = value },
+        )
+
+        setupSwitchPreference("anonymousUsageData",
+            onLoad = { preferencesState.anonymousUsageData },
+            onSave = { value: Boolean -> preferencesState.anonymousUsageData = value },
+        )
+
+        setupSwitchPreference("keepScreenOn",
+            onLoad = { preferencesState.keepScreenOn },
+            onSave = { value: Boolean -> preferencesState.keepScreenOn = value },
+        )
+
+        setupSwitchPreference("updateDbOnStartup",
+            onLoad = { preferencesState.updateDbOnStartup },
+            onSave = { value: Boolean -> preferencesState.updateDbOnStartup = value },
+        )
+
+        setupSwitchPreference("trimWhitespaces",
+            onLoad = { preferencesState.trimWhitespaces },
+            onSave = { value: Boolean -> preferencesState.trimWhitespaces = value },
+        )
+
+        setupSwitchPreference("autoscrollAutostart",
+            onLoad = { preferencesState.autoscrollAutostart },
+            onSave = { value: Boolean -> preferencesState.autoscrollAutostart = value },
+        )
+
+        setupSwitchPreference("autoscrollForwardNextSong",
+            onLoad = { preferencesState.autoscrollForwardNextSong },
+            onSave = { value: Boolean -> preferencesState.autoscrollForwardNextSong = value },
+        )
+
+        setupSwitchPreference("horizontalScroll",
+            onLoad = { preferencesState.horizontalScroll },
+            onSave = { value: Boolean -> preferencesState.horizontalScroll = value },
+        )
+
+        setupSwitchPreference("forceSharpChords",
+            onLoad = { preferencesState.forceSharpNotes },
+            onSave = { value: Boolean -> preferencesState.forceSharpNotes = value },
+        )
+
+        setupSwitchPreference("songLyricsSearch",
+            onLoad = { preferencesState.songLyricsSearch },
+            onSave = { value: Boolean -> preferencesState.songLyricsSearch = value },
+        )
+
+        setupSwitchPreference("saveCustomSongsBackups",
+            onLoad = { preferencesState.saveCustomSongsBackups },
+            onSave = { value: Boolean -> preferencesState.saveCustomSongsBackups = value },
+        )
+
+        setupSwitchPreference("syncBackupAutomatically",
+            onLoad = { preferencesState.syncBackupAutomatically },
             onSave = { value: Boolean ->
-                preferencesState.swipeToRandomizeAgain = value
-            }
+                preferencesState.syncBackupAutomatically = value
+                if (value && backupSyncManager.needsAutomaticBackup()) {
+                    backupSyncManager.makeAutomaticBackup()
+                }
+            },
+            summaryProvider = {
+                uiInfoService.resString(
+                    R.string.settings_sync_backup_automatically_hint,
+                    backupSyncManager.formatLastBackupTime(),
+                )
+            },
         )
 
         setupMultiListPreference("filterLanguages",
@@ -251,10 +300,29 @@ class SettingsFragment(
             }
         )
 
-        setupSwitchPreference("restoreTransposition",
-            onLoad = { preferencesState.restoreTransposition },
-            onSave = { value: Boolean ->
-                preferencesState.restoreTransposition = value
+        setupListPreference("mediaButtonBehaviour",
+            mediaButtonService.mediaButtonBehavioursEntries(),
+            onLoad = { preferencesState.mediaButtonBehaviour.id.toString() },
+            onSave = { id: String ->
+                preferencesState.mediaButtonBehaviour =
+                    MediaButtonBehaviours.mustParseById(id.toLong())
+            }
+        )
+
+        setupListPreference("customSongsOrdering",
+            settingsEnumService.customSongsOrderingStringEntries(),
+            onLoad = { preferencesState.customSongsOrdering.id.toString() },
+            onSave = { id: String ->
+                preferencesState.customSongsOrdering =
+                    CustomSongsOrdering.mustParseById(id.toLong())
+            }
+        )
+
+        setupListPreference("homeScreen",
+            homeScreenEnumService.homeScreenEnumsEntries(),
+            onLoad = { preferencesState.homeScreen.id.toString() },
+            onSave = { id: String ->
+                preferencesState.homeScreen = HomeScreenEnum.mustParseById(id.toLong())
             }
         )
 
@@ -286,118 +354,6 @@ class SettingsFragment(
         setupClickPreference("settingsPrivacyPolicy") {
             LinkOpener().openPrivacyPolicy()
         }
-
-        setupSwitchPreference("anonymousUsageData",
-            onLoad = { preferencesState.anonymousUsageData },
-            onSave = { value: Boolean ->
-                preferencesState.anonymousUsageData = value
-            }
-        )
-
-        setupSwitchPreference("keepScreenOn",
-            onLoad = { preferencesState.keepScreenOn },
-            onSave = { value: Boolean ->
-                preferencesState.keepScreenOn = value
-            }
-        )
-
-        setupSwitchPreference("updateDbOnStartup",
-            onLoad = { preferencesState.updateDbOnStartup },
-            onSave = { value: Boolean ->
-                preferencesState.updateDbOnStartup = value
-            }
-        )
-
-        setupSwitchPreference("trimWhitespaces",
-            onLoad = { preferencesState.trimWhitespaces },
-            onSave = { value: Boolean ->
-                preferencesState.trimWhitespaces = value
-            }
-        )
-
-        setupSwitchPreference("autoscrollAutostart",
-            onLoad = { preferencesState.autoscrollAutostart },
-            onSave = { value: Boolean ->
-                preferencesState.autoscrollAutostart = value
-            }
-        )
-
-        setupSwitchPreference("autoscrollForwardNextSong",
-            onLoad = { preferencesState.autoscrollForwardNextSong },
-            onSave = { value: Boolean ->
-                preferencesState.autoscrollForwardNextSong = value
-            }
-        )
-
-        setupSwitchPreference("horizontalScroll",
-            onLoad = { preferencesState.horizontalScroll },
-            onSave = { value: Boolean ->
-                preferencesState.horizontalScroll = value
-            }
-        )
-
-        setupSwitchPreference("forceSharpChords",
-            onLoad = { preferencesState.forceSharpNotes },
-            onSave = { value: Boolean ->
-                preferencesState.forceSharpNotes = value
-            }
-        )
-
-        setupSwitchPreference("songLyricsSearch",
-            onLoad = { preferencesState.songLyricsSearch },
-            onSave = { value: Boolean ->
-                preferencesState.songLyricsSearch = value
-            }
-        )
-
-        setupSwitchPreference("saveCustomSongsBackups",
-            onLoad = { preferencesState.saveCustomSongsBackups },
-            onSave = { value: Boolean ->
-                preferencesState.saveCustomSongsBackups = value
-            }
-        )
-
-        setupSwitchPreference("syncBackupAutomatically",
-            onLoad = { preferencesState.syncBackupAutomatically },
-            onSave = { value: Boolean ->
-                preferencesState.syncBackupAutomatically = value
-                if (value && backupSyncManager.needsAutomaticBackup()) {
-                    backupSyncManager.makeAutomaticBackup()
-                }
-            },
-            summaryProvider = {
-                uiInfoService.resString(
-                    R.string.settings_sync_backup_automatically_hint,
-                    backupSyncManager.formatLastBackupTime(),
-                )
-          },
-        )
-
-        setupListPreference("mediaButtonBehaviour",
-            mediaButtonService.mediaButtonBehavioursEntries(),
-            onLoad = { preferencesState.mediaButtonBehaviour.id.toString() },
-            onSave = { id: String ->
-                preferencesState.mediaButtonBehaviour =
-                    MediaButtonBehaviours.mustParseById(id.toLong())
-            }
-        )
-
-        setupListPreference("customSongsOrdering",
-            settingsEnumService.customSongsOrderingStringEntries(),
-            onLoad = { preferencesState.customSongsOrdering.id.toString() },
-            onSave = { id: String ->
-                preferencesState.customSongsOrdering =
-                    CustomSongsOrdering.mustParseById(id.toLong())
-            }
-        )
-
-        setupListPreference("homeScreen",
-            homeScreenEnumService.homeScreenEnumsEntries(),
-            onLoad = { preferencesState.homeScreen.id.toString() },
-            onSave = { id: String ->
-                preferencesState.homeScreen = HomeScreenEnum.mustParseById(id.toLong())
-            }
-        )
 
         setupClickPreference("billingRemoveAds") {
             layoutController.showLayout(BillingLayoutController::class)
@@ -557,14 +513,6 @@ class SettingsFragment(
 
         val progress = (value - min) / (max - min)
         return (progress * resolution).roundToInt()
-    }
-
-    private fun decimal3(value: Float): String {
-        return decimalFormat3.format(value.toDouble())
-    }
-
-    private fun decimal1(value: Float): String {
-        return decimalFormat1.format(value.toDouble())
     }
 
 }

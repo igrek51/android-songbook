@@ -1,5 +1,8 @@
 package igrek.songbook.util
 
+import java.math.RoundingMode
+import java.text.DecimalFormat
+
 fun Int.limitTo(max: Int): Int {
     return if (this > max) max else this
 }
@@ -34,4 +37,20 @@ fun Long.interpolate(min: Long, max: Long): Float {
 
 fun Float.cutOffMin(min: Float): Float {
     return if (this < min) min else this
+}
+
+val decimalFormat1: DecimalFormat = DecimalFormat("#.#").apply {
+    roundingMode = RoundingMode.HALF_UP
+}
+
+val decimalFormat3: DecimalFormat = DecimalFormat("#.###").apply {
+    roundingMode = RoundingMode.HALF_UP
+}
+
+fun roundDecimal3(value: Float): String {
+    return decimalFormat3.format(value.toDouble())
+}
+
+fun roundDecimal1(value: Float): String {
+    return decimalFormat1.format(value.toDouble())
 }

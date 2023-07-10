@@ -5,7 +5,7 @@ import androidx.test.runner.AndroidJUnit4
 import igrek.songbook.activity.MainActivity
 import igrek.songbook.inject.appFactory
 import igrek.songbook.settings.chordsnotation.ChordsNotation
-import igrek.songbook.settings.preferences.SettingField
+import igrek.songbook.settings.preferences.FloatField
 import igrek.songbook.settings.preferences.PreferencesService
 import igrek.songbook.settings.preferences.SettingsState
 import org.junit.Assert.assertEquals
@@ -23,16 +23,17 @@ class PreferencesPersistenceTest {
     @Test
     fun test_default_values() {
         val preferencesService = appFactory.preferencesService.get()
+        val settingsState = appFactory.settingsState.get()
 
         preferencesService.clear()
 
-        val restoreTransposition: Boolean = preferencesService.getValue(SettingField.RestoreTransposition)
+        val restoreTransposition: Boolean = settingsState.restoreTransposition
         assertEquals(restoreTransposition, true)
 
-        val chordsEndOfLine: Boolean = preferencesService.getValue(SettingField.ChordsEndOfLine)
-        assertEquals(chordsEndOfLine, false)
+        val randomPlaylistSongs: Boolean = settingsState.randomPlaylistSongs
+        assertEquals(randomPlaylistSongs, false)
 
-        val chordsNotation: ChordsNotation = preferencesService.getValue(SettingField.ChordsNotationId)
+        val chordsNotation: ChordsNotation = settingsState.chordsNotation
         assertEquals(chordsNotation, ChordsNotation.default)
     }
 
@@ -43,19 +44,19 @@ class PreferencesPersistenceTest {
 
         preferencesService.clear()
 
-        var current: Float = preferencesService.getValue(SettingField.AutoscrollSpeed)
+        var current: Float = settingsState.autoscrollSpeed
         assertEquals(current, 0.200f)
         assertEquals(settingsState.autoscrollSpeed, 0.200f)
         // check modified
         settingsState.autoscrollSpeed = 23f
-        current = preferencesService.getValue(SettingField.AutoscrollSpeed)
+        current = preferencesService.getValue(FloatField("autoscrollSpeed", 0.200f))
         assertEquals(current, 23f)
         assertEquals(settingsState.autoscrollSpeed, 23f)
 
         preferencesService.dumpAll()
         preferencesService.reload()
         // check if persisted after save & reload
-        current = preferencesService.getValue(SettingField.AutoscrollSpeed)
+        current = preferencesService.getValue(FloatField("autoscrollSpeed", 0.200f))
         assertEquals(current, 23f)
         assertEquals(settingsState.autoscrollSpeed, 23f)
 
@@ -64,7 +65,7 @@ class PreferencesPersistenceTest {
         // lose changes by reloading without saving
         preferencesService.reload()
         assertEquals(settingsState.autoscrollSpeed, 23f)
-        current = preferencesService.getValue(SettingField.AutoscrollSpeed)
+        current = preferencesService.getValue(FloatField("autoscrollSpeed", 0.200f))
         assertEquals(current, 23f)
     }
 
@@ -74,13 +75,7 @@ class PreferencesPersistenceTest {
         preferencesService.clear()
 
         try {
-            var pause: Boolean = preferencesService.getValue(SettingField.AutoscrollSpeed)
-            check(false) { "should throw type error" }
-        } catch (e: RuntimeException) {
-        }
-
-        try {
-            preferencesService.setValue(SettingField.AutoscrollSpeed, true)
+            preferencesService.setValue(FloatField("autoscrollSpeed", 0.200f), true)
             check(false) { "should throw type error" }
         } catch (e: RuntimeException) {
         }
