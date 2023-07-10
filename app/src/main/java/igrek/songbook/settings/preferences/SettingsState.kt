@@ -15,50 +15,116 @@ import igrek.songbook.settings.theme.ColorScheme
 import igrek.songbook.settings.theme.DisplayStyle
 import igrek.songbook.settings.theme.FontTypeface
 
+
 class SettingsState(
     preferencesService: LazyInject<PreferencesService> = appFactory.preferencesService,
 ) {
     internal val preferencesService by LazyExtractor(preferencesService)
 
-    var fontsize: Float by PreferenceDelegate(SettingField.Fontsize)
-    var appLanguage: AppLanguage by PreferenceDelegate(SettingField.AppLanguage)
-    var chordsNotation: ChordsNotation by PreferenceDelegate(SettingField.ChordsNotationId)
-    var fontTypeface: FontTypeface by PreferenceDelegate(SettingField.FontTypefaceId)
-    var colorScheme: ColorScheme by PreferenceDelegate(SettingField.ColorSchemeId)
-    var autoscrollSpeed: Float by PreferenceDelegate(SettingField.AutoscrollSpeed)
-    var autoscrollSpeedAutoAdjustment: Boolean by PreferenceDelegate(SettingField.AutoscrollSpeedAutoAdjustment)
-    var autoscrollSpeedVolumeKeys: Boolean by PreferenceDelegate(SettingField.AutoscrollSpeedVolumeKeys)
-    var randomFavouriteSongsOnly: Boolean by PreferenceDelegate(SettingField.RandomFavouriteSongsOnly)
-    var randomPlaylistSongs: Boolean by PreferenceDelegate(SettingField.RandomPlaylistSongs)
-    var restoreTransposition: Boolean by PreferenceDelegate(SettingField.RestoreTransposition)
-    var chordsInstrument: ChordsInstrument by PreferenceDelegate(SettingField.ChordsInstrument)
-    var userAuthToken: String by PreferenceDelegate(SettingField.UserAuthToken)
-    var appExecutionCount: Long by PreferenceDelegate(SettingField.AppExecutionCount)
-    var adsStatus: Long by PreferenceDelegate(SettingField.AdsStatus)
-    var chordsDisplayStyle: DisplayStyle by PreferenceDelegate(SettingField.ChordsDisplayStyle)
-    var chordsEditorFontTypeface: FontTypeface by PreferenceDelegate(SettingField.ChordsEditorFontTypeface)
-    var keepScreenOn: Boolean by PreferenceDelegate(SettingField.KeepScreenOn)
-    var anonymousUsageData: Boolean by PreferenceDelegate(SettingField.AnonymousUsageData)
-    var chordDiagramStyle: ChordDiagramStyle by PreferenceDelegate(SettingField.ChordDiagramStyle)
-    var updateDbOnStartup: Boolean by PreferenceDelegate(SettingField.UpdateDbOnStartup)
-    var trimWhitespaces: Boolean by PreferenceDelegate(SettingField.TrimWhitespaces)
-    var autoscrollAutostart: Boolean by PreferenceDelegate(SettingField.AutoscrollAutostart)
-    var autoscrollForwardNextSong: Boolean by PreferenceDelegate(SettingField.AutoscrollForwardNextSong)
-    var autoscrollShowEyeFocus: Boolean by PreferenceDelegate(SettingField.AutoscrollShowEyeFocus)
-    var autoscrollIndividualSpeed: Boolean by PreferenceDelegate(SettingField.AutoscrollIndividualSpeed)
-    var horizontalScroll: Boolean by PreferenceDelegate(SettingField.HorizontalScroll)
-    var mediaButtonBehaviour: MediaButtonBehaviours by PreferenceDelegate(SettingField.MediaButtonBehaviour)
-    var purchasedAdFree: Boolean by PreferenceDelegate(SettingField.PurchasedAdFree)
-    var homeScreen: HomeScreenEnum by PreferenceDelegate(SettingField.HomeScreen)
-    var forceSharpNotes: Boolean by PreferenceDelegate(SettingField.ForceSharpNotes)
-    var customSongsOrdering: CustomSongsOrdering by PreferenceDelegate(SettingField.CustomSongsOrdering)
-    var songLyricsSearch: Boolean by PreferenceDelegate(SettingField.SongLyricsSearch)
-    var syncBackupAutomatically: Boolean by PreferenceDelegate(SettingField.SyncBackupAutomatically)
-    var lastDriveBackupTimestamp: Long by PreferenceDelegate(SettingField.LastDriveBackupTimestamp)
-    var deviceId: String by PreferenceDelegate(SettingField.DeviceId)
-    var lastAppVersionCode: Long by PreferenceDelegate(SettingField.LastAppVersionCode)
-    var saveCustomSongsBackups: Boolean by PreferenceDelegate(SettingField.SaveCustomSongsBackups)
-    var castScrollControl: CastScrollControl by PreferenceDelegate(SettingField.CastScrollControl)
-    var swipeToRandomizeAgain: Boolean by PreferenceDelegate(SettingField.SwipeToRandomizeAgain)
+    companion object {
+        val knownSettingFields: MutableMap<String, FieldDefinition<*, *>> = mutableMapOf()
+    }
+
+    var chordsNotation: ChordsNotation by SettingFieldDelegate.makeGenericLongId(
+        "chordsNotationId",
+        defaultValue = ChordsNotation.default,
+        serializer = ChordsNotation::id,
+        deserializer = ChordsNotation.Companion::deserialize
+    )
+    var appLanguage: AppLanguage by SettingFieldDelegate.makeGenericStringId(
+        "appLanguage",
+        defaultValue = AppLanguage.DEFAULT,
+        serializer = AppLanguage::langCode,
+        deserializer = AppLanguage.Companion::parseByLangCode
+    )
+    var fontTypeface: FontTypeface by SettingFieldDelegate.makeGenericStringId(
+        "fontTypefaceId",
+        defaultValue = FontTypeface.default,
+        serializer = FontTypeface::id,
+        deserializer = FontTypeface.Companion::parseById
+    )
+    var colorScheme: ColorScheme by SettingFieldDelegate.makeGenericLongId(
+        "colorSchemeId",
+        defaultValue = ColorScheme.default,
+        serializer = ColorScheme::id,
+        deserializer = ColorScheme.Companion::parseById
+    )
+    var chordsInstrument: ChordsInstrument by SettingFieldDelegate.makeGenericLongId(
+        "chordsInstrument",
+        defaultValue = ChordsInstrument.default,
+        serializer = ChordsInstrument::id,
+        deserializer = ChordsInstrument.Companion::parseById
+    )
+    var chordsDisplayStyle: DisplayStyle by SettingFieldDelegate.makeGenericLongId(
+        "chordsDisplayStyle",
+        defaultValue = DisplayStyle.default,
+        serializer = DisplayStyle::id,
+        deserializer = DisplayStyle.Companion::parseById,
+    )
+    var chordsEditorFontTypeface: FontTypeface by SettingFieldDelegate.makeGenericStringId(
+        "chordsEditorFontTypeface",
+        defaultValue = FontTypeface.MONOSPACE,
+        serializer = FontTypeface::id,
+        deserializer = FontTypeface.Companion::parseById,
+    )
+    var chordDiagramStyle: ChordDiagramStyle by SettingFieldDelegate.makeGenericLongId(
+        "chordDiagramStyle",
+        defaultValue = ChordDiagramStyle.default,
+        serializer = ChordDiagramStyle::id,
+        deserializer = ChordDiagramStyle.Companion::parseById,
+    )
+    var mediaButtonBehaviour: MediaButtonBehaviours by SettingFieldDelegate.makeGenericLongId(
+        "mediaButtonBehaviour",
+        defaultValue = MediaButtonBehaviours.default,
+        serializer = MediaButtonBehaviours::id,
+        deserializer = MediaButtonBehaviours.Companion::parseById,
+    )
+    var customSongsOrdering: CustomSongsOrdering by SettingFieldDelegate.makeGenericLongId(
+        "customSongsOrdering",
+        defaultValue = CustomSongsOrdering.default,
+        serializer = CustomSongsOrdering::id,
+        deserializer = CustomSongsOrdering.Companion::parseById,
+    )
+    var castScrollControl: CastScrollControl by SettingFieldDelegate.makeGenericLongId(
+        "castScrollControl",
+        defaultValue = CastScrollControl.default,
+        serializer = CastScrollControl::id,
+        deserializer = CastScrollControl.Companion::mustParseById,
+    )
+    var homeScreen: HomeScreenEnum by SettingFieldDelegate.makeGenericLongId(
+        "homeScreen",
+        defaultValue = HomeScreenEnum.default,
+        serializer = HomeScreenEnum::id,
+        deserializer = HomeScreenEnum.Companion::parseById,
+    )
+
+    var fontsize: Float by SettingFieldDelegate.make("fontsize", 20.0f) // dp
+    var autoscrollSpeed: Float by SettingFieldDelegate.make("autoscrollSpeed", 0.200f) // em / s
+    var autoscrollSpeedAutoAdjustment: Boolean by SettingFieldDelegate.make("autoscrollSpeedAutoAdjustment", true)
+    var autoscrollSpeedVolumeKeys: Boolean by SettingFieldDelegate.make("autoscrollSpeedVolumeKeys", true)
+    var randomFavouriteSongsOnly: Boolean by SettingFieldDelegate.make("randomFavouriteSongsOnly", false)
+    var randomPlaylistSongs: Boolean by SettingFieldDelegate.make("randomPlaylistSongs", false)
+    var restoreTransposition: Boolean by SettingFieldDelegate.make("restoreTransposition", true)
+    var userAuthToken: String by SettingFieldDelegate.make("userAuthToken", "")
+    var appExecutionCount: Long by SettingFieldDelegate.make("appExecutionCount", 0)
+    var adsStatus: Long by SettingFieldDelegate.make("adsStatus", 0)
+    var keepScreenOn: Boolean by SettingFieldDelegate.make("keepScreenOn", true)
+    var anonymousUsageData: Boolean by SettingFieldDelegate.make("anonymousUsageData", false)
+    var updateDbOnStartup: Boolean by SettingFieldDelegate.make("updateDbOnStartup", true)
+    var trimWhitespaces: Boolean by SettingFieldDelegate.make("trimWhitespaces", true)
+    var autoscrollAutostart: Boolean by SettingFieldDelegate.make("autoscrollAutostart", false)
+    var autoscrollForwardNextSong: Boolean by SettingFieldDelegate.make("autoscrollForwardNextSong", false)
+    var autoscrollShowEyeFocus: Boolean by SettingFieldDelegate.make("autoscrollShowEyeFocus", true)
+    var autoscrollIndividualSpeed: Boolean by SettingFieldDelegate.make("autoscrollIndividualSpeed", false)
+    var horizontalScroll: Boolean by SettingFieldDelegate.make("horizontalScroll", false)
+    var purchasedAdFree: Boolean by SettingFieldDelegate.make("purchasedAdFree", false)
+    var forceSharpNotes: Boolean by SettingFieldDelegate.make("forceSharpNotes", false)
+    var songLyricsSearch: Boolean by SettingFieldDelegate.make("songLyricsSearch", true)
+    var syncBackupAutomatically: Boolean by SettingFieldDelegate.make("syncBackupAutomatically", false)
+    var lastDriveBackupTimestamp: Long by SettingFieldDelegate.make("lastDriveBackupTimestamp", 0) // in seconds
+    var deviceId: String by SettingFieldDelegate.make("deviceId", "")
+    var lastAppVersionCode: Long by SettingFieldDelegate.make("lastAppVersionCode", 0)
+    var saveCustomSongsBackups: Boolean by SettingFieldDelegate.make("saveCustomSongsBackups", true)
+    var swipeToRandomizeAgain: Boolean by SettingFieldDelegate.make("swipeToRandomizeAgain", true)
 
 }
