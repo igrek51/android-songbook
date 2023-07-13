@@ -13,6 +13,7 @@ Here's the list of third-party libraries and tools used by *Songbook*:
 - [Guava](https://github.com/google/guava)
 - [Jackson](https://github.com/FasterXML/jackson)
 - [Java](https://github.com/openjdk/jdk)
+- [Jetpack Compose](https://github.com/android/compose-samples)
 - [JWTDecode](https://github.com/auth0/JWTDecode.Android)
 - [Kotlin](https://github.com/JetBrains/kotlin)
 - [Material Design icons](https://github.com/google/material-design-icons)
