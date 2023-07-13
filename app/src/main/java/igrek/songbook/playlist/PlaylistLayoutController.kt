@@ -299,7 +299,7 @@ private fun PlaylistItemComposable(
     modifier: Modifier,
     reorderButtonModifier: Modifier,
 ) {
-    val playlist: Playlist = itemsContainer.items[index]
+    val playlist: Playlist = itemsContainer.items.getOrNull(index) ?: return
 
     Row(
         modifier.padding(0.dp)
@@ -377,7 +377,7 @@ private fun SongItemComposable(
     modifier: Modifier,
     reorderButtonModifier: Modifier,
 ) {
-    val song: Song = itemsContainer.items[index]
+    val song: Song = itemsContainer.items.getOrNull(index) ?: return
 
     Row (
         modifier.padding(0.dp)
