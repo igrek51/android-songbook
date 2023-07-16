@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.36.1] - 1905 - 2023-07-17
+### Added
+- "Swipe left" gesture on the song view to shuffle a random song again
+  (if there's no open playlist).
+- You can toggle songs of playlist (add or remove) on a "playlist fill" view.
+
+### Fixed
+- Fixed synchronization issue in editor session.
+- Fixed updating playlists view after applying a change.
+
 ## [1.36.0] - 1904 - 2023-07-10
 ### Added
 - You can join **Song Cast** room in a **web browser** to spectate the presented song.
