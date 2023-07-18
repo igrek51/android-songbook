@@ -111,7 +111,7 @@ class SongCastLobbyLayout(
 
         val thisLayout = this
         layout.findViewById<ComposeView>(R.id.compose_view).apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
             setContent {
                 AppTheme {
                     MainComponent(thisLayout)

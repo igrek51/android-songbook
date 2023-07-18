@@ -67,7 +67,7 @@ class QuickMenuCast {
         this.quickMenuView = quickMenuView
         val thisMenu = this
         quickMenuView.findViewById<ComposeView>(R.id.compose_quick_menu_cast).apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
             setContent {
                 AppTheme {
                     MainComponent(thisMenu)
