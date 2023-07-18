@@ -17,6 +17,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.key
@@ -31,8 +32,10 @@ import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import igrek.songbook.info.logger.LoggerFactory.logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -89,6 +92,8 @@ fun <T> ReorderListView(
         dragTargetIndex.value == -1
     }
 
+    val dividerPx: Float = with(LocalDensity.current) { 1.dp.toPx() }
+
     itemsContainer.items.indices.forEach { index: Int ->
         reorderButtonModifiers[index] = Modifier.createReorderButtonModifier(
             itemsContainer, index, draggingIndex, dragTargetIndex, itemHeights, itemAnimatedOffsets,
@@ -121,7 +126,7 @@ fun <T> ReorderListView(
                 itemsContainer,
                 isDragging, isDragTargetFirst, isDraggingMes, isDragTargetMes,
                 itemHeights, itemAnimatedOffsets,
-                scrollDiff, reorderButtonModifiers, itemContent,
+                scrollDiff, reorderButtonModifiers, dividerPx, itemContent,
             )
         }
     }
@@ -139,6 +144,7 @@ fun <T> ReorderListColumn(
     itemAnimatedOffsets: Map<Int, Animatable<Float, AnimationVector1D>>,
     scrollDiff: State<Float>,
     reorderButtonModifiers: Map<Int, Modifier>,
+    dividerPx: Float,
     itemContent: @Composable (itemsContainer: ItemsContainer<T>, index: Int, modifier: Modifier, reorderButtonModifier: Modifier) -> Unit,
 ) {
     DividerBeforeItem(isDragTargetFirst)
@@ -149,7 +155,7 @@ fun <T> ReorderListColumn(
             itemsContainer, index,
             isDragging, isDraggingMes.getValue(index), isDragTargetMes.getValue(index),
             itemAnimatedOffsets.getValue(index), reorderButtonModifiers.getValue(index),
-            itemHeights, scrollDiff, itemContent,
+            itemHeights, scrollDiff, dividerPx, itemContent,
         )
     }
 }
@@ -166,6 +172,7 @@ private fun <T> ReorderListViewItem(
     reorderButtonModifier: Modifier,
     itemHeights: MutableMap<Int, Float>,
     scrollDiff: State<Float>,
+    dividerPx: Float,
     itemContent: @Composable (itemsContainer: ItemsContainer<T>, index: Int, modifier: Modifier, reorderButtonModifier: Modifier) -> Unit,
 ) {
     key(itemsContainer.modifiedMap.getValue(index).value) {
@@ -175,7 +182,7 @@ private fun <T> ReorderListViewItem(
             .offset { IntOffset(0, offsetYAnimated.value.roundToInt()) }
             .fillMaxWidth()
             .onGloballyPositioned { coordinates: LayoutCoordinates ->
-                itemHeights[index] = coordinates.size.height.toFloat()
+                itemHeights[index] = coordinates.size.height.toFloat() + dividerPx
             }
         if (isDraggingMe.value) {
             itemModifier = itemModifier
@@ -213,10 +220,12 @@ private fun DividerAfterItem(
         )
     } else if (isDragging.value) {
         Divider(
+            thickness = 1.dp,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.04f),
         )
     } else {
         Divider(
+            thickness = 1.dp,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
         )
     }
@@ -338,16 +347,14 @@ private fun <T> Modifier.createReorderButtonModifier(
             val beyondVisibleHeight = parentViewportHeight.value - priorVisibleHeight
             val borderArea = thisHeight * 2.5f
             var overscrolledY = 0f
+            val overscrolledTop = priorVisibleHeight + relativateOffset - borderArea
+            val overscrolledBottom = -beyondVisibleHeight + relativateOffset + borderArea
             when {
-                offsetYAnimatedVal < 0 && scrollState.canScrollBackward -> {
-                    val overscrolled = priorVisibleHeight + relativateOffset - borderArea
-                    if (overscrolled < 0)
-                        overscrolledY = overscrolled
+                dragAmount.y < 0 && overscrolledTop < 0 && scrollState.canScrollBackward -> {
+                    overscrolledY = overscrolledTop
                 }
-                offsetYAnimatedVal > 0 && scrollState.canScrollForward -> {
-                    val overscrolled = -beyondVisibleHeight + relativateOffset + borderArea
-                    if (overscrolled > 0)
-                        overscrolledY = overscrolled
+                dragAmount.y > 0 && overscrolledBottom > 0 && scrollState.canScrollForward -> {
+                    overscrolledY = overscrolledBottom
                 }
             }
 
