@@ -42,6 +42,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 import kotlin.math.abs
+import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
 
@@ -346,16 +347,17 @@ private fun <T> Modifier.createReorderButtonModifier(
             }
             val beyondVisibleHeight = parentViewportHeight.value - priorVisibleHeight
             val borderArea = thisHeight * 2.5f
-            var overscrolledY = 0f
             val overscrolledTop = priorVisibleHeight + relativateOffset - borderArea
             val overscrolledBottom = -beyondVisibleHeight + relativateOffset + borderArea
-            when {
-                dragAmount.y < 0 && overscrolledTop < 0 && scrollState.canScrollBackward -> {
-                    overscrolledY = overscrolledTop
+            val movedABit = relativateOffset.absoluteValue > thisHeight
+            val overscrolledY: Float = when {
+                (offsetYAnimatedVal < 0 || movedABit) && overscrolledTop < 0 && scrollState.canScrollBackward -> {
+                    overscrolledTop
                 }
-                dragAmount.y > 0 && overscrolledBottom > 0 && scrollState.canScrollForward -> {
-                    overscrolledY = overscrolledBottom
+                (offsetYAnimatedVal > 0 || movedABit) && overscrolledBottom > 0 && scrollState.canScrollForward -> {
+                    overscrolledBottom
                 }
+                else -> 0f
             }
 
             coroutineScope.launch {
