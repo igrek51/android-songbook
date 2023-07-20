@@ -73,7 +73,8 @@ class UiErrorHandler(
             message = message,
             positiveButton = R.string.action_info_ok, positiveAction = {},
             neutralButton = R.string.action_report_error, neutralAction = {
-                appFactory.crashlyticsLogger.get().reportNonFatalError(t)
+                val t2 = ContextError(errorMessage, t)
+                appFactory.crashlyticsLogger.get().reportNonFatalError(t2)
                 uiInfoService.showToast(R.string.report_error_sent)
             },
         )
@@ -90,7 +91,8 @@ class UiErrorHandler(
             message = message,
             positiveButton = R.string.action_info_ok, positiveAction = {},
             neutralButton = R.string.action_report_error, neutralAction = {
-                appFactory.crashlyticsLogger.get().reportNonFatalError(t)
+                val t2 = ContextError(errorMessage, t)
+                appFactory.crashlyticsLogger.get().reportNonFatalError(t2)
                 uiInfoService.showToast(R.string.report_error_sent)
             },
         )

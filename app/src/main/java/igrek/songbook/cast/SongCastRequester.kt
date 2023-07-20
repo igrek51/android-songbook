@@ -1,6 +1,6 @@
 package igrek.songbook.cast
 
-import igrek.songbook.admin.HttpRequester
+import igrek.songbook.system.HttpRequester
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor

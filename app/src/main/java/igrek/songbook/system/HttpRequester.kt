@@ -1,5 +1,6 @@
-package igrek.songbook.admin
+package igrek.songbook.system
 
+import igrek.songbook.info.errorcheck.ContextError
 import igrek.songbook.info.logger.LoggerFactory
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
@@ -52,13 +53,13 @@ class HttpRequester {
                     Result.success(responseData)
                 } catch (e: Throwable) {
                     logger.error("onResponse error: ${e.message}", e)
-                    Result.failure(RuntimeException(e.message))
+                    Result.failure(ContextError("Network error: failed to extract response from ${request.method()} ${request.url()}", e))
                 }
             }
 
         } catch (e: IOException) {
             logger.error("Request sending error: ${e.message}", e)
-            return Result.failure(RuntimeException(e.message))
+            return Result.failure(ContextError("Network error when sending request ${request.method()} ${request.url()}", e))
         }
     }
 

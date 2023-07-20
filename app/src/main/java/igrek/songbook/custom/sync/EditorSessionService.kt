@@ -1,7 +1,7 @@
 package igrek.songbook.custom.sync
 
 import igrek.songbook.R
-import igrek.songbook.admin.HttpRequester
+import igrek.songbook.system.HttpRequester
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.errorcheck.safeExecute

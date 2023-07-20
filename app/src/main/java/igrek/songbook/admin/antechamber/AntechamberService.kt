@@ -3,7 +3,7 @@ package igrek.songbook.admin.antechamber
 
 import igrek.songbook.R
 import igrek.songbook.admin.AdminService
-import igrek.songbook.admin.HttpRequester
+import igrek.songbook.system.HttpRequester
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.UiErrorHandler

@@ -34,7 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import igrek.songbook.R
-import igrek.songbook.admin.ApiResponseError
+import igrek.songbook.system.ApiResponseError
 import igrek.songbook.compose.AppTheme
 import igrek.songbook.compose.LabelText
 import igrek.songbook.compose.RichText
