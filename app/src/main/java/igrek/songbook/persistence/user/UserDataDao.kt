@@ -75,7 +75,7 @@ class UserDataDao(
 
     suspend fun load() {
         runCatching {
-            RetryAttempt(3, "loading user data", backoffDelayMs = 200).run {
+            RetryAttempt(3, "loading user data", backoffDelayMs = 300).run {
                 reload(resetOnError = false)
             }
         }.recoverCatching {
@@ -85,6 +85,7 @@ class UserDataDao(
             reloadSync()
         }.recoverCatching {
             delay(2000)
+            logger.error("failed to load user data. Trying delayed synchronous load...")
             reloadSync()
         }.recover { t ->
             logger.error("failed to load user data", t)

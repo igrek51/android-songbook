@@ -91,6 +91,9 @@ class AppInitializer(
 
         logger.info("Initializing application...")
 
+        // Enable coroutine's stacktrace recovery
+        System.setProperty(kotlinx.coroutines.DEBUG_PROPERTY_NAME, kotlinx.coroutines.DEBUG_PROPERTY_VALUE_ON)
+
         syncInit()
 
         initJob = GlobalScope.launch {
