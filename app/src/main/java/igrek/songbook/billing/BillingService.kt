@@ -193,47 +193,43 @@ class BillingService(
     fun callRestorePurchases() {
         uiInfoService.showInfo(R.string.billing_restoring_purchases)
         defaultScope.launch {
-            restorePurchases()
+            try {
+                restorePurchases()
+                uiInfoService.showInfo(R.string.billing_purchases_restored)
+            } catch (t: Throwable) {
+                UiErrorHandler().handleError(t, R.string.error_purchase_error)
+            }
             purchaseEventsSubject.onNext(true)
-            uiInfoService.showInfo(R.string.billing_purchases_restored)
         }
     }
 
     private suspend fun restorePurchases() {
-        try {
-
-            for (productId: String in this.knownAllProducts) {
-                productAmounts[productId] = 0
-                productStateMap[productId] = ProductState.UNKNOWN
-            }
-
-            val params = QueryPurchasesParams.newBuilder()
-                .setProductType(BillingClient.ProductType.INAPP)
-            val purchasesResult = billingClient!!.queryPurchasesAsync(params.build())
-            val billingResult = purchasesResult.billingResult
-            if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                processPurchaseList(purchasesResult.purchasesList)
-            } else {
-                throw RuntimeException("Restoring purchases failed: ${billingResult.responseCode} ${billingResult.debugMessage}")
-            }
-
-            // restorePurchasesFromHistory()
-
-            for (productId in knownAllProducts) {
-                if (productStateMap[productId] == ProductState.UNKNOWN) {
-                    productStateMap[productId] = ProductState.UNPURCHASED
-                }
-            }
-
-            logger.debug(
-                "Restored purchases: " +
-                        "$PRODUCT_ID_NO_ADS - ${productStateMap[PRODUCT_ID_NO_ADS]?.name}, " +
-                        "$PRODUCT_ID_DONATE_1_BEER - ${productStateMap[PRODUCT_ID_DONATE_1_BEER]?.name} quantity=${productAmounts[PRODUCT_ID_DONATE_1_BEER]}"
-            )
-
-        } catch (t: Throwable) {
-            UiErrorHandler().handleError(t, R.string.error_purchase_error)
+        for (productId: String in this.knownAllProducts) {
+            productAmounts[productId] = 0
+            productStateMap[productId] = ProductState.UNKNOWN
         }
+
+        val params = QueryPurchasesParams.newBuilder()
+            .setProductType(BillingClient.ProductType.INAPP)
+        val purchasesResult = billingClient!!.queryPurchasesAsync(params.build())
+        val billingResult = purchasesResult.billingResult
+        if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
+            processPurchaseList(purchasesResult.purchasesList)
+        } else {
+            throw RuntimeException("Restoring purchases failed: ${billingResult.responseCode} ${billingResult.debugMessage}")
+        }
+
+        for (productId in knownAllProducts) {
+            if (productStateMap[productId] == ProductState.UNKNOWN) {
+                productStateMap[productId] = ProductState.UNPURCHASED
+            }
+        }
+
+        logger.debug(
+            "Restored purchases: " +
+                    "$PRODUCT_ID_NO_ADS - ${productStateMap[PRODUCT_ID_NO_ADS]?.name}, " +
+                    "$PRODUCT_ID_DONATE_1_BEER - ${productStateMap[PRODUCT_ID_DONATE_1_BEER]?.name} quantity=${productAmounts[PRODUCT_ID_DONATE_1_BEER]}"
+        )
     }
 
     private suspend fun restorePurchasesFromHistory() {
