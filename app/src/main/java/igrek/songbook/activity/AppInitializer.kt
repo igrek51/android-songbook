@@ -151,7 +151,7 @@ class AppInitializer(
     }
 
     fun newIntentFromActivity(intent: Intent?) {
-        if (initJob?.isActive != false) return // true or null
+        if (initJob?.isActive != false) return // exit if initializing or unknown
         postInitIntent(intent)
     }
 

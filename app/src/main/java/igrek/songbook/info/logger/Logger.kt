@@ -12,7 +12,8 @@ open class Logger internal constructor() {
     }
 
     fun error(t: Throwable) {
-        log("[${t.javaClass.name}] ${t.message}", LogLevel.ERROR, "[ERROR] ")
+        val throwableMessage = formatErrorMessage(t)
+        log(throwableMessage, LogLevel.ERROR, "[ERROR] ")
         printExceptionStackTrace(t)
     }
 

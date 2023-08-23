@@ -29,7 +29,8 @@ class UiErrorHandler(
         if (t is LocalizedError) {
             uiInfoService.showInfo(t.messageRes, indefinite = true)
         } else {
-            LoggerFactory.logger.error(t)
+            val errorMessage = uiInfoService.resString(contextResId, formatErrorMessage(t))
+            LoggerFactory.logger.error(errorMessage)
             uiInfoService.showInfoAction(
                 contextResId,
                 err,

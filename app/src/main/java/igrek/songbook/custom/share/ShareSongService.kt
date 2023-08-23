@@ -95,7 +95,7 @@ open class ShareSongService(
                 }
             }
         } catch (t: Throwable) {
-            UiErrorHandler().handleError(RuntimeException("Invalid URL: ${t.message}", t))
+            UiErrorHandler().handleError(t, "Invalid URL")
         }
     }
 
