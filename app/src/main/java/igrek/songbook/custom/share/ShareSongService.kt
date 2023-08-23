@@ -120,11 +120,13 @@ open class ShareSongService(
     private fun generateURL(song: Song): String {
         val base64 = encodeSong(song)
         logger.debug("Song \"${song.title}\" encoded to $base64")
-        return "https://songbookapp.page.link/?${SHARED_SONG_QUERY_PREFIX}${base64}"
+        return "https://songbook.igrek.dev/song?d=${base64}"
     }
 }
 
+const val SHARED_SONG_QUERY_PREFIX_FIREBASE = "https://songbookapp.page.link/?link=https://songbook.igrek.dev/song?d="
 const val SHARED_SONG_QUERY_PREFIX = "link=https://songbook.igrek.dev/song?d="
+const val SHARED_SONG_QUERY_PREFIX2 = "songbook.igrek.dev/song?d="
 const val SHARED_SONG_QUERY_PREFIX_ALT = "d="
 
 fun parseSongFromUri(intent: Intent?): String? {
@@ -134,8 +136,14 @@ fun parseSongFromUri(intent: Intent?): String? {
         logger.error("invalid song url: $data")
         return null
     }
+    if (query.startsWith(SHARED_SONG_QUERY_PREFIX_FIREBASE)) {
+        return query.removePrefix(SHARED_SONG_QUERY_PREFIX_FIREBASE)
+    }
     if (query.startsWith(SHARED_SONG_QUERY_PREFIX)) {
         return query.removePrefix(SHARED_SONG_QUERY_PREFIX)
+    }
+    if (query.startsWith(SHARED_SONG_QUERY_PREFIX2)) {
+        return query.removePrefix(SHARED_SONG_QUERY_PREFIX2)
     }
     if (query.startsWith(SHARED_SONG_QUERY_PREFIX_ALT)) {
         return query.removePrefix(SHARED_SONG_QUERY_PREFIX_ALT)
