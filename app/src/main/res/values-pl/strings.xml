@@ -602,5 +602,5 @@
     <string name="opened_a_random_song_from_favourites">Losowa piosenka z ulubionych</string>
     <string name="settings_swipe_to_randomize_again">Przesuń w lewo, aby wylosować ponownie</string>
     <string name="settings_swipe_to_randomize_again_hint">Gest \"machnięcia w lewo\" w widoku piosenki ponownie wylosuje utwór (jeśli nie ma otwartej playlisty).</string>
-    <string name="opening_shared_song">Otwieram udostępnioną piosenkę…</string>
+    <string name="opened_shared_song">Wczytano udostępnioną piosenkę.</string>
 </resources>

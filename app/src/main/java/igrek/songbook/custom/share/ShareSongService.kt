@@ -88,13 +88,13 @@ open class ShareSongService(
     }
 
     fun openSharedEncodedSong(encodedSong: String) {
-        uiInfoService.showInfo(R.string.opening_shared_song)
         logger.info("decoding shared song: $encodedSong")
         try {
             val song = decodeSong(encodedSong)
             song.let {
                 GlobalScope.launch {
                     songOpener.openSongPreview(song)
+                    uiInfoService.showInfo(R.string.opened_shared_song)
                 }
             }
         } catch (t: Throwable) {
