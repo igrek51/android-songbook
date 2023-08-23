@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.36.2] - 1906 - 2023-08-24
+### Changed
+- Shared song links are now using our songbook.igrek.dev domain 
+  due to Firebase Dynamic Links shutdown. Old links may stop working soon.
+- Added more context to errors. Enabled coroutine's stacktrace recovery.
+
+### Fixed
+- Fixed corrupted data error by saving backup file.
+  This allows to recover if app has been terminated, while saving the data.
+- Fix reordering animation on moveable items. Improved overscroll animation.
+
 ## [1.36.1] - 1905 - 2023-07-17
 ### Added
 - "Swipe left" gesture on the song view to shuffle a random song again
