@@ -3,6 +3,7 @@ package igrek.songbook.custom.share
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import igrek.songbook.R
 import igrek.songbook.activity.CopyToClipboardActivity
 import igrek.songbook.custom.share.protos.SharedSong
 import igrek.songbook.info.errorcheck.UiErrorHandler
@@ -31,6 +32,7 @@ open class ShareSongService(
 ) {
     private val songOpener by LazyExtractor(songOpener)
     private val activity by LazyExtractor(activity)
+    private val uiInfoService by LazyExtractor(appFactory.uiInfoService)
 
     fun encodeSong(song: Song): String {
         val marsh: ByteArray = marshal(song)
@@ -86,6 +88,7 @@ open class ShareSongService(
     }
 
     fun openSharedEncodedSong(encodedSong: String) {
+        uiInfoService.showInfo(R.string.opening_shared_song)
         logger.info("decoding shared song: $encodedSong")
         try {
             val song = decodeSong(encodedSong)

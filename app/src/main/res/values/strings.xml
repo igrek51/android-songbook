@@ -633,4 +633,5 @@
     <string name="opened_a_random_song_from_favourites">Random song from liked songs</string>
     <string name="settings_swipe_to_randomize_again">Swipe left to shuffle again</string>
     <string name="settings_swipe_to_randomize_again_hint">Make \"swipe left\" gesture on the song view to shuffle a random song again (if there\'s no open playlist).</string>
+    <string name="opening_shared_song">Opening shared song…</string>
 </resources>
