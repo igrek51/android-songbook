@@ -97,10 +97,39 @@ abstract class AbstractJsonDao<T>(
             }
             throw e
         } catch (e: EmptyFileException) {
-            logger.warn("File seems to be empty, trying alternative read: $file")
-            val bytes: ByteArray = readFromPhantomFile(filename)
-            val content: String = bytes.toString(Charsets.UTF_8)
+            logger.warn("File seems to be empty: $file, checking write-backup...")
+            val content: String = readFromWriteBakFile(dbName, schemaVersion) ?: throw e
             return json.decodeFromString(serializer, content)
+        }
+    }
+
+    private fun readFromWriteBakFile(dbName: String, schemaVersion: Int): String? {
+        val filename = buildFilename(dbName, schemaVersion)
+        val file = File(path, "$filename.write.bak").absoluteFile
+        if (!file.exists())
+            return null
+
+        try {
+            if (!file.canRead())
+                throw RuntimeException("No permission to read a file: $file")
+            if (!file.isFile)
+                throw RuntimeException("Path is not a regular file: $file")
+
+            val size = file.length()
+            if (size == 0L) {
+                throw EmptyFileException("File seems to be empty (due to insufficient permissions or corrupted file): $file")
+            }
+            val bytes: ByteArray = file.readBytes()
+            if (bytes.isEmpty()) {
+                throw RuntimeException("File seems to have zero bytes (due to insufficient permissions or corrupted file, $size length): $file")
+            }
+            val content: String = bytes.toString(Charsets.UTF_8)
+            logger.info("successfully recovered ${bytes.size} bytes from a write-backup file: $file")
+            return content
+
+        } catch (e: Throwable) {
+            logger.error("Failed to load write-backup file: $file")
+            return null
         }
     }
 
@@ -146,20 +175,23 @@ abstract class AbstractJsonDao<T>(
         }
     }
 
-    private fun saveDb(db: T): File {
-        return saveToFile(dbName, schemaVersion, db)
+    private fun saveDb(db: T) {
+        saveToFile(dbName, schemaVersion, db)
     }
 
-    private fun saveToFile(dbName: String, schemaVersion: Int, obj: T): File {
+    private fun saveToFile(dbName: String, schemaVersion: Int, obj: T) {
         json.encodeToJsonElement(serializer, obj)
         val content = json.encodeToString(serializer, obj)
         val filename = buildFilename(dbName, schemaVersion)
         val file = File(path, filename)
         if (content.isEmpty()) {
             logger.error("Empty content to save, aborting: $file")
+            return
         }
         file.writeText(content, Charsets.UTF_8)
-        return file
+        // save backup to secure from terminating app while saving data (resulting in wiped-out file)
+        val backupFile = File(path, "$filename.write.bak")
+        backupFile.writeText(content, Charsets.UTF_8)
     }
 
     private fun buildFilename(name: String, schemaVersion: Int): String {
