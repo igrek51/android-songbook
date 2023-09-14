@@ -32,7 +32,6 @@ import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import igrek.songbook.info.logger.LoggerFactory.logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -123,7 +122,7 @@ fun <T> ReorderListView(
                 },
         ) {
 
-            logger.debug("recomposing all items")
+//            logger.debug("recomposing all items")
             itemsContainer.items.indices.forEach { index: Int ->
                 ReorderListViewItem(itemsContainer, index, itemContent)
             }
@@ -141,7 +140,7 @@ private fun <T> ReorderListViewItem(
     index: Int,
     itemContent: @Composable (itemsContainer: ItemsContainer<T>, id: Int, modifier: Modifier) -> Unit,
 ) {
-    logger.debug("recomposing item $index")
+//    logger.debug("recomposing item $index")
     key(itemsContainer.modifiedMap.getValue(index).value) {
         val itemModifier = itemsContainer.itemModifiers.getValue(index)
         itemContent(itemsContainer, index, itemModifier)
