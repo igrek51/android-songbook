@@ -3,6 +3,8 @@
 package igrek.songbook.playlist
 
 import android.annotation.SuppressLint
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
@@ -243,14 +245,15 @@ private fun MainComponent(controller: PlaylistLayoutController) {
         if (currentPlaylist == null) {
             if (controller.state.playlistItems.items.isNotEmpty()) {
 
-                ReorderListView(
+                ReorderListView<Playlist>(
                     itemsContainer = controller.state.playlistItems,
                     scrollState = controller.state.playlistsScrollState,
                     onReorder = { newItems ->
                         controller.onPlaylistsReordered(newItems)
                     },
-                ) { itemsContainer: ItemsContainer<Playlist>, index: Int, modifier: Modifier, reorderButtonModifier: Modifier ->
-                    PlaylistItemComposable(controller, itemsContainer, index, modifier, reorderButtonModifier)
+                    onLoad = {},
+                ) { itemsContainer: ItemsContainer<Playlist>, id: Int, modifier: Modifier ->
+                    PlaylistItemComposable(controller, itemsContainer, id, modifier)
                 }
 
             } else {
@@ -272,8 +275,9 @@ private fun MainComponent(controller: PlaylistLayoutController) {
                     onReorder = { newItems ->
                         controller.onSongsReordered(newItems)
                     },
-                ) { itemsContainer: ItemsContainer<Song>, index: Int, modifier: Modifier, reorderButtonModifier: Modifier ->
-                    SongItemComposable(controller, itemsContainer, index, modifier, reorderButtonModifier)
+                    onLoad = {},
+                ) { itemsContainer: ItemsContainer<Song>, id: Int, modifier: Modifier ->
+                    SongItemComposable(controller, itemsContainer, id, modifier)
                 }
 
             } else {
@@ -295,18 +299,20 @@ private fun MainComponent(controller: PlaylistLayoutController) {
 private fun PlaylistItemComposable(
     controller: PlaylistLayoutController,
     itemsContainer: ItemsContainer<Playlist>,
-    index: Int,
+    id: Int,
     modifier: Modifier,
-    reorderButtonModifier: Modifier,
 ) {
-    val playlist: Playlist = itemsContainer.items.getOrNull(index) ?: return
+    val playlist: Playlist = itemsContainer.items.getOrNull(id) ?: return
+    val reorderButtonModifier: Modifier = itemsContainer.reorderButtonModifiers.getValue(id)
 
     Row(
         modifier.padding(0.dp)
             .combinedClickable(
                 onClick = {
-                    mainScope.launch {
-                        controller.onPlaylistClick(playlist)
+                    Handler(Looper.getMainLooper()).post {
+                        mainScope.launch {
+                            controller.onPlaylistClick(playlist)
+                        }
                     }
                 },
                 onLongClick = {
@@ -373,18 +379,20 @@ private fun PlaylistItemComposable(
 private fun SongItemComposable(
     controller: PlaylistLayoutController,
     itemsContainer: ItemsContainer<Song>,
-    index: Int,
+    id: Int,
     modifier: Modifier,
-    reorderButtonModifier: Modifier,
 ) {
-    val song: Song = itemsContainer.items.getOrNull(index) ?: return
+    val song: Song = itemsContainer.items.getOrNull(id) ?: return
+    val reorderButtonModifier: Modifier = itemsContainer.reorderButtonModifiers.getValue(id)
 
     Row (
         modifier.padding(0.dp)
             .combinedClickable(
                 onClick = {
-                    mainScope.launch {
-                        controller.onSongClick(song)
+                    Handler(Looper.getMainLooper()).post {
+                        mainScope.launch {
+                            controller.onSongClick(song)
+                        }
                     }
                 },
                 onLongClick = {
