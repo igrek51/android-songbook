@@ -101,12 +101,10 @@ fun <T> ReorderListView(
         itemsContainer.isDraggingMes[index] = derivedStateOf {
             draggingIndex.value == index
         }
-        if (!itemsContainer.reorderButtonModifiers.containsKey(index)) {
-            itemsContainer.reorderButtonModifiers[index] = Modifier.createReorderButtonModifier(
-                itemsContainer, index, draggingIndex, scrollState, parentViewportHeight,
-                coroutineScope, scrollJob, onReorder,
-            )
-        }
+        itemsContainer.reorderButtonModifiers[index] = Modifier.createReorderButtonModifier(
+            itemsContainer, index, draggingIndex, scrollState, parentViewportHeight,
+            coroutineScope, scrollJob, onReorder,
+        )
         itemsContainer.itemModifiers[index] = Modifier.createItemModifier(
             itemsContainer, index,
         )
