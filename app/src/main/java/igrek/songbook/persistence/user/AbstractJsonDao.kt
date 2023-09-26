@@ -86,7 +86,7 @@ abstract class AbstractJsonDao<T>(
             }
             val bytes: ByteArray = file.readBytes()
             if (bytes.isEmpty()) {
-                throw RuntimeException("File seems to have zero bytes (due to insufficient permissions or corrupted file, $size length): $file")
+                throw EmptyFileException("File seems to have zero bytes (due to insufficient permissions or corrupted file, $size length): $file")
             }
             val content: String = bytes.toString(Charsets.UTF_8)
             return json.decodeFromString(serializer, content)
