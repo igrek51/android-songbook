@@ -366,7 +366,9 @@ class ChordsEditorTransformer(
     }
 
     fun reformatAndTrimEditor() {
-        transformLyrics(this::reformatAndTrim)
+        transformLyrics { lyrics ->
+            reformatAndTrim(reformatAndTrim(lyrics))
+        }
     }
 
     private fun reformatNeeded(): Boolean {
