@@ -59,17 +59,7 @@ class SongImportFileChooser(
     fun init() {
         fileChooserLauncher =
             activityResultDispatcher.registerActivityResultLauncher { resultCode: Int, data: Intent? ->
-                when (resultCode) {
-                    Activity.RESULT_OK -> {
-                        onFileSelect(data)
-                    }
-                    Activity.RESULT_CANCELED -> {
-                        uiInfoService.showToast(R.string.file_select_operation_canceled)
-                    }
-                    else -> {
-                        UiErrorHandler().handleError(RuntimeException("Unknown operation result"))
-                    }
-                }
+                processActivityResult(resultCode, data)
             }
     }
 
@@ -86,22 +76,26 @@ class SongImportFileChooser(
 
                     } else {
                         activityResultDispatcher.startActivityForResult(intent) { resultCode: Int, data: Intent? ->
-                            when (resultCode) {
-                                Activity.RESULT_OK -> {
-                                    onFileSelect(data)
-                                }
-                                Activity.RESULT_CANCELED -> {
-                                    uiInfoService.showToast(R.string.file_select_operation_canceled)
-                                }
-                                else -> {
-                                    UiErrorHandler().handleError(RuntimeException("Unknown operation result"))
-                                }
-                            }
+                            processActivityResult(resultCode, data)
                         }
                     }
                 }
             } catch (ex: android.content.ActivityNotFoundException) {
                 uiInfoService.showToast(R.string.file_manager_not_found)
+            }
+        }
+    }
+
+    private fun processActivityResult(resultCode: Int, data: Intent?) {
+        when (resultCode) {
+            Activity.RESULT_OK -> {
+                onFileSelect(data)
+            }
+            Activity.RESULT_CANCELED -> {
+                uiInfoService.showToast(R.string.file_select_operation_canceled)
+            }
+            else -> {
+                UiErrorHandler().handleError(RuntimeException("Unknown operation result"))
             }
         }
     }

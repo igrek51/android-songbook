@@ -79,7 +79,8 @@
             android:resizeableActivity="true"
             android:exported="true"
             android:theme="@style/AppTheme"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleTask"
+            />
 
         <activity
             android:name=".activity.TvActivity"
@@ -87,7 +88,8 @@
             android:resizeableActivity="true"
             android:exported="true"
             android:theme="@style/AppTheme"
-            android:launchMode="singleInstance" />
+            android:launchMode="singleTask"
+            />
 
         <activity
             android:name=".activity.KickstartActivity"
@@ -95,7 +97,7 @@
             android:resizeableActivity="true"
             android:exported="true"
             android:theme="@style/AppTheme"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTask"
             tools:targetApi="n" />
 
         <activity
