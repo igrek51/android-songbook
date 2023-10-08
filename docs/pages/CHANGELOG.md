@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.36.3] - 1907 - 2023-10-08
+### Fixed
+- Fixed "File import canceled" on latest Android.
+- Fixed lyrics still needing reformatting after doing Reformat.
+- Improved reordering animation on playlists.
+
 ## [1.36.2] - 1906 - 2023-08-24
 ### Changed
 - Shared song links are now using our songbook.igrek.dev domain 
