@@ -235,7 +235,7 @@ class SongCastService {
                 }
                 lastShot = Date().time
             }
-            delay(1_000)
+            delay(2_000)
         }
     }
 

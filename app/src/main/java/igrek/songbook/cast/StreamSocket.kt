@@ -102,7 +102,7 @@ class StreamSocket(
             logger.warn("Reconnecting to socket.io ($i)")
             socket.disconnect()
             socket.connect()
-            delay(100 + i * 100L)
+            delay(100 + i * 150L)
             if (i == 20 && !socket.connected()) {
                 throw RuntimeException("Failed to connect to socket.io events stream, reconnecting...")
             }
