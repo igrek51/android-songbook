@@ -32,7 +32,7 @@ class SongRankService(
     private val jsonType = MediaType.parse("application/json; charset=utf-8")
     private val jsonSerializer = Json {
         encodeDefaults = true
-        ignoreUnknownKeys = false
+        ignoreUnknownKeys = true
         isLenient = false
         allowStructuredMapKeys = true
         prettyPrint = false

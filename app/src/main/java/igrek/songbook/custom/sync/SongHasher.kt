@@ -9,7 +9,7 @@ import kotlinx.serialization.json.Json
 class SongHasher {
     private val jsonSerializer = Json {
         encodeDefaults = true
-        ignoreUnknownKeys = false
+        ignoreUnknownKeys = true
         isLenient = false
         allowStructuredMapKeys = true
         prettyPrint = false
