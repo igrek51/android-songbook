@@ -36,6 +36,7 @@ data class CustomSong(
         }
     }
 
+    val artist: String? get() = this.categoryName
     val chordsNotationN: ChordsNotation get() = this.chordsNotation ?: ChordsNotation.default
 }
 
@@ -44,4 +45,5 @@ data class SyncSessionData(
     var lastLocalHash: String = "",
     var lastRemoteHash: String = "",
     var localIdToRemoteMap: MutableMap<String, String> = mutableMapOf(),
+    var localTrash: MutableMap<String, Long> = mutableMapOf(), // local song ID to timestamp of removal in seconds
 )

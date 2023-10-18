@@ -35,6 +35,16 @@ class SongHasher {
         val json = jsonSerializer.encodeToString(TitledSongDto.serializer(), dto)
         return ShaHasher().singleHash(json)
     }
+
+    fun stdSongContentHash(song: CustomSong): String {
+        val parts: List<String> = listOf(
+            song.title,
+            song.artist ?: "",
+            song.content,
+            song.chordsNotationN.id.toString(),
+        )
+        return ShaHasher().singleHash(parts.joinToString("\n")).lowercase()
+    }
 }
 
 @Serializable

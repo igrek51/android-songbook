@@ -9,6 +9,7 @@ import igrek.songbook.persistence.general.model.SongIdentifier
 import igrek.songbook.persistence.general.model.SongNamespace
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.AbstractJsonDao
+import java.util.Date
 
 class CustomSongsDao(
     path: String,
@@ -86,7 +87,9 @@ class CustomSongsDao(
         songsRepository.openHistoryDao.removeUsage(song.id, true)
         songsRepository.transposeDao.removeUsage(song.id, true)
         songsRepository.songTweakDao.removeUsage(SongIdentifier(song.id, SongNamespace.Custom))
-        customSongs.syncSessionData.localIdToRemoteMap.remove(song.id)
+
+        // remember timestamp of removal
+        customSongs.syncSessionData.localTrash[song.id] = Date().time / 1000
 
         songsRepository.saveAndReloadUserSongs()
     }
