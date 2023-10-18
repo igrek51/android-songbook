@@ -43,8 +43,6 @@ class EditorSessionService(
             { session: String -> "$songbookApiBase/api/editor/session/$session" }
         private val pullSyncHeaderUrl =
             { session: String -> "$songbookApiBase/api/editor/session/$session/header" }
-        private val pushSongsUrl =
-            { session: String -> "$songbookApiBase/api/editor/session/$session" }
         private val editorSessionUrl =
             { session: String -> "$songbookApiBase/ui/editor/session/$session" }
         private val pullSongUrl =
@@ -156,7 +154,7 @@ class EditorSessionService(
         }
 
         val result = pushSongsAsync(split.sessionId, pushSongs).await()
-        val updatedSession: EditorSessionDto = result.getOrThrow()
+        result.getOrThrow()
         logger.debug("Sync: local snapshot pushed: updated: ${split.updatedLocals.size}, added: ${split.addedLocals.size}, deleted: ${split.deletedLocals.size}")
     }
 
@@ -434,22 +432,15 @@ class EditorSessionService(
     private fun pushSongsAsync(
         sessionId: String,
         songs: List<EditorSongDto>,
-    ): Deferred<Result<EditorSessionDto>> {
+    ): Deferred<Result<Unit>> {
         val dto = EditorSessionPushDto(songs = songs)
         val json =
             httpRequester.jsonSerializer.encodeToString(EditorSessionPushDto.serializer(), dto)
         val request: Request = Request.Builder()
-            .url(pushSongsUrl(sessionId))
+            .url("$songbookApiBase/api/editor/session/$sessionId/push")
             .post(RequestBody.create(httpRequester.jsonType, json))
             .build()
-        return httpRequester.httpRequestAsync(request) { response ->
-            val jsonData = response.body()?.string() ?: ""
-            val responseData: EditorSessionDto = httpRequester.jsonSerializer.decodeFromString(
-                EditorSessionDto.serializer(),
-                jsonData
-            )
-            responseData
-        }
+        return httpRequester.httpRequestAsync(request) {}
     }
 }
 
