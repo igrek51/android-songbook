@@ -38,15 +38,8 @@ class EditorSessionService(
 
     companion object {
         private const val songbookApiBase = "https://songbook.igrek.dev"
-        private const val createSessionUrl = "$songbookApiBase/api/editor/session"
-        private val pullSongsUrl =
-            { session: String -> "$songbookApiBase/api/editor/session/$session" }
-        private val pullSyncHeaderUrl =
-            { session: String -> "$songbookApiBase/api/editor/session/$session/header" }
         private val editorSessionUrl =
-            { session: String -> "$songbookApiBase/ui/editor/session/$session" }
-        private val pullSongUrl =
-            { session: String, songId: String -> "$songbookApiBase/api/editor/session/$session/song/$songId" }
+            { sessionId: String -> "$songbookApiBase/ui/editor/session/$sessionId" }
     }
 
     private val httpRequester = HttpRequester()
@@ -370,7 +363,7 @@ class EditorSessionService(
         val json =
             httpRequester.jsonSerializer.encodeToString(EditorSessionCreateDto.serializer(), dto)
         val request: Request = Request.Builder()
-            .url(createSessionUrl)
+            .url("$songbookApiBase/api/editor/session")
             .post(RequestBody.create(httpRequester.jsonType, json))
             .build()
         return httpRequester.httpRequestAsync(request) { response ->
@@ -386,7 +379,7 @@ class EditorSessionService(
 
     private fun pullAllSongsAsync(sessionId: String): Deferred<Result<EditorSessionDto>> {
         val request: Request = Request.Builder()
-            .url(pullSongsUrl(sessionId))
+            .url("$songbookApiBase/api/editor/session/$sessionId")
             .get()
             .build()
         return httpRequester.httpRequestAsync(request) { response ->
@@ -401,7 +394,7 @@ class EditorSessionService(
 
     private fun pullSongAsync(sessionId: String, songId: String): Deferred<Result<EditorSongDto>> {
         val request: Request = Request.Builder()
-            .url(pullSongUrl(sessionId, songId))
+            .url("$songbookApiBase/api/editor/session/$sessionId/song/$songId")
             .get()
             .build()
         return httpRequester.httpRequestAsync(request) { response ->
@@ -416,7 +409,7 @@ class EditorSessionService(
 
     private fun pullSyncHeaderAsync(sessionId: String): Deferred<Result<EditorSyncHeaderDto>> {
         val request: Request = Request.Builder()
-            .url(pullSyncHeaderUrl(sessionId))
+            .url("$songbookApiBase/api/editor/session/$sessionId/header")
             .get()
             .build()
         return httpRequester.httpRequestAsync(request) { response ->
