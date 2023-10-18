@@ -125,10 +125,7 @@ class EditorSessionService(
     }
 
     private suspend fun synchronizeStep5Push(split: SyncSplit) {
-        logger.info("Sync: pushing local snapshot")
-
         val localSongs: List<CustomSong> = songsRepository.customSongsDao.customSongs.songs
-
         val localIdToRemoteMap = syncSessionData.localIdToRemoteMap
 
         val pushSongs: MutableList<EditorSongDto> = mutableListOf()
@@ -148,7 +145,7 @@ class EditorSessionService(
 
         val result = pushSongsAsync(split.sessionId, pushSongs).await()
         result.getOrThrow()
-        logger.debug("Sync: local snapshot pushed: updated: ${split.updatedLocals.size}, added: ${split.addedLocals.size}, deleted: ${split.deletedLocals.size}")
+        logger.info("Sync: local snapshot pushed: updated: ${split.updatedLocals.size}, added: ${split.addedLocals.size}, deleted: ${split.deletedLocals.size}")
     }
 
     private fun synchronizeStep6SessionLink(sessionId: String) {
@@ -181,7 +178,7 @@ class EditorSessionService(
             .associateBy { it.song_id }.toMap()
         val remoteIdToLocalMap: Map<String, String> = localIdToRemoteMap.entries.associate{(k,v) -> v to k}
 
-        val syncSplit = SyncSplit(sessionId = sessionId)
+        val split = SyncSplit(sessionId = sessionId)
         val matches: MutableList<CrdtItemMatch> = mutableListOf()
 
         // existing local songs
@@ -191,7 +188,7 @@ class EditorSessionService(
 
             val match = CrdtItemMatch(
                 localId = localId,
-                localUpdateTime = localItem.updateTime,
+                localUpdateTime = localItem.updateTime / 1000, // millis to seconds
                 localValue = localItem,
                 localHash = SongHasher().stdSongContentHash(localItem),
             )
@@ -250,25 +247,23 @@ class EditorSessionService(
             val localId = match.localId
             val remoteId = match.remoteId
             if (localId != null && remoteId != null) {
-                syncSplit.newLocalRemoteIdMap[localId] = remoteId
+                split.newLocalRemoteIdMap[localId] = remoteId
             }
             when {
-                localId == null && remoteId != null -> syncSplit.addedRemotes.add(CrdtItemAddedRemote(
+                localId == null && remoteId != null -> split.addedRemotes.add(CrdtItemAddedRemote(
                     remoteId = remoteId,
                     remoteUpdateTime = remoteUpdateTimeN,
                     remoteValue = match.remoteValue!!,
                     remoteHash = match.remoteHash!!,
                 ))
-                remoteId == null && localId != null -> syncSplit.addedLocals.add(CrdtItemAddedLocal(
+                remoteId == null && localId != null -> split.addedLocals.add(CrdtItemAddedLocal(
                     localId = localId,
                     localUpdateTime = localUpdateTimeN,
                     localValue = match.localValue!!,
                     localHash = match.localHash!!,
                 ))
                 localId == null && remoteId == null -> throw RuntimeException("both local and remote is empty")
-                match.localUpdateTime == null -> throw RuntimeException("update time of local song is unkown")
-                match.remoteUpdateTime == null -> throw RuntimeException("update time of remote song is unkown")
-                match.localHash == match.remoteHash -> syncSplit.common.add(CrdtItemCommon(
+                match.localHash == match.remoteHash -> split.common.add(CrdtItemCommon(
                     localId = localId!!,
                     localUpdateTime = localUpdateTimeN,
                     localValue = match.localValue!!,
@@ -278,16 +273,24 @@ class EditorSessionService(
                     remoteValue = match.remoteValue!!,
                     remoteHash = match.remoteHash!!,
                 ))
-                localUpdateTimeN >= remoteUpdateTimeN -> { // resolve conflict - last write wins
+                // resolve conflict - last write wins
+                localUpdateTimeN >= remoteUpdateTimeN -> { // local wins
                     if (match.localValue == null) {
-                        syncSplit.deletedLocals.add(CrdtItemDeletedLocal(
+                        split.deletedLocals.add(CrdtItemDeletedLocal(
                             localId = localId!!,
                             localUpdateTime = localUpdateTimeN,
                             remoteId = remoteId!!,
                             remoteUpdateTime = remoteUpdateTimeN,
                         ))
+                    } else if (match.remoteValue == null) {
+                        split.addedLocals.add(CrdtItemAddedLocal(
+                            localId = localId!!,
+                            localUpdateTime = localUpdateTimeN,
+                            localValue = match.localValue!!,
+                            localHash = match.localHash!!,
+                        ))
                     } else {
-                        syncSplit.updatedLocals.add(CrdtItemCommon(
+                        split.updatedLocals.add(CrdtItemCommon(
                             localId = localId!!,
                             localUpdateTime = localUpdateTimeN,
                             localValue = match.localValue!!,
@@ -301,15 +304,22 @@ class EditorSessionService(
                 }
                 localUpdateTimeN < remoteUpdateTimeN -> {
                     if (match.remoteValue == null) {
-                        syncSplit.deletedRemotes.add(CrdtItemDeletedRemote(
+                        split.deletedRemotes.add(CrdtItemDeletedRemote(
                             localId = localId!!,
                             localUpdateTime = localUpdateTimeN,
                             localValue = match.localValue!!,
                             remoteId = remoteId!!,
                             remoteUpdateTime = remoteUpdateTimeN,
                         ))
+                    } else if (match.localValue == null) {
+                        split.addedRemotes.add(CrdtItemAddedRemote(
+                            remoteId = remoteId!!,
+                            remoteUpdateTime = remoteUpdateTimeN,
+                            remoteValue = match.remoteValue!!,
+                            remoteHash = match.remoteHash!!,
+                        ))
                     } else {
-                        syncSplit.updatedRemotes.add(CrdtItemCommon(
+                        split.updatedRemotes.add(CrdtItemCommon(
                             localId = localId!!,
                             localUpdateTime = localUpdateTimeN,
                             localValue = match.localValue!!,
@@ -325,7 +335,9 @@ class EditorSessionService(
             }
         }
 
-        return syncSplit
+        logger.debug("Sync: Compare: locally updated: ${split.updatedLocals.size}, locally added: ${split.addedLocals.size}, locally deleted: ${split.deletedLocals.size}, " +
+            "remotely updated: ${split.updatedRemotes.size}, remotely added: ${split.addedRemotes.size}, remotely deleted: ${split.deletedRemotes.size}")
+        return split
     }
 
     private fun updateSongByRemote(localOne: CustomSong, remoteOne: EditorSongDto) {
@@ -461,7 +473,7 @@ data class EditorSongDto(
     companion object {
         fun fromLocalSong(local: CustomSong, remoteSongId: String): EditorSongDto = EditorSongDto(
             id = remoteSongId,
-            update_timestamp = local.updateTime / 1000,
+            update_timestamp = local.updateTime / 1000, // millis to seconds
             title = local.title,
             artist = local.categoryName,
             content = local.content,
