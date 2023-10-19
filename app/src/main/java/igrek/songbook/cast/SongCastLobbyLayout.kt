@@ -73,7 +73,10 @@ import igrek.songbook.system.ClipboardManager
 import igrek.songbook.util.defaultScope
 import igrek.songbook.util.formatTimestampKitchen
 import igrek.songbook.util.mainScope
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SongCastLobbyLayout(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
