@@ -186,10 +186,10 @@ class SongCastService {
         while (isInRoom()) {
             val interval: Long? = when {
                 !activityController.isForeground -> null
-                streamSocket.ioSocket?.connected() == false -> (500..1500).random().toLong()
+                streamSocket.ioSocket?.connected() == false -> (700..1700).random().toLong()
                 else -> {
-                    val penaltyMillis = refreshCounter.current().limitTo(120) * 1000 // max 2m
-                    (500..1500).random().toLong() + penaltyMillis
+                    val penaltyMillis = refreshCounter.current().limitTo(180) * 1000 // max 3m
+                    (700..2000).random().toLong() + penaltyMillis
                 }
             }
             if (interval != null && Date().time - lastShot >= interval) {
@@ -203,12 +203,12 @@ class SongCastService {
                     }
                 } catch (e: Throwable) {
                     UiErrorHandler().handleContextError(e, R.string.songcast_connection_context)
-                    delay(5_000)
+                    delay(7_000)
                 }
 
                 lastShot = Date().time
             }
-            delay(1_000)
+            delay(1_500)
         }
     }
 
@@ -235,7 +235,7 @@ class SongCastService {
                 }
                 lastShot = Date().time
             }
-            delay(2_000)
+            delay(2_000 + (0..500).random().toLong())
         }
     }
 

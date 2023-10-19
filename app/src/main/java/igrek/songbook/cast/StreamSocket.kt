@@ -55,9 +55,9 @@ class StreamSocket(
 
             socket.on(Socket.EVENT_CONNECT) {
                 logger.debug("socket.io: Connected with id: ${socket.id()}")
-                socket.emit("subscribe_for_session_events", JSONObject(
-                    mapOf("session_id" to sessionCode)
-                ))
+//                socket.emit("subscribe_for_session_events", JSONObject(
+//                    mapOf("session_id" to sessionCode)
+//                ))
             }
             socket.on(Socket.EVENT_DISCONNECT) {
                 logger.debug("socket.io: Disconnected")

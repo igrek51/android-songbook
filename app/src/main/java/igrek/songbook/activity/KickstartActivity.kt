@@ -14,7 +14,6 @@ import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.MainLayout
-import igrek.songbook.playlist.PlaylistLayoutController
 import igrek.songbook.util.waitUntil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -26,11 +25,11 @@ import kotlin.reflect.KClass
 class KickstartActivity : MainActivity() {
 
     private suspend fun bootstrapUI() {
-        openNavItem(R.id.nav_playlists)
-        waitForLayout(PlaylistLayoutController::class)
-//        safeExecute {
-//            appFactory.songCastMenuLayout.get().restoreRoom()
-//        }
+        openNavItem(R.id.nav_song_cast)
+        waitForLayout(SongCastMenuLayout::class)
+        safeExecute {
+            appFactory.songCastMenuLayout.get().restoreRoom()
+        }
 //        appFactory.commanderService.get().commandAttempt("logs")
     }
 
