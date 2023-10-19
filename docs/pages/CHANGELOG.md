@@ -6,9 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.36.4] - 1908 - 2023-10-20
 ### Changed
 - Conflicts no longer happen in Custom songs synchronization
   due to using Conflict-free Replicated Data Type algorithm.
+
+### Fixed
+- Song Cast is now more stable in the rooms with many connected devices. 
 
 ## [1.36.3] - 1907 - 2023-10-08
 ### Fixed
