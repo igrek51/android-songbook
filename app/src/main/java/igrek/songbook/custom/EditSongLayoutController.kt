@@ -310,13 +310,17 @@ class EditSongLayoutController(
     }
 
     fun setupImportedSong(title: String, artist: String?, content: String, notation: ChordsNotation?) {
-        songTitleEdit?.setText(title)
+        if (songTitleEdit?.text?.toString().isNullOrEmpty()) {
+            songTitleEdit?.setText(title)
+        }
         artist?.run {
-            customCategoryNameEdit?.setText(artist)
+            if (customCategoryNameEdit?.text?.toString().isNullOrEmpty()) {
+                customCategoryNameEdit?.setText(artist)
+            }
         }
         songContentEdit?.setText(content)
-        notation?.let { _notation ->
-            chordsNotationSpinner?.selectedNotation = _notation
+        notation?.let { notationN ->
+            chordsNotationSpinner?.selectedNotation = notationN
         }
     }
 }
