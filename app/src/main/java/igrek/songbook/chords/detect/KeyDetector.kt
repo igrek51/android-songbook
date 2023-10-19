@@ -40,7 +40,7 @@ class KeyDetector {
         val hasMediant = (key.mediant() in minorChordNotes).toInt() // iii
         val hasSupertonic = (key.supertonic() in minorChordNotes).toInt() // ii
         val scaleDegreeScore =
-            hasTonic * 500 + hasSubmediant * 250 + hasDominant * 125 + hasSubdominant * 50 + hasMediant * 10 + hasSupertonic * 10
+            hasTonic * 500 + hasSubmediant * 450 + hasDominant * 150 + hasSubdominant * 50 + hasMediant * 10 + hasSupertonic * 10
 
         val sharpnessAbs = majorKeySharpnessAbs[key]!!
         val sharpnessScore = -sharpnessAbs // take key with less sharps/flats

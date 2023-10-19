@@ -46,13 +46,13 @@ class KeyDetectorTest {
     }
 
     @Test
-    fun test_detectMajorKeyWithMinorChord() {
-        val lyrics = LyricsExtractor().parseLyrics("[F#m E D]")
+    fun test_detectMinorKeyWithoutMajorTonic() {
+        val lyrics = LyricsExtractor().parseLyrics("[D E F#m]")
         ChordParser(ChordsNotation.ENGLISH).parseAndFillChords(lyrics)
         val scores = KeyDetector().detectKeyScores(lyrics)
         println(scores)
         val key = KeyDetector().detectKey(lyrics)
-        Assertions.assertThat(key).isEqualTo(MajorKey.D_MAJOR)
+        Assertions.assertThat(key).isEqualTo(MajorKey.A_MAJOR)
     }
 
     @Test
