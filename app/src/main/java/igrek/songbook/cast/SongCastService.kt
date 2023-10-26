@@ -188,8 +188,8 @@ class SongCastService {
                 !activityController.isForeground -> null
                 streamSocket.ioSocket?.connected() == false -> (700..1700).random().toLong()
                 else -> {
-                    val penaltyMillis = refreshCounter.current().limitTo(180) * 1000 // max 3m
-                    (700..2000).random().toLong() + penaltyMillis
+                    val penaltyMillis = (refreshCounter.current() * 2.0f).limitTo(180f) * 1000 // max 3m
+                    (1000..2000).random().toLong() + penaltyMillis.toLong()
                 }
             }
             if (interval != null && Date().time - lastShot >= interval) {
