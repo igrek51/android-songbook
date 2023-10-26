@@ -274,7 +274,7 @@ class SongPreviewLayoutController(
             ?.apply {
                 setOnClickListener { setFullscreen(false) }
             }
-        setFullscreen(false)
+        refreshFullscreen()
     }
 
     private fun showMoreActions() {
@@ -404,8 +404,11 @@ class SongPreviewLayoutController(
 
     private fun setFullscreen(fullscreen: Boolean) {
         this.fullscreen = fullscreen
-        windowManagerService.setFullscreen(fullscreen)
+        refreshFullscreen()
+    }
 
+    private fun refreshFullscreen() {
+        windowManagerService.setFullscreen(fullscreen)
         if (fullscreen) {
             appBarLayout?.visibility = View.GONE
             if (!activityController.isAndroidTv()) {
@@ -433,8 +436,6 @@ class SongPreviewLayoutController(
     override fun onLayoutExit() {
         autoscrollService.stop()
         windowManagerService.keepScreenOn(false)
-        if (fullscreen)
-            setFullscreen(false)
     }
 
     private fun onPreviewSizeChanged() {
