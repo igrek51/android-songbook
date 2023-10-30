@@ -22,8 +22,8 @@ import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.listview.SongItemsContainer
 import igrek.songbook.songselection.listview.SongListComposable
-import igrek.songbook.songselection.search.SongSearchItem
-import igrek.songbook.songselection.listview.items.SongTreeItem
+import igrek.songbook.songselection.listview.items.AbstractListItem
+import igrek.songbook.songselection.listview.items.SongListItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
@@ -92,20 +92,20 @@ class LatestSongsLayoutController(
             .filter { song -> song.language in acceptedLangCodes }
             .sortedBy { song -> -song.updateTime }
             .take(latestSongsCount)
-            .map { song -> SongSearchItem.song(song) }
+            .map { song -> SongListItem(song) }
             .toList()
         state.itemsContainer.replaceAll(items)
     }
 
-    fun onItemClick(item: SongTreeItem) {
-        item.song?.let {
-            songOpener.openSongPreview(it)
+    fun onItemClick(item: AbstractListItem) {
+        if (item is SongListItem) {
+            songOpener.openSongPreview(item.song)
         }
     }
 
-    fun onItemMore(item: SongTreeItem) {
-        if (item.isSong) {
-            songContextMenuBuilder.showSongActions(item.song!!)
+    fun onItemMore(item: AbstractListItem) {
+        if (item is SongListItem) {
+            songContextMenuBuilder.showSongActions(item.song)
         }
     }
 }

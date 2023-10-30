@@ -35,7 +35,9 @@ import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.listview.ListScrollPosition
 import igrek.songbook.songselection.listview.SongItemsContainer
 import igrek.songbook.songselection.listview.SongListComposable
-import igrek.songbook.songselection.listview.items.SongTreeItem
+import igrek.songbook.songselection.listview.items.AbstractListItem
+import igrek.songbook.songselection.listview.items.CategoryListItem
+import igrek.songbook.songselection.listview.items.SongListItem
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.util.mainScope
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -206,8 +208,8 @@ class SongTreeLayoutController(
                 .firstOrNull { category -> category.id == currentCategory?.id }
         }
 
-        val items: MutableList<SongTreeItem> = getSongItems()
-        val sortedItems: List<SongTreeItem> = SongTreeSorter().sort(items)
+        val items: MutableList<AbstractListItem> = getSongItems()
+        val sortedItems: List<AbstractListItem> = SongTreeSorter().sort(items)
 
         state.itemsContainer.replaceAll(sortedItems)
 
@@ -220,7 +222,7 @@ class SongTreeLayoutController(
         }
     }
 
-    private fun getSongItems(): MutableList<SongTreeItem> {
+    private fun getSongItems(): MutableList<AbstractListItem> {
         val songsRepo: AllSongsRepository = songsRepository.allSongsRepo
         val acceptedLanguages = appLanguageService.selectedSongLanguages
         val acceptedLangCodes = acceptedLanguages.map { lang -> lang.langCode } + "" + null
@@ -229,7 +231,7 @@ class SongTreeLayoutController(
             currentCategory?.getUnlockedSongs().orEmpty()
                 .filter { song -> song.language in acceptedLangCodes }
                 .asSequence()
-                .map { song -> SongTreeItem.song(song) }
+                .map { song -> SongListItem(song) }
                 .toMutableList()
         } else {
             // all categories apart from custom
@@ -238,7 +240,7 @@ class SongTreeLayoutController(
                     category.songs.any { song -> song.language in acceptedLangCodes }
                 }
                 .asSequence()
-                .map { category -> SongTreeItem.category(category) }
+                .map { category -> CategoryListItem(category) }
                 .toMutableList()
         }
     }
@@ -265,9 +267,8 @@ class SongTreeLayoutController(
         }
     }
 
-    fun onItemClick(item: SongTreeItem) {
-        val song = item.song
-        if (item.category != null) {
+    fun onItemClick(item: AbstractListItem) {
+        if (item is CategoryListItem) {
             rememberScrollPosition()
             mainScope.launch {
                 state.scrollState.scrollToItem(0, 0)
@@ -279,14 +280,14 @@ class SongTreeLayoutController(
             mainScope.launch {
                 state.scrollState.scrollToItem(0, 0)
             }
-        } else if (song != null) {
-            songOpener.openSongPreview(song)
+        } else if (item is SongListItem) {
+            songOpener.openSongPreview(item.song)
         }
     }
 
-    fun onItemMore(item: SongTreeItem) {
-        item.song?.let {
-            songContextMenuBuilder.showSongActions(it)
+    fun onItemMore(item: AbstractListItem) {
+        if (item is SongListItem) {
+            songContextMenuBuilder.showSongActions(item.song)
         }
     }
 

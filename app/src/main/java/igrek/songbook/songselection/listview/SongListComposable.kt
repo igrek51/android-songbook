@@ -36,17 +36,20 @@ import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.appFactory
 import igrek.songbook.playlist.PlaylistFillItem
 import igrek.songbook.playlist.PlaylistService
-import igrek.songbook.songselection.listview.items.SongTreeItem
+import igrek.songbook.songselection.listview.items.AbstractListItem
+import igrek.songbook.songselection.listview.items.CategoryListItem
+import igrek.songbook.songselection.listview.items.CustomCategoryListItem
+import igrek.songbook.songselection.listview.items.SongListItem
 import igrek.songbook.util.mainScope
 import kotlinx.coroutines.launch
 
 class SongItemsContainer(
-    var items: List<SongTreeItem> = mutableListOf(),
+    var items: List<AbstractListItem> = mutableListOf(),
     val modifiedAll: MutableState<Long> = mutableStateOf(0),
     val modifiedMap: MutableMap<Int, MutableState<Long>> = mutableMapOf(),
-    private val itemToIndex: MutableMap<SongTreeItem, Int> = mutableMapOf(),
+    private val itemToIndex: MutableMap<AbstractListItem, Int> = mutableMapOf(),
 ) {
-    fun replaceAll(newList: List<SongTreeItem>) {
+    fun replaceAll(newList: List<AbstractListItem>) {
         items = newList
         items.forEachIndexed { index, item ->
             if (!modifiedMap.containsKey(index)) {
@@ -57,7 +60,7 @@ class SongItemsContainer(
         modifiedAll.value += 1
     }
 
-    fun notifyItemChange(item: SongTreeItem) {
+    fun notifyItemChange(item: AbstractListItem) {
         val index = itemToIndex[item] ?: return
         modifiedMap.getValue(index).value += 1
     }
@@ -67,16 +70,16 @@ class SongItemsContainer(
 fun SongListComposable(
     itemsContainer: SongItemsContainer,
     scrollState: LazyListState = rememberLazyListState(),
-    onItemClick: (item: SongTreeItem) -> Unit,
-    onItemMore: ((item: SongTreeItem) -> Unit)? = null,
+    onItemClick: (item: AbstractListItem) -> Unit,
+    onItemMore: ((item: AbstractListItem) -> Unit)? = null,
 ) {
     key(itemsContainer.modifiedAll.value) {
         LazyColumn(
             modifier = Modifier.fillMaxHeight(),
             state = scrollState,
         ) {
-            itemsContainer.items.forEachIndexed { index: Int, item: SongTreeItem ->
-                item (key = item.song?.id ?: item.category?.id ?: index) {
+            itemsContainer.items.forEachIndexed { index: Int, item: AbstractListItem ->
+                item (key = item.id() ?: index) {
                     SongTreeItemComposable(itemsContainer, item, index, onItemClick, onItemMore)
                 }
             }
@@ -87,10 +90,10 @@ fun SongListComposable(
 @Composable
 fun SongTreeItemComposable(
     itemsContainer: SongItemsContainer,
-    item: SongTreeItem,
+    item: AbstractListItem,
     index: Int,
-    onItemClick: (item: SongTreeItem) -> Unit,
-    onItemMore: ((item: SongTreeItem) -> Unit)? = null,
+    onItemClick: (item: AbstractListItem) -> Unit,
+    onItemMore: ((item: AbstractListItem) -> Unit)? = null,
 ) {
     key(itemsContainer.modifiedMap.getValue(index).value) {
         logger.debug("recompose item $index")
@@ -113,11 +116,10 @@ fun SongTreeItemComposable(
                 ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            val song = item.song
             val iconId: Int = when {
-                item.category != null -> R.drawable.folder
-                item.customCategory != null -> R.drawable.folder
-                song != null && song.isCustom() -> R.drawable.edit
+                item is CategoryListItem -> R.drawable.folder
+                item is CustomCategoryListItem -> R.drawable.folder
+                item is SongListItem && item.song.isCustom() -> R.drawable.edit
                 else -> R.drawable.note
             }
 
@@ -133,8 +135,8 @@ fun SongTreeItemComposable(
                     .weight(1f)
                     .padding(vertical = 8.dp, horizontal = 4.dp),
             ) {
-                when {
-                    item.category != null -> {
+                when (item) {
+                    is CategoryListItem -> {
                         Text(
                             modifier = Modifier.padding(vertical = 6.dp),
                             text = item.category.displayName.orEmpty(),
@@ -143,7 +145,7 @@ fun SongTreeItemComposable(
                         )
                     }
 
-                    item.customCategory != null -> {
+                    is CustomCategoryListItem -> {
                         Text(
                             modifier = Modifier.padding(vertical = 6.dp),
                             text = item.customCategory.name,
@@ -152,13 +154,13 @@ fun SongTreeItemComposable(
                         )
                     }
 
-                    song != null -> {
+                    is SongListItem -> {
                         Text(
-                            text = song.title,
+                            text = item.song.title,
                             style = MaterialTheme.typography.titleSmall,
                             color = colorTextTitle,
                         )
-                        val artist = song.displayCategories()
+                        val artist = item.song.displayCategories()
                         if (artist.isNotEmpty()) {
                             Text(
                                 text = artist,
@@ -170,35 +172,37 @@ fun SongTreeItemComposable(
                 }
             }
 
-            if (song != null && onItemMore != null) {
-                IconButton(
-                    onClick = {
-                        mainScope.launch {
-                            onItemMore(item)
+            when {
+                item is PlaylistFillItem -> {
+                    val playlistService: PlaylistService = appFactory.playlistService.get()
+                    if (!playlistService.isSongOnCurrentPlaylist(item.song)) {
+                        IconButton(
+                            onClick = {
+                                mainScope.launch {
+                                    onItemClick(item)
+                                }
+                            },
+                        ) {
+                            Icon(
+                                painterResource(id = R.drawable.add),
+                                contentDescription = null,
+                                modifier = Modifier.size(24.dp),
+                                tint = Color.White,
+                            )
                         }
-                    },
-                ) {
-                    Icon(
-                        painterResource(id = R.drawable.more),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp),
-                        tint = Color.White,
-                    )
+                    }
                 }
-            }
 
-            if (item is PlaylistFillItem && song != null) {
-                val playlistService: PlaylistService = appFactory.playlistService.get()
-                if (!playlistService.isSongOnCurrentPlaylist(song)) {
+                item is SongListItem && onItemMore != null -> {
                     IconButton(
                         onClick = {
                             mainScope.launch {
-                                onItemClick(item)
+                                onItemMore(item)
                             }
                         },
                     ) {
                         Icon(
-                            painterResource(id = R.drawable.add),
+                            painterResource(id = R.drawable.more),
                             contentDescription = null,
                             modifier = Modifier.size(24.dp),
                             tint = Color.White,

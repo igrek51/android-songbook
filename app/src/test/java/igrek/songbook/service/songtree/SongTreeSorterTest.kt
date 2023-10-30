@@ -4,7 +4,9 @@ import igrek.songbook.persistence.general.model.Category
 import igrek.songbook.persistence.general.model.CategoryType
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongStatus
-import igrek.songbook.songselection.listview.items.SongTreeItem
+import igrek.songbook.songselection.listview.items.AbstractListItem
+import igrek.songbook.songselection.listview.items.CategoryListItem
+import igrek.songbook.songselection.listview.items.SongListItem
 import igrek.songbook.songselection.tree.SongTreeSorter
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
@@ -42,7 +44,7 @@ class SongTreeSorterTest {
         assertSortedOrdering(listOf(categoryBudka, songZzz, songCma, songJolkaJolka, song51, categoryPinkFloyd, categoryOthers, categoryCustom, songJestTaki, categoryCc), listOf(song51, songCma, songJestTaki, songJolkaJolka, songZzz, categoryCustom, categoryBudka, categoryCc, categoryPinkFloyd, categoryOthers))
     }
 
-    private fun songItem(title: String, categoryType: CategoryType = CategoryType.OTHERS, categoryName: String = "others", custom: Boolean = false): SongTreeItem {
+    private fun songItem(title: String, categoryType: CategoryType = CategoryType.OTHERS, categoryName: String = "others"): AbstractListItem {
         val category = Category(categoryType.id, categoryType, categoryName, false)
         val song = Song(
                 id = "1",
@@ -59,19 +61,19 @@ class SongTreeSorterTest {
                 author = null,
                 status = SongStatus.PUBLISHED
         )
-        return SongTreeItem.song(song)
+        return SongListItem(song)
     }
 
-    private fun categoryItem(artist: String): SongTreeItem {
+    private fun categoryItem(artist: String): AbstractListItem {
         return categoryItem(CategoryType.ARTIST, artist)
     }
 
-    private fun categoryItem(categoryType: CategoryType, categoryName: String): SongTreeItem {
+    private fun categoryItem(categoryType: CategoryType, categoryName: String): AbstractListItem {
         val category = Category(categoryType.id, categoryType, categoryName, false)
-        return SongTreeItem.category(category)
+        return CategoryListItem(category)
     }
 
-    private fun assertSortedOrdering(`in`: List<SongTreeItem>, outExpected: List<SongTreeItem>) {
+    private fun assertSortedOrdering(`in`: List<AbstractListItem>, outExpected: List<AbstractListItem>) {
         val out = sorter.sort(`in`)
         assertThat(out).isEqualTo(outExpected)
     }

@@ -28,9 +28,10 @@ import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.songselection.listview.SongItemsContainer
 import igrek.songbook.songselection.listview.SongListComposable
+import igrek.songbook.songselection.listview.items.AbstractListItem
+import igrek.songbook.songselection.listview.items.SongListItem
 import igrek.songbook.songselection.search.SongSearchFilter
 import igrek.songbook.songselection.search.sortSongsByFilterRelevance
-import igrek.songbook.songselection.listview.items.SongTreeItem
 import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.locale.StringSimplifier
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -146,7 +147,7 @@ class PlaylistFillLayoutController(
     }
 
     private fun updateItemsList() {
-        val items: MutableList<SongTreeItem> = getSongItems(songsRepository.allSongsRepo)
+        val items: MutableList<AbstractListItem> = getSongItems(songsRepository.allSongsRepo)
         state.itemsContainer.replaceAll(items)
     }
 
@@ -157,7 +158,7 @@ class PlaylistFillLayoutController(
         updateItemsList()
     }
 
-    private fun getSongItems(songsRepo: AllSongsRepository): MutableList<SongTreeItem> {
+    private fun getSongItems(songsRepo: AllSongsRepository): MutableList<AbstractListItem> {
         val acceptedLanguages = appLanguageService.selectedSongLanguages
         val acceptedLangCodes = acceptedLanguages.map { lang -> lang.langCode } + "" + null
 
@@ -167,13 +168,13 @@ class PlaylistFillLayoutController(
                 .filter { song -> song.language in acceptedLangCodes }
                 .filter { song -> songFilter.matchSong(song) }
                 .sortSongsByFilterRelevance(songFilter)
-                .map { song -> PlaylistFillItem.song(song) }
+                .map { song -> PlaylistFillItem(song) }
                 .toMutableList()
         } else {
             songsRepo.songs.get()
                 .filter { song -> song.language in acceptedLangCodes }
                 .sortedBy { it.displayName().lowercase(StringSimplifier.locale) }
-                .map { song -> PlaylistFillItem.song(song) }
+                .map { song -> PlaylistFillItem(song) }
                 .toMutableList()
         }
     }
@@ -202,9 +203,9 @@ class PlaylistFillLayoutController(
         }
     }
 
-    fun onItemClick(item: SongTreeItem) {
-        item.song?.let { song ->
-            playlistService.toggleSongInCurrentPlaylist(song)
+    fun onItemClick(item: AbstractListItem) {
+        if (item is SongListItem) {
+            playlistService.toggleSongInCurrentPlaylist(item.song)
             state.itemsContainer.notifyItemChange(item)
         }
     }

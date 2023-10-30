@@ -20,8 +20,8 @@ import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.listview.SongItemsContainer
 import igrek.songbook.songselection.listview.SongListComposable
-import igrek.songbook.songselection.search.SongSearchItem
-import igrek.songbook.songselection.listview.items.SongTreeItem
+import igrek.songbook.songselection.listview.items.AbstractListItem
+import igrek.songbook.songselection.listview.items.SongListItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
@@ -85,20 +85,20 @@ class OpenHistoryLayoutController(
             }
             val songIdentifier = SongIdentifier(openedSong.songId, namespace)
             val song = songsRepository.allSongsRepo.songFinder.find(songIdentifier)
-            if (song != null) SongSearchItem.song(song) else null
+            if (song != null) SongListItem(song) else null
         }
         state.itemsContainer.replaceAll(items)
     }
 
-    fun onItemClick(item: SongTreeItem) {
-        item.song?.let {
-            songOpener.openSongPreview(it)
+    fun onItemClick(item: AbstractListItem) {
+        if (item is SongListItem) {
+            songOpener.openSongPreview(item.song)
         }
     }
 
-    fun onItemMore(item: SongTreeItem) {
-        if (item.isSong) {
-            songContextMenuBuilder.showSongActions(item.song!!)
+    fun onItemMore(item: AbstractListItem) {
+        if (item is SongListItem) {
+            songContextMenuBuilder.showSongActions(item.song)
         }
     }
 }

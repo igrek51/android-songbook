@@ -46,10 +46,12 @@ import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.listview.ListScrollPosition
 import igrek.songbook.songselection.listview.SongItemsContainer
 import igrek.songbook.songselection.listview.SongListComposable
+import igrek.songbook.songselection.listview.items.AbstractListItem
+import igrek.songbook.songselection.listview.items.CustomCategoryListItem
+import igrek.songbook.songselection.listview.items.SongListItem
 import igrek.songbook.songselection.search.SongSearchFilter
 import igrek.songbook.songselection.search.sortSongsByFilterRelevance
 import igrek.songbook.songselection.tree.NoParentItemException
-import igrek.songbook.songselection.listview.items.SongTreeItem
 import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.locale.InsensitiveNameComparator
 import igrek.songbook.util.mainScope
@@ -436,7 +438,7 @@ class CustomSongsListLayoutController(
             customCategory = null
         val filtering = isFilterSet()
 
-        val songItems: List<SongTreeItem> = when {
+        val songItems: List<AbstractListItem> = when {
 
             filtering -> {
                 val songFilter =
@@ -444,7 +446,7 @@ class CustomSongsListLayoutController(
                 songsRepository.customSongsRepo.songs.get()
                     .filter { song -> songFilter.matchSong(song) }
                     .sortSongsByFilterRelevance(songFilter)
-                    .map { SongTreeItem.song(it) }
+                    .map { SongListItem(it) }
             }
 
             groupingEnabled && customCategory == null -> {
@@ -453,23 +455,23 @@ class CustomSongsListLayoutController(
                     InsensitiveNameComparator<CustomCategory>(locale) { category -> category.name }
                 val categories = songsRepository.customSongsDao.customCategories
                     .sortedWith(categoryNameComparator)
-                    .map { SongTreeItem.customCategory(it) }
+                    .map { CustomCategoryListItem(it) }
                 val uncategorized = songsRepository.customSongsRepo.uncategorizedSongs.get()
                     .sortSongs()
-                    .map { SongTreeItem.song(it) }
+                    .map { SongListItem(it) }
                 categories + uncategorized
             }
 
             groupingEnabled && customCategory != null -> {
                 customCategory!!.songs
                     .sortSongs()
-                    .map { SongTreeItem.song(it) }
+                    .map { SongListItem(it) }
             }
 
             else -> {
                 songsRepository.customSongsRepo.songs.get()
                     .sortSongs()
-                    .map { SongTreeItem.song(it) }
+                    .map { SongListItem(it) }
             }
 
         }
@@ -535,9 +537,8 @@ class CustomSongsListLayoutController(
         }
     }
 
-    fun onItemClick(item: SongTreeItem) {
-        val song = item.song
-        if (item.customCategory != null) {
+    fun onItemClick(item: AbstractListItem) {
+        if (item is CustomCategoryListItem) {
             rememberScrollPosition()
             mainScope.launch {
                 state.scrollState.scrollToItem(0, 0)
@@ -550,14 +551,14 @@ class CustomSongsListLayoutController(
             mainScope.launch {
                 state.scrollState.scrollToItem(0, 0)
             }
-        } else if (song != null) {
-            songOpener.openSongPreview(song)
+        } else if (item is SongListItem) {
+            songOpener.openSongPreview(item.song)
         }
     }
 
-    fun onItemMore(item: SongTreeItem) {
-        item.song?.let {
-            songContextMenuBuilder.showSongActions(it)
+    fun onItemMore(item: AbstractListItem) {
+        if (item is SongListItem) {
+            songContextMenuBuilder.showSongActions(item.song)
         }
     }
 

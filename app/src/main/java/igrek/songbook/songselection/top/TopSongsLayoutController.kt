@@ -23,9 +23,9 @@ import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.listview.SongItemsContainer
 import igrek.songbook.songselection.listview.SongListComposable
-import igrek.songbook.songselection.search.SongSearchItem
+import igrek.songbook.songselection.listview.items.AbstractListItem
+import igrek.songbook.songselection.listview.items.SongListItem
 import igrek.songbook.songselection.search.SongSearchLayoutController
-import igrek.songbook.songselection.listview.items.SongTreeItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 
@@ -111,23 +111,21 @@ class TopSongsLayoutController(
             .filter { song -> song.rank != null }
             .sortedWith(compareBy({ -(it.rank ?: 0.0) }, { -it.updateTime }))
             .take(topSongsCount)
-            .map { song -> SongSearchItem.song(song) }
+            .map { song -> SongListItem(song) }
             .toList()
 
         state.itemsContainer.replaceAll(latestSongs)
     }
 
-    fun onItemClick(item: SongTreeItem) {
-        val song = item.song
-        if (song != null) {
-            songOpener.openSongPreview(song)
+    fun onItemClick(item: AbstractListItem) {
+        if (item is SongListItem) {
+            songOpener.openSongPreview(item.song)
         }
     }
 
-    fun onItemMore(item: SongTreeItem) {
-        val song = item.song
-        if (song != null) {
-            songContextMenuBuilder.showSongActions(song)
+    fun onItemMore(item: AbstractListItem) {
+        if (item is SongListItem) {
+            songContextMenuBuilder.showSongActions(item.song)
         }
     }
 }

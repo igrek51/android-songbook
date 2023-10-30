@@ -32,7 +32,9 @@ import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.listview.ListScrollPosition
 import igrek.songbook.songselection.listview.SongItemsContainer
 import igrek.songbook.songselection.listview.SongListComposable
-import igrek.songbook.songselection.listview.items.SongTreeItem
+import igrek.songbook.songselection.listview.items.AbstractListItem
+import igrek.songbook.songselection.listview.items.CategoryListItem
+import igrek.songbook.songselection.listview.items.SongListItem
 import igrek.songbook.songselection.tree.SongTreeLayoutController
 import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.locale.StringSimplifier
@@ -159,7 +161,7 @@ class SongSearchLayoutController(
     }
 
     private fun updateItemsList() {
-        val items: MutableList<SongTreeItem> = getSongItems(songsRepository.allSongsRepo)
+        val items: MutableList<AbstractListItem> = getSongItems(songsRepository.allSongsRepo)
         state.itemsContainer.replaceAll(items)
 
         emptySearchButton?.visibility = when (items.isEmpty()) {
@@ -168,7 +170,7 @@ class SongSearchLayoutController(
         }
     }
 
-    private fun getSongItems(songsRepo: AllSongsRepository): MutableList<SongTreeItem> {
+    private fun getSongItems(songsRepo: AllSongsRepository): MutableList<AbstractListItem> {
         val acceptedLanguages = appLanguageService.selectedSongLanguages
         val acceptedLangCodes = acceptedLanguages.map { lang -> lang.langCode } + "" + null
 
@@ -176,7 +178,7 @@ class SongSearchLayoutController(
             return songsRepo.songs.get()
                 .filter { song -> song.language in acceptedLangCodes }
                 .sortedBy { it.displayName().lowercase(StringSimplifier.locale) }
-                .map { song -> SongSearchItem.song(song) }
+                .map { song -> SongListItem(song) }
                 .toMutableList()
         } else {
             val songFilter =
@@ -186,11 +188,11 @@ class SongSearchLayoutController(
                 .filter { song -> song.language in acceptedLangCodes }
                 .filter { song -> songFilter.matchSong(song) }
                 .sortSongsByFilterRelevance(songFilter)
-                .map { song -> SongSearchItem.song(song) }
+                .map { song -> SongListItem(song) }
             // filter categories
             val categoriesSequence = songsRepo.categories.get()
                 .filter { category -> songFilter.matchCategory(category) }
-                .map { category -> SongTreeItem.category(category) }
+                .map { category -> CategoryListItem(category) }
             // display union
             return categoriesSequence.plus(songsSequence)
                 .toMutableList()
@@ -229,20 +231,19 @@ class SongSearchLayoutController(
         }
     }
 
-    fun onItemClick(item: SongTreeItem) {
-        val song = item.song
-        if (song != null) {
-            songOpener.openSongPreview(song)
-        } else {
+    fun onItemClick(item: AbstractListItem) {
+        if (item is SongListItem) {
+            songOpener.openSongPreview(item.song)
+        } else if (item is CategoryListItem) {
             // move to selected category
             songTreeLayoutController.currentCategory = item.category
             layoutController.showLayout(SongTreeLayoutController::class)
         }
     }
 
-    fun onItemMore(item: SongTreeItem) {
-        item.song?.let { song ->
-            songContextMenuBuilder.showSongActions(song)
+    fun onItemMore(item: AbstractListItem) {
+        if (item is SongListItem) {
+            songContextMenuBuilder.showSongActions(item.song)
         }
     }
 }
