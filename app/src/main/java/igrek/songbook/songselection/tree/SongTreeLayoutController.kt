@@ -30,6 +30,7 @@ import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.language.SongLanguage
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
+import igrek.songbook.songselection.listview.SongItemsContainer
 import igrek.songbook.songselection.listview.SongListComposable
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.util.mainScope
@@ -59,7 +60,6 @@ class SongTreeLayoutController(
     private var composeView: ComposeView? = null
     private var subscriptions = mutableListOf<Disposable>()
     private var actionBar: ActionBar? = null
-    val itemsList: MutableList<SongTreeItem> = mutableListOf()
     val state = SongTreeLayoutState()
 
     override fun showLayout(layout: View) {
@@ -202,8 +202,7 @@ class SongTreeLayoutController(
         val items: MutableList<SongTreeItem> = getSongItems()
         val sortedItems: List<SongTreeItem> = SongTreeSorter().sort(items)
 
-        itemsList.clear()
-        itemsList.addAll(sortedItems)
+        state.itemsContainer.replaceAll(sortedItems)
 
         if (isCategorySelected()) {
             goBackButton?.visibility = View.VISIBLE
@@ -284,6 +283,7 @@ class SongTreeLayoutController(
 }
 
 class SongTreeLayoutState {
+    val itemsContainer: SongItemsContainer = SongItemsContainer()
     val rootScroll: LazyListState = LazyListState()
     val folderScroll: LazyListState = LazyListState()
 }
@@ -296,7 +296,7 @@ private fun MainComponent(controller: SongTreeLayoutController) {
             else -> controller.state.rootScroll
         }
         SongListComposable(
-            controller.itemsList,
+            controller.state.itemsContainer,
             scrollState = scrollState,
             onItemClick = controller::onItemClick,
             onItemMore = controller::onItemMore,

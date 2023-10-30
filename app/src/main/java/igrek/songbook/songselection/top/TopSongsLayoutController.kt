@@ -21,6 +21,7 @@ import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.language.SongLanguage
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
+import igrek.songbook.songselection.listview.SongItemsContainer
 import igrek.songbook.songselection.listview.SongListComposable
 import igrek.songbook.songselection.search.SongSearchItem
 import igrek.songbook.songselection.search.SongSearchLayoutController
@@ -46,7 +47,6 @@ class TopSongsLayoutController(
     private var languagePicker: MultiPicker<SongLanguage>? = null
     private var subscriptions = mutableListOf<Disposable>()
     private val topSongsCount = 500
-    val itemsList: MutableList<SongTreeItem> = mutableListOf()
     val state = TopSongsLayoutState()
 
     override fun showLayout(layout: View) {
@@ -114,8 +114,7 @@ class TopSongsLayoutController(
             .map { song -> SongSearchItem.song(song) }
             .toList()
 
-        itemsList.clear()
-        itemsList.addAll(latestSongs)
+        state.itemsContainer.replaceAll(latestSongs)
     }
 
     fun onItemClick(item: SongTreeItem) {
@@ -132,6 +131,7 @@ class TopSongsLayoutController(
 }
 
 class TopSongsLayoutState {
+    val itemsContainer: SongItemsContainer = SongItemsContainer()
     val scrollState: LazyListState = LazyListState()
 }
 
@@ -139,7 +139,7 @@ class TopSongsLayoutState {
 private fun MainComponent(controller: TopSongsLayoutController) {
     Column {
         SongListComposable(
-            controller.itemsList,
+            controller.state.itemsContainer,
             scrollState = controller.state.scrollState,
             onItemClick = controller::onItemClick,
             onItemMore = controller::onItemMore,

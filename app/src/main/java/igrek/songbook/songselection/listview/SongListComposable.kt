@@ -20,6 +20,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,20 +36,32 @@ import igrek.songbook.songselection.tree.SongTreeItem
 import igrek.songbook.util.mainScope
 import kotlinx.coroutines.launch
 
+class SongItemsContainer(
+    var items: List<SongTreeItem> = mutableListOf(),
+    val modifiedAll: MutableState<Long> = mutableStateOf(0),
+) {
+    fun replaceAll(newList: List<SongTreeItem>) {
+        items = newList
+        modifiedAll.value += 1
+    }
+}
+
 @Composable
 fun SongListComposable(
-    items: MutableList<SongTreeItem>,
+    itemsContainer: SongItemsContainer,
     scrollState: LazyListState = rememberLazyListState(),
     onItemClick: (item: SongTreeItem) -> Unit,
     onItemMore: (item: SongTreeItem) -> Unit,
 ) {
-    LazyColumn(
-        modifier = Modifier.fillMaxHeight(),
-        state = scrollState,
-    ) {
-        items.forEachIndexed { index: Int, item: SongTreeItem ->
-            item (key = item.song?.id ?: item.category?.id ?: index) {
-                SongTreeItemComposable(item, onItemClick, onItemMore)
+    key(itemsContainer.modifiedAll.value) {
+        LazyColumn(
+            modifier = Modifier.fillMaxHeight(),
+            state = scrollState,
+        ) {
+            itemsContainer.items.forEachIndexed { index: Int, item: SongTreeItem ->
+                item (key = item.song?.id ?: item.category?.id ?: index) {
+                    SongTreeItemComposable(item, onItemClick, onItemMore)
+                }
             }
         }
     }
@@ -103,9 +118,10 @@ fun SongTreeItemComposable(
             if (item.category != null) {
 
                 Text(
+                    modifier = Modifier.padding(vertical = 4.dp),
                     text = item.category.displayName.orEmpty(),
                     style = MaterialTheme.typography.titleSmall,
-                    color = colorTextSubtitle,
+                    color = colorTextTitle,
                 )
 
             } else if (song != null) {
