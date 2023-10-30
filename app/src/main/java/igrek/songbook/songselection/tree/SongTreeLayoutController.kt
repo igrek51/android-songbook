@@ -1,5 +1,7 @@
 package igrek.songbook.songselection.tree
 
+import android.os.Handler
+import android.os.Looper
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +32,7 @@ import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.language.SongLanguage
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
+import igrek.songbook.songselection.listview.ListScrollPosition
 import igrek.songbook.songselection.listview.SongItemsContainer
 import igrek.songbook.songselection.listview.SongListComposable
 import igrek.songbook.songselection.search.SongSearchLayoutController
@@ -60,6 +63,7 @@ class SongTreeLayoutController(
     private var composeView: ComposeView? = null
     private var subscriptions = mutableListOf<Disposable>()
     private var actionBar: ActionBar? = null
+    private var storedScroll: ListScrollPosition? = null
     val state = SongTreeLayoutState()
 
     override fun showLayout(layout: View) {
@@ -106,6 +110,8 @@ class SongTreeLayoutController(
                 }
             }
         }
+
+        restoreScrollPosition()
 
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
@@ -189,7 +195,7 @@ class SongTreeLayoutController(
         goUp()
     }
 
-    fun isCategorySelected(): Boolean {
+    private fun isCategorySelected(): Boolean {
         return currentCategory != null
     }
 
@@ -249,9 +255,10 @@ class SongTreeLayoutController(
         try {
             if (currentCategory == null)
                 throw NoParentItemException()
-            // go to all categories
             currentCategory = null
+
             updateItemsList()
+            restoreScrollPosition()
         } catch (e: NoParentItemException) {
             layoutController.showPreviousLayoutOrQuit()
         }
@@ -259,13 +266,17 @@ class SongTreeLayoutController(
 
     fun onItemClick(item: SongTreeItem) {
         val song = item.song
-        if (item.isCategory) {
-            // go to category
+        if (item.category != null) {
+            rememberScrollPosition()
+            mainScope.launch {
+                state.scrollState.scrollToItem(0, 0)
+            }
+
             currentCategory = item.category
             updateItemsList()
-            // scroll to beginning
+
             mainScope.launch {
-                state.folderScroll.scrollToItem(0, 0)
+                state.scrollState.scrollToItem(0, 0)
             }
         } else if (song != null) {
             songOpener.openSongPreview(song)
@@ -273,31 +284,48 @@ class SongTreeLayoutController(
     }
 
     fun onItemMore(item: SongTreeItem) {
-        val song = item.song
-        if (song != null) {
-            songContextMenuBuilder.showSongActions(song)
-        } else {
-            onItemClick(item)
+        item.song?.let {
+            songContextMenuBuilder.showSongActions(it)
+        }
+    }
+
+    private fun rememberScrollPosition() {
+        storedScroll = ListScrollPosition(
+            state.scrollState.firstVisibleItemIndex,
+            state.scrollState.firstVisibleItemScrollOffset,
+        )
+    }
+
+    private fun restoreScrollPosition() {
+        val storedScroll = storedScroll ?: return
+        mainScope.launch {
+            state.scrollState.scrollToItem(
+                storedScroll.firstVisiblePosition,
+                storedScroll.yOffsetPx,
+            )
+        }
+        Handler(Looper.getMainLooper()).post {
+            mainScope.launch {
+                state.scrollState.scrollToItem(
+                    storedScroll.firstVisiblePosition,
+                    storedScroll.yOffsetPx,
+                )
+            }
         }
     }
 }
 
 class SongTreeLayoutState {
     val itemsContainer: SongItemsContainer = SongItemsContainer()
-    val rootScroll: LazyListState = LazyListState()
-    val folderScroll: LazyListState = LazyListState()
+    val scrollState: LazyListState = LazyListState()
 }
 
 @Composable
 private fun MainComponent(controller: SongTreeLayoutController) {
     Column {
-        val scrollState = when {
-            controller.isCategorySelected() -> controller.state.folderScroll
-            else -> controller.state.rootScroll
-        }
         SongListComposable(
             controller.state.itemsContainer,
-            scrollState = scrollState,
+            scrollState = controller.state.scrollState,
             onItemClick = controller::onItemClick,
             onItemMore = controller::onItemMore,
         )

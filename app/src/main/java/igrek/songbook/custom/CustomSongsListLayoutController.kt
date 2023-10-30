@@ -94,7 +94,6 @@ class CustomSongsListLayoutController(
     private val editorSessionService by LazyExtractor(editorSessionService)
 
     private var goBackButton: ImageButton? = null
-    private var storedScroll: ListScrollPosition? = null
     private var tabTitleLabel: TextView? = null
     private var emptyListLabel: TextView? = null
     private var customSearchBarLayout: FrameLayout? = null
@@ -105,6 +104,7 @@ class CustomSongsListLayoutController(
     private var songsSortButton: ImageButton? = null
 
     var customCategory: CustomCategory? = null
+    private var storedScroll: ListScrollPosition? = null
     private var sortPicker: SinglePicker<CustomSongsOrdering>? = null
     private var searchingOn: Boolean = false
     private var itemNameFilter: String? = null
@@ -214,6 +214,8 @@ class CustomSongsListLayoutController(
                 }
             }
         }
+
+        restoreScrollPosition()
 
         val localFocus = LocalFocusTraverser(
             currentViewGetter = { composeView },
@@ -473,8 +475,6 @@ class CustomSongsListLayoutController(
         }
         state.itemsContainer.replaceAll(songItems)
 
-        restoreScrollPosition()
-
         emptyListLabel?.visibility = when (songItems.isEmpty()) {
             true -> View.VISIBLE
             else -> View.GONE
@@ -513,27 +513,6 @@ class CustomSongsListLayoutController(
         }
     }
 
-    fun onItemClick(item: SongTreeItem) {
-        val song = item.song
-        if (song != null) {
-            songOpener.openSongPreview(song)
-        } else if (item.customCategory != null) {
-            rememberScrollPosition()
-            mainScope.launch {
-                state.folderScroll.scrollToItem(0, 0)
-            }
-            customCategory = item.customCategory
-            updateHeader()
-            updateItemsList()
-        }
-    }
-
-    fun onItemMore(item: SongTreeItem) {
-        item.song?.let {
-            songContextMenuBuilder.showSongActions(it)
-        }
-    }
-
     override fun onBackClicked() {
         if (searchingOn) {
             onClearFilterClicked()
@@ -547,6 +526,7 @@ class CustomSongsListLayoutController(
             if (customCategory == null)
                 throw NoParentItemException()
             customCategory = null
+
             updateHeader()
             updateItemsList()
             restoreScrollPosition()
@@ -555,18 +535,50 @@ class CustomSongsListLayoutController(
         }
     }
 
+    fun onItemClick(item: SongTreeItem) {
+        val song = item.song
+        if (item.customCategory != null) {
+            rememberScrollPosition()
+            mainScope.launch {
+                state.scrollState.scrollToItem(0, 0)
+            }
+
+            customCategory = item.customCategory
+            updateHeader()
+            updateItemsList()
+
+            mainScope.launch {
+                state.scrollState.scrollToItem(0, 0)
+            }
+        } else if (song != null) {
+            songOpener.openSongPreview(song)
+        }
+    }
+
+    fun onItemMore(item: SongTreeItem) {
+        item.song?.let {
+            songContextMenuBuilder.showSongActions(it)
+        }
+    }
+
     private fun rememberScrollPosition() {
         storedScroll = ListScrollPosition(
-            state.rootScroll.firstVisibleItemIndex,
-            state.rootScroll.firstVisibleItemScrollOffset,
+            state.scrollState.firstVisibleItemIndex,
+            state.scrollState.firstVisibleItemScrollOffset,
         )
     }
 
     private fun restoreScrollPosition() {
         val storedScroll = storedScroll ?: return
+        mainScope.launch {
+            state.scrollState.scrollToItem(
+                storedScroll.firstVisiblePosition,
+                storedScroll.yOffsetPx,
+            )
+        }
         Handler(Looper.getMainLooper()).post {
             mainScope.launch {
-                state.rootScroll.scrollToItem(
+                state.scrollState.scrollToItem(
                     storedScroll.firstVisiblePosition,
                     storedScroll.yOffsetPx,
                 )
@@ -577,20 +589,15 @@ class CustomSongsListLayoutController(
 
 class CustomSongsLayoutState {
     val itemsContainer: SongItemsContainer = SongItemsContainer()
-    val rootScroll: LazyListState = LazyListState()
-    val folderScroll: LazyListState = LazyListState()
+    val scrollState: LazyListState = LazyListState()
 }
 
 @Composable
 private fun MainComponent(controller: CustomSongsListLayoutController) {
     Column {
-        val scrollState = when (controller.customCategory) {
-            null -> controller.state.rootScroll
-            else -> controller.state.folderScroll
-        }
         SongListComposable(
             controller.state.itemsContainer,
-            scrollState = scrollState,
+            scrollState = controller.state.scrollState,
             onItemClick = controller::onItemClick,
             onItemMore = controller::onItemMore,
         )

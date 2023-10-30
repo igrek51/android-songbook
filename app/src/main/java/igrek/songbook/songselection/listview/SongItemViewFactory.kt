@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.view.isVisible
 import igrek.songbook.R
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.appFactory
