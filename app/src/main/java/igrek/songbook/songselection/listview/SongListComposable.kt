@@ -106,7 +106,7 @@ fun SongTreeItemComposable(
         Icon(
             painterResource(id = iconId),
             contentDescription = null,
-            modifier = Modifier.padding(start = 2.dp).size(24.dp),
+            modifier = Modifier.padding(start = 6.dp, end = 2.dp).size(24.dp),
             tint = Color.White,
         )
 
@@ -118,7 +118,7 @@ fun SongTreeItemComposable(
             if (item.category != null) {
 
                 Text(
-                    modifier = Modifier.padding(vertical = 4.dp),
+                    modifier = Modifier.padding(vertical = 6.dp),
                     text = item.category.displayName.orEmpty(),
                     style = MaterialTheme.typography.titleSmall,
                     color = colorTextTitle,

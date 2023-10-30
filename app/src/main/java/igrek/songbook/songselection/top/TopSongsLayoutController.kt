@@ -118,14 +118,16 @@ class TopSongsLayoutController(
     }
 
     fun onItemClick(item: SongTreeItem) {
-        if (item.isSong) {
-            songOpener.openSongPreview(item.song!!)
+        val song = item.song
+        if (song != null) {
+            songOpener.openSongPreview(song)
         }
     }
 
     fun onItemMore(item: SongTreeItem) {
-        if (item.isSong) {
-            songContextMenuBuilder.showSongActions(item.song!!)
+        val song = item.song
+        if (song != null) {
+            songContextMenuBuilder.showSongActions(song)
         }
     }
 }

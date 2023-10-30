@@ -10,7 +10,13 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import igrek.songbook.R
+import igrek.songbook.compose.AppTheme
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -22,10 +28,10 @@ import igrek.songbook.send.SendMessageService
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.songpreview.SongOpener
-import igrek.songbook.songselection.SongClickListener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
-import igrek.songbook.songselection.listview.LazySongListView
 import igrek.songbook.songselection.listview.ListScrollPosition
+import igrek.songbook.songselection.listview.SongItemsContainer
+import igrek.songbook.songselection.listview.SongListComposable
 import igrek.songbook.songselection.tree.SongTreeItem
 import igrek.songbook.songselection.tree.SongTreeLayoutController
 import igrek.songbook.system.SoftKeyboardService
@@ -47,7 +53,7 @@ class SongSearchLayoutController(
     appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
 ) : InflatedLayout(
     _layoutResourceId = R.layout.screen_song_search
-), SongClickListener {
+) {
     private val songsRepository by LazyExtractor(songsRepository)
     private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
     private val songOpener by LazyExtractor(songOpener)
@@ -57,13 +63,13 @@ class SongSearchLayoutController(
     private val preferencesState by LazyExtractor(settingsState)
     private val appLanguageService by LazyExtractor(appLanguageService)
 
-    private var itemsListView: LazySongListView? = null
     private var searchFilterEdit: EditText? = null
     private var emptySearchButton: Button? = null
     private var searchFilterSubject: PublishSubject<String> = PublishSubject.create()
     private var itemFilter: String? = null
     private var storedScroll: ListScrollPosition? = null
     private var subscriptions = mutableListOf<Disposable>()
+    val state = SongSearchLayoutState()
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
@@ -116,10 +122,17 @@ class SongSearchLayoutController(
             setOnClickListener { onClearFilterClicked() }
         }
 
-        itemsListView = layout.findViewById<LazySongListView>(R.id.itemsList)?.also {
-            it.init(activity, this, songContextMenuBuilder)
-        }
         updateItemsList()
+
+        val thisLayout = this
+        layout.findViewById<ComposeView>(R.id.compose_view).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+            setContent {
+                AppTheme {
+                    MainComponent(thisLayout)
+                }
+            }
+        }
 
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
@@ -142,15 +155,10 @@ class SongSearchLayoutController(
 
     private fun updateItemsList() {
         val items: MutableList<SongTreeItem> = getSongItems(songsRepository.allSongsRepo)
-        itemsListView?.setItems(items)
+        state.itemsContainer.replaceAll(items)
 
-        // restore Scroll Position
-        if (storedScroll != null) {
-            itemsListView?.restoreScrollPosition(storedScroll)
-        }
-
-        emptySearchButton?.visibility = when (itemsListView?.count) {
-            0 -> View.VISIBLE
+        emptySearchButton?.visibility = when (items.isEmpty()) {
+            true -> View.VISIBLE
             else -> View.GONE
         }
     }
@@ -217,13 +225,14 @@ class SongSearchLayoutController(
     }
 
     fun openSongPreview(item: SongTreeItem) {
-        songOpener.openSongPreview(item.song!!)
+        item.song?.let {  song ->
+            songOpener.openSongPreview(song)
+        }
     }
 
-    override fun onSongItemClick(item: SongTreeItem) {
-        // store Scroll Position
-        storedScroll = itemsListView?.currentScrollPosition
-        if (item.isSong) {
+    fun onItemClick(item: SongTreeItem) {
+        val song = item.song
+        if (song != null) {
             openSongPreview(item)
         } else {
             // move to selected category
@@ -232,11 +241,29 @@ class SongSearchLayoutController(
         }
     }
 
-    override fun onSongItemLongClick(item: SongTreeItem) {
-        if (item.isSong) {
+    fun onItemMore(item: SongTreeItem) {
+        val song = item.song
+        if (song != null) {
             songContextMenuBuilder.showSongActions(item.song!!)
         } else {
-            onSongItemClick(item)
+            onItemClick(item)
         }
+    }
+}
+
+class SongSearchLayoutState {
+    val itemsContainer: SongItemsContainer = SongItemsContainer()
+    val scrollState: LazyListState = LazyListState()
+}
+
+@Composable
+private fun MainComponent(controller: SongSearchLayoutController) {
+    Column {
+        SongListComposable(
+            controller.state.itemsContainer,
+            scrollState = controller.state.scrollState,
+            onItemClick = controller::onItemClick,
+            onItemMore = controller::onItemMore,
+        )
     }
 }

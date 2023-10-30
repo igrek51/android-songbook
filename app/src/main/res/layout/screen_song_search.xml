@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/mainLayout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal"
-    android:orientation="vertical"
-    android:weightSum="1"
-    android:descendantFocusability="afterDescendants">
+    android:fillViewport="true"
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -78,35 +75,23 @@
                     android:src="@drawable/close" />
 
             </FrameLayout>
-
         </androidx.appcompat.widget.Toolbar>
-
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/compose_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/appBarLayout"
-        android:padding="0dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="wrap_content" />
 
-        <igrek.songbook.songselection.listview.LazySongListView
-            android:id="@+id/itemsList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    <Button
+        android:id="@+id/emptySearchButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:layout_margin="8dp"
+        android:text="@string/search_empty_suggest_it"
+        android:visibility="gone" />
+</LinearLayout>
 
-        <Button
-            android:id="@+id/emptySearchButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:layout_margin="8dp"
-            android:text="@string/search_empty_suggest_it"
-            android:visibility="gone" />
-
-    </RelativeLayout>
-
-</RelativeLayout>
