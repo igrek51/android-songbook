@@ -6,7 +6,7 @@ import igrek.songbook.persistence.general.model.CategoryType
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.general.model.SongStatus
 import igrek.songbook.songselection.search.SongSearchFilter
-import igrek.songbook.songselection.tree.SongTreeItem
+import igrek.songbook.songselection.listview.items.SongTreeItem
 import org.junit.Test
 
 class SongSearchFilterTest {

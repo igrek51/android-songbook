@@ -3,6 +3,7 @@ package igrek.songbook.songselection.tree
 import com.google.common.base.Function
 import com.google.common.collect.Ordering
 import igrek.songbook.persistence.general.model.CategoryType
+import igrek.songbook.songselection.listview.items.SongTreeItem
 import java.text.Collator
 import java.util.Collections
 import java.util.Locale

@@ -25,7 +25,7 @@ import igrek.songbook.songselection.listview.SongItemsContainer
 import igrek.songbook.songselection.listview.SongListComposable
 import igrek.songbook.songselection.search.SongSearchItem
 import igrek.songbook.songselection.search.SongSearchLayoutController
-import igrek.songbook.songselection.tree.SongTreeItem
+import igrek.songbook.songselection.listview.items.SongTreeItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 

@@ -16,7 +16,7 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.LocalFocusTraverser
 import igrek.songbook.songselection.SongClickListener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
-import igrek.songbook.songselection.tree.SongTreeItem
+import igrek.songbook.songselection.listview.items.SongTreeItem
 import igrek.songbook.util.limitTo
 
 

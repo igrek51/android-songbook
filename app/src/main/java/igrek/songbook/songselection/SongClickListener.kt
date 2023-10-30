@@ -1,6 +1,6 @@
 package igrek.songbook.songselection
 
-import igrek.songbook.songselection.tree.SongTreeItem
+import igrek.songbook.songselection.listview.items.SongTreeItem
 
 interface SongClickListener {
 

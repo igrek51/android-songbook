@@ -1,4 +1,4 @@
-package igrek.songbook.songselection.tree
+package igrek.songbook.songselection.listview.items
 
 import igrek.songbook.persistence.general.model.Category
 import igrek.songbook.persistence.general.model.Song

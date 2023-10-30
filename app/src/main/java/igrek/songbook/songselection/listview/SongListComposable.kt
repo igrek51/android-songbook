@@ -36,7 +36,7 @@ import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.appFactory
 import igrek.songbook.playlist.PlaylistFillItem
 import igrek.songbook.playlist.PlaylistService
-import igrek.songbook.songselection.tree.SongTreeItem
+import igrek.songbook.songselection.listview.items.SongTreeItem
 import igrek.songbook.util.mainScope
 import kotlinx.coroutines.launch
 
@@ -59,10 +59,6 @@ class SongItemsContainer(
 
     fun notifyItemChange(item: SongTreeItem) {
         val index = itemToIndex[item] ?: return
-        modifiedMap.getValue(index).value += 1
-    }
-
-    fun notifyIndexChange(index: Int) {
         modifiedMap.getValue(index).value += 1
     }
 }

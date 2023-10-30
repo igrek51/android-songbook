@@ -30,7 +30,7 @@ import igrek.songbook.songselection.listview.SongItemsContainer
 import igrek.songbook.songselection.listview.SongListComposable
 import igrek.songbook.songselection.search.SongSearchFilter
 import igrek.songbook.songselection.search.sortSongsByFilterRelevance
-import igrek.songbook.songselection.tree.SongTreeItem
+import igrek.songbook.songselection.listview.items.SongTreeItem
 import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.locale.StringSimplifier
 import io.reactivex.android.schedulers.AndroidSchedulers

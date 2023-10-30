@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
-import igrek.songbook.songselection.tree.SongTreeItem
+import igrek.songbook.songselection.listview.items.SongTreeItem
 
 class SongListItemAdapter internal constructor(
     context: Context,
