@@ -94,12 +94,8 @@ fun SongTreeItemComposable(
     ) {
         val song = item.song
         val iconId: Int = when {
-            item.category != null -> {
-                R.drawable.folder
-            }
-            song != null && song.isCustom() -> {
-                R.drawable.edit
-            }
+            item.category != null -> R.drawable.folder
+            song != null && song.isCustom() -> R.drawable.edit
             else -> R.drawable.note
         }
 
@@ -116,7 +112,6 @@ fun SongTreeItemComposable(
                 .padding(vertical = 8.dp, horizontal = 4.dp),
         ) {
             if (item.category != null) {
-
                 Text(
                     modifier = Modifier.padding(vertical = 6.dp),
                     text = item.category.displayName.orEmpty(),
@@ -125,14 +120,13 @@ fun SongTreeItemComposable(
                 )
 
             } else if (song != null) {
-                val artist = song.categories.joinToString(", ") { c -> c.displayName!! }
+                val artist = song.displayCategories()
 
                 Text(
                     text = song.title,
                     style = MaterialTheme.typography.titleSmall,
                     color = colorTextTitle,
                 )
-
                 Text(
                     text = artist,
                     style = MaterialTheme.typography.bodySmall,
