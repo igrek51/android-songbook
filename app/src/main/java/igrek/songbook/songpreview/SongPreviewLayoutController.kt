@@ -388,17 +388,6 @@ class SongPreviewLayoutController(
 
     fun isAutoscrollPanelVisible(): Boolean = quickMenuAutoscroll.isVisible
 
-    private fun goToBeginning() {
-        resetOverlayScroll()
-        if ((songPreview?.scroll ?: 0f) == 0f && !autoscrollService.isRunning) {
-            uiInfoService.showInfo(R.string.scroll_at_the_beginning_already)
-        }
-        songPreview?.goToBeginning()
-        if (autoscrollService.isRunning) {
-            autoscrollService.start() // restart autoscrolling
-        }
-    }
-
     fun toggleFullscreen() {
         setFullscreen(!this.fullscreen)
     }

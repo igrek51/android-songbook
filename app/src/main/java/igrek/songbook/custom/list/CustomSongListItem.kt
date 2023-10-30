@@ -5,7 +5,7 @@ import igrek.songbook.persistence.user.custom.CustomCategory
 
 open class CustomSongListItem(
     val song: Song? = null,
-    val customCategory: CustomCategory? = null
+    val customCategory: CustomCategory? = null,
 ) {
 
     override fun toString(): String {

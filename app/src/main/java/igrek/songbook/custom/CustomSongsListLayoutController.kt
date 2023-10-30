@@ -1,7 +1,6 @@
 package igrek.songbook.custom
 
 
-import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
@@ -14,10 +13,14 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.view.isVisible
 import igrek.songbook.R
-import igrek.songbook.custom.list.CustomSongListItem
-import igrek.songbook.custom.list.CustomSongListView
+import igrek.songbook.compose.AppTheme
 import igrek.songbook.custom.sync.EditorSessionService
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
@@ -29,7 +32,6 @@ import igrek.songbook.layout.InflatedLayout
 import igrek.songbook.layout.LocalFocusTraverser
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
-import igrek.songbook.layout.list.ListItemClickListener
 import igrek.songbook.layout.spinner.SinglePicker
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
@@ -42,14 +44,19 @@ import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
 import igrek.songbook.songselection.listview.ListScrollPosition
+import igrek.songbook.songselection.listview.SongItemsContainer
+import igrek.songbook.songselection.listview.SongListComposable
 import igrek.songbook.songselection.search.SongSearchFilter
 import igrek.songbook.songselection.search.sortSongsByFilterRelevance
 import igrek.songbook.songselection.tree.NoParentItemException
+import igrek.songbook.songselection.tree.SongTreeItem
 import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.locale.InsensitiveNameComparator
+import igrek.songbook.util.mainScope
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import java.util.concurrent.TimeUnit
 
@@ -70,7 +77,7 @@ class CustomSongsListLayoutController(
     editorSessionService: LazyInject<EditorSessionService> = appFactory.editorSessionService,
 ) : InflatedLayout(
     _layoutResourceId = R.layout.screen_custom_songs
-), ListItemClickListener<CustomSongListItem> {
+) {
     private val songsRepository by LazyExtractor(songsRepository)
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
@@ -86,7 +93,6 @@ class CustomSongsListLayoutController(
     private val preferencesState by LazyExtractor(settingsState)
     private val editorSessionService by LazyExtractor(editorSessionService)
 
-    private var itemsListView: CustomSongListView? = null
     private var goBackButton: ImageButton? = null
     private var storedScroll: ListScrollPosition? = null
     private var tabTitleLabel: TextView? = null
@@ -98,12 +104,14 @@ class CustomSongsListLayoutController(
     private var moreActionsButton: ImageButton? = null
     private var songsSortButton: ImageButton? = null
 
-    private var customCategory: CustomCategory? = null
+    var customCategory: CustomCategory? = null
     private var sortPicker: SinglePicker<CustomSongsOrdering>? = null
     private var searchingOn: Boolean = false
     private var itemNameFilter: String? = null
     private var searchFilterSubject: PublishSubject<String> = PublishSubject.create()
+    private var composeView: ComposeView? = null
     private var subscriptions = mutableListOf<Disposable>()
+    val state = CustomSongsLayoutState()
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
@@ -194,13 +202,21 @@ class CustomSongsListLayoutController(
                 }
             }
 
-        itemsListView = layout.findViewById(R.id.itemsListView)
-        itemsListView!!.init(activity as Context, this)
         updateHeader()
         updateItemsList()
 
+        val thisLayout = this
+        composeView = layout.findViewById<ComposeView>(R.id.compose_view).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+            setContent {
+                AppTheme {
+                    MainComponent(thisLayout)
+                }
+            }
+        }
+
         val localFocus = LocalFocusTraverser(
-            currentViewGetter = { itemsListView?.selectedView },
+            currentViewGetter = { composeView },
             currentFocusGetter = { appFactory.activity.get().currentFocus?.id },
             preNextFocus = { _: Int, _: View ->
                 when {
@@ -213,7 +229,7 @@ class CustomSongsListLayoutController(
                     R.id.itemSongMoreButton, R.id.itemsListView -> {
                         (currentView as ViewGroup).descendantFocusability =
                             ViewGroup.FOCUS_BLOCK_DESCENDANTS
-                        itemsListView?.requestFocusFromTouch()
+                        composeView?.requestFocusFromTouch()
                     }
                 }
                 when {
@@ -238,18 +254,13 @@ class CustomSongsListLayoutController(
                     R.id.itemSongMoreButton, R.id.itemsListView -> {
                         (currentView as ViewGroup).descendantFocusability =
                             ViewGroup.FOCUS_BLOCK_DESCENDANTS
-                        itemsListView?.requestFocusFromTouch()
+                        composeView?.requestFocusFromTouch()
                     }
                 }
                 when {
                     currentFocusId == R.id.itemSongMoreButton -> -1
-                    itemsListView?.selectedItemPosition == 0 -> {
-                        when {
-                            customCategory != null -> R.id.goBackButton
-                            else -> R.id.navMenuButton
-                        }
-                    }
-                    else -> 0
+                    customCategory != null -> R.id.goBackButton
+                    else -> R.id.navMenuButton
                 }
             },
             nextDown = { currentFocusId: Int, currentView: View ->
@@ -257,13 +268,13 @@ class CustomSongsListLayoutController(
                     R.id.itemSongMoreButton, R.id.itemsListView -> {
                         (currentView as ViewGroup).descendantFocusability =
                             ViewGroup.FOCUS_BLOCK_DESCENDANTS
-                        itemsListView?.requestFocusFromTouch()
+                        composeView?.requestFocusFromTouch()
                     }
                 }
                 0
             },
         )
-        itemsListView?.setOnKeyListener { _, keyCode, event ->
+        composeView?.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN) {
                 if (localFocus.handleKey(keyCode))
                     return@setOnKeyListener true
@@ -423,7 +434,7 @@ class CustomSongsListLayoutController(
             customCategory = null
         val filtering = isFilterSet()
 
-        val songItems: List<CustomSongListItem> = when {
+        val songItems: List<SongTreeItem> = when {
 
             filtering -> {
                 val songFilter =
@@ -431,7 +442,7 @@ class CustomSongsListLayoutController(
                 songsRepository.customSongsRepo.songs.get()
                     .filter { song -> songFilter.matchSong(song) }
                     .sortSongsByFilterRelevance(songFilter)
-                    .map { CustomSongListItem(song = it) }
+                    .map { SongTreeItem.song(it) }
             }
 
             groupingEnabled && customCategory == null -> {
@@ -440,36 +451,32 @@ class CustomSongsListLayoutController(
                     InsensitiveNameComparator<CustomCategory>(locale) { category -> category.name }
                 val categories = songsRepository.customSongsDao.customCategories
                     .sortedWith(categoryNameComparator)
-                    .map { CustomSongListItem(customCategory = it) }
+                    .map { SongTreeItem.customCategory(it) }
                 val uncategorized = songsRepository.customSongsRepo.uncategorizedSongs.get()
                     .sortSongs()
-                    .map { CustomSongListItem(song = it) }
+                    .map { SongTreeItem.song(it) }
                 categories + uncategorized
             }
 
             groupingEnabled && customCategory != null -> {
                 customCategory!!.songs
                     .sortSongs()
-                    .map { CustomSongListItem(song = it) }
+                    .map { SongTreeItem.song(it) }
             }
 
             else -> {
                 songsRepository.customSongsRepo.songs.get()
                     .sortSongs()
-                    .map { CustomSongListItem(song = it) }
+                    .map { SongTreeItem.song(it) }
             }
 
         }
-        itemsListView?.items = songItems.toList()
+        state.itemsContainer.replaceAll(songItems)
 
-        if (storedScroll != null) {
-            Handler(Looper.getMainLooper()).post {
-                itemsListView?.restoreScrollPosition(storedScroll)
-            }
-        }
+        restoreScrollPosition()
 
-        emptyListLabel?.visibility = when (itemsListView?.count) {
-            0 -> View.VISIBLE
+        emptyListLabel?.visibility = when (songItems.isEmpty()) {
+            true -> View.VISIBLE
             else -> View.GONE
         }
     }
@@ -506,14 +513,24 @@ class CustomSongsListLayoutController(
         }
     }
 
-    override fun onItemClick(item: CustomSongListItem) {
-        storedScroll = itemsListView?.currentScrollPosition
-        if (item.song != null) {
-            songOpener.openSongPreview(item.song)
+    fun onItemClick(item: SongTreeItem) {
+        val song = item.song
+        if (song != null) {
+            songOpener.openSongPreview(song)
         } else if (item.customCategory != null) {
+            rememberScrollPosition()
+            mainScope.launch {
+                state.folderScroll.scrollToItem(0, 0)
+            }
             customCategory = item.customCategory
             updateHeader()
             updateItemsList()
+        }
+    }
+
+    fun onItemMore(item: SongTreeItem) {
+        item.song?.let {
+            songContextMenuBuilder.showSongActions(it)
         }
     }
 
@@ -532,19 +549,50 @@ class CustomSongsListLayoutController(
             customCategory = null
             updateHeader()
             updateItemsList()
+            restoreScrollPosition()
         } catch (e: NoParentItemException) {
             layoutController.showPreviousLayoutOrQuit()
         }
     }
 
-    override fun onItemLongClick(item: CustomSongListItem) {
-        onMoreActions(item)
+    private fun rememberScrollPosition() {
+        storedScroll = ListScrollPosition(
+            state.rootScroll.firstVisibleItemIndex,
+            state.rootScroll.firstVisibleItemScrollOffset,
+        )
     }
 
-    override fun onMoreActions(item: CustomSongListItem) {
-        item.song?.let {
-            songContextMenuBuilder.showSongActions(it)
+    private fun restoreScrollPosition() {
+        val storedScroll = storedScroll ?: return
+        Handler(Looper.getMainLooper()).post {
+            mainScope.launch {
+                state.rootScroll.scrollToItem(
+                    storedScroll.firstVisiblePosition,
+                    storedScroll.yOffsetPx,
+                )
+            }
         }
     }
+}
 
+class CustomSongsLayoutState {
+    val itemsContainer: SongItemsContainer = SongItemsContainer()
+    val rootScroll: LazyListState = LazyListState()
+    val folderScroll: LazyListState = LazyListState()
+}
+
+@Composable
+private fun MainComponent(controller: CustomSongsListLayoutController) {
+    Column {
+        val scrollState = when (controller.customCategory) {
+            null -> controller.state.rootScroll
+            else -> controller.state.folderScroll
+        }
+        SongListComposable(
+            controller.state.itemsContainer,
+            scrollState = scrollState,
+            onItemClick = controller::onItemClick,
+            onItemMore = controller::onItemMore,
+        )
+    }
 }

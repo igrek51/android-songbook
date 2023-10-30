@@ -2,10 +2,12 @@ package igrek.songbook.songselection.tree
 
 import igrek.songbook.persistence.general.model.Category
 import igrek.songbook.persistence.general.model.Song
+import igrek.songbook.persistence.user.custom.CustomCategory
 
 open class SongTreeItem protected constructor(
-    open val song: Song?,
-    val category: Category?,
+    open val song: Song? = null,
+    val category: Category? = null,
+    val customCategory: CustomCategory? = null,
 ) {
 
     val simpleName: String?
@@ -32,11 +34,15 @@ open class SongTreeItem protected constructor(
     companion object {
 
         fun song(song: Song): SongTreeItem {
-            return SongTreeItem(song, null)
+            return SongTreeItem(song=song)
         }
 
         fun category(category: Category): SongTreeItem {
-            return SongTreeItem(null, category)
+            return SongTreeItem(category=category)
+        }
+
+        fun customCategory(customCategory: CustomCategory): SongTreeItem {
+            return SongTreeItem(customCategory=customCategory)
         }
     }
 }

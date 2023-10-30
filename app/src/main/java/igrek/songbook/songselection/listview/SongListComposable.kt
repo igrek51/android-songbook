@@ -95,6 +95,7 @@ fun SongTreeItemComposable(
         val song = item.song
         val iconId: Int = when {
             item.category != null -> R.drawable.folder
+            item.customCategory != null -> R.drawable.folder
             song != null && song.isCustom() -> R.drawable.edit
             else -> R.drawable.note
         }
@@ -111,27 +112,40 @@ fun SongTreeItemComposable(
                 .weight(1f)
                 .padding(vertical = 8.dp, horizontal = 4.dp),
         ) {
-            if (item.category != null) {
-                Text(
-                    modifier = Modifier.padding(vertical = 6.dp),
-                    text = item.category.displayName.orEmpty(),
-                    style = MaterialTheme.typography.titleSmall,
-                    color = colorTextTitle,
-                )
+            when {
+                item.category != null -> {
+                    Text(
+                        modifier = Modifier.padding(vertical = 6.dp),
+                        text = item.category.displayName.orEmpty(),
+                        style = MaterialTheme.typography.titleSmall,
+                        color = colorTextTitle,
+                    )
+                }
 
-            } else if (song != null) {
-                val artist = song.displayCategories()
+                item.customCategory != null -> {
+                    Text(
+                        modifier = Modifier.padding(vertical = 6.dp),
+                        text = item.customCategory.name,
+                        style = MaterialTheme.typography.titleSmall,
+                        color = colorTextTitle,
+                    )
+                }
 
-                Text(
-                    text = song.title,
-                    style = MaterialTheme.typography.titleSmall,
-                    color = colorTextTitle,
-                )
-                Text(
-                    text = artist,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = colorTextSubtitle,
-                )
+                song != null -> {
+                    Text(
+                        text = song.title,
+                        style = MaterialTheme.typography.titleSmall,
+                        color = colorTextTitle,
+                    )
+                    val artist = song.displayCategories()
+                    if (artist.isNotEmpty()) {
+                        Text(
+                            text = artist,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = colorTextSubtitle,
+                        )
+                    }
+                }
             }
         }
 
