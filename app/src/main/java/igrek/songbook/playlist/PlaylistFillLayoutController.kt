@@ -26,10 +26,6 @@ import igrek.songbook.persistence.repository.AllSongsRepository
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.SettingsState
-import igrek.songbook.songselection.SongClickListener
-import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
-import igrek.songbook.songselection.favourite.FavouritesLayoutController
-import igrek.songbook.songselection.listview.LazySongListView
 import igrek.songbook.songselection.listview.SongItemsContainer
 import igrek.songbook.songselection.listview.SongListComposable
 import igrek.songbook.songselection.search.SongSearchFilter
@@ -45,7 +41,6 @@ import java.util.concurrent.TimeUnit
 
 class PlaylistFillLayoutController(
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
-    songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
     softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
     settingsState: LazyInject<SettingsState> = appFactory.settingsState,
     appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
@@ -55,7 +50,6 @@ class PlaylistFillLayoutController(
     _layoutResourceId = R.layout.screen_playlist_fill
 ) {
     private val songsRepository by LazyExtractor(songsRepository)
-    private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
     private val preferencesState by LazyExtractor(settingsState)
     private val appLanguageService by LazyExtractor(appLanguageService)
@@ -211,10 +205,9 @@ class PlaylistFillLayoutController(
     fun onItemClick(item: SongTreeItem) {
         item.song?.let { song ->
             playlistService.toggleSongInCurrentPlaylist(song)
+            state.itemsContainer.notifyItemChange(item)
         }
     }
-
-    fun onItemMore(item: SongTreeItem) {}
 }
 
 @Composable
@@ -224,7 +217,7 @@ private fun MainComponent(controller: PlaylistFillLayoutController) {
             controller.state.itemsContainer,
             scrollState = controller.state.scrollState,
             onItemClick = controller::onItemClick,
-            onItemMore = controller::onItemMore,
+            onItemMore = null,
         )
     }
 }
