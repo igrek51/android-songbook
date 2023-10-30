@@ -3,7 +3,13 @@ package igrek.songbook.songselection.latest
 
 import android.view.View
 import android.widget.ImageButton
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import igrek.songbook.R
+import igrek.songbook.compose.AppTheme
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -13,10 +19,9 @@ import igrek.songbook.persistence.general.SongsUpdater
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.songpreview.SongOpener
-import igrek.songbook.songselection.SongClickListener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
-import igrek.songbook.songselection.listview.LazySongListView
-import igrek.songbook.songselection.listview.ListScrollPosition
+import igrek.songbook.songselection.listview.SongItemsContainer
+import igrek.songbook.songselection.listview.SongListComposable
 import igrek.songbook.songselection.search.SongSearchItem
 import igrek.songbook.songselection.tree.SongTreeItem
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -30,25 +35,36 @@ class LatestSongsLayoutController(
     songsUpdater: LazyInject<SongsUpdater> = appFactory.songsUpdater,
 ) : InflatedLayout(
     _layoutResourceId = R.layout.screen_latest_songs
-), SongClickListener {
+) {
     private val songsRepository by LazyExtractor(songsRepository)
     private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
     private val songOpener by LazyExtractor(songOpener)
     private val appLanguageService by LazyExtractor(appLanguageService)
     private val songsUpdater by LazyExtractor(songsUpdater)
 
-    private var itemsListView: LazySongListView? = null
-    private var storedScroll: ListScrollPosition? = null
     private var subscriptions = mutableListOf<Disposable>()
     private val latestSongsCount = 200
+    val state = LayoutState()
+
+    class LayoutState {
+        val itemsContainer: SongItemsContainer = SongItemsContainer()
+        val scrollState: LazyListState = LazyListState()
+    }
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
 
-        itemsListView = layout.findViewById<LazySongListView>(R.id.itemsList)?.also {
-            it.init(activity, this, songContextMenuBuilder)
-        }
         updateItemsList()
+
+        val thisLayout = this
+        layout.findViewById<ComposeView>(R.id.compose_view).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+            setContent {
+                AppTheme {
+                    MainComponent(thisLayout)
+                }
+            }
+        }
 
         layout.findViewById<ImageButton>(R.id.updateLatestSongs)?.let {
             it.setOnClickListener {
@@ -70,7 +86,7 @@ class LatestSongsLayoutController(
     private fun updateItemsList() {
         val acceptedLanguages = appLanguageService.selectedSongLanguages
         val acceptedLangCodes = acceptedLanguages.map { lang -> lang.langCode } + "" + null
-        val latestSongs = songsRepository.publicSongsRepo.songs.get()
+        val items = songsRepository.publicSongsRepo.songs.get()
             .asSequence()
             .filter { it.isPublic() }
             .filter { song -> song.language in acceptedLangCodes }
@@ -78,23 +94,30 @@ class LatestSongsLayoutController(
             .take(latestSongsCount)
             .map { song -> SongSearchItem.song(song) }
             .toList()
-        itemsListView?.setItems(latestSongs)
+        state.itemsContainer.replaceAll(items)
+    }
 
-        if (storedScroll != null) {
-            itemsListView?.restoreScrollPosition(storedScroll)
+    fun onItemClick(item: SongTreeItem) {
+        item.song?.let {
+            songOpener.openSongPreview(it)
         }
     }
 
-    override fun onSongItemClick(item: SongTreeItem) {
-        storedScroll = itemsListView?.currentScrollPosition
-        if (item.isSong) {
-            songOpener.openSongPreview(item.song!!)
-        }
-    }
-
-    override fun onSongItemLongClick(item: SongTreeItem) {
+    fun onItemMore(item: SongTreeItem) {
         if (item.isSong) {
             songContextMenuBuilder.showSongActions(item.song!!)
         }
+    }
+}
+
+@Composable
+private fun MainComponent(controller: LatestSongsLayoutController) {
+    Column {
+        SongListComposable(
+            controller.state.itemsContainer,
+            scrollState = controller.state.scrollState,
+            onItemClick = controller::onItemClick,
+            onItemMore = controller::onItemMore,
+        )
     }
 }

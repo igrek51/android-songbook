@@ -69,7 +69,12 @@ class SongSearchLayoutController(
     private var itemFilter: String? = null
     private var storedScroll: ListScrollPosition? = null
     private var subscriptions = mutableListOf<Disposable>()
-    val state = SongSearchLayoutState()
+    val state = LayoutState()
+
+    class LayoutState {
+        val itemsContainer: SongItemsContainer = SongItemsContainer()
+        val scrollState: LazyListState = LazyListState()
+    }
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
@@ -236,18 +241,10 @@ class SongSearchLayoutController(
     }
 
     fun onItemMore(item: SongTreeItem) {
-        val song = item.song
-        if (song != null) {
-            songContextMenuBuilder.showSongActions(item.song!!)
-        } else {
-            onItemClick(item)
+        item.song?.let { song ->
+            songContextMenuBuilder.showSongActions(song)
         }
     }
-}
-
-class SongSearchLayoutState {
-    val itemsContainer: SongItemsContainer = SongItemsContainer()
-    val scrollState: LazyListState = LazyListState()
 }
 
 @Composable
