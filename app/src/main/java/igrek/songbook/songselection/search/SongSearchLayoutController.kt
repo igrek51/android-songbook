@@ -163,14 +163,6 @@ class SongSearchLayoutController(
         }
     }
 
-    private fun setSongFilter(itemNameFilter: String?) {
-        this.itemFilter = itemNameFilter
-        if (itemNameFilter == null)
-            searchFilterEdit?.setText("", TextView.BufferType.EDITABLE)
-        storedScroll = null
-        updateItemsList()
-    }
-
     private fun getSongItems(songsRepo: AllSongsRepository): MutableList<SongTreeItem> {
         val acceptedLanguages = appLanguageService.selectedSongLanguages
         val acceptedLangCodes = acceptedLanguages.map { lang -> lang.langCode } + "" + null
@@ -200,6 +192,14 @@ class SongSearchLayoutController(
         }
     }
 
+    private fun setSongFilter(itemNameFilter: String?) {
+        this.itemFilter = itemNameFilter
+        if (itemNameFilter == null)
+            searchFilterEdit?.setText("", TextView.BufferType.EDITABLE)
+        storedScroll = null
+        updateItemsList()
+    }
+
     private fun isFilterSet(): Boolean {
         if (itemFilter.isNullOrEmpty())
             return false
@@ -224,16 +224,10 @@ class SongSearchLayoutController(
         }
     }
 
-    fun openSongPreview(item: SongTreeItem) {
-        item.song?.let {  song ->
-            songOpener.openSongPreview(song)
-        }
-    }
-
     fun onItemClick(item: SongTreeItem) {
         val song = item.song
         if (song != null) {
-            openSongPreview(item)
+            songOpener.openSongPreview(song)
         } else {
             // move to selected category
             songTreeLayoutController.currentCategory = item.category

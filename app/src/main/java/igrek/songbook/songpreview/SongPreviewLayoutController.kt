@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import android.view.View
 import android.view.ViewGroup
@@ -519,19 +520,31 @@ class SongPreviewLayoutController(
 
     private fun formatSongTitle(): Spanned {
         val song = currentSong ?: return SpannableString("")
-        val categories = song.displayCategories()
+        val artist = song.displayCategories()
         return when {
-            categories.isNotBlank() -> {
-                val span: Spannable = SpannableString("${song.title} - $categories")
+            artist.isNotBlank() -> {
+                val span: Spannable = SpannableString("${song.title}\n$artist")
+                span.setSpan(
+                    StyleSpan(Typeface.BOLD),
+                    0, song.title.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+                )
+                span.setSpan(
+                    RelativeSizeSpan(0.8f),
+                    song.title.length + 1,
+                    song.title.length + 1 + artist.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+                )
+                span
+            }
+            else -> {
+                val span: Spannable = SpannableString(song.title)
                 span.setSpan(
                     StyleSpan(Typeface.BOLD),
                     0, song.title.length,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
                 )
                 span
-            }
-            else -> {
-                SpannableString(song.title)
             }
         }
     }
