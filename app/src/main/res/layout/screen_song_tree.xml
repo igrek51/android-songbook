@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal"
-    android:orientation="vertical"
-    android:weightSum="1"
-    android:descendantFocusability="afterDescendants">
+    android:fillViewport="true"
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -30,11 +28,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_centerVertical="true"
-                android:gravity="center_vertical"
                 android:layout_gravity="center_vertical"
-                android:adjustViewBounds="true">
+                android:adjustViewBounds="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <ImageButton
                     android:id="@+id/navMenuButton"
@@ -108,23 +106,11 @@
                     android:src="@drawable/search" />
 
             </LinearLayout>
-
         </androidx.appcompat.widget.Toolbar>
-
     </com.google.android.material.appbar.AppBarLayout>
 
-    <RelativeLayout
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/compose_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/appBarLayout"
-        android:padding="0dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <igrek.songbook.songselection.listview.SongListView
-            android:id="@+id/itemsList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </RelativeLayout>
-
-</RelativeLayout>
+        android:layout_height="wrap_content" />
+</LinearLayout>
