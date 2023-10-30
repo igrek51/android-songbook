@@ -9,7 +9,13 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import igrek.songbook.R
+import igrek.songbook.compose.AppTheme
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
@@ -22,7 +28,10 @@ import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.songselection.SongClickListener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
+import igrek.songbook.songselection.favourite.FavouritesLayoutController
 import igrek.songbook.songselection.listview.LazySongListView
+import igrek.songbook.songselection.listview.SongItemsContainer
+import igrek.songbook.songselection.listview.SongListComposable
 import igrek.songbook.songselection.search.SongSearchFilter
 import igrek.songbook.songselection.search.sortSongsByFilterRelevance
 import igrek.songbook.songselection.tree.SongTreeItem
@@ -44,7 +53,7 @@ class PlaylistFillLayoutController(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
 ) : InflatedLayout(
     _layoutResourceId = R.layout.screen_playlist_fill
-), SongClickListener {
+) {
     private val songsRepository by LazyExtractor(songsRepository)
     private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
@@ -53,11 +62,16 @@ class PlaylistFillLayoutController(
     private val playlistService by LazyExtractor(playlistService)
     private val uiInfoService by LazyExtractor(uiInfoService)
 
-    private var itemsListView: LazySongListView? = null
     private var searchFilterEdit: EditText? = null
     private var searchFilterSubject: PublishSubject<String> = PublishSubject.create()
     private var itemFilter: String? = null
     private var subscriptions = mutableListOf<Disposable>()
+    val state = LayoutState()
+
+    class LayoutState {
+        val itemsContainer: SongItemsContainer = SongItemsContainer()
+        val scrollState: LazyListState = LazyListState()
+    }
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
@@ -104,10 +118,17 @@ class PlaylistFillLayoutController(
             setOnClickListener { onClearFilterClicked() }
         }
 
-        itemsListView = layout.findViewById<LazySongListView>(R.id.itemsList)?.also {
-            it.init(activity, this, songContextMenuBuilder)
-        }
         updateItemsList()
+
+        val thisLayout = this
+        layout.findViewById<ComposeView>(R.id.compose_view).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+            setContent {
+                AppTheme {
+                    MainComponent(thisLayout)
+                }
+            }
+        }
 
         uiInfoService.showInfo(R.string.playlist_fill_search_song_to_add)
 
@@ -132,7 +153,7 @@ class PlaylistFillLayoutController(
 
     private fun updateItemsList() {
         val items: MutableList<SongTreeItem> = getSongItems(songsRepository.allSongsRepo)
-        itemsListView?.setItems(items)
+        state.itemsContainer.replaceAll(items)
     }
 
     private fun setSongFilter(itemNameFilter: String?) {
@@ -187,10 +208,23 @@ class PlaylistFillLayoutController(
         }
     }
 
-    override fun onSongItemClick(item: SongTreeItem) {
-        playlistService.toggleSongInCurrentPlaylist(item.song!!)
+    fun onItemClick(item: SongTreeItem) {
+        item.song?.let { song ->
+            playlistService.toggleSongInCurrentPlaylist(song)
+        }
     }
 
-    override fun onSongItemLongClick(item: SongTreeItem) {
+    fun onItemMore(item: SongTreeItem) {}
+}
+
+@Composable
+private fun MainComponent(controller: PlaylistFillLayoutController) {
+    Column {
+        SongListComposable(
+            controller.state.itemsContainer,
+            scrollState = controller.state.scrollState,
+            onItemClick = controller::onItemClick,
+            onItemMore = controller::onItemMore,
+        )
     }
 }
