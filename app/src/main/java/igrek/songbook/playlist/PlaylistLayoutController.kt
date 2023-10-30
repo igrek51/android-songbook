@@ -245,7 +245,7 @@ private fun MainComponent(controller: PlaylistLayoutController) {
         if (currentPlaylist == null) {
             if (controller.state.playlistItems.items.isNotEmpty()) {
 
-                ReorderListView<Playlist>(
+                ReorderListView(
                     itemsContainer = controller.state.playlistItems,
                     scrollState = controller.state.playlistsScrollState,
                     onReorder = { newItems ->

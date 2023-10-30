@@ -2,7 +2,13 @@ package igrek.songbook.songselection.top
 
 import android.view.View
 import android.widget.ImageButton
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import igrek.songbook.R
+import igrek.songbook.compose.AppTheme
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
@@ -14,10 +20,8 @@ import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.language.SongLanguage
 import igrek.songbook.songpreview.SongOpener
-import igrek.songbook.songselection.SongClickListener
 import igrek.songbook.songselection.contextmenu.SongContextMenuBuilder
-import igrek.songbook.songselection.listview.LazySongListView
-import igrek.songbook.songselection.listview.ListScrollPosition
+import igrek.songbook.songselection.listview.SongListComposable
 import igrek.songbook.songselection.search.SongSearchItem
 import igrek.songbook.songselection.search.SongSearchLayoutController
 import igrek.songbook.songselection.tree.SongTreeItem
@@ -32,26 +36,33 @@ class TopSongsLayoutController(
     appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
 ) : InflatedLayout(
     _layoutResourceId = R.layout.screen_top_songs
-), SongClickListener {
+) {
     private val songsRepository by LazyExtractor(songsRepository)
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
     private val songOpener by LazyExtractor(songOpener)
     private val appLanguageService by LazyExtractor(appLanguageService)
 
-    private var itemsListView: LazySongListView? = null
-    private var storedScroll: ListScrollPosition? = null
     private var languagePicker: MultiPicker<SongLanguage>? = null
     private var subscriptions = mutableListOf<Disposable>()
     private val topSongsCount = 500
+    val itemsList: MutableList<SongTreeItem> = mutableListOf()
+    val state = TopSongsLayoutState()
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
 
-        itemsListView = layout.findViewById<LazySongListView>(R.id.itemsList)?.also {
-            it.init(activity, this, songContextMenuBuilder)
-        }
         updateItemsList()
+
+        val thisLayout = this
+        layout.findViewById<ComposeView>(R.id.compose_view).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+            setContent {
+                AppTheme {
+                    MainComponent(thisLayout)
+                }
+            }
+        }
 
         layout.findViewById<ImageButton>(R.id.searchSongButton)?.run {
             setOnClickListener { goToSearchSong() }
@@ -102,23 +113,36 @@ class TopSongsLayoutController(
             .take(topSongsCount)
             .map { song -> SongSearchItem.song(song) }
             .toList()
-        itemsListView?.setItems(latestSongs)
 
-        if (storedScroll != null) {
-            itemsListView?.restoreScrollPosition(storedScroll)
-        }
+        itemsList.clear()
+        itemsList.addAll(latestSongs)
     }
 
-    override fun onSongItemClick(item: SongTreeItem) {
-        storedScroll = itemsListView?.currentScrollPosition
+    fun onItemClick(item: SongTreeItem) {
         if (item.isSong) {
             songOpener.openSongPreview(item.song!!)
         }
     }
 
-    override fun onSongItemLongClick(item: SongTreeItem) {
+    fun onItemMore(item: SongTreeItem) {
         if (item.isSong) {
             songContextMenuBuilder.showSongActions(item.song!!)
         }
+    }
+}
+
+class TopSongsLayoutState {
+    val scrollState: LazyListState = LazyListState()
+}
+
+@Composable
+private fun MainComponent(controller: TopSongsLayoutController) {
+    Column {
+        SongListComposable(
+            controller.itemsList,
+            scrollState = controller.state.scrollState,
+            onItemClick = controller::onItemClick,
+            onItemMore = controller::onItemMore,
+        )
     }
 }

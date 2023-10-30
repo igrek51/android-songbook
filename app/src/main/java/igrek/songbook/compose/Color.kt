@@ -70,5 +70,7 @@ val colorLightBackground = Color(0xFF393939)
 val colorItemListBorder = md_theme_dark_onSurface.copy(alpha = 0.1f)
 val colorItemDraggedBackground = Color.LightGray.copy(alpha = 0.3f)
 val colorItemClicked = Color(0xFF6A6C72)
+val colorTextTitle = Color(0xFFFFFFFF)
+val colorTextSubtitle = Color(0xFFD0D0D0)
 
 //val seed = Color(0xFF1564C0)
