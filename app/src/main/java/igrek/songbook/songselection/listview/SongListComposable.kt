@@ -9,6 +9,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -33,9 +34,6 @@ import igrek.songbook.compose.colorTextSubtitle
 import igrek.songbook.compose.colorTextTitle
 import igrek.songbook.compose.itemBorderStroke
 import igrek.songbook.info.logger.LoggerFactory.logger
-import igrek.songbook.inject.appFactory
-import igrek.songbook.playlist.PlaylistFillItem
-import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.songselection.listview.items.AbstractListItem
 import igrek.songbook.songselection.listview.items.CategoryListItem
 import igrek.songbook.songselection.listview.items.CustomCategoryListItem
@@ -66,12 +64,15 @@ class SongItemsContainer(
     }
 }
 
+typealias PostButtonComposable = @Composable (item: AbstractListItem, onItemClick: (item: AbstractListItem) -> Unit, onItemMore: ((item: AbstractListItem) -> Unit)?) -> Unit
+
 @Composable
 fun SongListComposable(
     itemsContainer: SongItemsContainer,
     scrollState: LazyListState = rememberLazyListState(),
     onItemClick: (item: AbstractListItem) -> Unit,
     onItemMore: ((item: AbstractListItem) -> Unit)? = null,
+    postButtonContent: PostButtonComposable? = null,
 ) {
     key(itemsContainer.modifiedAll.value) {
         LazyColumn(
@@ -80,7 +81,7 @@ fun SongListComposable(
         ) {
             itemsContainer.items.forEachIndexed { index: Int, item: AbstractListItem ->
                 item (key = item.id() ?: index) {
-                    SongTreeItemComposable(itemsContainer, item, index, onItemClick, onItemMore)
+                    SongTreeItemComposable(itemsContainer, item, index, onItemClick, onItemMore, postButtonContent)
                 }
             }
         }
@@ -94,11 +95,14 @@ fun SongTreeItemComposable(
     index: Int,
     onItemClick: (item: AbstractListItem) -> Unit,
     onItemMore: ((item: AbstractListItem) -> Unit)? = null,
+    postButtonContent: PostButtonComposable? = null,
 ) {
     key(itemsContainer.modifiedMap.getValue(index).value) {
         logger.debug("recompose item $index")
         Row(
-            Modifier.padding(0.dp)
+            Modifier
+                .defaultMinSize(minHeight = 48.dp)
+                .padding(0.dp)
                 .border(itemBorderStroke)
                 .combinedClickable(
                     onClick = {
@@ -116,101 +120,106 @@ fun SongTreeItemComposable(
                 ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            val iconId: Int = when {
-                item is CategoryListItem -> R.drawable.folder
-                item is CustomCategoryListItem -> R.drawable.folder
-                item is SongListItem && item.song.isCustom() -> R.drawable.edit
-                else -> R.drawable.note
-            }
-
-            Icon(
-                painterResource(id = iconId),
-                contentDescription = null,
-                modifier = Modifier.padding(start = 6.dp, end = 2.dp).size(24.dp),
-                tint = Color.White,
-            )
+            SongItemIconComposable(item)
 
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .padding(vertical = 8.dp, horizontal = 4.dp),
             ) {
-                when (item) {
-                    is CategoryListItem -> {
-                        Text(
-                            modifier = Modifier.padding(vertical = 6.dp),
-                            text = item.category.displayName.orEmpty(),
-                            style = MaterialTheme.typography.titleSmall,
-                            color = colorTextTitle,
-                        )
-                    }
-
-                    is CustomCategoryListItem -> {
-                        Text(
-                            modifier = Modifier.padding(vertical = 6.dp),
-                            text = item.customCategory.name,
-                            style = MaterialTheme.typography.titleSmall,
-                            color = colorTextTitle,
-                        )
-                    }
-
-                    is SongListItem -> {
-                        Text(
-                            text = item.song.title,
-                            style = MaterialTheme.typography.titleSmall,
-                            color = colorTextTitle,
-                        )
-                        val artist = item.song.displayCategories()
-                        if (artist.isNotEmpty()) {
-                            Text(
-                                text = artist,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = colorTextSubtitle,
-                            )
-                        }
-                    }
-                }
+                SongItemTextComposable(item)
             }
 
-            when {
-                item is PlaylistFillItem -> {
-                    val playlistService: PlaylistService = appFactory.playlistService.get()
-                    if (!playlistService.isSongOnCurrentPlaylist(item.song)) {
-                        IconButton(
-                            onClick = {
-                                mainScope.launch {
-                                    onItemClick(item)
-                                }
-                            },
-                        ) {
-                            Icon(
-                                painterResource(id = R.drawable.add),
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp),
-                                tint = Color.White,
-                            )
-                        }
-                    }
-                }
-
-                item is SongListItem && onItemMore != null -> {
-                    IconButton(
-                        onClick = {
-                            mainScope.launch {
-                                onItemMore(item)
-                            }
-                        },
-                    ) {
-                        Icon(
-                            painterResource(id = R.drawable.more),
-                            contentDescription = null,
-                            modifier = Modifier.size(24.dp),
-                            tint = Color.White,
-                        )
-                    }
-                }
+            when (postButtonContent == null) {
+                true -> SongItemPostButtonComposable(item, onItemClick, onItemMore)
+                else -> postButtonContent(item, onItemClick, onItemMore)
             }
+        }
+    }
+}
 
+@Composable
+fun SongItemIconComposable(
+    item: AbstractListItem,
+) {
+    val iconId: Int = when {
+        item is CategoryListItem -> R.drawable.folder
+        item is CustomCategoryListItem -> R.drawable.folder
+        item is SongListItem && item.song.isCustom() -> R.drawable.edit
+        else -> R.drawable.note
+    }
+    Icon(
+        painterResource(id = iconId),
+        contentDescription = null,
+        modifier = Modifier.padding(start = 6.dp, end = 2.dp).size(24.dp),
+        tint = Color.White,
+    )
+}
+
+@Composable
+fun SongItemTextComposable(
+    item: AbstractListItem,
+) {
+    when (item) {
+        is CategoryListItem -> {
+            Text(
+                modifier = Modifier.padding(vertical = 6.dp),
+                text = item.category.displayName.orEmpty(),
+                style = MaterialTheme.typography.titleSmall,
+                color = colorTextTitle,
+            )
+        }
+
+        is CustomCategoryListItem -> {
+            Text(
+                modifier = Modifier.padding(vertical = 6.dp),
+                text = item.customCategory.name,
+                style = MaterialTheme.typography.titleSmall,
+                color = colorTextTitle,
+            )
+        }
+
+        is SongListItem -> {
+            Text(
+                text = item.song.title,
+                style = MaterialTheme.typography.titleSmall,
+                color = colorTextTitle,
+            )
+            val artist = item.song.displayCategories()
+            if (artist.isNotEmpty()) {
+                Text(
+                    text = artist,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = colorTextSubtitle,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun SongItemPostButtonComposable(
+    item: AbstractListItem,
+    onItemClick: (item: AbstractListItem) -> Unit,
+    onItemMore: ((item: AbstractListItem) -> Unit)? = null,
+) {
+    when {
+        item is SongListItem && onItemMore != null -> {
+            IconButton(
+                modifier = Modifier.padding(0.dp).size(40.dp, 40.dp),
+                onClick = {
+                    mainScope.launch {
+                        onItemMore(item)
+                    }
+                },
+            ) {
+                Icon(
+                    painterResource(id = R.drawable.more),
+                    contentDescription = null,
+                    modifier = Modifier.size(24.dp),
+                    tint = Color.White,
+                )
+            }
         }
     }
 }

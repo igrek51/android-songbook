@@ -10,10 +10,18 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import igrek.songbook.R
 import igrek.songbook.compose.AppTheme
 import igrek.songbook.info.UiInfoService
@@ -26,6 +34,7 @@ import igrek.songbook.persistence.repository.AllSongsRepository
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.SettingsState
+import igrek.songbook.songselection.listview.PostButtonComposable
 import igrek.songbook.songselection.listview.SongItemsContainer
 import igrek.songbook.songselection.listview.SongListComposable
 import igrek.songbook.songselection.listview.items.AbstractListItem
@@ -34,9 +43,11 @@ import igrek.songbook.songselection.search.SongSearchFilter
 import igrek.songbook.songselection.search.sortSongsByFilterRelevance
 import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.locale.StringSimplifier
+import igrek.songbook.util.mainScope
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 
@@ -219,6 +230,36 @@ private fun MainComponent(controller: PlaylistFillLayoutController) {
             scrollState = controller.state.scrollState,
             onItemClick = controller::onItemClick,
             onItemMore = null,
+            postButtonContent = { item, onItemClick, onItemMore ->
+                PlaylistFillItemPostButtonComposable(item, onItemClick, onItemMore)
+            },
         )
+    }
+}
+
+@Composable
+fun PlaylistFillItemPostButtonComposable(
+    item: AbstractListItem,
+    onItemClick: (item: AbstractListItem) -> Unit,
+    onItemMore: ((item: AbstractListItem) -> Unit)? = null,
+) {
+    val item2 = item as? PlaylistFillItem ?: return
+    val playlistService: PlaylistService = appFactory.playlistService.get()
+    if (!playlistService.isSongOnCurrentPlaylist(item2.song)) {
+        IconButton(
+            modifier = Modifier.padding(0.dp).size(40.dp, 40.dp),
+            onClick = {
+                mainScope.launch {
+                    onItemClick(item2)
+                }
+            },
+        ) {
+            Icon(
+                painterResource(id = R.drawable.add),
+                contentDescription = null,
+                modifier = Modifier.size(24.dp),
+                tint = Color.White,
+            )
+        }
     }
 }
