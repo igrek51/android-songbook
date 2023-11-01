@@ -34,7 +34,6 @@ import igrek.songbook.persistence.repository.AllSongsRepository
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.language.AppLanguageService
 import igrek.songbook.settings.preferences.SettingsState
-import igrek.songbook.songselection.listview.PostButtonComposable
 import igrek.songbook.songselection.listview.SongItemsContainer
 import igrek.songbook.songselection.listview.SongListComposable
 import igrek.songbook.songselection.listview.items.AbstractListItem
@@ -56,7 +55,6 @@ class PlaylistFillLayoutController(
     softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
     settingsState: LazyInject<SettingsState> = appFactory.settingsState,
     appLanguageService: LazyInject<AppLanguageService> = appFactory.appLanguageService,
-    playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
 ) : InflatedLayout(
     _layoutResourceId = R.layout.screen_playlist_fill
@@ -65,8 +63,8 @@ class PlaylistFillLayoutController(
     private val softKeyboardService by LazyExtractor(softKeyboardService)
     private val preferencesState by LazyExtractor(settingsState)
     private val appLanguageService by LazyExtractor(appLanguageService)
-    private val playlistService by LazyExtractor(playlistService)
     private val uiInfoService by LazyExtractor(uiInfoService)
+    val playlistService by LazyExtractor(appFactory.playlistService)
 
     private var searchFilterEdit: EditText? = null
     private var searchFilterSubject: PublishSubject<String> = PublishSubject.create()
@@ -230,8 +228,8 @@ private fun MainComponent(controller: PlaylistFillLayoutController) {
             scrollState = controller.state.scrollState,
             onItemClick = controller::onItemClick,
             onItemMore = null,
-            postButtonContent = { item, onItemClick, onItemMore ->
-                PlaylistFillItemPostButtonComposable(item, onItemClick, onItemMore)
+            postButtonContent = { item, onItemClick, _ ->
+                PlaylistFillItemPostButtonComposable(item, onItemClick, controller.playlistService)
             },
         )
     }
@@ -241,10 +239,9 @@ private fun MainComponent(controller: PlaylistFillLayoutController) {
 fun PlaylistFillItemPostButtonComposable(
     item: AbstractListItem,
     onItemClick: (item: AbstractListItem) -> Unit,
-    onItemMore: ((item: AbstractListItem) -> Unit)? = null,
+    playlistService: PlaylistService,
 ) {
     val item2 = item as? PlaylistFillItem ?: return
-    val playlistService: PlaylistService = appFactory.playlistService.get()
     if (!playlistService.isSongOnCurrentPlaylist(item2.song)) {
         IconButton(
             modifier = Modifier.padding(0.dp).size(40.dp, 40.dp),

@@ -38,14 +38,12 @@ class GlobalFocusTraverser(
     navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
     songPreviewLayoutController: LazyInject<SongPreviewLayoutController> = appFactory.songPreviewLayoutController,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-    playlistService: LazyInject<PlaylistService> = appFactory.playlistService,
 ) {
     private val activity by LazyExtractor(activity)
     private val layoutController by LazyExtractor(layoutController)
     private val navigationMenuController by LazyExtractor(navigationMenuController)
     private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
     private val uiInfoService by LazyExtractor(uiInfoService)
-    private val playlistService by LazyExtractor(playlistService)
 
     private val debugMode: Boolean = false
 
@@ -231,7 +229,7 @@ class GlobalFocusTraverser(
     fun nextLeftView(currentViewId: Int): Int {
         if (navigationMenuController.isDrawerShown()) {
             when (currentViewId) {
-                R.id.navMenuButton, R.id.itemsList, R.id.itemsListView, R.id.main_content -> return R.id.nav_view
+                R.id.navMenuButton, R.id.compose_view, R.id.itemsListView, R.id.main_content -> return R.id.nav_view
                 R.id.nav_top_songs -> return R.id.nav_top_songs
                 R.id.navAddCustomSongButton -> return R.id.nav_custom_songs
                 R.id.navHelpExtraButton -> return R.id.nav_about
@@ -329,7 +327,7 @@ class GlobalFocusTraverser(
     fun nextDownView(currentViewId: Int): Int {
         if (navigationMenuController.isDrawerShown()) {
             when (currentViewId) {
-                R.id.navMenuButton, R.id.itemsList, R.id.itemsListView, R.id.main_content -> return R.id.nav_view
+                R.id.navMenuButton, R.id.compose_view, R.id.itemsListView, R.id.main_content -> return R.id.nav_view
             }
         } else if (uiInfoService.isSnackbarShown()) {
             if (uiInfoService.focusSnackBar())
@@ -369,23 +367,23 @@ class GlobalFocusTraverser(
             }
             currentViewId == R.id.main_content -> R.id.navMenuButton
             layoutController.isState(TopSongsLayoutController::class) -> when (currentViewId) {
-                R.id.navMenuButton, R.id.languageFilterButton, R.id.searchSongButton -> R.id.itemsList
+                R.id.navMenuButton, R.id.languageFilterButton, R.id.searchSongButton -> R.id.compose_view
                 else -> 0
             }
             layoutController.isState(SongTreeLayoutController::class) -> when (currentViewId) {
-                R.id.navMenuButton, R.id.goBackButton, R.id.languageFilterButton, R.id.searchSongButton -> R.id.itemsList
+                R.id.navMenuButton, R.id.goBackButton, R.id.languageFilterButton, R.id.searchSongButton -> R.id.compose_view
                 else -> 0
             }
             layoutController.isState(SongSearchLayoutController::class) -> when (currentViewId) {
-                R.id.navMenuButton, R.id.searchFilterEdit, R.id.searchFilterClearButton -> R.id.itemsList
+                R.id.navMenuButton, R.id.searchFilterEdit, R.id.searchFilterClearButton -> R.id.compose_view
                 else -> 0
             }
             layoutController.isState(PlaylistFillLayoutController::class) -> when (currentViewId) {
-                R.id.navMenuButton, R.id.searchFilterEdit, R.id.searchFilterClearButton -> R.id.itemsList
+                R.id.navMenuButton, R.id.searchFilterEdit, R.id.searchFilterClearButton -> R.id.compose_view
                 else -> 0
             }
             layoutController.isState(CustomSongsListLayoutController::class) -> when (currentViewId) {
-                R.id.navMenuButton, R.id.goBackButton, R.id.searchFilterEdit, R.id.searchFilterClearButton, R.id.searchSongButton, R.id.songsSortButton, R.id.moreActionsButton -> R.id.itemsListView
+                R.id.navMenuButton, R.id.goBackButton, R.id.searchFilterEdit, R.id.searchFilterClearButton, R.id.searchSongButton, R.id.songsSortButton, R.id.moreActionsButton -> R.id.compose_view
                 else -> 0
             }
             layoutController.isState(EditSongLayoutController::class) -> when (currentViewId) {
@@ -401,11 +399,11 @@ class GlobalFocusTraverser(
                 else -> 0
             }
             layoutController.isState(LatestSongsLayoutController::class) -> when (currentViewId) {
-                R.id.navMenuButton, R.id.updateLatestSongs -> R.id.itemsList
+                R.id.navMenuButton, R.id.updateLatestSongs -> R.id.compose_view
                 else -> 0
             }
             layoutController.isState(FavouritesLayoutController::class) -> when (currentViewId) {
-                R.id.navMenuButton -> R.id.itemsList
+                R.id.navMenuButton -> R.id.compose_view
                 else -> 0
             }
             layoutController.isState(PlaylistLayoutController::class) -> when (currentViewId) {
@@ -413,7 +411,7 @@ class GlobalFocusTraverser(
                 else -> 0
             }
             layoutController.isState(OpenHistoryLayoutController::class) -> when (currentViewId) {
-                R.id.navMenuButton -> R.id.itemsList
+                R.id.navMenuButton -> R.id.compose_view
                 else -> 0
             }
             layoutController.isState(MissingSongLayoutController::class) -> when (currentViewId) {
@@ -451,7 +449,7 @@ class GlobalFocusTraverser(
     fun nextUpView(currentViewId: Int): Int {
         if (navigationMenuController.isDrawerShown()) {
             when (currentViewId) {
-                R.id.navMenuButton, R.id.itemsList, R.id.itemsListView, R.id.main_content -> return R.id.nav_view
+                R.id.navMenuButton, R.id.compose_view, R.id.itemsListView, R.id.main_content -> return R.id.nav_view
             }
         }
 
@@ -497,11 +495,11 @@ class GlobalFocusTraverser(
                 else -> 0
             }
             layoutController.isState(LatestSongsLayoutController::class) -> when (currentViewId) {
-                R.id.itemsList -> R.id.navMenuButton
+                R.id.compose_view -> R.id.navMenuButton
                 else -> 0
             }
             layoutController.isState(FavouritesLayoutController::class) -> when (currentViewId) {
-                R.id.itemsList -> R.id.navMenuButton
+                R.id.compose_view -> R.id.navMenuButton
                 else -> 0
             }
             layoutController.isState(PlaylistLayoutController::class) -> when (currentViewId) {
@@ -509,7 +507,7 @@ class GlobalFocusTraverser(
                 else -> 0
             }
             layoutController.isState(OpenHistoryLayoutController::class) -> when (currentViewId) {
-                R.id.itemsList -> R.id.navMenuButton
+                R.id.compose_view -> R.id.navMenuButton
                 else -> 0
             }
             layoutController.isState(MissingSongLayoutController::class) -> when (currentViewId) {

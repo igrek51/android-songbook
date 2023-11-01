@@ -513,11 +513,11 @@ class SongPreviewLayoutController(
         return when {
             artist.isNotBlank() -> {
                 val span: Spannable = SpannableString("${song.title}\n$artist")
-                span.setSpan(
-                    StyleSpan(Typeface.BOLD),
-                    0, song.title.length,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
-                )
+//                span.setSpan(
+//                    StyleSpan(Typeface.BOLD),
+//                    0, song.title.length,
+//                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+//                )
                 span.setSpan(
                     RelativeSizeSpan(0.8f),
                     song.title.length + 1,
