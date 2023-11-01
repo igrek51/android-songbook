@@ -42,6 +42,8 @@ import igrek.songbook.R
 import igrek.songbook.compose.AppTheme
 import igrek.songbook.compose.ItemsContainer
 import igrek.songbook.compose.ReorderListView
+import igrek.songbook.compose.colorTextSubtitle
+import igrek.songbook.compose.colorTextTitle
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
@@ -78,8 +80,16 @@ class PlaylistLayoutController : InflatedLayout(
     private var playlistTitleLabel: TextView? = null
     private var goBackButton: ImageButton? = null
 
-    val state = PlaylistLayoutState()
     private var subscriptions = mutableListOf<Disposable>()
+    val state = LayoutState()
+
+    class LayoutState {
+        val playlistsScrollState: ScrollState = ScrollState(0)
+        val songsScrollState: ScrollState = ScrollState(0)
+        val currentPlaylist: MutableState<Playlist?> = mutableStateOf(null)
+        val playlistItems: ItemsContainer<Playlist> = ItemsContainer()
+        val songItems: ItemsContainer<Song> = ItemsContainer()
+    }
 
     override fun showLayout(layout: View) {
         super.showLayout(layout)
@@ -230,14 +240,6 @@ class PlaylistLayoutController : InflatedLayout(
     }
 }
 
-class PlaylistLayoutState {
-    val playlistsScrollState: ScrollState = ScrollState(0)
-    val songsScrollState: ScrollState = ScrollState(0)
-    val currentPlaylist: MutableState<Playlist?> = mutableStateOf(null)
-    val playlistItems: ItemsContainer<Playlist> = ItemsContainer()
-    val songItems: ItemsContainer<Song> = ItemsContainer()
-}
-
 @Composable
 private fun MainComponent(controller: PlaylistLayoutController) {
     Column {
@@ -277,7 +279,7 @@ private fun MainComponent(controller: PlaylistLayoutController) {
                     },
                     onLoad = {},
                 ) { itemsContainer: ItemsContainer<Song>, id: Int, modifier: Modifier ->
-                    SongItemComposable(controller, itemsContainer, id, modifier)
+                    PlaylistSongItemComposable(controller, itemsContainer, id, modifier)
                 }
 
             } else {
@@ -376,7 +378,7 @@ private fun PlaylistItemComposable(
 
 @SuppressLint("ModifierParameter")
 @Composable
-private fun SongItemComposable(
+private fun PlaylistSongItemComposable(
     controller: PlaylistLayoutController,
     itemsContainer: ItemsContainer<Song>,
     id: Int,
@@ -403,12 +405,7 @@ private fun SongItemComposable(
             ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(
-            painterResource(id = R.drawable.note),
-            contentDescription = null,
-            modifier = Modifier.padding(start = 2.dp).size(24.dp),
-            tint = Color.White,
-        )
+        PlSongItemIconComposable(song)
 
         val tooltipState = remember { PlainTooltipState() }
         PlainTooltipBox(
@@ -429,12 +426,13 @@ private fun SongItemComposable(
             }
         }
 
-        Text(
+        Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(vertical = 10.dp, horizontal = 4.dp),
-            text = song.displayName(),
-        )
+                .padding(vertical = 8.dp, horizontal = 4.dp),
+        ) {
+            PlSongItemTextComposable(song)
+        }
 
         IconButton(
             onClick = {
@@ -450,5 +448,41 @@ private fun SongItemComposable(
                 tint = Color.White,
             )
         }
+    }
+}
+
+@Composable
+fun PlSongItemIconComposable(
+    song: Song,
+) {
+    val iconId: Int = when {
+        song.isCustom() -> R.drawable.edit
+        else -> R.drawable.note
+    }
+    Icon(
+        painterResource(id = iconId),
+        contentDescription = null,
+        modifier = Modifier.padding(start = 2.dp).size(24.dp),
+        tint = Color.White,
+    )
+}
+
+
+@Composable
+fun PlSongItemTextComposable(
+    song: Song,
+) {
+    Text(
+        text = song.title,
+        style = MaterialTheme.typography.titleSmall,
+        color = colorTextTitle,
+    )
+    val artist = song.displayCategories()
+    if (artist.isNotEmpty()) {
+        Text(
+            text = artist,
+            style = MaterialTheme.typography.bodySmall,
+            color = colorTextSubtitle,
+        )
     }
 }
