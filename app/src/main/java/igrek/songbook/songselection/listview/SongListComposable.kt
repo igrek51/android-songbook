@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalFoundationApi::class)
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 
 package igrek.songbook.songselection.listview
 
@@ -24,9 +24,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -38,7 +43,6 @@ import igrek.songbook.compose.colorTextSubtitle
 import igrek.songbook.compose.colorTextTitle
 import igrek.songbook.compose.itemBorderStroke
 import igrek.songbook.compose.md_theme_dark_onSurfaceVariant
-import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.songselection.listview.items.AbstractListItem
 import igrek.songbook.songselection.listview.items.CategoryListItem
 import igrek.songbook.songselection.listview.items.CustomCategoryListItem
@@ -51,6 +55,7 @@ class SongItemsContainer(
     val modifiedAll: MutableState<Long> = mutableStateOf(0),
     val modifiedMap: MutableMap<Int, MutableState<Long>> = mutableMapOf(),
     private val itemToIndex: MutableMap<AbstractListItem, Int> = mutableMapOf(),
+    private val focusRequesters: MutableMap<Int, MutableMap<Int, FocusRequester>> = mutableMapOf()
 ) {
     fun replaceAll(newList: List<AbstractListItem>) {
         items = newList
@@ -66,6 +71,11 @@ class SongItemsContainer(
     fun notifyItemChange(item: AbstractListItem) {
         val index = itemToIndex[item] ?: return
         modifiedMap.getValue(index).value += 1
+    }
+
+    fun getFocusRequester(index: Int, element: Int): FocusRequester {
+        val level2 = focusRequesters.getOrPut(index) { mutableMapOf() }
+        return level2.getOrPut(element) { FocusRequester() }
     }
 }
 
@@ -104,12 +114,14 @@ fun SongTreeItemComposable(
     postButtonContent: PostButtonComposable? = null,
 ) {
     key(itemsContainer.modifiedMap.getValue(index).value) {
-        logger.debug("recompose item $index")
+//        logger.debug("recompose item $index")
         Row(
             Modifier
                 .defaultMinSize(minHeight = 48.dp)
                 .padding(0.dp)
                 .border(itemBorderStroke)
+                .focusRequester(itemsContainer.getFocusRequester(index, 0))
+                .focusProperties { right = itemsContainer.getFocusRequester(index, 1) }
                 .combinedClickable(
                     onClick = {
                         Handler(Looper.getMainLooper()).post {
@@ -137,7 +149,7 @@ fun SongTreeItemComposable(
             }
 
             when (postButtonContent == null) {
-                true -> SongItemPostButtonComposable(item, onItemClick, onItemMore)
+                true -> SongItemPostButtonComposable(itemsContainer, item, index, onItemClick, onItemMore)
                 else -> postButtonContent(item, onItemClick, onItemMore)
             }
         }
@@ -205,14 +217,18 @@ fun SongItemTextComposable(
 
 @Composable
 fun SongItemPostButtonComposable(
+    itemsContainer: SongItemsContainer,
     item: AbstractListItem,
+    index: Int,
     onItemClick: (item: AbstractListItem) -> Unit,
     onItemMore: ((item: AbstractListItem) -> Unit)? = null,
 ) {
     when {
         item is SongListItem && onItemMore != null -> {
             IconButton(
-                modifier = Modifier.padding(0.dp).size(40.dp, 40.dp),
+                modifier = Modifier.padding(0.dp).size(40.dp, 40.dp)
+                    .focusRequester(itemsContainer.getFocusRequester(index, 1))
+                    .focusProperties { left = itemsContainer.getFocusRequester(index, 0) },
                 onClick = {
                     mainScope.launch {
                         onItemMore(item)
