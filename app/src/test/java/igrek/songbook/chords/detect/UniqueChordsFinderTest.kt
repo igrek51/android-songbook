@@ -43,4 +43,18 @@ class UniqueChordsFinderTest {
         )
     }
 
+    @Test
+    fun test_split_unique_dash_chords() {
+        val chordsFinder = UniqueChordsFinder()
+        val input = "[Dmaj7-D D-Dsus4-Dsus2]"
+        val lyrics = LyricsExtractor().parseLyrics(input)
+        ChordParser(ChordsNotation.ENGLISH).parseAndFillChords(lyrics)
+
+        val uniqueChords = chordsFinder.findUniqueChordNamesInLyrics(lyrics)
+
+        Assertions.assertThat(uniqueChords).containsOnly(
+            "Dmaj7", "D", "Dsus2", "Dsus4",
+        )
+    }
+
 }

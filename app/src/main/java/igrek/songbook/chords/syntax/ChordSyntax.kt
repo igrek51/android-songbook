@@ -6,6 +6,9 @@ val compoundChordsDelimiters = setOf(" ", "\n").toTypedArray()
 // these delimiters may split chords but may be a part of chords as well
 val singleChordsDelimiters = setOf(" ", "\n", ",", "/", "(", ")", "-").toTypedArray()
 
+// these delimiters are only allowed in the middle of valid compound chord
+val compoundChordAllowedSplitters = setOf("/")
+
 // split compound chords, keeping delimiters as result parts
 val regexSplitcompoundChordsWithDelimiters = Regex("""(?<=[ \n])|(?=[ \n])""")
 

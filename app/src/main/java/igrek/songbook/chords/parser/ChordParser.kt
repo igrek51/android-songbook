@@ -10,6 +10,7 @@ import igrek.songbook.chords.model.LyricsTextType
 import igrek.songbook.chords.model.NoteModifier
 import igrek.songbook.chords.syntax.ChordNames
 import igrek.songbook.chords.syntax.chordSuffixes
+import igrek.songbook.chords.syntax.compoundChordAllowedSplitters
 import igrek.songbook.chords.syntax.compoundChordsDelimiters
 import igrek.songbook.chords.syntax.regexSplitSingleChordsWithDelimiters
 import igrek.songbook.chords.syntax.regexSplitcompoundChordsWithDelimiters
@@ -96,18 +97,26 @@ class ChordParser(
         if (fragments.all { it.type == ChordFragmentType.CHORD_SPLITTER })
             return null
 
-        if (fragments.size == 3 &&
-            fragments[0].type == ChordFragmentType.SINGLE_CHORD &&
-            fragments[1].type == ChordFragmentType.CHORD_SPLITTER &&
-            fragments[2].type == ChordFragmentType.SINGLE_CHORD
-        ) {
-            return CompoundChord(
-                chord1 = fragments[0].singleChord!!,
-                splitter = fragments[1].text,
-                chord2 = fragments[2].singleChord!!,
-            )
-        }
-        return null
+        if (fragments.size != 3)
+            return null
+
+        val splitter = fragments[1]
+        val former = fragments[0]
+        val latter = fragments[2]
+
+        if (!(
+            splitter.type == ChordFragmentType.CHORD_SPLITTER
+            && former.type == ChordFragmentType.SINGLE_CHORD
+            && latter.type == ChordFragmentType.SINGLE_CHORD
+            && splitter.text in compoundChordAllowedSplitters
+        ))
+            return null
+
+        return CompoundChord(
+            chord1 = former.singleChord!!,
+            splitter = splitter.text,
+            chord2 = latter.singleChord!!,
+        )
     }
 
     fun parseAndFillChords(lyrics: LyricsModel): Set<String> {

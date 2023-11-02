@@ -67,7 +67,7 @@ class ChordsParserTest {
         val parser = ChordParser(ChordsNotation.GERMAN)
         assertThat(parser.recognizeCompoundChord("C")).isNull()
         assertThat(parser.recognizeSingleChord("C")).isEqualTo(Chord(0, false, ""))
-        assertThat(parser.recognizeCompoundChord("C-h")).isEqualTo(CompoundChord(Chord(0, false, ""), "-", Chord(11, true, "")))
+        assertThat(parser.recognizeCompoundChord("C-h")).isNull()
         assertThat(parser.recognizeCompoundChord("(C-h)")).isNull()
 
         val unknowns = mutableSetOf<String>()
@@ -101,8 +101,9 @@ class ChordsParserTest {
         val parser = ChordParser(ChordsNotation.GERMAN)
         assertThat(parser.recognizeSingleChord("Fmaj7")).isNotNull
         assertThat(parser.recognizeSingleChord("G#maj7-F")).isNull()
-        assertThat(parser.recognizeCompoundChord("G#maj7-F")).isEqualTo(CompoundChord(
-            Chord(8, false, "maj7", NoteModifier.SHARP), "-", Chord(5, false, "")
+        assertThat(parser.recognizeCompoundChord("G#maj7-F")).isNull()
+        assertThat(parser.recognizeCompoundChord("G#maj7/F")).isEqualTo(CompoundChord(
+            Chord(8, false, "maj7", NoteModifier.SHARP), "/", Chord(5, false, "")
         ))
     }
 
@@ -201,5 +202,43 @@ class ChordsParserTest {
         val chord: GeneralChord? = ChordParser(ChordsNotation.ENGLISH).parseGeneralChord("Caug7")
         assertThat(chord?.baseChord?.noteIndex).isEqualTo(Note.C.index)
         assertThat(chord?.baseChord?.suffix).isEqualTo("aug7")
+    }
+
+    @Test
+    fun test_parseDashedChords() {
+        val input = "[Dmaj7-D]"
+        val lyrics = LyricsExtractor().parseLyrics(input)
+        ChordParser(ChordsNotation.ENGLISH).parseAndFillChords(lyrics)
+        val fragments = lyrics.lines
+            .flatMap { line -> line.fragments }
+            .filter { it.type == LyricsTextType.CHORDS }
+            .flatMap { fragment -> fragment.chordFragments }
+
+        assertThat(fragments).hasSize(3)
+        assertThat(fragments[0]).isEqualTo(ChordFragment("Dmaj7", ChordFragmentType.SINGLE_CHORD, singleChord = Chord(2, false, "maj7")))
+        assertThat(fragments[1]).isEqualTo(ChordFragment("-", ChordFragmentType.CHORD_SPLITTER))
+        assertThat(fragments[2]).isEqualTo(ChordFragment("D", ChordFragmentType.SINGLE_CHORD, singleChord = Chord(2, false, "")))
+    }
+
+    @Test
+    fun test_parseDashedChords2() {
+        val input = "[Dmaj7-D D-Dsus4-Dsus2]"
+        val lyrics = LyricsExtractor().parseLyrics(input)
+        ChordParser(ChordsNotation.ENGLISH).parseAndFillChords(lyrics)
+        val fragments = lyrics.lines
+            .flatMap { line -> line.fragments }
+            .filter { it.type == LyricsTextType.CHORDS }
+            .flatMap { fragment -> fragment.chordFragments }
+
+        assertThat(fragments).hasSize(9)
+        assertThat(fragments[0]).isEqualTo(ChordFragment("Dmaj7", ChordFragmentType.SINGLE_CHORD, singleChord = Chord(2, false, "maj7")))
+        assertThat(fragments[1]).isEqualTo(ChordFragment("-", ChordFragmentType.CHORD_SPLITTER))
+        assertThat(fragments[2]).isEqualTo(ChordFragment("D", ChordFragmentType.SINGLE_CHORD, singleChord = Chord(2, false, "")))
+        assertThat(fragments[3]).isEqualTo(ChordFragment(" ", ChordFragmentType.CHORD_SPLITTER))
+        assertThat(fragments[4]).isEqualTo(ChordFragment("D", ChordFragmentType.SINGLE_CHORD, singleChord = Chord(2, false, "")))
+        assertThat(fragments[5]).isEqualTo(ChordFragment("-", ChordFragmentType.CHORD_SPLITTER))
+        assertThat(fragments[6]).isEqualTo(ChordFragment("Dsus4", ChordFragmentType.SINGLE_CHORD, singleChord = Chord(2, false, "sus4")))
+        assertThat(fragments[7]).isEqualTo(ChordFragment("-", ChordFragmentType.CHORD_SPLITTER))
+        assertThat(fragments[8]).isEqualTo(ChordFragment("Dsus2", ChordFragmentType.SINGLE_CHORD, singleChord = Chord(2, false, "sus2")))
     }
 }
