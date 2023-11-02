@@ -1,7 +1,6 @@
 package igrek.songbook.songpreview
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.graphics.Typeface
@@ -21,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
@@ -32,8 +30,6 @@ import igrek.songbook.cast.SongCastService
 import igrek.songbook.chords.diagram.ChordDiagramsService
 import igrek.songbook.chords.loader.LyricsLoader
 import igrek.songbook.compose.colorPreviewSubtitle
-import igrek.songbook.compose.colorTextSubtitle
-import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -75,7 +71,6 @@ class SongPreviewLayoutController(
     autoscrollService: LazyInject<AutoscrollService> = appFactory.autoscrollService,
     softKeyboardService: LazyInject<SoftKeyboardService> = appFactory.softKeyboardService,
     songDetailsService: LazyInject<SongDetailsService> = appFactory.songDetailsService,
-    uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     favouriteSongsService: LazyInject<FavouriteSongsService> = appFactory.favouriteSongsService,
     songContextMenuBuilder: LazyInject<SongContextMenuBuilder> = appFactory.songContextMenuBuilder,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
@@ -96,7 +91,6 @@ class SongPreviewLayoutController(
     private val autoscrollService by LazyExtractor(autoscrollService)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
     private val songDetailsService by LazyExtractor(songDetailsService)
-    private val uiInfoService by LazyExtractor(uiInfoService)
     private val favouriteSongsService by LazyExtractor(favouriteSongsService)
     private val songContextMenuBuilder by LazyExtractor(songContextMenuBuilder)
     private val songsRepository by LazyExtractor(songsRepository)
@@ -525,7 +519,7 @@ class SongPreviewLayoutController(
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
                 )
                 span.setSpan(
-                    RelativeSizeSpan(0.8f),
+                    RelativeSizeSpan(0.9f),
                     song.title.length + 1,
                     song.title.length + 1 + artist.length,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
