@@ -230,7 +230,6 @@ fun SongItemPostButtonComposable(
     }
 }
 
-@Composable
 fun Modifier.simpleVerticalScrollbar(
     state: LazyListState,
     width: Dp = 4.dp
@@ -238,12 +237,15 @@ fun Modifier.simpleVerticalScrollbar(
     return drawWithContent {
         drawContent()
 
-        val firstVisibleElementIndex = state.layoutInfo.visibleItemsInfo.firstOrNull()?.index
-
-        if (firstVisibleElementIndex != null) {
-            val elementHeight = this.size.height / state.layoutInfo.totalItemsCount
-            val scrollbarOffsetY = firstVisibleElementIndex * elementHeight
-            val scrollbarHeight = state.layoutInfo.visibleItemsInfo.size * elementHeight
+        val visibleAll = state.layoutInfo.visibleItemsInfo.size >= state.layoutInfo.totalItemsCount
+        if (!visibleAll) {
+            val avgItemHeight = this.size.height / state.layoutInfo.visibleItemsInfo.size
+            val avgScrollHeightPerItem = this.size.height / state.layoutInfo.totalItemsCount
+            val firstItemHeight = state.layoutInfo.visibleItemsInfo.firstOrNull()?.size?.toFloat() ?: avgItemHeight
+            val firstItemCoverage = state.firstVisibleItemScrollOffset / firstItemHeight
+            val partialVisibleItems = state.layoutInfo.visibleItemsInfo.size - firstItemCoverage
+            val scrollbarOffsetY = (state.firstVisibleItemIndex + firstItemCoverage) * avgScrollHeightPerItem
+            val scrollbarHeight = this.size.height * partialVisibleItems / state.layoutInfo.totalItemsCount
 
             drawRect(
                 color = md_theme_dark_onSurfaceVariant,
