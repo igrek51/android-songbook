@@ -56,10 +56,16 @@ class GlobalFocusTraverser(
             logger.debug("Current focus view: $resourceName - $viewName")
         }
 
+        if (currentFocusId == -1 && debugMode)
+            logger.warn("unknown current focus")
+
         val nextViewId = nextViewProvider(currentFocusId)
 
         if (nextViewId == -1)
             return true
+
+//        if (nextViewId == 0 && debugMode)
+//            logger.debug("unknown next focus")
 
         if (nextViewId != 0 && nextViewId != currentFocusId) {
             activity.findViewById<View>(nextViewId)?.let {
@@ -495,19 +501,23 @@ class GlobalFocusTraverser(
                 else -> 0
             }
             layoutController.isState(LatestSongsLayoutController::class) -> when (currentViewId) {
-                R.id.compose_view -> R.id.navMenuButton
+                R.id.compose_view, -1 -> R.id.navMenuButton
+                else -> 0
+            }
+            layoutController.isState(TopSongsLayoutController::class) -> when (currentViewId) {
+                R.id.compose_view, -1 -> R.id.navMenuButton
                 else -> 0
             }
             layoutController.isState(FavouritesLayoutController::class) -> when (currentViewId) {
-                R.id.compose_view -> R.id.navMenuButton
+                R.id.compose_view, -1 -> R.id.navMenuButton
                 else -> 0
             }
             layoutController.isState(PlaylistLayoutController::class) -> when (currentViewId) {
-                R.id.compose_view -> R.id.navMenuButton
+                R.id.compose_view, -1 -> R.id.navMenuButton
                 else -> 0
             }
             layoutController.isState(OpenHistoryLayoutController::class) -> when (currentViewId) {
-                R.id.compose_view -> R.id.navMenuButton
+                R.id.compose_view, -1 -> R.id.navMenuButton
                 else -> 0
             }
             layoutController.isState(MissingSongLayoutController::class) -> when (currentViewId) {
@@ -519,11 +529,11 @@ class GlobalFocusTraverser(
                 else -> 0
             }
             layoutController.isState(RoomListLayoutController::class) -> when (currentViewId) {
-                R.id.myNameEditText -> R.id.navMenuButton
+                R.id.myNameEditText, -1 -> R.id.navMenuButton
                 else -> 0
             }
             layoutController.isState(RoomLobbyLayoutController::class) -> when (currentViewId) {
-                R.id.openSelectedSongButton -> R.id.navMenuButton
+                R.id.openSelectedSongButton, -1 -> R.id.navMenuButton
                 else -> 0
             }
             layoutController.isState(BillingLayoutController::class) -> when (currentViewId) {
