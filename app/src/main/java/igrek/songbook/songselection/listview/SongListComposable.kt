@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
+@file:OptIn(ExperimentalFoundationApi::class)
 
 package igrek.songbook.songselection.listview
 
@@ -24,9 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.focus.FocusRequester
@@ -149,7 +147,7 @@ fun SongTreeItemComposable(
             }
 
             when (postButtonContent == null) {
-                true -> SongItemPostButtonComposable(itemsContainer, item, index, onItemClick, onItemMore)
+                true -> SongItemPostButtonComposable(itemsContainer, item, index, onItemMore)
                 else -> postButtonContent(item, onItemClick, onItemMore)
             }
         }
@@ -220,7 +218,6 @@ fun SongItemPostButtonComposable(
     itemsContainer: SongItemsContainer,
     item: AbstractListItem,
     index: Int,
-    onItemClick: (item: AbstractListItem) -> Unit,
     onItemMore: ((item: AbstractListItem) -> Unit)? = null,
 ) {
     when {
