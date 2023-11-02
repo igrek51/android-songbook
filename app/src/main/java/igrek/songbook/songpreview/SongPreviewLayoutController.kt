@@ -1,6 +1,7 @@
 package igrek.songbook.songpreview
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.graphics.ColorFilter
 import android.graphics.PorterDuff
 import android.graphics.Typeface
@@ -8,6 +9,7 @@ import android.graphics.drawable.Drawable
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import android.view.View
@@ -17,7 +19,9 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
@@ -27,6 +31,8 @@ import igrek.songbook.activity.ActivityController
 import igrek.songbook.cast.SongCastService
 import igrek.songbook.chords.diagram.ChordDiagramsService
 import igrek.songbook.chords.loader.LyricsLoader
+import igrek.songbook.compose.colorPreviewSubtitle
+import igrek.songbook.compose.colorTextSubtitle
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.inject.LazyExtractor
@@ -513,13 +519,19 @@ class SongPreviewLayoutController(
         return when {
             artist.isNotBlank() -> {
                 val span: Spannable = SpannableString("${song.title}\n$artist")
-//                span.setSpan(
-//                    StyleSpan(Typeface.BOLD),
-//                    0, song.title.length,
-//                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
-//                )
+                span.setSpan(
+                    StyleSpan(Typeface.BOLD),
+                    0, song.title.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+                )
                 span.setSpan(
                     RelativeSizeSpan(0.8f),
+                    song.title.length + 1,
+                    song.title.length + 1 + artist.length,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
+                )
+                span.setSpan(
+                    ForegroundColorSpan(colorPreviewSubtitle.toArgb()),
                     song.title.length + 1,
                     song.title.length + 1 + artist.length,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,

@@ -72,5 +72,6 @@ val colorItemDraggedBackground = Color.LightGray.copy(alpha = 0.3f)
 val colorItemClicked = Color(0xFF6A6C72)
 val colorTextTitle = Color(0xFFFFFFFF)
 val colorTextSubtitle = Color(0xFFD0D0D0)
+val colorPreviewSubtitle = Color(0xE0B9D1EC)
 
 //val seed = Color(0xFF1564C0)
