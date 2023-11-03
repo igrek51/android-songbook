@@ -24,7 +24,6 @@ import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.info.logview.LogsLayoutController
 import igrek.songbook.inject.LazyExtractor
-import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.SingletonInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.ad.AdService
