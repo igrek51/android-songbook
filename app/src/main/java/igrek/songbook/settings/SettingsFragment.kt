@@ -12,6 +12,8 @@ import igrek.songbook.chords.diagram.guitar.ChordDiagramStyle
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.RetryDelayed
 import igrek.songbook.info.errorcheck.safeExecute
+import igrek.songbook.info.logger.Logger
+import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
@@ -65,6 +67,8 @@ class SettingsFragment(
     private val homeScreenEnumService by LazyExtractor(homeScreenEnumService)
     private val settingsEnumService by LazyExtractor(settingsEnumService)
     private val customSongsBackuper by LazyExtractor(customSongsBackuper)
+
+    private val logger: Logger = LoggerFactory.logger
 
     companion object {
         const val SEEKBAR_RESOLUTION = 10000
@@ -393,7 +397,10 @@ class SettingsFragment(
         onLoad: () -> String?,
         onSave: (id: String) -> Unit,
     ) {
-        val preference = findPreference(key) as ListPreference
+        val preference = findPreference(key) as ListPreference? ?: run {
+            logger.error("preference not found: $key")
+            return
+        }
         preference.entryValues = entriesMap.keys.toTypedArray()
         preference.entries = entriesMap.values.toTypedArray()
         preference.onPreferenceChangeListener =
@@ -410,8 +417,11 @@ class SettingsFragment(
         onLoad: () -> Set<String>?,
         onSave: (ids: Set<String>) -> Unit,
         stringConverter: (ids: Set<String>, entriesMap: LinkedHashMap<String, String>) -> String
-    ): MultiSelectListPreference {
-        val preference = findPreference(key) as MultiSelectListPreference
+    ) {
+        val preference = findPreference(key) as MultiSelectListPreference? ?: run {
+            logger.error("preference not found: $key")
+            return
+        }
         preference.entryValues = entriesMap.keys.toTypedArray()
         preference.entries = entriesMap.values.toTypedArray()
 
@@ -430,7 +440,6 @@ class SettingsFragment(
                 true
             }
         preference.summary = stringConverter(preference.values, entriesMap)
-        return preference
     }
 
     private fun multiPreferenceAllSelected(multiPreference: MultiSelectListPreference): Boolean {
@@ -452,7 +461,10 @@ class SettingsFragment(
         onSave: (value: Float) -> Unit,
         stringConverter: (value: Float) -> String,
     ) {
-        val preference = findPreference(key) as SeekBarPreference
+        val preference = findPreference(key) as SeekBarPreference? ?: run {
+            logger.error("preference not found: $key")
+            return
+        }
         preference.isAdjustable = true
         preference.max = SEEKBAR_RESOLUTION
         val currentValueF: Float = onLoad()
@@ -476,7 +488,10 @@ class SettingsFragment(
         onSave: (value: Boolean) -> Unit,
         summaryProvider: (() -> String)? = null,
     ) {
-        val preference = findPreference(key) as SwitchPreference
+        val preference = findPreference(key) as SwitchPreference? ?: run {
+            logger.error("preference not found: $key")
+            return
+        }
         preference.isChecked = onLoad()
         preference.onPreferenceChangeListener =
             Preference.OnPreferenceChangeListener { _, newValue ->
@@ -495,7 +510,10 @@ class SettingsFragment(
         key: String,
         onClick: () -> Unit,
     ) {
-        val button = findPreference(key)
+        val button: Preference = findPreference(key) ?: run {
+            logger.error("preference not found: $key")
+            return
+        }
         button.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             onClick.invoke()
             true

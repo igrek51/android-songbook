@@ -135,7 +135,7 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.legacy:legacy-preference-v14:1.0.0")
+    implementation("androidx.preference:preference-ktx:1.2.1") // Settings layouts
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("androidx.activity:activity-ktx:1.8.0")
     implementation("androidx.work:work-runtime:2.8.1")
