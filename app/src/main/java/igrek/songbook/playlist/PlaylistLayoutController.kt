@@ -30,6 +30,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -309,6 +311,12 @@ private fun PlaylistItemComposable(
 
     Row(
         modifier.padding(0.dp)
+            .focusRequester(itemsContainer.createFocusRequester(id, 0))
+            .focusProperties {
+                itemsContainer.getFocusRequester(id, 1)?.let {
+                    right = it
+                }
+            }
             .combinedClickable(
                 onClick = {
                     Handler(Looper.getMainLooper()).post {
@@ -360,6 +368,13 @@ private fun PlaylistItemComposable(
         )
 
         IconButton(
+            modifier = Modifier
+                .focusRequester(itemsContainer.createFocusRequester(id, 1))
+                .focusProperties {
+                    itemsContainer.getFocusRequester(id, 0)?.let {
+                        left = it
+                    }
+                },
             onClick = {
               mainScope.launch {
                   controller.onPlaylistMore(playlist)
@@ -389,6 +404,12 @@ private fun PlaylistSongItemComposable(
 
     Row (
         modifier.padding(0.dp)
+            .focusRequester(itemsContainer.createFocusRequester(id, 0))
+            .focusProperties {
+                itemsContainer.getFocusRequester(id, 1)?.let {
+                    right = it
+                }
+            }
             .combinedClickable(
                 onClick = {
                     Handler(Looper.getMainLooper()).post {
@@ -435,6 +456,13 @@ private fun PlaylistSongItemComposable(
         }
 
         IconButton(
+            modifier = Modifier
+                .focusRequester(itemsContainer.createFocusRequester(id, 1))
+                .focusProperties {
+                    itemsContainer.getFocusRequester(id, 0)?.let {
+                        left = it
+                    }
+                },
             onClick = {
                 mainScope.launch {
                     controller.onSongMore(song)

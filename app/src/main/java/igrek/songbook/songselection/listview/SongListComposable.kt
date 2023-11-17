@@ -53,7 +53,7 @@ class SongItemsContainer(
     val modifiedAll: MutableState<Long> = mutableStateOf(0),
     val modifiedMap: MutableMap<Int, MutableState<Long>> = mutableMapOf(),
     private val itemToIndex: MutableMap<AbstractListItem, Int> = mutableMapOf(),
-    private val focusRequesters: MutableMap<Int, MutableMap<Int, FocusRequester>> = mutableMapOf()
+    private val focusRequesters: MutableMap<Int, MutableMap<Int, FocusRequester>> = mutableMapOf(),
 ) {
     fun replaceAll(newList: List<AbstractListItem>) {
         items = newList
@@ -76,7 +76,7 @@ class SongItemsContainer(
         return level2[element]
     }
 
-    fun getOrPutFocusRequester(index: Int, element: Int): FocusRequester {
+    fun createFocusRequester(index: Int, element: Int): FocusRequester {
         val level2 = focusRequesters.getOrPut(index) { mutableMapOf() }
         return level2.getOrPut(element) { FocusRequester() }
     }
@@ -123,7 +123,7 @@ fun SongTreeItemComposable(
                 .defaultMinSize(minHeight = 48.dp)
                 .padding(0.dp)
                 .border(itemBorderStroke)
-                .focusRequester(itemsContainer.getOrPutFocusRequester(index, 0))
+                .focusRequester(itemsContainer.createFocusRequester(index, 0))
                 .focusProperties {
                     itemsContainer.getFocusRequester(index, 1)?.let {
                         right = it
@@ -233,7 +233,7 @@ fun SongItemPostButtonComposable(
         item is SongListItem && onItemMore != null -> {
             IconButton(
                 modifier = Modifier.padding(0.dp).size(40.dp, 40.dp)
-                    .focusRequester(itemsContainer.getOrPutFocusRequester(index, 1))
+                    .focusRequester(itemsContainer.createFocusRequester(index, 1))
                     .focusProperties {
                         itemsContainer.getFocusRequester(index, 0)?.let {
                             left = it

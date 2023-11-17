@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
@@ -59,6 +60,7 @@ class ItemsContainer<T>(
     var totalRelativeSwapOffset: Float = 0f,
     val overscrollDiff: MutableState<Float> = mutableStateOf(0f),
     val parentViewportWidth: MutableState<Float> = mutableStateOf(0f),
+    private val focusRequesters: MutableMap<Int, MutableMap<Int, FocusRequester>> = mutableMapOf(),
 ) {
     fun replaceAll(newList: MutableList<T>) {
         items = newList
@@ -73,6 +75,16 @@ class ItemsContainer<T>(
     fun notifyItemChange(position: Int) {
         val index = positionToIndexMap[position] ?: return
         modifiedMap.getValue(index).value += 1
+    }
+
+    fun getFocusRequester(index: Int, element: Int): FocusRequester? {
+        val level2 = focusRequesters.getOrPut(index) { mutableMapOf() }
+        return level2[element]
+    }
+
+    fun createFocusRequester(index: Int, element: Int): FocusRequester {
+        val level2 = focusRequesters.getOrPut(index) { mutableMapOf() }
+        return level2.getOrPut(element) { FocusRequester() }
     }
 }
 
