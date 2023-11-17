@@ -18,7 +18,13 @@ class ContextMenuBuilder(
     private val activity by LazyExtractor(activity)
     private val uiResourceService by LazyExtractor(uiResourceService)
 
-    fun showContextMenu(titleResId: Int, actions: List<Action>) {
+    fun showContextMenu(
+        titleResId: Int,
+        actions: List<Action>,
+        positiveButton: Int = 0, positiveAction: () -> Unit = {},
+        negativeButton: Int = 0, negativeAction: () -> Unit = {},
+        neutralButton: Int = 0, neutralAction: () -> Unit = {},
+    ) {
         GlobalScope.launch(Dispatchers.Main) {
             val actionNames = actions.map { action -> actionName(action) }.toTypedArray()
 
@@ -30,6 +36,29 @@ class ContextMenuBuilder(
                     }
                 }
                 .setCancelable(true)
+
+            if (positiveButton > 0) {
+                builder.setPositiveButton(uiResourceService.resString(positiveButton)) { _, _ ->
+                    safeExecute {
+                        positiveAction.invoke()
+                    }
+                }
+            }
+            if (negativeButton > 0) {
+                builder.setNegativeButton(uiResourceService.resString(negativeButton)) { _, _ ->
+                    safeExecute {
+                        negativeAction.invoke()
+                    }
+                }
+            }
+            if (neutralButton > 0) {
+                builder.setNeutralButton(uiResourceService.resString(neutralButton)) { _, _ ->
+                    safeExecute {
+                        neutralAction.invoke()
+                    }
+                }
+            }
+
             if (!activity.isFinishing) {
                 builder.create().show()
             }

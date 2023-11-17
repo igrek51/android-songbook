@@ -58,6 +58,7 @@ class ChordDiagramsService(
         val uniqueChords = UniqueChordsFinder().findUniqueChordNamesInLyrics(lyrics)
         if (uniqueChords.isEmpty()) {
             uiInfoService.showInfo(R.string.no_chords_recognized_in_song)
+            showFindChordByNameMenu()
             return
         }
         showUniqueChordsMenu(uniqueChords)
@@ -69,7 +70,14 @@ class ChordDiagramsService(
                 showChordDiagramsAlert(chord, uniqueChords)
             }
         }.toList()
-        contextMenuBuilder.showContextMenu(R.string.choose_a_chord, actions)
+        contextMenuBuilder.showContextMenu(
+            titleResId = R.string.choose_a_chord,
+            actions=actions,
+            positiveButton = R.string.action_find_chord,
+            positiveAction = {
+                showFindChordByNameMenu()
+            },
+        )
     }
 
     private fun showChordDiagramsAlert(typedChord: String, uniqueChords: Set<String>) {
@@ -143,8 +151,8 @@ class ChordDiagramsService(
         }
     }
 
-    private fun tryToFindChordDiagram(_chordName: String) {
-        val typedChordName = _chordName.trim()
+    private fun tryToFindChordDiagram(chordName: String) {
+        val typedChordName = chordName.trim()
         if (typedChordName.isBlank()) {
             uiInfoService.showInfo(R.string.chord_diagram_not_found)
             return
