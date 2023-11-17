@@ -96,14 +96,14 @@ class ChordDiagramsService(
                 alertBuilder.setTitle(title)
                 alertBuilder.setCancelable(true)
 
-                alertBuilder.setPositiveButton(uiResourceService.resString(R.string.action_close)) { _, _ -> }
+                alertBuilder.setPositiveButton(uiResourceService.resString(R.string.action_find_chord)) { _, _ ->
+                    showFindChordByNameMenu()
+                }
+                alertBuilder.setNegativeButton(uiResourceService.resString(R.string.action_close)) { _, _ -> }
                 if (uniqueChords.isNotEmpty()) {
                     alertBuilder.setNeutralButton(uiResourceService.resString(R.string.action_back)) { _, _ ->
                         showUniqueChordsMenu(uniqueChords)
                     }
-                }
-                alertBuilder.setNegativeButton(uiResourceService.resString(R.string.action_find_chord)) { _, _ ->
-                    showFindChordByNameMenu()
                 }
 
                 val inflater =
