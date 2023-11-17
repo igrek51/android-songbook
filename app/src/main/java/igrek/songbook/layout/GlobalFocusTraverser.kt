@@ -17,7 +17,6 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.playlist.PlaylistFillLayoutController
 import igrek.songbook.playlist.PlaylistLayoutController
-import igrek.songbook.playlist.PlaylistService
 import igrek.songbook.room.RoomListLayoutController
 import igrek.songbook.room.RoomLobbyLayoutController
 import igrek.songbook.send.ContactLayoutController
