@@ -16,6 +16,7 @@
 
     <color name="activePanelButton">#0092D3</color>
     <color name="loadingBar">#2185DA</color>
+    <color name="toolbarTitle">#ffffff</color>
 
     <color name="navMenuText">#ffffff</color>
     <color name="navMenuIconTint">#ffffff</color>

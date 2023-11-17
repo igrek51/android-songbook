@@ -65,7 +65,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
                 android:text="@string/nav_playlists"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="@color/toolbarTitle" />
 
             <ImageButton
                 android:id="@+id/addPlaylistButton"

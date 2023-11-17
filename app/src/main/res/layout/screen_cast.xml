@@ -48,7 +48,8 @@
                 android:layout_marginStart="20dp"
                 android:text="@string/nav_song_cast"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textColor="@color/toolbarTitle"
+                />
 
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>

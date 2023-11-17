@@ -64,7 +64,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
                 android:text="@string/editing_custom_song"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="@color/toolbarTitle" />
 
             <LinearLayout
                 android:layout_width="96dp"

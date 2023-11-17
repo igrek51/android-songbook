@@ -46,7 +46,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
                 android:text="@string/nav_screen_share"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="@color/toolbarTitle" />
 
             <LinearLayout
                 android:layout_width="48dp"

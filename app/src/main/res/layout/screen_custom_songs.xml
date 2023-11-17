@@ -75,7 +75,8 @@
                     android:layout_marginStart="2dp"
                     android:gravity="center_vertical"
                     android:text="@string/nav_custom_song"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:textColor="@color/toolbarTitle" />
 
                 <FrameLayout
                     android:id="@+id/customSearchBarLayout"
