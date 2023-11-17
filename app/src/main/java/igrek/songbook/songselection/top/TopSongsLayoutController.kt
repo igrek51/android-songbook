@@ -2,9 +2,11 @@ package igrek.songbook.songselection.top
 
 import android.view.View
 import android.widget.ImageButton
+import android.widget.ProgressBar
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import igrek.songbook.R
@@ -26,8 +28,10 @@ import igrek.songbook.songselection.listview.SongListComposable
 import igrek.songbook.songselection.listview.items.AbstractListItem
 import igrek.songbook.songselection.listview.items.SongListItem
 import igrek.songbook.songselection.search.SongSearchLayoutController
+import igrek.songbook.util.mainScope
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.launch
 
 class TopSongsLayoutController(
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
@@ -45,24 +49,25 @@ class TopSongsLayoutController(
     private val appLanguageService by LazyExtractor(appLanguageService)
 
     private var languagePicker: MultiPicker<SongLanguage>? = null
+    private var loadingBar: ProgressBar? = null
     private var subscriptions = mutableListOf<Disposable>()
     private val topSongsCount = 500
-    val state = TopSongsLayoutState()
+
+    val state = LayoutState()
+
+    class LayoutState {
+        val itemsContainer: SongItemsContainer = SongItemsContainer()
+        val scrollState: LazyListState = LazyListState()
+    }
 
     override fun showLayout(layout: View) {
+        initLayout(layout)
+        updateLayout()
+    }
+
+    private fun initLayout(layout: View) {
         super.showLayout(layout)
-
-        updateItemsList()
-
-        val thisLayout = this
-        layout.findViewById<ComposeView>(R.id.compose_view).apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
-            setContent {
-                AppTheme {
-                    MainComponent(thisLayout)
-                }
-            }
-        }
+        loadingBar = layout.findViewById(R.id.loadingBar)
 
         layout.findViewById<ImageButton>(R.id.searchSongButton)?.run {
             setOnClickListener { goToSearchSong() }
@@ -86,6 +91,18 @@ class TopSongsLayoutController(
             setOnClickListener { languagePicker?.showChoiceDialog() }
         }
 
+        val thisLayout = this
+        mainScope.launch {
+            layout.findViewById<ComposeView>(R.id.compose_view).apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+                setContent {
+                    AppTheme {
+                        MainComponent(thisLayout)
+                    }
+                }
+            }
+        }
+
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
         subscriptions.add(songsRepository.dbChangeSubject
@@ -95,6 +112,10 @@ class TopSongsLayoutController(
                     updateItemsList()
             }, UiErrorHandler::handleError)
         )
+    }
+
+    private fun updateLayout() {
+        updateItemsList()
     }
 
     private fun goToSearchSong() {
@@ -128,11 +149,10 @@ class TopSongsLayoutController(
             songContextMenuBuilder.showSongActions(item.song)
         }
     }
-}
 
-class TopSongsLayoutState {
-    val itemsContainer: SongItemsContainer = SongItemsContainer()
-    val scrollState: LazyListState = LazyListState()
+    fun stopLoading() {
+        loadingBar?.visibility = View.GONE
+    }
 }
 
 @Composable
@@ -144,5 +164,9 @@ private fun MainComponent(controller: TopSongsLayoutController) {
             onItemClick = controller::onItemClick,
             onItemMore = controller::onItemMore,
         )
+    }
+
+    LaunchedEffect(Unit) {
+        controller.stopLoading()
     }
 }
