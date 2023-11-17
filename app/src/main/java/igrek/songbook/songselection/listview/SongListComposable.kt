@@ -71,7 +71,12 @@ class SongItemsContainer(
         modifiedMap.getValue(index).value += 1
     }
 
-    fun getFocusRequester(index: Int, element: Int): FocusRequester {
+    fun getFocusRequester(index: Int, element: Int): FocusRequester? {
+        val level2 = focusRequesters.getOrPut(index) { mutableMapOf() }
+        return level2[element]
+    }
+
+    fun getOrPutFocusRequester(index: Int, element: Int): FocusRequester {
         val level2 = focusRequesters.getOrPut(index) { mutableMapOf() }
         return level2.getOrPut(element) { FocusRequester() }
     }
@@ -118,8 +123,12 @@ fun SongTreeItemComposable(
                 .defaultMinSize(minHeight = 48.dp)
                 .padding(0.dp)
                 .border(itemBorderStroke)
-                .focusRequester(itemsContainer.getFocusRequester(index, 0))
-                .focusProperties { right = itemsContainer.getFocusRequester(index, 1) }
+                .focusRequester(itemsContainer.getOrPutFocusRequester(index, 0))
+                .focusProperties {
+                    itemsContainer.getFocusRequester(index, 1)?.let {
+                        right = it
+                    }
+                }
                 .combinedClickable(
                     onClick = {
                         Handler(Looper.getMainLooper()).post {
@@ -224,8 +233,12 @@ fun SongItemPostButtonComposable(
         item is SongListItem && onItemMore != null -> {
             IconButton(
                 modifier = Modifier.padding(0.dp).size(40.dp, 40.dp)
-                    .focusRequester(itemsContainer.getFocusRequester(index, 1))
-                    .focusProperties { left = itemsContainer.getFocusRequester(index, 0) },
+                    .focusRequester(itemsContainer.getOrPutFocusRequester(index, 1))
+                    .focusProperties {
+                        itemsContainer.getFocusRequester(index, 0)?.let {
+                            left = it
+                        }
+                    },
                 onClick = {
                     mainScope.launch {
                         onItemMore(item)
