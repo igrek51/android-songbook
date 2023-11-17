@@ -499,19 +499,40 @@ class GlobalFocusTraverser(
                 R.id.transformChordsButton -> R.id.navMenuButton
                 else -> 0
             }
-            layoutController.isState(LatestSongsLayoutController::class) -> when (currentViewId) {
-                R.id.compose_view, -1 -> R.id.navMenuButton
-                else -> 0
-            }
             layoutController.isState(TopSongsLayoutController::class) -> when (currentViewId) {
                 R.id.compose_view, -1 -> R.id.navMenuButton
                 else -> 0
             }
-            layoutController.isState(FavouritesLayoutController::class) -> when (currentViewId) {
+            layoutController.isState(SongSearchLayoutController::class) -> when (currentViewId) {
+                R.id.compose_view, -1 -> R.id.searchFilterEdit
+                else -> 0
+            }
+            layoutController.isState(SongTreeLayoutController::class) -> when (currentViewId) {
+                R.id.compose_view, -1 -> when {
+                    isViewVisible(R.id.goBackButton) -> R.id.goBackButton
+                    else -> R.id.navMenuButton
+                }
+                else -> 0
+            }
+            layoutController.isState(LatestSongsLayoutController::class) -> when (currentViewId) {
                 R.id.compose_view, -1 -> R.id.navMenuButton
                 else -> 0
             }
+            layoutController.isState(CustomSongsListLayoutController::class) -> when (currentViewId) {
+                R.id.compose_view, -1 -> when {
+                    isViewVisible(R.id.goBackButton) -> R.id.goBackButton
+                    else -> R.id.navMenuButton
+                }
+                else -> 0
+            }
             layoutController.isState(PlaylistLayoutController::class) -> when (currentViewId) {
+                R.id.compose_view, -1 -> when {
+                    isViewVisible(R.id.goBackButton) -> R.id.goBackButton
+                    else -> R.id.navMenuButton
+                }
+                else -> 0
+            }
+            layoutController.isState(FavouritesLayoutController::class) -> when (currentViewId) {
                 R.id.compose_view, -1 -> R.id.navMenuButton
                 else -> 0
             }
