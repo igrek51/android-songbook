@@ -137,11 +137,11 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.legacy:legacy-preference-v14:1.0.0")
     implementation("androidx.multidex:multidex:2.0.1")
-    implementation("androidx.activity:activity-ktx:1.7.2")
+    implementation("androidx.activity:activity-ktx:1.8.0")
     implementation("androidx.work:work-runtime:2.8.1")
     // Kotlin
     val kotlinVersion = rootProject.extra.get("kotlin_version") as String
-    implementation("androidx.core:core-ktx:1.10.1")
+    implementation("androidx.core:core-ktx:1.12.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
@@ -150,16 +150,16 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
     // Material Design Components
-    implementation("com.google.android.material:material:1.9.0")
+    implementation("com.google.android.material:material:1.10.0")
     // Jetpack Compose
     val composeBom = platform("androidx.compose:compose-bom:2023.06.01")
     implementation(composeBom)
     implementation("androidx.compose.material3:material3:1.1.2") // Material Design 3
     debugImplementation("androidx.compose.ui:ui-tooling")
-    implementation("androidx.activity:activity-compose:1.7.2") // Integration with activities
+    implementation("androidx.activity:activity-compose:1.8.0") // Integration with activities
     // Firebase
-    implementation("com.google.firebase:firebase-analytics-ktx:21.3.0")
-    implementation("com.google.firebase:firebase-crashlytics:18.4.2")
+    implementation("com.google.firebase:firebase-analytics-ktx:21.5.0")
+    implementation("com.google.firebase:firebase-crashlytics:18.6.0")
     // Google APIs
     implementation("com.google.api-client:google-api-client-android:1.35.2") {
         exclude(group="org.apache.httpcomponents")
@@ -167,7 +167,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-basement:18.2.0")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     // AdMob
-    implementation("com.google.android.gms:play-services-ads:22.4.0")
+    implementation("com.google.android.gms:play-services-ads:22.5.0")
     implementation("com.google.http-client:google-http-client-gson:1.43.1") {
         exclude(module="httpclient")
         exclude(module="commons-logging")
