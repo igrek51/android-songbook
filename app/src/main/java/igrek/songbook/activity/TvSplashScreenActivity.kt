@@ -12,6 +12,7 @@ class TvSplashScreenActivity : AppCompatActivity() {
 
         val intent = Intent(applicationContext, TvActivity::class.java)
         startActivity(intent)
+        @Suppress("DEPRECATION")
         overridePendingTransition(0, 0)
         finish()
     }

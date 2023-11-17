@@ -1,5 +1,5 @@
 buildscript {
-    val kotlinVersion = "1.8.22"
+    val kotlinVersion = "1.9.20"
     extra["kotlin_version"] = kotlinVersion
 
     repositories {

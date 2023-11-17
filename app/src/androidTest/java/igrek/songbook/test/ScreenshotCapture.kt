@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package igrek.songbook.test
 
 import android.content.Context

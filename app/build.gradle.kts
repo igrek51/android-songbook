@@ -90,7 +90,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.8" // based on https://developer.android.com/jetpack/androidx/releases/compose-kotlin
+        kotlinCompilerExtensionVersion = "1.5.4" // based on https://developer.android.com/jetpack/androidx/releases/compose-kotlin
     }
     configurations.all {
         resolutionStrategy {
@@ -114,6 +114,12 @@ android {
             isIncludeAndroidResources = true
             isReturnDefaultValues = true
         }
+    }
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
     }
 }
 

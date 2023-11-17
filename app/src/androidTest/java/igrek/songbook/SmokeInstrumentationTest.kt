@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package igrek.songbook
 
 import androidx.test.InstrumentationRegistry
