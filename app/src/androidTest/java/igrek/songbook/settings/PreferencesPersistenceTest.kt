@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package igrek.songbook.settings
 
 import androidx.test.rule.ActivityTestRule

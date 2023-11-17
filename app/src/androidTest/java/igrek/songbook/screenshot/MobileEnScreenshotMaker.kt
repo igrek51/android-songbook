@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package igrek.songbook.screenshot
 
 import android.view.KeyEvent

@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package igrek.songbook.wip
 
 import android.app.Activity
@@ -42,7 +44,6 @@ class FeatureInProgressTest {
         val ruleActivity = rule.activity
         AppContextFactory.createAppContext(ruleActivity)
 
-        val activity: Activity = appFactory.activity.get()
         val preferencesService: PreferencesService = appFactory.preferencesService.get()
         val songsRepository: SongsRepository = appFactory.songsRepository.get()
 

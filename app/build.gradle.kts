@@ -5,7 +5,7 @@ import java.io.ByteArrayOutputStream
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("plugin.serialization") //version "1.9.0"
+    kotlin("plugin.serialization")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
 }
@@ -31,11 +31,11 @@ fun getVersionName(): String {
 @Suppress("UnstableApiUsage")
 android {
     namespace = "igrek.songbook"
-    compileSdk = 33
+    compileSdk = 34
     defaultConfig {
         applicationId = "igrek.songbook"
         minSdk = 21 // Android 5.0 Lollipop
-        targetSdk = 33 // Android 13
+        targetSdk = 34 // Android 14
         versionCode = getVersionCode()
         versionName = getVersionName()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -58,8 +58,8 @@ android {
     buildTypes {
         getByName("debug") {
             isDebuggable = true
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = false
+            isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
             buildConfigField("java.util.Date", "BUILD_DATE", "new java.util.Date(" + System.currentTimeMillis() + "L)")
         }
@@ -97,15 +97,17 @@ android {
             force("com.google.code.findbugs:jsr305:1.3.9")
         }
     }
-    packagingOptions {
-        exclude("META-INF/DEPENDENCIES")
-        exclude("META-INF/LICENSE")
-        exclude("META-INF/LICENSE.txt")
-        exclude("META-INF/license.txt")
-        exclude("META-INF/NOTICE")
-        exclude("META-INF/NOTICE.txt")
-        exclude("META-INF/notice.txt")
-        exclude("META-INF/ASL2.0")
+    packaging {
+        resources {
+            excludes += "META-INF/DEPENDENCIES"
+            excludes += "META-INF/LICENSE"
+            excludes += "META-INF/LICENSE.txt"
+            excludes += "META-INF/license.txt"
+            excludes += "META-INF/NOTICE"
+            excludes += "META-INF/NOTICE.txt"
+            excludes += "META-INF/notice.txt"
+            excludes += "META-INF/ASL2.0"
+        }
     }
     testOptions {
         unitTests {
