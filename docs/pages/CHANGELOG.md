@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fullscreen mode is kept when a new song gets presented with SongCast.
+- Delimiters inside compound chords are validated.
+- Improved focusability when controlling app with keyboard arrows or D-pad.
 
 ## [1.36.4] - 1908 - 2023-10-20
 ### Changed
