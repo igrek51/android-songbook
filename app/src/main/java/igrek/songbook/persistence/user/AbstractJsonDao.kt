@@ -180,7 +180,6 @@ abstract class AbstractJsonDao<T>(
     }
 
     private fun saveToFile(dbName: String, schemaVersion: Int, obj: T) {
-        json.encodeToJsonElement(serializer, obj)
         val content = json.encodeToString(serializer, obj)
         val filename = buildFilename(dbName, schemaVersion)
         val file = File(path, filename)
