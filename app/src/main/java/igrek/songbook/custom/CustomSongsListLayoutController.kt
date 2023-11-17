@@ -219,72 +219,13 @@ class CustomSongsListLayoutController(
 
         restoreScrollPosition()
 
-        val localFocus = LocalFocusTraverser(
-            currentViewGetter = { composeView },
-            currentFocusGetter = { appFactory.activity.get().currentFocus?.id },
-            preNextFocus = { _: Int, _: View ->
-                when {
-                    appFactory.navigationMenuController.get().isDrawerShown() -> R.id.nav_view
-                    else -> 0
-                }
-            },
-            nextLeft = { currentFocusId: Int, currentView: View ->
-                when (currentFocusId) {
-                    R.id.itemSongMoreButton, R.id.itemsListView -> {
-                        (currentView as ViewGroup).descendantFocusability =
-                            ViewGroup.FOCUS_BLOCK_DESCENDANTS
-                        composeView?.requestFocusFromTouch()
-                    }
-                }
-                when {
-                    currentFocusId == R.id.itemSongMoreButton -> -1
-                    currentFocusId == R.id.itemsListView && customCategory != null -> R.id.goBackButton
-                    currentFocusId == R.id.itemsListView && customCategory == null -> R.id.navMenuButton
-                    else -> 0
-                }
-            },
-            nextRight = { currentFocusId: Int, currentView: View ->
-                when {
-                    currentFocusId == R.id.itemsListView && currentView.findViewById<View>(R.id.itemSongMoreButton)?.isVisible == true -> {
-                        (currentView as? ViewGroup)?.descendantFocusability =
-                            ViewGroup.FOCUS_BEFORE_DESCENDANTS
-                        R.id.itemSongMoreButton
-                    }
-                    else -> 0
-                }
-            },
-            nextUp = { currentFocusId: Int, currentView: View ->
-                when (currentFocusId) {
-                    R.id.itemSongMoreButton, R.id.itemsListView -> {
-                        (currentView as ViewGroup).descendantFocusability =
-                            ViewGroup.FOCUS_BLOCK_DESCENDANTS
-                        composeView?.requestFocusFromTouch()
-                    }
-                }
-                when {
-                    currentFocusId == R.id.itemSongMoreButton -> -1
-                    customCategory != null -> R.id.goBackButton
-                    else -> R.id.navMenuButton
-                }
-            },
-            nextDown = { currentFocusId: Int, currentView: View ->
-                when (currentFocusId) {
-                    R.id.itemSongMoreButton, R.id.itemsListView -> {
-                        (currentView as ViewGroup).descendantFocusability =
-                            ViewGroup.FOCUS_BLOCK_DESCENDANTS
-                        composeView?.requestFocusFromTouch()
-                    }
-                }
-                0
-            },
-        )
-        composeView?.setOnKeyListener { _, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN) {
-                if (localFocus.handleKey(keyCode))
-                    return@setOnKeyListener true
-            }
-            return@setOnKeyListener false
-        }
+//        composeView?.setOnKeyListener { _, keyCode, event ->
+//            if (event.action == KeyEvent.ACTION_DOWN) {
+//                if (localFocus.handleKey(keyCode))
+//                    return@setOnKeyListener true
+//            }
+//            return@setOnKeyListener false
+//        }
 
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
