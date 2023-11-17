@@ -154,11 +154,12 @@ class ChordDiagramsService(
     private fun tryToFindChordDiagram(chordName: String) {
         val typedChordName = chordName.trim()
         if (typedChordName.isBlank()) {
-            uiInfoService.showInfo(R.string.chord_diagram_not_found)
+            uiInfoService.showInfo(R.string.no_text_provided)
             return
         }
         if (!hasChordDiagram(typedChordName)) {
-            uiInfoService.showInfo(R.string.chord_diagram_not_found)
+            val instrumentName = uiResourceService.resString(preferencesState.chordsInstrument.displayNameResId)
+            uiInfoService.showInfo(R.string.chord_diagram_not_found_ext, chordName, instrumentName)
             return
         }
 

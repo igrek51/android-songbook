@@ -308,7 +308,8 @@
     <string name="settings_chord_digram_style">Układ wizualizacji diagramów akordów</string>
     <string name="action_find_chord">Znajdź</string>
     <string name="chord_diagram_find_chord">Podaj nazwę akordu</string>
-    <string name="chord_diagram_not_found">Brak diagramu dla podanego akordu i instrumentu</string>
+    <string name="chord_diagram_not_found">Nie znaleziono diagramu</string>
+    <string name="chord_diagram_not_found_ext">Brak diagramu dla akordu \"%s\" i instrumentu %s</string>
     <string name="nav_chord_diagram">Diagramy Akordów</string>
     <string name="settings_update_db_on_startup">Aktualizuj piosenki przy starcie</string>
     <string name="settings_update_db_on_startup_hint">Automatycznie pobieraj najnowsze piosenki</string>
@@ -584,4 +585,5 @@
     <string name="settings_swipe_to_randomize_again">Przesuń w lewo, aby wylosować ponownie</string>
     <string name="settings_swipe_to_randomize_again_hint">Gest \"machnięcia w lewo\" w widoku piosenki ponownie wylosuje utwór (jeśli nie ma otwartej playlisty).</string>
     <string name="opened_shared_song">Wczytano udostępnioną piosenkę.</string>
+    <string name="no_text_provided">Nie podano tekstu</string>
 </resources>

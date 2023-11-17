@@ -338,7 +338,8 @@
     <string name="settings_chord_digram_style">Visualisation layout of the chord diagrams</string>
     <string name="action_find_chord">Find</string>
     <string name="chord_diagram_find_chord">Enter chord name</string>
-    <string name="chord_diagram_not_found">No diagram found for a given chord and instrument</string>
+    <string name="chord_diagram_not_found">No diagram found</string>
+    <string name="chord_diagram_not_found_ext">No chord diagram matching name \"%s\" and instrument %s</string>
     <string name="nav_chord_diagram">Chord Diagrams</string>
     <string name="settings_update_db_on_startup">Update songs on startup</string>
     <string name="settings_update_db_on_startup_hint">Download latest songs automatically</string>
@@ -615,4 +616,5 @@
     <string name="settings_swipe_to_randomize_again">Swipe left to shuffle again</string>
     <string name="settings_swipe_to_randomize_again_hint">Make \"swipe left\" gesture on the song view to shuffle a random song again (if there\'s no open playlist).</string>
     <string name="opened_shared_song">Loaded shared song.</string>
+    <string name="no_text_provided">No text provided</string>
 </resources>
