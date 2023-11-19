@@ -4,8 +4,8 @@ import java.io.ByteArrayOutputStream
 
 plugins {
     id("com.android.application")
-    kotlin("android")
-    kotlin("plugin.serialization")
+    id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
 }
