@@ -96,7 +96,7 @@ class AntechamberService(
             jsonSerializer.encodeToString(AntechamberSongDto.serializer(), antechamberSongDto)
         val request: Request = Request.Builder()
             .url(allSongsUrl)
-            .post(RequestBody.create(jsonType, json))
+            .post(json.toRequestBody(jsonType))
             .build()
         return httpRequester.httpRequestAsync(request) { }
     }

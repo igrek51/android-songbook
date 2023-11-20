@@ -309,7 +309,7 @@
     <string name="action_find_chord">Znajdź</string>
     <string name="chord_diagram_find_chord">Podaj nazwę akordu</string>
     <string name="chord_diagram_not_found">Nie znaleziono diagramu</string>
-    <string name="chord_diagram_not_found_ext">Brak diagramu dla akordu \"%s\" i instrumentu %s</string>
+    <string name="chord_diagram_not_found_ext" formatted="false">Brak diagramu dla akordu \"%s\" i instrumentu %s</string>
     <string name="nav_chord_diagram">Diagramy Akordów</string>
     <string name="settings_update_db_on_startup">Aktualizuj piosenki przy starcie</string>
     <string name="settings_update_db_on_startup_hint">Automatycznie pobieraj najnowsze piosenki</string>

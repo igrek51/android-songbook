@@ -32,3 +32,5 @@
 
 # iText pdf
 -dontwarn org.slf4j.impl.StaticLoggerBinder
+-dontwarn org.w3c.dom.DOMImplementationSourceList
+-dontwarn org.xml.sax.driver

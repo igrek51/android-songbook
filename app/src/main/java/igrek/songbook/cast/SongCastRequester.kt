@@ -126,7 +126,7 @@ class SongCastRequester {
         val request: Request = Request.Builder()
             .url(dropSessionUrl(oldSessionCode))
             .header(authDeviceHeader, deviceId)
-            .post(RequestBody.create(null, ""))
+            .post("".toRequestBody(null))
             .build()
         return httpRequester.httpRequestAsync(request) {
             logger.info("SongCast session $oldSessionCode dropped")
@@ -163,7 +163,7 @@ class SongCastRequester {
         val request: Request = Request.Builder()
             .url(sessionSongUrl(sessionCode))
             .header(authDeviceHeader, deviceId)
-            .post(RequestBody.create(httpRequester.jsonType, json))
+            .post(json.toRequestBody(httpRequester.jsonType))
             .build()
         return httpRequester.httpRequestAsync(request) {
             onSuccess()
@@ -179,7 +179,7 @@ class SongCastRequester {
         val request: Request = Request.Builder()
             .url(sessionScrollUrl(sessionCode))
             .header(authDeviceHeader, deviceId)
-            .post(RequestBody.create(httpRequester.jsonType, json))
+            .post(json.toRequestBody(httpRequester.jsonType))
             .build()
         return httpRequester.httpRequestAsync(request) {}
     }
@@ -192,7 +192,7 @@ class SongCastRequester {
         val request: Request = Request.Builder()
             .url(sessionChatUrl(sessionCode))
             .header(authDeviceHeader, deviceId)
-            .post(RequestBody.create(httpRequester.jsonType, json))
+            .post(json.toRequestBody(httpRequester.jsonType))
             .build()
         return httpRequester.httpRequestAsync(request) {
             logger.info("SongCast: chat message sent: ${payload.text}")
@@ -206,7 +206,7 @@ class SongCastRequester {
         val request: Request = Request.Builder()
             .url(promoteMemberUrl(sessionCode, memberPubId))
             .header(authDeviceHeader, deviceId)
-            .post(RequestBody.create(null, ""))
+            .post("".toRequestBody(null))
             .build()
         return httpRequester.httpRequestAsync(request) {
             logger.info("SongCast: member promoted: $memberPubId")

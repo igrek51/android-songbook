@@ -339,7 +339,7 @@
     <string name="action_find_chord">Find</string>
     <string name="chord_diagram_find_chord">Enter chord name</string>
     <string name="chord_diagram_not_found">No diagram found</string>
-    <string name="chord_diagram_not_found_ext">No chord diagram matching name \"%s\" and instrument %s</string>
+    <string name="chord_diagram_not_found_ext" formatted="false">No chord diagram matching name \"%s\" and instrument %s</string>
     <string name="nav_chord_diagram">Chord Diagrams</string>
     <string name="settings_update_db_on_startup">Update songs on startup</string>
     <string name="settings_update_db_on_startup_hint">Download latest songs automatically</string>

@@ -444,7 +444,7 @@ class EditorSessionService(
             httpRequester.jsonSerializer.encodeToString(EditorSessionPushDto.serializer(), dto)
         val request: Request = Request.Builder()
             .url("$songbookApiBase/api/editor/session/$sessionId/push")
-            .post(RequestBody.create(httpRequester.jsonType, json))
+            .post(json.toRequestBody(httpRequester.jsonType))
             .build()
         return httpRequester.httpRequestAsync(request) {}
     }
