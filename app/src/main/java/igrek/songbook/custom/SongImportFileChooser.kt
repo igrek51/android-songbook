@@ -237,7 +237,7 @@ class SongImportFileChooser(
         }
 
         val parsedLines = parsedFirstLines + lastLines
-        val parsedContent = parsedLines.joinToString("\n")
+        val parsedContent = parsedLines.joinToString("\n").trim{ it == '\n' }
         return ParsedSongContent(parsedContent, title, artist, notation)
     }
 
