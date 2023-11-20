@@ -155,7 +155,8 @@ class EditSongLayoutController(
     }
 
     private fun getAllCategoryNames(): List<String> {
-        return songsRepository.allSongsRepo.publicCategories.get()
+        return songsRepository.customSongsRepo.allCategoryNames.get() +
+            songsRepository.allSongsRepo.publicCategories.get()
             .mapNotNull { it.displayName }
             .sorted()
     }

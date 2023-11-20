@@ -16,6 +16,14 @@ data class CustomSongsRepository(
         valuesSupplier = songs
     )
 
+    val allCategoryNames: SimpleCache<List<String>> = SimpleCache {
+        songs.get()
+            .filter { song: Song -> !song.customCategoryName.isNullOrBlank() }
+            .map { song: Song -> song.customCategoryName.orEmpty() }
+            .distinct()
+            .sorted()
+    }
+
     fun invalidate() {
         songs.invalidate()
         uncategorizedSongs.invalidate()
