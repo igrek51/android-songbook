@@ -144,7 +144,7 @@ class SongCastMenuLayout(
             }
         }, onFailure = { e ->
             if (e is ApiResponseError) {
-                if (e.response.code() == 404) {
+                if (e.response.code == 404) {
                     throw LocalizedError(R.string.songcast_room_not_found)
                 }
             }
@@ -164,7 +164,7 @@ class SongCastMenuLayout(
             }
         }, onFailure = { e ->
             if (e is ApiResponseError) {
-                if (e.response.code() == 404) {
+                if (e.response.code == 404) {
                     throw LocalizedError(R.string.songcast_restoring_room_not_found)
                 }
             }

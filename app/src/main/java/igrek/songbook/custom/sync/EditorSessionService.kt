@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 class EditorSessionService(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
@@ -376,10 +377,10 @@ class EditorSessionService(
             httpRequester.jsonSerializer.encodeToString(EditorSessionCreateDto.serializer(), dto)
         val request: Request = Request.Builder()
             .url("$songbookApiBase/api/editor/session")
-            .post(RequestBody.create(httpRequester.jsonType, json))
+            .post(json.toRequestBody(httpRequester.jsonType))
             .build()
         return httpRequester.httpRequestAsync(request) { response ->
-            val jsonData = response.body()?.string() ?: ""
+            val jsonData = response.body?.string() ?: ""
             val responseData: EditorSessionCreatedDto =
                 httpRequester.jsonSerializer.decodeFromString(
                     EditorSessionCreatedDto.serializer(),
@@ -395,7 +396,7 @@ class EditorSessionService(
             .get()
             .build()
         return httpRequester.httpRequestAsync(request) { response ->
-            val jsonData = response.body()?.string() ?: ""
+            val jsonData = response.body?.string() ?: ""
             val responseData: EditorSessionDto = httpRequester.jsonSerializer.decodeFromString(
                 EditorSessionDto.serializer(),
                 jsonData
@@ -410,7 +411,7 @@ class EditorSessionService(
             .get()
             .build()
         return httpRequester.httpRequestAsync(request) { response ->
-            val jsonData = response.body()?.string() ?: ""
+            val jsonData = response.body?.string() ?: ""
             val responseData: EditorSongDto = httpRequester.jsonSerializer.decodeFromString(
                 EditorSongDto.serializer(),
                 jsonData
@@ -425,7 +426,7 @@ class EditorSessionService(
             .get()
             .build()
         return httpRequester.httpRequestAsync(request) { response ->
-            val jsonData = response.body()?.string() ?: ""
+            val jsonData = response.body?.string() ?: ""
             val responseData: EditorSyncHeaderDto = httpRequester.jsonSerializer.decodeFromString(
                 EditorSyncHeaderDto.serializer(),
                 jsonData

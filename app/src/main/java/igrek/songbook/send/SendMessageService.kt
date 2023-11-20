@@ -64,7 +64,7 @@ class SendMessageService(
             val request = Request.Builder().url(url).post(requestBody).build()
 
             val result = httpRequester.httpRequestAsync(request) {
-                it.body()?.string() ?: ""
+                it.body?.string() ?: ""
             }.await()
 
             result.fold(onSuccess = { response: String ->

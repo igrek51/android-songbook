@@ -188,8 +188,8 @@ dependencies {
     implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
     implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
     // OkHttp
-    implementation("com.squareup.okhttp3:okhttp:3.12.12") // last version supporting API 1
-    implementation("com.squareup.okhttp3:logging-interceptor:3.12.12")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
     // JWT
     implementation("com.auth0.android:jwtdecode:2.0.2")
     // Socket.IO

@@ -20,8 +20,10 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import java.util.Date
 
@@ -49,7 +51,7 @@ class AntechamberService(
     }
 
     private val httpRequester = HttpRequester()
-    private val jsonType = MediaType.parse("application/json; charset=utf-8")
+    private val jsonType: MediaType = "application/json; charset=utf-8".toMediaType()
     private val jsonSerializer = Json {
         encodeDefaults = true
         ignoreUnknownKeys = true
@@ -66,7 +68,7 @@ class AntechamberService(
             .addHeader(authTokenHeader, adminService.userAuthToken)
             .build()
         return httpRequester.httpRequestAsync(request) { response: Response ->
-            val json = response.body()?.string() ?: ""
+            val json = response.body?.string() ?: ""
             val allDtos: AllAntechamberSongsDto =
                 jsonSerializer.decodeFromString(AllAntechamberSongsDto.serializer(), json)
             val antechamberSongs: List<Song> = allDtos.toModel()
@@ -80,7 +82,7 @@ class AntechamberService(
             jsonSerializer.encodeToString(AntechamberSongDto.serializer(), antechamberSongDto)
         val request: Request = Request.Builder()
             .url(specificSongUrl(song.id))
-            .put(RequestBody.create(jsonType, json))
+            .put(json.toRequestBody(jsonType))
             .addHeader(authTokenHeader, adminService.userAuthToken)
             .build()
         return httpRequester.httpRequestAsync(request) { }
@@ -116,11 +118,11 @@ class AntechamberService(
         val json = jsonSerializer.encodeToString(ChordsSongDto.serializer(), dto)
         val request: Request = Request.Builder()
             .url(updatePublicSongIdUrl(song.id))
-            .put(RequestBody.create(jsonType, json))
+            .put(json.toRequestBody(jsonType))
             .addHeader(authTokenHeader, adminService.userAuthToken)
             .build()
         return httpRequester.httpRequestAsync(request) { response: Response ->
-            logger.debug("Update response", response.body()?.string())
+            logger.debug("Update response", response.body?.string())
         }
     }
 
@@ -132,11 +134,11 @@ class AntechamberService(
         val json = jsonSerializer.encodeToString(ChordsSongDto.serializer(), dto)
         val request: Request = Request.Builder()
             .url(approveSongUrl)
-            .post(RequestBody.create(jsonType, json))
+            .post(json.toRequestBody(jsonType))
             .addHeader(authTokenHeader, adminService.userAuthToken)
             .build()
         return httpRequester.httpRequestAsync(request) { response: Response ->
-            logger.debug("Approve response", response.body()?.string())
+            logger.debug("Approve response", response.body?.string())
         }
     }
 
