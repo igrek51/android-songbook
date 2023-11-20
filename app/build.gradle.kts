@@ -167,7 +167,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     // AdMob
     implementation("com.google.android.gms:play-services-ads:22.5.0")
-    implementation("com.google.http-client:google-http-client-gson:1.43.1") {
+    implementation("com.google.http-client:google-http-client-gson:1.43.3") {
         exclude(module="httpclient")
         exclude(module="commons-logging")
     }
@@ -179,11 +179,11 @@ dependencies {
     // Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.0")
     // Guava
-    implementation("com.google.guava:guava:31.1-android")
+    implementation("com.google.guava:guava:32.1.3-android")
     // Apache Commons Codec
-    implementation("commons-codec:commons-codec:1.15")
+    implementation("commons-codec:commons-codec:1.16.0")
     // Protobuf
-    implementation("com.google.protobuf:protobuf-kotlin:3.22.2")
+    implementation("com.google.protobuf:protobuf-kotlin:3.25.1")
     // RX
     implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
     implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
@@ -201,7 +201,7 @@ dependencies {
     // Unit tests
     testImplementation("androidx.appcompat:appcompat:1.6.1")
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.mockito:mockito-core:2.28.2")
+    testImplementation("org.mockito:mockito-core:5.7.0")
     testImplementation("org.assertj:assertj-core:3.24.2")
     // Android instumentation tests
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.10.01"))
@@ -212,7 +212,7 @@ dependencies {
     androidTestImplementation("androidx.test:rules:1.5.0")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
-    androidTestImplementation("org.mockito:mockito-core:2.28.2")
-    androidTestImplementation("org.mockito:mockito-android:2.22.0")
+    androidTestImplementation("org.mockito:mockito-core:5.7.0")
+    androidTestImplementation("org.mockito:mockito-android:5.7.0")
     androidTestImplementation("org.assertj:assertj-core:3.24.2")
 }
