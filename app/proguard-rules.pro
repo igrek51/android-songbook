@@ -29,3 +29,6 @@
 -keepclassmembers class * { @com.google.api.client.util.Key <fields>; }
 
 -dontobfuscate
+
+# iText pdf
+-dontwarn org.slf4j.impl.StaticLoggerBinder

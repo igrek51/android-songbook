@@ -203,8 +203,8 @@ dependencies {
     implementation("io.socket:socket.io-client:2.1.0") {
         exclude(group="org.json", module="json")
     }
-    // PDFBox
-    implementation("com.tom-roush:pdfbox-android:2.0.25.0") // don't upgrade due to huge bundle size
+    // iText PDF
+    implementation("com.itextpdf.android:kernel-android:7.2.5")
     // Unit tests
     testImplementation("androidx.appcompat:appcompat:1.6.1")
     testImplementation("junit:junit:4.13.2")
