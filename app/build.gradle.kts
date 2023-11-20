@@ -137,7 +137,7 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.preference:preference-ktx:1.2.1") // Settings layouts
     implementation("androidx.multidex:multidex:2.0.1")
-    implementation("androidx.activity:activity-ktx:1.8.0")
+    implementation("androidx.activity:activity-ktx:1.8.1")
     implementation("androidx.work:work-runtime:2.8.1")
     // Kotlin
     val kotlinVersion = rootProject.extra.get("kotlin_version") as String
@@ -146,17 +146,16 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion")
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:1.0-M1-1.4.0-rc")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.1")
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
     // Material Design Components
     implementation("com.google.android.material:material:1.10.0")
     // Jetpack Compose
-    val composeBom = platform("androidx.compose:compose-bom:2023.06.01")
-    implementation(composeBom)
+    implementation(platform("androidx.compose:compose-bom:2023.10.01"))
     implementation("androidx.compose.material3:material3:1.1.2") // Material Design 3
     debugImplementation("androidx.compose.ui:ui-tooling")
-    implementation("androidx.activity:activity-compose:1.8.0") // Integration with activities
+    implementation("androidx.activity:activity-compose:1.8.1") // Integration with activities
     // Firebase
     implementation("com.google.firebase:firebase-analytics-ktx:21.5.0")
     implementation("com.google.firebase:firebase-crashlytics:18.6.0")
@@ -178,7 +177,7 @@ dependencies {
     // Google Play Billing
     implementation("com.android.billingclient:billing-ktx:5.2.1")
     // Jackson
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.0")
     // Guava
     implementation("com.google.guava:guava:31.1-android")
     // Apache Commons Codec
@@ -205,7 +204,7 @@ dependencies {
     testImplementation("org.mockito:mockito-core:2.28.2")
     testImplementation("org.assertj:assertj-core:3.24.2")
     // Android instumentation tests
-    androidTestImplementation(composeBom)
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.10.01"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     androidTestImplementation("junit:junit:4.13.2")
