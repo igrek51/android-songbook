@@ -164,8 +164,9 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.activity:activity-compose:1.8.1") // Integration with activities
     // Firebase
-    implementation("com.google.firebase:firebase-analytics-ktx:21.5.0")
-    implementation("com.google.firebase:firebase-crashlytics:18.6.0")
+    implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-analytics")
     // Google APIs
     implementation("com.google.api-client:google-api-client-android:1.35.2") {
         exclude(group="org.apache.httpcomponents")
