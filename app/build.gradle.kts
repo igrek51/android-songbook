@@ -16,7 +16,7 @@ fun getVersionCode(): Int {
         this.commandLine = listOf("git", "tag", "--list")
         this.standardOutput = stdout
     }
-    return stdout.toString().split("\n").size + 1800
+    return stdout.toString().split("\n").count { it.isNotBlank() } + 1800
 }
 
 fun getVersionName(): String {
