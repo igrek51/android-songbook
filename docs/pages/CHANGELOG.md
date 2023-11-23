@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.37.0] - 1909 - 2023-11-24
 ### Changed
 - User interfaces has been revamped. In particular, songs list got modernized layouts.
   Song is displayed in 2 lines layout, separating title from artist.
