@@ -66,20 +66,11 @@ open class Logger internal constructor() {
     protected fun log(message: String?, level: LogLevel, logPrefix: String) {
         if (level.moreOrEqualImportant(LoggerFactory.CONSOLE_LEVEL)) {
 
-            val consoleMessage: String =
-                if (level.lessOrEqualImportant(LoggerFactory.SHOW_TRACE_DETAILS_LEVEL)) {
-                    val externalTrace = getFirstExternalTrace(
-                        Thread.currentThread()
-                            .stackTrace
-                    )
+            val callerInfo = buildCallerTraceInfo(
+                Thread.currentThread().stackTrace
+            )
 
-                    val fileName = externalTrace.fileName
-                    val lineNumber = externalTrace.lineNumber
-
-                    String.format("%s(%s:%d): %s", logPrefix, fileName, lineNumber, message)
-                } else {
-                    logPrefix + message
-                }
+            val consoleMessage = "$logPrefix($callerInfo): $message"
 
             when {
                 level.moreOrEqualImportant(LogLevel.ERROR) -> printError(consoleMessage)
@@ -108,11 +99,11 @@ open class Logger internal constructor() {
         }
     }
 
-    /**
-     * @param stackTraces array of stack traces
-     * @return first external stack trace (not in this class)
-     */
     private fun getFirstExternalTrace(stackTraces: Array<StackTraceElement>): StackTraceElement {
+        for (stackTrace in stackTraces) {
+            Log.d(tagWithKey(), "stackTrace " + stackTrace.className + ", " + stackTrace.fileName + ", " + stackTrace.lineNumber)
+        }
+
         var loggerClassFound = false
         // skip first stack traces: dalvik.system.VMStack, java.lang.Thread
         for (i in 2 until stackTraces.size) {
@@ -127,6 +118,18 @@ open class Logger internal constructor() {
             }
         }
         return stackTraces[0]
+    }
+
+    private fun buildCallerTraceInfo(stackTraces: Array<StackTraceElement>): String {
+        val traceElement = getFirstExternalTrace(stackTraces)
+        return when {
+            traceElement.fileName != null -> "${traceElement.fileName}:${traceElement.lineNumber}"
+            traceElement.className != null -> {
+                val shortClassName = traceElement.className.split(".").last()
+                "${shortClassName}:${traceElement.lineNumber}"
+            }
+            else -> ""
+        }
     }
 
     private fun printExceptionStackTrace(ex: Throwable) {
