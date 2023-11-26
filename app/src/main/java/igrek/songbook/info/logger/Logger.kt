@@ -100,10 +100,6 @@ open class Logger internal constructor() {
     }
 
     private fun getFirstExternalTrace(stackTraces: Array<StackTraceElement>): StackTraceElement {
-        for (stackTrace in stackTraces) {
-            Log.d(tagWithKey(), "stackTrace " + stackTrace.className + ", " + stackTrace.fileName + ", " + stackTrace.lineNumber)
-        }
-
         var loggerClassFound = false
         // skip first stack traces: dalvik.system.VMStack, java.lang.Thread
         for (i in 2 until stackTraces.size) {
