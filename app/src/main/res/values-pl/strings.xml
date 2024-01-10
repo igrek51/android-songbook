@@ -86,7 +86,7 @@
     <string name="scroll_at_the_beginning_already">Powrót na początek.</string>
     <string name="file_manager_not_found">Brak systemowej przeglądarki plików.</string>
     <string name="selected_file_is_too_big">Wybrany plik jest za duży. Czy to na pewno plik TEKSTOWY?</string>
-    <string name="editing_custom_song">Moja piosenka</string>
+    <string name="editing_custom_song">Własna piosenka</string>
     <string name="custom_song_editor">Edytor piosenki</string>
     <string name="edit_song_title_label">Tytuł piosenki:</string>
     <string name="edit_song_title_hint">Tytuł…</string>
@@ -188,7 +188,7 @@
     <string name="chords_unknown_chord">Nieznany akord dla wybranej notacji: \"%s\"</string>
     <string name="action_confirmation_title">Jesteś pewien?</string>
     <string name="confirm_remove_song">Czy na pewno chcesz usunąć piosenkę?</string>
-    <string name="confirm_discard_custom_song_changes">Czy chcesz zapisać niezapisane zmiany w piosence?</string>
+    <string name="confirm_discard_custom_song_changes">Czy chcesz zapisać zmiany wprowadzone w piosence?</string>
     <string name="no_new_chords_detected">Brak nowych akordów</string>
     <string name="new_chords_detected">Znalazłem nowe akordy: %s</string>
     <string name="editor_onexit_validation_failed">W piosence znaleziono błędy:
@@ -469,7 +469,7 @@
     <string name="custom_songs_restore_backup_choose">Wybierz wersję do przywrócenia</string>
     <string name="confirm_restore_custom_songs_backup">Czy na pewno chcesz przywrócić \"Moje Piosenki\" z kopii zapasowej? Twoje obecne piosenki zostaną utracone.</string>
     <string name="custom_songs_backup_restored">Kopia zapasowa \"Moich Piosenek\" została przywrócona.</string>
-    <string name="settings_saveCustomSongsBackups">Zachowuj dzienne kopie Moich Piosenek</string>
+    <string name="settings_saveCustomSongsBackups">Zachowuj dzienne kopie \"Moich Piosenek\"</string>
     <string name="settings_saveCustomSongsBackups_hint">Przetrzymuj lokalne wersje \"Moich Piosenek\" z ostatnich 14 dni</string>
     <string name="settings_restore_custom_songs_backup">Przywróć \"Moje Piosenki\" z lokalnej kopii</string>
     <string name="action_copy_dialog">Kopiuj</string>
