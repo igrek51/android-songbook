@@ -139,13 +139,13 @@
     <string name="typeface_serif">Szeryfowa (Serif)</string>
     <string name="typeface_monospace">Maszynowa (Monospace)</string>
     <string name="no_songs_to_shuffle">Brak piosenek do wylosowania</string>
-    <string name="action_song_copy">📋 Utwórz kopię</string>
+    <string name="action_song_copy">📋 Edytuj kopię</string>
     <string name="action_song_edit">✏️ Edytuj</string>
     <string name="action_song_remove">❌ Usuń</string>
     <string name="action_song_set_favourite">⭐️ Polub</string>
     <string name="action_song_unset_favourite">⭐️ Usuń z polubionych</string>
     <string name="song_action_more">Więcej</string>
-    <string name="song_copied_as_custom">Piosenka została skopiowana do \"Moich piosenek\".</string>
+    <string name="song_copied_as_custom">Piosenka skopiowana do \"Moich piosenek\".</string>
     <string name="action_song_publish">🌐 Opublikuj</string>
     <string name="settings_song_preview">Wygląd piosenek</string>
     <string name="settings_color_scheme">Schemat kolorów</string>
