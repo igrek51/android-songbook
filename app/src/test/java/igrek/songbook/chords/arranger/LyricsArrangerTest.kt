@@ -443,6 +443,7 @@ class LyricsArrangerTest {
                 LyricsLine(listOf(
                     text("end of verse"),
                     chord("a F"),
+                    text(" "),
                     LyricsFragment("// x2", LyricsTextType.COMMENT, x = 0f, width = 5f),
                 )),
             )),
@@ -453,7 +454,8 @@ class LyricsArrangerTest {
             )),
             LyricsLine(listOf(
                 LyricsFragment.text("end of verse", x = 0f, width = 12f),
-                LyricsFragment("// x2", LyricsTextType.COMMENT, x = 12f, width = 5f),
+                LyricsFragment.text("", x = 12f, width = 1f),
+                LyricsFragment("// x2", LyricsTextType.COMMENT, x = 13f, width = 5f),
             )),
         )
     }
