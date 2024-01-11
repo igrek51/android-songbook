@@ -28,8 +28,7 @@ class ChordsAboveArranger(
         val texts = LyricsLine(
             fragments = filterFragments(
                 line.fragments,
-                LyricsTextType.REGULAR_TEXT,
-                LyricsTextType.COMMENT
+                LyricsTextType.REGULAR_TEXT, LyricsTextType.COMMENT,
             ),
             primalIndex = line.primalIndex,
         )
@@ -43,9 +42,10 @@ class ChordsAboveArranger(
 
     private fun alignSingleChordsLeft(chords: List<LyricsFragment>, texts: List<LyricsFragment>) {
         // if there's one chords section at end only, align it to left
-        if (!(chords.size == 1 && texts.isNotEmpty()))
+        val textWithoutComments = texts.filter { fragment -> fragment.type == LyricsTextType.REGULAR_TEXT }
+        if (!(chords.size == 1 && textWithoutComments.isNotEmpty()))
             return
-        val textEnd = texts.last().run { x + width }
+        val textEnd = textWithoutComments.last().run { x + width }
         val firstChord = chords.first()
         if (textEnd <= firstChord.x) {
             firstChord.x = 0f

@@ -4,6 +4,7 @@ import igrek.songbook.chords.render.TypefaceLengthMapper
 import igrek.songbook.chords.model.LyricsFragment
 import igrek.songbook.chords.model.LyricsLine
 import igrek.songbook.chords.model.LyricsModel
+import igrek.songbook.chords.model.LyricsTextType
 import igrek.songbook.chords.model.lineWrapperChar
 import igrek.songbook.settings.theme.DisplayStyle
 import org.assertj.core.api.Assertions
@@ -425,6 +426,34 @@ class LyricsArrangerTest {
                 LyricsFragment.chords("a7", x = 20f, width = 2f),
                 LyricsFragment.chords(" D", x = 22f, width = 2f),
                 LyricsFragment.text(" wo wo wo", x = 24f, width = 9f),
+            )),
+        )
+    }
+
+
+    @Test
+    fun test_chords_above_with_comment() {
+        val wrapper = LyricsArranger(
+            displayStyle = DisplayStyle.ChordsAbove,
+            screenWRelative = 100f,
+            lengthMapper = lengthMapper,
+        )
+        val wrapped = wrapper.arrangeModel(
+            LyricsModel(listOf(
+                LyricsLine(listOf(
+                    text("end of verse"),
+                    chord("a F"),
+                    LyricsFragment("// x2", LyricsTextType.COMMENT, x = 0f, width = 5f),
+                )),
+            )),
+        )
+        Assertions.assertThat(wrapped.lines).containsExactly(
+            LyricsLine(listOf(
+                LyricsFragment.chords("a F", x = 0f, width = 3f),
+            )),
+            LyricsLine(listOf(
+                LyricsFragment.text("end of verse", x = 0f, width = 12f),
+                LyricsFragment("// x2", LyricsTextType.COMMENT, x = 12f, width = 5f),
             )),
         )
     }
