@@ -65,10 +65,11 @@
         %s
         \n
         \nTytuł: %s
-        \nKategorie: %s
+        \nArtysta: %s
         \nLokalizacja: %s
         \nWersja piosenki: %s
         \nOstatnia modyfikacja: %s
+        \nHash: %s
     </string>
     <string name="song_details_comment">Komentarz: %s</string>
     <string name="song_details_preferred_key">Preferowana tonacja: %s</string>

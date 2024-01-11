@@ -69,10 +69,11 @@
         %s
         \n
         \nTitle: %s
-        \nCategories: %s
+        \nArtist: %s
         \nLocation: %s
         \nSong version: %s
         \nLast modification: %s
+        \nHash: %s
     </string>
     <string name="song_details_comment">Comment: %s</string>
     <string name="song_details_preferred_key">Preferred key: %s</string>

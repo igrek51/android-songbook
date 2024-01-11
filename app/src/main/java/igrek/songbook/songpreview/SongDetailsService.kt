@@ -1,6 +1,7 @@
 package igrek.songbook.songpreview
 
 import igrek.songbook.R
+import igrek.songbook.custom.sync.SongHasher
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.inject.LazyExtractor
@@ -34,6 +35,7 @@ class SongDetailsService(
         val modificationDate = getLastModificationDate(song)
         val path = buildSongPath(song)
         val namespaceName = buildNamespaceName(song)
+        val songHash = SongHasher().hashSong(song).lowercase().take(8)
 
         val messageLines = mutableListOf<String>()
         messageLines.add(
@@ -44,7 +46,8 @@ class SongDetailsService(
                 categories,
                 namespaceName,
                 songVersion,
-                modificationDate
+                modificationDate,
+                songHash,
             )
         )
         if (!preferredKey.isNullOrEmpty())
