@@ -93,7 +93,8 @@ class SongContextMenuBuilder(
             SongContextAction(R.string.action_song_remove,
                 availableCondition = { song -> song.isCustom() },
                 executor = { song ->
-                    ConfirmDialogBuilder().confirmAction(R.string.confirm_remove_song) {
+                    val message = uiResourceService.resString(R.string.confirm_remove_song, song.displayName())
+                    ConfirmDialogBuilder().confirmAction(message) {
                         customSongService.removeSong(song)
                     }
                 }),

@@ -262,7 +262,12 @@ class EditSongLayoutController(
     }
 
     private fun removeSong() {
-        ConfirmDialogBuilder().confirmAction(R.string.confirm_remove_song) {
+        val songName = when (currentSong) {
+            null -> songTitle
+            else -> currentSong?.displayName() ?: ""
+        }
+        val message = uiInfoService.resString(R.string.confirm_remove_song, songName)
+        ConfirmDialogBuilder().confirmAction(message) {
             if (currentSong == null) {
                 // just cancel
                 uiInfoService.showInfo(R.string.edit_song_has_been_removed)
