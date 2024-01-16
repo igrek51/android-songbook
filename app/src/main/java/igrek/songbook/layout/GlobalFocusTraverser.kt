@@ -7,8 +7,7 @@ import androidx.core.view.isVisible
 import igrek.songbook.R
 import igrek.songbook.billing.BillingLayoutController
 import igrek.songbook.custom.CustomSongsListLayoutController
-import igrek.songbook.custom.EditSongLayoutController
-import igrek.songbook.editor.ChordsEditorLayoutController
+import igrek.songbook.editor.SongEditorLayoutController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
@@ -191,15 +190,10 @@ class GlobalFocusTraverser(
                 R.id.searchFilterClearButton -> R.id.searchFilterClearButton
                 else -> 0
             }
-            layoutController.isState(EditSongLayoutController::class) -> when (currentViewId) {
+            layoutController.isState(SongEditorLayoutController::class) -> when (currentViewId) {
                 R.id.navMenuButton -> R.id.goBackButton
                 R.id.goBackButton -> R.id.saveSongButton
                 R.id.saveSongButton -> R.id.moreActionsButton
-                else -> 0
-            }
-            layoutController.isState(ChordsEditorLayoutController::class) -> when (currentViewId) {
-                R.id.navMenuButton -> R.id.goBackButton
-                R.id.goBackButton -> R.id.tooltipEditChordsLyricsInfo
                 else -> 0
             }
             layoutController.isState(PlaylistLayoutController::class) -> when (currentViewId) {
@@ -295,15 +289,10 @@ class GlobalFocusTraverser(
                 R.id.goBackButton -> R.id.navMenuButton
                 else -> R.id.navMenuButton
             }
-            layoutController.isState(EditSongLayoutController::class) -> when (currentViewId) {
+            layoutController.isState(SongEditorLayoutController::class) -> when (currentViewId) {
                 R.id.moreActionsButton -> R.id.saveSongButton
                 R.id.saveSongButton -> R.id.goBackButton
                 R.id.goBackButton -> R.id.navMenuButton
-                else -> 0
-            }
-            layoutController.isState(ChordsEditorLayoutController::class) -> when (currentViewId) {
-                R.id.goBackButton -> R.id.navMenuButton
-                R.id.tooltipEditChordsLyricsInfo -> R.id.goBackButton
                 else -> 0
             }
             layoutController.isState(PlaylistLayoutController::class) -> when (currentViewId) {
@@ -391,16 +380,8 @@ class GlobalFocusTraverser(
                 R.id.navMenuButton, R.id.goBackButton, R.id.searchFilterEdit, R.id.searchFilterClearButton, R.id.searchSongButton, R.id.songsSortButton, R.id.moreActionsButton -> R.id.compose_view
                 else -> 0
             }
-            layoutController.isState(EditSongLayoutController::class) -> when (currentViewId) {
-                R.id.navMenuButton, R.id.goBackButton, R.id.saveSongButton, R.id.moreActionsButton -> R.id.songTitleEdit
-                R.id.songTitleEdit -> R.id.customCategoryNameEdit
-                R.id.customCategoryNameEdit -> R.id.songChordNotationSpinner
-                R.id.songChordNotationSpinner -> R.id.tooltipEditChordsLyricsInfo
-                R.id.tooltipEditChordsLyricsInfo -> R.id.songContentEdit
-                else -> 0
-            }
-            layoutController.isState(ChordsEditorLayoutController::class) -> when (currentViewId) {
-                R.id.navMenuButton, R.id.goBackButton, R.id.tooltipEditChordsLyricsInfo -> R.id.transformChordsButton
+            layoutController.isState(SongEditorLayoutController::class) -> when (currentViewId) {
+                R.id.navMenuButton, R.id.goBackButton, R.id.saveSongButton, R.id.moreActionsButton -> R.id.compose_view
                 else -> 0
             }
             layoutController.isState(LatestSongsLayoutController::class) -> when (currentViewId) {
@@ -487,16 +468,8 @@ class GlobalFocusTraverser(
             currentViewId == R.id.main_content -> R.id.navMenuButton
             currentViewId == R.id.navMenuButton -> R.id.navMenuButton
 
-            layoutController.isState(EditSongLayoutController::class) -> when (currentViewId) {
-                R.id.songContentEdit -> R.id.tooltipEditChordsLyricsInfo
-                R.id.tooltipEditChordsLyricsInfo -> R.id.songChordNotationSpinner
-                R.id.songChordNotationSpinner -> R.id.customCategoryNameEdit
-                R.id.customCategoryNameEdit -> R.id.songTitleEdit
-                R.id.songTitleEdit -> R.id.navMenuButton
-                else -> 0
-            }
-            layoutController.isState(ChordsEditorLayoutController::class) -> when (currentViewId) {
-                R.id.transformChordsButton -> R.id.navMenuButton
+            layoutController.isState(SongEditorLayoutController::class) -> when (currentViewId) {
+                R.id.compose_view -> R.id.navMenuButton
                 else -> 0
             }
             layoutController.isState(TopSongsLayoutController::class) -> when (currentViewId) {

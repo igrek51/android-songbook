@@ -54,7 +54,7 @@
     <string name="end_of_song_autoscroll_stopped">Koniec piosenki</string>
     <string name="song_category_others">Inne</string>
     <string name="song_category_custom">Moje piosenki</string>
-    <string name="song_search_edit_hint">Tytuł, artysta lub fragment piosenki</string>
+    <string name="song_search_edit_hint">Tytuł, wykonawca lub fragment piosenki</string>
     <string name="secret_key_invalid" formatted="false">Hasło niepoprawne: %s</string>
     <string name="unlock_new_songs_unlocked">Odblokowano piosenki: %d</string>
     <string name="autoscroll_panel_speed">Szybkość autoprzewijania: %s linii / s</string>
@@ -65,7 +65,7 @@
         %s
         \n
         \nTytuł: %s
-        \nArtysta: %s
+        \nWykonawca: %s
         \nLokalizacja: %s
         \nWersja piosenki: %s
         \nOstatnia modyfikacja: %s
@@ -87,17 +87,16 @@
     <string name="scroll_at_the_beginning_already">Powrót na początek.</string>
     <string name="file_manager_not_found">Brak systemowej przeglądarki plików.</string>
     <string name="selected_file_is_too_big">Wybrany plik jest za duży. Czy to na pewno plik TEKSTOWY?</string>
-    <string name="editing_custom_song">Własna piosenka</string>
+    <string name="editing_custom_song">Edytor piosenki</string>
     <string name="custom_song_editor">Edytor piosenki</string>
-    <string name="edit_song_title_label">Tytuł piosenki:</string>
-    <string name="edit_song_title_hint">Tytuł…</string>
-    <string name="edit_song_content_label">Tekst piosenki z [akordami]:</string>
-    <string name="import_song_content_hint">
+    <string name="edit_song_title_label">Tytuł piosenki</string>
+    <string name="edit_song_content_label">Tekst piosenki z akordami</string>
+    <string name="edit_song_content_label_hint">Wprowadź tekst piosenki z akordami</string>
+    <string name="edit_song_content_hint">
         Tekst piosenki z [akordami] w tej samej linii
         \nOtwórz pomoc (?), aby uzyskać więcej szczegółów.
         \n…[C]Przykładowy [G#]tekst [C G# A7 F#maj7]…
         \n…[C]So, so you think you can [D]tell…
-        \n…Smoke on the water [C G#]…
         \n…Never gonna [G]give you [A]up…
     </string>
     <string name="import_content_from_file">📂 Importuj z pliku\n  (TXT / PDF / Drive / Google Docs)</string>
@@ -123,8 +122,7 @@
     <string name="update_is_available">Nowa aktualizacja piosenek jest dostępna.</string>
     <string name="action_update">Aktualizuj</string>
     <string name="edit_song_add_chord">[akord]</string>
-    <string name="edit_song_category_name_label">Artysta / kategoria:</string>
-    <string name="edit_song_category_name_hint">Artysta lub nazwa kategorii</string>
+    <string name="edit_song_category_name_label">Wykonawca</string>
     <string name="contact_subject_hint">Temat</string>
     <string name="settings_language">Język aplikacji</string>
     <string name="language_default">Domyślny systemowy</string>
@@ -165,7 +163,6 @@
     <string name="settings_general_section">Ogólne</string>
     <string name="db_update_failed_incompatible">Baza danych nie jest kompatybilna z Twoją wersją aplikacji. Proszę, zaktualizuj aplikację.</string>
     <string name="action_rate_app">⭐️ Oceń</string>
-    <string name="edit_song_open_in_editor">📑 Otwórz w edytorze</string>
     <string name="edit_song_copy">Kopiuj</string>
     <string name="edit_song_paste">Wklej</string>
     <string name="edit_song_detect_chords">Wykryj akordy</string>
@@ -173,7 +170,7 @@
     <string name="paste_empty">Brak tekstu do wklejenia</string>
     <string name="selected_text_copied">Zaznaczenie skopiowane: %s</string>
     <string name="no_text_selected">Brak zaznaczenia</string>
-    <string name="edit_song_chords_notation">Notacja akordów:</string>
+    <string name="edit_song_chords_notation">Notacja akordów</string>
     <string name="edit_song_undo">Cofnij</string>
     <string name="chords_editor_reformat_trim">Uporządkuj</string>
     <string name="chords_editor_move_chords_to_right">Przesuń akordy z góry na koniec linii</string>
@@ -235,11 +232,11 @@
     <string name="publish_song_title">Opublikuj piosenkę</string>
     <string name="publish_song_description">Możesz tu opublikować własne opracowanie piosenki, aby udostępnić ją pozostałym użytkownikom aplikacji. Najpierw musi jednak zostać zatwierdzona. Będę bardzo wdzięczny za Twój wkład w rozwój aplikacji.</string>
     <string name="publish_song_title_field">Tytuł piosenki</string>
-    <string name="publish_song_artist_field">Nazwa artysty / Kategoria</string>
+    <string name="publish_song_artist_field">Wykonawca</string>
     <string name="publish_song_content_field">Piosenka z akordami</string>
-    <string name="missing_song_description">Jeśli w aplikcaji brakuje jakiejś piosenki, tutaj możesz zaproponować dodanie jej, aby zasygnalizować zapotrzebowanie na nią. Pamiętaj, że piosenki można również dodawać wraz z opracowanymi akordami (używając opcji publikowania własnych piosenek). Nazwę piosenki napisz w postaci \"Artysta - Tytuł\"</string>
-    <string name="missing_song_titles">Artysta - Tytuł</string>
-    <string name="missing_song_title_invalid_format">Niepoprawny format. Spróbuj: \"Artysta - Tytuł\"</string>
+    <string name="missing_song_description">Jeśli w aplikcaji brakuje jakiejś piosenki, tutaj możesz zaproponować dodanie jej, aby zasygnalizować zapotrzebowanie na nią. Pamiętaj, że piosenki można również dodawać wraz z opracowanymi akordami (używając opcji publikowania własnych piosenek). Nazwę piosenki napisz w postaci \"Wykonawca - Tytuł\"</string>
+    <string name="missing_song_titles">Wykonawca - Tytuł</string>
+    <string name="missing_song_title_invalid_format">Niepoprawny format. Spróbuj: \"Wykonawca - Tytuł\"</string>
     <string name="dialog_warning">Ostrzeżenie</string>
     <string name="publish_song_no_change">Ta piosenka jest już opublikowana. Nie dokonałeś żadnych zmian w stosunku do oryginalnej piosenki. Zmodyfikuj swoją piosenkę, jeśli chcesz wysłać poprawioną wersję.</string>
     <string name="antechamber_new_song_sent">Piosenka została wysłana.</string>
@@ -427,10 +424,10 @@
     <string name="settings_custom_songs_ordering">Porządek listy moich piosenek</string>
     <string name="song_list_ordering">Porządek piosenek</string>
     <string name="song_sorting_by_title">Sortuj wg tytułu</string>
-    <string name="song_sorting_by_artist">Sortuj wg artysty (kategorii)</string>
+    <string name="song_sorting_by_artist">Sortuj wg wykonawcy</string>
     <string name="song_sorting_by_latest">Sortuj od najnowszych</string>
     <string name="song_sorting_by_oldest">Sortuj od najstarszych</string>
-    <string name="song_sorting_group_categories">Grupuj wg artysty</string>
+    <string name="song_sorting_group_categories">Grupuj wg wykonawcy</string>
     <string name="action_create_new_custom_song">➕ Nowa piosenka</string>
     <string name="settings_songLyricsSearch">Wyszukiwanie po fragmencie tekstu</string>
     <string name="settings_songLyricsSearch_hint">Szukaj piosenek zawierających słowa tekstu (wolniejsze)</string>

@@ -167,14 +167,10 @@ class MobilePlScreenshotMaker {
         onView(isRoot()).perform(waitFor(200))
         onView(withText(R.string.song_copied_edit_it)).perform(click())
         // Open editor
-        onView(withId(R.id.songContentEdit)).check(matches(isDisplayed()))
-        onView(withId(R.id.songContentEdit)).perform(scrollTo(), click())
+        onView(withId(R.id.compose_view)).check(matches(isDisplayed()))
+        onView(withId(R.id.compose_view)).perform(scrollTo(), click())
         onView(isRoot()).perform(waitFor(100))
-        onView(withText(R.string.edit_song_detect_chords)).perform(scrollTo())
-        onView(withId(R.id.songContentEdit)).perform(pressKey(KeyEvent.KEYCODE_PAGE_UP))
-        onView(withId(R.id.songContentEdit)).perform(pressKey(KeyEvent.KEYCODE_PAGE_UP))
-        onView(withId(R.id.songContentEdit)).perform(pressKey(KeyEvent.KEYCODE_PAGE_UP))
-        onView(withId(R.id.songContentEdit)).perform(pressKey(KeyEvent.KEYCODE_PAGE_UP))
+        onView(withId(R.id.compose_view)).perform(pressKey(KeyEvent.KEYCODE_PAGE_UP))
 
         onView(isRoot()).perform(waitFor(100))
 

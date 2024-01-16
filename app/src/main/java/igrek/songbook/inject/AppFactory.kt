@@ -24,13 +24,12 @@ import igrek.songbook.chords.diagram.ChordDiagramsService
 import igrek.songbook.chords.loader.LyricsLoader
 import igrek.songbook.custom.CustomSongService
 import igrek.songbook.custom.CustomSongsListLayoutController
-import igrek.songbook.custom.EditSongLayoutController
+import igrek.songbook.editor.SongEditorLayoutController
 import igrek.songbook.custom.ExportFileChooser
 import igrek.songbook.custom.ImportFileChooser
 import igrek.songbook.custom.SongImportFileChooser
 import igrek.songbook.custom.share.ShareSongService
 import igrek.songbook.custom.sync.EditorSessionService
-import igrek.songbook.editor.ChordsEditorLayoutController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.UiResourceService
 import igrek.songbook.info.analytics.CrashlyticsLogger
@@ -146,7 +145,7 @@ class AppFactory(
     val exportFileChooser = SingletonInject { ExportFileChooser() }
     val okHttpClient = SingletonInject { OkHttpClient() }
     val customSongService = SingletonInject { CustomSongService() }
-    val editSongLayoutController = SingletonInject { EditSongLayoutController() }
+    val songEditorLayoutController = SingletonInject { SongEditorLayoutController() }
     val songsUpdater = SingletonInject { SongsUpdater() }
     val randomSongOpener = SingletonInject { RandomSongOpener() }
     val appLanguageService = SingletonInject { AppLanguageService() }
@@ -157,7 +156,6 @@ class AppFactory(
     val lyricsThemeService = SingletonInject { LyricsThemeService() }
     val customSongsListLayoutController = SingletonInject { CustomSongsListLayoutController() }
     val songContextMenuBuilder = SingletonInject { SongContextMenuBuilder() }
-    val chordsEditorLayoutController = SingletonInject { ChordsEditorLayoutController() }
     val contextMenuBuilder = SingletonInject { ContextMenuBuilder() }
     val userDataDao = SingletonInject { UserDataDao() }
     val playlistLayoutController = SingletonInject { PlaylistLayoutController() }

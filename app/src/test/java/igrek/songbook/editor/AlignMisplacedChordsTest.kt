@@ -14,7 +14,7 @@ class AlignMisplacedChordsTest {
 
     private val transformer = ChordsEditorTransformer(
         history = Mockito.mock(LyricsEditorHistory::class.java),
-        chordsNotation = ChordsNotation.GERMAN,
+        chordsNotationProvider = { ChordsNotation.GERMAN },
         textEditor = textEditor,
         uiInfoService = SingletonInject { UiInfoServiceMock() },
         clipboardManager = SingletonInject { ClipboardManagerMock() },

@@ -13,6 +13,7 @@ import com.google.common.io.CharStreams
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityResultDispatcher
 import igrek.songbook.activity.AppInitializer
+import igrek.songbook.editor.SongEditorLayoutController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.info.errorcheck.LocalizedError
 import igrek.songbook.info.errorcheck.UiErrorHandler
@@ -33,13 +34,13 @@ import java.nio.charset.Charset
 class SongImportFileChooser(
     activity: LazyInject<Activity> = appFactory.activity,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
-    editSongLayoutController: LazyInject<EditSongLayoutController> = appFactory.editSongLayoutController,
+    songEditorLayoutController: LazyInject<SongEditorLayoutController> = appFactory.songEditorLayoutController,
     activityResultDispatcher: LazyInject<ActivityResultDispatcher> = appFactory.activityResultDispatcher,
     appInitializer: LazyInject<AppInitializer> = appFactory.appInitializer,
 ) {
     private val activity by LazyExtractor(activity)
     private val uiInfoService by LazyExtractor(uiInfoService)
-    private val editSongLayoutController by LazyExtractor(editSongLayoutController)
+    private val editSongLayoutController by LazyExtractor(songEditorLayoutController)
     private val activityResultDispatcher by LazyExtractor(activityResultDispatcher)
     private val appInitializer by LazyExtractor(appInitializer)
 

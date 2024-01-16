@@ -1,6 +1,7 @@
 package igrek.songbook.custom
 
 import igrek.songbook.R
+import igrek.songbook.editor.SongEditorLayoutController
 import igrek.songbook.info.UiInfoService
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
@@ -19,23 +20,23 @@ class CustomSongService(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
     layoutController: LazyInject<LayoutController> = appFactory.layoutController,
-    editSongLayoutController: LazyInject<EditSongLayoutController> = appFactory.editSongLayoutController,
+    songEditorLayoutController: LazyInject<SongEditorLayoutController> = appFactory.songEditorLayoutController,
     exportFileChooser: LazyInject<ExportFileChooser> = appFactory.exportFileChooser,
 ) {
     private val uiInfoService by LazyExtractor(uiInfoService)
     private val songsRepository by LazyExtractor(songsRepository)
     private val layoutController by LazyExtractor(layoutController)
-    private val editSongLayoutController by LazyExtractor(editSongLayoutController)
+    private val editSongLayoutController by LazyExtractor(songEditorLayoutController)
     private val exportFileChooser by LazyExtractor(exportFileChooser)
 
     fun showAddSongScreen() {
         editSongLayoutController.setCurrentSong(null)
-        layoutController.showLayout(EditSongLayoutController::class)
+        layoutController.showLayout(SongEditorLayoutController::class)
     }
 
     fun showEditSongScreen(song: Song) {
         editSongLayoutController.setCurrentSong(song)
-        layoutController.showLayout(EditSongLayoutController::class)
+        layoutController.showLayout(SongEditorLayoutController::class)
     }
 
     fun exportSong(song: Song) {

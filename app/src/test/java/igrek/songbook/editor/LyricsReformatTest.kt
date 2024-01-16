@@ -11,11 +11,11 @@ import org.mockito.Mockito
 class LyricsReformatTest {
 
     private val transformer = ChordsEditorTransformer(
-            history = Mockito.mock(LyricsEditorHistory::class.java),
-            chordsNotation = ChordsNotation.GERMAN,
-            textEditor = EmptyTextEditor(),
-            uiInfoService = SingletonInject { Mockito.mock(UiInfoService::class.java) },
-            clipboardManager = SingletonInject { ClipboardManagerMock() },
+        history = Mockito.mock(LyricsEditorHistory::class.java),
+        chordsNotationProvider = { ChordsNotation.GERMAN },
+        textEditor = EmptyTextEditor(),
+        uiInfoService = SingletonInject { Mockito.mock(UiInfoService::class.java) },
+        clipboardManager = SingletonInject { ClipboardManagerMock() },
     )
 
     @Test

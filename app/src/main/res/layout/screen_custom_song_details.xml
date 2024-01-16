@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:orientation="vertical">
@@ -112,118 +111,12 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/compose_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:gravity="bottom"
-                android:text="@string/edit_song_title_label"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/songTitleEdit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="#07ffffff"
-                android:gravity="center_vertical"
-                android:hint="@string/edit_song_title_hint"
-                android:inputType="text"
-                android:padding="8dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:gravity="bottom"
-                android:text="@string/edit_song_category_name_label"
-                android:textSize="18sp" />
-
-            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:id="@+id/customCategoryNameEdit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="#07ffffff"
-                android:gravity="center_vertical"
-                android:hint="@string/edit_song_category_name_hint"
-                android:inputType="text"
-                android:padding="8dp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:gravity="bottom"
-                android:text="@string/edit_song_chords_notation"
-                android:textSize="18sp" />
-
-            <Spinner
-                android:id="@+id/songChordNotationSpinner"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:focusable="true"
-                android:focusableInTouchMode="false" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp">
-
-                <TextView
-                    android:id="@+id/editChordsLyricsInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_gravity="start|bottom"
-                    android:gravity="bottom"
-                    android:text="@string/edit_song_content_label"
-                    android:textSize="18sp"
-                    android:layout_toStartOf="@+id/tooltipEditChordsLyricsInfo" />
-
-                <ImageButton
-                    android:id="@+id/tooltipEditChordsLyricsInfo"
-                    android:layout_width="30dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="end|center_vertical"
-                    android:layout_centerVertical="true"
-                    android:adjustViewBounds="true"
-                    android:background="?android:selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:focusableInTouchMode="false"
-                    android:padding="4dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/help"
-                    android:layout_alignParentEnd="true" />
-
-            </RelativeLayout>
-
-            <EditText
-                android:id="@+id/songContentEdit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="#07ffffff"
-                android:gravity="top"
-                android:hint="@string/import_song_content_hint"
-                android:minHeight="240dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="false"
-                android:padding="8dp"
-                android:inputType="none"
-                android:text="" />
-
-        </LinearLayout>
+            android:layout_height="match_parent" />
     </ScrollView>
 
 </LinearLayout>

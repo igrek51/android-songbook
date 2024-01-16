@@ -33,6 +33,7 @@
             android:name=".activity.SplashScreenActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|navigation"
             android:resizeableActivity="true"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -48,6 +49,7 @@
             android:name=".activity.TvSplashScreenActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|navigation"
             android:resizeableActivity="true"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true"
             android:theme="@style/SplashTheme">
             <intent-filter>
@@ -60,6 +62,7 @@
             android:name=".activity.SharedSongOpenActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|navigation"
             android:resizeableActivity="true"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true"
             android:theme="@style/SplashTheme">
             <intent-filter android:autoVerify="false">
@@ -77,6 +80,7 @@
             android:name=".activity.MainActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|navigation"
             android:resizeableActivity="true"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true"
             android:theme="@style/AppTheme"
             android:launchMode="singleTask"
@@ -86,6 +90,7 @@
             android:name=".activity.TvActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|navigation"
             android:resizeableActivity="true"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true"
             android:theme="@style/AppTheme"
             android:launchMode="singleTask"
@@ -95,6 +100,7 @@
             android:name=".activity.KickstartActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|screenSize|smallestScreenSize|screenLayout|navigation"
             android:resizeableActivity="true"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true"
             android:theme="@style/AppTheme"
             android:launchMode="singleTask"

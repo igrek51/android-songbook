@@ -18,8 +18,7 @@ import igrek.songbook.billing.BillingLayoutController
 import igrek.songbook.cast.SongCastLobbyLayout
 import igrek.songbook.cast.SongCastMenuLayout
 import igrek.songbook.custom.CustomSongsListLayoutController
-import igrek.songbook.custom.EditSongLayoutController
-import igrek.songbook.editor.ChordsEditorLayoutController
+import igrek.songbook.editor.SongEditorLayoutController
 import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.info.logview.LogsLayoutController
@@ -68,8 +67,7 @@ class LayoutController {
         SongPreviewLayoutController::class to appFactory.songPreviewLayoutController,
         ContactLayoutController::class to appFactory.contactLayoutController,
         SettingsLayoutController::class to appFactory.settingsLayoutController,
-        EditSongLayoutController::class to appFactory.editSongLayoutController,
-        ChordsEditorLayoutController::class to appFactory.chordsEditorLayoutController,
+        SongEditorLayoutController::class to appFactory.songEditorLayoutController,
         CustomSongsListLayoutController::class to appFactory.customSongsListLayoutController,
         FavouritesLayoutController::class to appFactory.favouritesLayoutController,
         PlaylistLayoutController::class to appFactory.playlistLayoutController,

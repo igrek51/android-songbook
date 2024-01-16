@@ -1,6 +1,8 @@
 package igrek.songbook.editor
 
-import android.widget.EditText
+import androidx.compose.runtime.MutableState
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
 
 interface ITextEditor {
     fun setText(text: String)
@@ -9,23 +11,32 @@ interface ITextEditor {
     fun getSelection(): Pair<Int, Int>
 }
 
-class EditTextTextEditor(private val component: EditText) : ITextEditor {
+class EditTextTextEditor(private val component: MutableState<TextFieldValue>) : ITextEditor {
 
     override fun setText(text: String) {
-        component.setText(text)
+        val formerSelection = component.value.selection
+        val newSelection = when {
+            formerSelection.min <= text.length && formerSelection.max <= text.length -> formerSelection
+            else -> TextRange(start = text.length, end = text.length) // cursor at the end
+        }
+        component.value = TextFieldValue(
+            text = text,
+            selection = newSelection
+        )
     }
 
     override fun getText(): String {
-        return component.text.toString()
+        return component.value.text
     }
 
     override fun setSelection(start: Int, end: Int) {
-        component.setSelection(start, end)
-        component.requestFocus()
+        component.value = component.value.copy(selection = TextRange(start, end))
     }
 
     override fun getSelection(): Pair<Int, Int> {
-        return component.selectionStart to component.selectionEnd
+        val min = component.value.selection.min
+        val max = component.value.selection.max
+        return min to max
     }
 
 }

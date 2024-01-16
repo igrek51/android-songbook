@@ -20,8 +20,8 @@ import igrek.songbook.system.ClipboardManager
 
 class ChordsEditorTransformer(
     private var history: LyricsEditorHistory,
-    private val chordsNotation: ChordsNotation,
     private val textEditor: ITextEditor,
+    private val chordsNotationProvider: () -> ChordsNotation,
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
     clipboardManager: LazyInject<ClipboardManager> = appFactory.clipboardManager,
     settingsState: LazyInject<SettingsState> = appFactory.settingsState,
@@ -31,6 +31,9 @@ class ChordsEditorTransformer(
     private val preferencesState by LazyExtractor(settingsState)
 
     private var clipboard: String? = null
+
+    private val chordsNotation: ChordsNotation
+        get() = chordsNotationProvider()
 
     private fun transformLyrics(transformer: (String) -> String) {
         textEditor.getText()

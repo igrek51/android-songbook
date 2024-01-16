@@ -8,12 +8,13 @@ import android.widget.ImageButton
 import androidx.core.view.isVisible
 import com.google.android.material.navigation.NavigationView
 import igrek.songbook.R
-import igrek.songbook.cast.SongCastMenuLayout
+import igrek.songbook.custom.CustomSongsListLayoutController
 import igrek.songbook.info.errorcheck.safeExecute
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.MainLayout
+import igrek.songbook.songselection.listview.items.SongListItem
 import igrek.songbook.util.waitUntil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -25,12 +26,13 @@ import kotlin.reflect.KClass
 class KickstartActivity : MainActivity() {
 
     private suspend fun bootstrapUI() {
-        openNavItem(R.id.nav_song_cast)
-        waitForLayout(SongCastMenuLayout::class)
+        openNavItem(R.id.nav_custom_songs)
+        waitForLayout(CustomSongsListLayoutController::class)
         safeExecute {
-            appFactory.songCastMenuLayout.get().restoreRoom()
+            val item = appFactory.customSongsListLayoutController.get().state.itemsContainer.items[0]
+            val song = (item as SongListItem).song
+            appFactory.customSongService.get().showEditSongScreen(song)
         }
-//        appFactory.commanderService.get().commandAttempt("logs")
     }
 
     private val logger: Logger = LoggerFactory.logger

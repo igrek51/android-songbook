@@ -91,17 +91,16 @@
     <string name="scroll_at_the_beginning_already">Back to the beginning.</string>
     <string name="file_manager_not_found">Please install a File Manager.</string>
     <string name="selected_file_is_too_big">Selected file is too big. Is it really a TEXT file?</string>
-    <string name="editing_custom_song">Custom song</string>
+    <string name="editing_custom_song">Song editor</string>
     <string name="custom_song_editor">Song editor</string>
-    <string name="edit_song_title_label">Song Title:</string>
-    <string name="edit_song_title_hint">Title…</string>
-    <string name="edit_song_content_label">Lyrics and [chords]:</string>
-    <string name="import_song_content_hint">
+    <string name="edit_song_title_label">Song Title</string>
+    <string name="edit_song_content_label">Lyrics and chords</string>
+    <string name="edit_song_content_label_hint">Enter lyrics and chords</string>
+    <string name="edit_song_content_hint">
         Song lyrics with [chords] in the same line
         \nCheck out help (?) for more details.
         \n…[C]Example [G#]text [C G# A7 F#maj7]…
         \n…[C]So, so you think you can [D]tell…
-        \n…Smoke on the water [C G#]…
         \n…Never gonna [G]give you [A]up…
     </string>
     <string name="import_content_from_file">📂 Import from file\n  (TXT / PDF / Drive / Google Docs)</string>
@@ -127,8 +126,7 @@
     <string name="update_is_available">New songs update is available.</string>
     <string name="action_update">Update</string>
     <string name="edit_song_add_chord">[Mark]</string>
-    <string name="edit_song_category_name_label">Artist / category:</string>
-    <string name="edit_song_category_name_hint">Artist or category name</string>
+    <string name="edit_song_category_name_label">Artist</string>
     <string name="contact_subject_hint">Subject</string>
     <string name="settings_language">Application language</string>
     <string name="language_english" translatable="false">English</string>
@@ -171,7 +169,6 @@
     <string name="settings_general_section">General</string>
     <string name="db_update_failed_incompatible">Database is not compatible with your application version. Please udpate an application.</string>
     <string name="action_rate_app">⭐️ Rate App</string>
-    <string name="edit_song_open_in_editor">📑 Open in Song Editor</string>
     <string name="edit_song_copy">Copy</string>
     <string name="edit_song_paste">Paste</string>
     <string name="edit_song_detect_chords">Detect chords</string>
@@ -179,7 +176,7 @@
     <string name="paste_empty">No text to paste</string>
     <string name="selected_text_copied">Selection copied: %s</string>
     <string name="no_text_selected">No text selected</string>
-    <string name="edit_song_chords_notation">Chords notation:</string>
+    <string name="edit_song_chords_notation">Chords notation</string>
     <string name="edit_song_undo">Undo</string>
     <string name="chords_editor_reformat_trim">Reformat</string>
     <string name="chords_editor_move_chords_to_right">Move chords from upper line to the right</string>
