@@ -2,7 +2,6 @@ package igrek.songbook.editor
 
 import android.view.View
 import android.widget.ImageButton
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.ScrollState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -28,10 +27,8 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
-import igrek.songbook.layout.LayoutController
 import igrek.songbook.layout.contextmenu.ContextMenuBuilder
 import igrek.songbook.layout.dialog.ConfirmDialogBuilder
-import igrek.songbook.layout.navigation.NavigationMenuController
 import igrek.songbook.persistence.general.model.Song
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.settings.chordsnotation.ChordsNotation
@@ -53,10 +50,7 @@ class SongEditorLayoutController(
     adminService: LazyInject<AdminService> = appFactory.adminService,
     webviewLayoutController: LazyInject<WebviewLayoutController> = appFactory.webviewLayoutController,
     songOpener: LazyInject<SongOpener> = appFactory.songOpener,
-    layoutController: LazyInject<LayoutController> = appFactory.layoutController,
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
-    appCompatActivity: LazyInject<AppCompatActivity> = appFactory.appCompatActivity,
-    navigationMenuController: LazyInject<NavigationMenuController> = appFactory.navigationMenuController,
 ) : InflatedLayout(
     _layoutResourceId = R.layout.screen_custom_song_details
 ) {
@@ -72,7 +66,6 @@ class SongEditorLayoutController(
     private val webviewLayoutController by LazyExtractor(webviewLayoutController)
     private val songOpener by LazyExtractor(songOpener)
     private val uiResourceService by LazyExtractor(uiResourceService)
-    private val navigationMenuController by LazyExtractor(navigationMenuController)
 
     private var currentSong: Song? = null
     private var allCategoryNames: List<String> = emptyList()
