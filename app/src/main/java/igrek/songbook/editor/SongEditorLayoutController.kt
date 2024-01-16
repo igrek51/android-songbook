@@ -1,5 +1,7 @@
 package igrek.songbook.editor
 
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.ImageButton
 import androidx.compose.foundation.ScrollState
@@ -37,6 +39,8 @@ import igrek.songbook.settings.preferences.SettingsState
 import igrek.songbook.songpreview.SongOpener
 import igrek.songbook.system.SoftKeyboardService
 import igrek.songbook.system.locale.StringSimplifier
+import igrek.songbook.util.mainScope
+import kotlinx.coroutines.launch
 
 class SongEditorLayoutController(
     uiInfoService: LazyInject<UiInfoService> = appFactory.uiInfoService,
@@ -100,7 +104,7 @@ class SongEditorLayoutController(
         }
 
         layout.findViewById<ImageButton>(R.id.saveSongButton).setOnClickListener(SafeClickListener {
-            saveSong()
+            saveSongAndExit()
         })
 
         layout.findViewById<ImageButton>(R.id.moreActionsButton)
@@ -117,8 +121,6 @@ class SongEditorLayoutController(
                 }
             }
         }
-
-        history.reset(textEditor)
     }
 
     fun openUrlChordFormat() {
@@ -148,7 +150,7 @@ class SongEditorLayoutController(
     private fun showMoreActions() {
         val actions = mutableListOf(
             ContextMenuBuilder.Action(R.string.edit_song_save) {
-                saveSong()
+                saveSongAndExit()
             },
             ContextMenuBuilder.Action(R.string.import_content_from_file) {
                 importContentFromFile()
@@ -188,9 +190,18 @@ class SongEditorLayoutController(
         setLyricsContentText(song?.content ?: "")
         state.chordsNotationExpanded.value = false
         state.artistAutocompleteExpanded.value = false
+        history.reset(textEditor)
     }
 
-    private fun saveSong() {
+    private fun saveSongAndExit(check: Boolean = true) {
+        val err = editorTransformer.quietValidate()
+        if (check && err != null) {
+            val message = uiResourceService.resString(R.string.editor_onexit_validation_failed, err)
+            return ConfirmDialogBuilder().confirmAction(message) {
+                saveSongAndExit(check = false)
+            }
+        }
+
         val songTitle = state.songTitle.ifBlank {
             return uiInfoService.showInfo(R.string.fill_in_all_fields)
         }
@@ -236,20 +247,11 @@ class SongEditorLayoutController(
                 titleResId = R.string.confirm_unsaved_changes_title,
                 messageResId = R.string.confirm_discard_custom_song_changes,
                 positiveButton = R.string.confirm_unsaved_save,
-                positiveAction = { saveSong() },
+                positiveAction = { saveSongAndExit() },
                 negativeButton = R.string.confirm_discard_changes,
                 negativeAction = { layoutController.showPreviousLayoutOrQuit() },
                 neutralButton = R.string.action_cancel,
                 neutralAction = {})
-            return
-        }
-
-        val err = editorTransformer.quietValidate()
-        if (err != null) {
-            val message = uiResourceService.resString(R.string.editor_onexit_validation_failed, err)
-            ConfirmDialogBuilder().confirmAction(message) {
-                layoutController.showPreviousLayoutOrQuit()
-            }
             return
         }
 
@@ -286,6 +288,7 @@ class SongEditorLayoutController(
         notation?.let { notationN ->
             state.chordsNotationId = notationN.id
         }
+        history.reset(textEditor)
     }
 
     fun showTransformMenu() {
@@ -361,6 +364,7 @@ class SongEditorLayoutController(
         history.save(textEditor)
         action.invoke()
         history.restoreSelectionFromHistory(textEditor)
+        history.save(textEditor)
     }
 
     private fun setLyricsContentText(text: String) {
@@ -424,9 +428,32 @@ class SongEditorLayoutController(
     }
 
     fun undoChange() {
-        if (history.isEmpty())
-            return uiInfoService.showToast(R.string.no_undo_changes)
-        history.revertLast(textEditor)
+        val historyReverted = history.revertLast(textEditor)
+        if (!historyReverted)
+            uiInfoService.showInfo(R.string.no_undo_changes)
+    }
+
+
+    fun validateChords() {
+        val errorMessage = editorTransformer.quietValidate()
+        if (errorMessage == null) {
+            uiInfoService.showInfo(R.string.chords_are_valid)
+        } else {
+            val placeholder = uiInfoService.resString(R.string.editor_chords_invalid)
+            uiInfoService.showInfoAction(
+                placeholder.format(errorMessage),
+                actionResId = R.string.action_reformat,
+                action = {
+                    Handler(Looper.getMainLooper()).post {
+                        mainScope.launch {
+                            wrapHistoryContext {
+                                editorTransformer.reformatAndTrimEditor()
+                            }
+                        }
+                    }
+                },
+            )
+        }
     }
 
     override fun onLayoutExit() {

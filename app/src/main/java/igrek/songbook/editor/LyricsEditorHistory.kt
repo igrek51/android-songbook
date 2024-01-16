@@ -30,18 +30,27 @@ open class LyricsEditorHistory {
         }
     }
 
-    fun revertLast(textEditor: ITextEditor) {
+    fun revertLast(textEditor: ITextEditor): Boolean {
+        if (history.isEmpty())
+            return false
+
         val last = history.last()
-        val text = last.text
-        var selStart = last.startSelection
-        var selEnd = last.endSelection
-        textEditor.setText(last.text)
-        if (selStart > text.length)
-            selStart = text.length
-        if (selEnd > text.length)
-            selEnd = text.length
-        textEditor.setSelection(selStart, selEnd)
-        history.removeAt(history.lastIndex)
+
+        // revert to last saved state without dropping it
+        if (textEditor.getText() != last.text) {
+            textEditor.setText(last.text)
+            textEditor.setSelection(last.startSelection, last.endSelection)
+            return true
+        }
+
+        if (history.size <= 1)
+            return false
+
+        history.dropLast(1)
+        val veryLast = history.last()
+        textEditor.setText(veryLast.text)
+        textEditor.setSelection(veryLast.startSelection, veryLast.endSelection)
+        return true
     }
 
     private fun peekLastSelection(): Pair<Int, Int>? {

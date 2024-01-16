@@ -115,6 +115,22 @@ open class UiInfoService(
         )
     }
 
+    fun showInfoAction(
+        info: String,
+        actionResId: Int,
+        indefinite: Boolean = false,
+        durationMillis: Int = 0,
+        action: () -> Unit,
+    ) {
+        showSnackbar(
+            info = info,
+            actionResId = actionResId,
+            action = action,
+            indefinite = indefinite,
+            durationMillis = durationMillis,
+        )
+    }
+
     fun isSnackbarShown(): Boolean {
         return lastSnakbar?.isShown ?: false
     }

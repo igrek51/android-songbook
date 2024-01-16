@@ -187,15 +187,18 @@ private fun ContentLabel(controller: SongEditorLayoutController) {
 private fun EditorToolbar(controller: SongEditorLayoutController) {
     val scrollState = rememberScrollState()
     val editorTransformer = controller.editorTransformer
+    val state = controller.state
     Row (modifier = Modifier.horizontalScroll(scrollState)) {
         FlatButton(R.string.edit_song_transform_chords) {
             controller.showTransformMenu()
         }
         FlatButton(R.string.chords_editor_reformat_trim) {
-            controller.wrapHistoryContext { editorTransformer.reformatAndTrimEditor() }
+            controller.wrapHistoryContext {
+                editorTransformer.reformatAndTrimEditor()
+            }
         }
         FlatButton(R.string.edit_song_validate_chords) {
-            editorTransformer.validateChords()
+            controller.validateChords()
         }
         FlatButton(R.string.edit_song_detect_chords) {
             controller.wrapHistoryContext {
@@ -204,30 +207,39 @@ private fun EditorToolbar(controller: SongEditorLayoutController) {
         }
         FlatButton(R.string.chords_editor_select_line) {
             editorTransformer.selectNextLine()
+            state.contentFocusRequester.requestFocus()
         }
         FlatButton(R.string.edit_song_copy) {
             editorTransformer.onCopyClick()
         }
         FlatButton(R.string.edit_song_paste) {
             editorTransformer.onPasteClick()
+            state.contentFocusRequester.requestFocus()
         }
         FlatButton(R.string.chords_editor_duplicate) {
-            editorTransformer.duplicateSelection()
+            controller.wrapHistoryContext {
+                editorTransformer.duplicateSelection()
+            }
+            state.contentFocusRequester.requestFocus()
         }
         FlatButton(R.string.edit_song_undo) {
             controller.undoChange()
         }
         FlatButton(R.string.edit_song_add_chord_splitter) {
             editorTransformer.addChordSplitter()
+            state.contentFocusRequester.requestFocus()
         }
         FlatButton(R.string.edit_song_add_chord) {
             editorTransformer.onWrapChordClick()
+            state.contentFocusRequester.requestFocus()
         }
         FlatButton(R.string.left_arrow) {
             controller.quickCursorMove(-1)
+            state.contentFocusRequester.requestFocus()
         }
         FlatButton(R.string.right_arrow) {
             controller.quickCursorMove(+1)
+            state.contentFocusRequester.requestFocus()
         }
     }
 }
@@ -278,9 +290,9 @@ private fun FlatButton(
             }
         },
         modifier = modifier
-            .padding(horizontal = 1.dp, vertical = 1.dp)
+            .padding(horizontal = 2.dp, vertical = 1.dp)
             .heightIn(min = 40.dp),
-        contentPadding = PaddingValues(horizontal = 4.dp, vertical = 8.dp),
+        contentPadding = PaddingValues(horizontal = 6.dp, vertical = 8.dp),
         shape = RoundedCornerShape(20),
         elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.0.dp),
         colors = ButtonDefaults.buttonColors(

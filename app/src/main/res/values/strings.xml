@@ -179,6 +179,7 @@
     <string name="edit_song_chords_notation">Chords notation</string>
     <string name="edit_song_undo">Undo</string>
     <string name="chords_editor_reformat_trim">Reformat</string>
+    <string name="action_reformat">Reformat</string>
     <string name="chords_editor_move_chords_to_right">Move chords from upper line to the right</string>
     <string name="chords_editor_convert_from_notation">Convert from other chords notation</string>
     <string name="chords_editor_fis_to_sharp"><![CDATA[Replace Fis -> F#]]></string>

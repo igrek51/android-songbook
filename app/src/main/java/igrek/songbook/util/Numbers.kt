@@ -54,3 +54,19 @@ fun roundDecimal3(value: Float): String {
 fun roundDecimal1(value: Float): String {
     return decimalFormat1.format(value.toDouble())
 }
+
+fun Int.clampMin(min: Int): Int {
+    return if (this < min) min else this
+}
+
+fun Int.clampMax(max: Int): Int {
+    return if (this > max) max else this
+}
+
+fun Int.clamp(min: Int, max: Int): Int {
+    if (this < min)
+        return min
+    if (this > max)
+        return max
+    return this
+}

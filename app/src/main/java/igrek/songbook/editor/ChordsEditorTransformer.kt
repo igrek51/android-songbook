@@ -129,6 +129,7 @@ class ChordsEditorTransformer(
         }
 
         setContentWithSelection(edited, selStart, selEnd)
+        history.save(textEditor)
     }
 
     private fun validateChordsBrackets(text: String) {
@@ -188,16 +189,6 @@ class ChordsEditorTransformer(
     }
 
 
-    fun validateChords() {
-        val errorMessage = quietValidate()
-        if (errorMessage == null) {
-            uiInfoService.showToast(R.string.chords_are_valid)
-        } else {
-            val placeholder = uiInfoService.resString(R.string.editor_chords_invalid)
-            uiInfoService.showToast(placeholder.format(errorMessage))
-        }
-    }
-
     fun quietValidate(): String? {
         val text = textEditor.getText()
         return try {
@@ -228,9 +219,9 @@ class ChordsEditorTransformer(
         clipboardManager.copyToSystemClipboard(selection)
 
         if (clipboard.isNullOrEmpty()) {
-            uiInfoService.showToast(R.string.no_text_selected)
+            uiInfoService.showInfo(R.string.no_text_selected)
         } else {
-            uiInfoService.showToast(
+            uiInfoService.showInfo(
                 uiInfoService.resString(R.string.selected_text_copied, clipboard)
             )
         }
@@ -242,8 +233,7 @@ class ChordsEditorTransformer(
         val systemClipboard = clipboardManager.getFromSystemClipboard()
         val toPaste = if (!systemClipboard.isNullOrEmpty()) systemClipboard else clipboard
         if (toPaste.isNullOrEmpty()) {
-            uiInfoService.showToast(R.string.paste_empty)
-            return
+            return uiInfoService.showInfo(R.string.paste_empty)
         }
 
         var edited = textEditor.getText()
@@ -256,6 +246,7 @@ class ChordsEditorTransformer(
         selStart = selEnd
 
         setContentWithSelection(edited, selStart, selEnd)
+        history.save(textEditor)
     }
 
     fun addChordSplitter() {
@@ -272,6 +263,7 @@ class ChordsEditorTransformer(
         } else {
             onAddSequenceClick("[")
         }
+        history.save(textEditor)
     }
 
 
@@ -282,9 +274,9 @@ class ChordsEditorTransformer(
         }
         val detectedChordsNum = chordsMarker.allMarkedChords.size
         if (detectedChordsNum == 0) {
-            uiInfoService.showToast(R.string.no_new_chords_detected)
+            uiInfoService.showInfo(R.string.no_new_chords_detected)
         } else {
-            uiInfoService.showToast(
+            uiInfoService.showInfo(
                 uiInfoService.resString(
                     R.string.new_chords_detected,
                     detectedChordsNum.toString(),
@@ -372,6 +364,7 @@ class ChordsEditorTransformer(
         transformLyrics { lyrics ->
             reformatAndTrim(reformatAndTrim(lyrics))
         }
+        uiInfoService.showInfo(R.string.chords_are_valid)
     }
 
     private fun reformatNeeded(): Boolean {
