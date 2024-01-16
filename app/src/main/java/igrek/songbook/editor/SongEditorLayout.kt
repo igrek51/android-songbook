@@ -94,7 +94,7 @@ private fun ArtistTextField(controller: SongEditorLayoutController) {
             properties = PopupProperties(
                 focusable = false,
                 dismissOnBackPress = true,
-                dismissOnClickOutside = true
+                dismissOnClickOutside = true,
             ),
             onDismissRequest = {
                 state.artistAutocompleteExpanded.value = false
@@ -199,9 +199,7 @@ private fun EditorToolbar(controller: SongEditorLayoutController) {
         }
         FlatButton(R.string.edit_song_detect_chords) {
             controller.wrapHistoryContext {
-                editorTransformer.detectChords(
-                    keepIndentation = true
-                )
+                editorTransformer.detectChords(keepIndentation = true)
             }
         }
         FlatButton(R.string.chords_editor_select_line) {
