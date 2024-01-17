@@ -109,6 +109,7 @@ class CustomSongsListLayoutController(
     private var searchFilterSubject: PublishSubject<String> = PublishSubject.create()
     private var composeView: ComposeView? = null
     private var subscriptions = mutableListOf<Disposable>()
+    private var lastAutoSyncTime: Long = 0
     val state = CustomSongsLayoutState()
 
     override fun showLayout(layout: View) {
@@ -232,7 +233,16 @@ class CustomSongsListLayoutController(
             }, UiErrorHandler::handleError)
         )
 
-        editorSessionService.autoSyncCustomSongs()
+        autoSyncCustomSongs()
+    }
+
+    private fun autoSyncCustomSongs() {
+        if (settingsState.keepCustomSongsInSync) {
+            if (System.currentTimeMillis() - lastAutoSyncTime >= 10_000) {
+                editorSessionService.autoSyncCustomSongs()
+                lastAutoSyncTime = System.currentTimeMillis()
+            }
+        }
     }
 
     private fun isFilterSet(): Boolean {

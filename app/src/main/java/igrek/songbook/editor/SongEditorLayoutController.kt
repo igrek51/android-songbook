@@ -215,6 +215,7 @@ class SongEditorLayoutController(
         val chordsNotation: ChordsNotation = ChordsNotation.parseById(state.chordsNotationId)
             ?: chordsNotationService.chordsNotation
         val content = state.lyricsContent.value.text
+        val hasChanges = hasUnsavedChanges()
         val currentSong = currentSong
         if (currentSong == null) { // create
             this.currentSong = customSongService.addCustomSong(
@@ -225,11 +226,13 @@ class SongEditorLayoutController(
                 currentSong, songTitle, customCategoryName, content, chordsNotation,
             )
         }
-        uiInfoService.showInfoAction(R.string.edit_song_has_been_saved, songTitle, actionResId = R.string.open_saved_song) {
+        uiInfoService.showInfoAction(R.string.edit_song_has_been_saved, songTitle,
+            actionResId = R.string.open_saved_song) {
             songOpener.openSongPreview(currentSong!!)
         }
 
-        editorSessionService.autoSyncCustomSongs()
+        if (hasChanges)
+            editorSessionService.autoSyncCustomSongs()
 
         layoutController.showPreviousLayoutOrQuit()
     }
@@ -271,6 +274,7 @@ class SongEditorLayoutController(
         val songTitle = state.songTitle
         val customCategoryName = state.artist
         val songContent = state.lyricsContent.value.text
+        val chordsNotationId = state.chordsNotationId
         val currentSong = currentSong
         if (currentSong == null) { // add
             if (songTitle.isNotEmpty()) return true
@@ -280,6 +284,7 @@ class SongEditorLayoutController(
             if (currentSong.title != songTitle) return true
             if (currentSong.customCategoryName.orEmpty() != customCategoryName) return true
             if (currentSong.content.orEmpty() != songContent) return true
+            if (currentSong.chordsNotation.id != chordsNotationId) return true
         }
         return false
     }
