@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.38.1] - 1914 - 2024-01-18
+### Fixed
+- Fix: already used item id on songs list.
+
 ## [1.38.0] - 1913 - 2024-01-18
 ### Added
 - In the song's details, you can look up the hash to check whether two songs differ or not.

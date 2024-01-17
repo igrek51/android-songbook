@@ -99,7 +99,7 @@ fun SongListComposable(
             userScrollEnabled = true,
         ) {
             itemsContainer.items.forEachIndexed { index: Int, item: AbstractListItem ->
-                item (key = item.id() ?: index) {
+                item (key = index) {
                     SongTreeItemComposable(itemsContainer, item, index, onItemClick, onItemMore, postButtonContent)
                 }
             }
