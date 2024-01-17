@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.38.0] - 1913 - 2024-01-18
+
+
 ## [1.37.3] - 1912 - 2023-11-24
 ### Changed
 - User interfaces has been revamped. In particular, songs list got modernized layouts.

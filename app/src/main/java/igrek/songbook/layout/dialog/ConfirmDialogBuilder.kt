@@ -16,7 +16,7 @@ class ConfirmDialogBuilder(
             titleResId = R.string.action_confirmation_title,
             message = message,
             negativeButton = R.string.action_cancel, negativeAction = {},
-            positiveButton = R.string.action_info_ok, positiveAction = action
+            positiveButton = R.string.action_info_ok, positiveAction = action,
         )
     }
 
@@ -25,7 +25,7 @@ class ConfirmDialogBuilder(
             titleResId = R.string.action_confirmation_title,
             messageResId = messageResId,
             negativeButton = R.string.action_cancel, negativeAction = {},
-            positiveButton = R.string.action_info_ok, positiveAction = action
+            positiveButton = R.string.action_info_ok, positiveAction = action,
         )
     }
 

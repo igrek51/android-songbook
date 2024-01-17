@@ -126,5 +126,6 @@ class SettingsState(
     var lastAppVersionCode: Long by SettingFieldDelegate.make("lastAppVersionCode", 0)
     var saveCustomSongsBackups: Boolean by SettingFieldDelegate.make("saveCustomSongsBackups", true)
     var swipeToRandomizeAgain: Boolean by SettingFieldDelegate.make("swipeToRandomizeAgain", true)
+    var keepCustomSongsInSync: Boolean by SettingFieldDelegate.make("keepCustomSongsInSync", false)
 
 }

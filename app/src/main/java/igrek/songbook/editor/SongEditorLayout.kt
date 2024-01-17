@@ -247,7 +247,7 @@ private fun EditorToolbar(controller: SongEditorLayoutController) {
 @Composable
 private fun ContentTextField(controller: SongEditorLayoutController) {
     val state = controller.state
-    val fontFamily = when (controller.preferencesState.chordsEditorFontTypeface) {
+    val fontFamily = when (controller.settingsState.chordsEditorFontTypeface) {
         FontTypeface.SANS_SERIF -> FontFamily.SansSerif
         FontTypeface.SERIF -> FontFamily.Serif
         FontTypeface.MONOSPACE -> FontFamily.Monospace

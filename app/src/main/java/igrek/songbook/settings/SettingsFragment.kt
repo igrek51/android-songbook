@@ -271,6 +271,11 @@ class SettingsFragment(
             onSave = { value: Boolean -> preferencesState.saveCustomSongsBackups = value },
         )
 
+        setupSwitchPreference("keepCustomSongsInSync",
+            onLoad = { preferencesState.keepCustomSongsInSync },
+            onSave = { value: Boolean -> preferencesState.keepCustomSongsInSync = value },
+        )
+
         setupSwitchPreference("syncBackupAutomatically",
             onLoad = { preferencesState.syncBackupAutomatically },
             onSave = { value: Boolean ->

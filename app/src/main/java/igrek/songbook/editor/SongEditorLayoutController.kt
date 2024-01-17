@@ -64,12 +64,13 @@ class SongEditorLayoutController(
     private val songImportFileChooser by LazyExtractor(songImportFileChooser)
     private val chordsNotationService by LazyExtractor(chordsNotationService)
     private val contextMenuBuilder by LazyExtractor(contextMenuBuilder)
-    val preferencesState by LazyExtractor(settingsState)
+    val settingsState by LazyExtractor(settingsState)
     private val songsRepository by LazyExtractor(songsRepository)
     private val adminService by LazyExtractor(adminService)
     private val webviewLayoutController by LazyExtractor(webviewLayoutController)
     private val songOpener by LazyExtractor(songOpener)
     private val uiResourceService by LazyExtractor(uiResourceService)
+    private val editorSessionService by LazyExtractor(appFactory.editorSessionService)
 
     private var currentSong: Song? = null
     private var allCategoryNames: List<String> = emptyList()
@@ -178,7 +179,7 @@ class SongEditorLayoutController(
         val songTitle = state.songTitle
         val artist = state.artist
         val songContent = state.lyricsContent.value.text
-        val notation = ChordsNotation.parseById(state.chordsNotationId) ?: preferencesState.chordsNotation
+        val notation = ChordsNotation.parseById(state.chordsNotationId) ?: settingsState.chordsNotation
         customSongService.exportSongContent(songContent, songTitle, artist, notation)
     }
 
@@ -186,7 +187,7 @@ class SongEditorLayoutController(
         currentSong = song
         state.songTitle = song?.title ?: ""
         state.artist = song?.customCategoryName ?: ""
-        state.chordsNotationId = song?.chordsNotation?.id ?: preferencesState.chordsNotation.id
+        state.chordsNotationId = song?.chordsNotation?.id ?: settingsState.chordsNotation.id
         setLyricsContentText(song?.content ?: "")
         state.chordsNotationExpanded.value = false
         state.artistAutocompleteExpanded.value = false
@@ -197,9 +198,14 @@ class SongEditorLayoutController(
         val err = editorTransformer.quietValidate()
         if (check && err != null) {
             val message = uiResourceService.resString(R.string.editor_onexit_validation_failed, err)
-            return ConfirmDialogBuilder().confirmAction(message) {
-                saveSongAndExit(check = false)
-            }
+            return uiInfoService.dialogThreeChoices(
+                titleResId = R.string.action_confirmation_title,
+                message = message,
+                negativeButton = R.string.action_cancel, negativeAction = {},
+                positiveButton = R.string.action_save, positiveAction = {
+                    saveSongAndExit(check = false)
+                },
+            )
         }
 
         val songTitle = state.songTitle.ifBlank {
@@ -219,9 +225,12 @@ class SongEditorLayoutController(
                 currentSong, songTitle, customCategoryName, content, chordsNotation,
             )
         }
-        uiInfoService.showInfoAction(R.string.edit_song_has_been_saved, actionResId = R.string.open_saved_song) {
+        uiInfoService.showInfoAction(R.string.edit_song_has_been_saved, songTitle, actionResId = R.string.open_saved_song) {
             songOpener.openSongPreview(currentSong!!)
         }
+
+        editorSessionService.autoSyncCustomSongs()
+
         layoutController.showPreviousLayoutOrQuit()
     }
 

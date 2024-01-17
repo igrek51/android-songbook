@@ -88,7 +88,7 @@ class CustomSongsListLayoutController(
     private val songImportFileChooser by LazyExtractor(songImportFileChooser)
     private val settingsEnumService by LazyExtractor(settingsEnumService)
     private val softKeyboardService by LazyExtractor(softKeyboardService)
-    private val preferencesState by LazyExtractor(settingsState)
+    private val settingsState by LazyExtractor(settingsState)
     private val editorSessionService by LazyExtractor(editorSessionService)
 
     private var goBackButton: ImageButton? = null
@@ -101,7 +101,7 @@ class CustomSongsListLayoutController(
     private var moreActionsButton: ImageButton? = null
     private var songsSortButton: ImageButton? = null
 
-    var customCategory: CustomCategory? = null
+    private var customCategory: CustomCategory? = null
     private var storedScroll: ListScrollPosition? = null
     private var sortPicker: SinglePicker<CustomSongsOrdering>? = null
     private var searchingOn: Boolean = false
@@ -215,14 +215,6 @@ class CustomSongsListLayoutController(
 
         restoreScrollPosition()
 
-//        composeView?.setOnKeyListener { _, keyCode, event ->
-//            if (event.action == KeyEvent.ACTION_DOWN) {
-//                if (localFocus.handleKey(keyCode))
-//                    return@setOnKeyListener true
-//            }
-//            return@setOnKeyListener false
-//        }
-
         subscriptions.forEach { s -> s.dispose() }
         subscriptions.clear()
         subscriptions.add(searchFilterSubject
@@ -239,6 +231,8 @@ class CustomSongsListLayoutController(
                     updateItemsList()
             }, UiErrorHandler::handleError)
         )
+
+        editorSessionService.autoSyncCustomSongs()
     }
 
     private fun isFilterSet(): Boolean {
@@ -379,7 +373,7 @@ class CustomSongsListLayoutController(
 
             filtering -> {
                 val songFilter =
-                    SongSearchFilter(itemNameFilter.orEmpty(), preferencesState.songLyricsSearch)
+                    SongSearchFilter(itemNameFilter.orEmpty(), settingsState.songLyricsSearch)
                 songsRepository.customSongsRepo.songs.get()
                     .filter { song -> songFilter.matchSong(song) }
                     .sortSongsByFilterRelevance(songFilter)

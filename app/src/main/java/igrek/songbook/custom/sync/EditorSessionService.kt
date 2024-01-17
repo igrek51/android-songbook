@@ -21,7 +21,6 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import okhttp3.Request
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 
 class EditorSessionService(
@@ -34,6 +33,7 @@ class EditorSessionService(
     private val songsRepository by LazyExtractor(songsRepository)
     private val deviceIdProvider by LazyExtractor(deviceIdProvider)
     private val clipboardManager by LazyExtractor(clipboardManager)
+    private val settingsState by LazyExtractor(appFactory.settingsState)
 
     private val logger: Logger = LoggerFactory.logger
 
@@ -44,17 +44,24 @@ class EditorSessionService(
     }
 
     private val httpRequester = HttpRequester()
-
     private val syncSessionData: SyncSessionData get() = songsRepository.customSongsDao.customSongs.syncSessionData
+    private var quiet: Boolean = false
 
-    fun synchronizeWithWeb() {
+    fun synchronizeWithWeb(quiet: Boolean = false) {
+        this.quiet = quiet
         ioScope.launch {
             try {
-                uiInfoService.showInfo(R.string.sync_session_synchronizing)
+                uiInfoService.showInfo(R.string.sync_session_synchronizing, indefinite = true)
                 synchronizeStep1CreateSession()
             } catch (e: Throwable) {
                 UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
             }
+        }
+    }
+
+    fun autoSyncCustomSongs() {
+        if (settingsState.keepCustomSongsInSync) {
+            synchronizeWithWeb(quiet = true)
         }
     }
 
@@ -150,6 +157,9 @@ class EditorSessionService(
     }
 
     private fun synchronizeStep6SessionLink(sessionId: String) {
+        if (this.quiet) {
+            return uiInfoService.clearSnackBars()
+        }
         val editorLink = editorSessionUrl(sessionId)
         uiInfoService.showInfoAction(R.string.sync_session_songs_synchronized,
             actionResId=R.string.sync_copy_link) {

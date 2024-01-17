@@ -106,7 +106,7 @@
     <string name="import_content_from_file">📂 Import from file\n  (TXT / PDF / Drive / Google Docs)</string>
     <string name="edit_song_save">💾 Save song</string>
     <string name="edit_song_remove">❌ Delete song</string>
-    <string name="edit_song_has_been_saved">Song has been saved in \"Custom songs\".</string>
+    <string name="edit_song_has_been_saved">Custom song saved: %s</string>
     <string name="edit_song_has_been_removed">Song has been removed.</string>
     <string name="settings_chords_notation">Chords notation (note naming convention)</string>
     <string name="notation_english">English:\nAm Bb B C C# Dm Eb</string>
@@ -206,7 +206,7 @@
     <string name="editor_onexit_validation_failed">There are validation errors:
         \n%s
         \n
-        \nDo you want to ignore these errors?</string>
+        \nDo you really want to ignore these errors and save?</string>
     <string name="nav_playlists">Playlists</string>
     <string name="empty_playlists">No playlists. Create your own playlists e.g.:\n\"Training\",\n\"Campfire songs\",\n\"Concert setlist\",\n\"Fingerstyle\"</string>
     <string name="action_add_to_playlist">▶️ Add to playlist</string>
@@ -616,4 +616,7 @@
     <string name="settings_swipe_to_randomize_again_hint">Make \"swipe left\" gesture on the song view to shuffle a random song again (if there\'s no open playlist).</string>
     <string name="opened_shared_song">Loaded shared song.</string>
     <string name="no_text_provided">No text provided</string>
+    <string name="settings_keepCustomSongsInSync">Keep custom songs in sync</string>
+    <string name="settings_keepCustomSongsInSync_hint">Synchronize custom songs with online server whenever you read or modify a song.</string>
+    <string name="action_save">Save</string>
 </resources>

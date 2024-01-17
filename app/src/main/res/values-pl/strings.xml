@@ -102,7 +102,7 @@
     <string name="import_content_from_file">📂 Importuj z pliku\n  (TXT / PDF / Drive / Google Docs)</string>
     <string name="edit_song_save">💾 Zapisz piosenkę</string>
     <string name="edit_song_remove">❌ Usuń piosenkę</string>
-    <string name="edit_song_has_been_saved">Zapisano piosenkę w \"Moje piosenki\".</string>
+    <string name="edit_song_has_been_saved">Własna piosenka zapisana: %s</string>
     <string name="edit_song_has_been_removed">Usunięto piosenkę.</string>
     <string name="settings_chords_notation">Notacja akordów</string>
     <string name="notation_english">Angielska:\nAm Bb B C C# Dm Eb</string>
@@ -193,7 +193,7 @@
     <string name="editor_onexit_validation_failed">W piosence znaleziono błędy:
         \n%s
         \n
-        \nCzy chcesz zignorować te błędy?</string>
+        \nCzy chcesz zignorować te błędy i zapisać?</string>
     <string name="nav_playlists">Playlisty</string>
     <string name="empty_playlists">Brak playlist. Utwórz własne playlisty, jak np.:\n\"Do nauki\",\n\"Ognisko\",\n\"Setlista na koncert\",\n\"Fingerstyle\"</string>
     <string name="action_add_to_playlist">▶️ Dodaj do playlisty</string>
@@ -409,7 +409,7 @@
     <string name="settings_random_playlist_songs">Losowanie z playlisty</string>
     <string name="settings_random_playlist_songs_hint">Akcja \"Losowa piosenka\" losuje piosenkę z aktualnie otwartej playlisty.</string>
     <string name="home_screen_enum_top">Top lista</string>
-    <string name="home_screen_enum_categories">Kategorie</string>
+    <string name="home_screen_enum_categories">Wykonawcy</string>
     <string name="home_screen_enum_search">Szukaj</string>
     <string name="home_screen_enum_latest">Najnowsze piosenki</string>
     <string name="home_screen_enum_playlists">Playlisty</string>
@@ -451,7 +451,7 @@
     <string name="sync_session_songs_synchronized">Zsynchronizowano. Sesja będzie aktywna przez 24 godziny</string>
     <string name="sync_copy_link">Kopiuj Link</string>
     <string name="sync_copy_link_copied">Link skopiowany.</string>
-    <string name="sync_session_synchronizing">Synchronizing songs…</string>
+    <string name="sync_session_synchronizing">Synchronizacja piosenek…</string>
     <string name="listview_empty">Brak</string>
     <string name="copied_to_clipboard">Skopiowano do schowka</string>
     <string name="action_open_changelog">Otwórz</string>
@@ -585,4 +585,7 @@
     <string name="settings_swipe_to_randomize_again_hint">Gest \"machnięcia w lewo\" w widoku piosenki ponownie wylosuje utwór (jeśli nie ma otwartej playlisty).</string>
     <string name="opened_shared_song">Wczytano udostępnioną piosenkę.</string>
     <string name="no_text_provided">Nie podano tekstu</string>
+    <string name="settings_keepCustomSongsInSync">Synchronizuj własne piosenki</string>
+    <string name="settings_keepCustomSongsInSync_hint">Synchronizuj własne piosenki z serwerem online przy każdej próbie odczytu / modyfikacji piosenki.</string>
+    <string name="action_save">Zapisz</string>
 </resources>
