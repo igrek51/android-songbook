@@ -449,6 +449,7 @@
     <string name="report_error_sent">Wysłano raport o błędzie. Dziękuję.</string>
     <string name="custom_songs_synchornize">🔃 Synchronizuj do edycji</string>
     <string name="sync_session_songs_synchronized">Zsynchronizowano. Sesja będzie aktywna przez 24 godziny</string>
+    <string name="sync_session_songs_synchronized_short">Zsynchronizowano piosenki.</string>
     <string name="sync_copy_link">Kopiuj Link</string>
     <string name="sync_copy_link_copied">Link skopiowany.</string>
     <string name="sync_session_synchronizing">Synchronizacja piosenek…</string>

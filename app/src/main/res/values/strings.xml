@@ -479,6 +479,7 @@
     <string name="report_error_sent">Report of an error has been sent. Thank you.</string>
     <string name="custom_songs_synchornize">🔃 Synchronize with Web Editor</string>
     <string name="sync_session_songs_synchronized">Synchronized. Session will be active for 24 hours</string>
+    <string name="sync_session_songs_synchronized_short">Songs synchronized.</string>
     <string name="sync_copy_link">Copy Link</string>
     <string name="sync_copy_link_copied">Link copied</string>
     <string name="sync_session_synchronizing">Synchronizing songs…</string>

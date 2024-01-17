@@ -69,9 +69,10 @@
                 <TextView
                     android:id="@+id/tabTitleLabel"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:maxHeight="48dp"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginStart="2dp"
                     android:gravity="center_vertical"
                     android:text="@string/nav_custom_song"

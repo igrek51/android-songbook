@@ -158,7 +158,7 @@ class EditorSessionService(
 
     private fun synchronizeStep6SessionLink(sessionId: String) {
         if (this.quiet) {
-            return uiInfoService.clearSnackBars()
+            return uiInfoService.showInfo(R.string.sync_session_songs_synchronized_short)
         }
         val editorLink = editorSessionUrl(sessionId)
         uiInfoService.showInfoAction(R.string.sync_session_songs_synchronized,
