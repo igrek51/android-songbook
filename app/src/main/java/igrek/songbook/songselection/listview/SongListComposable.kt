@@ -23,7 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
@@ -50,7 +50,7 @@ import kotlinx.coroutines.launch
 
 class SongItemsContainer(
     var items: List<AbstractListItem> = mutableListOf(),
-    val modifiedAll: MutableState<Long> = mutableStateOf(0),
+    val modifiedAll: MutableState<Long> = mutableLongStateOf(0),
     val modifiedMap: MutableMap<Int, MutableState<Long>> = mutableMapOf(),
     private val itemToIndex: MutableMap<AbstractListItem, Int> = mutableMapOf(),
     private val focusRequesters: MutableMap<Int, MutableMap<Int, FocusRequester>> = mutableMapOf(),
@@ -59,7 +59,7 @@ class SongItemsContainer(
         items = newList
         items.forEachIndexed { index, item ->
             if (!modifiedMap.containsKey(index)) {
-                modifiedMap[index] = mutableStateOf(0)
+                modifiedMap[index] = mutableLongStateOf(0)
             }
             itemToIndex[item] = index
         }

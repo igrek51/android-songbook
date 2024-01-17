@@ -139,13 +139,13 @@ dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     // Android
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("androidx.annotation:annotation:1.7.0")
+    implementation("androidx.annotation:annotation:1.7.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.preference:preference-ktx:1.2.1") // Settings layouts
     implementation("androidx.multidex:multidex:2.0.1")
-    implementation("androidx.activity:activity-ktx:1.8.1")
+    implementation("androidx.activity:activity-ktx:1.8.2")
     implementation("androidx.work:work-runtime:2.8.1")
     // Kotlin
     val kotlinVersion = rootProject.extra.get("kotlin_version") as String
@@ -162,7 +162,7 @@ dependencies {
     implementation(platform("androidx.compose:compose-bom:2023.10.01"))
     implementation("androidx.compose.material3:material3:1.1.2") // Material Design 3
     debugImplementation("androidx.compose.ui:ui-tooling")
-    implementation("androidx.activity:activity-compose:1.8.1") // Integration with activities
+    implementation("androidx.activity:activity-compose:1.8.2") // Integration with activities
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
     implementation("com.google.firebase:firebase-crashlytics")
