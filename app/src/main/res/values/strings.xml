@@ -196,7 +196,7 @@
     <string name="action_confirmation_title">Are you sure?</string>
     <string name="confirm_remove_song">Do you really want to remove the song \"%s\"?</string>
     <string name="confirm_discard_custom_song_changes">Do you want to save applied changes?</string>
-    <string name="no_new_chords_detected">No new chords</string>
+    <string name="no_new_chords_detected">Not found any new chords</string>
     <string name="new_chords_detected">I\'ve found new chords: %s</string>
     <string name="transpose_minus_5" translatable="false">-5</string>
     <string name="transpose_minus_1" translatable="false">-1</string>

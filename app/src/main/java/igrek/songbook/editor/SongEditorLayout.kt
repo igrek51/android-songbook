@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -15,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
@@ -28,17 +28,28 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import igrek.songbook.R
@@ -52,7 +63,17 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun MainComponent(controller: SongEditorLayoutController) {
     val state = controller.state
-    Column {
+    val verticalScroll = rememberScrollState()
+    val localDensity = LocalDensity.current
+    val layoutHeight = remember { mutableStateOf(0.dp) }
+    Column (modifier = Modifier
+        .onGloballyPositioned { coordinates ->
+            layoutHeight.value = with(localDensity) {
+                coordinates.boundsInRoot().height.toDp()
+            }
+        }
+        .verticalScroll(verticalScroll)
+    ) {
         OutlinedTextField(
             value = state.songTitle,
             onValueChange = { state.songTitle = it },
@@ -64,8 +85,9 @@ internal fun MainComponent(controller: SongEditorLayoutController) {
         ChordsNotationPicker(controller)
 
         ContentLabel(controller)
+
         EditorToolbar(controller)
-        ContentTextField(controller)
+        ContentTextField(controller, layoutHeight)
     }
 }
 
@@ -188,7 +210,13 @@ private fun EditorToolbar(controller: SongEditorLayoutController) {
     val scrollState = rememberScrollState()
     val editorTransformer = controller.editorTransformer
     val state = controller.state
-    Row (modifier = Modifier.horizontalScroll(scrollState)) {
+    var positionInRootTopBar by remember { mutableStateOf(Offset.Zero) }
+    Row (modifier = Modifier
+        .horizontalScroll(scrollState)
+        .onGloballyPositioned { coordinates ->
+            positionInRootTopBar = coordinates.positionInRoot()
+        }
+    ) {
         FlatButton(R.string.edit_song_transform_chords) {
             controller.showTransformMenu()
         }
@@ -245,18 +273,21 @@ private fun EditorToolbar(controller: SongEditorLayoutController) {
 }
 
 @Composable
-private fun ContentTextField(controller: SongEditorLayoutController) {
+private fun ContentTextField(controller: SongEditorLayoutController, columnHeight: MutableState<Dp>) {
     val state = controller.state
     val fontFamily = when (controller.settingsState.chordsEditorFontTypeface) {
         FontTypeface.SANS_SERIF -> FontFamily.SansSerif
         FontTypeface.SERIF -> FontFamily.Serif
         FontTypeface.MONOSPACE -> FontFamily.Monospace
     }
+    var maxH = columnHeight.value - 50.dp
+    if (maxH < 100.dp)
+        maxH = 100.dp
     OutlinedTextField(
         modifier = Modifier
             .padding(vertical = 0.1.dp)
             .fillMaxWidth()
-            .defaultMinSize(minHeight = 100.dp)
+            .heightIn(100.dp, maxH)
             .horizontalScroll(state.horizontalScroll)
             .focusRequester(state.contentFocusRequester),
         value = state.lyricsContent.value,
