@@ -8,7 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [1.38.0] - 1913 - 2024-01-18
+### Added
+- In the song's details, you can look up the hash to check whether two songs differ or not.
+- You can turn on a new setting: "Keep custom songs in sync",
+  which makes it to synchronize custom songs with online server whenever you read or modify a song.
 
+### Changed
+- Song Editor layout has been redesigned. All song's metadata can be edited in one view.
+- "My Songs" are now called "Custom Songs".
+
+### Fixed
+- Fixed bug with a comment in line breaking displaying chords above the line.
 
 ## [1.37.3] - 1912 - 2023-11-24
 ### Changed
