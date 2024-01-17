@@ -125,6 +125,11 @@
             android:title="@string/settings_custom_songs_ordering"
             android:summary="%s"
             app:iconSpaceReserved="false" />
+        <SwitchPreference
+            android:key="keepCustomSongsInSync"
+            android:title="@string/settings_keepCustomSongsInSync"
+            android:summary="@string/settings_keepCustomSongsInSync_hint"
+            app:iconSpaceReserved="false" />
         <ListPreference
             android:key="chordsEditorFontTypeface"
             android:title="@string/settings_chords_editor_typeface"
