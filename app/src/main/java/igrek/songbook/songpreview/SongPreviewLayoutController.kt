@@ -424,6 +424,7 @@ class SongPreviewLayoutController(
     }
 
     override fun onLayoutExit() {
+        graphicsInitialized = false
         autoscrollService.stop()
         windowManagerService.keepScreenOn(false)
     }

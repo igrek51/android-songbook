@@ -196,7 +196,7 @@ class LayoutController {
                 layoutHistory = layoutHistory.dropLast(1).toMutableList()
             }
         } catch (e: NoSuchElementException) {
-            logger.error(e)
+            // quit on empty history
         }
 
         if (layoutHistory.isEmpty()) {
