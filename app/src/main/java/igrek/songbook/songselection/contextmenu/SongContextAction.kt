@@ -4,7 +4,7 @@ import igrek.songbook.persistence.general.model.Song
 
 class SongContextAction(
     val displayNameResId: Int,
-    val availableCondition: (Song) -> Boolean,
+    val availableCondition: (Song, Boolean) -> Boolean,
     val executor: (Song) -> Unit
 ) {
 

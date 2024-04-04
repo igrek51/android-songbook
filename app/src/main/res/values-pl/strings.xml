@@ -186,7 +186,7 @@
     <string name="chords_invalid_missing_opening_bracket">Brak nawiasu otwierającego \"[\"</string>
     <string name="chords_unknown_chord">Nieznany akord dla wybranej notacji: \"%s\"</string>
     <string name="action_confirmation_title">Jesteś pewien?</string>
-    <string name="confirm_remove_song">Czy na pewno chcesz usunąć piosenkę \"%s\"?</string>
+    <string name="confirm_remove_song">Czy na pewno chcesz trwale usunąć piosenkę \"%s\"?</string>
     <string name="confirm_discard_custom_song_changes">Czy chcesz zapisać zmiany wprowadzone w piosence?</string>
     <string name="no_new_chords_detected">Brak nowych akordów</string>
     <string name="new_chords_detected">Znalazłem nowe akordy: %s</string>

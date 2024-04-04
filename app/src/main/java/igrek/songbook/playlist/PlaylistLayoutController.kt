@@ -219,7 +219,7 @@ class PlaylistLayoutController : InflatedLayout(
     }
 
     fun onSongMore(song: Song) {
-        songContextMenuBuilder.showSongActions(song)
+        songContextMenuBuilder.showSongActions(song, playlistContext = playlistService.currentPlaylist != null)
     }
 
     fun onSongsReordered(newItems: MutableList<Song>) {

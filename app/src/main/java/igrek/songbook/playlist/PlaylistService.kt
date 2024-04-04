@@ -31,7 +31,7 @@ class PlaylistService(
     private val songPreviewLayoutController by LazyExtractor(songPreviewLayoutController)
 
     var currentPlaylist: Playlist? = null
-    var addPlaylistSongSubject: PublishSubject<Pair<Song, Boolean>> = PublishSubject.create()
+    private var addPlaylistSongSubject: PublishSubject<Pair<Song, Boolean>> = PublishSubject.create()
 
     fun addNewPlaylist(onSuccess: (Playlist) -> Unit = {}) {
         InputDialogBuilder().input(R.string.new_playlist_name, null) { name ->
