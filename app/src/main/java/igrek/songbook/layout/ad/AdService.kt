@@ -11,6 +11,7 @@ import com.google.android.gms.ads.AdRequest.*
 import igrek.songbook.BuildConfig
 import igrek.songbook.R
 import igrek.songbook.activity.ActivityController
+import igrek.songbook.editor.SongEditorLayoutController
 import igrek.songbook.info.errorcheck.UiErrorHandler
 import igrek.songbook.info.logger.LoggerFactory.logger
 import igrek.songbook.inject.LazyExtractor
@@ -86,8 +87,8 @@ class AdService(
             preferencesState.adsStatus == 1L -> false
             preferencesState.purchasedAdFree -> false
             activityController.isAndroidTv() -> false
+            SongEditorLayoutController::class.isInstance(currentLayout) -> false
             //SongPreviewLayoutController::class.isInstance(currentLayout) -> false
-            //ChordsEditorLayoutController::class.isInstance(currentLayout) -> false
             else -> true
         }
     }
