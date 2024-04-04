@@ -519,7 +519,9 @@ class SongCastService {
         if (clientFollowTransposition && layoutController.isState(SongPreviewLayoutController::class)) {
             val transposition = sessionState.songTransposition ?: 0
             logger.debug("transposing by SongCast event: $transposition semitones")
-            lyricsLoader.onTransposeTo(transposition.toInt())
+            mainScope.launch {
+                lyricsLoader.onTransposeTo(transposition.toInt())
+            }
         }
     }
 

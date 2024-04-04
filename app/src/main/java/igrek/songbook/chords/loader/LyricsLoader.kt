@@ -148,13 +148,14 @@ class LyricsLoader(
         songCastService.shareTranspositionControl(chordsTransposerManager.transposedBy)
     }
 
+    fun onTransposeResetEvent() {
+        chordsTransposerManager.onTransposeResetEvent()
+        songCastService.shareTranspositionControl(chordsTransposerManager.transposedBy)
+    }
+
     fun onTransposeTo(absoluteSemitones: Int) {
         val delta = absoluteSemitones - chordsTransposerManager.transposedBy
         onTransposeEvent(delta)
-    }
-
-    fun onTransposeResetEvent() {
-        chordsTransposerManager.onTransposeResetEvent()
     }
 
     fun loadEphemeralLyrics(
