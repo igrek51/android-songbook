@@ -543,7 +543,7 @@
     <string name="songcast_scrollcontrol_slides2">Tryb slajdów: 2 linie</string>
     <string name="songcast_scrollcontrol_slides4">Tryb slajdów: 4 linie</string>
     <string name="songcast_scrollcontrol_slides8">Tryb slajdów: 8 linii</string>
-    <string name="songcast_remote_control">Zdalna kontrola podczas prezentowania</string>
+    <string name="songcast_remote_control">Kontrola przewijania podczas prezentowania</string>
     <string name="songcast_follow_presenters_scroll">Podążaj za przewijaniem prezentera</string>
     <string name="songcast_follow_presenters_transposition">Śledź tonację prezentera</string>
     <string name="songcast_settings">Ustawienia Song Cast</string>
