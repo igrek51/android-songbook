@@ -576,6 +576,7 @@
     <string name="songcast_scrollcontrol_slides8">Slides mode: 8 lines</string>
     <string name="songcast_remote_control">Remote control when presenting</string>
     <string name="songcast_follow_presenters_scroll">Follow presenter\'s scroll</string>
+    <string name="songcast_follow_presenters_transposition">Follow presenter\'s transposition key</string>
     <string name="songcast_settings">Song Cast settings</string>
     <string name="songcast_songname_none">None</string>
     <string name="songcast_you">You</string>
@@ -598,6 +599,7 @@
     <string name="songcast_refreshing_session">Refreshing…</string>
     <string name="songcast_open_presented_song_automatically_tooltip">Launch presented song automatically as soon as it\'s selected by the presenter</string>
     <string name="songcast_follow_presenters_scroll_tooltip">Allow presenter to control your scroll position or switch slides</string>
+    <string name="songcast_follow_presenters_transposition_tooltip">Allow presenter to control transposition key</string>
     <string name="songcast_this_song_is_not_presented">This song is not currently presented.</string>
     <string name="songcast_youre_presenting_this_song">You\'re presenting this song.</string>
     <string name="songcast_youre_spectating_this_song">You\'re spectating this song.</string>

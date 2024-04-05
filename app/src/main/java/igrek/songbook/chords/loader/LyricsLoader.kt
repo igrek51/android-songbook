@@ -36,6 +36,7 @@ class LyricsLoader(
     private val windowManagerService by LazyExtractor(windowManagerService)
     private val preferencesState by LazyExtractor(settingsState)
     private val uiInfoService by LazyExtractor(appFactory.uiInfoService)
+    private val songCastService by LazyExtractor(appFactory.songCastService)
 
     private val logger = LoggerFactory.logger
     private val chordsTransposerManager = ChordsTransposerManager()
@@ -49,6 +50,8 @@ class LyricsLoader(
         private set
     var songKey: MajorKey = MajorKey.C_MAJOR
         private set
+
+    val transposedBy: Int get() = chordsTransposerManager.transposedBy
 
     fun load(
         fileContent: String,
@@ -142,6 +145,12 @@ class LyricsLoader(
 
     fun onTransposeEvent(semitones: Int) {
         chordsTransposerManager.onTransposeEvent(semitones)
+        songCastService.shareTranspositionControl(chordsTransposerManager.transposedBy)
+    }
+
+    fun onTransposeTo(absoluteSemitones: Int) {
+        val delta = absoluteSemitones - chordsTransposerManager.transposedBy
+        onTransposeEvent(delta)
     }
 
     fun onTransposeResetEvent() {

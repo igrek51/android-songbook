@@ -125,6 +125,14 @@ private fun MainComponent(controller: QuickMenuCast) {
             controller.songCastService.clientFollowScroll = it
         }
 
+        SwitchWithLabel(
+            stringResource(R.string.songcast_follow_presenters_transposition),
+            controller.songCastService.clientFollowTransposition,
+            tooltip = stringResource(R.string.songcast_follow_presenters_transposition_tooltip),
+        ) {
+            controller.songCastService.clientFollowTransposition = it
+        }
+
         Button(
             onClick = safeAsyncExecutor {
                 appFactory.layoutController.g.showLayout(SongCastLobbyLayout::class)

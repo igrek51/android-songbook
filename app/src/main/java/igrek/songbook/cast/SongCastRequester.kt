@@ -9,7 +9,6 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import okhttp3.Request
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 
 
@@ -29,6 +28,7 @@ class SongCastRequester {
         private val sessionUrl = { session: String -> "${songbookApiBase}/api/cast/$session" }
         private val sessionSongUrl = { session: String -> "${songbookApiBase}/api/cast/$session/song" }
         private val sessionScrollUrl = { session: String -> "${songbookApiBase}/api/cast/$session/scroll" }
+        private val sessionTransposeUrl = { session: String -> "${songbookApiBase}/api/cast/$session/transpose" }
         private val sessionChatUrl = { session: String -> "${songbookApiBase}/api/cast/$session/chat" }
         private val promoteMemberUrl = { session: String, memberPubId: String ->
             "${songbookApiBase}/api/cast/$session/member/$memberPubId/promote"
@@ -178,6 +178,19 @@ class SongCastRequester {
         val json = httpRequester.jsonSerializer.encodeToString(CastScroll.serializer(), payload)
         val request: Request = Request.Builder()
             .url(sessionScrollUrl(sessionCode))
+            .header(authDeviceHeader, deviceId)
+            .post(json.toRequestBody(httpRequester.jsonType))
+            .build()
+        return httpRequester.httpRequestAsync(request) {}
+    }
+
+    fun postTransposeControlAsync(
+        payload: CastTranspose,
+    ): Deferred<Result<Unit>> {
+        val deviceId = deviceIdProvider.getDeviceId()
+        val json = httpRequester.jsonSerializer.encodeToString(CastTranspose.serializer(), payload)
+        val request: Request = Request.Builder()
+            .url(sessionTransposeUrl(sessionCode))
             .header(authDeviceHeader, deviceId)
             .post(json.toRequestBody(httpRequester.jsonType))
             .build()

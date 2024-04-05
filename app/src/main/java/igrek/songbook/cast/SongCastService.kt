@@ -39,6 +39,7 @@ class SongCastService {
     private val songPreviewLayoutController by LazyExtractor(appFactory.songPreviewLayoutController)
     private val songOpener by LazyExtractor(appFactory.songOpener)
     private val scrollService by LazyExtractor(appFactory.scrollService)
+    private val lyricsLoader by LazyExtractor(appFactory.lyricsLoader)
 
     private val logger: Logger = LoggerFactory.logger
     private val requester = SongCastRequester()
@@ -55,6 +56,7 @@ class SongCastService {
     private var refreshCounter = FibonacciCounter()
     private var joinTimestamp: Long = 0
     var clientFollowScroll: Boolean by mutableStateOf(true)
+    var clientFollowTransposition: Boolean by mutableStateOf(true)
     var clientOpenPresentedSongs: Boolean by mutableStateOf(true)
     var lastSharedScroll: CastScroll? = null
     private val logEvents: MutableList<LogEvent> = mutableListOf()
@@ -104,6 +106,7 @@ class SongCastService {
             sessionState.currentScroll = null
             sessionState.chatMessages = listOf()
             sessionState.createdTime = 0
+            sessionState.songTransposition = null
             ephemeralSong = null
         }
         streamSocket.close()
@@ -168,6 +171,7 @@ class SongCastService {
         sessionState.castSongDto = null
         sessionState.currentScroll = null
         sessionState.chatMessages = listOf()
+        sessionState.songTransposition = null
         ephemeralSong = null
         streamSocket.close()
         periodicRefreshJob = null
@@ -251,6 +255,7 @@ class SongCastService {
                 sessionState.castSongDto = responseData.song
                 sessionState.currentScroll = responseData.scroll
                 sessionState.chatMessages = responseData.chat_messages
+                sessionState.songTransposition = responseData.song_transposition
                 sessionState.createdTime = responseData.create_timestamp
                 sessionState.initialized = true
                 ephemeralSong = responseData.song?.let { buildEphemeralSong(it) }
@@ -264,6 +269,10 @@ class SongCastService {
 
     fun postScrollControlAsync(payload: CastScroll): Deferred<Result<Unit>> {
         return requester.postScrollControlAsync(payload)
+    }
+
+    fun postTransposeControlAsync(payload: CastTranspose): Deferred<Result<Unit>> {
+        return requester.postTransposeControlAsync(payload)
     }
 
     fun postChatMessageAsync(payload: CastChatMessageSent): Deferred<Result<Unit>> {
@@ -286,6 +295,7 @@ class SongCastService {
             artist = song.artist,
             content = song.content.orEmpty(),
             chords_notation_id = song.chordsNotation.id,
+            song_transposition = lyricsLoader.transposedBy.toLong(),
         )
         val castSongDto = CastSong(
             id = payload.id,
@@ -351,6 +361,7 @@ class SongCastService {
         val ephemeralSongN = ephemeralSong ?: return
         defaultScope.launch {
             songOpener.openSongPreview(ephemeralSongN) {
+                adaptToTranspositionControl()
                 adaptToScrollControl()
             }
         }
@@ -363,6 +374,7 @@ class SongCastService {
             "CastMembersUpdatedEvent" -> refreshSessionDetails()
             "ChatMessageReceivedEvent" -> refreshSessionDetails()
             "SongScrolledEvent" -> refreshSessionDetails()
+            "SongTransposedEvent" -> refreshSessionDetails()
             else -> {
                 logger.warn("Unknown SongCast event type: $type")
                 refreshSessionDetails()
@@ -451,6 +463,10 @@ class SongCastService {
             }
             changed = true
         }
+        if (oldState.songTransposition != newState.songTransposition) {
+            adaptToTranspositionControl()
+            changed = true
+        }
         return changed
     }
 
@@ -497,6 +513,16 @@ class SongCastService {
         }
     }
 
+    private fun adaptToTranspositionControl() {
+        if (sessionState.songTransposition == null) return
+        if (isPresenting()) return
+        if (clientFollowTransposition && layoutController.isState(SongPreviewLayoutController::class)) {
+            val transposition = sessionState.songTransposition ?: 0
+            logger.debug("transposing by SongCast event: $transposition semitones")
+            lyricsLoader.onTransposeTo(transposition.toInt())
+        }
+    }
+
     private fun addSystemLogEvent(resourceId: Int, vararg args: Any?) {
         val text = uiInfoService.resString(resourceId, *args)
         logEvents.add(
@@ -535,6 +561,19 @@ class SongCastService {
     fun getWebRoomLink(): String {
         return "https://songbook.igrek.dev/ui/cast/${sessionCode}/spectate"
     }
+
+    fun shareTranspositionControl(transposition: Int) {
+        if (!isPresenting()) return
+        defaultScope.launch {
+            val payload = CastTranspose(transposed_by = transposition.toLong())
+            logger.debug("Sharing transposition control: ${payload.transposed_by}")
+            val result = postTransposeControlAsync(payload).await()
+            result.fold(onSuccess = {
+            }, onFailure = { e ->
+                UiErrorHandler().handleError(e, R.string.error_communication_breakdown)
+            })
+        }
+    }
 }
 
 data class SessionState(
@@ -544,4 +583,5 @@ data class SessionState(
     var currentScroll: CastScroll? = null,
     var chatMessages: List<CastChatMessage> = listOf(),
     var createdTime: Long = 0, // in seconds
+    var songTransposition: Long? = null,
 )

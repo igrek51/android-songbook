@@ -545,6 +545,7 @@
     <string name="songcast_scrollcontrol_slides8">Tryb slajdów: 8 linii</string>
     <string name="songcast_remote_control">Zdalna kontrola podczas prezentowania</string>
     <string name="songcast_follow_presenters_scroll">Podążaj za przewijaniem prezentera</string>
+    <string name="songcast_follow_presenters_transposition">Śledź tonację prezentera</string>
     <string name="songcast_settings">Ustawienia Song Cast</string>
     <string name="songcast_songname_none">Brak</string>
     <string name="songcast_you">Ty</string>
@@ -567,6 +568,7 @@
     <string name="songcast_refreshing_session">Odświeżanie…</string>
     <string name="songcast_open_presented_song_automatically_tooltip">Automatycznie otwieraj prezentowane piosenki wybrane przez prezentera</string>
     <string name="songcast_follow_presenters_scroll_tooltip">Pozwól prezenterowi kontrolować pozycję przewijania lub zmieniać slajdy</string>
+    <string name="songcast_follow_presenters_transposition_tooltip">Pozwól prezenterowi kontrolować tonację (transpozycję) piosenki</string>
     <string name="songcast_this_song_is_not_presented">Ta piosenka nie jest obecnie prezentowana.</string>
     <string name="songcast_youre_presenting_this_song">Prezentujesz tą piosenkę.</string>
     <string name="songcast_youre_spectating_this_song">Obserwujesz tą piosenkę.</string>

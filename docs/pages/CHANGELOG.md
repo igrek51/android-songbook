@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [1.38.2] - 1915 - 2024-04-04
+### Added
+- SongCast can follow the transposition key set by the presenter.
+  Spectators can turn this option in SongCast settings.
+
 ### Changed
 - When in a playlist, song's context menu doesn't show an option to delete a song to prevent
   deleting it permanently by accident. There's only an option to remove it from the playlist.

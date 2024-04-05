@@ -25,6 +25,7 @@ data class CastSession(
     var song: CastSong?,
     var scroll: CastScroll?,
     var chat_messages: List<CastChatMessage>,
+    var song_transposition: Long?,
 )
 
 @Serializable
@@ -53,6 +54,11 @@ data class CastScroll(
 )
 
 @Serializable
+data class CastTranspose(
+    var transposed_by: Long,
+)
+
+@Serializable
 data class CastChatMessage(
     var timestamp: Long, // in seconds
     var author: String,
@@ -66,6 +72,7 @@ data class CastSongSelected(
     var artist: String?,
     var content: String,
     var chords_notation_id: Long,
+    var song_transposition: Long?,
 )
 
 @Serializable
