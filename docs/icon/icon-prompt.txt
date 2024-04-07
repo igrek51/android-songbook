@@ -1,0 +1,2 @@
+Generate the image with this exact prompt:
+"The image depicts an elegant, beautiful icon for a Songbook app. It features a white music note on a dark circle, viewed from a top-down perspective. The background is white"
