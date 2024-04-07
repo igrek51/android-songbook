@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.38.3] - 1916 - 2024-04-07
+### Changed
+- App icon has been recreated in a high resolution
+  and made to fit the new Google Play Store requirements.
+
 ## [1.38.2] - 1915 - 2024-04-04
 ### Added
 - SongCast can follow the transposition key set by the presenter.
