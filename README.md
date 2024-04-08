@@ -1,10 +1,20 @@
 # Songbook
 
+![](./docs/gfx/banner.png)
+
 [![GitHub version (latest SemVer)](https://img.shields.io/github/v/tag/igrek51/android-songbook?label=GitHub&sort=semver)](https://github.com/igrek51/android-songbook)
 [![Github Pages](https://img.shields.io/badge/docs-github.io-blue)](https://igrek51.github.io/android-songbook)
 [![Google Play](https://img.shields.io/badge/Google%20Play-igrek.songbook-blue)](https://play.google.com/store/apps/details?id=igrek.songbook)
 
-Song lyrics viewer with chords to play on guitar, piano and sing
+<div align="center">
+    <a href="https://github.com/igrek51/android-songbook">GitHub</a>
+    -
+    <a href="https://igrek51.github.io/android-songbook">Documentation</a>
+    -
+    <a href="https://play.google.com/store/apps/details?id=igrek.songbook">Google Play</a>
+</div>
+
+Song lyrics viewer with chords for guitar, piano and singing
 
 ## Features
 Our chief weapons are:
