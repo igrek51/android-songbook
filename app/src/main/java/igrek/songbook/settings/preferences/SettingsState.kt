@@ -122,7 +122,7 @@ class SettingsState(
     var songLyricsSearch: Boolean by SettingFieldDelegate.make("songLyricsSearch", true)
     var syncBackupAutomatically: Boolean by SettingFieldDelegate.make("syncBackupAutomatically", false)
     var lastDriveBackupTimestamp: Long by SettingFieldDelegate.make("lastDriveBackupTimestamp", 0) // in seconds
-    var deviceId: String by SettingFieldDelegate.make("deviceId", "")
+    var userDeviceId: String by SettingFieldDelegate.make("deviceId", "")
     var lastAppVersionCode: Long by SettingFieldDelegate.make("lastAppVersionCode", 0)
     var saveCustomSongsBackups: Boolean by SettingFieldDelegate.make("saveCustomSongsBackups", true)
     var swipeToRandomizeAgain: Boolean by SettingFieldDelegate.make("swipeToRandomizeAgain", true)

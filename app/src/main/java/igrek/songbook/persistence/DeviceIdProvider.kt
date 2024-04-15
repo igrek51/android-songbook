@@ -14,16 +14,26 @@ class DeviceIdProvider (
     private val preferencesService by LazyExtractor(appFactory.preferencesService)
     private val userDataDao by LazyExtractor(appFactory.userDataDao)
 
-    fun getDeviceId(): String {
-        if (preferencesState.deviceId.isBlank()) {
+    fun getUserDeviceId(): String {
+        if (preferencesState.userDeviceId.isBlank()) {
             val uuid = newUUID()
-            preferencesState.deviceId = uuid
-            LoggerFactory.logger.debug("Device UUID assigned: $uuid")
+            preferencesState.userDeviceId = uuid
+            LoggerFactory.logger.debug("Unique User ID assigned: $uuid")
 
             preferencesService.dumpAll()
             userDataDao.requestSave(true)
         }
-        return preferencesState.deviceId
+        return preferencesState.userDeviceId
+    }
+
+    fun getUniqueDeviceId(): String {
+        if (userDataDao.deviceDao.deviceDb.uid.isBlank()) {
+            val uuid = newUUID()
+            userDataDao.deviceDao.deviceDb.uid = uuid
+            LoggerFactory.logger.debug("Unique Device ID assigned: $uuid")
+            userDataDao.requestSave(true)
+        }
+        return userDataDao.deviceDao.deviceDb.uid
     }
 
     fun newUUID(): String {

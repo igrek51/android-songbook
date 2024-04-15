@@ -41,7 +41,7 @@ class SongCastRequester {
         onSuccess: suspend (responseData: CastSessionJoined) -> Unit,
     ): Deferred<Result<CastSessionJoined>> {
         logger.info("Creating SongCast session by member '$memberName'...")
-        val deviceId = deviceIdProvider.getDeviceId()
+        val deviceId = deviceIdProvider.getUniqueDeviceId()
         val dto = CastSessionJoin(member_name = memberName)
         val json = httpRequester.jsonSerializer.encodeToString(CastSessionJoin.serializer(), dto)
         val request: Request = Request.Builder()
@@ -71,7 +71,7 @@ class SongCastRequester {
         onSuccess: suspend (responseData: CastSessionJoined) -> Unit,
     ): Deferred<Result<CastSessionJoined>> {
         logger.info("Joining SongCast session by member '$memberName'...")
-        val deviceId = deviceIdProvider.getDeviceId()
+        val deviceId = deviceIdProvider.getUniqueDeviceId()
         val dto = CastSessionJoin(member_name = memberName)
         val json = httpRequester.jsonSerializer.encodeToString(CastSessionJoin.serializer(), dto)
         val request: Request = Request.Builder()
@@ -95,7 +95,7 @@ class SongCastRequester {
     fun restoreSessionAsync(
         onSuccess: suspend (responseData: CastSessionJoined) -> Unit,
     ): Deferred<Result<CastSessionJoined>> {
-        val deviceId = deviceIdProvider.getDeviceId()
+        val deviceId = deviceIdProvider.getUniqueDeviceId()
         val request: Request = Request.Builder()
             .url(rejoinSessionUrl)
             .header(authDeviceHeader, deviceId)
@@ -122,7 +122,7 @@ class SongCastRequester {
             return GlobalScope.async { Result.success(Unit) }
         }
         logger.info("Dropping SongCast session: $oldSessionCode")
-        val deviceId = deviceIdProvider.getDeviceId()
+        val deviceId = deviceIdProvider.getUniqueDeviceId()
         val request: Request = Request.Builder()
             .url(dropSessionUrl(oldSessionCode))
             .header(authDeviceHeader, deviceId)
@@ -136,7 +136,7 @@ class SongCastRequester {
     fun getSessionDetailsAsync(
         onSuccess: suspend (responseData: CastSession) -> Unit,
     ): Deferred<Result<CastSession>> {
-        val deviceId = deviceIdProvider.getDeviceId()
+        val deviceId = deviceIdProvider.getUniqueDeviceId()
         val request: Request = Request.Builder()
             .url(sessionUrl(sessionCode))
             .header(authDeviceHeader, deviceId)
@@ -158,7 +158,7 @@ class SongCastRequester {
         payload: CastSongSelected,
         onSuccess: () -> Unit,
     ): Deferred<Result<Unit>> {
-        val deviceId = deviceIdProvider.getDeviceId()
+        val deviceId = deviceIdProvider.getUniqueDeviceId()
         val json = httpRequester.jsonSerializer.encodeToString(CastSongSelected.serializer(), payload)
         val request: Request = Request.Builder()
             .url(sessionSongUrl(sessionCode))
@@ -174,7 +174,7 @@ class SongCastRequester {
     fun postScrollControlAsync(
         payload: CastScroll,
     ): Deferred<Result<Unit>> {
-        val deviceId = deviceIdProvider.getDeviceId()
+        val deviceId = deviceIdProvider.getUniqueDeviceId()
         val json = httpRequester.jsonSerializer.encodeToString(CastScroll.serializer(), payload)
         val request: Request = Request.Builder()
             .url(sessionScrollUrl(sessionCode))
@@ -187,7 +187,7 @@ class SongCastRequester {
     fun postTransposeControlAsync(
         payload: CastTranspose,
     ): Deferred<Result<Unit>> {
-        val deviceId = deviceIdProvider.getDeviceId()
+        val deviceId = deviceIdProvider.getUniqueDeviceId()
         val json = httpRequester.jsonSerializer.encodeToString(CastTranspose.serializer(), payload)
         val request: Request = Request.Builder()
             .url(sessionTransposeUrl(sessionCode))
@@ -200,7 +200,7 @@ class SongCastRequester {
     fun postChatMessageAsync(
         payload: CastChatMessageSent,
     ): Deferred<Result<Unit>> {
-        val deviceId = deviceIdProvider.getDeviceId()
+        val deviceId = deviceIdProvider.getUniqueDeviceId()
         val json = httpRequester.jsonSerializer.encodeToString(CastChatMessageSent.serializer(), payload)
         val request: Request = Request.Builder()
             .url(sessionChatUrl(sessionCode))
@@ -215,7 +215,7 @@ class SongCastRequester {
     fun promoteMemberAsync(
         memberPubId: String,
     ): Deferred<Result<Unit>> {
-        val deviceId = deviceIdProvider.getDeviceId()
+        val deviceId = deviceIdProvider.getUniqueDeviceId()
         val request: Request = Request.Builder()
             .url(promoteMemberUrl(sessionCode, memberPubId))
             .header(authDeviceHeader, deviceId)

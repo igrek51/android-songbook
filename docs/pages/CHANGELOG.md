@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.38.4] - 1917 - 2024-04-15
+### Changed
+- Unique device ID is not included in the backup data,
+  preventing from duplicating the same ID on many devices.
+
+### Fixed
+- Fixed `NotFoundException` for Drawable background_splash resource.
+
 ## [1.38.3] - 1916 - 2024-04-07
 ### Changed
 - App icon has been recreated in a high resolution

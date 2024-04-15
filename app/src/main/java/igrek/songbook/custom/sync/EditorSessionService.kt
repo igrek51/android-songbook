@@ -381,7 +381,7 @@ class EditorSessionService(
 
 
     private fun createSessionAsync(): Deferred<Result<String>> {
-        val deviceId = deviceIdProvider.getDeviceId()
+        val deviceId = deviceIdProvider.getUniqueDeviceId()
         val dto = EditorSessionCreateDto(device_id = deviceId)
         val json =
             httpRequester.jsonSerializer.encodeToString(EditorSessionCreateDto.serializer(), dto)

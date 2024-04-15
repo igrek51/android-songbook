@@ -180,7 +180,7 @@ class CommanderUtils(
     }
 
     fun showDeviceId() {
-        val deviceId = appFactory.deviceIdProvider.get().getDeviceId()
+        val deviceId = appFactory.deviceIdProvider.get().getUniqueDeviceId()
         success(deviceId)
     }
 

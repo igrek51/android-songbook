@@ -15,6 +15,7 @@ import igrek.songbook.inject.appFactory
 import igrek.songbook.persistence.LocalFilesystem
 import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.custom.CustomSongsDao
+import igrek.songbook.persistence.user.device.DeviceDao
 import igrek.songbook.persistence.user.exclusion.ExclusionDao
 import igrek.songbook.persistence.user.favourite.FavouriteSongsDao
 import igrek.songbook.persistence.user.history.OpenHistoryDao
@@ -55,6 +56,7 @@ class UserDataDao(
     var transposeDao: TransposeDao by LazyDaoLoader { path -> TransposeDao(path) }
     var preferencesDao: PreferencesDao by LazyDaoLoader { path -> PreferencesDao(path) }
     var songTweakDao: SongTweakDao by LazyDaoLoader { path -> SongTweakDao(path) }
+    var deviceDao: DeviceDao by LazyDaoLoader { path -> DeviceDao(path) } // not backed up
 
     private var saveRequestSubject: PublishSubject<Boolean> = PublishSubject.create()
     private val logger = LoggerFactory.logger
@@ -135,6 +137,7 @@ class UserDataDao(
                 { transposeDao = TransposeDao(path, resetOnError=resetOnError) },
                 { preferencesDao = PreferencesDao(path, resetOnError=resetOnError) },
                 { songTweakDao = SongTweakDao(path, resetOnError=resetOnError) },
+                { deviceDao = DeviceDao(path, resetOnError=resetOnError) },
             )
         }
 
@@ -156,6 +159,7 @@ class UserDataDao(
                 transposeDao = TransposeDao(path, resetOnError = resetOnError)
                 preferencesDao = PreferencesDao(path, resetOnError = resetOnError)
                 songTweakDao = SongTweakDao(path, resetOnError = resetOnError)
+                deviceDao = DeviceDao(path, resetOnError=resetOnError)
             }
         }
         logger.debug("User data loaded synchronously")
@@ -184,6 +188,7 @@ class UserDataDao(
                 { transposeDao.save() },
                 { preferencesDao.save() },
                 { songTweakDao.save() },
+                { deviceDao.save() },
             )
         }
         logger.info("User data saved")
@@ -211,6 +216,7 @@ class UserDataDao(
             transposeDao.factoryReset()
             preferencesDao.factoryReset()
             songTweakDao.factoryReset()
+            deviceDao.factoryReset()
         }
     }
 
