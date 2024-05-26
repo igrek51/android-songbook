@@ -3079,29 +3079,64 @@ val guitarChordsDiagrams: Map<String, List<String>> = mapOf(
 
 val ukuleleChordsDiagrams: Map<String, List<String>> = mapOf(
     "C" to listOf("0,0,0,3"),
+    "C7" to listOf("0,0,0,1", "3,4,3,3"),
     "Cm" to listOf("1,3,3,3"),
+    "Cm7" to listOf("0,0,6,6", "3,3,3,3", "0,0,6,6"),
+
     "C#" to listOf("1,1,1,4"),
+    "C#7" to listOf("1,1,1,2"),
     "C#m" to listOf("1,1,0,2"),
+    "C#m7" to listOf("1,1,0,2"),
+
     "D" to listOf("2,2,2,0"),
+    "D7" to listOf("2,2,2,3"),
     "Dm" to listOf("2,2,1,0"),
+    "Dm7" to listOf("2,2,1,3", "5,5,5,5"),
+
     "D#" to listOf("0,3,3,1"),
+    "D#7" to listOf("3,3,3,4"),
     "D#m" to listOf("3,3,2,1"),
+    "D#m7" to listOf("3,3,2,4"),
+
     "E" to listOf("1,4,0,2"),
+    "E7" to listOf("1,2,0,2"),
     "Em" to listOf("0,4,3,2"),
+    "Em7" to listOf("0,2,0,2", "7,7,7,7", "4,4,3,5"),
+
     "F" to listOf("2,0,1,0"),
+    "F7" to listOf("2,3,1,3"),
     "Fm" to listOf("1,0,1,3"),
+    "Fm7" to listOf("1,3,1,3"),
+
     "F#" to listOf("3,1,2,1"),
+    "F#7" to listOf("3,4,2,4"),
     "F#m" to listOf("2,1,2,0"),
+    "F#m7" to listOf("2,4,2,4"),
+
     "G" to listOf("0,2,3,2"),
+    "G7" to listOf("0,2,1,2"),
     "Gm" to listOf("0,2,3,1"),
+    "Gm7" to listOf("0,2,1,1"),
+
     "G#" to listOf("5,3,4,3"),
+    "G#7" to listOf("1,3,2,3"),
     "G#m" to listOf("4,3,4,2"),
+    "G#m7" to listOf("1,3,2,2"),
+
     "A" to listOf("2,1,0,0"),
+    "A7" to listOf("0,1,0,0"),
     "Am" to listOf("2,0,0,0"),
+    "Am7" to listOf("0,0,0,0", "2,4,3,3"),
+
     "Bb" to listOf("3,2,1,1"),
+    "Bb7" to listOf("1,2,1,1"),
     "Bbm" to listOf("3,1,1,1"),
+    "Bbm7" to listOf("1,1,1,1"),
+
     "B" to listOf("4,3,2,2"),
+    "B7" to listOf("4,3,2,0", "2,3,2,2"),
     "Bm" to listOf("4,2,2,2"),
+    "Bm7" to listOf("4,2,2,0", "2,2,2,2"),
 )
 
 val mandolinChordsDiagrams: Map<String, List<String>> = mapOf(
