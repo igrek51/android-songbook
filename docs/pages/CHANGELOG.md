@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added seventh chord diagrams for Ukulele (e.g. `C7`, `Am7`).
 
+### Fixed
+- Fixed sharing the presenter's transposition key with Song Cast spectators.
+
 ## [1.38.4] - 1917 - 2024-04-15
 ### Changed
 - Unique device ID is not included in the backup data,

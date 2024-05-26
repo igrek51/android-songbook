@@ -283,6 +283,7 @@ class SongCastService {
         return requester.promoteMemberAsync(memberPubId)
     }
 
+    // Share opened song by Presenter
     suspend fun presentMyOpenedSong(song: Song) {
         if (!isPresenter()) return
         // opening the song presented by someone else (or returning to the same one)
@@ -319,6 +320,7 @@ class SongCastService {
         uiInfoService.showInfo(R.string.songcast_song_selected_by_me, songName)
 
         songPreviewLayoutController.addOnInitListener {
+            payload.song_transposition = lyricsLoader.transposedBy.toLong()
             defaultScope.launch {
                 val result = postSongPresentAsync(payload).await()
                 result.fold(onSuccess = {
@@ -357,6 +359,7 @@ class SongCastService {
         }
     }
 
+    // Open and Follow presented song by a Spectator
     fun openPresentedSong() {
         val ephemeralSongN = ephemeralSong ?: return
         defaultScope.launch {
