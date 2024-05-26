@@ -36,6 +36,7 @@ class SongDetailsService(
         val path = buildSongPath(song)
         val namespaceName = buildNamespaceName(song)
         val songHash = SongHasher().hashSong(song).lowercase().take(8)
+        val lyricsLanguage = getLyricsLanguageName(song)
 
         val messageLines = mutableListOf<String>()
         messageLines.add(
@@ -47,6 +48,7 @@ class SongDetailsService(
                 namespaceName,
                 songVersion,
                 modificationDate,
+                lyricsLanguage,
                 songHash,
             )
         )
@@ -103,6 +105,14 @@ class SongDetailsService(
 
     private fun showMoreActions(song: Song) {
         songContextMenuBuilder.showSongActions(song)
+    }
+
+    private fun getLyricsLanguageName(song: Song): String {
+        val language = song.language ?: return "unknown"
+        if (language.isBlank()) return "unknown"
+        val locale = Locale(language)
+        val langDisplayName: String? = locale.getDisplayLanguage(locale)
+        return langDisplayName ?: "invalid langugage code"
     }
 
 }

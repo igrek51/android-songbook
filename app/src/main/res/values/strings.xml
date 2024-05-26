@@ -73,6 +73,7 @@
         \nLocation: %s
         \nSong version: %s
         \nLast modification: %s
+        \nLyrics language: %s
         \nHash: %s
     </string>
     <string name="song_details_comment">Comment: %s</string>

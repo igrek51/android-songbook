@@ -69,6 +69,7 @@
         \nLokalizacja: %s
         \nWersja piosenki: %s
         \nOstatnia modyfikacja: %s
+        \nJęzyk: %s
         \nHash: %s
     </string>
     <string name="song_details_comment">Komentarz: %s</string>

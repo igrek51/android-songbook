@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Added seventh chord diagrams for Ukulele (e.g. `C7`, `Am7`).
+- Enable other lyrics languages, such as French.
 
 ### Fixed
 - Fixed sharing the presenter's transposition key with Song Cast spectators.

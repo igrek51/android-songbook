@@ -2,9 +2,7 @@ package igrek.songbook.songselection.tree
 
 import android.os.Handler
 import android.os.Looper
-import android.view.KeyEvent
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
@@ -14,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.core.view.isVisible
 import igrek.songbook.R
 import igrek.songbook.compose.AppTheme
 import igrek.songbook.info.UiResourceService
@@ -23,7 +20,6 @@ import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
 import igrek.songbook.layout.InflatedLayout
-import igrek.songbook.layout.LocalFocusTraverser
 import igrek.songbook.layout.spinner.MultiPicker
 import igrek.songbook.persistence.general.model.Category
 import igrek.songbook.persistence.repository.AllSongsRepository

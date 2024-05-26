@@ -87,7 +87,7 @@ class AppLanguageService(
 
     fun languageStringEntries(): LinkedHashMap<String, String> {
         val map = LinkedHashMap<String, String>()
-        for (item in AppLanguage.values()) {
+        for (item in AppLanguage.entries) {
             val displayName = uiResourceService.resString(item.displayNameResId)
             map[item.langCode] = displayName
         }
