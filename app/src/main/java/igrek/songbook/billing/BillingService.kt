@@ -45,7 +45,7 @@ class BillingService(
 
     private val logger: Logger = LoggerFactory.logger
     private var billingClient: BillingClient? = null
-    private val defaultScope: CoroutineScope
+    private val defaultScope: CoroutineScope = GlobalScope
     private val knownAllProducts: List<String> = listOf(
         PRODUCT_ID_NO_ADS,
         PRODUCT_ID_DONATE_1_BEER,
@@ -71,7 +71,6 @@ class BillingService(
     }
 
     init {
-        defaultScope = GlobalScope
         initJob = defaultScope.launch {
             initChannel.receive()
             initDetailsChannel.receive()
@@ -166,27 +165,51 @@ class BillingService(
     ) {
         val responseCode = billingResult.responseCode
         val debugMessage = billingResult.debugMessage
-        when (responseCode) {
-            BillingClient.BillingResponseCode.OK -> {
-                if (productDetails.isEmpty()) {
-                    logger.warn("Found empty product details")
-                } else {
-                    for (productDetail in productDetails) {
-                        val productId = productDetail.productId
-                        productsDetails[productId] = productDetail
-                        val offerDetails: ProductDetails.OneTimePurchaseOfferDetails? =
-                            productDetail.oneTimePurchaseOfferDetails
-                        productPrices[productId] = offerDetails?.formattedPrice
+        try {
+            when (responseCode) {
+                BillingClient.BillingResponseCode.OK -> {
+                    if (productDetails.isEmpty()) {
+                        logger.warn("Found empty product details")
+                    } else {
+                        for (productDetail in productDetails) {
+                            val productId = productDetail.productId
+                            productsDetails[productId] = productDetail
+                            val offerDetails: ProductDetails.OneTimePurchaseOfferDetails? =
+                                productDetail.oneTimePurchaseOfferDetails
+                            productPrices[productId] = offerDetails?.formattedPrice
+                        }
+                        logger.debug("Product details fetched: ${productDetails.size}")
                     }
-                    logger.debug("Product details fetched: ${productDetails.size}")
+                }
+                BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE -> {
+                    throw RuntimeException("Network connection is down. Can't connect to Google Play")
+                }
+                BillingClient.BillingResponseCode.BILLING_UNAVAILABLE -> {
+                    throw RuntimeException("Google Play Billing API is not available.")
+                }
+                BillingClient.BillingResponseCode.DEVELOPER_ERROR -> {
+                    throw RuntimeException("Billing Response: Invalid arguments provided to the API")
+                    // Developer error means that Google Play does not recognize the configuration.
+                    // The product ID must match and the APK you are using must be signed with release keys."
+                }
+                BillingClient.BillingResponseCode.ERROR -> {
+                    throw RuntimeException("Fatal error during the API action. ${billingResult.debugMessage}")
+                }
+                BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED -> {
+                    throw RuntimeException("Requested feature is not supported by Play Store on the current device. Please update Play Store.")
+                }
+                BillingClient.BillingResponseCode.SERVICE_DISCONNECTED -> {
+                    throw RuntimeException("Play Store service is not connected now - potentially transient state.")
+                }
+                BillingClient.BillingResponseCode.SERVICE_TIMEOUT -> {
+                    throw RuntimeException("The request has reached the maximum timeout before Google Play responds.")
+                }
+                else -> {
+                    throw RuntimeException("Failed to get product details: $responseCode $debugMessage")
                 }
             }
-            else -> {
-                UiErrorHandler().handleError(
-                    RuntimeException("Product details: $responseCode $debugMessage"),
-                    R.string.error_purchase_error
-                )
-            }
+        } catch (e: RuntimeException) {
+            UiErrorHandler().handleError(e, R.string.error_purchase_error)
         }
     }
 
@@ -278,7 +301,7 @@ class BillingService(
                     throw RuntimeException("Fatal error during the API action. ${billingResult.debugMessage}")
                 }
                 BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED -> {
-                    throw RuntimeException("Requested feature is not supported by Play Store on the current device")
+                    throw RuntimeException("Requested feature is not supported by Play Store on the current device. Please update Play Store.")
                 }
                 BillingClient.BillingResponseCode.ITEM_NOT_OWNED -> {
                     throw RuntimeException("Failure to consume since item is not owned.")
@@ -293,7 +316,7 @@ class BillingService(
                     throw RuntimeException("The request has reached the maximum timeout before Google Play responds.")
                 }
                 BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE -> {
-                    throw RuntimeException("Network connection is down.")
+                    throw RuntimeException("Network connection is down. Can't connect to Google Play")
                 }
                 else -> {
                     throw RuntimeException("Billing Response Code ${billingResult.responseCode} ${billingResult.debugMessage}")

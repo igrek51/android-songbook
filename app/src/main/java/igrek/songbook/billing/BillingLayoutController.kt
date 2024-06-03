@@ -31,7 +31,6 @@ class BillingLayoutController(
 
     private var buyAdFreeButton: Button? = null
     private var adFreePriceTextView: TextView? = null
-//    private var donate1PriceTextView: TextView? = null
 
     private val subscriptions = mutableListOf<Disposable>()
 
@@ -49,16 +48,13 @@ class BillingLayoutController(
                 }, UiErrorHandler::handleError)
         )
 
-        buyAdFreeButton = layout.findViewById(R.id.billingBuyAdFree)
         adFreePriceTextView = layout.findViewById(R.id.billingAdFreePrice)
-//        donate1PriceTextView = layout.findViewById(R.id.billingDonate1Price)
 
+        buyAdFreeButton = layout.findViewById(R.id.billingBuyAdFree)
+        buyAdFreeButton?.isEnabled = false
         buyAdFreeButton?.setOnClickListener {
             billingService.launchBillingFlow(PRODUCT_ID_NO_ADS)
         }
-//        layout.findViewById<Button>(R.id.billingBuyDonate1Button)?.setOnClickListener {
-//            billingService.launchBillingFlow(PRODUCT_ID_DONATE_1_BEER)
-//        }
         layout.findViewById<Button>(R.id.billingRestorePurchases)?.setOnClickListener {
             billingService.callRestorePurchases()
         }
@@ -79,10 +75,8 @@ class BillingLayoutController(
     }
 
     private fun updateComponents() {
-        val priceAdFree = billingService.getProductPrice(PRODUCT_ID_NO_ADS).orEmpty()
+        val priceAdFree: String? = billingService.getProductPrice(PRODUCT_ID_NO_ADS)
         val adfreePurchased: Boolean? = billingService.isPurchased(PRODUCT_ID_NO_ADS)
-
-//        val priceDonate1 = billingService.getProductPrice(PRODUCT_ID_DONATE_1_BEER).orEmpty()
 
         runBlocking(Dispatchers.Main) {
 
@@ -91,15 +85,19 @@ class BillingLayoutController(
                     it.isEnabled = false
                     it.text = uiResourceService.resString(R.string.billing_already_purchased)
                 }
+            } else if (priceAdFree == null) { // waiting for product details
+                buyAdFreeButton?.let {
+                    it.isEnabled = false
+                }
+            } else {
+                buyAdFreeButton?.let {
+                    it.isEnabled = true
+                }
             }
 
             adFreePriceTextView?.let {
-                it.text = uiInfoService.resString(R.string.billing_item_price, priceAdFree)
+                it.text = uiInfoService.resString(R.string.billing_item_price, priceAdFree.orEmpty())
             }
-
-//            donate1PriceTextView?.let {
-//                it.text = uiInfoService.resString(R.string.billing_item_price, priceDonate1)
-//            }
 
         }
     }
