@@ -164,17 +164,17 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.activity:activity-compose:1.8.2") // Integration with activities
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
     // Google APIs
     implementation("com.google.api-client:google-api-client-android:1.35.2") {
         exclude(group="org.apache.httpcomponents")
     }
-    implementation("com.google.android.gms:play-services-basement:18.2.0")
-    implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation("com.google.android.gms:play-services-basement:18.4.0")
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
     // AdMob
-    implementation("com.google.android.gms:play-services-ads:22.5.0")
+    implementation("com.google.android.gms:play-services-ads:23.1.0")
     implementation("com.google.http-client:google-http-client-gson:1.43.3") {
         exclude(module="httpclient")
         exclude(module="commons-logging")
