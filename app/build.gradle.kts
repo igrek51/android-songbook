@@ -183,7 +183,7 @@ dependencies {
         exclude(group="org.apache.httpcomponents")
     }
     // Google Play Billing
-    implementation("com.android.billingclient:billing-ktx:5.2.1")
+    implementation("com.android.billingclient:billing-ktx:7.0.0")
     // Jackson
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.16.0")
     // Guava

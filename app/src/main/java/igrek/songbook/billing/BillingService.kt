@@ -88,9 +88,12 @@ class BillingService(
     private fun initConnection() {
         try {
             logger.debug("initializing Billing Service")
+            val pendingParams: PendingPurchasesParams = PendingPurchasesParams.newBuilder()
+                .enableOneTimeProducts()
+                .build()
             billingClient = BillingClient.newBuilder(context)
                 .setListener(this)
-                .enablePendingPurchases()
+                .enablePendingPurchases(pendingParams)
                 .build()
             billingClient?.startConnection(this)
         } catch (t: Throwable) {
@@ -182,7 +185,7 @@ class BillingService(
                     }
                 }
                 BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE -> {
-                    throw RuntimeException("Network connection is down. Can't connect to Google Play")
+                    throw RuntimeException("Network connection is down. Google Play billing service is unavailable")
                 }
                 BillingClient.BillingResponseCode.BILLING_UNAVAILABLE -> {
                     throw RuntimeException("Google Play Billing API is not available.")
@@ -192,17 +195,17 @@ class BillingService(
                     // Developer error means that Google Play does not recognize the configuration.
                     // The product ID must match and the APK you are using must be signed with release keys."
                 }
-                BillingClient.BillingResponseCode.ERROR -> {
-                    throw RuntimeException("Fatal error during the API action. ${billingResult.debugMessage}")
-                }
                 BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED -> {
                     throw RuntimeException("Requested feature is not supported by Play Store on the current device. Please update Play Store.")
                 }
                 BillingClient.BillingResponseCode.SERVICE_DISCONNECTED -> {
                     throw RuntimeException("Play Store service is not connected now - potentially transient state.")
                 }
-                BillingClient.BillingResponseCode.SERVICE_TIMEOUT -> {
-                    throw RuntimeException("The request has reached the maximum timeout before Google Play responds.")
+                BillingClient.BillingResponseCode.NETWORK_ERROR -> {
+                    throw RuntimeException("Network connection is down. There was a problem with the network connection between the user's device and the Google Play system.")
+                }
+                BillingClient.BillingResponseCode.ERROR -> {
+                    throw RuntimeException("Fatal error during the API action. ${billingResult.debugMessage}")
                 }
                 else -> {
                     throw RuntimeException("Failed to get product details: $responseCode $debugMessage")
@@ -289,34 +292,34 @@ class BillingService(
                 BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> {
                     uiInfoService.showInfo(R.string.billing_user_already_owns_item)
                 }
-                BillingClient.BillingResponseCode.DEVELOPER_ERROR -> {
-                    throw RuntimeException("Billing Response: Invalid arguments provided to the API")
-                    // Developer error means that Google Play does not recognize the configuration.
-                    // The product ID must match and the APK you are using must be signed with release keys."
-                }
-                BillingClient.BillingResponseCode.BILLING_UNAVAILABLE -> {
-                    throw RuntimeException("Google Play Billing API is not available.")
-                }
-                BillingClient.BillingResponseCode.ERROR -> {
-                    throw RuntimeException("Fatal error during the API action. ${billingResult.debugMessage}")
-                }
-                BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED -> {
-                    throw RuntimeException("Requested feature is not supported by Play Store on the current device. Please update Play Store.")
-                }
                 BillingClient.BillingResponseCode.ITEM_NOT_OWNED -> {
                     throw RuntimeException("Failure to consume since item is not owned.")
                 }
                 BillingClient.BillingResponseCode.ITEM_UNAVAILABLE -> {
                     throw RuntimeException("Requested product is not available for purchase")
                 }
+                BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE -> {
+                    throw RuntimeException("Network connection is down. Google Play billing service is unavailable")
+                }
+                BillingClient.BillingResponseCode.BILLING_UNAVAILABLE -> {
+                    throw RuntimeException("Google Play Billing API is not available.")
+                }
+                BillingClient.BillingResponseCode.DEVELOPER_ERROR -> {
+                    throw RuntimeException("Billing Response: Invalid arguments provided to the API")
+                    // Developer error means that Google Play does not recognize the configuration.
+                    // The product ID must match and the APK you are using must be signed with release keys."
+                }
+                BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED -> {
+                    throw RuntimeException("Requested feature is not supported by Play Store on the current device. Please update Play Store.")
+                }
                 BillingClient.BillingResponseCode.SERVICE_DISCONNECTED -> {
                     throw RuntimeException("Play Store service is not connected now - potentially transient state.")
                 }
-                BillingClient.BillingResponseCode.SERVICE_TIMEOUT -> {
-                    throw RuntimeException("The request has reached the maximum timeout before Google Play responds.")
+                BillingClient.BillingResponseCode.NETWORK_ERROR -> {
+                    throw RuntimeException("Network connection is down. There was a problem with the network connection between the user's device and the Google Play system.")
                 }
-                BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE -> {
-                    throw RuntimeException("Network connection is down. Can't connect to Google Play")
+                BillingClient.BillingResponseCode.ERROR -> {
+                    throw RuntimeException("Fatal error during the API action. ${billingResult.debugMessage}")
                 }
                 else -> {
                     throw RuntimeException("Billing Response Code ${billingResult.responseCode} ${billingResult.debugMessage}")
@@ -350,34 +353,34 @@ class BillingService(
                 BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> {
                     uiInfoService.showInfo(R.string.billing_user_already_owns_item)
                 }
-                BillingClient.BillingResponseCode.DEVELOPER_ERROR -> {
-                    throw RuntimeException("Billing Response: Invalid arguments provided to the API")
-                    // Developer error means that Google Play does not recognize the configuration.
-                    // The product ID must match and the APK you are using must be signed with release keys."
-                }
-                BillingClient.BillingResponseCode.BILLING_UNAVAILABLE -> {
-                    throw RuntimeException("Google Play Billing API is not available.")
-                }
-                BillingClient.BillingResponseCode.ERROR -> {
-                    throw RuntimeException("Fatal error during the API action. ${billingResult.debugMessage}")
-                }
-                BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED -> {
-                    throw RuntimeException("Requested feature is not supported by Play Store on the current device")
-                }
                 BillingClient.BillingResponseCode.ITEM_NOT_OWNED -> {
                     throw RuntimeException("Failure to consume since item is not owned.")
                 }
                 BillingClient.BillingResponseCode.ITEM_UNAVAILABLE -> {
                     throw RuntimeException("Requested product is not available for purchase")
                 }
+                BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE -> {
+                    throw RuntimeException("Network connection is down. Google Play billing service is unavailable")
+                }
+                BillingClient.BillingResponseCode.BILLING_UNAVAILABLE -> {
+                    throw RuntimeException("Google Play Billing API is not available.")
+                }
+                BillingClient.BillingResponseCode.DEVELOPER_ERROR -> {
+                    throw RuntimeException("Billing Response: Invalid arguments provided to the API")
+                    // Developer error means that Google Play does not recognize the configuration.
+                    // The product ID must match and the APK you are using must be signed with release keys."
+                }
+                BillingClient.BillingResponseCode.FEATURE_NOT_SUPPORTED -> {
+                    throw RuntimeException("Requested feature is not supported by Play Store on the current device. Please update Play Store.")
+                }
                 BillingClient.BillingResponseCode.SERVICE_DISCONNECTED -> {
                     throw RuntimeException("Play Store service is not connected now - potentially transient state.")
                 }
-                BillingClient.BillingResponseCode.SERVICE_TIMEOUT -> {
-                    throw RuntimeException("The request has reached the maximum timeout before Google Play responds.")
+                BillingClient.BillingResponseCode.NETWORK_ERROR -> {
+                    throw RuntimeException("Network connection is down. There was a problem with the network connection between the user's device and the Google Play system.")
                 }
-                BillingClient.BillingResponseCode.SERVICE_UNAVAILABLE -> {
-                    throw RuntimeException("Network connection is down.")
+                BillingClient.BillingResponseCode.ERROR -> {
+                    throw RuntimeException("Fatal error during the API action. ${billingResult.debugMessage}")
                 }
                 else -> {
                     throw RuntimeException("Billing Response Code ${billingResult.responseCode} ${billingResult.debugMessage}")
