@@ -188,7 +188,7 @@ class BillingService(
                     throw RuntimeException("Network connection is down. Google Play billing service is unavailable")
                 }
                 BillingClient.BillingResponseCode.BILLING_UNAVAILABLE -> {
-                    throw RuntimeException("Google Play Billing API is not available.")
+                    throw RuntimeException("Google Play Billing Unavailable. Please try again.")
                 }
                 BillingClient.BillingResponseCode.DEVELOPER_ERROR -> {
                     throw RuntimeException("Billing Response: Invalid arguments provided to the API")
@@ -220,8 +220,12 @@ class BillingService(
         uiInfoService.showInfo(R.string.billing_restoring_purchases)
         defaultScope.launch {
             try {
-                restorePurchases()
-                uiInfoService.showInfo(R.string.billing_purchases_restored)
+                val stateHistogram = restorePurchases()
+                val pending = stateHistogram[ProductState.PENDING] ?: 0
+                when (pending > 0) {
+                    true -> uiInfoService.showInfo(R.string.billing_purchases_restored_pending, pending.toString())
+                    false -> uiInfoService.showInfo(R.string.billing_purchases_restored)
+                }
             } catch (t: Throwable) {
                 UiErrorHandler().handleError(t, R.string.error_purchase_error)
             }
@@ -229,7 +233,7 @@ class BillingService(
         }
     }
 
-    private suspend fun restorePurchases() {
+    private suspend fun restorePurchases(): Map<ProductState, Int> {
         for (productId: String in this.knownAllProducts) {
             productAmounts[productId] = 0
             productStateMap[productId] = ProductState.UNKNOWN
@@ -245,10 +249,13 @@ class BillingService(
             throw RuntimeException("Restoring purchases failed: ${billingResult.responseCode} ${billingResult.debugMessage}")
         }
 
+        val stateHistogram: MutableMap<ProductState, Int> = hashMapOf()
         for (productId in knownAllProducts) {
             if (productStateMap[productId] == ProductState.UNKNOWN) {
                 productStateMap[productId] = ProductState.UNPURCHASED
             }
+            val state = productStateMap[productId] ?: ProductState.UNKNOWN
+            stateHistogram[state] = (stateHistogram[state] ?: 0) + 1
         }
 
         logger.debug(
@@ -256,6 +263,7 @@ class BillingService(
                     "$PRODUCT_ID_NO_ADS - ${productStateMap[PRODUCT_ID_NO_ADS]?.name}, " +
                     "$PRODUCT_ID_DONATE_1_BEER - ${productStateMap[PRODUCT_ID_DONATE_1_BEER]?.name} quantity=${productAmounts[PRODUCT_ID_DONATE_1_BEER]}"
         )
+        return stateHistogram
     }
 
     private suspend fun restorePurchasesFromHistory() {
@@ -302,7 +310,7 @@ class BillingService(
                     throw RuntimeException("Network connection is down. Google Play billing service is unavailable")
                 }
                 BillingClient.BillingResponseCode.BILLING_UNAVAILABLE -> {
-                    throw RuntimeException("Google Play Billing API is not available.")
+                    throw RuntimeException("Google Play Billing Unavailable. Purchase went wrong. Please try again.")
                 }
                 BillingClient.BillingResponseCode.DEVELOPER_ERROR -> {
                     throw RuntimeException("Billing Response: Invalid arguments provided to the API")
@@ -363,7 +371,7 @@ class BillingService(
                     throw RuntimeException("Network connection is down. Google Play billing service is unavailable")
                 }
                 BillingClient.BillingResponseCode.BILLING_UNAVAILABLE -> {
-                    throw RuntimeException("Google Play Billing API is not available.")
+                    throw RuntimeException("Google Play Billing Unavailable. Purchase went wrong. Please try again.")
                 }
                 BillingClient.BillingResponseCode.DEVELOPER_ERROR -> {
                     throw RuntimeException("Billing Response: Invalid arguments provided to the API")

@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.38.6] - 1919 - 2024-06-25
+### Fixed
+- Updated Google Play Billing flow.
+
 ## [1.38.5] - 1918 - 2024-05-27
 ### Added
 - Added seventh chord diagrams for Ukulele (e.g. `C7`, `Am7`).

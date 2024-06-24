@@ -88,10 +88,12 @@ class BillingLayoutController(
             } else if (priceAdFree == null) { // waiting for product details
                 buyAdFreeButton?.let {
                     it.isEnabled = false
+                    it.text = uiResourceService.resString(R.string.billing_buy_ad_free)
                 }
             } else {
                 buyAdFreeButton?.let {
                     it.isEnabled = true
+                    it.text = uiResourceService.resString(R.string.billing_buy_ad_free)
                 }
             }
 

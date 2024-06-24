@@ -384,13 +384,14 @@
     <string name="media_button_behaviour_next_song">Przejdź do następnej piosenki</string>
     <string name="media_button_behaviour_nothing">Nie rób nic</string>
     <string name="settings_buttons_section">Sterowanie przyciskami</string>
-    <string name="billing_ad_free_info">Kup \"Brak reklam\", aby usunąć banner z reklamami w aplikacji, raz na zawsze (jednorazowa płatność).</string>
+    <string name="billing_ad_free_info">Kup \"Brak reklam\", aby usunąć banner z reklamami w aplikacji, raz na zawsze. Jest to jednorazowa płatność.</string>
     <string name="billing_buy_ad_free">Wykup Brak reklam</string>
     <string name="billing_restore_pruchases">Wczytaj poprzednie zakupy</string>
     <string name="billing_already_purchased">Już kupione</string>
     <string name="error_purchase_error" formatted="false">Błąd płatności: %s</string>
     <string name="billing_restoring_purchases">Przywracanie poprzednich zakupów…</string>
-    <string name="billing_purchases_restored">Płatności przywrócone</string>
+    <string name="billing_purchases_restored">Status płatności przywrócony</string>
+    <string name="billing_purchases_restored_pending" formatted="false">Płatności przywrócone. %s płatność w toku.</string>
     <string name="billing_starting_purchase">Rozpoczynanie płatności…</string>
     <string name="billing_thanks_for_purchase_wait">Dziękuję za płatność. Oczekiwanie na przetworzenie transakcji…</string>
     <string name="billing_thanks_for_purchase_confirm">Dziękuję za płatność. Płatność potwierdzona.</string>
