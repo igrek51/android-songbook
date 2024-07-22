@@ -174,7 +174,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-basement:18.4.0")
     implementation("com.google.android.gms:play-services-auth:21.2.0")
     // AdMob
-    implementation("com.google.android.gms:play-services-ads:23.1.0")
+    implementation("com.google.android.gms:play-services-ads:23.2.0")
     implementation("com.google.http-client:google-http-client-gson:1.43.3") {
         exclude(module="httpclient")
         exclude(module="commons-logging")
