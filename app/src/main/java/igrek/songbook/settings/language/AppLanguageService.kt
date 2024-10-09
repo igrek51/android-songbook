@@ -7,30 +7,34 @@ import igrek.songbook.info.UiResourceService
 import igrek.songbook.inject.LazyExtractor
 import igrek.songbook.inject.LazyInject
 import igrek.songbook.inject.appFactory
+import igrek.songbook.persistence.repository.SongsRepository
 import igrek.songbook.persistence.user.UserDataDao
 import igrek.songbook.settings.preferences.SettingsState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
 
+
 class AppLanguageService(
     activity: LazyInject<Activity> = appFactory.activity,
     uiResourceService: LazyInject<UiResourceService> = appFactory.uiResourceService,
     settingsState: LazyInject<SettingsState> = appFactory.settingsState,
     userDataDao: LazyInject<UserDataDao> = appFactory.userDataDao,
+    songsRepository: LazyInject<SongsRepository> = appFactory.songsRepository,
 ) {
     private val activity by LazyExtractor(activity)
     private val uiResourceService by LazyExtractor(uiResourceService)
     private val preferencesState by LazyExtractor(settingsState)
     private val userDataDao by LazyExtractor(userDataDao)
+    private val songsRepository by LazyExtractor(songsRepository)
 
     var selectedSongLanguages: Set<SongLanguage>
         get() {
             val excludedLanguages = userDataDao.exclusionDao.exclusionDb.languages
-            return SongLanguage.allKnown().filter { it.langCode !in excludedLanguages }.toSet()
+            return knownLanguageCodes().filter { it.langCode !in excludedLanguages }.toSet()
         }
         set(value) {
-            val excluded = (SongLanguage.allKnown() - value).map { it.langCode }.toMutableList()
+            val excluded = (knownLanguageCodes() - value).map { it.langCode }.toMutableList()
             userDataDao.exclusionDao.setExcludedLanguages(excluded)
         }
 
@@ -74,9 +78,13 @@ class AppLanguageService(
         }
     }
 
+    private fun knownLanguageCodes(): List<SongLanguage> {
+        return songsRepository.allSongsRepo.songLanguages.get()
+    }
+
     fun songLanguageEntries(): LinkedHashMap<SongLanguage, String> {
         val map = LinkedHashMap<SongLanguage, String>()
-        SongLanguage.allKnown()
+        knownLanguageCodes()
             .forEach { lang ->
                 val locale = Locale(lang.langCode)
                 val langDisplayName = locale.getDisplayLanguage(locale)
@@ -85,7 +93,7 @@ class AppLanguageService(
         return map
     }
 
-    fun languageStringEntries(): LinkedHashMap<String, String> {
+    fun appLanguageStringEntries(): LinkedHashMap<String, String> {
         val map = LinkedHashMap<String, String>()
         for (item in AppLanguage.entries) {
             val displayName = uiResourceService.resString(item.displayNameResId)
@@ -96,7 +104,7 @@ class AppLanguageService(
 
     fun languageFilterEntries(): LinkedHashMap<String, String> {
         val map = LinkedHashMap<String, String>()
-        SongLanguage.allKnown()
+        knownLanguageCodes()
             .forEach { lang ->
                 val locale = Locale(lang.langCode)
                 val langDisplayName = locale.getDisplayLanguage(locale)
@@ -106,8 +114,17 @@ class AppLanguageService(
     }
 
     fun setSelectedSongLanguageCodes(languageCodes: Set<String>) {
-        selectedSongLanguages = SongLanguage.allKnown()
+        selectedSongLanguages = knownLanguageCodes()
             .filter { it.langCode in languageCodes }
             .toSet()
+    }
+}
+
+fun isValidLanguageCode(langCode: String): Boolean {
+    return try {
+        val locale = Locale(langCode)
+        !locale.isO3Language.isNullOrEmpty()
+    } catch (e: MissingResourceException) {
+        false
     }
 }

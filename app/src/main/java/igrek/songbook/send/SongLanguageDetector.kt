@@ -11,8 +11,8 @@ class SongLanguageDetector {
 
     fun detectLanguageCode(lyrics: String): String {
         if (polishCharacters.any { it in lyrics }) {
-            return SongLanguage.POLISH.langCode
+            return SongLanguage.POLISH_CODE
         }
-        return SongLanguage.ENGLISH.langCode
+        return SongLanguage.ENGLISH_CODE
     }
 }
