@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.38.7] - 1920 - 2024-10-10
+### Added
+- Support for all song languages.
+
 ## [1.38.6] - 1919 - 2024-06-25
 ### Fixed
 - Updated Google Play Billing flow.
