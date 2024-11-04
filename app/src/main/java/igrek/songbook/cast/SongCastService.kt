@@ -190,7 +190,7 @@ class SongCastService {
         while (isInRoom()) {
             val interval: Long? = when {
                 !activityController.isForeground -> null
-                streamSocket.ioSocket?.connected() == false -> (700..1700).random().toLong()
+                !streamSocket.connected -> (700..1700).random().toLong()
                 else -> {
                     val penaltyMillis = (refreshCounter.current() * 2.0f).limitTo(180f) * 1000 // max 3m
                     (1000..2000).random().toLong() + penaltyMillis.toLong()
@@ -219,13 +219,13 @@ class SongCastService {
     private suspend fun periodicReconnect() {
         var lastShot: Long = Date().time
         while (isInRoom()) {
-            val interval: Long? = when {
-                !activityController.isForeground -> null
-                !streamSocket.initialized -> null
-                streamSocket.ioSocket?.connected() == false -> 0
-                else -> null
+            val whetherReconnect: Boolean = when {
+                activityController.isInBackground -> false
+                !streamSocket.initialized -> false
+                !streamSocket.connected -> true
+                else -> false
             }
-            if (interval != null && Date().time - lastShot >= interval) {
+            if (whetherReconnect) {
                 try {
                     uiInfoService.showInfoAction(
                         R.string.songcast_reconnecting_to_room,
@@ -271,7 +271,7 @@ class SongCastService {
         return requester.postScrollControlAsync(payload)
     }
 
-    fun postTransposeControlAsync(payload: CastTranspose): Deferred<Result<Unit>> {
+    private fun postTransposeControlAsync(payload: CastTranspose): Deferred<Result<Unit>> {
         return requester.postTransposeControlAsync(payload)
     }
 

@@ -28,6 +28,8 @@ class ActivityController(
     var initialized = false
     var isForeground = true
         private set
+    val isInBackground: Boolean
+        get() = !isForeground
 
     fun onConfigurationChanged(newConfig: Configuration) {
         // resize event

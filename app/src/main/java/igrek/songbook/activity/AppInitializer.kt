@@ -1,6 +1,5 @@
 package igrek.songbook.activity
 
-
 import android.app.Activity
 import android.content.Intent
 import igrek.songbook.BuildConfig

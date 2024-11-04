@@ -3,117 +3,105 @@ package igrek.songbook.cast
 import igrek.songbook.info.logger.Logger
 import igrek.songbook.info.logger.LoggerFactory
 import igrek.songbook.util.ioScope
-import io.socket.client.Ack
-import io.socket.client.IO
-import io.socket.client.Socket
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import okhttp3.*
+import okio.ByteString
+import java.util.concurrent.TimeUnit
 
 class StreamSocket(
     private val onEventBroadcast: suspend (data: JSONObject) -> Unit,
-) {
+)  : WebSocketListener() {
 
     private val logger: Logger = LoggerFactory.logger
-    var ioSocket: Socket? = null
+    private var webSocket: WebSocket? = null
     var initialized: Boolean = false
-    private val debug: Boolean = false
+    var connected: Boolean = false
     private var connectJob: Job? = null
+    private var sessionCode: String? = null
 
     companion object {
-        const val songbookApiBase = "https://songbook.igrek.dev"
+        const val WS_URL_BASE = "wss://songbook.igrek.dev"
     }
 
     fun connect(sessionCode: String) {
+        this.sessionCode = sessionCode
+        val that = this
         connectJob = ioScope.launch {
-            val opts = IO.Options()
-            opts.path = "/socket.io/cast"
-            val socket = IO.socket(songbookApiBase, opts)
-            ioSocket = socket
+
             initialized = false
+            connected = false
 
-            socket.on("broadcast_new_event") { args ->
-                ioScope.launch {
-                    val data = args[0] as JSONObject
-                    onEventBroadcast(data)
-                }
-            }
-
-            socket.on("subscribe_for_session_events_ack") {
-                logger.debug("ACK: SongCast subscribed to socket.io room events")
-            }
-
-            if (debug) {
-                socket.onAnyIncoming { args ->
-                    logger.debug("socket incoming packet: $args")
-                }
-                socket.onAnyOutgoing { args ->
-                    logger.debug("socket outgoing packet: $args")
-                }
-            }
-
-            socket.on(Socket.EVENT_CONNECT) {
-                logger.debug("socket.io: Connected with id: ${socket.id()}")
-//                socket.emit("subscribe_for_session_events", JSONObject(
-//                    mapOf("session_id" to sessionCode)
-//                ))
-            }
-            socket.on(Socket.EVENT_DISCONNECT) {
-                logger.debug("socket.io: Disconnected")
-            }
-            socket.on(Socket.EVENT_CONNECT_ERROR) {
-                logger.error("socket.io: Connection Eror")
-            }
-
-            socket.disconnect()
-            socket.connect()
-
-            for (i in 1..20) {
-                if (socket.connected())
-                    break
-                logger.warn("Reconnecting to socket.io ($i)")
-                socket.disconnect()
-                socket.connect()
-                delay(100 + i * 100L)
-                if (i == 20 && !socket.connected()) {
-                    throw RuntimeException("Failed to connect to socket.io events stream")
-                }
-            }
-
-            socket.emit("subscribe_for_session_events", JSONObject(
-                mapOf("session_id" to sessionCode)
-            ), Ack {
-                if (debug)
-                    logger.debug("ACK: subscribe_for_session_events")
-            })
+            val client: OkHttpClient = OkHttpClient.Builder()
+                .connectTimeout(10,  TimeUnit.SECONDS)
+                .readTimeout(0,  TimeUnit.MILLISECONDS)
+                .build()
+            val request = Request.Builder()
+                .url("$WS_URL_BASE/api/cast/$sessionCode/events/ws")
+                .build()
+            webSocket = client.newWebSocket(request, that)
+            // Trigger shutdown of the dispatcher's executor so this process exits immediately.
+            client.dispatcher.executorService.shutdown()
 
             initialized = true
-            if (debug)
-                logger.debug("SongCast connected to socket.io")
         }
     }
 
-    suspend fun reconnect() {
-        val socket = ioSocket ?: return
-        for (i in 1..20) {
-            if (socket.connected())
-                break
-            logger.warn("Reconnecting to socket.io ($i)")
-            socket.disconnect()
-            socket.connect()
-            delay(100 + i * 150L)
-            if (i == 20 && !socket.connected()) {
-                throw RuntimeException("Failed to connect to socket.io events stream, reconnecting...")
-            }
+    override fun onOpen(webSocket: WebSocket, response: Response) {
+        logger.info("SongCast WS: connection accepted")
+        connected = true
+    }
+
+    override fun onMessage(webSocket: WebSocket, text: String) {
+        logger.info("SongCast WS: message received: $text")
+        onTextMessage(text)
+    }
+
+    override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
+        logger.info("SongCast WS: binary message received: $bytes")
+        val text = bytes.utf8()
+        onTextMessage(text)
+    }
+
+    private fun onTextMessage(text: String) {
+        if (text == "ping") return
+        val jsonData = JSONObject(text)
+        ioScope.launch {
+            onEventBroadcast(jsonData)
         }
+    }
+
+    override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
+        logger.info("SongCast WS: closing by remote peer")
+    }
+
+    override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+        logger.info("SongCast WS: connection closed")
+    }
+
+    override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+        logger.error("SongCast: Websocket error", t)
+    }
+
+    fun reconnect() {
+        val sessionCode = this.sessionCode ?: return
+        logger.debug("Reconnecting to SongCast room $sessionCode")
+        close()
+        connect(sessionCode)
     }
 
     fun close() {
-        ioSocket?.disconnect()
-        ioSocket = null
         if (connectJob?.isActive == true) {
             connectJob?.cancel()
         }
+        if (webSocket != null) {
+            webSocket?.close(1000, "closing by client")
+            logger.info("Unsubscribed from topic")
+            sessionCode = null
+            webSocket = null
+        }
+        initialized = false
+        connected = false
     }
 }
