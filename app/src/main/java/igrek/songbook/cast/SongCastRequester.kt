@@ -154,6 +154,27 @@ class SongCastRequester {
         }
     }
 
+    fun getScrollControlAsync(
+        onSuccess: suspend (responseData: CastScroll) -> Unit,
+    ): Deferred<Result<CastScroll>> {
+        val deviceId = deviceIdProvider.getUniqueDeviceId()
+        val request: Request = Request.Builder()
+            .url(sessionScrollUrl(sessionCode))
+            .header(authDeviceHeader, deviceId)
+            .get()
+            .build()
+        return httpRequester.httpRequestAsync(request) { response ->
+            val jsonData = response.body?.string() ?: ""
+            val responseData: CastScroll =
+                httpRequester.jsonSerializer.decodeFromString(
+                    CastScroll.serializer(),
+                    jsonData
+                )
+            onSuccess(responseData)
+            responseData
+        }
+    }
+
     fun postSongPresentAsync(
         payload: CastSongSelected,
         onSuccess: () -> Unit,

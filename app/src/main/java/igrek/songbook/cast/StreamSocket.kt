@@ -27,18 +27,17 @@ class StreamSocket(
 
     fun connect(sessionCode: String) {
         this.sessionCode = sessionCode
+        initialized = false
+        connected = false
         val that = this
         connectJob = ioScope.launch {
-
-            initialized = false
-            connected = false
 
             val client: OkHttpClient = OkHttpClient.Builder()
                 .connectTimeout(10,  TimeUnit.SECONDS)
                 .readTimeout(0,  TimeUnit.MILLISECONDS)
                 .build()
             val request = Request.Builder()
-                .url("$WS_URL_BASE/api/cast/$sessionCode/events/ws")
+                .url("$WS_URL_BASE/ws/cast/$sessionCode/events")
                 .build()
             webSocket = client.newWebSocket(request, that)
             // Trigger shutdown of the dispatcher's executor so this process exits immediately.
@@ -82,6 +81,7 @@ class StreamSocket(
 
     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
         logger.error("SongCast: Websocket error", t)
+        connected = false
     }
 
     fun reconnect() {

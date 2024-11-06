@@ -119,7 +119,7 @@ class ScrollService(
         return CastScroll(
             view_start = primalStartIndex.toFloat() + linesStartFraction,
             view_end = primalEndIndex.toFloat() + linesEndFractoin,
-            visible_text = visibleText,
+            visible_text = null,
             mode = preferencesState.castScrollControl.id,
         )
     }

@@ -190,10 +190,10 @@ class SongCastService {
         while (isInRoom()) {
             val interval: Long? = when {
                 !activityController.isForeground -> null
-                !streamSocket.connected -> (700..1700).random().toLong()
+                !streamSocket.connected -> randomLong(1000, 2500)
                 else -> {
-                    val penaltyMillis = (refreshCounter.current() * 2.0f).limitTo(180f) * 1000 // max 3m
-                    (1000..2000).random().toLong() + penaltyMillis.toLong()
+                    val penaltyMillis = (refreshCounter.current() * 4.0f).limitTo(240f) * 1000 // max 4m
+                    randomLong(1000, 2000) + penaltyMillis.toLong()
                 }
             }
             if (interval != null && Date().time - lastShot >= interval) {
@@ -217,7 +217,6 @@ class SongCastService {
     }
 
     private suspend fun periodicReconnect() {
-        var lastShot: Long = Date().time
         while (isInRoom()) {
             val whetherReconnect: Boolean = when {
                 activityController.isInBackground -> false
@@ -237,9 +236,8 @@ class SongCastService {
                 } catch (e: Throwable) {
                     UiErrorHandler().handleContextError(e, R.string.songcast_connection_context)
                 }
-                lastShot = Date().time
             }
-            delay(2_000 + (0..500).random().toLong())
+            delay(4_000 + randomLong(0, 500))
         }
     }
 
@@ -259,6 +257,15 @@ class SongCastService {
                 sessionState.createdTime = responseData.create_timestamp
                 sessionState.initialized = true
                 ephemeralSong = responseData.song?.let { buildEphemeralSong(it) }
+            }
+        }
+    }
+
+    private fun getScrollControlAsync(): Deferred<Result<CastScroll>> {
+        return requester.getScrollControlAsync { responseData ->
+            sessionStateMutex.withLock {
+                oldState = sessionState.copy()
+                sessionState.currentScroll = responseData
             }
         }
     }
@@ -349,7 +356,7 @@ class SongCastService {
         )
     }
 
-    private fun followsPresentedSong(pubMemberId: String?): Boolean {
+    private fun doesFollowPresentedSong(pubMemberId: String?): Boolean {
         return when {
             !clientOpenPresentedSongs -> false
             pubMemberId == null -> false
@@ -374,10 +381,10 @@ class SongCastService {
         when (val type = data.getString("type")) {
             "SongSelectedEvent" -> refreshSessionDetails()
             "SongDeselectedEvent" -> refreshSessionDetails()
-            "CastMembersUpdatedEvent" -> refreshSessionDetails()
-            "ChatMessageReceivedEvent" -> refreshSessionDetails()
-            "SongScrolledEvent" -> refreshSessionDetails()
+            "SongScrolledEvent" -> refreshScrollDetails()
             "SongTransposedEvent" -> refreshSessionDetails()
+            "ChatMessageReceivedEvent" -> refreshSessionDetails()
+            "CastMembersUpdatedEvent" -> refreshSessionDetails()
             else -> {
                 logger.warn("Unknown SongCast event type: $type")
                 refreshSessionDetails()
@@ -402,6 +409,21 @@ class SongCastService {
                     refreshCounter.reset()
             }
             refreshUI()
+            return Result.success(Unit)
+        }, onFailure = { e ->
+            UiErrorHandler().handleContextError(e, R.string.songcast_connection_context)
+            return Result.failure(e)
+        })
+    }
+
+    private suspend fun refreshScrollDetails(): Result<Unit> {
+        val result = getScrollControlAsync().await()
+        result.fold(onSuccess = {
+            sessionStateMutex.withLock {
+                if (oldState.initialized) {
+                    watchSessionScrollState(oldState.currentScroll, sessionState.currentScroll)
+                }
+            }
             return Result.success(Unit)
         }, onFailure = { e ->
             UiErrorHandler().handleContextError(e, R.string.songcast_connection_context)
@@ -473,6 +495,16 @@ class SongCastService {
         return changed
     }
 
+    private fun watchSessionScrollState(oldScroll: CastScroll?, newScroll: CastScroll?): Boolean {
+        if (oldScroll != newScroll) {
+            newScroll?.run {
+                adaptToScrollControl()
+            }
+            return true
+        }
+        return false
+    }
+
     private fun onSongSelectedEventDto(castSongDto: CastSong) {
         val presenter: CastMember? = sessionState.members.find { it.public_member_id == castSongDto.chosen_by }
         val presenterName = presenter?.name ?: "Unknown"
@@ -483,7 +515,7 @@ class SongCastService {
             )
         }
         val amIPresenting = presenter?.public_member_id == myMemberPublicId
-        val followsSong = followsPresentedSong(presenter?.public_member_id)
+        val followsSong = doesFollowPresentedSong(presenter?.public_member_id)
         when {
             amIPresenting || followsSong -> uiInfoService.showInfo(
                 R.string.songcast_song_selected, presenterName, songName,
@@ -579,6 +611,10 @@ class SongCastService {
             })
         }
     }
+}
+
+fun randomLong(low: Int, high: Int): Long {
+    return (low..high).random().toLong()
 }
 
 data class SessionState(
