@@ -13,12 +13,13 @@ class DeviceIdProvider (
     private val preferencesState by LazyExtractor(settingsState)
     private val preferencesService by LazyExtractor(appFactory.preferencesService)
     private val userDataDao by LazyExtractor(appFactory.userDataDao)
+    private val logger = LoggerFactory.logger
 
-    fun getUserDeviceId(): String {
+    fun getUserId(): String {
         if (preferencesState.userDeviceId.isBlank()) {
             val uuid = newUUID()
             preferencesState.userDeviceId = uuid
-            LoggerFactory.logger.debug("Unique User ID assigned: $uuid")
+            logger.debug("Unique User ID assigned: $uuid")
 
             preferencesService.dumpAll()
             userDataDao.requestSave(true)
@@ -26,14 +27,21 @@ class DeviceIdProvider (
         return preferencesState.userDeviceId
     }
 
+    // used to distinguish different devices in Editor Session and SongCast
     fun getUniqueDeviceId(): String {
         if (userDataDao.deviceDao.deviceDb.uid.isBlank()) {
             val uuid = newUUID()
             userDataDao.deviceDao.deviceDb.uid = uuid
-            LoggerFactory.logger.debug("Unique Device ID assigned: $uuid")
+            logger.debug("Unique Device ID assigned: $uuid")
             userDataDao.requestSave(true)
         }
         return userDataDao.deviceDao.deviceDb.uid
+    }
+
+    fun setUniqueDeviceId(udid: String) {
+        userDataDao.deviceDao.deviceDb.uid = udid
+        logger.info("Unique Device ID re-assigned: $udid")
+        userDataDao.requestSave(true)
     }
 
     fun newUUID(): String {

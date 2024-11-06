@@ -155,7 +155,8 @@ class CommanderService(
 
             SimpleKeyRule("ad show") { this.commanderUtils.enableAds() },
 
-            SimpleKeyRule("device id") { this.commanderUtils.showDeviceId() },
+            SimpleKeyRule("udid get") { this.commanderUtils.showUniqueDeviceId() },
+            SubCommandRule("udid set", this.commanderUtils::setUniqueDeviceId), // udid set 012345678901234901234567890
 
             SimpleKeyRule("goto shop") {
                 this.layoutController.showLayout(BillingLayoutController::class)

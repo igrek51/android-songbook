@@ -179,9 +179,14 @@ class CommanderUtils(
         success(message)
     }
 
-    fun showDeviceId() {
+    fun showUniqueDeviceId() {
         val deviceId = appFactory.deviceIdProvider.get().getUniqueDeviceId()
         success(deviceId)
+    }
+
+    fun setUniqueDeviceId(udid: String) {
+        appFactory.deviceIdProvider.get().setUniqueDeviceId(udid)
+        success("Unique Device ID re-assigned: $udid")
     }
 
     fun success(message: String) {

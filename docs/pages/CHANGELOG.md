@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+## [1.38.8] - 1921 - 2024-10-10
+### Added
+- Command line allows to check and re-assign Unique Device ID.
+
+### Changed
+- Enhanced performance of real-time streaming the SongCast events, switched to WebSocket.
 
 ## [1.38.7] - 1920 - 2024-10-10
 ### Added
