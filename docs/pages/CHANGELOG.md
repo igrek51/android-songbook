@@ -6,7 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-## [1.38.8] - 1921 - 2024-10-10
+## [1.38.9] - 1922 - 2024-11-08
+### Fixed
+- Fixed launching dedicated Activity on Android TV devices.
+
+## [1.38.8] - 1921 - 2024-11-07
 ### Added
 - Command line allows to check and re-assign Unique Device ID.
 

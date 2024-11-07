@@ -107,5 +107,4 @@ class ActivityController(
         val activityName = activity::class.simpleName
         return activityName == TvActivity::class.simpleName
     }
-
 }

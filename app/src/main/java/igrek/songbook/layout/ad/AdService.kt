@@ -59,6 +59,7 @@ class AdService(
     }
 
     fun initialize() {
+        if (activityController.isAndroidTv()) return
         GlobalScope.launch(Dispatchers.IO) {
             try {
                 MobileAds.initialize(activity) {}
