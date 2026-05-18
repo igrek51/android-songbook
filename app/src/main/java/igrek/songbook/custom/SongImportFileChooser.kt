@@ -184,11 +184,11 @@ class SongImportFileChooser(
         val extension = File(filename).extension.lowercase()
 
         return when {
-            mimetype == "application/pdf" || extension == "`pdf" -> {
+            mimetype == "application/pdf" || extension == "pdf" -> {
                 logger.info("extracting content from PDF file $filename")
                 PdfContentExtractor().extractPdfContent(inputStream)
             }
-            mimetype == "text/plain" || extension == "txt" -> {
+            mimetype == "text/plain" || extension in setOf("txt", "cho", "chordpro") -> {
                 logger.info("reading content from text file $filename")
                 extractTxtContent(inputStream)
             }

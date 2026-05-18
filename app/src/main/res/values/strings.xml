@@ -468,7 +468,7 @@
     <string name="prompt_first_time_manual_action">Tutorial</string>
     <string name="prompt_rate_app_title">Do you like Songbook?</string>
     <string name="prompt_rate_app_body">Would you rate the Songbook with 5 stars ⭐️⭐️⭐️⭐️⭐️?</string>
-    <string name="error_song_file_type_unallowed" formatted="false">Not allowed file type: %s. Only TXT, PDF files and Google Docs are allowed.</string>
+    <string name="error_song_file_type_unallowed" formatted="false">Not allowed file type: %s. Only TXT, ChordPro, PDF files and Google Docs are allowed.</string>
     <string name="backup_file_exported">Backup file has been exported.</string>
     <string name="settings_sync_backup_automatically">Automatic Backups</string>
     <string name="settings_sync_backup_automatically_hint">Make periodic (daily) backups automatically to your Google Drive Account.\nLast backup: %s</string>
