@@ -11,7 +11,7 @@
     sdk.dir=/opt/ext/android-sdk
     ```
 
--   `.keystore.properties`
+-   `.keystore.properties` - Copy from template `keystore.properties`
 
     ```
     storeFile=songbook.jks

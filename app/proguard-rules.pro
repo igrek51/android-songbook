@@ -34,3 +34,7 @@
 -dontwarn org.slf4j.impl.StaticLoggerBinder
 -dontwarn org.w3c.dom.DOMImplementationSourceList
 -dontwarn org.xml.sax.driver
+
+# Android media classes (not available in all API levels)
+-dontwarn android.media.LoudnessCodecController
+-dontwarn android.media.LoudnessCodecController$OnLoudnessCodecUpdateListener

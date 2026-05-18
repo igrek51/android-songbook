@@ -1,4 +1,7 @@
-.PHONY: setup build install app
+.PHONY: setup build test install app
+
+JAVA_HOME := /usr/lib/jvm/java-21-openjdk-amd64
+GRADLE := JAVA_HOME=$(JAVA_HOME) ./gradlew
 
 setup:
 	python3 -m venv venv &&\
@@ -14,11 +17,19 @@ mkdocs-push:
 
 # Build a debug APK
 build:
-	./gradlew assembleDebug
+	$(GRADLE) assembleDebug
+
+# Build a release APK
+build-release:
+	$(GRADLE) assembleRelease
+
+# Run unit tests
+test:
+	$(GRADLE) testDebugUnitTest
 
 # Build and Install a debug APK on a connected device
 install:
-	./gradlew installDebug
+	$(GRADLE) installDebug
 
 install-apk:
 	adb install app/build/outputs/apk/debug/app-debug.apk

@@ -1,41 +1,36 @@
 import java.util.Properties
 import java.io.FileInputStream
-import java.io.ByteArrayOutputStream
 
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.serialization")
+    id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
 }
 
 fun getVersionCode(): Int {
-    val stdout = ByteArrayOutputStream()
-    exec {
-        this.commandLine = listOf("git", "tag", "--list")
-        this.standardOutput = stdout
-    }
-    return stdout.toString().split("\n").count { it.isNotBlank() } + 1800
+    val output = providers.exec {
+        commandLine("git", "tag", "--list")
+    }.standardOutput.asText.get()
+    return output.split("\n").count { it.isNotBlank() } + 1800
 }
 
 fun getVersionName(): String {
-    val stdout = ByteArrayOutputStream()
-    exec {
-        this.commandLine = listOf("git", "describe", "--tags", "--dirty", "--always")
-        this.standardOutput = stdout
-    }
-    return stdout.toString().trim()
+    return providers.exec {
+        commandLine("git", "describe", "--tags", "--dirty", "--always")
+    }.standardOutput.asText.get().trim()
 }
 
 @Suppress("UnstableApiUsage")
 android {
     namespace = "igrek.songbook"
-    compileSdk = 34
+    compileSdk = 36
     defaultConfig {
         applicationId = "igrek.songbook"
         minSdk = 21 // Android 5.0 Lollipop
-        targetSdk = 34 // Android 14
+        targetSdk = 36 // Android 16
         versionCode = getVersionCode()
         versionName = getVersionName()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -64,7 +59,7 @@ android {
             buildConfigField("java.util.Date", "BUILD_DATE", "new java.util.Date(" + System.currentTimeMillis() + "L)")
         }
         register("prerelease") {
-            isDebuggable = true
+            isDebuggable = false
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
@@ -81,13 +76,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "21"
         freeCompilerArgs = listOf(
-            "-Xallow-result-return-type",
             "-opt-in=kotlin.RequiresOptIn",
             "-opt-in=kotlinx.coroutines.DelicateCoroutinesApi",
         )
@@ -97,10 +91,7 @@ android {
         viewBinding = true
         buildConfig = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14" // based on https://developer.android.com/jetpack/androidx/releases/compose-kotlin
-    }
-    configurations.all {
+    configurations.configureEach {
         resolutionStrategy {
             force("com.google.code.findbugs:jsr305:1.3.9")
         }
@@ -127,12 +118,12 @@ android {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 dependencies {
@@ -164,7 +155,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.activity:activity-compose:1.8.2") // Integration with activities
     // Firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.5.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
     // Google APIs
@@ -174,7 +165,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-basement:18.4.0")
     implementation("com.google.android.gms:play-services-auth:21.2.0")
     // AdMob
-    implementation("com.google.android.gms:play-services-ads:23.2.0")
+    implementation("com.google.android.gms:play-services-ads:23.6.0")
     implementation("com.google.http-client:google-http-client-gson:1.43.3") {
         exclude(module="httpclient")
         exclude(module="commons-logging")
