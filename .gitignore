@@ -14,3 +14,6 @@ app/.attach_pid*
 
 /venv
 /site
+__pycache__
+*.pyc
+
