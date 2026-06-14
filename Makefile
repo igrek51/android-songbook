@@ -1,7 +1,9 @@
-.PHONY: setup build test install app
+.PHONY: setup build test install app list-emulators start-emulator run-emulator
 
+ANDROID_HOME := /opt/android-sdk
 JAVA_HOME := /usr/lib/jvm/java-21-openjdk-amd64
 GRADLE := JAVA_HOME=$(JAVA_HOME) ./gradlew
+ADB := $(ANDROID_HOME)/platform-tools/adb
 
 setup:
 	python3 -m venv venv &&\
@@ -32,13 +34,13 @@ install:
 	$(GRADLE) installDebug
 
 install-apk:
-	adb install app/build/outputs/apk/debug/app-debug.apk
+	$(ADB) install app/build/outputs/apk/debug/app-debug.apk
 
 list-emulators:
-	/opt/ext/android-sdk/emulator/emulator  -list-avds
+	$(ANDROID_HOME)/emulator/emulator -list-avds
 
 start-emulator:
-	/opt/ext/android-sdk/emulator/emulator -avd Pixel3_API_25_N_7.1_no_store
+	$(ANDROID_HOME)/emulator/emulator -avd $$($(ANDROID_HOME)/emulator/emulator -list-avds | head -1) -no-window -no-audio &
 
-run:
-	adb shell am start -n igrek.songbook/.activity.SplashScreenActivity
+run-emulator: build install-apk
+	$(ADB) shell am start -n igrek.songbook/.activity.SplashScreenActivity
