@@ -7,43 +7,42 @@
 # ///
 #
 # Usage:
-#   uv run scripts/songbook_upload.py <file> -c <category> [-c <category> ...]
+#   uv run scripts/songbook_upload.py <file> [options]
 #
 # Examples:
-#   # Single category, parsed filename
-#   uv run scripts/songbook_upload.py Artist_-_Song.txt -c "Rock"
+#   # Artist and title inferred from filename
+#   uv run scripts/songbook_upload.py "Bracia Figo Fagot - Czy Kochalabys Mnie Bardziej.txt"
 #
-#   # Override title/author, multiple categories
-#   uv run scripts/songbook_upload.py file.txt -c "Jazz" -c "Live" \
-#     --title "My Song" --author "Me"
+#   # Explicit artist and title
+#   uv run scripts/songbook_upload.py file.txt --artist "Bracia Figo Fagot" --title "My Song"
 #
 #   # Dry-run to preview payload
-#   uv run scripts/songbook_upload.py Artist_-_Song.txt -c "Pop" --dry-run
+#   uv run scripts/songbook_upload.py "Artist - Song.txt" --dry
 #
 #   # Custom server URL and token
-#   uv run scripts/songbook_upload.py file.txt -c "Rock" \
+#   uv run scripts/songbook_upload.py file.txt --artist "Rock" \
 #     --url http://192.168.1.100:8008 --token mytoken
 #
-#   # Custom language and chords notation
-#   uv run scripts/songbook_upload.py file.txt -c "Classical" \
-#     --language en --notation 1
+#   # Custom language, chords notation and uploader
+#   uv run scripts/songbook_upload.py file.txt --artist "Classical" \
+#     --language en --notation 1 --author "uploader_username"
 #
 # Options:
 #   file              Path to Songbook .txt file (inline [chords] format)
-#   -c, --category    Category name (required, repeatable)
+#   -a, --artist      Artist name (inferred from filename if omitted)
 #   --url             Server URL (default: http://localhost:8008)
 #   --token           X-Auth-Token value (default: authtoken)
 #   -l, --language    Language code (default: pl)
 #   -n, --notation    Chords notation: 1=GERMAN, 2=GERMAN_IS, 3=ENGLISH,
 #                     4=SOLFEGE (default: 3)
-#   -a, --author      Override author (default: parsed from filename)
+#   --author          Uploader username (optional)
 #   -t, --title       Override title (default: parsed from filename)
-#   -d, --dry-run     Print payload without sending
+#   -d, --dry          Print payload without sending
 #   -v, --verbose     Verbose output
 #
 # Filename convention:
-#   Artist_-_Song_Title.txt  -> author="Artist", title="Song Title"
-#   Song_Title.txt           -> title="Song Title" (no author)
+#   Artist - Title.txt  -> artist="Artist", title="Title"
+#   Title.txt           -> title="Title" (no artist)
 #
 import argparse
 import json
@@ -57,12 +56,12 @@ import requests
 
 def parse_filename(filename: str):
     stem = Path(filename).stem
-    m = re.match(r'^(.+?)_-_(.+)$', stem)
+    m = re.match(r'^(.+?)[ _]-[ _](.+)$', stem)
     if m:
-        author = m.group(1).strip().replace('_', ' ')
-        title = m.group(2).strip().replace('_', ' ')
-        return author, title
-    return None, stem.replace('_', ' ')
+        artist = m.group(1).strip().replace('_', ' ').title()
+        title = m.group(2).strip().replace('_', ' ').title()
+        return artist, title
+    return None, stem.replace('_', ' ').title()
 
 
 def read_file(filepath: str) -> str:
@@ -70,17 +69,16 @@ def read_file(filepath: str) -> str:
         return f.read()
 
 
-def build_payload(filepath: str, categories: list[str], language: str, notation: int,
-                  author: str | None, title: str | None) -> dict:
+def build_payload(filepath: str, artist: str, language: str, notation: int,
+                  author: str | None, title: str) -> dict:
     content = read_file(filepath)
-    parsed_author, parsed_title = parse_filename(filepath)
     payload = {
-        'title': title or parsed_title,
+        'title': title,
         'content': content,
-        'categories': categories,
+        'categories': [artist],
         'chords_notation': notation,
         'language': language,
-        'author': author or parsed_author or '',
+        'author': author or '',
         'state': 1,
     }
     return payload
@@ -110,22 +108,37 @@ def upload_payload(payload: dict, url: str, token: str, dry_run: bool, verbose: 
         sys.exit(1)
 
 
+def prompt_field(name: str, value: str) -> str:
+    print(f"\n{name}: {value}")
+    try:
+        response = input("Do you accept? [Y/n]: ").strip().lower()
+    except (EOFError, KeyboardInterrupt):
+        print()
+        raise
+    if response in ("", "y", "yes"):
+        return value
+    try:
+        return input(f"Enter {name}: ").strip()
+    except (EOFError, KeyboardInterrupt):
+        print()
+        raise
+
+
 def main():
     parser = argparse.ArgumentParser(
         description='Upload Songbook-format chord files to django_chords server.')
     parser.add_argument('file', help='Path to Songbook .txt file')
+    parser.add_argument('--artist', '-a', help='Artist name (default: parsed from filename)')
     parser.add_argument('--url', default='http://localhost:8008',
                         help='Server URL (default: http://localhost:8008)')
     parser.add_argument('--token', default='authtoken',
                         help='X-Auth-Token value (default: authtoken)')
-    parser.add_argument('--category', '-c', action='append', required=True,
-                        dest='categories', help='Category name (can be repeated, at least one required)')
     parser.add_argument('--language', '-l', default='pl', help='Language code (default: pl)')
     parser.add_argument('--notation', '-n', type=int, default=3, choices=[1, 2, 3, 4],
                         help='Chords notation: 1=GERMAN, 2=GERMAN_IS, 3=ENGLISH, 4=SOLFEGE (default: 3)')
-    parser.add_argument('--author', '-a', help='Override author (default: parsed from filename)')
+    parser.add_argument('--author', help='Uploader username (optional)')
     parser.add_argument('--title', '-t', help='Override title (default: parsed from filename)')
-    parser.add_argument('--dry-run', '-d', action='store_true',
+    parser.add_argument('--dry', '-d', action='store_true',
                         help='Print payload without sending')
     parser.add_argument('--verbose', '-v', action='store_true', help='Verbose output')
     args = parser.parse_args()
@@ -134,15 +147,35 @@ def main():
         print(f'File not found: {args.file}', file=sys.stderr)
         sys.exit(1)
 
+    parsed_artist, parsed_title = parse_filename(args.file)
+
+    artist = args.artist or parsed_artist
+    title = args.title or parsed_title
+
+    if not artist:
+        print('No artist: provide --artist or use filename "Artist - Song.txt"',
+              file=sys.stderr)
+        sys.exit(1)
+
+    action = 'DRY-RUN' if args.dry else 'Upload'
+    print(f'{action}: {args.file}')
+
+    try:
+        artist = prompt_field("Artist", artist)
+        title = prompt_field("Title", title)
+    except (EOFError, KeyboardInterrupt):
+        print('Cancelled.', file=sys.stderr)
+        sys.exit(1)
+
     payload = build_payload(
         filepath=args.file,
-        categories=args.categories,
+        artist=artist,
         language=args.language,
         notation=args.notation,
         author=args.author,
-        title=args.title,
+        title=title,
     )
-    upload_payload(payload, args.url, args.token, args.dry_run, args.verbose)
+    upload_payload(payload, args.url, args.token, args.dry, args.verbose)
 
 
 if __name__ == '__main__':
