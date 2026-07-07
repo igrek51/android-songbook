@@ -48,7 +48,9 @@ import argparse
 import json
 import os
 import re
+import sqlite3
 import sys
+import tempfile
 from pathlib import Path
 
 import requests
@@ -82,6 +84,98 @@ def build_payload(filepath: str, artist: str, language: str, notation: int,
         'state': 1,
     }
     return payload
+
+
+def fetch_categories_via_db(base: str, token: str, verbose: bool) -> list[str] | None:
+    for url in [f'{base}/songs_db', f'{base}/api/v5/songs_db']:
+        if verbose:
+            print(f'  Trying songs DB at: {url}')
+        headers = {'X-Auth-Token': token}
+        try:
+            resp = requests.get(url, headers=headers, timeout=15)
+        except requests.RequestException as e:
+            if verbose:
+                print(f'  Connection failed: {e}')
+            continue
+        if not resp.ok:
+            if verbose:
+                print(f'  HTTP {resp.status_code}')
+            continue
+        try:
+            tmp = tempfile.NamedTemporaryFile(delete=False, suffix='.db')
+            tmp.write(resp.content)
+            tmp.close()
+            conn = sqlite3.connect(tmp.name)
+            cur = conn.cursor()
+            cur.execute("SELECT name FROM songs_category")
+            rows = cur.fetchall()
+            conn.close()
+            os.unlink(tmp.name)
+            names = [r[0] for r in rows]
+            if verbose:
+                print(f'  Found {len(names)} categories in songs DB')
+            return names
+        except Exception as e:
+            if verbose:
+                print(f'  Failed to parse songs DB: {e}')
+            try:
+                os.unlink(tmp.name)
+            except Exception:
+                pass
+            continue
+    return None
+
+
+def check_category_exists(url: str, token: str, artist: str, verbose: bool):
+    base = url.rstrip('/')
+    candidates = [
+        f'{base}/category',
+        f'{base}/categories',
+        f'{base}/api/v5/category',
+        f'{base}/api/v5/categories',
+    ]
+    names = None
+    for endpoint in candidates:
+        if verbose:
+            print(f'Checking categories at: {endpoint}')
+        headers = {'X-Auth-Token': token}
+        try:
+            resp = requests.get(endpoint, headers=headers, timeout=5)
+        except requests.RequestException as e:
+            if verbose:
+                print(f'  Connection failed: {e}')
+            continue
+        if resp.status_code == 404:
+            continue
+        if not resp.ok:
+            if verbose:
+                print(f'  HTTP {resp.status_code}')
+            continue
+        try:
+            data = resp.json()
+        except Exception:
+            continue
+        if isinstance(data, list):
+            names = [c.get('name') if isinstance(c, dict) else str(c) for c in data]
+        elif isinstance(data, dict):
+            names = list(data.keys())
+        if names is not None:
+            break
+    if names is None:
+        if verbose:
+            print('No JSON category endpoint found, trying songs database...')
+        names = fetch_categories_via_db(base, token, verbose)
+    if names is None:
+        if verbose:
+            print('Could not fetch category list — skipping check.')
+        return
+    if verbose:
+        print(f'Existing categories: {len(names)}')
+    if artist in names:
+        print(f'Category "{artist}" already exists.')
+    else:
+        print(f'WARNING: Artist "{artist}" not found in existing categories. '
+              f'It will be created automatically on upload.', file=sys.stderr)
 
 
 def upload_payload(payload: dict, url: str, token: str, dry_run: bool, verbose: bool):
@@ -166,6 +260,8 @@ def main():
     except (EOFError, KeyboardInterrupt):
         print('Cancelled.', file=sys.stderr)
         sys.exit(1)
+
+    check_category_exists(args.url, args.token, artist, args.verbose)
 
     payload = build_payload(
         filepath=args.file,
